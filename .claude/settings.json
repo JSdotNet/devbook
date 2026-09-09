@@ -1,5 +1,19 @@
 {
   "permissions": {
     "deny": ["Read(_meta/**)"]
+  },
+  "extraKnownMarketplaces": {
+    "jsdotnet": {
+      "source": {
+        "source": "github",
+        "repo": "JSdotNet/ai-agent-stack"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "devbook@jsdotnet": true,
+    "delivery@jsdotnet": true,
+    "delivery-schedule@jsdotnet": true,
+    "devbook-config@jsdotnet": true
   }
 }

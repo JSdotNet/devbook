@@ -1,0 +1,63 @@
+{
+  "bindings": {
+    "delivery.tracker": { "provider": "github" },
+    "delivery.roles": {
+      "architecture": null,
+      "qa": null,
+      "domain": null,
+      "ux": null,
+      "product": null,
+      "security": null,
+      "docs": null
+    }
+  },
+  "extensions": {
+    "session.start": ["devbook:devbook-check"],
+    "app.start": null,
+    "qa.run": null,
+    "docs.update": ["devbook:install"]
+  },
+  "policy": {
+    "qa.depth": "skipped",
+    "qa.ceiling": "skipped",
+    "pr.required": false
+  },
+  "gates": [
+    {
+      "at": "deliver",
+      "when": "before",
+      "purpose": "approval",
+      "prompt": "Nothing here is pushed or opened as a pull request until asked. Push and open one now?",
+      "show": "summary",
+      "unattended": "block"
+    }
+  ],
+  "components": {
+    "devbook": {
+      "pluginVersion": "3.3.0",
+      "contractVersion": 9,
+      "adopted": ["arc42", "domain", "tech", "design", "ai"],
+      "materialized": {
+        "AGENTS.md#devbook": {
+          "from": "3.3.0",
+          "hash": "sha256:3afc612ae8298e78c53247a473dd4bfab4e4b90e269fc3502ec353cff517c6a6",
+          "managed": true
+        },
+        ".gitignore#devbook": {
+          "from": "3.3.0",
+          "hash": "sha256:36b316a78cd232fc4f2a1d3248a2bc2449bbff9c9b5534b41f1aee9d8b2b2458",
+          "managed": true
+        }
+      },
+      "migrations": [
+        { "id": "006-drop-backlog", "applied": "2026-09-09" },
+        { "id": "008-config-to-devbook", "applied": "2026-09-09" },
+        { "id": "009-install-skill-ids", "applied": "2026-09-09" }
+      ]
+    },
+    "delivery": {
+      "pluginVersion": "2.6.0",
+      "materialized": {}
+    }
+  }
+}
