@@ -58,6 +58,10 @@
     "delivery": {
       "pluginVersion": "2.6.0",
       "materialized": {}
+    },
+    "schedule": {
+      "pluginVersion": "0.4.0",
+      "enabled": ["devbook-check", "tech-update", "merge-review", "package-update"]
     }
   }
 }
