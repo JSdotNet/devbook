@@ -82,6 +82,7 @@ decision is superseded.
 | [56. Payload-Only Components Carry No Contract Version](adr/56-payload-only-components-carry-no-contract-version.md) | 2026-09-09 | `contractVersion`, `adopted`, and `migrations` are `devbook`'s alone; a component that only copies files it owns has hash-matching as its whole migration mechanism. |
 | [57. A Workflow Gates the Checks the Schedule Cannot](adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 | The three checks run on every pull request; the schedule cannot block a merge, and `--check` never regenerates, so record 29's refresh rule stands. |
 | [58. The Runner Opens No Browser Pane](adr/58-the-runner-opens-no-browser-pane.md) | 2026-09-09 | Three ids for one host's own browser pane leave the runner's allowlist: record 47's exception covers this marketplace's own servers, and the pane already had a plain-link fallback beside it. |
+| [59. The Marketplace Stamps Itself and Materializes Nothing](adr/59-the-marketplace-stamps-itself-and-materializes-nothing.md) | 2026-09-09 | This repository adopts its own stack config and stamps every component it uses, and copies none of the payload it ships — it is the source of the generator and the rules it would otherwise install into itself. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both
