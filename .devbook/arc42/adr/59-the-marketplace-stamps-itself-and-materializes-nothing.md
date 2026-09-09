@@ -39,10 +39,15 @@ hosts.
 **What the checks report against this from now on.** `devbook-check` passes: `adopted` names
 the five folders that are on disk, both stamped sections are present and match their hashes,
 and the ledger holds `006`, `008`, and `009` — each verified no-op by its own `--check` before
-it was recorded. `devbook-config`'s report keeps one permanent row that reads like drift and
-is not: the plugin is enabled here and stamps nothing, because
+it was recorded.
+
+`devbook-config`'s report keeps two rows that read like drift and are not. The three stamped
+plugins come back `blocked` — *stamped here, not installed on this machine* — on every checkout
+whose owner has not installed them, which is the normal state of the repository that authors
+them and is never a reason to drop a stamp. And `devbook-config` itself stamps nothing, because
 [record 23](23-the-guide-names-every-plugin-and-depends-on-none.md) gave it no
-`components.<name>` to write, so its scope is `adoptable` forever.
+`components.<name>` to write: it reads `out-of-scope` until someone installs it and `adoptable`
+from then on, and never reaches `reconcile`.
 
 Hashes are taken over LF-normalized text. The working tree is CRLF under `core.autocrlf=true`
 while the index is LF, and a stamp is committed and shared, so a byte hash would be wrong on
