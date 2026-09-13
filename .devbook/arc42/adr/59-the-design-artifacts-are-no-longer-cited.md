@@ -34,7 +34,8 @@ may not sit silently apart, so one of them changes in the same commit, or the di
 recorded here as a decision. The closing instruction to name the artifact you validated against
 is dropped; nothing in the section now points outside the repository. A single consolidated
 page may return later as one row — what does not return is the six-way split, or a citation
-that outranks the code it describes.
+that outranks the code it describes. **It returned on 2026-09-14**, as
+[record 62](62-one-design-artifact-replaces-six.md) describes: one page, cited without the direction.
 
 The one citation living outside `AGENTS.md` goes in the same wave:
 `devbook-collaboration`'s release note cited *Layered Annotations* for a design

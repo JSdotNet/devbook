@@ -85,6 +85,7 @@ decision is superseded.
 | [59. The Design Artifacts Are No Longer Cited](adr/59-the-design-artifacts-are-no-longer-cited.md) | 2026-09-09 | `AGENTS.md` stops naming the six external design pages: half of them are behind the repository rather than ahead of it, and none of them opens for whoever runs a change here. |
 | [60. The Annotation Lifecycle Ends in devbook](adr/60-the-annotation-lifecycle-ends-in-devbook.md) | 2026-09-09 | The sweep is `devbook`'s, because a repository without the review plugin still gets notes — and promotion to a work item is nobody's yet, because it would make two Separate Ways contexts name each other. |
 | [61. The Marketplace Stamps Itself and Materializes Nothing](adr/61-the-marketplace-stamps-itself-and-materializes-nothing.md) | 2026-09-09 | This repository adopts its own stack config and stamps every component it uses, and copies none of the payload it ships — it is the source of the generator and the rules it would otherwise install into itself. |
+| [62. One Design Artifact Replaces Six](adr/62-one-design-artifact-replaces-six.md) | 2026-09-14 | The design of devbook and its plugins is one published page, written from the repository and cited as one row; a divergence is recorded against it, and it never outranks the code it describes. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both

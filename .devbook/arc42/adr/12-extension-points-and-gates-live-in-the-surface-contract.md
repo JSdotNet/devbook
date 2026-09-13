@@ -10,7 +10,7 @@ mechanism, the stack config, the host slots, and the surface capability with its
 contract. It replaces three files that came across from the two host plugins: the predecessor
 dashboard's contract, `dashboard-usage`, and `canvas-usage`.
 
-The layered design treats the surface capability and the extension points as separate concerns,
+The layered design — now [§7 of the consolidated artifact](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f#s7), per [record 62](62-one-design-artifact-replaces-six.md) — treats the surface capability and the extension points as separate concerns,
 and splitting them would honour "state each rule in exactly one file" more literally. They are
 together because they are one subject stated from one side: everything outside the engine that
 a flow talks to, and the terms on which it does. A run reads them at the same moment — once,
