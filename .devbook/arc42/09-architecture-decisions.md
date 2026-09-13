@@ -84,6 +84,7 @@ decision is superseded.
 | [58. The Runner Opens No Browser Pane](adr/58-the-runner-opens-no-browser-pane.md) | 2026-09-09 | Three ids for one host's own browser pane leave the runner's allowlist: record 47's exception covers this marketplace's own servers, and the pane already had a plain-link fallback beside it. |
 | [59. The Design Artifacts Are No Longer Cited](adr/59-the-design-artifacts-are-no-longer-cited.md) | 2026-09-09 | `AGENTS.md` stops naming the six external design pages: half of them are behind the repository rather than ahead of it, and none of them opens for whoever runs a change here. |
 | [60. The Annotation Lifecycle Ends in devbook](adr/60-the-annotation-lifecycle-ends-in-devbook.md) | 2026-09-09 | The sweep is `devbook`'s, because a repository without the review plugin still gets notes — and promotion to a work item is nobody's yet, because it would make two Separate Ways contexts name each other. |
+| [61. The Marketplace Stamps Itself and Materializes Nothing](adr/61-the-marketplace-stamps-itself-and-materializes-nothing.md) | 2026-09-09 | This repository adopts its own stack config and stamps every component it uses, and copies none of the payload it ships — it is the source of the generator and the rules it would otherwise install into itself. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both

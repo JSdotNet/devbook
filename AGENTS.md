@@ -142,9 +142,9 @@ Every chapter carries a fenced `meta` block; write it in the same change as the 
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
-Files under any `_meta/` folder are generated tool input. Never read or hand-edit them,
-and never regenerate or commit them in a session — the `devbook-check` schedule owns that
-refresh. Run the check before committing:
+Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.
+Never regenerate or commit them in a session — the scheduled job owns that refresh. Run
+the check before committing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
 
