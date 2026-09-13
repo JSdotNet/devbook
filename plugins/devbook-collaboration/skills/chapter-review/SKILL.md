@@ -70,7 +70,9 @@ lens is a review that misses the finding.
    ```
 
    `--kind question` when the chapter cannot be judged until somebody answers;
-   `suggestion` or `flag` otherwise.
+   `flag` when the objection should be the first thing the approver reads —
+   the gate shows flags first and never blocks on one; `suggestion` or
+   `comment` otherwise.
 
 6. **Write the verdict** into the chapter's `meta` block. Set `review-at` to
    today and `reviewer` to yourself as the reviewer of record:

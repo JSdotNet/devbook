@@ -24,6 +24,7 @@ stateDiagram-v2
     Cleared --> Approved: chapter-approve, a person chooses it
     ChangesRequested --> Approved: an approver overrides, findings cleared with the rest
     Approved --> NoState: content changes, and rung, signature and date come off
+    Approved --> ChangesRequested: chapter-approve lifts the rung over notes raised since it
     NoState --> [*]
 ```
 
@@ -37,7 +38,10 @@ stateDiagram-v2
   swept with them. A chapter that carries both is a half-finished write, not a state.
 - **An open question is the one thing that blocks the decision.** Devbook's check reports an
   approval standing over one as an error, so `chapter-approve` refuses rather than warns. Every
-  other kind of note is weighed, not enforced.
+  other kind of note is weighed, not enforced — a `flag` first, and a note dated after
+  `approved-at` named as raised since the approval. Choosing revise over one is the
+  `Approved --> ChangesRequested` edge: the rung comes off by a person's decision rather than
+  by a content change, and the notes already on the chapter are the findings.
 - **The exit is content change, not time.** An approval lapses because the chapter moved under
   it, which is why [Review Queue](domain.md#review-queue) reports staleness rather than the
   chapter claiming to be current.

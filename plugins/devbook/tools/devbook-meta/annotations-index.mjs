@@ -3,10 +3,12 @@
 //
 // Markdown stays canonical, annotations included. This is the *derived* half:
 // the index a reader comes off so no reader needs the writer and no reader
-// parses Markdown twice. Every consumer named in the design reads this file —
-// the cross-repository inbox, the open-note count on a graph node, the
-// approval gate rendering the objections raised since `approved-at` — and none
-// of them couples to `annotations.mjs`, which only writes.
+// parses Markdown twice. It serves the reads that span chapters — the
+// cross-repository inbox, the open-note count on a graph node, the review
+// queue — and none of them couples to `annotations.mjs`. The approval gate is
+// deliberately not among them: it shows one chapter and reads that chapter,
+// because a note written on the branch since the last refresh is exactly the
+// one this file lacks.
 //
 // Deleting it costs nothing: it is a deterministic function of the chapters,
 // so re-running the generator reproduces it byte for byte.

@@ -2,6 +2,20 @@
 
 Behaviour changes a consumer would notice, newest first.
 
+## 0.6.0: the gate reads what was raised since the approval
+
+Nothing you have on disk changes shape. `chapter-approve` now orders the open notes it
+shows by kind — questions, then flags, then the rest — and on a chapter that already
+carries `approved-at` names each note dated after it as raised since the approval,
+with revise meaning *lift the rung and send it back through review*. `kind: flag`,
+accepted by devbook's schema since 3.1.0 and read by nothing, is now the note the
+approver sees first; it still never blocks, and only an open question does.
+`chapter-review` says when to write one. `chapter-review-queue` gains a row,
+*objected to since approval*, owed by whoever approved.
+
+Run `devbook-collaboration:install` again: `rules/chapter-collaboration.md` changed,
+and the reconcile will otherwise report the installed copy as behind.
+
 ## 0.5.0: a finding is an annotation fence
 
 **Breaking for chapters that carry findings, and the migration is manual.** Nothing

@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -23,6 +23,19 @@ on open and never opens a `_meta/` file — deliberately, so the view cannot go 
 `chapter-review-queue` prefers the index and states its own fallback: when there is none, it
 scans. The only other mention is a dashboard test asserting that writes to `_meta/index.json`
 do not count as session activity. The artifact is written here and read nowhere.
+
+**2026-09-14. The reader the generator itself named did not materialize, on purpose.** The
+header of `annotations-index.mjs` listed three consumers the annotation design intended for
+the index, and one of them — "the approval gate rendering the objections raised since
+`approved-at`" — was built here. It reads the chapter instead.
+[Record 62](../adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md)
+says why: the gate shows one chapter and has that file open already, every fact it needs is in
+it, and the index is refreshed nightly, so the note a reviewer wrote on this branch an hour
+ago is exactly the one it would miss. That sharpens this record rather than closing it. A
+one-chapter read is the wrong shape of consumer for a corpus index, and the candidate the
+design named turned out to be one; what the index is for is the read that spans chapters,
+and in this repository that is still `chapter-review-queue` alone, with its scan fallback.
+The header now says so.
 
 **Every reconcile installs it anyway.** `assets/build/Update-DevbookIndex.ps1` materializes
 `always`, both workflows materialize wherever GitHub Actions is present, and

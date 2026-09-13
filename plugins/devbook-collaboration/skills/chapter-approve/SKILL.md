@@ -1,6 +1,6 @@
 ---
 name: chapter-approve
-description: 'Run the approval decision on a devbook chapter — show the chapter itself with its open annotation fences, take approve, revise, or decline from a person, and on approval write devbook''s own status: approved rung with approved-by and approved-at while clearing the collaboration state. Use when: approving a chapter, signing off a specification before it becomes work, recording who approved what, or lifting an approval that has gone stale. Triggers on: "approve this chapter", "sign off on this", "record the approval", "is this approved", "the approval is stale".'
+description: 'Run the approval decision on a devbook chapter — show the chapter itself with its open annotation fences, flags first and any note raised since approved-at named as such, take approve, revise, or decline from a person, and on approval write devbook''s own status: approved rung with approved-by and approved-at while clearing the collaboration state. Use when: approving a chapter, signing off a specification before it becomes work, recording who approved what, weighing objections raised after an approval, or lifting an approval that has gone stale. Triggers on: "approve this chapter", "sign off on this", "record the approval", "is this approved", "the approval is stale", "what was raised since the approval".'
 ---
 
 # chapter approve
@@ -25,18 +25,25 @@ which the authoring rules exempt from terseness: a fragment here is what turns
 
 1. **Show the chapter itself**, not a summary of it, together with its current
    `review` state and every open note on it — `annotations.mjs list --chapter
-   <path#slug> --status open`, each with its author, kind, and body. A summary
-   is not what is being approved, and a person cannot approve what they have not
-   read.
+   <path#slug> --status open`, each with its author, date, kind, and body,
+   ordered by kind: questions, then flags, then suggestions and comments. When
+   the chapter carries `approved-at`, mark every note dated after it as
+   **raised since the approval** — those are the objections the approval never
+   saw. Read the chapter, never `_meta/annotations.json`: the index is
+   refreshed on a schedule, so the note written on this branch an hour ago is
+   exactly the one it lacks. A summary is not what is being approved, and a
+   person cannot approve what they have not read.
 
 2. **Say plainly what stands in the way**, if anything:
 
    | Condition | Say |
    |---|---|
    | An open `kind: question` fence remains | Which questions are open, and that this chapter **cannot** be approved over one — devbook's check reports that as an error. Answer and resolve it first |
+   | An open `kind: flag` remains | Which flags, verbatim. A flag is the loudest remark a note can be and the first reason to choose revise; it does not block, because only a question outranks `status` |
    | Another open fence remains | Which notes are open, and that approving now approves a chapter somebody has remarked on |
    | `review` is absent or `requested` | Nobody has reviewed this yet |
-   | `status: approved` already, unchanged since `approved-at` | It is already approved; there is nothing to decide |
+   | `status: approved` already, with open notes dated after `approved-at` | The approval stands over objections it never saw. List them; the decision is whether it still stands — see step 3 |
+   | `status: approved` already, unchanged since `approved-at`, nothing raised since | It is already approved; there is nothing to decide |
 
    Only the first row blocks the decision, and it blocks it because an open
    question means the chapter is not agreed, whatever `status` says. The rest
@@ -49,6 +56,13 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    | approve | Step 4 |
    | revise | Leave `status` alone. Record what they want changed as one annotation fence each, `--author` the person who asked, set `review: changes-requested`, `reviewer` to the author, `review-at` to today, and stop |
    | decline | Leave the chapter as it is. Report the reason to the user and stop; declining records nothing on the chapter, because a chapter nobody approved is the ordinary case |
+
+   On a chapter already approved with notes raised since, the same three
+   outcomes mean: approve — the approval stands, write nothing and say so;
+   revise — lift the approval per **Lifting a stale approval** below and, in
+   the same change, set `review: changes-requested`, `reviewer` to the author,
+   `review-at` to today, over the notes as they are; decline — leave the
+   chapter as it is, approval and notes both, for whoever answers them.
 
    Never infer approval from silence, from a cleared review, or from the
    chapter looking fine. If nobody answers — an unattended run, a scheduled job
@@ -79,8 +93,9 @@ An approval is of what was read. When the chapter's content changed after
 `approved-at`, the rung is no longer true and devbook's own rule is that it
 comes out. Drop `status` back to the chapter's ordinary rung, delete
 `approved-by` and `approved-at` in the same change, and say what changed since
-the approval. Do not re-approve it here — that is a new decision, and it starts
-at step 1.
+the approval. The same lift is the revise outcome on an approval a person has
+chosen not to let stand over notes raised since it. Do not re-approve it here —
+that is a new decision, and it starts at step 1.
 
 ## Do not
 
@@ -91,3 +106,5 @@ at step 1.
   chapter, and never sweep an open note to clear the way for an approval.
 - Do not approve a chapter to unblock a flow. An unapproved chapter parks the
   run; that is the designed outcome, not a failure to route around.
+- Do not refuse over a flag. Only an open question blocks; a flag is shown,
+  first, and weighed by the person.
