@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-14
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/7-approved-is-a-status-rung.md", ".devbook/arc42/adr/19-a-role-plugin-holds-no-flow-control.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-collaboration/domain.md#approval", ".devbook/domain/devbook-collaboration/dependencies.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/7-approved-is-a-status-rung.md", ".devbook/arc42/adr/19-a-role-plugin-holds-no-flow-control.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md", ".devbook/arc42/adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-collaboration/domain.md#approval", ".devbook/domain/devbook-collaboration/dependencies.md"]
 ```
 
 The gate that shows a chapter with its open notes, takes approve, revise, or decline from a
@@ -55,4 +55,5 @@ a run's output is a chapter, the flow's Check & Review stage runs devbook's `--c
 what reports an approval standing over an open question; the run's gate then decides the run.
 Where a run builds *from* a chapter, devbook's own `from-spec-<kind>` reads the chapter's status
 and stops on an open question, so the objection reaches the person before the build rather than
-through the engine.
+through the engine. What the gate does with each kind of note it shows is
+[record 63](63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md).
