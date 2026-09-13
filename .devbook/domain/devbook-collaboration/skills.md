@@ -52,7 +52,9 @@ Record that a person read this chapter and approved it, in devbook's own rung wi
 a date, and clear this context's namespace and the chapter's resolved notes in the same change.
 
 An open `kind: question` note blocks it outright: devbook's check reports an approval standing over
-one as an error, so this is the one condition the skill refuses on rather than states.
+one as an error, so this is the one condition the skill refuses on rather than states. Every other
+open note is shown and weighed, flags first; on a chapter already approved, a note dated after
+`approved-at` is named as raised since the approval, and revise means lifting the rung.
 
 It runs only where a person chose it in that session — never from a schedule, never as a
 consequence of a cleared review, and never on the strength of a conversation a later session cannot
