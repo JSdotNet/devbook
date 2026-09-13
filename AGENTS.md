@@ -9,22 +9,14 @@ file here is hand-authored.
 
 ## Validating a change
 
-The design these plugins implement is written down outside this repository. Before writing,
-read the artifacts the change touches; when the repository and an artifact disagree, the
-artifact is right — fix the repository, or record the divergence as a decision in
-`.devbook/arc42/09-architecture-decisions.md` with the reason. Never leave the two silently
-apart.
+The design these plugins implement is written down in this repository. Before writing, read
+the chapters the change touches: `.devbook/arc42/adr/` for why something is the way it is and
+`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/domain/` for the vocabulary
+and the boundary each plugin owns, and the plugin's own `rules/` for what a file must contain.
 
-| Artifact | Governs |
-| --- | --- |
-| [devbook](https://claude.ai/code/artifact/2229020b-18d3-4d4d-9613-de82be7add04) | The `.devbook/` convention: folders, the fenced `meta` block, addressing, reading order, the approval gate, the plugin family. |
-| [Knowledge Base Internals 2.0](https://claude.ai/code/artifact/63e86cb8-f258-4836-8cd4-5a32c6235fa0) | The schema underneath it: which fields become edges, each folder's status ladder and `type` set, the `tests` field, the converters. |
-| [Layered Plugin Stack](https://claude.ai/code/artifact/591deaa8-c29a-4159-8146-dcbbfba46f81) | How plugins couple: the four layers, dependency vs bridge vs surface, enabling a combination per repository. |
-| [The Rename Wave](https://claude.ai/code/artifact/aea8acf9-5335-4000-8e0f-450653349a90) | Naming and the host split: `flow-`, `fleet-`, `phase-`, `schedule-`, and what belongs in the `delivery` plugin. |
-| [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19) | Annotations as a second fenced block in the chapter, their lifecycle, and what the app layer on top may not own. |
-| [devbook Retrieval](https://claude.ai/code/artifact/a50fc1f6-413d-4767-aad8-45be44c85107) | How the canon is retrieved: it is walked, never searched; semantic search belongs over the `_inbox` intake only, as a capability that may be absent. |
-
-Name the artifact you validated against when reporting the change.
+When the repository and a chapter disagree, one of them is wrong and neither may stay that
+way: change the other in the same commit, or — when the divergence is deliberate — record it
+as a decision in `.devbook/arc42/adr/` with the reason. Never leave the two silently apart.
 
 Before committing, run the checker and the generator over this repository's own devbook:
 

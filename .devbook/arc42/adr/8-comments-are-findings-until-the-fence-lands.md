@@ -42,7 +42,7 @@ Two things the single-line key could not do arrive with the fence, and both are 
 presentation. An open `kind: question` on an `approved` chapter is an error in `devbook`'s own
 check, so an approval standing over an unanswered finding now fails the gate instead of being
 silent. And a resolved note has to be swept, which
-[record 59](59-the-annotation-lifecycle-ends-in-devbook.md) puts in `devbook` rather than here.
+[record 60](60-the-annotation-lifecycle-ends-in-devbook.md) puts in `devbook` rather than here.
 
 Two divergences from the design were taken deliberately. It says "knowledge-base is at 0.14.0;
 this is the next minor — or devbook 0.1.0, if the rename wave lands first"; the rename landed

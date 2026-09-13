@@ -1,4 +1,4 @@
-# 59. The Annotation Lifecycle Ends in devbook
+# 60. The Annotation Lifecycle Ends in devbook
 
 ```meta
 date: 2026-09-09

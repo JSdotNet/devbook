@@ -83,5 +83,5 @@ classDiagram
   `kind: question` is the one that blocks the approval decision.
 - **The seam that used to be open is closed.** Findings were flat `ext` keys until
   2026-09-09; see [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md)
-  and [record 59](../../arc42/adr/59-the-annotation-lifecycle-ends-in-devbook.md) for why the
+  and [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md) for why the
   sweep stayed with devbook.
