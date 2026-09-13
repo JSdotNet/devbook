@@ -6,7 +6,8 @@ related: [".devbook/domain/context-map.md#devbook-collaboration"]
 ```
 
 > Five skills. Four move one chapter through a review, and one of those four writes nothing at all;
-> the fifth sits outside the pass and installs the contract.
+> the fifth sits outside the pass and installs the contract. Deleting the answered notes is
+> `devbook:annotation-sweep`, in the plugin that owns the fence.
 
 ## chapter-handoff
 
@@ -22,14 +23,14 @@ survives the conversation it was made in, which is the whole point of writing it
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook-collaboration/domain.md#finding"]
+related: [".devbook/domain/devbook-collaboration/domain.md#finding", ".devbook/domain/devbook/domain.md#annotation"]
 ```
 
 Read a chapter against its folder's rules and its own evidence, and record the verdict:
-`changes-requested` with one finding per objection, or `cleared` with none.
+`changes-requested` over one annotation fence per objection, or `cleared` over none open.
 
 A verdict and its findings are written in the same change — a verdict with nothing behind it is not
-a review.
+a review. The fences are the evidence, so the two cannot drift without one of them being wrong.
 
 ### Clear Without Approving
 
@@ -48,7 +49,10 @@ related: [".devbook/domain/devbook-collaboration/domain.md#approval", ".devbook/
 ```
 
 Record that a person read this chapter and approved it, in devbook's own rung with a signature and
-a date, and clear this context's namespace in the same change.
+a date, and clear this context's namespace and the chapter's resolved notes in the same change.
+
+An open `kind: question` note blocks it outright: devbook's check reports an approval standing over
+one as an error, so this is the one condition the skill refuses on rather than states.
 
 It runs only where a person chose it in that session — never from a schedule, never as a
 consequence of a cleared review, and never on the strength of a conversation a later session cannot

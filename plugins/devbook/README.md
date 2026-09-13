@@ -86,6 +86,18 @@ tooling before delegating graph authoring to the `.tech` write path.
 **Trigger keywords:** `update technology graph`, `refresh .tech`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
+### Skill: `annotation-sweep`
+
+Deletes every resolved annotation fence in one chapter and nothing else. It is
+the last step of the lifecycle in `rules/devbook-annotations.md`: `open` means
+somebody is waiting, `resolved` means answered and lives only the rest of the
+branch, and gone is the resting state — the prose change is the record and git
+holds the exchange. Chapter-scoped on purpose, so a person sees what is about to
+go before it does.
+
+**Trigger keywords:** `sweep the annotations`, `clear resolved notes`,
+`delete the answered comments`, `sweep before merging`
+
 ### No flows
 
 This plugin ships the shape of a devbook folder and never the procedure for changing one.

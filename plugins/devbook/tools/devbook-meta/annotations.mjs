@@ -6,11 +6,12 @@
 //                                                             --author <who> --body <text> [--kind question]
 //   node .github/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
 //   node .github/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+//   node .github/tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug> [--status resolved]
 //
 // Several channels legitimately write a note — a person in an editor, a skill,
 // the desktop app, a device with no clone queuing one for later — and they all
 // go through this module. The CLI below and any in-process caller import the
-// same four functions; nothing anywhere else writes a fence with a regular
+// same five functions; nothing anywhere else writes a fence with a regular
 // expression of its own.
 //
 // Every edit is surgical. `reply` and `resolve` splice lines into the fence
@@ -24,7 +25,13 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { parseAnnotations, resolveAnnotation, annotationKinds } from "./metadata.mjs";
+import {
+    parseAnnotations,
+    parseAnnotationBody,
+    resolveAnnotation,
+    annotationKinds,
+    annotationStatuses,
+} from "./metadata.mjs";
 
 const FENCE = "```";
 
@@ -366,6 +373,53 @@ export async function resolve(repoRoot, address, index, { delete: sweep = false 
     return { path: chapter.relPath, index, swept: false };
 }
 
+/**
+ * Sweep a chapter: delete every fence at `status` and nothing else.
+ *
+ * `resolve --delete` closes one loop by ordinal, which is the move a person
+ * makes the moment they answer a note. This is the other half of the same
+ * rule — before a branch merges, every resolved note goes, because the prose
+ * change is the record and git holds the exchange. An open note is never
+ * touched, whatever else its fence carries.
+ *
+ * Deletes bottom-up, so a fence earlier in the file still sits where the sweep
+ * found it by the time its turn comes.
+ */
+export async function sweep(repoRoot, address, { status = "resolved" } = {}) {
+    if (!annotationStatuses().includes(status)) {
+        throw new Error(`Unknown annotation status "${status}" — one of ${annotationStatuses().join(", ")}.`);
+    }
+    const chapter = await loadChapter(repoRoot, address);
+    const { lines } = chapter;
+
+    const notes = annotationsIn(chapter).map((note) => ({
+        ...note,
+        fields: resolveAnnotation(parseAnnotationBody(note.text)),
+    }));
+    const matching = notes.filter((note) => note.fields.status === status);
+
+    for (const note of [...matching].sort((a, b) => b.start - a.start)) {
+        let start = note.start;
+        // Take the blank line that separated the note from its passage.
+        if (start > 0 && lines[start - 1].trim() === "") start--;
+        lines.splice(start, note.end - start);
+    }
+
+    if (matching.length) await save(chapter);
+    return {
+        path: chapter.relPath,
+        swept: matching.map((note) => ({
+            index: note.ordinal,
+            chapter: note.chapter,
+            kind: note.fields.kind,
+            author: note.fields.author,
+            date: note.fields.date,
+            body: note.fields.body,
+        })),
+        remaining: notes.length - matching.length,
+    };
+}
+
 // --- CLI -------------------------------------------------------------------
 
 const USAGE = `annotations.mjs — read and write annotation fences
@@ -375,6 +429,7 @@ const USAGE = `annotations.mjs — read and write annotation fences
           [--kind ${annotationKinds().join("|")}] [--date YYYY-MM-DD]
   reply   --chapter <path#slug> --index <n> --author <who> --body <text> [--date YYYY-MM-DD]
   resolve --chapter <path#slug> --index <n> [--delete]
+  sweep   --chapter <path#slug> [--status ${annotationStatuses().join("|")}]
 
   --root <dir>   repository root (default: the working directory)`;
 
@@ -437,6 +492,20 @@ async function main(argv) {
                 delete: args.includes("--delete"),
             });
             console.log(`${result.swept ? "swept   " : "resolved"} ${result.path} #${result.index}`);
+            return 0;
+        }
+        case "sweep": {
+            const result = await sweep(repoRoot, address, {
+                status: optionValue(args, "--status") ?? "resolved",
+            });
+            for (const note of result.swept) {
+                console.log(`swept   ${result.path}#${note.chapter ?? ""} #${note.index} — ${note.author}, ${note.date}`);
+            }
+            console.log(
+                result.swept.length
+                    ? `${result.swept.length} note(s) swept, ${result.remaining} left. Review and commit it yourself.`
+                    : `Nothing to sweep — ${result.remaining} note(s) left, none of them resolved.`
+            );
             return 0;
         }
         default:

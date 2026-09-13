@@ -28,9 +28,12 @@ classDiagram
         +Reviewer reviewer
         +reviewAt
     }
-    class Finding {
-        +index
-        +line
+    class Annotation {
+        <<Devbook>>
+        +kind
+        +status
+        +author
+        +ordinal
     }
     class Reviewer {
         +handle
@@ -51,8 +54,9 @@ classDiagram
     }
 
     Chapter "1" --> "1" MetaBlock : carries
+    Chapter "1" --> "many" Annotation : carries in its body
     MetaBlock "1" --> "0..1" ChapterReview : holds under ext.devbook-collaboration
-    ChapterReview "1" --> "many" Finding : open-n
+    ChapterReview "1" ..> "many" Annotation : stands over the open ones
     ChapterReview --> Reviewer : names one
     ChapterReview --> ReviewState : is in
     Approval --> ChapterReview : clears
@@ -62,7 +66,7 @@ classDiagram
 
 ## Relationship notes
 
-- **The aggregate has no storage of its own.** `ChapterReview` is a projection of four keys in
+- **The aggregate has no storage of its own.** `ChapterReview` is a projection of three keys in
   a block another context owns, which is the whole design: it can ship a release without
   devbook shipping one, because devbook carries `ext.*` through untouched and has no opinion on
   what any of it means.
@@ -72,11 +76,12 @@ classDiagram
 - **`Approval` writes across the line and is therefore a service.** It is the one operation
   whose result is not a state of the aggregate — it deletes the aggregate and sets a field
   belonging to someone else, which is coordination rather than a transition.
-- **`Finding` is an entity keyed by its number.** The numbering is dense and starts at 1, so
-  removing one renumbers its successors; that is a cost accepted in exchange for a flat key
-  that can be deleted on its own.
-- **Nothing here associates with an [annotation](../devbook/domain.md#annotation), and that is
-  the open seam.** Devbook now ships a threaded fence with authors, replies, and quoted
-  passages, which is what a finding wanted to be. Until this context moves, a repository with
-  both installed has two places to leave a comment — see
-  [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).
+- **A [Finding](domain.md#finding) is an `Annotation`, and the association is a dependency
+  rather than a composition.** The fence hangs off the chapter, not off the review: it outlives
+  the pass that raised it, a person can write one with no review running, and this context
+  neither owns its shape nor sweeps it. What the review contributes is the reading — an open
+  `kind: question` is the one that blocks the approval decision.
+- **The seam that used to be open is closed.** Findings were flat `ext` keys until
+  2026-09-09; see [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md)
+  and [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md) for why the
+  sweep stayed with devbook.

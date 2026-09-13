@@ -1,7 +1,7 @@
 {
   "name": "devbook",
   "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, an opaque ext namespace a layered plugin keeps its own state in, and annotation fences that keep a review note in the chapter beside the passage it is about, compiled into derived _meta indexes and a reference-graph canvas. Ships bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling. Ships the shape and the check, never a flow: the delivery engine carries a chapter change and reads these rules from the repository.",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "author": {
     "name": "Job Schepers"
   },

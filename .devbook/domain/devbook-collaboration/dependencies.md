@@ -12,7 +12,8 @@ related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/doma
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
-| [Devbook](../devbook/dependencies.md) | Customer-Supplier, declared `devbook >=3.0.0 <4.0.0` | `ext.devbook-collaboration.*` keys in a chapter's own `meta` block | The [extension namespace](../plugin-authoring/domain.md#extension-namespace): keys carried through untouched, unvalidated, producing no edge | It has no store of its own. Every fact it remembers about a chapter is a key in that chapter, which is what lets it release without a devbook release. |
+| [Devbook](../devbook/dependencies.md) | Customer-Supplier, declared `devbook >=3.4.0 <4.0.0` | `ext.devbook-collaboration.*` keys in a chapter's own `meta` block | The [extension namespace](../plugin-authoring/domain.md#extension-namespace): keys carried through untouched, unvalidated, producing no edge | It has no store of its own. The state it remembers about a chapter is three keys in that chapter, which is what lets it release without a devbook release. |
+| [Devbook](../devbook/domain.md#annotation) | Conformist, for the whole device | Writes findings through `tools/devbook-meta/annotations.mjs` | The [annotation](../devbook/domain.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this context's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md). |
 | [Devbook](../devbook/domain.md#chapter) | Conformist, for one field | Writes `status: approved`, `approved-by`, `approved-at` directly | The shared `approved` rung and its two record fields | Approval is devbook's field and keeps devbook's meaning. This context runs the decision; it does not own the vocabulary. |
 | Plugin Authoring | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its install delivers, the `components.collaboration` stamp | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged, installed, and stamped like every other plugin here. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, and the two rule wrappers its install writes | Each host's own schemas | Its contract has to fire when either host opens a chapter, which only a materialized wrapper achieves. |
@@ -36,7 +37,10 @@ related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/doma
 - **Nothing declares this context.** It is above devbook in the layer order and below nothing,
   so no manifest anywhere names it — a repository that has not enabled it simply has no review
   state, and every chapter still reads correctly.
-- **One relationship is missing on purpose and is now out of date.** Devbook ships a threaded
-  annotation fence that does what a single-line finding was reaching for, and this context has
-  not moved to it. The migration is one pass; see
-  [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).
+- **Promotion to a work item is not here, and the Separate Ways row above is why.** A note that
+  has become tracked work should be promoted through `bindings["delivery.tracker"]`, but the
+  operations, their resolution order, and the key naming them are declared in `delivery`'s own
+  surface contract — a file this context may not point at. Restating it here is what the
+  Separate Ways relationship exists to prevent, so promotion belongs in `delivery` or in a
+  bridge allowed to name both. See
+  [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md).

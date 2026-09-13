@@ -1,7 +1,7 @@
 {
   "name": "devbook-collaboration",
-  "version": "0.4.0",
-  "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records findings and the reviewer's verdict, runs the approval decision that writes devbook's own approved rung, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. An L1 extension: every fact it remembers lives under ext.devbook-collaboration in the chapter's own meta block, so it adds no field to devbook's schema and needs no devbook release of its own. Ships devbook-collaboration:install, which puts its one rule in the repository so both hosts apply it on a matching read.",
+  "version": "0.5.0",
+  "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records each finding as a devbook annotation fence beside the passage it is about, runs the approval decision that writes devbook's own approved rung, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. An L1 extension: the state it remembers is three ext.devbook-collaboration keys in the chapter's own meta block, so it adds no field to devbook's schema and needs no devbook release of its own. Ships devbook-collaboration:install, which puts its one rule in the repository so both hosts apply it on a matching read.",
   "author": {
     "name": "Job Schepers"
   },
@@ -19,7 +19,7 @@
   "dependencies": [
     {
       "name": "devbook",
-      "version": ">=3.0.0 <4.0.0",
+      "version": ">=3.4.0 <4.0.0",
       "marketplace": "jsdotnet"
     }
   ]
