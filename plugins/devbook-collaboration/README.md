@@ -2,11 +2,13 @@
 
 Review, comment, and hand-off workflows over [devbook](../devbook) chapters.
 
-An L1 extension: it depends on `devbook` and nothing else, and every fact it
-remembers about a chapter lives under `ext.devbook-collaboration.*` in that
+An L1 extension: it depends on `devbook` and nothing else. The state it
+remembers about a chapter is three `ext.devbook-collaboration.*` keys in that
 chapter's own `meta` block — the opaque namespace devbook carries through
-untouched. It adds no field to devbook's schema and needs no devbook release of
-its own. The one thing it puts in a repository is its own rule, installed by
+untouched — and a finding is one of devbook's own `annotation` fences, beside
+the passage it is about. It adds no field to devbook's schema and needs no
+devbook release of its own. The one thing it puts in a repository is its own
+rule, installed by
 [`devbook-collaboration:install`](skills/install/SKILL.md) and stamped
 under `components.collaboration`.
 
@@ -27,9 +29,12 @@ owes the next move:
 | Skill | Who runs it | Leaves behind |
 |---|---|---|
 | `chapter-handoff` | The author | `review: requested` and the reviewer's name, plus a brief to send |
-| `chapter-review` | The reviewer | `review: changes-requested` with one `open-<n>` per finding, or `review: cleared` |
-| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state at all |
+| `chapter-review` | The reviewer | One annotation fence per finding, and `review: changes-requested`, or `review: cleared` with none open |
+| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state and no resolved note left on the chapter |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting |
+
+Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
+merges. It is devbook's, because the fence is.
 
 `devbook-collaboration:install` sits outside the pass: run it once when you enable the
 plugin, and again after an upgrade. It installs `rules/chapter-collaboration.md`
@@ -44,34 +49,40 @@ road to it.
 
 ## The state
 
+Three keys, and no fourth: a finding is not state.
+
 | Key | Value |
 |---|---|
 | `ext.devbook-collaboration.review` | `requested` · `changes-requested` · `cleared` |
 | `ext.devbook-collaboration.reviewer` | One handle, name, or role |
 | `ext.devbook-collaboration.review-at` | `YYYY-MM-DD` |
-| `ext.devbook-collaboration.open-<n>` | One unresolved finding, one line, numbered from 1 |
 
 ```meta
 status: draft
 ext.devbook-collaboration.review: changes-requested
 ext.devbook-collaboration.reviewer: @jsdotnet
 ext.devbook-collaboration.review-at: 2026-09-03
-ext.devbook-collaboration.open-1: The 30-day window in the refund rule table has no tests entry.
 ```
 
-The full contract — the three states, why a finding is one key rather than a
-list entry, and the rule that none of it is chapter content — is in
+## The findings
+
+One objection is one [annotation fence](../devbook/rules/devbook-annotations.md)
+in the chapter body, beside the passage it is about — devbook's own device, so
+this plugin adds nothing to reach it:
+
+```annotation
+kind: question
+author: @jsdotnet
+date: 2026-09-03
+quote: refunds are accepted within 30 days
+body: The 30-day window has no tests entry. Which test proves it?
+```
+
+`kind: question` is the one that blocks a decision: devbook reads an open
+question as *this chapter is not agreed*, whatever `status` says, and its check
+refuses an approval standing over one. Every write goes through devbook's
+`tools/devbook-meta/annotations.mjs`; nothing here writes a fence itself.
+
+The full contract — the three states, when a finding is a question rather than a
+remark, and the rule that none of it is chapter content — is in
 [`rules/chapter-collaboration.md`](rules/chapter-collaboration.md).
-
-## What this release does not do
-
-Comments are still single-line findings in `ext`, not threads — and as of
-devbook 3.1.0 that is several releases out of date. The
-[Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19)
-design puts a threaded `annotation` fence in devbook itself, with authors,
-replies, quoted passages, and a sweep, and [devbook has now shipped
-it](../devbook/rules/devbook-annotations.md). This plugin
-has not moved yet, so a repository with both installed has two places to leave
-a comment. The migration is one pass: every `open-<n>` becomes one fence with
-`body` set from the line and `author` unknown. See
-[the decision](../../.devbook/arc42/adr/8-comments-are-findings-until-the-fence-lands.md).

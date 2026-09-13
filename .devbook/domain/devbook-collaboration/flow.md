@@ -11,13 +11,13 @@ related: [".devbook/domain/devbook-collaboration/domain.md#chapter-review", ".de
 ## The Review Pass
 
 Four skills and three states, and every state names who owes the next move. The resting shape
-is no keys at all — this context's state exists in order to be cleared.
+is no keys and no open notes — this context's state exists in order to be cleared.
 
 ```mermaid
 stateDiagram-v2
     [*] --> NoState: chapter written
     NoState --> Requested: chapter-handoff, reviewer named
-    Requested --> ChangesRequested: chapter-review, one open-n per finding
+    Requested --> ChangesRequested: chapter-review, one annotation fence per finding
     Requested --> Cleared: chapter-review, nothing outstanding
     ChangesRequested --> Requested: author revises and hands back
     Cleared --> Requested: content changed again
@@ -33,8 +33,11 @@ stateDiagram-v2
 - **There is no `in-progress`.** A review nobody has recorded a verdict on is still
   `requested`; a fourth value would let a chapter sit in a state that obliges no one.
 - **Approval clears everything in one change.** The rung, `approved-by`, and `approved-at` go
-  in; every `ext.devbook-collaboration.` key comes out. A chapter that carries both is a
-  half-finished write, not a state.
+  in; every `ext.devbook-collaboration.` key comes out, and the chapter's resolved notes are
+  swept with them. A chapter that carries both is a half-finished write, not a state.
+- **An open question is the one thing that blocks the decision.** Devbook's check reports an
+  approval standing over one as an error, so `chapter-approve` refuses rather than warns. Every
+  other kind of note is weighed, not enforced.
 - **The exit is content change, not time.** An approval lapses because the chapter moved under
   it, which is why [Review Queue](domain.md#review-queue) reports staleness rather than the
   chapter claiming to be current.
@@ -54,14 +57,14 @@ sequenceDiagram
     C-->>R: the brief to send
     R->>C: chapter-review
     alt findings
-        C-->>A: review: changes-requested, open-1..n
+        C-->>A: review: changes-requested, with the open notes
         A->>C: revise, hand back
         C-->>R: review: requested
     else nothing outstanding
         C-->>P: review: cleared
     end
     P->>C: chapter-approve — a person, in this session
-    C-->>C: status approved, signed and dated, ext namespace cleared
+    C-->>C: status approved, signed and dated, namespace cleared, resolved notes swept
     Note over C: An approval is of what was read. Change the content and it comes off.
 ```
 

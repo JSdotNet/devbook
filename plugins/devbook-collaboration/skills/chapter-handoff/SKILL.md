@@ -37,8 +37,8 @@ asking for the fourth.
    ```
 
    Overwrite an existing request rather than adding a second — a chapter waits
-   on one reviewer. Leave any `open-<n>` from an earlier pass in place; a
-   finding is resolved by fixing it, not by handing the chapter on.
+   on one reviewer. Leave every open note from an earlier pass where it is; a
+   finding is resolved by answering it, not by handing the chapter on.
 
 4. **Build the brief** and give it to the user as the message to send. Four
    parts, in this order, and nothing else:
@@ -49,6 +49,7 @@ asking for the fourth.
    | What changed | The commits touching this chapter since its last `approved-at`, or since it was created |
    | Context to load | The chapters reachable in one step through `related` and `depends-on`, by address |
    | Evidence | The chapter's `tests` entries, and any claim in it that has none |
+   | Still open | Its open annotation fences, by ordinal, author, and body |
 
    Walk the graph for the third row; never search the folder.
 

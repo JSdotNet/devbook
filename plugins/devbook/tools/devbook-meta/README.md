@@ -93,7 +93,7 @@ followed, so a scoped graph stays about its own folder.
 | `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
-| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, plus a CLI over the same four functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. |
+| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
 | `build.mjs` | CLI wrapper: writes all three artifacts per scope, prints stats, exits non-zero on errors. |
 | `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs`, `field-scope.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, the four write operations, and the field-scope sub-rules. |
 
@@ -483,7 +483,7 @@ node, the approval gate showing the objections raised since `approved-at`.
         { "author": "claude/flow-arc42", "date": "2026-09-02", "body": "No second scan." }
       ],
       // Opaque: validated as a mapping of namespaces, never read into.
-      "ext": { "devbook-collaboration": { "finding": "open-1" } }
+      "ext": { "your-plugin": { "raised-in": "2026-09-02" } }
     }
   ]
 }
@@ -495,7 +495,7 @@ consumer never has to tell "no quote" from "an empty quote".
 A `resolved` thread is still listed. It lives for the rest of the branch so a
 reviewer sees the exchange in the pull request that raised it — the sweep is
 what removes it, not the generator. A note that never gets swept is the smell
-this index makes visible.
+this index makes visible; `devbook:annotation-sweep` is what removes it.
 
 ## Viewing
 

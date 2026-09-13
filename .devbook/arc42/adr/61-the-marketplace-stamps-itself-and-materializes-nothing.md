@@ -1,4 +1,4 @@
-# 59. The Marketplace Stamps Itself and Materializes Nothing
+# 61. The Marketplace Stamps Itself and Materializes Nothing
 
 ```meta
 date: 2026-09-09

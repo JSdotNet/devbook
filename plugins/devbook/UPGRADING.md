@@ -5,6 +5,20 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 3.4.0: the annotation sweep has an entry point
+
+**No migration; nothing you have breaks.** `--check` is unchanged and no schema field
+moved. What is new is the step the lifecycle already required and nothing implemented.
+
+- `annotations.mjs` gains `sweep --chapter <path#slug> [--status resolved]`, the bulk half
+  of `resolve --delete`. It takes every fence at one status and no other, bottom-up, and is
+  chapter-scoped like every other operation there — a resolved note under a subheading is
+  the subchapter's to sweep, not its parent's.
+- `devbook:annotation-sweep` is the skill that runs it: list what would go, show it, sweep,
+  and hand the commit back. Run it before a branch merges. Until now `resolved` notes
+  accumulated in chapters and in every diff, because the only deletion was one fence by
+  ordinal and nobody reached for it.
+
 ## 3.3.0: the validator checks where a field sits, not only what it says
 
 **No migration; `--check` may newly fail.** Four rules the folder rules already stated

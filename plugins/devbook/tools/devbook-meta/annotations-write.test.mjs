@@ -1,14 +1,14 @@
-// Exercises the four write operations against a throwaway fixture repository:
+// Exercises the five write operations against a throwaway fixture repository:
 // where `add` lands a note, that `reply` and `resolve` splice into the fence
 // already there rather than reserializing it, that a swept note leaves no
-// trace behind, and that an ordinal means the same thing to all four once a
-// chapter has subchapters. Every case re-lints the written file, because a
-// writer that produces something `--check` rejects is the failure that
-// matters.
+// trace behind, that `sweep` takes every resolved fence and no open one, and
+// that an ordinal means the same thing to all of them once a chapter has
+// subchapters. Every case re-lints the written file, because a writer that
+// produces something `--check` rejects is the failure that matters.
 import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { add, reply, resolve, list } from "./annotations.mjs";
+import { add, reply, resolve, sweep, list } from "./annotations.mjs";
 import { validateDocument } from "./metadata.mjs";
 
 const FENCE = "```";
@@ -37,8 +37,8 @@ const SOURCE = [
     "quote: one indexed range read",
     "body: An existing thread.",
     "ext:",
-    "  devbook-collaboration:",
-    "    finding: open-1",
+    "  your-plugin:",
+    "    raised-in: 2026-09-02",
     FENCE,
     "",
 ].join("\n");
@@ -111,7 +111,7 @@ await run("reply", async (root) => {
     const [thread] = await list(root, ADDRESS);
     check(thread.replies?.length === 1, "reply: the thread gained one reply", JSON.stringify(thread.replies));
     check(
-        thread.ext?.["devbook-collaboration"]?.finding === "open-1",
+        thread.ext?.["your-plugin"]?.["raised-in"] === "2026-09-02",
         "reply: splicing left the ext namespace untouched",
         JSON.stringify(thread.ext)
     );
@@ -333,6 +333,139 @@ await run(
         check(
             markdown.includes("A note on Foo.") && markdown.includes("A note on Bar."),
             "resolve: nothing was swept"
+        );
+    },
+    nested()
+);
+
+// --- Sweep -----------------------------------------------------------------
+//
+// `resolve --delete` closes one loop by ordinal; the sweep closes the branch's.
+// It must take every resolved fence in one pass and leave every open one where
+// it was — which only holds if it deletes bottom-up, since removing a fence
+// moves every line after it.
+
+/** Three notes on one passage: resolved, open, resolved. */
+const mixed = [
+    "# Building Block View",
+    "",
+    FENCE + "meta",
+    "status: draft",
+    FENCE,
+    "",
+    "## Devbook Meta",
+    "",
+    FENCE + "meta",
+    "status: draft",
+    FENCE,
+    "",
+    "The outline is one indexed range read.",
+    "",
+    FENCE + "annotation",
+    "status: resolved",
+    "author: jobsc",
+    "date: 2026-09-02",
+    "body: First, answered.",
+    FENCE,
+    "",
+    FENCE + "annotation",
+    "kind: question",
+    "author: jobsc",
+    "date: 2026-09-02",
+    "body: Second, still open.",
+    FENCE,
+    "",
+    FENCE + "annotation",
+    "status: resolved",
+    "author: claude",
+    "date: 2026-09-03",
+    "body: Third, answered.",
+    FENCE,
+    "",
+].join("\n");
+
+await run(
+    "sweep",
+    async (root) => {
+        const result = await sweep(root, ADDRESS);
+        check(result.swept.length === 2, "sweep: it took both resolved notes", String(result.swept.length));
+        check(result.remaining === 1, "sweep: it reports what it left", String(result.remaining));
+        const threads = await list(root, ADDRESS);
+        check(
+            threads.length === 1 && threads[0].body === "Second, still open.",
+            "sweep: the open note between two resolved ones survives intact",
+            JSON.stringify(threads.map((thread) => thread.body))
+        );
+        check(threads[0].index === 1, "sweep: what is left renumbers from one", String(threads[0].index));
+        const markdown = await readFile(path.join(root, REL), "utf8");
+        check(!markdown.includes("answered."), "sweep: no resolved fence left behind");
+        check(
+            markdown.includes("The outline is one indexed range read."),
+            "sweep: it took no prose with it"
+        );
+    },
+    mixed
+);
+
+await run(
+    "sweep twice",
+    async (root) => {
+        await sweep(root, ADDRESS);
+        const again = await sweep(root, ADDRESS);
+        check(
+            again.swept.length === 0 && again.remaining === 1,
+            "sweep: a second pass is a no-op",
+            JSON.stringify(again)
+        );
+    },
+    mixed
+);
+
+await run("sweep with nothing resolved", async (root) => {
+    const result = await sweep(root, ADDRESS);
+    check(result.swept.length === 0, "sweep: an open-only chapter loses nothing", String(result.swept.length));
+    const threads = await list(root, ADDRESS);
+    check(threads.length === 1, "sweep: the open note is still there", String(threads.length));
+});
+
+await run("sweep an unknown status", async (root) => {
+    let threw = false;
+    try {
+        await sweep(root, ADDRESS, { status: "closed" });
+    } catch {
+        threw = true;
+    }
+    check(threw, "sweep: a status outside the closed set refuses rather than deleting nothing quietly");
+});
+
+await run(
+    "sweep is chapter-scoped",
+    async (root) => {
+        await resolve(root, FOO, 1);
+        await resolve(root, BAR, 1);
+        const result = await sweep(root, FOO);
+        check(result.swept.length === 1, "sweep: the parent address took one note", String(result.swept.length));
+        const markdown = await readFile(path.join(root, REL), "utf8");
+        check(!markdown.includes("A note on Foo."), "sweep: the parent's own resolved note is gone");
+        check(
+            markdown.includes("A note on Bar."),
+            "sweep: a resolved note under a subheading is the subchapter's to sweep"
+        );
+    },
+    nested()
+);
+
+await run(
+    "sweep a file address",
+    async (root) => {
+        await resolve(root, FOO, 1);
+        await resolve(root, BAR, 1);
+        const result = await sweep(root, REL);
+        check(result.swept.length === 2, "sweep: a file address sweeps every chapter in it", String(result.swept.length));
+        const markdown = await readFile(path.join(root, REL), "utf8");
+        check(
+            !markdown.includes("A note on Foo.") && !markdown.includes("A note on Bar."),
+            "sweep: both notes are gone"
         );
     },
     nested()

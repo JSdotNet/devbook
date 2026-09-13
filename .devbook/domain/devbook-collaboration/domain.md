@@ -9,13 +9,14 @@ related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc4
 What this context is responsible for: that a chapter always says who owes the next move, and
 that an approval on it was chosen by a person in the session that wrote it.
 
-Inside the boundary: the review request, the reviewer, the findings that are still open, the
-verdict, the approval decision, and the sweep that reports what is waiting on whom.
+Inside the boundary: the review request, the reviewer, the verdict, the approval decision, and
+the sweep that reports what is waiting on whom.
 
-Outside it: what a chapter says, what its folder's rules are, and the schema the state is
-stored in — all [Devbook](../devbook/domain.md)'s. This context adds no field to that schema
-and needs no release of it: everything it remembers lives in the `ext` namespace devbook
-reserves and never interprets.
+Outside it: what a chapter says, what its folder's rules are, the schema the state is stored
+in, and the [annotation](../devbook/domain.md#annotation) a finding is written as — all
+[Devbook](../devbook/domain.md)'s. This context adds no field to that schema and needs no
+release of it: the state it remembers lives in the `ext` namespace devbook reserves and never
+interprets, and a finding lives in devbook's own device.
 
 ## Chapter Review
 
@@ -24,10 +25,11 @@ type: aggregate
 related: [".devbook/domain/devbook-collaboration/domain.md#review-pass", ".devbook/domain/devbook/domain.md#meta-block"]
 ```
 
-One chapter's position in a review, held entirely in `ext.devbook-collaboration.*` keys inside
-that chapter's own block. It is the consistency boundary because those keys are only ever
-consistent together: a state without a reviewer says nobody owes anything, and a reviewer
-without findings after `changes-requested` says the review was never written down.
+One chapter's position in a review, held in three `ext.devbook-collaboration.*` keys inside
+that chapter's own block, over the notes in the chapter body. It is the consistency boundary
+because the keys are only ever consistent together and against those notes: a state without a
+reviewer says nobody owes anything, and `changes-requested` over no open note says the review
+was never written down.
 
 Its lifecycle is deliberately short. The state exists to be cleared — an approved chapter
 carries the decision and not the road to it — so the resting shape of a chapter in this context
@@ -39,9 +41,10 @@ is no keys at all.
 |---|---|---|
 | Every remembered fact lives under `ext.devbook-collaboration.`, and this context writes no other field except devbook's `approved` rung | all mutations | untested |
 | A chapter in `requested` or `changes-requested` names exactly one reviewer | `chapter-handoff()`, `chapter-review()` | untested |
-| A `changes-requested` verdict carries at least one `open-<n>` finding | `chapter-review()` | untested |
-| Findings are numbered from 1 with no gaps, one line each | `chapter-review()` | untested |
-| Approval clears every key in this namespace in the same change that writes the rung | `chapter-approve()` | untested |
+| A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | `chapter-review()` | untested |
+| A finding is written through devbook's `annotations.mjs` and never as a key here | `chapter-review()`, `chapter-approve()` | untested |
+| Approval clears every key in this namespace, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()` | untested |
+| No chapter is approved over an open `kind: question` note | `chapter-approve()` | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | No skill here writes `approved` without a person choosing it in that session | `chapter-approve()` | untested |
 | Review state is never read as chapter content | convention | open — the rule is installed into the repository; nothing checks a reader obeyed it |
 
@@ -49,16 +52,24 @@ is no keys at all.
 
 ```meta
 type: entity
-aliases: [open-n, comment, objection]
+aliases: [note, comment, objection]
+related: [".devbook/domain/devbook/domain.md#annotation"]
 ```
 
-One unresolved objection, as one key — `open-1`, `open-2` — rather than an entry in a list. It
-has identity within the review because it is resolved individually, and the flat key is what
-lets it be removed without rewriting its siblings, in a block grammar that has no nesting.
+One unresolved objection, as one
+[annotation](../devbook/domain.md#annotation) fence in the chapter body — devbook's device,
+not this context's. It has identity within the review because it is answered individually, and
+it is addressed the way devbook addresses a note: the chapter, plus its ordinal under that
+heading.
 
-One line is the whole budget. A finding that needs a paragraph is a review comment about the
-chapter's content, and belongs in an [annotation](../devbook/domain.md#annotation) beside the
-passage it is about.
+This context reads a finding and writes one; it owns neither the shape nor the lifecycle. What
+it adds is the reading: an open `kind: question` is a hole in the chapter and blocks the
+approval decision, while a `comment`, `suggestion`, or `flag` is a remark about a chapter that
+stands.
+
+It was one flat `ext` key until 2026-09-09, which recorded no author, could not be replied to
+in place, and never said which passage it was about. See
+[the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).
 
 ### Reviewer
 
