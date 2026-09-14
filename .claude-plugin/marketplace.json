@@ -1,6 +1,6 @@
 {
   "name": "jsdotnet",
-  "description": "The jsdotnet plugin marketplace: the devbook convention and the delivery flow, as agents, skills, instruction files, and hooks authored once and read by both Claude Code and GitHub Copilot.",
+  "description": "The jsdotnet plugin marketplace: the devbook convention and the delivery flow, as agents, skills, instruction files, hooks, and MCP servers authored once and read by both Claude Code and GitHub Copilot.",
   "owner": {
     "name": "Job Schepers",
     "url": "https://github.com/JSdotNet"
