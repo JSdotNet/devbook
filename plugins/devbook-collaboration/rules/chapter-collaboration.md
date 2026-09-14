@@ -36,7 +36,10 @@ Write `kind: question` when the chapter cannot be judged until somebody answers
 — devbook treats an open question as *this chapter is not agreed*, whatever
 `status` says, and its check refuses an approval standing over one. Anything
 else is `suggestion`, `flag`, or plain `comment`, and none of those blocks a
-decision.
+decision. `flag` is the one the approver reads first: the gate shows open notes
+flags-first, and on an approved chapter names each note dated after
+`approved-at` as raised since the approval — a reason to lift the rung, never a
+refusal.
 
 Findings were `ext.devbook-collaboration.open-<n>` keys until this plugin's
 0.5.0. That spelling is gone: it had no author, no thread, and no passage.

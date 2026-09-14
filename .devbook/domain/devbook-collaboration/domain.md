@@ -45,6 +45,7 @@ is no keys at all.
 | A finding is written through devbook's `annotations.mjs` and never as a key here | `chapter-review()`, `chapter-approve()` | untested |
 | Approval clears every key in this namespace, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()` | untested |
 | No chapter is approved over an open `kind: question` note | `chapter-approve()` | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| The gate shows every open note on the chapter, from the chapter itself, before the decision is asked | `chapter-approve()` | untested |
 | No skill here writes `approved` without a person choosing it in that session | `chapter-approve()` | untested |
 | Review state is never read as chapter content | convention | open — the rule is installed into the repository; nothing checks a reader obeyed it |
 
@@ -53,7 +54,7 @@ is no keys at all.
 ```meta
 type: entity
 aliases: [note, comment, objection]
-related: [".devbook/domain/devbook/domain.md#annotation"]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md"]
 ```
 
 One unresolved objection, as one
@@ -65,7 +66,10 @@ heading.
 This context reads a finding and writes one; it owns neither the shape nor the lifecycle. What
 it adds is the reading: an open `kind: question` is a hole in the chapter and blocks the
 approval decision, while a `comment`, `suggestion`, or `flag` is a remark about a chapter that
-stands.
+stands. Among the remarks a `flag` is read first, and a note dated after the chapter's
+`approved-at` is read as raised since the approval — an objection the approval never saw, and a
+reason to lift it. Neither reading blocks; see
+[the decision](../../arc42/adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md).
 
 It was one flat `ext` key until 2026-09-09, which recorded no author, could not be replied to
 in place, and never said which passage it was about. See
@@ -98,7 +102,7 @@ state that obliges no one.
 ```meta
 type: domain-service
 aliases: [sign-off, agreed]
-related: [".devbook/arc42/adr/7-approved-is-a-status-rung.md"]
+related: [".devbook/arc42/adr/7-approved-is-a-status-rung.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md"]
 ```
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,
@@ -112,6 +116,12 @@ strength of a conversation a later session cannot read.
 The behaviour does not live on the [Chapter Review](#chapter-review) aggregate because its
 output leaves that aggregate entirely: the review state is deleted and a devbook field is set,
 which is a coordination across two owners rather than a transition of one.
+
+It lives in this context and not in the flow engine because it writes the rung it decides, and
+the engine reads that rung and never writes it. It reads the chapter, not the derived index:
+every fact the decision needs is in the one file it is already showing, and the index is
+refreshed on a schedule, so the note written on this branch an hour ago is the one it lacks.
+See [the decision](../../arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md).
 
 ## Review Queue
 

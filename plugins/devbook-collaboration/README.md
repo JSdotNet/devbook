@@ -30,8 +30,8 @@ owes the next move:
 |---|---|---|
 | `chapter-handoff` | The author | `review: requested` and the reviewer's name, plus a brief to send |
 | `chapter-review` | The reviewer | One annotation fence per finding, and `review: changes-requested`, or `review: cleared` with none open |
-| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state and no resolved note left on the chapter |
-| `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting |
+| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state and no resolved note left on the chapter. Or, on an approval a person will not let stand over what was raised since it, the rung lifted and `review: changes-requested` |
+| `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting — including an approval objected to since it was signed |
 
 Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
 merges. It is devbook's, because the fence is.
@@ -80,8 +80,13 @@ body: The 30-day window has no tests entry. Which test proves it?
 
 `kind: question` is the one that blocks a decision: devbook reads an open
 question as *this chapter is not agreed*, whatever `status` says, and its check
-refuses an approval standing over one. Every write goes through devbook's
-`tools/devbook-meta/annotations.mjs`; nothing here writes a fence itself.
+refuses an approval standing over one. `kind: flag` is the one the approver
+reads first: the gate shows open notes flags-first and, on a chapter already
+approved, names every note dated after `approved-at` as raised since the
+approval — a reason to lift it, never a block. Every write goes through
+devbook's `tools/devbook-meta/annotations.mjs`; nothing here writes a fence
+itself, and the gate reads the chapter rather than the derived index, so a note
+written on the branch a minute ago is already in front of the person.
 
 The full contract — the three states, when a finding is a question rather than a
 remark, and the rule that none of it is chapter content — is in

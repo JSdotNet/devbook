@@ -39,6 +39,7 @@ chapter that never appears in the queue.
    |---|---|---|
    | Approved over a question | `status: approved` with an open `kind: question` note | Whoever approved it |
    | Stale approval | `status: approved` and the chapter's content changed after `approved-at` | Whoever approved it |
+   | Objected to since approval | `status: approved` with an open note dated after `approved-at` | Whoever approved it |
    | Changes requested | `review: changes-requested` | The author |
    | Awaiting review | `review: requested` | `reviewer` |
    | Awaiting approval | `review: cleared` | Whoever approves |
@@ -53,12 +54,13 @@ chapter that never appears in the queue.
 
 4. **Report the queue** grouped by who owes the next move, each row carrying the
    chapter address, how long it has been waiting, and its open notes verbatim
-   when it has any. Order the groups by the table above — an approval standing
-   over an open question, and then a stale one, are claims the repository is
-   currently making and getting wrong, which outrank work that is merely waiting.
+   when it has any, flags first. Order the groups by the table above — an
+   approval standing over an open question, a stale one, and one objected to
+   since it was signed are claims the repository is currently making and
+   getting wrong, which outrank work that is merely waiting.
 
 5. **Stop.** Offer the next move — `chapter-review` for an awaiting-review row,
-   `chapter-approve` for an awaiting-approval or stale row,
+   `chapter-approve` for an awaiting-approval, stale, or objected-to row,
    `devbook:annotation-sweep` for a chapter with notes to sweep — and let the
    user pick one.
 
