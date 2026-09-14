@@ -5,8 +5,11 @@ number: 1
 related: [".devbook/domain/context-map.md#plugin-authoring"]
 ```
 
-ai-agent-stack packages the devbook and delivery flow — the agents, skills, instruction files,
-and hooks that do the work — as plugins served from one marketplace, `jsdotnet`.
+This repository, `devbook`, packages the devbook convention and the delivery flow — the agents,
+skills, instruction files, and hooks that do the work — as plugins served from one
+marketplace, `jsdotnet`. The repository is named for the convention that every plugin here
+reads from or writes into; the marketplace name is a separate key, kept apart on purpose in
+[record 65](adr/65-the-repository-is-named-devbook.md).
 
 ## Quality Goals
 

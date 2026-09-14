@@ -6,7 +6,7 @@ review-ready change — delivery in the continuous-delivery sense, stopping shor
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `delivery` with `/plugin`. During development, add this working copy by path

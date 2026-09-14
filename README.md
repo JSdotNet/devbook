@@ -1,11 +1,11 @@
-# ai-agent-stack
+# devbook
 
 The `jsdotnet` plugin marketplace for Claude Code and GitHub Copilot: the devbook
 convention and the delivery flow, as agents, skills, instruction files, hooks, and MCP servers
 authored once and loaded by both hosts.
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then `/plugin` and enable what you need. Every plugin installs on its own; the ones that need

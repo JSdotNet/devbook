@@ -8,7 +8,7 @@ CI check that keeps references honest.
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `devbook` with `/plugin`. During development, add this working copy by

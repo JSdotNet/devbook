@@ -12,7 +12,7 @@ never a capability.
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `delivery-surface-dashboard` with `/plugin`. Nothing else is required: the server

@@ -29,7 +29,7 @@ ecosystem is pointing, and that pairs with `AGENTS.md` at the root.
 **A plugin cannot ship rules.** There is no rules component and no `rules` key in
 `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
 ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything here
-is repository-scoped: it serves people working **in** `ai-agent-stack`, never someone who
+is repository-scoped: it serves people working **in** this repository, never someone who
 installed a plugin from it.
 
 A plugin instruction file is authored in the same host-neutral shape all the same — `name`,

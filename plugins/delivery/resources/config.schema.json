@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/JSdotNet/ai-agent-stack/plugins/delivery/resources/config.schema.json",
+  "$id": "https://github.com/JSdotNet/devbook/plugins/delivery/resources/config.schema.json",
   "title": "config.json — delivery-owned keys",
   "description": "The four top-level keys the delivery engine owns in .devbook/config.json. Other components own their own entry under `components` and are not described here.",
   "type": "object",

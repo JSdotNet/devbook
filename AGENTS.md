@@ -1,4 +1,4 @@
-# ai-agent-stack
+# devbook
 
 A Claude Code plugin marketplace named `jsdotnet`: the agents, skills, instructions, and hooks
 that drive delivery work. One folder per plugin under `plugins/`, each installable on its own.
@@ -141,7 +141,7 @@ behaviour.
 ## Trying a change
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 During development, add this working copy by path instead of by repo, then `/plugin` to enable

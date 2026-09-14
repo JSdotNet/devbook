@@ -12,7 +12,7 @@ catalog serves either host — the scheduler is resolved from the live tool list
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Enable `delivery-schedule` with `/plugin` — the host installs `delivery` with it — then run
