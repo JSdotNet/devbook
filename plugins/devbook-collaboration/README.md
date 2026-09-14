@@ -15,7 +15,7 @@ under `components.collaboration`.
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `devbook-collaboration` with `/plugin`. `devbook` is a declared

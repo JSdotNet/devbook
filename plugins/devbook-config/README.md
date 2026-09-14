@@ -11,7 +11,7 @@ empty, `devbook` included. See
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `devbook-config` with `/plugin`. During development, add this working copy by path

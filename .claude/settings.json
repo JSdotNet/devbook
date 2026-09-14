@@ -6,7 +6,7 @@
     "jsdotnet": {
       "source": {
         "source": "github",
-        "repo": "JSdotNet/ai-agent-stack"
+        "repo": "JSdotNet/devbook"
       }
     }
   },

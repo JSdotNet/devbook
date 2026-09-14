@@ -10,7 +10,7 @@ records.
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `delivery-surface-collector` with `/plugin`. Plain Node, no npm dependencies, no

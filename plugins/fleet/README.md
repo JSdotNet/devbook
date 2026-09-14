@@ -7,7 +7,7 @@ it.
 ## Installation
 
 ```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
+claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `fleet` with `/plugin`. It declares a hard dependency on `delivery`, so enabling it
