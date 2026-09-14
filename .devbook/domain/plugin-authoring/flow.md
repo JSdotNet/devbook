@@ -25,7 +25,7 @@ flowchart LR
     declare --> list["List in marketplace.json"]
     list --> check["Validate the shape"]
     check -->|shape rejected| write
-    check -->|clean| install["Host installs by plugin@jsdotnet"]
+    check -->|clean| install["Host installs by plugin@jsdotnet-devbook"]
     install --> claude["Claude Code loads it"]
     install --> copilot["Copilot loads it"]
 ```

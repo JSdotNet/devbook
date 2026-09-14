@@ -3,7 +3,7 @@
     "deny": ["Read(_meta/**)"]
   },
   "extraKnownMarketplaces": {
-    "jsdotnet": {
+    "jsdotnet-devbook": {
       "source": {
         "source": "github",
         "repo": "JSdotNet/devbook"
@@ -11,9 +11,9 @@
     }
   },
   "enabledPlugins": {
-    "devbook@jsdotnet": true,
-    "delivery@jsdotnet": true,
-    "delivery-schedule@jsdotnet": true,
-    "devbook-config@jsdotnet": true
+    "devbook@jsdotnet-devbook": true,
+    "delivery@jsdotnet-devbook": true,
+    "delivery-schedule@jsdotnet-devbook": true,
+    "devbook-config@jsdotnet-devbook": true
   }
 }
