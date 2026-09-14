@@ -89,9 +89,9 @@ relationship that exists in the assets and in no manifest.
 | Upstream | Downstream | Pattern | Declared |
 |---|---|---|---|
 | Plugin Authoring | every context | Shared Kernel | No — it is the vocabulary, not a plugin |
-| Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=3.0.0 <4.0.0` |
-| Delivery | Fleet | Customer/Supplier | Yes, `delivery >=2.0.0 <3.0.0` |
-| Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=2.0.0 <3.0.0` |
+| Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
+| Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | Devbook | Delivery Schedule | Separate Ways | No — `devbook-check` and `devbook-tech-update` are named as targets and skipped when absent |
 | Devbook | Delivery | **Undeclared** | No, and it should be — see [debt record 4](../arc42/tdr/4-delivery-depends-on-devbook.md) |

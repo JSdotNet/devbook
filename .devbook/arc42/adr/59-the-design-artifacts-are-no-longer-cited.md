@@ -15,7 +15,7 @@ right*, and by now that instruction is unsafe in both directions.
 
 **Half the set is behind the repository, not ahead of it.** *Knowledge Base Internals 2.0*
 describes six folders and a `.backlog` status ladder that
-[migration `006-drop-backlog`](../../../plugins/devbook/migrations/006-drop-backlog/MIGRATION.md)
+migration `006-drop-backlog`
 removed at contract version 6, together with the `implements` field only those chapters
 carried. *The Rename Wave* describes `claude-desktop`, `copilot-app`, and a `devbook-flows`
 bridge that [17](17-no-host-profile-plugins.md) and [34](34-flows-belong-to-delivery.md)

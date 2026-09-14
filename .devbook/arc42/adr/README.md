@@ -113,6 +113,7 @@ later reversed is the part a reader most needs.
 | [61. The Marketplace Stamps Itself and Materializes Nothing](61-the-marketplace-stamps-itself-and-materializes-nothing.md) | 2026-09-09 |
 | [62. The Chapter Gate Is devbook-collaboration's, and It Reads the Chapter](62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md) | 2026-09-14 |
 | [63. An Open flag Is Shown at the Gate and Never Blocks It](63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md) | 2026-09-14 |
+| [64. 1.0.0 Is the First Release](64-1-0-0-is-the-first-release.md) | 2026-09-14 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

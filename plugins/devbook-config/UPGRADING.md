@@ -1,4 +1,4 @@
-# Upgrading devbook-collaboration
+# Upgrading devbook-config
 
 Behaviour changes a consumer would notice, newest first.
 

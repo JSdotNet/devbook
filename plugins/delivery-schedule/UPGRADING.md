@@ -1,4 +1,4 @@
-# Upgrading devbook-collaboration
+# Upgrading delivery-schedule
 
 Behaviour changes a consumer would notice, newest first.
 
