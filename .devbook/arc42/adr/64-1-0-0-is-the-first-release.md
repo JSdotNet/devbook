@@ -48,6 +48,19 @@ had done to it; here it described three no-ops recorded on the day the stamp was
 an entry pointing at a migration the plugin no longer ships is the one thing a ledger must not
 hold.
 
+**The deletion's argument expires at the first install, so the obligation starts at 1.0.0.**
+The three migrations could go because no repository was in a state they moved away from. That
+holds until the first consumer — Finance is the one expected — runs `devbook:install`; from
+that stamp onward, a change to a chapter schema, a stamp shape, a config key, or a path the
+install writes leaves a repository behind unless a script moves it. So from this baseline such
+a change ships its migration in the same commit as the change that needs it, never in a later
+one and never as a note in `UPGRADING.md` asking each consumer to edit by hand. Which changes
+owe one and which do not — an additive field with a safe default, a renamed or removed field,
+a materialized file reconcile would otherwise report as customized — is stated once, in
+`AGENTS.md` under *When a change ships a migration*, and this record does not repeat the three
+cases. The two halves are one decision: a history nobody lived through is collapsed exactly
+once, and the reason that was safe is the reason it is never safe again.
+
 Records and debt entries that name the three ids or a pre-release version — 25, 35, 39, 56, 59,
 [debt 3](../tdr/3-devbook-rename-has-no-migration.md), [debt 4](../tdr/4-delivery-depends-on-devbook.md)
 among them — describe the history as it was argued and stay as written. [Record 59](59-the-design-artifacts-are-no-longer-cited.md)
