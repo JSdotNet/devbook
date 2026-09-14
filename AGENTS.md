@@ -76,6 +76,33 @@ plugins/<name>/
 A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`, `source`
 (`./plugins/<name>`), `description`, `version` — or Claude Code will not offer it.
 
+### When a change ships a migration
+
+From 1.0.0 onward, a change to a devbook chapter schema, a stamp shape, a `.devbook/config.json`
+key, or a path `devbook:install` writes ships its migration in the same commit as the change,
+under `migrations/<version>-<slug>/` of the plugin that owns it: a `MIGRATION.md` beside an
+idempotent `migrate.mjs` whose `--check` exits `1` while work remains. The ledger it lands
+in, the `not-applicable` result, and the rule that a shipped id is never invented, renamed, or
+removed are in `plugins/devbook/assets/reconcile-protocol.md`; the folder shape and numbering
+are in `plugins/devbook/README.md` under *Migrations*. Neither is repeated here.
+
+Three cases decide whether one is owed:
+
+- An added field with a safe default — a chapter, stamp, or config that omits it still
+  validates and reads as before — needs no migration. Note it in `UPGRADING.md` and stop.
+- A renamed or removed field always needs one, in a chapter `meta` block, the stamp, or a
+  config key alike: every repository holding the old spelling is broken until a script rewrites
+  it, and a prose note asking each one to do so by hand is not a migration.
+- A change to what `devbook:install` materializes — a path, a marker, a rendered section, a
+  workflow — needs one whenever an already-installed repository would otherwise keep the stale
+  file. Reconcile replaces only a copy that still hashes to a release devbook shipped, and
+  never deletes: a moved path leaves the old copy behind as an orphan, and a copy edited since
+  it landed is reported as customized and left alone. Either way the file is stale until a
+  script moves it. A file reconcile would replace on its own needs none.
+
+The reason this obligation starts at 1.0.0 and not before is
+`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
+
 ## Where the rest of the rules are
 
 A rule that applies to one kind of file is authored once in `.agents/rules/` and wrapped per

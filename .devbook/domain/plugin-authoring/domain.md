@@ -417,6 +417,7 @@ Presence in a repository's ledger decides whether a migration runs, never a comp
 version numbers, which is what makes re-running one safe. A prose migration note is not a
 migration — it does not run, so it becomes an unbounded manual chore in every consuming
 repository.
+Which changes owe one is decided once, in `AGENTS.md` under *When a change ships a migration*.
 
 ### MCP Server
 
