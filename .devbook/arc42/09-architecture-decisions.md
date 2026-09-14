@@ -24,7 +24,7 @@ decision is superseded.
 
 | Record | Taken | In one line |
 | --- | --- | --- |
-| [1. Marketplace Named jsdotnet](adr/1-marketplace-named-jsdotnet.md) | 2026-09-02 | The marketplace is `jsdotnet`, not `jsdotnet-copilot`, and is never renamed after release — the name is a per-machine primary key. |
+| [1. Marketplace Named jsdotnet](adr/1-marketplace-named-jsdotnet.md) | 2026-09-02 | The marketplace is `jsdotnet`, not `jsdotnet-copilot`, and is never renamed after release — the name is a per-machine primary key. Superseded by record 66 on the name; the warning stands. |
 | [2. One Folder Per Plugin](adr/2-one-folder-per-plugin.md) | 2026-09-02 | Every plugin is self-contained under `plugins/<name>/` and either works alone or declares what it needs; dependency, bridge, and surface are the only three ways to couple. |
 | [3. One Authored Copy Per Asset](adr/3-one-authored-copy-per-asset.md) | 2026-09-02 | An asset is written once and read by both hosts, and the cost of that is paid inside the authored file. |
 | [4. No Generated Sync Layer](adr/4-no-generated-sync-layer.md) | 2026-09-02 | The generator that derived the Claude files from the Copilot ones was written, verified, and dropped; both manifests are hand-authored. |
@@ -89,6 +89,7 @@ decision is superseded.
 | [63. An Open flag Is Shown at the Gate and Never Blocks It](adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md) | 2026-09-14 | `kind: flag` gets its reader: shown first among the remarks, and named as raised since the approval when it postdates `approved-at` — a reason to lift the rung, never a block, because only devbook's own open question outranks `status`. |
 | [64. 1.0.0 Is the First Release](adr/64-1-0-0-is-the-first-release.md) | 2026-09-14 | Every plugin is `1.0.0` and the pre-release migrations are deleted: no consumer installed under the old numbers, so the spread recorded merge order and nothing else — and because that argument expires at the first install, from this baseline every schema, stamp, config-key, or materialized-path change ships its migration in the same commit. |
 | [65. The Repository Is Named devbook](adr/65-the-repository-is-named-devbook.md) | 2026-09-14 | `JSdotNet/ai-agent-stack` becomes `JSdotNet/devbook`: the old name described the stack before the specialists left, the repository name is a separate key from the frozen marketplace name `jsdotnet`, and GitHub redirects the old one — cheap only before the first install by name, which is why it is done now. |
+| [66. The Marketplace Is Named jsdotnet-devbook](adr/66-the-marketplace-is-named-jsdotnet-devbook.md) | 2026-09-14 | `jsdotnet` becomes `jsdotnet-devbook` under the rule `jsdotnet-<repository>`, shared with `jsdotnet-ai-plugins`: the bare name only said "not Copilot" while it stood alone, and the rename costs one machine and two plugins today. Supersedes record 1's choice of name; keeps its warning. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both

@@ -1,6 +1,6 @@
 # devbook
 
-A Claude Code plugin marketplace named `jsdotnet`: the agents, skills, instructions, and hooks
+A Claude Code plugin marketplace named `jsdotnet-devbook`: the agents, skills, instructions, and hooks
 that drive delivery work. One folder per plugin under `plugins/`, each installable on its own.
 
 Assets are authored once and loaded by both Claude Code and GitHub Copilot — both hosts ignore

@@ -1,6 +1,6 @@
 # devbook
 
-The `jsdotnet` plugin marketplace for Claude Code and GitHub Copilot: the devbook
+The `jsdotnet-devbook` plugin marketplace for Claude Code and GitHub Copilot: the devbook
 convention and the delivery flow, as agents, skills, instruction files, hooks, and MCP servers
 authored once and loaded by both hosts.
 

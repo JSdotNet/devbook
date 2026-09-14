@@ -49,7 +49,7 @@ related: [".devbook/arc42/adr/1-marketplace-named-jsdotnet.md"]
 A repository that offers plugins for installation, identified by the `name` in
 `.claude-plugin/marketplace.json`. That name is the local primary key: a host keys its
 registry, its cache, and every `plugin@marketplace` reference by it, so two marketplaces one
-user has added may not share a name. This repository's marketplace is `jsdotnet`.
+user has added may not share a name. This repository's marketplace is `jsdotnet-devbook`.
 
 ### Plugin
 

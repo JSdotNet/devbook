@@ -115,8 +115,12 @@ later reversed is the part a reader most needs.
 | [63. An Open flag Is Shown at the Gate and Never Blocks It](63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md) | 2026-09-14 |
 | [64. 1.0.0 Is the First Release](64-1-0-0-is-the-first-release.md) | 2026-09-14 |
 | [65. The Repository Is Named devbook](65-the-repository-is-named-devbook.md) | 2026-09-14 |
+| [66. The Marketplace Is Named jsdotnet-devbook](66-the-marketplace-is-named-jsdotnet-devbook.md) | 2026-09-14 |
 
-Three records carry a supersession note and stay where they are.
+Four records carry a supersession note and stay where they are.
+[1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
+warning it gave — [66](66-the-marketplace-is-named-jsdotnet-devbook.md) renames the
+marketplace on that warning's own terms.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the
 flows moved twice and the bridge is gone.
 [8](8-comments-are-findings-until-the-fence-lands.md) and
