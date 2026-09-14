@@ -52,8 +52,8 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // Version 6 removes `.backlog` from the recognized folders and with it the
 // `implements` reference field, and adds two things on top of 5: the shared
 // `approved` rung with its `approved-by`/`approved-at` record, and the opaque
-// `ext` namespace an L1 plugin persists its own state in. Only the removal is
-// breaking, and it ships as migration `006-drop-backlog`. Version 5 was
+// `ext` namespace an L1 plugin persists its own state in. Only the removal was
+// breaking; its migration predates 1.0.0 and no longer ships. Version 5 was
 // additive over 4: `status` may now be resolved from the folder's resting value
 // rather than read off the block, and both artifacts gained an optional
 // `statusDeclared: false` marking the entries where that happened. Version 4

@@ -327,12 +327,15 @@ for technologies that do not appear in package manifests.
 
 ```text
 migrations/
-├── 006-drop-backlog/
-│   ├── MIGRATION.md   what, why, what breaks, appliesTo
-│   └── migrate.mjs    idempotent; --check exits 1 while work remains
-├── 008-config-to-devbook/
-└── 009-install-skill-ids/
+└── <contractVersion>-<slug>/
+    ├── MIGRATION.md   what, why, what breaks, appliesTo
+    └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
+
+1.0.0 ships none, so the folder is absent until the first breaking change after it. The
+migrations written before 1.0.0 moved repositories between states no repository is in any
+more and were dropped at the reset, per
+`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
 
 Rules that keep a ledger trustworthy:
 
@@ -362,25 +365,15 @@ releases leave it alone: plugin semver moves for prose and new skills,
 `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
 `tools/devbook-meta/graph.mjs`.
 
-Version 6 removes `.backlog` and the `implements` field (breaking — migration
-`006-drop-backlog`), and adds the shared `approved` rung with `approved-by` /
-`approved-at`, and the `ext` namespace. Both additions are additive: a corpus
-written against 5 stays valid.
-
-Version 9 renames the three install skills to `install` (breaking — migration
-`009-install-skill-ids`), which reaches a repository through the provider ids it
-names under `extensions`. No stamp key and no chapter changes.
-
-Version 8 moves the file the stamp lives in from `.github/ai-agent-stack.json`
-to `.devbook/config.json` (breaking — migration `008-config-to-devbook`). The
-stamp's own shape is untouched; only where it is read from moved. A corpus of
-chapters is unaffected, which is why `appliesTo` names every folder and the
-migration reads none of them.
+1.0.0 ships at 9. The number counts schema shapes rather than releases and was not
+restarted with the version: a derived artifact stamped 9 before the reset still follows
+the contract a 1.0.0 generator writes, and the first breaking change after 1.0.0 ships as
+`010-<slug>`.
 
 ## Upgrade notes
 
-Version-by-version upgrade notes for the releases before the `migrations/` ledger, and
-for the behaviour changes it does not script, are in [UPGRADING.md](UPGRADING.md).
+Behaviour changes a consumer would notice, release by release, are in
+[UPGRADING.md](UPGRADING.md); 1.0.0 is its first entry.
 
 ## Folder structure
 

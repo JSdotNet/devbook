@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/ad
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
-| [Delivery](../delivery/dependencies.md) | Customer-Supplier, declared `delivery >=2.0.0 <3.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
+| [Delivery](../delivery/dependencies.md) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [Devbook](../devbook/dependencies.md) | Separate Ways | Two catalog entries name `devbook-check` and `devbook-tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [Fleet](../fleet/dependencies.md) | Separate Ways | A schedule may name a `fleet-*` skill as a target | The skill name alone | Same relationship. A `fleet-*` skill holds no gate, which is what makes it schedulable where a flow is not. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |

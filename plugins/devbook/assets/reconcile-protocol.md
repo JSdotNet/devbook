@@ -29,8 +29,7 @@ materialize, stamp — every time.
 
 `.devbook/config.json`, repo-scope and committed. devbook owns exactly
 one entry inside it and never edits another component's — except where a
-devbook migration renames an id another component's entry spells, as
-`009-install-skill-ids` rewrites the install-skill ids under `extensions`.
+devbook migration renames an id another component's entry spells.
 
 Five fields, and only devbook writes all five. Every component writes `pluginVersion`
 and what it put in the repository — a `materialized` map for one that copies files,
@@ -42,20 +41,18 @@ whose install rewrites content the repository authored, which is devbook alone:
   "components": {
     "devbook": {
       "pluginVersion": "1.0.0",
-      "contractVersion": 6,
+      "contractVersion": 9,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
         ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
-        "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
-        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true },
-        ".agents/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
-        ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true },
-        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.4.0", "hash": "sha256:e3f0…", "managed": true }
+        "build/Update-DevbookIndex.ps1": { "from": "1.0.0", "hash": "sha256:7e10…", "managed": false },
+        "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
+        ".agents/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:b17e…", "managed": true },
+        ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
+        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.0.0", "hash": "sha256:e3f0…", "managed": true }
       },
-      "migrations": [
-        { "id": "006-drop-backlog", "applied": "2026-09-03" }
-      ]
+      "migrations": []
     }
   }
 }
@@ -68,7 +65,7 @@ whose install rewrites content the repository authored, which is devbook alone:
 | `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
-| `migrations` | Append-only ledger. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |
+| `migrations` | Append-only ledger of `{ "id", "applied" }` entries, one per migration folder run, oldest first. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |
 
 `contractVersion`, `adopted`, and `migrations` are devbook's three; `pluginVersion`
 and `materialized` are everyone's. A component that only copies files it owns needs

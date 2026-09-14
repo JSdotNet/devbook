@@ -1,4 +1,4 @@
-# Upgrading devbook-collaboration
+# Upgrading delivery-surface-canvas
 
 Behaviour changes a consumer would notice, newest first.
 

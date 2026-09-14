@@ -44,10 +44,6 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    `node scripts/report.mjs --root <repository>` from this plugin's root. A clone older than
    the source is the common cause of "already latest" being wrong.
 
-   If the report names a `.github/ai-agent-stack.json`, move it before anything else: run
-   `devbook`'s `migrations/008-config-to-devbook/migrate.mjs`. Nothing reads the old path, so
-   until it moves the engine falls back to every default silently rather than failing.
-
    If the report finds no `.devbook/config.json`, this repository was never set up — run
    `devbook-config:setup` and stop.
 
