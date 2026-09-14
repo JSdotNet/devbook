@@ -8,7 +8,7 @@ related: [".devbook/arc42/09-architecture-decisions.md"]
 The approval gate's decision lives in the chapter as `status: approved`, one shared rung on top
 of each folder's own ladder, with `approved-by` and `approved-at` beside it.
 
-The design — the retired schema page, now [§3 of the consolidated artifact](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f#s3) per [record 62](62-one-design-artifact-replaces-six.md) — said both "a rung on top of its ordinary status ladder" and lists `approved` in the
+The design says both "a rung on top of its ordinary status ladder" and lists `approved` in the
 table of metadata fields. Only one can be built. A rung was chosen: a chapter has one lifecycle
 state, and a separate boolean field beside `status` would let a chapter claim `draft` and
 approved at once — which is exactly the ambiguity the gate exists to remove.

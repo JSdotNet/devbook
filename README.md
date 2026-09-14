@@ -43,3 +43,8 @@ node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs
 ```
 
 To try a change, add this working copy as a marketplace by path instead of by repository.
+
+The design behind all of it, with the reasons the repository's own records do not carry, is
+one page: [Devbook](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f).
+It is written from the repository, not the other way round: when the two disagree the
+repository and its decisions win, and the page is republished.

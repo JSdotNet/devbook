@@ -5,7 +5,7 @@ date: 2026-09-03
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/2-one-folder-per-plugin.md"]
 ```
 
-The layered design — since 2026-09-14 [§6 of the consolidated artifact](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f#s6), per [record 62](62-one-design-artifact-replaces-six.md) — puts the five folder-writing skills — one per adopted folder — in
+The layered design puts the five folder-writing skills — one per adopted folder — in
 `devbook-flows`, an L2b bridge depending on both `devbook` and `delivery`, and the graph
 renderer in `devbook-graph`, an L3 surface. The flows have moved; the canvas has not.
 

@@ -8,7 +8,7 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/plugin
 `devbook-collaboration` records a comment as one single-line finding in the chapter's
 `ext.devbook-collaboration.open-<n>` key. No author, no replies, no quoted passage, no thread.
 
-The design it implements — the retired annotations page, now [§4 of the consolidated artifact](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f#s4) per [record 62](62-one-design-artifact-replaces-six.md) — has a richer answer: a second fenced `annotation` block in the chapter
+The design it implements has a richer answer: a second fenced `annotation` block in the chapter
 body, carrying `author`, `date`, `kind`, `quote`, and a `replies` list, anchored by position and
 swept when resolved. That block is an L0 feature — it belongs to `devbook`, and `devbook` has
 not built it. Two ways to reach it were open, and both were refused. Building the fence from

@@ -10,7 +10,7 @@ manifest, no marketplace entry — its two viewer pages live in `extensions/deli
 and the canvas actions `render_diagram` and `render_markdown` are the whole surface.
 
 It shipped both transports for two days, on the argument that the layered design's combination
-table — a table the [consolidated artifact](https://claude.ai/code/artifact/f0e03cc1-73fa-4592-9431-9c9dfcaa215f#s6) does not carry, per [record 62](62-one-design-artifact-replaces-six.md) — listed *delivery + delivery-surface-canvas* as a supported outcome and a host without a canvas
+table lists *delivery + delivery-surface-canvas* as a supported outcome and a host without a canvas
 panel could not reach it otherwise. That argument was answered from the wrong side:
 `delivery-surface-dashboard` already implements the render group with the same two viewers, and it is
 what the `surface` slot resolves to wherever there is no canvas to open. So the MCP half was a

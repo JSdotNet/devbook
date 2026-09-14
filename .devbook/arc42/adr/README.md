@@ -111,7 +111,6 @@ later reversed is the part a reader most needs.
 | [59. The Design Artifacts Are No Longer Cited](59-the-design-artifacts-are-no-longer-cited.md) | 2026-09-09 |
 | [60. The Annotation Lifecycle Ends in devbook](60-the-annotation-lifecycle-ends-in-devbook.md) | 2026-09-09 |
 | [61. The Marketplace Stamps Itself and Materializes Nothing](61-the-marketplace-stamps-itself-and-materializes-nothing.md) | 2026-09-09 |
-| [62. One Design Artifact Replaces Six](62-one-design-artifact-replaces-six.md) | 2026-09-14 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the
