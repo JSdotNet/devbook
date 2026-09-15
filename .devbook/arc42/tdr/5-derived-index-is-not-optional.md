@@ -49,8 +49,9 @@ graph, and its roadmap rollups, off disk, in whichever repository it is pointed 
 run the generator. That is the argument for the artifact existing — and equally the argument for
 adopting it per repository rather than shipping it to all of them.
 
-**And the foundation runs the writer.** `devbook-tech-update` and the five `to-spec-*`
-converters call `build.mjs --scope <folder>` with no `--check`, in six places. `AGENTS.md` says
+**And the foundation runs the writer.** `devbook-tech-update` and `sync-specs` — the five
+`to-spec-*` converters when this was written — call `build.mjs --scope <folder>` with no
+`--check`. `AGENTS.md` says
 refreshing `_meta/` "belongs to automation, never to a session", and `devbook-check` step 6 says
 committing the refresh is "usually not what you want". `devbook-tech-update` already hedges its
 own line — indexes regenerated "when the repository ships `devbook-meta`" — which is a

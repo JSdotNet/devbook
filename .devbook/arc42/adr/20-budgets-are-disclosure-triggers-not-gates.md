@@ -19,7 +19,7 @@ by accident:
 | Kind | Why it exceeds by nature |
 | --- | --- |
 | `flow-*`, `phase-*`, `fleet-*`, `schedule-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
-| `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
+| `assets/spec-kinds/<kind>.md`, read by `sync-specs`, `apply-change`, and `verify-change` — the `to-spec-*` and `from-spec-*` skills until [record 69](69-the-converters-are-three-skills-named-after-openspec.md) | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
 | A plugin rule (`devbook-*.md`) and a `resources/` contract (`surface-contract.md`, `flow-*.md`, `schedule-catalog-contract.md`) — `*.instructions.md` when this was written | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
 | The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
 

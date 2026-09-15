@@ -401,8 +401,8 @@ capability is covered end to end, and a viewer can offer to run the thing.
 ### Why a test link and not a code link
 
 This schema deliberately has **no field linking a chapter to a source path** —
-see "Counterpart resolution" in the `to-spec-*`/`from-spec-*` skills' shared
-`code-sync-protocol.md`. A path in a metadata block rots on the first refactor
+see "Counterpart resolution" in `assets/code-sync-protocol.md`, shared by
+`sync-specs`, `apply-change`, and `verify-change`. A path in a metadata block rots on the first refactor
 and gives no signal when it does, so a chapter and its implementation are paired
 through naming instead.
 
