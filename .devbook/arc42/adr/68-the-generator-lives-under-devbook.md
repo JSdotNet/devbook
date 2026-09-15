@@ -7,7 +7,7 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-buil
 
 `devbook:install` materializes `tools/devbook-meta/` and `tools/devbook-tech/` into
 `.devbook/tools/`, not `.github/tools/`, and every command that names the generator names it
-there. Migration `10-the-generator-lives-under-devbook` moves an installed repository.
+there.
 
 The generator is plain Node with no host in it: it reads Markdown and writes JSON, and a
 repository with no GitHub Actions still runs it from `build/Update-DevbookIndex.ps1`. Putting it
@@ -34,9 +34,9 @@ from its own README. The workflows and the per-rule instruction wrappers stay un
 where record 25's argument still holds and where the host reads them.
 
 Consequence: `.github/` in a consuming repository holds what GitHub reads — the two workflows
-and the Copilot instruction wrappers — and nothing else devbook writes. The contract is 10, the
-migration ships in the same commit as the move per
-[record 64](64-1-0-0-is-the-first-release.md), and
-[record 61](61-the-marketplace-stamps-itself-and-materializes-nothing.md) and
-[debt record 4](../tdr/4-delivery-depends-on-devbook.md) read the new path where they
+and the Copilot instruction wrappers — and nothing else devbook writes. No migration and no
+version move ship with it: [record 64](64-1-0-0-is-the-first-release.md) makes that obligation
+start at the first install, and 1.0.0 has not been installed anywhere, so the path moves inside
+the release that first ships it. [Record 61](61-the-marketplace-stamps-itself-and-materializes-nothing.md)
+and [debt record 4](../tdr/4-delivery-depends-on-devbook.md) read the new path where they
 describe the table.

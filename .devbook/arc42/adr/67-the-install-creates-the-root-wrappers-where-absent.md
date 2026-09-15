@@ -28,5 +28,6 @@ has already decided what it says.
 
 Consequence: a repository installs devbook and both hosts read the section on their next
 session, with no step left for the reader. The asset is two files of two lines each, the
-reconcile table gains two rows whose `when` column reads `absent`, and no migration ships —
-a reconcile creates the file on its own where it is missing.
+reconcile table gains two rows whose `when` column reads `absent`, and no migration or
+version move ships — a reconcile creates the file on its own where it is missing, and 1.0.0
+is installed nowhere yet.

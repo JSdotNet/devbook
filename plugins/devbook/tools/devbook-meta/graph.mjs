@@ -45,10 +45,7 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // when something repo-visible changes shape, which is why a plugin release
 // usually leaves it alone — and why the migration ledger keys off it.
 //
-// Version 10 moves the generator from `.github/tools/` to `.devbook/tools/`,
-// devbook's own folder, and `generatedBy` with it; the migration folder is
-// `10-the-generator-lives-under-devbook`. Version 9 and 8 are recorded in the
-// migration ledger's history. Version 7 is additive over 6: the nested `.devbook/` layout is recognized
+// Version 7 is additive over 6: the nested `.devbook/` layout is recognized
 // alongside the flat dot-folders, and `bounded-context` joins the `.domain`
 // chapter types so a context-map section can be addressed. Nothing that
 // validated under 6 stops validating, so there is no migration folder.
@@ -62,7 +59,7 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 10;
+export const CONTRACT_VERSION = 9;
 
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those

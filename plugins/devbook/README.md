@@ -332,8 +332,8 @@ migrations/
     └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
 
-1.0.0 shipped none; `10-the-generator-lives-under-devbook` is the first, landing with 1.1.0.
-The migrations written before 1.0.0 moved repositories between states no repository is in any
+1.0.0 ships none, so the folder is absent until the first breaking change after it. The
+migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
 Whether a change owes one — and the three cases that are easy to get wrong — is decided once,
