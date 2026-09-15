@@ -23,7 +23,7 @@ instead of by repository.
 | --- | --- |
 | [`setup`](skills/setup/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component installs itself. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own install skill, and a re-validated config. |
-| [`guide`](skills/guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/domain.md`, the arc42 chapters, and `delivery`'s surface contract. |
+| [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/domain.md`, the arc42 chapters, and `delivery`'s surface contract. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-ai`. Reads only. |
 
 `devbook-config:adoption` is the one that writes nothing at all, and deliberately: `.ai` rates whether
@@ -107,7 +107,7 @@ committed and shared.
 | `.claude-plugin/plugin.json`, `.github/plugin/plugin.json` | The two manifests, agreeing on name, version, and description |
 | `skills/setup/SKILL.md` | First setup of the engine keys, before any component installs |
 | `skills/update/SKILL.md` | Version drift, migrations, re-validation |
-| `skills/guide/SKILL.md` | The question-answering procedure |
+| `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-ai` |
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
 

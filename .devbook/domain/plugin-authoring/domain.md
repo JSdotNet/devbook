@@ -165,7 +165,7 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 
 A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
-one scope needs none: `devbook-config` holds `setup`, `update`, `guide`, and `adoption` bare,
+one scope needs none: `devbook-config` holds `setup`, `update`, `ask`, and `adoption` bare,
 and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
