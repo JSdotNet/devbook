@@ -72,7 +72,7 @@ flowchart LR
         c3 --> c4["QA Validation"]
         c4 --> c5["Personal Validation"]
         c5 --> c6["Create Pull Request"]
-        c6 --> c7["Spec Verification"]
+        c6 --> c7["Verification"]
         c7 --> c8["Work Item Update"]
         c8 --> c9["Summary"]
     end

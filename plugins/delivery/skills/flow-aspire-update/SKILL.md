@@ -69,7 +69,7 @@ red baseline, and never decline the request over one.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Spec Verification → Work Item
+QA Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
 A framework upgrade, so QA Validation covers startup health plus Playwright smoke checks on
@@ -84,5 +84,5 @@ of truth.
 
 - `start_run` with `skillId: "flow-aspire-update"` and stages: Upgrade Intake & Baseline, Plan
   Refinement, Implementation, New Feature Adoption, Build & Test, QA Validation, Personal
-  Validation, Create Pull Request, Spec Verification, Work Item Update, Summary.
+  Validation, Create Pull Request, Verification, Work Item Update, Summary.
 - During Plan Refinement, open/update `render_markdown` with the refined upgrade plan.

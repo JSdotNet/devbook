@@ -7,7 +7,7 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/9-t
 
 The service point Build & Test serves — the build and the suites, looping with `implement`
 under a retry budget — is `validate`, not `verify`. `verify` is a service point of its own,
-and the phase behind it, **Spec Verification**, takes the place Documentation Update held: after
+and the phase behind it, **Verification**, takes the place Documentation Update held: after
 Create Pull Request and before Work Item Update, in the code-modifying tier. It checks the
 change set against the specification the run built on and the governed chapters the change set
 touches, and returns one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`,
@@ -64,11 +64,13 @@ is one added and one removed, and the count is unchanged.
 Consequence: `extensions.validate`, `policy["validate.retryBudget"]`,
 `bindings["delivery.mcp"].validate`, and a gate `at: "validate"` replace the `verify` spellings;
 `extensions.verify`, `bindings["delivery.mcp"].verify`, and a gate `at: "verify"` now mean the
-spec check; `docs.update` is rejected as an unknown key, and `phases.specVerification` replaces
+spec check; `docs.update` is rejected as an unknown key, and `phases.verification` replaces
 `phases.documentationUpdate`. The plugin stays at 1.0.0 and `UPGRADING.md` carries no entry:
 1.0.0 is installed nowhere but here, whose config moved in the same commit, so this lands in the
 baseline the way [record 64](64-1-0-0-is-the-first-release.md) folded everything before it, and
 no migration ships. Every code-modifying flow's `start_run` stage list swaps the stage;
 `flow-phases.md` defines it in full, and no phase skill is added, so the manifests still count
 three. The model category is its own, resolved to `opus`: calling drift `aligned` leaves a wrong
-pull request open.
+pull request open. The phase is called Verification, not Spec Verification: the spec check is
+what it runs today, and a further verification is added to this phase, never as a phase beside
+it.

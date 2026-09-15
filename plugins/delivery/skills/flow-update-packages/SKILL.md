@@ -62,7 +62,7 @@ and rollback boundaries, and the runtime validation target.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Spec Verification → Work Item
+QA Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow. Build & Test
 covers the compatibility and pipeline checks for the updated dependencies.
 
@@ -79,5 +79,5 @@ of truth.
 
 - `start_run` with `skillId: "flow-update-packages"` and stages: Dependency Analysis, Update
   Planning, Implementation, Security Validation, Build & Test, QA Validation, Personal
-  Validation, Create Pull Request, Spec Verification, Work Item Update, Summary.
+  Validation, Create Pull Request, Verification, Work Item Update, Summary.
 - During Update Planning, open/update `render_markdown` with the update and rollback plan.

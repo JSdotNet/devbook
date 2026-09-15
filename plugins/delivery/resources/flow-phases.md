@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (the Personal Validation gate, Create Pull Request, Spec Verification, Work Item Update, Summary).
+description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (the Personal Validation gate, Create Pull Request, Verification, Work Item Update, Summary).
 ---
 
 # Flow Phases (Engine-Owned)
@@ -20,7 +20,7 @@ companion files so a run reads the part it is actually in.
 | `flow-model-selection.md` | Category → model resolution and the personal override | Once, before `start_run` |
 | `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
-| **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Spec Verification, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
+| **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Verification, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
 | `skills/phase-personal-validation/SKILL.md` | The Personal Validation **review handoff** — starting the app, the links, the what-to-check list — in full | When the run reaches Personal Validation, and again on every revise round. The flow-runner reads it itself: the phase runs inline and is never delegated |
 
@@ -37,7 +37,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **Code-modifying flows** — `flow-feature`, `flow-bug`, `flow-structure`,
   `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`,
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
-  Personal Validation → Create Pull Request → Spec Verification → Work Item Update →
+  Personal Validation → Create Pull Request → Verification → Work Item Update →
   Summary**.
 - **Documentation/config flows** — `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`,
   `flow-ai`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
@@ -260,14 +260,15 @@ directly under the category's resolved model.
 **Model Category:** none. The flow-runner performs this phase inline, so it runs on the
 session's own model — see `flow-model-selection.md`.
 
-## Phase: Spec Verification
+## Phase: Verification
 
 Code-modifying tier. Runs **after** Create Pull Request and before Work Item Update. This is
 the `verify` service point, and the word is OpenSpec's: Build & Test and QA Validation say
 whether the change **runs**; this phase says whether it is **what was agreed**, and whether
 what the repository has written down is still true — one verdict per item, reported where the
 reviewer reads. It replaces a documentation refresh that guessed at staleness with a check
-that names it.
+that names it. The phase is named for the question, not for the one check it runs today: a
+further verification joins this phase rather than becoming a phase of its own.
 
 - **What it checks against.** The specification the run built on — the `spec` stage's output,
   the approved version when a gate sat after `spec`, and the acceptance criteria Scope
@@ -293,17 +294,17 @@ that names it.
 - **Skip this phase** (`skipped`) with the reason when the run recorded no specification and
   no acceptance criteria and the change set touches no governed chapter — a dependency update
   with no functional change is the usual case.
-- **`policy.phases.specVerification: false`** turns the phase off. It is then `skipped` with
+- **`policy.phases.verification: false`** turns the phase off. It is then `skipped` with
   that reason.
 
 **Agents:** the provider bound to `verify`; unbound, the flow-runner, with the reading
 delegated per **Delegation Order** in `flow-execution-model.md`.
 
-**Model Category:** Spec Verification.
+**Model Category:** Verification.
 
 ## Phase: Work Item Update
 
-Every tier. Runs after the pull request and Spec Verification, before Summary. It
+Every tier. Runs after the pull request and Verification, before Summary. It
 speaks to whatever `bindings["delivery.tracker"]` names — GitHub issues, Jira tickets, or
 Markdown chapters in the folder a repository that plans work as Markdown names.
 
@@ -319,7 +320,7 @@ Markdown chapters in the folder a repository that plans work as Markdown names.
 - **Include the QA report** for code-modifying flows: scenario pass/fail/flaky status,
   monitoring findings, and captured evidence or report links when available. If QA
   Validation was skipped or does not apply, state that explicitly rather than inventing a
-  result. The same for the spec verdict: the table when Spec Verification ran, the recorded
+  result. The same for the spec verdict: the table when Verification ran, the recorded
   reason when it was skipped.
 - **Use the bound tracker's own tooling first** — an installed tracker plugin skill or MCP
   integration — falling back to the host's CLI for that tracker. Never create a new item.

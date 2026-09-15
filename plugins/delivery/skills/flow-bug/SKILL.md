@@ -67,7 +67,7 @@ application running.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Spec Verification → Work Item
+QA Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
 A bug fix, so QA Validation is targeted: the `qa.run` provider re-runs the original reproduction
@@ -82,7 +82,7 @@ of truth.
 
 - `start_run` with `skillId: "flow-bug"` and stages: Scope Discovery, Bug Intake & Reproduction,
   Root Cause Analysis, Implementation, Build & Test, QA Validation, Personal Validation, Create
-  Pull Request, Spec Verification, Work Item Update, Summary.
+  Pull Request, Verification, Work Item Update, Summary.
 - During Scope Discovery, put the restated observed versus expected behavior, the derived
   verification criterion, and the suspected code paths in the stage output.
 - During Bug Intake & Reproduction, open/update `render_markdown` with the drafted bug report.

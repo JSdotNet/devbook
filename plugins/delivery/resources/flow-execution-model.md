@@ -64,7 +64,7 @@ stage uses the servers bound to the point it serves:
 | Build & Test | `validate` |
 | QA Validation | `app.start`, `qa.run` |
 | Create Pull Request, Work Item Update | `deliver` |
-| Spec Verification | `verify` |
+| Verification | `verify` |
 | Update Base, Personal Validation, Summary | none |
 
 Defaults, for a point the repository leaves absent:
@@ -119,7 +119,7 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    run rather than a shortcut:
    - **Build & Test** — per `skills/phase-build-test/SKILL.md`.
    - **QA Validation** — per `skills/phase-qa-validation/SKILL.md`.
-   - **Spec Verification's reading** — the change set and its tests against the
+   - **Verification's reading** — the change set and its tests against the
      specification and the chapters, per the phase in `flow-phases.md`; the verdict table
      comes back, the reading stays out.
    - **Scope Discovery's search half** — see **Splitting Scope Discovery** below.

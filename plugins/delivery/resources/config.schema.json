@@ -109,7 +109,7 @@
           "pattern": "^(?![./])(?!.*(?:/[.]|//|[.][.]|@[{]|[.]lock(?:/|$)))(?!.*[/.]$)[^\\s~^:?*[\\\\]+$"
         },
         "phases.updateBase": { "type": "boolean" },
-        "phases.specVerification": { "type": "boolean" },
+        "phases.verification": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" }
       }
     },

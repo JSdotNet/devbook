@@ -31,7 +31,7 @@ flowchart TD
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Spec Verification"]
+    t1["Verification"]
     t2["Work Item Update"]
     t3["Summary"]
     g -->|approve| t0

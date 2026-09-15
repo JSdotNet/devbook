@@ -118,7 +118,7 @@ those contracts; it does not re-decide them per skill.
 14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
     mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
-    **Spec Verification** and **Work Item Update** as defined in `flow-phases.md`. Spec
+    **Verification** and **Work Item Update** as defined in `flow-phases.md`. Spec
     Verification has no phase skill: run the `verify` provider, or reach the verdicts yourself
     with the reading delegated — it reports, repairs nothing, and commits nothing.
 15. **Stay in one owner session and delegate deliberately.** Run the flow in the invoking

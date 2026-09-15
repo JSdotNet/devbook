@@ -60,7 +60,7 @@ flowchart TD
     I -->|Yes| J["Create Pull Request or Skip"]
     I -->|No| K["Return to the relevant earlier stage"]
     K --> A
-    J --> DU["Spec Verification or Skip"]
+    J --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> L["Summary"]
 ```
@@ -76,7 +76,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -94,7 +94,7 @@ flowchart TD
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Spec Verification or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -109,7 +109,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -127,7 +127,7 @@ flowchart TD
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> A
-    I --> DU["Spec Verification or Skip"]
+    I --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> K["Summary"]
 ```
@@ -142,7 +142,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -160,7 +160,7 @@ flowchart TD
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> A
-    I --> DU["Spec Verification or Skip"]
+    I --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> K["Summary"]
 ```
@@ -175,7 +175,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -321,7 +321,7 @@ flowchart TD
     F -->|Yes| G["Create Pull Request or Skip"]
     F -->|No| H["Return to the relevant earlier stage"]
     H --> A
-    G --> DU["Spec Verification or Skip"]
+    G --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> I["Summary"]
 ```
@@ -335,7 +335,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -353,7 +353,7 @@ flowchart TD
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Spec Verification or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -368,7 +368,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -386,7 +386,7 @@ flowchart TD
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> V["Spec Verification or Skip"]
+    H --> V["Verification or Skip"]
     V --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -401,7 +401,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -419,7 +419,7 @@ flowchart TD
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Spec Verification or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -434,7 +434,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -452,7 +452,7 @@ flowchart TD
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Spec Verification or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -467,7 +467,7 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -489,7 +489,7 @@ flowchart TD
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> B
-    I --> V["Spec Verification or Skip (code-modifying tier only)"]
+    I --> V["Verification or Skip (code-modifying tier only)"]
     V --> U["Work Item Update or Skip"]
     U --> S["Summary"]
 ```
@@ -504,6 +504,6 @@ flowchart TD
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Spec Verification | the `verify` provider, or *(default)* *(code-modifying change kind only)* | servers bound to `verify` |
+| Verification | the `verify` provider, or *(default)* *(code-modifying change kind only)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |

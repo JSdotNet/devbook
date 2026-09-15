@@ -36,7 +36,7 @@
     "pr.required": true,
     "pr.base": "main",
     "phases.updateBase": true,
-    "phases.specVerification": true,
+    "phases.verification": true,
     "phases.workItemUpdate": true
   },
   "gates": [

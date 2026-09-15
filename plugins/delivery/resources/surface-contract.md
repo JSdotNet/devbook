@@ -239,7 +239,7 @@ key means the engine's own choice rather than undefined.
 | `pr.required` | boolean | `true` |
 | `pr.base` | a branch name | the repository's default branch |
 | `phases.updateBase` | boolean | `true` |
-| `phases.specVerification` | boolean | `true` |
+| `phases.verification` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that

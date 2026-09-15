@@ -29,7 +29,7 @@ flowchart TD
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Spec Verification"]
+    t1["Verification"]
     t2["Work Item Update"]
     t3["Summary"]
     g -->|approve| t0
@@ -50,7 +50,7 @@ runner and named by no skill.
   the only cycle here. It is bounded by the retry budget rather than by the provider.
 - QA Validation runs at full depth with captured evidence, because new functionality is the change
   kind that earns it.
-- `Spec Verification` is the `verify` service, after the pull request: the change set against
+- `Verification` is the `verify` service, after the pull request: the change set against
   the specification Stage 1 took in and the chapters it touches, one verdict per item, reported
   where the reviewer reads and never repaired.
 
