@@ -27,13 +27,12 @@ flowchart TD
     validate -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
-    qaRun --> verify["verify · service"]
-    verify --> gate{"Personal Validation · mandatory"}
+    qaRun --> gate{"Personal Validation · mandatory"}
     gate -->|approve| deliver["deliver · service"]
     gate -->|revise| implement
     gate -->|decline| blocked(["Blocked · never a silent skip"])
-    deliver --> docsUpdate(["docs.update · chore"])
-    docsUpdate --> workItem["Work Item Update"]
+    deliver --> verify["verify · service"]
+    verify --> workItem["Work Item Update"]
     workItem --> flowEnd(["flow.end · chore"])
     flowEnd --> summary(["Summary"])
 ```
@@ -47,9 +46,10 @@ flowchart TD
   the providers — which is why the two commonly bind to one provider and still resolve their
   model per stage.
 - **`verify` reports and never repairs.** Validation says the change runs; verification says it
-  is what was agreed, one verdict per item of the specification the run built on. It sits last
-  before the gate so the verdict is what the person decides on, and it never loops back on its
-  own: a `spec-ahead` row becomes work through `revise`, not through a second cycle.
+  is what was agreed and that what is written down is still true — one verdict per item of the
+  specification the run built on and the chapters the change set touches. It runs after
+  `deliver`, where a documentation refresh used to guess at staleness, and it commits nothing:
+  the table reaches the reviewer and the work item, and a row becomes work outside this run.
 - **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline
   and `deliver` produces file artifacts only; the run continues and says so once.
 - **Update Base is prepended by the runner and named by no skill.** The closing tier differs per
@@ -70,10 +70,9 @@ flowchart LR
         c1["Update Base"] --> c2["the flow's own stages"]
         c2 --> c3["Build & Test"]
         c3 --> c4["QA Validation"]
-        c4 --> cv["Spec Verification"]
-        cv --> c5["Personal Validation"]
+        c4 --> c5["Personal Validation"]
         c5 --> c6["Create Pull Request"]
-        c6 --> c7["Documentation Update"]
+        c6 --> c7["Spec Verification"]
         c7 --> c8["Work Item Update"]
         c8 --> c9["Summary"]
     end
@@ -88,8 +87,8 @@ flowchart LR
     end
 ```
 
-- **The documentation tier drops four phases because there is nothing runnable to validate and
-  no specification a chapter is built from** — the chapter is the specification — not because
+- **The documentation tier drops three phases because there is nothing runnable to validate
+  and nothing to verify a chapter against** — the chapter is the specification — not because
   the change matters less. A chapter change still passes Personal Validation and still opens
   for review.
 - **QA depth inside QA Validation is driven by change kind**: new functionality gets a browser

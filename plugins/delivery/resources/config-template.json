@@ -12,8 +12,7 @@
       "security": null
     },
     "delivery.mcp": {
-      "spec": ["your-guidelines-server"],
-      "docs.update": ["your-guidelines-server"]
+      "spec": ["your-guidelines-server"]
     }
   },
   "extensions": {
@@ -25,8 +24,7 @@
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
-    "docs.update": ["devbook:install"],
-    "flow.end": []
+    "flow.end": ["devbook:install"]
   },
   "policy": {
     "qa.depth": "targeted",
@@ -38,7 +36,7 @@
     "pr.required": true,
     "pr.base": "main",
     "phases.updateBase": true,
-    "phases.documentationUpdate": true,
+    "phases.specVerification": true,
     "phases.workItemUpdate": true
   },
   "gates": [

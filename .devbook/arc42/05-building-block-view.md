@@ -275,7 +275,7 @@ repository names the plugin that fills it: a role in `bindings["delivery.roles"]
 | `implement` | service | A change set and what was tested |
 | `validate` | service | Build and suite results. Default provider: `phase-build-test` |
 | `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-qa-validation`. `app.start` is normally filled by the seeded `repo:start`, and the evidence rules hold from `capture-contract.md` whichever provider answers |
-| `verify` | service | One verdict per item of the specification the run built on, with the evidence — report-only. No default provider: unbound, the flow-runner reaches the verdicts itself; a repository with devbook chapters binds `devbook:verify-change` |
+| `verify` | service | After the pull request, one verdict per item of the specification the run built on and the chapters the change set touches, with the evidence — report-only, where a documentation refresh used to run. No default provider: unbound, the flow-runner reaches the verdicts itself; a repository with devbook chapters binds `devbook:verify-change` |
 
 A missing provider costs capability, not a load. `delivery` and `devbook-flows` used to carry
 over two hundred `plugin:asset` references naming the seven; every one is now the point it was

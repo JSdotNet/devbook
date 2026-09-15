@@ -22,7 +22,7 @@
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
-    "docs.update": ["devbook:install"]
+    "flow.end": ["devbook:install"]
   },
   "policy": {
     "qa.depth": "skipped",

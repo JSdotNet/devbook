@@ -79,8 +79,8 @@ domain modeling belongs to `flow-domain`; route there rather than modeling here.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Spec Verification → Personal Validation → Create Pull Request → Documentation
-Update → Work Item Update → Summary. That file defines them; change them there, for every flow.
+QA Validation → Personal Validation → Create Pull Request → Spec Verification → Work Item
+Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright checks on the health
 endpoints and the critical service flows, runtime monitoring active throughout, evidence
@@ -93,9 +93,8 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-create-service"` and stages: Scope Discovery, Specification
-  Intake, Implementation Planning, Implementation, Build & Test, QA Validation, Spec
-  Verification, Personal Validation, Create Pull Request, Documentation Update, Work Item
-  Update, Summary.
+  Intake, Implementation Planning, Implementation, Build & Test, QA Validation, Personal
+  Validation, Create Pull Request, Spec Verification, Work Item Update, Summary.
 - During Scope Discovery, put the restated responsibility, the derived boundaries and
   contracts, and the acceptance criteria in the stage output, so the user can correct them.
 - During Specification Intake, open/update `render_markdown` with the service contract;

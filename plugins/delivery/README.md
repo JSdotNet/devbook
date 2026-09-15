@@ -44,9 +44,9 @@ Three things, and only three, and none of them is a stage definition.
 
 **Extension points.** The point set is closed and declared by the engine. Seven are
 **services** — exactly one provider, returning a result the flow acts on: `spec`,
-`implement`, `validate`, `app.start`, `qa.run`, `verify`, `deliver`. Five are **chores** — zero or more,
+`implement`, `validate`, `app.start`, `qa.run`, `verify`, `deliver`. Four are **chores** — zero or more,
 in declared order, contributing side effects and a report and never changing a decision:
-`session.start`, `flow.start`, `data.prepare`, `docs.update`, `flow.end`.
+`session.start`, `flow.start`, `data.prepare`, `flow.end`.
 
 **Gates.** A gate presents the output of the point it attaches to and asks a question, with
 three outcomes: `approve` continues, `revise` re-runs that point with the human's notes, and

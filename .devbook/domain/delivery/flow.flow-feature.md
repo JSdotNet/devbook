@@ -19,7 +19,6 @@ flowchart TD
     s2["Implementation"]
     c0["Build & Test"]
     c1["QA Validation"]
-    cv["Spec Verification"]
     c2["Personal Validation"]
 
     base --> s0
@@ -27,11 +26,10 @@ flowchart TD
     s1 --> s2
     s2 --> c0
     c0 --> c1
-    c1 --> cv
-    cv --> c2
+    c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Documentation Update"]
+    t1["Spec Verification"]
     t2["Work Item Update"]
     t3["Summary"]
     g -->|approve| t0
@@ -52,9 +50,9 @@ runner and named by no skill.
   the only cycle here. It is bounded by the retry budget rather than by the provider.
 - QA Validation runs at full depth with captured evidence, because new functionality is the change
   kind that earns it.
-- `Spec Verification` is the `verify` service: the change set against the specification Stage 1
-  took in, one verdict per acceptance criterion, reported and never repaired. A `spec-ahead` row
-  reaches the gate as a finding, and revise is how it becomes work.
+- `Spec Verification` is the `verify` service, after the pull request: the change set against
+  the specification Stage 1 took in and the chapters it touches, one verdict per item, reported
+  where the reviewer reads and never repaired.
 
 The roles and MCP servers each stage resolves are in the engine's own `FLOW-DIAGRAMS.md`, which
 is where a binding table belongs — this chapter is the model, not the wiring.

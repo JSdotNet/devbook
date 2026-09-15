@@ -46,7 +46,7 @@ in another context.
 | A run belongs to one session; a resumed run reattaches to the same run rather than opening a second | `start_run()` | untested |
 | Every tier opens with Update Base, prepended by the runner and named by no skill | stage sequencing | untested |
 | `implement` and `validate` are the only cycle, bounded by `validate.retryBudget` | `validate()` | untested |
-| `verify` reports one verdict per item of the run's specification and repairs nothing; a verdict becomes work only through a gate's revise | `verify()` | untested |
+| `verify` reports one verdict per item of the run's specification and the chapters the change set touches, repairs nothing, and commits nothing; a row becomes work outside the run | `verify()` | untested |
 | Personal Validation is reached before `deliver`, exactly once, and never inside it | gate evaluation | untested |
 | A chore contributes side effects and a report and never rewrites a stage's result | chore invocation | untested |
 | A stage repeated after a revise decision is recorded as repeated, not as one long stage | `update_stage()` | untested |
@@ -124,9 +124,8 @@ type: entity
 aliases: [shared step, phase skill]
 ```
 
-A shared step several flows run identically — Update Base, Build & Test, QA Validation, Spec
-Verification, Personal Validation, Create Pull Request, Documentation Update, Work Item Update,
-Summary. It
+A shared step several flows run identically — Update Base, Build & Test, QA Validation,
+Personal Validation, Create Pull Request, Spec Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
 of restated in sixteen.
 
@@ -138,9 +137,9 @@ related: [".devbook/domain/delivery/domain.md#phase"]
 ```
 
 Which closing phases a flow runs: the code-modifying tier, which builds, tests, validates,
-verifies against the specification, and opens a pull request, or the documentation tier, which
-does none of the first four because there is no runnable change to validate and the chapter it
-writes is the specification. `flow-fallback` has no fixed tier and resolves one
+opens a pull request, and verifies the result against the specification, or the documentation
+tier, which does none of those but the pull request because there is no runnable change to
+validate and the chapter it writes is the specification. `flow-fallback` has no fixed tier and resolves one
 from the change kind it determined.
 
 Session Handoff belongs to no tier. It is an interrupt rather than a step, firing at whatever
@@ -157,7 +156,7 @@ A named place in a flow where a repository plugs a provider in. The set is close
 by the engine: a repository picks what runs at a point, never what the points are, which is the
 asymmetry that keeps configuration from becoming a second, undocumented flow language.
 
-Seven are services and five are chores, and the difference is authority rather than cardinality.
+Seven are services and four are chores, and the difference is authority rather than cardinality.
 A service returns a result the flow acts on; a chore contributes side effects and a report and
 may never change an outcome.
 
@@ -179,8 +178,7 @@ type: enum
 ```
 
 `service` or `chore`. `spec`, `implement`, `validate`, `app.start`, `qa.run`, `verify`, and
-`deliver` are services; `session.start`, `flow.start`, `data.prepare`, `docs.update`, and `flow.end` are
-chores. Nothing is both, and no point changes kind — a chore promoted to a service would be a
+`deliver` are services; `session.start`, `flow.start`, `data.prepare`, and `flow.end` are chores. Nothing is both, and no point changes kind — a chore promoted to a service would be a
 provider gaining the authority to change an outcome without anybody re-reading the flow.
 
 ## Gate

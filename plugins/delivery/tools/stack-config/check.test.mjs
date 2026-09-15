@@ -151,7 +151,7 @@ test('a chore point takes a list, not a bare provider', () => {
 });
 
 test('a chore on-failure value is a closed enum', () => {
-    const errors = check({ extensions: { 'docs.update': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
+    const errors = check({ extensions: { 'flow.end': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
     assert.equal(errors.length, 1);
 });
 

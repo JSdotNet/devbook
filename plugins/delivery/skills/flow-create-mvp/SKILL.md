@@ -73,8 +73,8 @@ modeling belongs to `flow-domain`.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Spec Verification → Personal Validation → Create Pull Request → Documentation
-Update → Work Item Update → Summary. That file defines them; change them there, for every flow.
+QA Validation → Personal Validation → Create Pull Request → Spec Verification → Work Item
+Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright smoke tests over the core
 user flows, runtime monitoring active throughout, evidence recorded.
@@ -86,8 +86,8 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-create-mvp"` and stages: Scope Discovery, MVP Scope Intake,
-  Implementation Planning, Implementation, Build & Test, QA Validation, Spec Verification,
-  Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary.
+  Implementation Planning, Implementation, Build & Test, QA Validation, Personal Validation,
+  Create Pull Request, Spec Verification, Work Item Update, Summary.
 - During Scope Discovery, put the restated outcome, the core feature list in priority order,
   and the acceptance criteria in the stage output.
 - During MVP Scope Intake, open/update `render_markdown` with the recorded scope; during

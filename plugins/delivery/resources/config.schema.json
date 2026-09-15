@@ -63,7 +63,6 @@
             "qa.run": { "$ref": "#/$defs/mcpServers" },
             "verify": { "$ref": "#/$defs/mcpServers" },
             "deliver": { "$ref": "#/$defs/mcpServers" },
-            "docs.update": { "$ref": "#/$defs/mcpServers" },
             "flow.end": { "$ref": "#/$defs/mcpServers" }
           }
         }
@@ -84,7 +83,6 @@
         "qa.run": { "$ref": "#/$defs/servicePoint" },
         "verify": { "$ref": "#/$defs/servicePoint" },
         "deliver": { "$ref": "#/$defs/servicePoint" },
-        "docs.update": { "$ref": "#/$defs/chorePoint" },
         "flow.end": { "$ref": "#/$defs/chorePoint" }
       }
     },
@@ -111,7 +109,7 @@
           "pattern": "^(?![./])(?!.*(?:/[.]|//|[.][.]|@[{]|[.]lock(?:/|$)))(?!.*[/.]$)[^\\s~^:?*[\\\\]+$"
         },
         "phases.updateBase": { "type": "boolean" },
-        "phases.documentationUpdate": { "type": "boolean" },
+        "phases.specVerification": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" }
       }
     },
@@ -126,7 +124,7 @@
           "at": {
             "enum": [
               "session.start", "flow.start", "spec", "implement", "validate",
-              "data.prepare", "app.start", "qa.run", "verify", "deliver", "docs.update", "flow.end"
+              "data.prepare", "app.start", "qa.run", "verify", "deliver", "flow.end"
             ]
           },
           "when": { "enum": ["before", "after"] },
