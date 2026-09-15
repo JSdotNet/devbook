@@ -42,6 +42,7 @@ classDiagram
         +gates
     }
     class MachineOverlay {
+        +scope: user | repository | checkout
         +engineKeysTouched
     }
     class ComponentStamp {
@@ -55,7 +56,7 @@ classDiagram
     StackReport "1" --> "many" FactSource : cites, present or absent
     PluginRow --> ScopeVerdict : resolves to
     PluginRow ..> ComponentStamp : reads
-    EngineConfiguration "1" --> "0..1" MachineOverlay : merged under
+    EngineConfiguration "1" --> "0..3" MachineOverlay : merged under, outermost first
     EngineConfiguration ..> ComponentStamp : shares a file, never a key
     ScopeVerdict ..> InstallSkill : decides whether it runs
 ```

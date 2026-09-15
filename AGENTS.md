@@ -175,9 +175,14 @@ the check before committing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
 
-Two files here are yours alone, gitignored and absent by default. `AGENTS.local.md`
+Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
-it as this file's last word. `.devbook/config.local.json` overlays the committed
-stack config the same way. Never commit either, and put no secret in them — gitignored
-is not private.
+it as this file's last word. `config.local.json` overlays the committed stack config
+the same way. Each lives in one of three places, and a session reads every one it
+finds, nearest last: `.devbook/` in this checkout (gitignored, and absent in a fresh
+worktree), `repos/<id>/` under your devbook config directory for this repository —
+`<id>` is the `id` in `.devbook/config.json` — and that directory itself for every
+repository. The directory is `$XDG_CONFIG_HOME/devbook` when set, else
+`%APPDATA%\devbook` on Windows and `~/.config/devbook` elsewhere. Put no secret in
+any of them — gitignored is not private, and neither is your home directory.
 <!-- devbook:end -->

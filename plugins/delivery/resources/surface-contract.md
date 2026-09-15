@@ -1,6 +1,6 @@
 ---
 name: surface-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .devbook/config.json stack config and its gitignored .devbook/config.local.json overlay, the host slots, and the surface capability a run reports and renders through.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .devbook/config.json stack config and the overlays a machine keeps over it, the host slots, and the surface capability a run reports and renders through.
 ---
 
 # Surface Contract (Engine-Owned)
@@ -27,12 +27,15 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 
 `.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys
 and never edits another component's. `components` belongs to each component's own install skill.
+`id` sits beside the four and is not a setting: it names the repository, once, so a machine can
+keep an overlay for it — see below.
 
 The path is a path, not a dependency: the engine reads that file whether or not the repository
 adopted a single devbook folder, and `devbook` being absent costs nothing here.
 
 ```json
 {
+  "id": "your-repo",
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
@@ -86,55 +89,71 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   `flow-model-selection.md`.
 - **No secrets.** The file is committed. A credential pointer belongs in the repository's
   `start` skill, and the value belongs in a secret store.
-- **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
+- **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks `id` and the
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself, and
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
 
-### The local overlay
+### The overlays
 
-`.devbook/config.local.json`, machine-scope and **gitignored**. Optional, absent by default,
-and the answer to the one thing the committed file cannot express: a setting true of your
-machine and nobody else's. Without it the only way to run QA shallower than the team does is
-to edit the committed file and remember not to commit it, which is how a personal preference
-becomes everyone's next merge conflict.
+The answer to the one thing the committed file cannot express: a setting true of your machine
+and nobody else's. Without it the only way to run QA shallower than the team does is to edit
+the committed file and remember not to commit it, which is how a personal preference becomes
+everyone's next merge conflict. Three files, each optional and absent by default, merged over
+the committed config in this order so the later wins:
 
-It carries the same four keys, validated against the same schema, and merges over the
-committed file:
+| Layer | Path | True of |
+| --- | --- | --- |
+| user | `<config dir>/config.local.json` | You, in every repository |
+| repository | `<config dir>/repos/<id>/config.local.json` | You, in the repository whose committed `id` this is |
+| checkout | `.devbook/config.local.json`, gitignored | This checkout only |
+
+`<config dir>` is `$XDG_CONFIG_HOME/devbook` when that variable is set, else `%APPDATA%\devbook`
+on Windows and `~/.config/devbook` elsewhere. The first two live outside every clone, which is
+why they exist: a fresh worktree carries no gitignored file, and a session in one would
+otherwise run at the team's defaults without saying so. The repository layer is keyed on `id`
+rather than on a path or a remote because an id survives a move, a re-clone, and a worktree,
+and is absent only when the repository never chose one — then that layer is skipped.
+
+Every layer carries the same four keys, validated against the same schema, and merges the
+same way:
 
 | Shape | Merges by |
 | --- | --- |
 | Object | Key by key, the overlay winning. A sibling the overlay does not name is left standing. |
 | Array | Replaced whole. A chore list is an ordered whole, and half of one from each file is a run nobody wrote down. |
-| `gates` | **Appended.** The overlay can add a checkpoint and has no way of spelling the removal of one. |
+| `gates` | **Appended.** An overlay can add a checkpoint and has no way of spelling the removal of one — at any layer, of any layer beneath it. |
 | `null` | A value — deliberately unbound — never a delete. |
 
-Four things it may not say, and the checker refuses each by name:
+Five things an overlay may not say, and the checker refuses each by name:
 
 | Refused | Because |
 | --- | --- |
+| `id` | It is what found the overlay. Renaming it from inside is a loop. |
 | `components` | A stamp is repo-scope and committed; an overlay is neither. |
 | `policy.pr.required` | What the repository produces, not how one machine runs it. |
 | `policy.qa.ceiling` | The ceiling is the repository's limit. `qa.depth` is your choice inside it. |
 | `policy.gate.personalValidation` | The mandatory gate. Already `const` in the schema, and named here so the refusal states the invariant rather than a type error. |
 
-That list is the whole safety story, and it is worth stating plainly: **a gitignored file must
-never be able to weaken what a reviewer sees.** Everything a reader of the committed config
-would conclude about the gates a run passes, the pull request it opens, and the deepest QA it
-may reach stays true no matter what any overlay says. What an overlay changes is the cost and
-the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
+That list is the whole safety story, and it is worth stating plainly: **a file no reviewer
+sees must never be able to weaken what a reviewer sees.** Everything a reader of the committed
+config would conclude about the gates a run passes, the pull request it opens, and the deepest
+QA it may reach stays true no matter what any overlay says. What an overlay changes is the cost
+and the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
 zeroed retry budget, an extra checkpoint of your own.
 
-`check.mjs` finds the overlay beside the file it is given rather than taking a second path, and
-validates three times over: what the overlay may not say, whether it is well-typed alone, and
-whether the merged result still validates — the third catching the pair that is only wrong
-together. `resources/config.local-template.json` is a starting point.
+`check.mjs` finds every layer on its own — the user and repository layers from the environment
+and the committed `id`, the checkout layer beside the file it is given — and validates each
+three times over: what it may not say, whether it is well-typed alone, and whether the merge
+so far still validates, the third catching the pair that is only wrong together and naming the
+layer that broke it. `resources/config.local-template.json` is a starting point for any of
+the three.
 
-**Gitignored is not private.** No model and no secret, the same as the committed file: an
-overlay is read by every agent in your session and pasted into a bug report as readily as
-anything else.
+**Gitignored is not private, and neither is your home directory.** No model and no secret,
+the same as the committed file: an overlay is read by every agent in your session and pasted
+into a bug report as readily as anything else.
 
 ## Extension Points
 

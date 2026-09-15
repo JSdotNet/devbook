@@ -121,6 +121,7 @@ later reversed is the part a reader most needs.
 | [69. The Converters Are Three Skills Named After OpenSpec's Verbs](69-the-converters-are-three-skills-named-after-openspec.md) | 2026-09-15 |
 | [70. The Flow Context Lives in devbook](70-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
 | [71. The start Skill Holds the Runtime Facts](71-the-start-skill-holds-the-runtime-facts.md) | 2026-09-15 |
+| [72. The Overlay Has Three Layers, Keyed by a Committed Id](72-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
 
 Five records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
