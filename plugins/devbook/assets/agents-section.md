@@ -11,7 +11,7 @@ Render it from the stamp's `adopted` list, never from what happens to be on disk
 - Replace `<prefix>` with `.` in the flat layout and `.devbook/` in the nested one —
   the generator reports which layout it found on every run.
 - Replace `<generator>` with the path `generatorPath` reports: the conventional
-  `.github/tools/devbook-meta/build.mjs` in a repository this materialized into, and a
+  `.devbook/_tools/devbook-meta/build.mjs` in a repository this materialized into, and a
   repo-relative path in one that vendors the generator itself. Never write the
   conventional path into a repository where it does not resolve.
 - Keep the `<refresh>` sentence that matches what was materialized. A repository holding

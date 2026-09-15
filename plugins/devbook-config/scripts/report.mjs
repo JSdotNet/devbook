@@ -67,6 +67,25 @@ const ENGINE_KEYS = ['bindings', 'extensions', 'policy', 'gates'];
 const SERVICES = ['spec', 'implement', 'verify', 'app.start', 'qa.run', 'deliver'];
 const CHORES = ['session.start', 'flow.start', 'data.prepare', 'docs.update', 'flow.end'];
 
+// The engine default per extension point, from **MCP Server Strategy** in `delivery`'s
+// `resources/flow-execution-model.md`. Repeated here for the same reason COMPONENTS is: the
+// report has to say which server a repository leans on when the delivery plugin is not on
+// this machine. A point not listed defaults to none.
+const MCP_DEFAULTS = {
+    implement: ['microsoft-learn'],
+    verify: ['microsoft-learn'],
+    'app.start': ['aspire', 'playwright'],
+    'qa.run': ['aspire', 'playwright'],
+};
+
+// Where a host reads a repository's MCP servers from. `.mcp.json` is read by Claude Code and
+// the Copilot CLI, `.vscode/mcp.json` by VS Code, `.github/mcp.json` by the Copilot CLI alone.
+const MCP_FILES = [
+    { path: '.mcp.json', key: 'mcpServers' },
+    { path: '.vscode/mcp.json', key: 'servers' },
+    { path: '.github/mcp.json', key: 'mcpServers' },
+];
+
 const sources = [];
 
 /** Read a JSON file, recording where it was looked for and what came back. */
@@ -307,6 +326,35 @@ function buildPluginRows(catalogs, installed, enabled, marketplace, components) 
     });
 }
 
+/**
+ * The servers the engine will look for - every id bound under `delivery.mcp`, plus the engine
+ * default for each point the binding leaves absent - against the ids the repository's MCP
+ * configuration files actually declare. A default is only a name until a host can start the
+ * server behind it, so an id in `undeclared` costs its stage its grounding on every machine.
+ */
+function mcpServers(repoRoot, mcp) {
+    const wanted = new Set();
+    for (const point of [...SERVICES, ...CHORES]) {
+        const bound = mcp && point in mcp ? mcp[point] : MCP_DEFAULTS[point];
+        for (const id of bound ?? []) wanted.add(id);
+    }
+    const files = MCP_FILES.map(({ path, key }) => {
+        const value = load('MCP configuration', join(repoRoot, path));
+        const servers = value?.[key];
+        return {
+            path,
+            present: Boolean(value),
+            servers: servers && typeof servers === 'object' ? Object.keys(servers) : [],
+        };
+    });
+    const declared = new Set(files.flatMap((file) => file.servers));
+    return {
+        wanted: [...wanted],
+        files,
+        undeclared: [...wanted].filter((id) => !declared.has(id)),
+    };
+}
+
 function buildRepository(repoRoot) {
     const path = join(repoRoot, '.devbook', 'config.json');
     const config = load('stack config', path);
@@ -340,6 +388,7 @@ function buildRepository(repoRoot) {
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
         roles: config?.bindings?.['delivery.roles'] ?? null,
         mcp: config?.bindings?.['delivery.mcp'] ?? null,
+        mcpServers: mcpServers(repoRoot, config?.bindings?.['delivery.mcp']),
         extensions: config?.extensions ?? null,
         policy: config?.policy ?? null,
         gates: config?.gates ?? null,
@@ -373,6 +422,25 @@ function describeStamp(stamp) {
             : 'nothing enabled');
     }
     return parts.join('; ') || '-';
+}
+
+/**
+ * One line per MCP configuration file, and one more when a server the engine will look for is
+ * declared in none of them - the one thing the binding table cannot show.
+ */
+function describeMcpServers({ wanted, files, undeclared }) {
+    const ids = (list) => list.map((id) => `\`${id}\``).join(', ');
+    const lines = [
+        `MCP servers in use, bound or by engine default: ${ids(wanted) || 'none'}.`,
+        ...files.map((file) => (file.present
+            ? `- \`${file.path}\` declares ${ids(file.servers) || 'no server'}`
+            : `- \`${file.path}\` absent`)),
+    ];
+    if (undeclared.length) {
+        lines.push('');
+        lines.push(`Declared in none of them: ${ids(undeclared)}. A host cannot start a server it has not been told about, so the stage that leans on it runs without its grounding on every machine. The delivery plugin's \`resources/mcp-template.json\` (\`.mcp.json\`, read by Claude Code and the Copilot CLI) and \`resources/mcp-vscode-template.json\` (\`.vscode/mcp.json\`) declare the three engine defaults - copy them, or add the missing ids to a file that exists.`);
+    }
+    return lines.join('\n');
 }
 
 function describeValue(value) {
@@ -514,6 +582,8 @@ function render(model) {
         out.push(repo.mcp
             ? table(['Point', 'MCP servers'], Object.entries(repo.mcp).map(([k, v]) => [`\`${k}\``, v === null ? '`null` - deliberately none' : v.map((s) => `\`${s}\``).join(', ')]))
             : 'No `delivery.mcp` binding - every point takes the engine default MCP servers.');
+        out.push('');
+        out.push(describeMcpServers(repo.mcpServers));
         out.push('');
         out.push('### Extension points');
         out.push('');

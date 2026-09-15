@@ -69,10 +69,12 @@ export const CONTRACT_VERSION = 9;
 export const SCHEMA_VERSION = CONTRACT_VERSION;
 export const REPO_SCOPE = ".";
 
-// Where a repository that adopts the convention keeps this folder. The fallback
-// for `generatedBy`, and still the right answer whenever the generator is not
+// Where a repository that adopts the convention keeps this folder: under
+// `.devbook/`, beside the stack config and the stamp, because the generator is
+// plain Node and `.github/` is one host's folder. The fallback for
+// `generatedBy`, and still the right answer whenever the generator is not
 // inside the repository it is indexing — a plugin install, or `--root`.
-export const GENERATOR = ".github/tools/devbook-meta/build.mjs";
+export const GENERATOR = ".devbook/_tools/devbook-meta/build.mjs";
 
 const GENERATOR_FILE = fileURLToPath(new URL("./build.mjs", import.meta.url));
 

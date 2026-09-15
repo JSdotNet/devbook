@@ -106,41 +106,56 @@ does; how a change is carried — stages, roles, the approval gate, a pull reque
 delivery engine's, which ships one flow per folder and reads these rules from the repository.
 With `devbook` alone, a folder edit follows the folder's instruction file directly.
 
-### Skills: `to-spec-<kind>` and `from-spec-<kind>`
+### Skills: `sync-specs`, `apply-change`, `verify-change`
 
-Two directions between a devbook chapter and the code that implements it. The chapter is
-the **spec**, which is what the `spec` in each name refers to — `<kind>` alone would be
-ambiguous, because an aggregate is both a chapter and a class.
+Three skills between a devbook chapter and the code that implements it, named
+after the verbs [OpenSpec](https://openspec.dev/docs/skills) uses for the same
+moves — `apply-change` and `verify-change` exactly, `sync-specs` approximately,
+since OpenSpec has no skill that reads code to update a spec (debt record 6 in
+this repository's `.devbook/arc42/tdr/`). The chapter is the **spec**.
 
-- **`to-spec-<kind>`** — something exists in the application and the
-  chapter is missing, thin, or stale, so read the implementation and write the
-  chapter. Source and tests are the only evidence; comments, TODOs, and disabled
-  tests are not. The write routes per **Where the spec-side write goes** in
+- **`sync-specs`** — something exists in the application and the chapter is
+  missing, thin, or stale, so read the implementation and write the chapter.
+  Source and tests are the only evidence; comments, TODOs, and disabled tests
+  are not. The write routes per **Where the spec-side write goes** in
   `assets/code-sync-protocol.md`.
-- **`from-spec-<kind>`** — a chapter is agreed but unbuilt, so turn it
-  into a change brief (outcomes, invariants, ubiquitous language, out of scope,
-  acceptance checks) plus a change category, then stop. It never edits a source
-  or test tree, and never names a code-side flow — which delivery flow picks the
-  brief up is the user's decision, made after reading it.
+- **`apply-change`** — a chapter is agreed but unbuilt, so turn it into a
+  change brief (outcomes, invariants, ubiquitous language, out of scope,
+  acceptance checks) plus a change category, and hand the brief to the flow that
+  implements a change of that category, per **Where the code-side write goes**
+  in the protocol: a repo-native `flow-*` skill first, then the engine's
+  `flow-feature` or `flow-bug`, and nowhere when no engine is installed — then
+  it stops with the brief, and which flow picks it up is the user's decision.
+  It never edits a source or test tree itself.
+- **`verify-change`** — report which side moved, per chapter, and write
+  nothing: the drift verdict is the whole result, and its `Action` column names
+  which of the other two the verdict calls for.
 
-**The `from-spec-` direction covers both from scratch and update.** The change
-category is that axis, and counterpart resolution picks between them before the
-brief is written: `new functionality` when no counterpart exists at all, `change
-to existing behaviour` when one exists and the chapter asks for more, and
-`defect` when one was believed to already satisfy an agreed chapter and does not.
-That is why a `from-spec-` skill reads code — not to change it, but to establish what is
-already there so the brief asks only for the delta, and an update brief lists
-where the current behaviour lives.
+**`apply-change` covers both from scratch and update.** The change category
+is that axis, and counterpart resolution picks between them before the brief is
+written: `new functionality` when no counterpart exists at all, `change to
+existing behaviour` when one exists and the chapter asks for more, and `defect`
+when one was believed to already satisfy an agreed chapter and does not. That
+is why it reads code — not to change it, but to establish what is already there
+so the brief asks only for the delta, and an update brief lists where the
+current behaviour lives.
 
-Five kinds, two directions each:
+Each skill covers five kinds, decided by the chapter's `type` — or by the file,
+where the folder defines no `type`:
 
-| Kind | Target | `type` value(s) | Spec-side target |
-|------|--------|-----------------|-----------------|
-| `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `.domain/<context>/` |
-| `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `.domain/<context>/` |
-| `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills | `feature`, `sub-feature` | `.domain/<context>/` |
-| `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `.arc42/` |
-| `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `.design/` |
+| Kind | Target | `type` value(s) | Kind file |
+|------|--------|-----------------|-----------|
+| `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
+| `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
+| `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
+| `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `assets/spec-kinds/building-block.md` |
+| `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `assets/spec-kinds/design-component.md` |
+
+A kind file is what a kind needs that the protocol does not say: the chapters
+and file it covers, the folder rule, the spec-to-code mapping with an evidence
+column for capturing and a requirements column for proposing, and what each
+direction does differently there. The three skills are short because the kind
+files and the protocol are not.
 
 **The aggregate is the unit, not its parts.** One pass covers the root, every
 entity, value object, and enum it owns, the shared value-object and enum
@@ -153,34 +168,34 @@ land independently.
 
 A **domain service** is the deliberate exception: it is defined by coordinating
 across boundaries rather than living in one, so folding it into a boundary's pass
-would be backwards. It keeps its own pair, and owns the events it raises itself.
+would be backwards. It is its own kind, and owns the events it raises itself.
 
-**`to-spec-feature` runs the application.** `features.md` is the one chapter
-file written from the user's point of view, so that pass starts the app, walks
-the feature, and captures a screenshot per step — reading a controller tells you
-a route exists, while using the feature tells you what the product lets someone
-do, in what order, with what wording. It prefers the repository's own runtime and
-QA workflow skills where the repository has any installed, runs
+**`sync-specs` runs the application for a feature.** `features.md` is the one
+chapter file written from the user's point of view, so that pass starts the app,
+walks the feature, and captures a screenshot per step — reading a controller
+tells you a route exists, while using the feature tells you what the product
+lets someone do, in what order, with what wording. It prefers the repository's
+own runtime and QA workflow skills where the repository has any installed, runs
 only against a local or disposable environment, never exercises a destructive
 step to document it, and keeps the screenshots as report evidence rather than
-committing them to a devbook folder.
+committing them to a devbook folder. `verify-change` runs nothing: a feature is
+verified from code and tests.
 
-**Term chapters have no pair of their own.** They are written through
-the `.domain` write path, and populated incrementally by the capture passes: whenever one
-resolves a counterpart by inference rather than by an existing alias, it proposes
-a term with the discovered code name as an `alias`, which turns a one-off
-inference into a durable pairing for the next pass. The context folder itself, including
-its term chapters, is created by the same path.
+**Term chapters have no kind of their own.** They are written through the
+`.domain` write path, and populated incrementally by capture passes: whenever
+one resolves a counterpart by inference rather than by an existing alias, it
+proposes a term with the discovered code name as an `alias`, which turns a
+one-off inference into a durable pairing for the next pass. The context folder
+itself, including its term chapters, is created by the same path.
 
-`.tech` has no pair here — `devbook-tech-update` already covers that
-direction.
+`.tech` has no kind here — `devbook-tech-update` already covers that direction.
 
-The shared rules live once in `assets/code-sync-protocol.md`, which all 10 skills
-reference and none repeats: counterpart resolution, the evidence rules (including
-why unit tests are first-class evidence for capture rather than a cross-check), a
-five-way drift verdict (`aligned`, `code-ahead`, `spec-ahead`, `conflict`,
-`unresolved`, where `conflict` always stops and asks), the status rules, index
-regeneration, and a shared report table.
+The shared rules live once in `assets/code-sync-protocol.md`, which all three
+skills reference and none repeats: counterpart resolution, the evidence rules
+(including why unit tests are first-class evidence for capture rather than a
+cross-check), a five-way drift verdict (`aligned`, `code-ahead`, `spec-ahead`,
+`conflict`, `unresolved`, where `conflict` always stops and asks), the status
+rules, index regeneration, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
@@ -188,12 +203,14 @@ signal when it does. It goes through a `term` chapter's `aliases`, then the `.ar
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
-The dependency on the flows is one-way. A `to-spec-` skill names its folder's write
-path and hands over grounded input; no flow knows these skills exist.
+The dependency on the flows is one-way. `sync-specs` names its folder's write
+path and `apply-change` its category's, and both hand over grounded input; no
+flow knows these skills exist.
 
 **Trigger keywords:** `document what we built`, `capture from code`,
 `.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
-`change brief`, `spec code drift`, `the code has an invariant the chapter omits`
+`change brief`, `spec code drift`, `is the chapter still true`,
+`the code has an invariant the chapter omits`
 
 ### Instructions
 
@@ -268,17 +285,17 @@ chapter's Markdown beside its parsed `meta` block and a metadata lint.
 ```
 
 ```bash
-node .github/tools/devbook-meta/build.mjs            # write every adopted scope
-node .github/tools/devbook-meta/build.mjs --check    # CI: verify only
-node .github/tools/devbook-meta/build.mjs --scope .tech
-node .github/tools/devbook-meta/build.mjs --root ../other-repo
+node .devbook/_tools/devbook-meta/build.mjs            # write every adopted scope
+node .devbook/_tools/devbook-meta/build.mjs --check    # CI: verify only
+node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 ```bash
-node .github/tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
-node .github/tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
-node .github/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-node .github/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
+node .devbook/_tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
 ```
 
 `annotations.mjs` is the only writer of an annotation fence — the CLI above and
@@ -294,8 +311,8 @@ output shape and for when to refresh.
 ### Tooling: `devbook-tech`
 
 ```bash
-node .github/tools/devbook-tech/dotnet-packages.mjs --root .
-node .github/tools/devbook-tech/frontend-packages.mjs --root .
+node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root .
+node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 The inventory scripts emit deterministic JSON from repository manifests. Use them
@@ -313,7 +330,8 @@ for technologies that do not appear in package manifests.
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
-| `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
 

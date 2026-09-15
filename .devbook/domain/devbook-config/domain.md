@@ -147,7 +147,7 @@ Invocation semantics: command-invoked, and it changes nothing about intent. It f
 [scope verdict](#scope-verdict) — running what it can, reporting what this machine has not
 installed or this checkout has not enabled, and never dropping a stamp for either reason.
 
-## Guide
+## Ask
 
 ```meta
 type: domain-service

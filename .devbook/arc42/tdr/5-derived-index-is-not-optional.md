@@ -49,8 +49,9 @@ graph, and its roadmap rollups, off disk, in whichever repository it is pointed 
 run the generator. That is the argument for the artifact existing — and equally the argument for
 adopting it per repository rather than shipping it to all of them.
 
-**And the foundation runs the writer.** `devbook-tech-update` and the five `to-spec-*`
-converters call `build.mjs --scope <folder>` with no `--check`, in six places. `AGENTS.md` says
+**And the foundation runs the writer.** `devbook-tech-update` and `sync-specs` — the five
+`to-spec-*` converters when this was written — call `build.mjs --scope <folder>` with no
+`--check`. `AGENTS.md` says
 refreshing `_meta/` "belongs to automation, never to a session", and `devbook-check` step 6 says
 committing the refresh is "usually not what you want". `devbook-tech-update` already hedges its
 own line — indexes regenerated "when the repository ships `devbook-meta`" — which is a
@@ -112,7 +113,7 @@ hold.
 
 | Option | Trade-off |
 | --- | --- |
-| `devbook-derived`, an L1 extension on the `devbook-collaboration` template, taking `Update-DevbookIndex.ps1`, `devbook-meta-nightly.yml`, `devbook-derived-artifacts.md` with its `**/_meta/**` rule entry, the `_meta/` paragraphs of the `AGENTS.md` section, and `devbook-check` step 6 | What the layer model already describes. devbook keeps `tools/devbook-meta/`, `devbook-meta.yml`, and the `--check` gate, so a devbook-only repository still validates its own schema. L1 invokes `.github/tools/devbook-meta/build.mjs` at the path devbook already materializes it to, so no module crosses a plugin boundary. Costs a migration: assets leaving the materialize table have to be pulled from repositories that do not adopt the new plugin |
+| `devbook-derived`, an L1 extension on the `devbook-collaboration` template, taking `Update-DevbookIndex.ps1`, `devbook-meta-nightly.yml`, `devbook-derived-artifacts.md` with its `**/_meta/**` rule entry, the `_meta/` paragraphs of the `AGENTS.md` section, and `devbook-check` step 6 | What the layer model already describes. devbook keeps `tools/devbook-meta/`, `devbook-meta.yml`, and the `--check` gate, so a devbook-only repository still validates its own schema. L1 invokes `.devbook/_tools/devbook-meta/build.mjs` at the path devbook already materializes it to, so no module crosses a plugin boundary. Costs a migration: assets leaving the materialize table have to be pulled from repositories that do not adopt the new plugin |
 | The same split, with `emit()` and the `outputPathFor` / `outlinePathFor` / `annotationsPathFor` placement functions moving too, so the foundation ships no writer at all | The stricter boundary, and honest if placement is L1's rule — it is `devbook-derived-artifacts.md` that governs it, and that rule is moving. But L1's contract becomes twelve exports across three modules, versioned in lockstep by the stamp, in place of one documented CLI invocation |
 | Fix only the contradiction: make the six converter call sites `--check`-only and leave the packaging alone | Cheapest, and it removes a rule nobody keeps. Not an alternative to the split — both options above need it first — so this is a prerequisite being taken early, not a resolution |
 | Leave it | Every new adopter receives the nightly and the refresh script whether or not anything reads the output, and the "never in a session" rule stays stated and broken in six places |

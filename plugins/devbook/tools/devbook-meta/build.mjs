@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // build.mjs — CLI wrapper that writes the derived devbook metadata artifacts.
 //
-//   node .github/tools/devbook-meta/build.mjs           # every adopted scope
-//   node .github/tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
-//   node .github/tools/devbook-meta/build.mjs --scope .tech
-//   node .github/tools/devbook-meta/build.mjs --root ../other-repo
+//   node .devbook/_tools/devbook-meta/build.mjs           # every adopted scope
+//   node .devbook/_tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
+//   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+//   node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 //
 // Writes three artifacts per scope, per the derived-artifacts convention:
 //

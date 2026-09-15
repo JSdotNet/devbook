@@ -1,11 +1,11 @@
-# 67. The Flow Context Lives in devbook
+# 70. The Flow Context Lives in devbook
 
 ```meta
 date: 2026-09-15
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/arc42/adr/41-a-session-start-hook-fires-only-where-the-repository-adopted-the-plugin.md"]
 ```
 
-**Superseded, 2026-09-15** by [The start Skill Holds the Runtime Facts](68-the-start-skill-holds-the-runtime-facts.md):
+**Superseded, 2026-09-15** by [The start Skill Holds the Runtime Facts](71-the-start-skill-holds-the-runtime-facts.md):
 the file is retired, so where it lived no longer matters. The rule it applied — a file both
 hosts read lives in neither host's folder — stands, and record 11 still carries it.
 

@@ -78,7 +78,10 @@ All four live in `.devbook/config.json`:
 
 Copy `resources/config-template.json` and validate with
 `node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
-never become a silently absent setting.
+never become a silently absent setting. A point left out of `delivery.mcp` takes the engine
+default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
+`resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
+`devbook-config:setup` can copy them into a repository that declares no server yet.
 
 **Configuration chooses among behaviour the engine already implements; it never introduces
 new behaviour.** A stage is a prompt, not a program — "apply TDD", "escalate instead of
@@ -138,6 +141,8 @@ seed changes who runs capture, never whether it runs.
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
+| `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
+| `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
 | `assets/skills/` | The `start` and `capture` seeds `delivery:install` writes into a repository |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a pointer wrapper per host |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

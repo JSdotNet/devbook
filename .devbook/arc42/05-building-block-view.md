@@ -213,7 +213,7 @@ flowchart TB
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
         wf[".github/workflows/ - the check, and the nightly refresh"]
-        tools[".github/tools/ - the generator, at the path flows name"]
+        tools[".devbook/_tools/ - the generator, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
         cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
@@ -242,7 +242,7 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.github/tools/` holds devbook's generator at the path devbook's install writes it to, and five
+`.devbook/_tools/` holds devbook's generator at the path devbook's install writes it to, and five
 of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
 knowledge of, and a repository that hand-authored its folders without installing devbook gets a
 check line pointing at a file that is not there.
@@ -396,7 +396,7 @@ because no other plugin is allowed to name every plugin.
 | --- | --- |
 | `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
 | `update` | The same four keys, moved forward, after each component reconciled itself |
-| `guide` | Nothing. It reads, and every fact it states names the file behind it |
+| `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
 
 The four take no prefix. It is named `devbook-config` for the file it writes,
@@ -463,7 +463,7 @@ it left `.github/` — see [the decision](adr/11-the-stack-config-lives-in-devbo
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
 It is the only engine file in the folder: the runtime facts a run needs live in the
 repository's own `start` skill, not in a second file here — see
-[decision 68](adr/68-the-start-skill-holds-the-runtime-facts.md).
+[decision 71](adr/71-the-start-skill-holds-the-runtime-facts.md).
 
 ## Schedule Plugin
 

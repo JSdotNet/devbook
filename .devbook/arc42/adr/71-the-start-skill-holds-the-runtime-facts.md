@@ -1,8 +1,8 @@
-# 68. The start Skill Holds the Runtime Facts
+# 71. The start Skill Holds the Runtime Facts
 
 ```meta
 date: 2026-09-15
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/adr/46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md", ".devbook/arc42/adr/67-the-flow-context-lives-in-devbook.md", ".devbook/domain/delivery/dependencies.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/adr/46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md", ".devbook/arc42/adr/70-the-flow-context-lives-in-devbook.md", ".devbook/domain/delivery/dependencies.md"]
 ```
 
 The flow context file is retired, together with the `repo-flow-context` slot. A repository
@@ -46,5 +46,5 @@ name. The `start` seed gained four sections, so a copy a repository never edited
 on the next reconcile, and an edited one is reported as customized and left for its owner
 to extend. `delivery` ships no migration folder, by
 [56](56-payload-only-components-carry-no-contract-version.md); the report and the check are
-the instruction. [67](67-the-flow-context-lives-in-devbook.md) moved the file that morning
+the instruction. [70](70-the-flow-context-lives-in-devbook.md) moved the file that morning
 and is superseded by this the same day — the rule it moved under is record 11's and stands.
