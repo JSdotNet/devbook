@@ -328,7 +328,7 @@ related: [".devbook/domain/plugin-authoring/domain.md#host", ".devbook/arc42/05-
 ```
 
 A name a shared asset reads instead of a host's own file: `repo-instructions`,
-`repo-flow-context`, `model-override`, `stage-delegation`, `surface`, `pr-lane`. A slot is
+`model-override`, `stage-delegation`, `surface`, `pr-lane`. A slot is
 bound, never branched — an asset that carries an if-this-host clause has not used a slot.
 
 Behavioural divergence binds as a capability rather than as a host: `stage-delegation` asks

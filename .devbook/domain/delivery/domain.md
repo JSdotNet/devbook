@@ -435,11 +435,11 @@ related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc4
 ```
 
 A name a shared asset reads instead of a host's own file: `repo-instructions`,
-`repo-flow-context`, `model-override`, `stage-delegation`, `surface`, `pr-lane`. A slot is bound
+`model-override`, `stage-delegation`, `surface`, `pr-lane`. A slot is bound
 or it takes its documented unbound default, and it is never branched on — an asset carrying an
 if-this-host clause has not used a slot.
 
-Two of the six are answered by the live session rather than by configuration, which is what
+Two of the five are answered by the live session rather than by configuration, which is what
 keeps the hosts from re-diverging the moment one gains what the other has. Unbound is the
 resting state of the whole set.
 

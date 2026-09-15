@@ -45,7 +45,6 @@
           "additionalProperties": false,
           "properties": {
             "repo-instructions": { "$ref": "#/$defs/nullableString" },
-            "repo-flow-context": { "$ref": "#/$defs/nullableString" },
             "pr-lane": { "$ref": "#/$defs/nullableString" }
           }
         },

@@ -20,7 +20,7 @@ related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/tdr/4-deliv
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
 | A surface | Resolved at run time, never declared | Tool names matched by pattern from the live tool list | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. Host divergence is absorbed through a slot rather than a branch. |
-| A consuming repository | Customer-Supplier, this context supplying | `.devbook/config.json`, four engine-owned keys; the optional flow-context convention | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
+| A consuming repository | Customer-Supplier, this context supplying | `.devbook/config.json`, four engine-owned keys; the `start` skill it seeds and the repository edits | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
 
 ## Inbound dependents (known)
 
@@ -45,8 +45,8 @@ related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/tdr/4-deliv
   remediation — resolve the repository's own check instead of naming devbook's path, drop the
   three restated schema rules, and state in the README which flows need an adopted folder — is
   the one to take.
-- **Nothing here names a host.** Six slots absorb what would otherwise be host branches, and two
-  of the six are answered by the live session rather than by configuration, so the hosts cannot
+- **Nothing here names a host.** Five slots absorb what would otherwise be host branches, and two
+  of the five are answered by the live session rather than by configuration, so the hosts cannot
   re-diverge the moment one gains what the other has.
 - **Fan-out is not a dependency in either direction.** A flow owns a run, a gate, and a user
   turn, none of which survives a session boundary — so the mechanism that spawns a session per

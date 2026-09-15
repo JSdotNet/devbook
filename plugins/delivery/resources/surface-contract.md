@@ -84,8 +84,8 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   has decided; `null` means somebody decided no.
 - **No model ever appears in this file.** Model choice is personal — see
   `flow-model-selection.md`.
-- **No secrets.** The file is committed. A credential pointer belongs in
-  `.claude/flow-context.md`, and the value belongs in a secret store.
+- **No secrets.** The file is committed. A credential pointer belongs in the repository's
+  `start` skill, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself, and
@@ -255,12 +255,11 @@ that ref exists is resolved against the remote at flow time — Update Base fetc
 pull-request lane opens against it — because a config check that reached for the network would
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
 
-**QA depth resolves in one order, highest first:** `policy.qa.depth` here, then the
-`## QA Depth` section of `.claude/flow-context.md`, then `phase-qa-validation`'s change-kind
-selection. The first one present wins, and `policy.qa.ceiling` caps the result however it was
-reached. The config outranks the context file because it is the validated, versioned surface a
-repository commits; the context file describes the application, and says what to do when
-nothing above it decided. `qa.depth` may be overlaid per machine, `qa.ceiling` may not.
+**QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
+`phase-qa-validation`'s change-kind selection. The first one present wins, and
+`policy.qa.ceiling` caps the result however it was reached. The repository's `start` skill
+describes the application and never sets a depth. `qa.depth` may be overlaid per machine,
+`qa.ceiling` may not.
 
 ## Bindings
 
@@ -300,14 +299,13 @@ dependencies: one missing specialist must not demote every skill that names it.
 A shared skill never names a host's own file. It names a slot. A slot is **bound, never
 branched**: the skill reads `repo-instructions`; it does not contain an if-this-host clause.
 No plugin ships bindings, so a slot resolves from what the running session offers, from
-`bindings["delivery.slots"]` where a repository sets one — `repo-instructions`,
-`repo-flow-context`, and `pr-lane` only — or to the unbound default below, which
+`bindings["delivery.slots"]` where a repository sets one — `repo-instructions` and
+`pr-lane` only — or to the unbound default below, which
 is the normal case and never a gap.
 
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
-| `repo-flow-context` | The repository's flow context file, `.claude/flow-context.md` by convention | Discovery as today |
 | `model-override` | Where a user's personal model preferences live | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
