@@ -111,14 +111,15 @@ item, because the previous one is filtered out as in flight.
    | Dependency or package updates | `flow-update-packages` |
    | An Aspire version upgrade | `flow-aspire-update` |
    | A devbook folder — an architecture chapter, decision or debt record, the domain model, technology graph, design guidelines, or AI adoption record | `flow-spec` |
-   | Anything no skill above covers — tooling, CI, scripting, housekeeping | `flow-fallback` |
+   | Tooling, CI, scripting, documentation outside the devbook folders, housekeeping | `flow-code`, config kind |
 
    This mirrors the routing the plugin's `SessionStart` hook installs; a repository may ship
    its own `flow-*` skills in the host's repo-native skill folder, and those take precedence for the
-   categories they cover. `flow-fallback` is the last resort, not an escape hatch.
+   categories they cover. There is no fallback flow: every change to a repository is one of
+   these, and a matching flow whose preconditions are unmet derives what is missing.
 
    State the routing decision and its reason before acting on it. When the item is too
-   ambiguous to route, ask (interactive) or route to `flow-fallback` and say so (unattended).
+   ambiguous to route, ask (interactive) or route to `flow-code` and say so (unattended).
 
 ### Phase 5 — Claim and Run
 

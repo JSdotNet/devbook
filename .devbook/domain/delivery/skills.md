@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The seventeen skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The sixteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-code
@@ -80,17 +80,6 @@ is the same and only the role differs: the folder picks who drafts, and the repo
 instruction file for that folder says what a chapter must look like. It runs the repository's
 check and never regenerates the derived indexes, and it is the escalation target when any other
 flow discovers it needs a decision.
-
-## flow-fallback
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-fallback.md"]
-```
-
-The lane for a category no other flow covers. Its first stage will send you away when a dedicated
-flow exists: it is a last resort, never an escape hatch from a matching flow whose preconditions
-are inconvenient.
 
 ## phase-build-test
 

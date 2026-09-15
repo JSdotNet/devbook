@@ -60,8 +60,8 @@ flowchart TD
 
 ## The Two Tiers
 
-Same spine, different close. The tier is a property of the change kind, and `flow-code` and
-`flow-fallback` resolve it at run time and report which they picked.
+Same spine, different close. The tier is a property of the change kind, and `flow-code` resolves
+it at run time and reports which it picked.
 
 ```mermaid
 flowchart LR

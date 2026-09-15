@@ -72,7 +72,7 @@ host enforces, and that one for who has to live with whose model.
 | Plain, labelled with a capability | Conformance to a published language neither side declares | The caller resolves the group unanswered and continues |
 | Dashed | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
 
-The dashed `delivery → devbook` edge is the one to read twice. Six of the engine's seven
+The dashed `delivery → devbook` edge is the one to read twice. Five of the engine's six
 flows work with devbook absent, so it is not an L1 extension; it is one stack rather than two, so
 it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
