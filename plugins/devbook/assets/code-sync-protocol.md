@@ -337,8 +337,8 @@ the derived indexes need regenerating. The write itself happens inside the
 flow; regeneration is part of closing the pass:
 
 ```bash
-node .github/tools/devbook-meta/build.mjs --scope <folder>
-node .github/tools/devbook-meta/build.mjs --scope <folder> --check
+node .devbook/_tools/devbook-meta/build.mjs --scope <folder>
+node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
 ```
 
 Scope is the folder that changed — `.domain`, `.arc42`, or `.design`. Run
