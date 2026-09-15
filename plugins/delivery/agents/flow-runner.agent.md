@@ -51,7 +51,7 @@ those contracts; it does not re-decide them per skill.
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether the
    repository has a `start` skill at `.agents/skills/start.md`. When it does, persist the
-   path and name it to whichever provider fills `app.start` and to QA Validation as the
+   path and name it to whichever provider fills `app.start` and to Validation as the
    repository's declared runtime facts — command, entry points, readiness signals,
    credential pointer. Do not read it yourself; the `app.start` result carries what later
    stages need. Both files are optional; a missing or malformed one never blocks the run.
@@ -96,7 +96,7 @@ those contracts; it does not re-decide them per skill.
     run. Reserve inline execution for startup-only QA and for a host where `stage-delegation`
     resolves to nothing. `phase-personal-validation` is the opposite case and is **never
     delegated** — see step 12.
-11. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
+11. **Enforce Build & Test first.** Never start Validation or Personal Validation on a red
     build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
 12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the point it attaches to and asks its question. `approve` continues; `revise`

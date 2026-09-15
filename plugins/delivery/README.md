@@ -100,7 +100,7 @@ So `delivery:install` seeds two skills into the repository and hands them over:
 | Seed | Fills | The repository owns |
 |---|---|---|
 | `start` | the `app.start` point, as `repo:start` | the facts — command, entry points, readiness signals, credential pointer — and the procedure: startup, sign-in, the branch-to-area map |
-| `capture` | evidence capture inside QA Validation | the layout, the naming, the tooling |
+| `capture` | evidence capture inside Validation | the layout, the naming, the tooling |
 
 Each lands as one editable copy under `.agents/skills/` with a pointer wrapper per host. Edit
 the copy and it is yours: its hash matches no release, so every later reconcile reports it and

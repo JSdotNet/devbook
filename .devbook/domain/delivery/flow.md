@@ -69,7 +69,7 @@ flowchart LR
         direction TB
         c1["Update Base"] --> c2["the flow's own stages"]
         c2 --> c3["Build & Test"]
-        c3 --> c4["QA Validation"]
+        c3 --> c4["Validation"]
         c4 --> c5["Personal Validation"]
         c5 --> c6["Create Pull Request"]
         c6 --> c7["Verification"]
@@ -91,7 +91,7 @@ flowchart LR
   and nothing to verify a chapter against** — the chapter is the specification — not because
   the change matters less. A chapter change still passes Personal Validation and still opens
   for review.
-- **QA depth inside QA Validation is driven by change kind**: new functionality gets a browser
+- **QA depth inside Validation is driven by change kind**: new functionality gets a browser
   pass with captured evidence, an existing-flow change gets targeted verification, a dependency
   update gets startup only, and where there is no runnable application the depth is recorded as
   skipped rather than claimed.

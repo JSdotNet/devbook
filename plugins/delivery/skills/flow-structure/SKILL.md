@@ -14,7 +14,7 @@ Required: the structure or layout change — a folder move, project relocation, 
 organization fix, or test/harness placement change.
 
 Derived in Stage 0 when absent: the target layout rule, the affected surfaces, the
-verification criteria, and the runtime validation target (or the reason QA Validation is
+verification criteria, and the runtime validation target (or the reason Validation is
 skipped).
 
 ## Stage 0: Scope Discovery
@@ -76,10 +76,10 @@ architecture interpretation.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Verification → Work Item
+Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
-A change to existing structure, so QA Validation is targeted at the affected flows — and
+A change to existing structure, so Validation is targeted at the affected flows — and
 skipped with a recorded reason when the repository has no runnable surface.
 
 ## Surface Reporting
@@ -89,7 +89,7 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-structure"` and stages: Scope Discovery, Structure &
-  Architecture Intake, Refactor Planning, Implementation, Build & Test, QA Validation, Personal
+  Architecture Intake, Refactor Planning, Implementation, Build & Test, Validation, Personal
   Validation, Create Pull Request, Verification, Work Item Update, Summary.
 - During Scope Discovery, put the restated change, the derived target layout, the affected
   surfaces, and the verification criteria in the stage output, so the user can correct them.

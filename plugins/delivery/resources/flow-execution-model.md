@@ -62,7 +62,7 @@ stage uses the servers bound to the point it serves:
 | Scope Discovery; every intake, retrieval, drafting, and review stage of a documentation/config flow | `spec` |
 | Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
 | Build & Test | `validate` |
-| QA Validation | `app.start`, `qa.run` |
+| Validation | `app.start`, `qa.run` |
 | Create Pull Request, Work Item Update | `deliver` |
 | Verification | `verify` |
 | Update Base, Personal Validation, Summary | none |
@@ -118,7 +118,7 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    Five kinds of work are delegated by default, and running them inline is a defect in the
    run rather than a shortcut:
    - **Build & Test** — per `skills/phase-build-test/SKILL.md`.
-   - **QA Validation** — per `skills/phase-qa-validation/SKILL.md`.
+   - **Validation** — per `skills/phase-qa-validation/SKILL.md`.
    - **Verification's reading** — the change set and its tests against the
      specification and the chapters, per the phase in `flow-phases.md`; the verdict table
      comes back, the reading stays out.

@@ -6,7 +6,7 @@ description: 'Shared Build & Test phase for code-modifying flow-* flows. Builds 
 # Phase: Build & Test
 
 Reusable **Build & Test** phase shared by every code-modifying `flow-*` flow. The
-`flow-runner` agent invokes this skill first — before QA Validation and Personal
+`flow-runner` agent invokes this skill first — before Validation and Personal
 Validation — so build and test behavior lives in one place instead of in each skill.
 
 ## When To Run
@@ -46,7 +46,7 @@ turn. Run in a sub-agent it costs one summary instead.
 1. **Build all projects** and fail fast on any build error.
 2. **Run the unit test suite** and require it to pass.
 3. **Run the automated end-to-end (E2E) test suite** and require it to pass.
-4. **Stop and fix on red** — do not hand control to QA Validation or Personal Validation
+4. **Stop and fix on red** — do not hand control to Validation or Personal Validation
    while the build, unit, or E2E tests are failing.
 
 Batch these into as few shell invocations as the toolchain allows: chained commands cost one
@@ -60,7 +60,7 @@ flow-runner route it, rather than expanding the phase's sub-agent into a repair 
 
 - Build result (pass/fail) and the failing targets when red.
 - Unit and E2E test results with pass/fail counts.
-- A go/no-go signal for the next phase (QA Validation).
+- A go/no-go signal for the next phase (Validation).
 
 These are what the sub-agent returns, and all of it: a failing target is named with the
 error that identifies it, not with the surrounding log.

@@ -19,7 +19,7 @@ flowchart TD
     s2["Implementation Planning"]
     s3["Implementation"]
     c0["Build & Test"]
-    c1["QA Validation"]
+    c1["Validation"]
     c2["Personal Validation"]
 
     base --> s0
@@ -50,7 +50,7 @@ runner and named by no skill.
   configuration, and how it is started are part of the plan rather than of the implementation.
 - Extracting an existing area into its own service runs here too, for the same reason a carve runs
   through the module flow.
-- The service has to start before Personal Validation, which is why QA Validation is not optional
+- The service has to start before Personal Validation, which is why Validation is not optional
   for this one even when the change looks like configuration.
 
 The roles and MCP servers each stage resolves are in the engine's own `FLOW-DIAGRAMS.md`, which

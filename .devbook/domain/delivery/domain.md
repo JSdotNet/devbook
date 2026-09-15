@@ -124,7 +124,7 @@ type: entity
 aliases: [shared step, phase skill]
 ```
 
-A shared step several flows run identically — Update Base, Build & Test, QA Validation,
+A shared step several flows run identically — Update Base, Build & Test, Validation,
 Personal Validation, Create Pull Request, Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
 of restated in sixteen.

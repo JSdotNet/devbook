@@ -44,5 +44,5 @@ The pointer line is the whole body of both wrappers, never a second copy of the 
    user.
 
 Say plainly that both skills are now the repository's to edit, and that neither is required:
-absent a `capture` skill the QA Validation phase captures per
+absent a `capture` skill the Validation phase captures per
 `resources/capture-contract.md` itself.

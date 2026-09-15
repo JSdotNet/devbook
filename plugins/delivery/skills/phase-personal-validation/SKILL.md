@@ -16,7 +16,7 @@ soften that gate.
 
 ## When To Run
 
-- **Every tier**, after QA Validation for code-modifying flows and after the flow's own
+- **Every tier**, after Validation for code-modifying flows and after the flow's own
   stages for documentation/config flows.
 - **Again on every revise round.** A revised change set is a new thing to look at: re-run
   this whole skill rather than pointing back at the previous handback. The gate re-opens with
@@ -28,7 +28,7 @@ soften that gate.
 
 A link to a process that is not listening is worse than no link.
 
-- **Reuse the instance QA Validation left running** when there is one. Start a second only
+- **Reuse the instance Validation left running** when there is one. Start a second only
   after confirming the first is gone.
 - **Otherwise start it** with the `app.start` service — the repository's `start` skill when
   that is the provider — or the command QA proved this run. **Never hand the person a
@@ -79,7 +79,7 @@ look, what to do, and what should happen.**
 ## Step 4 — Present The Reviews
 
 - **The code review** of the change set, for the person to read.
-- **The recorded QA review** when QA Validation ran: scenarios with pass/fail, monitoring
+- **The recorded QA review** when Validation ran: scenarios with pass/fail, monitoring
   findings, and the captured evidence paths. When it was skipped, say so and why — never
   imply a result that was not produced.
 

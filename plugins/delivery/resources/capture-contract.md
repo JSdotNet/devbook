@@ -1,6 +1,6 @@
 ---
 name: capture-contract
-description: What evidence a flow captures for the feature being built, when it is required, what shape comes back, and how the QA Validation phase gets it with or without a capture skill or a QA provider bound. Engine-owned; the procedure that produces it is the repository's.
+description: What evidence a flow captures for the feature being built, when it is required, what shape comes back, and how the Validation phase gets it with or without a capture skill or a QA provider bound. Engine-owned; the procedure that produces it is the repository's.
 ---
 
 # Capture Contract (Engine-Owned)

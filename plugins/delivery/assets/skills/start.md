@@ -9,7 +9,7 @@ Start the app from what this file declares, not from a command guessed per sessi
 open it. **Edit this file** — it is yours: the facts are examples to replace, the procedure a
 starting point rather than a contract. The engine only expects a skill named `start` to exist
 and to leave a running application behind, and it names this file to whichever provider fills
-`app.start` and to QA Validation as the repository's declared runtime facts.
+`app.start` and to Validation as the repository's declared runtime facts.
 
 A repository with nothing to start binds `extensions.app.start` to `null` in
 `.devbook/config.json` instead of keeping this file.

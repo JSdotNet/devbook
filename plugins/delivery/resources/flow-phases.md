@@ -21,7 +21,7 @@ companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Verification, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
+| `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
 | `skills/phase-personal-validation/SKILL.md` | The Personal Validation **review handoff** — starting the app, the links, the what-to-check list — in full | When the run reaches Personal Validation, and again on every revise round. The flow-runner reads it itself: the phase runs inline and is never delegated |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
@@ -36,12 +36,12 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 
 - **Code-modifying flows** — `flow-feature`, `flow-bug`, `flow-structure`,
   `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`,
-  `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
+  `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → Validation →
   Personal Validation → Create Pull Request → Verification → Work Item Update →
   Summary**.
 - **Documentation/config flows** — `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`,
   `flow-ai`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
-  Update → Summary**. They produce no runnable code change, so Build & Test and QA Validation
+  Update → Summary**. They produce no runnable code change, so Build & Test and Validation
   do not apply.
 - **`flow-fallback`** has no fixed tier: it runs the code-modifying tier when its Routing
   Check determines a code-modifying change kind, and the documentation/config tier
@@ -120,14 +120,14 @@ directly.
 
 ## Phase: Build & Test
 
-Code-modifying tier. Runs after the flow's own stages, before QA Validation and Personal
+Code-modifying tier. Runs after the flow's own stages, before Validation and Personal
 Validation.
 
 **Defined in `skills/phase-build-test/SKILL.md`** — steps, agents, MCP servers, and stage
 reporting all live there. What stays here is its place in the tier: build every project, run
-the unit suite, run the automated end-to-end suite, and never continue to QA Validation or
+the unit suite, run the automated end-to-end suite, and never continue to Validation or
 Personal Validation on a red build or a failing test. When all three are green, continue to
-QA Validation without a confirmation prompt.
+Validation without a confirmation prompt.
 
 This phase is the `validate` service point. When a repository binds `validate`, that provider
 supplies the build and suite run and returns the failing targets; the phase skill is the
@@ -135,7 +135,7 @@ default provider when nothing is bound.
 
 **Model Category:** Implementation & Coding.
 
-## Phase: QA Validation
+## Phase: Validation
 
 Code-modifying tier. Runs after Build & Test.
 
@@ -203,7 +203,7 @@ is the whole of what configuration may change here.
 - **Wait for explicit user approval** before any pull request is created.
 - **When the user requests changes**, record `approval: "rejected"` with the user's wording,
   reopen the appropriate implementation or specification stage in the same run, apply the
-  requested changes, then repeat Build & Test, QA Validation, and the review handoff above.
+  requested changes, then repeat Build & Test, Validation, and the review handoff above.
   The run must not advance to Create Pull Request while a rejected decision is persisted.
 - **When returning to Personal Validation after requested changes**, record
   `approval: "pending"` before the handoff, so the revised change set still requires
@@ -237,7 +237,7 @@ description as file artifacts, say so once, and continue.
   states whether a flow must end in one; `policy.pr.base` names the base branch.
 - **Shut down validation runtime first** — and, more generally, before the run leaves your
   hands by any exit: a pull request, a `blocked` or `cancelled` finish, or a gate the user
-  has stepped away from. If QA Validation or Personal Validation started a local application
+  has stepped away from. If Validation or Personal Validation started a local application
   runtime, stop it and confirm it is no longer running before invoking any PR creation
   command. Prefer the repository's proven shutdown command. Block this phase with the actual
   shutdown error if the runtime cannot be stopped safely.
@@ -249,7 +249,7 @@ description as file artifacts, say so once, and continue.
   originating work item — `Closes` when merging resolves it, `Refs` when it does not.
 - **Open it through the lane, and validate nothing twice.** Push the branch, then raise the PR
   with the host's own pull-request action when the session offers one, otherwise `gh pr create`
-  or the bound GitHub tooling. Build & Test, QA Validation, and the recorded approval **are**
+  or the bound GitHub tooling. Build & Test, Validation, and the recorded approval **are**
   the validation: never rebuild, re-run tests or QA, or ask for a second confirmation here.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Skip this phase** (`skipped`) when the run produces no change set to submit.
@@ -263,7 +263,7 @@ session's own model — see `flow-model-selection.md`.
 ## Phase: Verification
 
 Code-modifying tier. Runs **after** Create Pull Request and before Work Item Update. This is
-the `verify` service point, and the word is OpenSpec's: Build & Test and QA Validation say
+the `verify` service point, and the word is OpenSpec's: Build & Test and Validation say
 whether the change **runs**; this phase says whether it is **what was agreed**, and whether
 what the repository has written down is still true — one verdict per item, reported where the
 reviewer reads. It replaces a documentation refresh that guessed at staleness with a check

@@ -19,7 +19,7 @@ flowchart TD
     s2["Execute"]
     s3["Review & Recommend"]
     c0["Build & Test"]
-    c1["QA Validation"]
+    c1["Validation"]
     c2["Personal Validation"]
 
     base --> s0

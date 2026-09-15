@@ -18,7 +18,7 @@ flowchart TD
     s1["Specification & Architecture Intake"]
     s2["Implementation"]
     c0["Build & Test"]
-    c1["QA Validation"]
+    c1["Validation"]
     c2["Personal Validation"]
 
     base --> s0
@@ -48,7 +48,7 @@ runner and named by no skill.
   flow nobody reaches.
 - `Implementation` and `Build & Test` are the `implement` and `validate` services, and their loop is
   the only cycle here. It is bounded by the retry budget rather than by the provider.
-- QA Validation runs at full depth with captured evidence, because new functionality is the change
+- Validation runs at full depth with captured evidence, because new functionality is the change
   kind that earns it.
 - `Verification` is the `verify` service, after the pull request: the change set against
   the specification Stage 1 took in and the chapters it touches, one verdict per item, reported

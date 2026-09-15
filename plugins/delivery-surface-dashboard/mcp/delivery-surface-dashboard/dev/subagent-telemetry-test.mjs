@@ -57,7 +57,7 @@ writeFileSync(
             skillId: "example-feature",
             title: "Sub-agent telemetry",
             status: "in_progress",
-            stages: [{ name: "QA Validation", status: "in_progress" }],
+            stages: [{ name: "Validation", status: "in_progress" }],
             insights: [],
             startedAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -69,7 +69,7 @@ writeFileSync(
 );
 writeFileSync(
     path.join(STATE, "active.json"),
-    JSON.stringify({ runId: RUN_ID, stage: { index: 0, name: "QA Validation" } }),
+    JSON.stringify({ runId: RUN_ID, stage: { index: 0, name: "Validation" } }),
     "utf8",
 );
 

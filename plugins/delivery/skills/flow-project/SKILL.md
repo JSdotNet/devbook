@@ -92,17 +92,17 @@ AppHost configuration, service discovery, and health checks.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Verification → Work Item
+Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
-A new runnable scaffold, so QA Validation runs with capture: start the AppHost, confirm the
+A new runnable scaffold, so Validation runs with capture: start the AppHost, confirm the
 dashboard and the service health endpoints are green — default `localhost:18888`, or the
 entry points Stage 1 declared in the `start` skill — confirm database connectivity,
 and run Playwright smoke checks on the example service under the runtime monitor.
 
 Two expectations are specific to this scaffold: Build & Test compiles the AppHost, service,
 and test projects with every NuGet dependency resolved, and runs the unit suite as the
-project's baseline; QA Validation starts the AppHost with `aspire run`. On failure, record
+project's baseline; Validation starts the AppHost with `aspire run`. On failure, record
 which phase failed with the actual errors, fix, and re-run.
 
 ## Surface Reporting
@@ -113,7 +113,7 @@ of truth.
 
 - `start_run` with `skillId: "flow-project"` and stages: GitHub Folder Setup, GitHub Actions
   Workflows, Specification & Architecture Intake, Tooling & Dependencies, Implementation, Build
-  & Test, QA Validation, Personal Validation, Create Pull Request, Verification, Work Item
+  & Test, Validation, Personal Validation, Create Pull Request, Verification, Work Item
   Update, Summary.
 - During Specification & Architecture Intake, open/update `render_markdown` with the reviewed
   or derived architecture, plus `render_diagram` for any Mermaid that goes with it.
