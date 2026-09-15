@@ -44,7 +44,7 @@ whose install rewrites content the repository authored, which is devbook alone:
       "contractVersion": 9,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
-        ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "1.0.0", "hash": "sha256:7e10…", "managed": false },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
@@ -84,12 +84,14 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
-| `tools/devbook-meta/` | `.github/tools/devbook-meta/` | always |
-| `tools/devbook-tech/` | `.github/tools/devbook-tech/` | `.tech` adopted |
+| `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `.tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
+| `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
+| `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
 | the local-file list below | `.gitignore`, between `# devbook:begin` and `# devbook:end` | always |
 | `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
@@ -106,6 +108,14 @@ reports its absence. Verify in phase 6 that none survived. This editing makes
 both files customized from the first reconcile onward, which is the
 intended outcome: their hash matches no shipped release, so reconcile reports
 them and leaves them alone.
+
+The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
+read natively by Copilot and not by Claude, so a repository owes each host a root file that
+points at it: `CLAUDE.md` is an `@AGENTS.md` import, `.github/copilot-instructions.md` one
+sentence. Both are copied only where absent and stamped `managed: false` from the first
+reconcile — the file is the repository's from the moment it lands, and a later reconcile
+reports drift on it and never writes to it. A present one, whatever it holds, is left alone.
+The reason is `.devbook/arc42/adr/67-the-install-creates-the-root-wrappers-where-absent.md`.
 
 The `AGENTS.md` section is rendered whole rather than copied at all. It is generated
 from the stamp's `adopted` list per `assets/agents-section.md`, keyed `AGENTS.md#devbook`,

@@ -466,7 +466,7 @@ run.
 A runner outside that table is not an error: the level and the selector still say
 what covers the chapter. What it loses is the run command, so the generator
 reports it as a warning. Teaching the tooling a new runner means adding its
-command to `TEST_RUNNERS` in `.github/tools/devbook-meta/metadata.mjs`.
+command to `TEST_RUNNERS` in `.devbook/_tools/devbook-meta/metadata.mjs`.
 
 ### Rules
 
@@ -513,7 +513,7 @@ tests: unit:dotnet:Ordering.Domain.Tests.OrderTests
 ### Running a linked test
 
 `testCommand("<level>:<runner>:<selector>")`, exported from
-`.github/tools/devbook-meta/metadata.mjs`, returns
+`.devbook/_tools/devbook-meta/metadata.mjs`, returns
 `{ level, runner, selector, command }` — `command` being an argv array meant
 to run from the repository root — or `null` when the entry is malformed or
 names a runner with no mapping. It executes nothing, so it is the seam a "run
@@ -627,13 +627,13 @@ that still carries `order` is a validation error — delete it, and use `number`
 or `index: root` if the order it declared is not what the rules above produce.
 
 The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
-`.github/tools/devbook-meta/outline.mjs`. Keep that table and the folders'
+`.devbook/_tools/devbook-meta/outline.mjs`. Keep that table and the folders'
 **Structure** blocks in step with each other.
 
 ## Derived metadata index
 
 These metadata blocks are compiled into derived indexes by
-`.github/tools/devbook-meta/build.mjs` — one pair per devbook folder plus
+`.devbook/_tools/devbook-meta/build.mjs` — one pair per devbook folder plus
 a repository-wide rollup, placed per
 `devbook-derived-artifacts.md`:
 
@@ -653,11 +653,11 @@ Only folders the repository actually has produce a scope.
 Regenerate whenever a chapter or file is added, renamed, or re-linked:
 
 ```bash
-node .github/tools/devbook-meta/build.mjs
+node .devbook/_tools/devbook-meta/build.mjs
 ```
 
 These are derived output — never edit them by hand. CI
 (`.github/workflows/devbook-meta.yml`) fails when a reference does not
 resolve or when a committed index is stale. Open the **Reference graph**
 canvas (optionally scoped to one folder) to explore it visually. See
-the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`) for the output shape.
+the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`) for the output shape.

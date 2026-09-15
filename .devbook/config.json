@@ -9,6 +9,12 @@
       "product": null,
       "security": null,
       "docs": null
+    },
+    "delivery.mcp": {
+      "implement": null,
+      "verify": null,
+      "app.start": null,
+      "qa.run": null
     }
   },
   "extensions": {

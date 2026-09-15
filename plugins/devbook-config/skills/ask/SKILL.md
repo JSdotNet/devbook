@@ -1,9 +1,9 @@
 ---
-name: guide
+name: ask
 description: 'Answer a question about this marketplace and the plugins in it — what devbook, delivery, the bridges, the surfaces, and the fan-out lane are and how they fit together, which version of a plugin is installed against the newest one published, which plugins are enabled here, and how this repository has wired its flows, roles, gates, and policy. Reads only; it never installs or reconciles anything. Use when: asking how the stack works, comparing installed against newest, checking what is enabled, or reading a repository''s flow wiring. Triggers on: "what is devbook", "explain the delivery engine", "how do the plugins fit together", "which version am I on", "is there a newer version", "which plugins are enabled", "how are my flows set up", "what does this repo bind", "which gates are on".'
 ---
 
-# devbook-config guide
+# devbook-config ask
 
 ## Purpose
 

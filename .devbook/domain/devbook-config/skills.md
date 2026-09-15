@@ -53,11 +53,11 @@ A component this machine has not installed is reported, skipped, and **left stam
 committed and shared while installed-ness is personal, so dropping the entry would un-adopt the
 component for everyone on the next commit.
 
-## guide
+## ask
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook-config/domain.md#guide"]
+related: [".devbook/domain/devbook-config/domain.md#ask"]
 ```
 
 Answer one question about this marketplace from what is on disk: what each part is and how they

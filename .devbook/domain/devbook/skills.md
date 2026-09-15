@@ -73,7 +73,7 @@ Chapter-scoped, so a person sees what is about to go before it does.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
 Read an implementation and its unit tests and write the chapter that was missing, thin, or
@@ -99,7 +99,7 @@ Screenshots are report evidence and are never committed into a devbook folder.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
 Turn an agreed but unbuilt chapter of any of the five kinds into a change brief — outcomes,
@@ -122,7 +122,7 @@ the change category is decided: new functionality, a change to existing behaviou
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
 Report the drift verdict per chapter and write nothing — no chapter, no brief, no status. The

@@ -1,4 +1,4 @@
-# 67. The Converters Are Three Skills Named After OpenSpec's Verbs
+# 69. The Converters Are Three Skills Named After OpenSpec's Verbs
 
 ```meta
 date: 2026-09-15

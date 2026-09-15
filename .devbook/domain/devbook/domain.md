@@ -250,7 +250,7 @@ request and the daily `devbook-check` schedule opens a pull request when the out
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that

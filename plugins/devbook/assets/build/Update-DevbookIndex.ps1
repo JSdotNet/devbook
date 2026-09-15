@@ -4,7 +4,7 @@
     Refresh the derived devbook indexes (`_meta/graph.json`, `_meta/index.json`).
 
 .DESCRIPTION
-    On-demand wrapper around `.github/tools/devbook-meta/build.mjs`, installed
+    On-demand wrapper around `.devbook/_tools/devbook-meta/build.mjs`, installed
     by the `devbook:install` skill.
 
     Refreshing the indexes is deliberate, not automatic. The pull-request check
@@ -90,7 +90,7 @@ function Get-IndexFingerprints {
 }
 
 $repoRoot = Resolve-RepositoryRoot -Requested $Root
-$generator = Join-Path $repoRoot '.github/tools/devbook-meta/build.mjs'
+$generator = Join-Path $repoRoot '.devbook/_tools/devbook-meta/build.mjs'
 
 if (-not (Test-Path -LiteralPath $generator -PathType Leaf)) {
     throw "Generator not found at '$generator'. Install it with the devbook:install skill."
