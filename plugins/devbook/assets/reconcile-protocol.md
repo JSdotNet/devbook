@@ -90,6 +90,8 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
+| `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
+| `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
 | the local-file list below | `.gitignore`, between `# devbook:begin` and `# devbook:end` | always |
 | `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
@@ -106,6 +108,14 @@ reports its absence. Verify in phase 6 that none survived. This editing makes
 both files customized from the first reconcile onward, which is the
 intended outcome: their hash matches no shipped release, so reconcile reports
 them and leaves them alone.
+
+The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
+read natively by Copilot and not by Claude, so a repository owes each host a root file that
+points at it: `CLAUDE.md` is an `@AGENTS.md` import, `.github/copilot-instructions.md` one
+sentence. Both are copied only where absent and stamped `managed: false` from the first
+reconcile — the file is the repository's from the moment it lands, and a later reconcile
+reports drift on it and never writes to it. A present one, whatever it holds, is left alone.
+The reason is `.devbook/arc42/adr/67-the-install-creates-the-root-wrappers-where-absent.md`.
 
 The `AGENTS.md` section is rendered whole rather than copied at all. It is generated
 from the stamp's `adopted` list per `assets/agents-section.md`, keyed `AGENTS.md#devbook`,

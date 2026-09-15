@@ -44,8 +44,9 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
   what each one's `paths` are is `rules/rules.json`, never a hardcoded list. Shape and table:
   `assets/rule-wrappers.md`.
 - Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
-  never from what is on disk. Report the file it landed in; whether a host reads
-  or imports that file is the repository's to arrange.
+  never from what is on disk. Then create `CLAUDE.md` and `.github/copilot-instructions.md`
+  from `assets/root-wrappers/` where absent, so both hosts reach that file; one that exists
+  is never touched, whatever it holds.
 - The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`
   and `.devbook/config.local.json`. Ignore both; create neither. An empty overlay
   reads as a setting somebody chose.
