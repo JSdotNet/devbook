@@ -119,12 +119,17 @@ later reversed is the part a reader most needs.
 | [67. The Install Creates the Root Wrappers Where Absent](67-the-install-creates-the-root-wrappers-where-absent.md) | 2026-09-15 |
 | [68. The Generator Lives Under .devbook/_tools/](68-the-generator-lives-under-devbook.md) | 2026-09-15 |
 | [69. The Converters Are Three Skills Named After OpenSpec's Verbs](69-the-converters-are-three-skills-named-after-openspec.md) | 2026-09-15 |
-| [70. The Overlay Has Three Layers, Keyed by a Committed Id](70-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
+| [70. The Flow Context Lives in devbook](70-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
+| [71. The start Skill Holds the Runtime Facts](71-the-start-skill-holds-the-runtime-facts.md) | 2026-09-15 |
+| [72. The Overlay Has Three Layers, Keyed by a Committed Id](72-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
 
-Four records carry a supersession note and stay where they are.
+Five records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
 warning it gave — [66](66-the-marketplace-is-named-jsdotnet-devbook.md) renames the
 marketplace on that warning's own terms.
+[70](70-the-flow-context-lives-in-devbook.md) moved a file that
+[71](71-the-start-skill-holds-the-runtime-facts.md) then retired the same day; the rule it
+moved the file under is record 11's and stands.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the
 flows moved twice and the bridge is gone.
 [8](8-comments-are-findings-until-the-fence-lands.md) and

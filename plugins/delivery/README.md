@@ -103,7 +103,7 @@ So `delivery:install` seeds two skills into the repository and hands them over:
 
 | Seed | Fills | The repository owns |
 |---|---|---|
-| `start` | the `app.start` point, as `repo:start` | the startup procedure, sign-in, the branch-to-area map |
+| `start` | the `app.start` point, as `repo:start` | the facts — command, entry points, readiness signals, credential pointer — and the procedure: startup, sign-in, the branch-to-area map |
 | `capture` | evidence capture inside QA Validation | the layout, the naming, the tooling |
 
 Each lands as one editable copy under `.agents/skills/` with a pointer wrapper per host. Edit
@@ -128,8 +128,8 @@ seed changes who runs capture, never whether it runs.
 - **A surface.** A dashboard, a canvas, and a headless collector are three implementations of
   one capability, resolved by pattern from the live tool list. **No surface bound is a normal
   outcome:** produce the file artifacts, say so once, never block a stage.
-- **A host.** A shared skill names a *slot* — `repo-instructions`, `repo-flow-context`,
-  `model-override`, `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
+- **A host.** A shared skill names a *slot* — `repo-instructions`, `model-override`,
+  `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
   or which takes its documented unbound default. A slot is bound, never branched.
 
 ## Files
@@ -142,13 +142,11 @@ seed changes who runs capture, never whether it runs.
 | `resources/surface-contract.md` | Extension points, gates, the stack config, host slots, and the surface capability |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |
-| `resources/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
-| `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
 | `assets/skills/` | The `start` and `capture` seeds `delivery:install` writes into a repository |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a pointer wrapper per host |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

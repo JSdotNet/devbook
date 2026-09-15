@@ -110,7 +110,7 @@ also why `devbook:install` did not move here.
 
 ```meta
 type: value-object
-related: [".devbook/arc42/adr/70-the-overlay-has-three-layers-keyed-by-a-committed-id.md"]
+related: [".devbook/arc42/adr/72-the-overlay-has-three-layers-keyed-by-a-committed-id.md"]
 ```
 
 An overlay merged over the committed file, holding what is true of this machine only. Three

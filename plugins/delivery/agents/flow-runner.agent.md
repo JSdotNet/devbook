@@ -20,9 +20,8 @@ Everything loaded stays in the prompt for the rest of the run, so reading ahead 
 preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
-(`resources/flow-model-selection.md`), the repository's optional runtime
-context file (`resources/flow-repo-context.md`), and the resolution of the
-stack config and the surface (`resources/surface-contract.md`). It applies
+(`resources/flow-model-selection.md`) and the resolution of the stack config
+and the surface (`resources/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
 ## Expected Behavior
@@ -50,13 +49,12 @@ those contracts; it does not re-decide them per skill.
    `flow-model-selection.md`. There is no repository-level model override, and
    the stack config carries no model key. Resolve each family to the current latest
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
-   override file, and persist the run's category → model mapping. Then check whether
-   `.claude/flow-context.md` exists — **read `flow-repo-context.md` only if it
-   does.** When present, persist its startup command, AppHost path, base URLs,
-   healthy-startup signals, credential pointer, QA depth, and any declared repo-native
-   `flow-*` skills, and pass them to the stages that need them. A repo-native skill takes
-   precedence over the plugin-provided one for the categories it covers. Both files are
-   optional; a missing or malformed one never blocks the run.
+   override file, and persist the run's category → model mapping. Then check whether the
+   repository has a `start` skill at `.agents/skills/start.md`. When it does, persist the
+   path and name it to whichever provider fills `app.start` and to QA Validation as the
+   repository's declared runtime facts — command, entry points, readiness signals,
+   credential pointer. Do not read it yourself; the `app.start` result carries what later
+   stages need. Both files are optional; a missing or malformed one never blocks the run.
 5. **Bind the surface and open it once.** Resolve each surface capability by pattern from the
    live tool list, in the priority order in the surface contract, and record which
    implementation answered. With a lifecycle capability bound, call its open operation once
@@ -157,7 +155,7 @@ those contracts; it does not re-decide them per skill.
   skill; edit `flow-model-selection.md` instead.
 - **Configuration chooses among behaviour the engine implements.** A stack-config key never
   adds a stage. A repository that needs a different flow shape writes a repo-native `flow-*`
-  skill.
+  skill, which takes precedence over the plugin-provided one for the categories it covers.
 - **No separate approval before internal transitions.** Continue through Build & Test and QA
   Validation, then stop at Personal Validation before any pull request.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
@@ -173,7 +171,7 @@ those contracts; it does not re-decide them per skill.
 - **No pull request** unless the user explicitly approved it and that approval is persisted.
 - **Model choice is personal; repo context and policy are not model choice.** A personal
   override changes the category default for that user only. The repository has no say in
-  model selection at all. `.claude/flow-context.md` and `policy` override startup and QA
+  model selection at all. The repository's `start` skill and `policy` decide startup and QA
   depth; neither ever sets a model.
 - **Shared-worktree sub-agents first.** An agent launched with its own checkout cannot see
   this session's uncommitted change set, so reserve that for work that would otherwise
@@ -209,7 +207,6 @@ spawning one, and it is never itself spawned as a sub-agent.
 - `resources/flow-execution-model.md`
 - `resources/surface-contract.md`
 - `resources/flow-model-selection.md`
-- `resources/flow-repo-context.md`
 - `skills/phase-build-test/SKILL.md`
 - `skills/phase-qa-validation/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`

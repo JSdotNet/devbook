@@ -1,4 +1,4 @@
-# 70. The Overlay Has Three Layers, Keyed by a Committed Id
+# 72. The Overlay Has Three Layers, Keyed by a Committed Id
 
 ```meta
 date: 2026-09-15

@@ -46,7 +46,7 @@ const COMPONENTS = {
 // install refuses to run until `components.devbook` names an adopted folder, and
 // delivery-schedule checks its targets against the plugins this repository enables, so it
 // wants the settled state. `delivery` is the one free position — its install reads the engine
-// keys and `.claude/flow-context.md` and no other component's stamp — and it sits before
+// keys and no other component's stamp — and it sits before
 // schedule because schedule's targets call the procedures it seeds. Anything not named here
 // follows, alphabetically.
 const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
@@ -360,6 +360,12 @@ function buildRepository(repoRoot) {
     const config = load('stack config', path);
     const legacyPath = join(repoRoot, '.github', 'ai-agent-stack.json');
     const legacy = existsSync(legacyPath) ? legacyPath : null;
+    // The flow context file is retired: its facts belong in the repository's `start` skill and
+    // its QA depth in `policy.qa.depth`. Nothing reads either path; the report names a leftover
+    // so the retirement is a named instruction rather than a file that silently stopped applying.
+    const legacyFlowContext = ['.devbook', '.claude']
+        .map((dir) => join(repoRoot, dir, 'flow-context.md'))
+        .find((candidate) => existsSync(candidate)) ?? null;
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const flat = join(repoRoot, `.${folder}`);
         const nested = join(repoRoot, '.devbook', folder);
@@ -394,6 +400,7 @@ function buildRepository(repoRoot) {
     return {
         path,
         legacyPath: legacy,
+        legacyFlowContextPath: legacyFlowContext,
         id,
         overlays,
         present: Boolean(config),
@@ -568,6 +575,10 @@ function render(model) {
     out.push('');
     if (repo.legacyPath) {
         out.push(`\`${repo.legacyPath}\` is still present. The stack config moved to \`.devbook/config.json\`; nothing reads the old path any more, so move the file before anything else.`);
+        out.push('');
+    }
+    if (repo.legacyFlowContextPath) {
+        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`start\` skill at \`.agents/skills/start.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`extensions.app.start\` set to \`null\`. Move what it says and delete it.`);
         out.push('');
     }
     for (const layer of repo.overlays) {
