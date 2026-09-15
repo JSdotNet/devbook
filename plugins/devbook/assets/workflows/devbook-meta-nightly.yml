@@ -60,7 +60,7 @@ jobs:
         id: generate
         run: |
           set +e
-          node .github/tools/devbook-meta/build.mjs
+          node .devbook/tools/devbook-meta/build.mjs
           echo "status=$?" >> "$GITHUB_OUTPUT"
 
       - name: Detect drift

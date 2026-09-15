@@ -23,7 +23,7 @@ Four kinds of evidence, in rising order of how hard they are to explain away.
 names and their whole scope from `.arc42`, `.domain`, `.tech`, `.design`, and `.ai`. Each stops
 at Stage 1 when the repository has not adopted the folder.
 
-**A payload path.** Each of the five runs `node .github/tools/devbook-meta/build.mjs --check`.
+**A payload path.** Each of the five runs `node .devbook/tools/devbook-meta/build.mjs --check`.
 That is devbook's generator at the path `devbook-install` writes it to — a plugin's payload,
 addressed by name from a plugin that claims not to know it exists.
 

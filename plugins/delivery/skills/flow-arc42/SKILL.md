@@ -55,7 +55,7 @@ contents, and continue.
 - Check the number, date, and status of a new record against the existing set, and name the
   dependent chapter updates it implies.
 - Update every reference elsewhere when a heading or file was renamed or moved.
-- Run `node .github/tools/devbook-meta/build.mjs --check` when the repository ships it, and
+- Run `node .devbook/tools/devbook-meta/build.mjs --check` when the repository ships it, and
   fix what it reports here. Never regenerate `_meta/` in this run: the refresh is the
   repository's own path.
 - Summarize the changed chapters for the user.

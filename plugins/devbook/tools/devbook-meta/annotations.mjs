@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // annotations.mjs — the only writer of an annotation fence.
 //
-//   node .github/tools/devbook-meta/annotations.mjs list    --chapter <path#slug> [--status open]
-//   node .github/tools/devbook-meta/annotations.mjs add     --chapter <path#slug> [--after "<quote>"] \
+//   node .devbook/tools/devbook-meta/annotations.mjs list    --chapter <path#slug> [--status open]
+//   node .devbook/tools/devbook-meta/annotations.mjs add     --chapter <path#slug> [--after "<quote>"] \
 //                                                             --author <who> --body <text> [--kind question]
-//   node .github/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-//   node .github/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
-//   node .github/tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug> [--status resolved]
+//   node .devbook/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+//   node .devbook/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+//   node .devbook/tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug> [--status resolved]
 //
 // Several channels legitimately write a note — a person in an editor, a skill,
 // the desktop app, a device with no clone queuing one for later — and they all

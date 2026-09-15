@@ -44,7 +44,7 @@ whose install rewrites content the repository authored, which is devbook alone:
       "contractVersion": 9,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
-        ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".devbook/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "1.0.0", "hash": "sha256:7e10…", "managed": false },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
@@ -84,8 +84,8 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
-| `tools/devbook-meta/` | `.github/tools/devbook-meta/` | always |
-| `tools/devbook-tech/` | `.github/tools/devbook-tech/` | `.tech` adopted |
+| `tools/devbook-meta/` | `.devbook/tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/tools/devbook-tech/` | `.tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |

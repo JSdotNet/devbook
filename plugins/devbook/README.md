@@ -268,17 +268,17 @@ chapter's Markdown beside its parsed `meta` block and a metadata lint.
 ```
 
 ```bash
-node .github/tools/devbook-meta/build.mjs            # write every adopted scope
-node .github/tools/devbook-meta/build.mjs --check    # CI: verify only
-node .github/tools/devbook-meta/build.mjs --scope .tech
-node .github/tools/devbook-meta/build.mjs --root ../other-repo
+node .devbook/tools/devbook-meta/build.mjs            # write every adopted scope
+node .devbook/tools/devbook-meta/build.mjs --check    # CI: verify only
+node .devbook/tools/devbook-meta/build.mjs --scope .tech
+node .devbook/tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 ```bash
-node .github/tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
-node .github/tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
-node .github/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-node .github/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+node .devbook/tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
+node .devbook/tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .devbook/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .devbook/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
 ```
 
 `annotations.mjs` is the only writer of an annotation fence — the CLI above and
@@ -294,8 +294,8 @@ output shape and for when to refresh.
 ### Tooling: `devbook-tech`
 
 ```bash
-node .github/tools/devbook-tech/dotnet-packages.mjs --root .
-node .github/tools/devbook-tech/frontend-packages.mjs --root .
+node .devbook/tools/devbook-tech/dotnet-packages.mjs --root .
+node .devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 The inventory scripts emit deterministic JSON from repository manifests. Use them
@@ -332,8 +332,8 @@ migrations/
     └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
 
-1.0.0 ships none, so the folder is absent until the first breaking change after it. The
-migrations written before 1.0.0 moved repositories between states no repository is in any
+1.0.0 shipped none; `10-the-generator-lives-under-devbook` is the first, landing with 1.1.0.
+The migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
 Whether a change owes one — and the three cases that are easy to get wrong — is decided once,

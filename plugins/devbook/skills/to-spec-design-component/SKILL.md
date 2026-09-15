@@ -148,8 +148,8 @@ chapter as accepted practice.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .github/tools/devbook-meta/build.mjs --scope .design
-   node .github/tools/devbook-meta/build.mjs --scope .design --check
+   node .devbook/tools/devbook-meta/build.mjs --scope .design
+   node .devbook/tools/devbook-meta/build.mjs --scope .design --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter

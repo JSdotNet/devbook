@@ -68,7 +68,7 @@ last — the order shown in the tree above. See
   - It is `.tech`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
   Never hand-edited; see `devbook-derived-artifacts.md`
-  and the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`).
+  and the devbook-meta tooling README (`.devbook/tools/devbook-meta/README.md`).
 - **`<layer>.md`** — One `## <Technology Name>` chapter per technology used (or
   under consideration) in that layer. Each chapter is an addressable node in
   the graph and carries a chapter metadata block.
@@ -165,7 +165,7 @@ Omit every optional field that has no value (no `related: []`, no
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
   renamed, and regenerate the derived index in the same change:
-  `node .github/tools/devbook-meta/build.mjs --scope .tech`.
+  `node .devbook/tools/devbook-meta/build.mjs --scope .tech`.
 - Ground stack claims in `.arc42` (especially
   `.arc42/04-solution-strategy.md#technology-choices` and
   `.arc42/09-architecture-decisions.md`) rather than inventing new choices here.

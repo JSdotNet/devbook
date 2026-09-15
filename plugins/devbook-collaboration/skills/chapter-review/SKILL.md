@@ -33,7 +33,7 @@ lens is a review that misses the finding.
    questions to answer, never facts about the domain:
 
    ```
-   node .github/tools/devbook-meta/annotations.mjs list --chapter <path#slug>
+   node .devbook/tools/devbook-meta/annotations.mjs list --chapter <path#slug>
    ```
 
    Whoever raised one, it counts. A question somebody else left open is still a
@@ -66,7 +66,7 @@ lens is a review that misses the finding.
    yourself, `--after` naming the passage when it is about one:
 
    ```
-   node .github/tools/devbook-meta/annotations.mjs add --chapter <path#slug>        --after "<the passage>" --kind question --author <you> --body "<the finding>"
+   node .devbook/tools/devbook-meta/annotations.mjs add --chapter <path#slug>        --after "<the passage>" --kind question --author <you> --body "<the finding>"
    ```
 
    `--kind question` when the chapter cannot be judged until somebody answers;

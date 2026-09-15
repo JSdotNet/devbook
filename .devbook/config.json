@@ -34,8 +34,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.0.0",
-      "contractVersion": 9,
+      "pluginVersion": "1.1.0",
+      "contractVersion": 10,
       "adopted": ["arc42", "domain", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
@@ -49,7 +49,9 @@
           "managed": true
         }
       },
-      "migrations": []
+      "migrations": [
+        { "id": "10-the-generator-lives-under-devbook", "applied": "2026-09-15" }
+      ]
     },
     "delivery": {
       "pluginVersion": "1.0.0",

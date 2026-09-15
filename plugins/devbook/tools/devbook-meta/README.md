@@ -27,16 +27,16 @@ The generator underneath, for CI and for anywhere pwsh is not available:
 
 ```bash
 # Regenerate every adopted scope
-node .github/tools/devbook-meta/build.mjs
+node .devbook/tools/devbook-meta/build.mjs
 
 # One scope only
-node .github/tools/devbook-meta/build.mjs --scope .tech
+node .devbook/tools/devbook-meta/build.mjs --scope .tech
 
 # Validate references without writing (exit 1 on a broken reference)
-node .github/tools/devbook-meta/build.mjs --check
+node .devbook/tools/devbook-meta/build.mjs --check
 
 # Point at a repository other than the working directory
-node .github/tools/devbook-meta/build.mjs --root ../other-repo
+node .devbook/tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 The repository root defaults to the working directory. Only devbook folders
@@ -98,7 +98,7 @@ followed, so a scoped graph stays about its own folder.
 | `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs`, `field-scope.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, the four write operations, and the field-scope sub-rules. |
 
 This folder is self-contained — copy it into a repository as
-`.github/tools/devbook-meta/` and it runs with no other files installed.
+`.devbook/tools/devbook-meta/` and it runs with no other files installed.
 
 ## Output shape: `graph.json`
 
@@ -109,7 +109,7 @@ mappable to D3, vis.js, or Sigma.
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": ".devbook/tools/devbook-meta/build.mjs",
   "scope": ".tech",
   "sources": [".tech"],
   "stats": { "nodes": 57, "edges": 120, "nodesByFolder": { }, "nodesByKind": { }, "nodesByStatus": { } },
@@ -315,7 +315,7 @@ sorting filenames.
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": ".devbook/tools/devbook-meta/build.mjs",
   "scope": ".domain",
   "sources": [".domain"],
   "problems": [],
@@ -453,7 +453,7 @@ node, the approval gate showing the objections raised since `approved-at`.
 ```jsonc
 {
   "schemaVersion": 6,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": ".devbook/tools/devbook-meta/build.mjs",
   "scope": ".arc42",
   "sources": [".arc42"],
   "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },

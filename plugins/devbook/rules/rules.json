@@ -14,7 +14,11 @@
         ".tech/**",
         ".design/**",
         ".ai/**",
-        ".devbook/**"
+        ".devbook/arc42/**",
+        ".devbook/domain/**",
+        ".devbook/tech/**",
+        ".devbook/design/**",
+        ".devbook/ai/**"
       ],
       "install": "always"
     },
@@ -32,7 +36,11 @@
         ".tech/**",
         ".design/**",
         ".ai/**",
-        ".devbook/**"
+        ".devbook/arc42/**",
+        ".devbook/domain/**",
+        ".devbook/tech/**",
+        ".devbook/design/**",
+        ".devbook/ai/**"
       ],
       "install": "always"
     },
@@ -63,7 +71,11 @@
         ".tech/**",
         ".design/**",
         ".ai/**",
-        ".devbook/**",
+        ".devbook/arc42/**",
+        ".devbook/domain/**",
+        ".devbook/tech/**",
+        ".devbook/design/**",
+        ".devbook/ai/**",
         "**/_meta/**"
       ],
       "install": "always"

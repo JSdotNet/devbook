@@ -217,8 +217,8 @@ up to that point and record the rest from code and tests.
 10. **Regenerate and validate.** After the write lands, per the protocol:
 
     ```bash
-    node .github/tools/devbook-meta/build.mjs --scope .domain
-    node .github/tools/devbook-meta/build.mjs --scope .domain --check
+    node .devbook/tools/devbook-meta/build.mjs --scope .domain
+    node .devbook/tools/devbook-meta/build.mjs --scope .domain --check
     ```
 
 11. **Report.** Close with the protocol's report table, one row per chapter

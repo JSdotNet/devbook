@@ -60,7 +60,7 @@ payload:
 ```jsonc
 {
   "schemaVersion": 1,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": ".devbook/tools/devbook-meta/build.mjs",
   "scope": ".tech",
   "sources": [".tech"]
   // ...artifact-specific payload
@@ -72,7 +72,7 @@ payload:
 - **generatedBy** (required) — repo-relative path to the generator, so anyone
   finding the file knows how to regenerate it. A generator resolves its own
   location against the repository root rather than hardcoding one, because a
-  repository that vendors it somewhere other than `.github/tools/` would
+  repository that vendors it somewhere other than `.devbook/tools/` would
   otherwise stamp a path that resolves to nothing. Where the generator sits
   outside the repository it is indexing — a plugin install, or `--root` — it
   falls back to the conventional location: an absolute path would break
@@ -116,13 +116,15 @@ payload:
   artifact wholesale. One `stat` per entry, not a re-parse of the corpus. This
   is what makes a warning-only freshness check safe: an edit made between
   refreshes is never displayed stale.
-- **Generators live in `.github/tools/<tool-name>/`** with a `README.md`
-  documenting usage and output shape.
+- **Generators live in `.devbook/tools/<tool-name>/`** with a `README.md`
+  documenting usage and output shape. That is devbook's own folder, beside the
+  stack config: a generator is plain Node with no host in it, and `.github/` is
+  one host's folder.
 
 ## Adding a new derived artifact
 
 1. Decide the scope: one folder (scoped) or several (repository-root).
-2. Add the generator under `.github/tools/<tool-name>/`, with a README.
+2. Add the generator under `.devbook/tools/<tool-name>/`, with a README.
 3. Emit the required envelope and keep the output deterministic.
 4. Write it to `<scope>/_meta/<artifact>.<format>`.
 5. Add a CI workflow that runs the generator's validation and fails on it, and
@@ -173,7 +175,7 @@ repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |
 |---|---|---|---|
-| `_meta/graph.json` | repository-wide | reference graph | `.github/tools/devbook-meta/build.mjs` |
+| `_meta/graph.json` | repository-wide | reference graph | `.devbook/tools/devbook-meta/build.mjs` |
 | `_meta/index.json` | repository-wide | ordered reading outline | same |
 | `_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
 | `.arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |

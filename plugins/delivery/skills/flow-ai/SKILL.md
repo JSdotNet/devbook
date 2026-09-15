@@ -62,7 +62,7 @@ Three questions, in order, before anything is written; state the answers.
   write the `approved` rung: that is a person's decision at a gate, not an author's.
 - The adoption map's stage table and diagram match the stage files exactly; every `depends-on`
   resolves, and no `.tech` chapter points back at `.ai`.
-- Run `node .github/tools/devbook-meta/build.mjs --check` when the repository ships it, and
+- Run `node .devbook/tools/devbook-meta/build.mjs --check` when the repository ships it, and
   fix what it reports here. Never regenerate `_meta/` in this run: the refresh is the
   repository's own path.
 - Summarize the changed chapters for the user, naming every status change.
