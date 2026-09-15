@@ -397,7 +397,7 @@ because no other plugin is allowed to name every plugin.
 | --- | --- |
 | `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
 | `update` | The same four keys, moved forward, after each component reconciled itself |
-| `guide` | Nothing. It reads, and every fact it states names the file behind it |
+| `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
 
 The four take no prefix. It is named `devbook-config` for the file it writes,
