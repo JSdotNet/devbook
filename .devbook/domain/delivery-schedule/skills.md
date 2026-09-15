@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#delivery-schedule"]
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery/skills.md#flow-bug"]
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery/skills.md#flow-code"]
 ```
 
 Pick the top open `bug` item and run the bug flow on it, unattended. It lands as a branch parked

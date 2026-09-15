@@ -1,6 +1,6 @@
 ---
 name: schedule-bug-fix
-description: 'Pick the single highest-priority open GitHub issue labelled ''bug'', claim it, and resolve it in this session by running flow-bug through to Personal Validation. One issue per run, no extra sessions.'
+description: 'Pick the single highest-priority open GitHub issue labelled ''bug'', claim it, and resolve it in this session by running flow-code, defect kind, through to Personal Validation. One issue per run, no extra sessions.'
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 Take the bug backlog down by exactly one. Fetch the open GitHub issues labelled `bug`, skip
 everything already in flight, select the single highest-priority remaining issue, claim it,
-and run `flow-bug` on it **in this session** — through reproduction, root cause, TDD fix, and
+and run `flow-code` on it **in this session**, as a defect, — through reproduction, root cause, TDD fix, and
 verification, stopping at Personal Validation.
 
 ## One Issue Per Run
@@ -18,12 +18,12 @@ verification, stopping at Personal Validation.
 This skill handles **one issue, in one session, per run.** It never prepares work for a
 second session and never spawns an agent to run the flow.
 
-That is a hard constraint, not a preference. `flow-bug` runs through the `flow-runner`
+That is a hard constraint, not a preference. `flow-code` runs through the `flow-runner`
 agent, which must own its session to hold the Personal Validation gate, write surface
 state, and ask the user a question — and this run cannot open a second session to give it
 one. See **Session Ownership** and **Sub-Agent Constraints** in
 `resources/flow-execution-model.md`. Because the scope is a single issue,
-this session *is* the owner session and `flow-bug` behaves exactly as designed.
+this session *is* the owner session and `flow-code` behaves exactly as designed.
 
 To work more than one bug, run this skill again. Each run picks the next issue, because the
 previous one is now claimed and filtered out as in flight.
@@ -33,7 +33,7 @@ previous one is now claimed and filtered out as in flight.
 - GitHub repository in `owner/repo` format (required).
 - Additional label filters to narrow the candidate set — e.g. `critical`, `sprint-42`
   (optional; default: `bug` only).
-- Severity hint for `flow-bug`: `critical`, `high`, `medium`, or `low`
+- Severity hint for `flow-code`: `critical`, `high`, `medium`, or `low`
   (optional; default: derived from issue labels when present, otherwise `medium`).
 - Base branch to branch from (default: repository default branch).
 - Selection override: an explicit issue number to work instead of the ranked pick (optional).
@@ -46,12 +46,12 @@ previous one is now claimed and filtered out as in flight.
 
 This skill invokes the following installed skill:
 
-- **`flow-bug`** — drives the full bug-resolution workflow: scope
+- **`flow-code`** — drives the full bug-resolution workflow, defect kind: scope
   discovery, reproduction, root-cause analysis, TDD fix, verification, and local-run
   monitoring, up to Personal Validation. This skill selects and claims the issue, then hands
   the session to it.
 
-If `flow-bug` is not installed, work the stages listed in Phase 4 manually and say in the
+If `flow-code` is not installed, work the stages listed in Phase 4 manually and say in the
 summary that the run went without the flow wrapper.
 
 ## Workflow
@@ -118,7 +118,7 @@ summary that the run went without the flow wrapper.
    If the claim fails (no write access, label creation rejected), stop here and report it.
    Never start work on an issue that could not be claimed.
 
-9. Run `flow-bug` in **this session** with the issue context below. Pass the GitHub origin as
+9. Run `flow-code` in **this session**, defect kind, with the issue context below. Pass the GitHub origin as
    `githubIssue` to `start_run`, so the run reports its captured result and QA report back to
    the issue.
 
@@ -138,7 +138,7 @@ summary that the run went without the flow wrapper.
    Branch: fix/<number>-<slug> from <base branch>
    ```
 
-   `flow-bug` owns the workflow from here: scope discovery, reproduction, root cause, a
+   `flow-code` owns the workflow from here: scope discovery, reproduction, root cause, a
    failing-test-first fix, verification, and local runtime validation. It stops at Personal
    Validation, and the pull request stays a separate, explicitly approved step.
 
@@ -170,7 +170,7 @@ the source of truth.
 
 - `start_run` with `skillId: "schedule-bug-fix"` and these stages: Fetch Candidate Bug Issues, Filter Out
   Work Already In Flight, Select One Issue, Claim and Resolve, Summary.
-- The `flow-bug` flow in Phase 4 opens its own run, with the selection run's
+- The `flow-code` flow in Phase 4 opens its own run, with the selection run's
   `githubIssue` metadata carried into its `start_run`. Reference that run id in this run's
   Claim and Resolve stage output rather than duplicating its stages here.
 
@@ -199,5 +199,5 @@ the source of truth.
 ## Related Skills
 
 - `start-session-from-issue` — the same single-issue pickup for any issue filter, routing to
-  whichever `flow-*` skill matches the issue type rather than always `flow-bug`.
+  whichever `flow-*` skill matches the issue type rather than always `flow-code`'s defect kind.
 - `pr-merge-ready` — takes the pull request behind this fix to merge-ready, one PR per pass.

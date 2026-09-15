@@ -99,8 +99,8 @@ related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/a
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
-the Personal Validation gate. Twelve ship here, one of them for the five devbook folders, and
-each owns its stage order and the tier it closes through.
+the Personal Validation gate. Seven ship here, one for the code and one for the five devbook
+folders, and each owns its stage order and the tier it closes through.
 
 A flow is the unit a request is routed to, so its category is the boundary that matters: a
 repository needing a different shape writes its own `flow-*`, which takes precedence for the
@@ -127,7 +127,7 @@ aliases: [shared step, phase skill]
 A shared step several flows run identically — Update Base, Build & Test, Validation,
 Personal Validation, Create Pull Request, Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
-of restated in twelve.
+of restated in seven.
 
 ### Phase Tier
 
@@ -139,8 +139,8 @@ related: [".devbook/domain/delivery/domain.md#phase"]
 Which closing phases a flow runs: the code-modifying tier, which builds, tests, validates,
 opens a pull request, and verifies the result against the specification, or the documentation
 tier, which does none of those but the pull request because there is no runnable change to
-validate and the chapter it writes is the specification. `flow-fallback` has no fixed tier and resolves one
-from the change kind it determined.
+validate and the chapter it writes is the specification. `flow-code` and `flow-fallback` have no fixed tier and
+resolve one from the change kind they determined.
 
 Session Handoff belongs to no tier. It is an interrupt rather than a step, firing at whatever
 stage the run has reached when the context gauge crosses its threshold.
@@ -465,8 +465,8 @@ defect, a dependency update, or a documentation change. It is resolved once, ear
 the input to two decisions that would otherwise each need their own switch — which phase tier
 runs, and how deep QA validation goes.
 
-It is a claim about the change, never about the flow that carried it: `flow-fallback` resolves
-one at run time and reports it, and a flow with a fixed tier still records it because the QA
+It is a claim about the change, never about the flow that carried it: `flow-code` and
+`flow-fallback` resolve one at run time and report it, and a flow with a fixed tier still records it because the QA
 depth downstream depends on it.
 
 ## Ubiquitous Language

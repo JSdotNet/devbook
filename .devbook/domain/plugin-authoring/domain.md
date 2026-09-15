@@ -170,8 +170,8 @@ and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds twelve `flow-*` — one
-of them for the five devbook folders, since
+only as the English description of what `fleet-` does. `delivery` holds seven `flow-*` — one
+for the code and one for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/34-flows-belong-to-delivery.md) —
 and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
 `fleet` holds three
@@ -179,7 +179,7 @@ and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
-subsystem while `flow-feature` and `phase-build-test` are the procedures inside them — which is
+subsystem while `flow-code` and `phase-build-test` are the procedures inside them — which is
 why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
 a contract other surfaces answer carries the contract word after the stem and the
 implementation after that, so the three are read as one kind from the marketplace list alone;

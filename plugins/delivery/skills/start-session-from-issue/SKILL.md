@@ -17,7 +17,7 @@ a single item, claim it, decide which `flow-*` flow its type calls for, and run 
 this session** with the item context and origin metadata baked in.
 
 This is the generic counterpart to `schedule-bug-fix` in the `delivery-schedule` plugin: any
-filter, any item type, routed to the matching flow rather than always `flow-bug`.
+filter, any item type, routed to the matching flow rather than always a defect.
 
 ## Tracker
 
@@ -107,11 +107,7 @@ item, because the previous one is filtered out as in flight.
 
    | Item is about | Flow |
    |---|---|
-   | A defect in existing behavior | `flow-bug` |
-   | New or changed feature behavior, including small UI tweaks | `flow-feature` |
-   | A new module, or carving one out of an existing area | `flow-create-module` |
-   | A new service, or extracting one | `flow-create-service` |
-   | Folder moves, project/solution layout, test placement | `flow-structure` |
+   | A defect, new or changed behavior, a new module or service, folder moves or layout changes — any change to the code | `flow-code`, which derives the kind |
    | Dependency or package updates | `flow-update-packages` |
    | An Aspire version upgrade | `flow-aspire-update` |
    | A devbook folder — an architecture chapter, decision or debt record, the domain model, technology graph, design guidelines, or AI adoption record | `flow-spec` |
@@ -176,7 +172,7 @@ item, because the previous one is filtered out as in flight.
     | Field | Value |
     |-------|-------|
     | Item worked | #42 — `Add login page` |
-    | Routed to | `flow-feature` (feature behavior, labelled `feature`) |
+    | Routed to | `flow-code`, feature kind (feature behavior, labelled `feature`) |
     | Claimed | `@me`, `in-progress` |
     | Outcome | Plan recorded, implementation complete, awaiting Personal Validation |
     | Candidates deferred | 3 (next up: #37 — `Fix null pointer`) |
@@ -218,7 +214,7 @@ the source of truth.
 ## Related Skills
 
 - `schedule-bug-fix` (`delivery-schedule` plugin) — the same single-item pickup narrowed to
-  `bug` items, always routed to `flow-bug`, ranked by severity.
+  `bug` items, always routed to `flow-code` as a defect, ranked by severity.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
 - **Session Handoff** in `resources/flow-execution-model.md` — hand this

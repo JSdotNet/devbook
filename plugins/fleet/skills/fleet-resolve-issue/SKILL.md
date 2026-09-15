@@ -464,7 +464,7 @@ Contract** for the tool cadence.
   which is exactly what `touchesRuntimeSurface` detects, and why such a change parks instead
   of reaching a pull request. Resume the parked worktree and run `delivery`'s
   `phase-validation` there, or work the issue through `start-session-from-issue` and
-  `flow-feature` from the start.
+  `flow-code` from the start.
 - **Three labels, three states.** `ready-for-pickup` means a sweep marked it and a worker has
   not started; `in-progress` means a worker holds it; `needs-validation` means the work is
   parked in a worktree waiting for you. An interrupted run leaves `in-progress` set — remove

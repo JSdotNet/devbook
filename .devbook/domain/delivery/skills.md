@@ -5,74 +5,25 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The twenty-two skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The seventeen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
-## flow-feature
+## flow-code
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/flow.flow-feature.md"]
+related: [".devbook/domain/delivery/flow.flow-code.md"]
 ```
 
-Carry a feature from a request to a review-ready change: new functionality, an incremental change
-to something that exists, or a small UI tweak. The default lane, and the one the other
-code-modifying flows are variations of.
+Carry any change to the code from a request to a review-ready change: a feature or an incremental
+change, a defect, a structure or layout refactor, a new module, service, or first runnable
+increment, and the tooling, CI, scripting, and housekeeping around them. One flow, because the
+opening and the close are the same for all of them; the kind is derived in the first stage and
+selects the one middle stage that differs — planning for a create or a refactor, reproduction and
+root cause for a defect.
 
-A thin request is the normal case rather than a reason to refuse the run.
-
-## flow-bug
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-bug.md"]
-```
-
-Take a defect from "this is broken" to a fix that has a test behind it: reproduce it, find the
-cause, fix it test-first, and verify. Missing reproduction steps, severity, or root cause are
-derived rather than demanded.
-
-## flow-structure
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-structure.md"]
-```
-
-Move what already works without changing what it does — folder moves, project and solution layout,
-test and harness placement, and every reference that has to follow. Behaviour is held still on
-purpose, so the diff stays reviewable as a move.
-
-## flow-create-module
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-module.md"]
-```
-
-Add a module to an existing project, or carve an existing area into one. Both end with a boundary
-somebody agreed, which is where the work actually is.
-
-## flow-create-service
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-service.md"]
-```
-
-Add a service to an existing project, or extract an existing area into one. Same shape as the
-module flow, plus a process boundary — wiring, configuration, and how it starts are part of the
-plan rather than of the implementation.
-
-## flow-create-mvp
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-mvp.md"]
-```
-
-Get to a first runnable increment of a product. What makes it an MVP is that it runs, not that it
-is small, so the flow is the same for a weekend prototype and a first release.
+A thin request is the normal case rather than a reason to refuse the run. A defect's fix has a
+test in front of it; a refactor holds behaviour still on purpose.
 
 ## flow-update-packages
 

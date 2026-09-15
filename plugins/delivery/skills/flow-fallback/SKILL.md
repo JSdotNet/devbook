@@ -13,7 +13,7 @@ workflow.
 **Unmet preconditions are not "inapplicable."** When a dedicated skill matches the category
 but its stated preconditions do not hold — no approved specification, no acceptance criteria,
 no architecture sign-off — invoke that skill anyway and derive the missing inputs inside it,
-per the `flow-feature`/`flow-bug` exception in
+per the derive-not-refuse rule in
 `resources/flow-execution-model.md`. Reach for this fallback only when no
 skill covers the category, or when the matched skill targets fundamentally different work.
 

@@ -80,39 +80,6 @@ flowchart TD
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-create-mvp
-
-```mermaid
-flowchart TD
-    S["Scope Discovery"] --> A["MVP Scope Intake"]
-    A --> B["Implementation Planning"]
-    B --> C["Implementation"]
-    C --> D["Build & Test"]
-    D --> E["Validation"]
-    E --> F["Personal Validation"]
-    F --> G{User approves?}
-    G -->|Yes| H["Create Pull Request or Skip"]
-    G -->|No| I["Return to the relevant earlier stage"]
-    I --> A
-    H --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> J["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| MVP Scope Intake | the `architecture` role | servers bound to `spec` |
-| Implementation Planning | the `architecture` role | — |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
 ## flow-update-packages
 
 ```mermaid
@@ -204,20 +171,29 @@ flowchart TD
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-feature
+## flow-code
 
 ```mermaid
 flowchart TD
     S["Scope Discovery"] --> A["Specification & Architecture Intake"]
-    A --> B["Implementation"]
-    B --> C["Build & Test"]
+    A --> K{Kind?}
+    K -->|create| P["Implementation Planning"]
+    K -->|refactor| R["Refactor Planning"]
+    K -->|defect| Q["Reproduction & Root Cause"]
+    K -->|feature, config| B
+    P --> B["Implementation"]
+    R --> B
+    Q --> B
+    B --> T{Change kind?}
+    T -->|code-modifying| C["Build & Test"]
     C --> D["Validation"]
     D --> E["Personal Validation"]
+    T -->|documentation/config| E
     E --> F{User approves?}
     F -->|Yes| G["Create Pull Request or Skip"]
     F -->|No| H["Return to the relevant earlier stage"]
     H --> A
-    G --> DU["Verification or Skip"]
+    G --> DU["Verification or Skip (code-modifying only)"]
     DU --> U["Work Item Update or Skip"]
     U --> I["Summary"]
 ```
@@ -225,139 +201,10 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Specification & Architecture Intake | the `architecture` role | servers bound to `spec` |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-bug
-
-```mermaid
-flowchart TD
-    S["Scope Discovery"] --> A["Bug Intake & Reproduction"]
-    A --> B["Root Cause Analysis"]
-    B --> C["Implementation"]
-    C --> D["Build & Test"]
-    D --> E["Validation"]
-    E --> F["Personal Validation"]
-    F --> G{User approves?}
-    G -->|Yes| H["Create Pull Request or Skip"]
-    G -->|No| I["Return to the relevant earlier stage"]
-    I --> A
-    H --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> J["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Bug Intake & Reproduction | the `implement` service, the `qa.run` provider (runtime repro) | — |
-| Root Cause Analysis | the `implement` service | — |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-structure
-
-```mermaid
-flowchart TD
-    S["Scope Discovery"] --> A["Structure & Architecture Intake"]
-    A --> B["Refactor Planning"]
-    B --> C["Implementation"]
-    C --> D["Build & Test"]
-    D --> E["Validation"]
-    E --> F["Personal Validation"]
-    F --> G{User approves?}
-    G -->|Yes| H["Create Pull Request or Skip"]
-    G -->|No| I["Return to the relevant earlier stage"]
-    I --> A
-    H --> V["Verification or Skip"]
-    V --> U["Work Item Update or Skip"]
-    U --> J["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Structure & Architecture Intake | the `architecture` role | servers bound to `spec` |
-| Refactor Planning | the `architecture` role, the `implement` service | — |
-| Implementation | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-create-module
-
-```mermaid
-flowchart TD
-    S["Scope Discovery"] --> A["Specification Intake"]
-    A --> B["Implementation Planning"]
-    B --> C["Implementation"]
-    C --> D["Build & Test"]
-    D --> E["Validation"]
-    E --> F["Personal Validation"]
-    F --> G{User approves?}
-    G -->|Yes| H["Create Pull Request or Skip"]
-    G -->|No| I["Return to the relevant earlier stage"]
-    I --> A
-    H --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> J["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Specification Intake | the `architecture` role | servers bound to `spec` |
-| Implementation Planning | the `architecture` role | — |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-create-service
-
-```mermaid
-flowchart TD
-    S["Scope Discovery"] --> A["Specification Intake"]
-    A --> B["Implementation Planning"]
-    B --> C["Implementation"]
-    C --> D["Build & Test"]
-    D --> E["Validation"]
-    E --> F["Personal Validation"]
-    F --> G{User approves?}
-    G -->|Yes| H["Create Pull Request or Skip"]
-    G -->|No| I["Return to the relevant earlier stage"]
-    I --> A
-    H --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> J["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Specification Intake | the `architecture` role | servers bound to `spec` |
-| Implementation Planning | the `architecture` role | — |
+| Specification & Architecture Intake | the `architecture` role; the `domain` role when a create crosses a context boundary | servers bound to `spec` |
+| Implementation Planning *(create)* | the `architecture` role | — |
+| Refactor Planning *(refactor)* | the `architecture` role, the `implement` service | — |
+| Reproduction & Root Cause *(defect)* | the `implement` service, the `app.start` service | `aspire` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |

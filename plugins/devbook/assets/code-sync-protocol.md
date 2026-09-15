@@ -344,9 +344,9 @@ category, resolved in this order:
 
 1. **A repo-native `flow-*` skill** that covers the change category — it takes
    precedence over anything a plugin provides.
-2. **The flow engine's own flow for the category**, when an engine is installed:
-   `flow-feature` for `new functionality` and `change to existing behaviour`,
-   `flow-bug` for `defect`. The brief is the flow's approved specification —
+2. **The flow engine's own flow for the code**, when an engine is installed: `flow-code`,
+   which derives its kind from the category — `defect` is its defect kind, the other two its
+   feature kind. The brief is the flow's approved specification —
    its outcomes are the requested behaviour, its acceptance checks the
    acceptance criteria, its invariants the constraints Stage 0 would otherwise
    derive.

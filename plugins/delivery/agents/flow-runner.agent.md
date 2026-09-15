@@ -197,7 +197,7 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 
 ## Example Usage
 
-- "Run `flow-feature` for the new export endpoint and stop at Personal Validation."
+- "Run `flow-code` for the new export endpoint and stop at Personal Validation."
 - "Run `flow-update-packages`; QA should be startup-only."
 - "Drive `flow-spec` through Personal Validation, Create Pull Request, Work Item Update, and
   Summary."

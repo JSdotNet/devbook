@@ -10,9 +10,8 @@ Read this file once, at the start of a run.
 
 ## Code-Modifying Flow Context
 
-- `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`,
-  `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, and
-  `flow-project` are **implementation-focused** flows.
+- `flow-code`, `flow-update-packages`, `flow-aspire-update`, and `flow-project` are
+  **implementation-focused** flows.
 - Each of these skills **owns establishing its own implementation context** in its first
   stage — scope, acceptance or verification criteria, impacted code paths, and the
   governing instructions and guidelines for the affected area.
@@ -36,7 +35,7 @@ user to run something themselves.
 | Situation | Route to |
 |---|---|
 | The change requires a new architectural decision | `flow-spec`, which records it in `.arc42/` |
-| The change requires a new bounded context or service boundary | `flow-create-service`, or `flow-spec` for the boundary decision |
+| The change requires a new bounded context or service boundary | `flow-spec` for the boundary decision, then `flow-code`'s create kind |
 | The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-spec`, which owns `.domain/`; skip this row when the repository keeps no `.domain/` folder |
 | The change requires a cross-cutting redesign | `flow-spec`, as a proposed decision first |
 | Accepting known debt instead of fixing it | `flow-spec`, as a technical debt record |
