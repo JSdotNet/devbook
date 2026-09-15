@@ -250,16 +250,20 @@ request and the daily `devbook-check` schedule opens a pull request when the out
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#to-spec-aggregate"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
-The two directions between a chapter and the code that implements it, over five kinds:
-`to-spec-<kind>` reads an implementation and writes the chapter, `from-spec-<kind>` reads an
-agreed chapter and emits a change brief, then stops without touching a source or test tree.
+The two directions between a chapter and the code that implements it, plus the check that
+says which one a chapter needs, as three skills over five kinds: `sync-specs` reads an
+implementation and writes the chapter, `propose-change` reads an agreed chapter and emits a
+change brief, then stops without touching a source or test tree, and `verify-change` reports the
+drift verdict and writes nothing. The names are OpenSpec's verbs for the same moves.
 
-Invocation semantics: command-invoked, one kind and one direction per run. The aggregate is the
-unit rather than its parts, because a consistency boundary decided twice is a boundary decided
-differently; a domain service is the deliberate exception and keeps its own pair.
+Invocation semantics: command-invoked, one skill and one kind per run. The kind is the
+chapter's `type`, or the file where the folder defines none, and everything a kind needs lives
+once in its own file rather than in a skill per kind and direction. The aggregate is the unit
+rather than its parts, because a consistency boundary decided twice is a boundary decided
+differently; a domain service is the deliberate exception and is its own kind.
 
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through

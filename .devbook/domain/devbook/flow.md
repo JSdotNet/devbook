@@ -78,11 +78,13 @@ stateDiagram-v2
 ## Catching Up With the Code
 
 Two directions, and the direction is decided by which side already exists. Neither one guesses:
-an unresolved counterpart is reported as unresolved, and a conflict stops and asks.
+an unresolved counterpart is reported as unresolved, and a conflict stops and asks. Both open
+with the same resolve-and-verdict step, and `verify-change` is that step on its own — the
+report table, no write in either direction.
 
 ```mermaid
 flowchart LR
-    subgraph capture["to-spec-&lt;kind&gt;"]
+    subgraph capture["sync-specs"]
         code["Implementation and its unit tests"] --> resolveA["Resolve counterpart"]
         resolveA --> verdictA{"Drift verdict"}
         verdictA -->|"code-ahead"| write["Write the chapter through the folder's write path"]
@@ -91,7 +93,7 @@ flowchart LR
         verdictA -->|"unresolved"| ask
     end
 
-    subgraph build["from-spec-&lt;kind&gt;"]
+    subgraph build["propose-change"]
         chapter["Agreed chapter"] --> resolveB["Resolve counterpart"]
         resolveB --> category{"Change category"}
         category -->|"no counterpart"| brief["Change brief: new functionality"]
@@ -103,7 +105,7 @@ flowchart LR
     end
 ```
 
-- **`from-spec-` reads code without changing it.** Establishing what is already there is what
+- **`propose-change` reads code without changing it.** Establishing what is already there is what
   lets the brief ask only for the delta, and it is why the update case can name where the
   current behaviour lives.
 - **Which flow picks a brief up is the user's decision**, taken after reading it. No skill here
@@ -114,7 +116,7 @@ flowchart LR
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule nobody
   agreed.
-- **Each converter carries the annotation prohibition itself.** `to-spec-<kind>` never writes a
-  fence, `from-spec-<kind>` never carries one into a brief, and both say so in their own `Do not`
+- **Each converter carries the annotation prohibition itself.** `sync-specs` never writes a
+  fence, `propose-change` never carries one into a brief, and both say so in their own `Do not`
   section. The session-start prompt states the reading rule; a writing rule has to be at the point
   of use to survive the session that reaches it.

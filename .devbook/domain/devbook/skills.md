@@ -5,8 +5,8 @@ type: skills
 related: [".devbook/domain/context-map.md#devbook"]
 ```
 
-> Thirteen skills: three that own the convention in a repository, and ten that cross the
-> boundary between a chapter and the code implementing it. None of them is a flow — this context
+> Seven skills: four that own the convention in a repository, and three that cross the
+> boundary between a chapter and the code implementing it, each over five chapter kinds. None of them is a flow — this context
 > ships the shape and the check, and the procedure for carrying a change belongs to the engine.
 
 ## install
@@ -58,71 +58,54 @@ Refresh a repository's technology graph from deterministic package inventories, 
 repository for what appears in no package manifest — runtimes, services, platforms, protocols,
 tooling — and hand the authoring to the folder's own write path.
 
-## to-spec-aggregate
+## annotation-sweep
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md"]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md"]
 ```
 
-Read an implemented aggregate and write the chapter that was missing, thin, or stale — the root and
-every entity, value object, and enum it owns, the shared groupings, and the events it raises.
+Delete every resolved annotation fence in one chapter and nothing else — the last step of the
+lifecycle, where `resolved` lives only the rest of the branch and gone is the resting state.
+Chapter-scoped, so a person sees what is about to go before it does.
+
+## sync-specs
+
+```meta
+type: feature
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
+```
+
+Read an implementation and its unit tests and write the chapter that was missing, thin, or
+stale, for any of the five kinds. The kind is the chapter's `type`, or the file where the folder
+defines none, and what a kind needs is read from its own file rather than carried in the skill.
 
 The aggregate is the unit and not its parts: a consistency boundary decided twice is a boundary
-decided differently.
+decided differently. A domain service is the deliberate exception — defined by coordinating
+across boundaries rather than living in one, it is its own kind and owns the events it raises.
 
-## to-spec-domain-service
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-The deliberate exception to that rule. A domain service is defined by coordinating across
-boundaries rather than living in one, so it keeps its own pass and owns the events it raises
-itself.
-
-## to-spec-feature
+### Run the Application for a Feature
 
 ```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
+type: sub-feature
 ```
 
-Read a shipped capability and write its chapter — and this is the one capture pass that **runs the
-application**. Reading a controller tells you a route exists; using the feature tells you what the
-product lets someone do, in what order, with what wording.
-
+`features.md` is the one chapter written from the user's point of view, so the feature kind is
+the one capture that **runs the application**. Reading a controller tells you a route exists;
+using the feature tells you what the product lets someone do, in what order, with what wording.
 Screenshots are report evidence and are never committed into a devbook folder.
 
-## to-spec-building-block
+## propose-change
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
-Read what a component actually is and write its building-block chapter in the architecture folder.
-
-## to-spec-design-component
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-Read an implemented UI component and write its entry in the design folder's component library.
-
-## from-spec-aggregate
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-Turn an agreed but unbuilt aggregate chapter into a change brief — outcomes, invariants, ubiquitous
-language, out of scope, acceptance checks — plus a change category, then stop. It never edits a
-source or test tree.
+Turn an agreed but unbuilt chapter of any of the five kinds into a change brief — outcomes,
+invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, then
+stop. It never edits a source or test tree, and which flow picks the brief up is the user's
+decision, taken after reading it — no skill here names a code-side flow.
 
 ### Read Code Without Changing It
 
@@ -131,42 +114,17 @@ type: sub-feature
 related: [".devbook/domain/devbook/domain.md#drift-verdict"]
 ```
 
-Establishing what already exists is what lets the brief ask only for the delta, and it is how the
-change category is decided: new functionality, a change to existing behaviour, or a defect.
+Establishing what already exists is what lets the brief ask only for the delta, and it is how
+the change category is decided: new functionality, a change to existing behaviour, or a defect.
 
-## from-spec-domain-service
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-The same, for a domain service and the events it raises.
-
-## from-spec-feature
+## verify-change
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/arc42/adr/67-the-converters-are-three-skills-named-after-openspec.md"]
 ```
 
-The same, for a feature or sub-feature chapter. Which flow picks the brief up is the user's
-decision, taken after reading it — no skill here names a code-side flow.
-
-## from-spec-building-block
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-The same, for an agreed building-block chapter.
-
-## from-spec-design-component
-
-```meta
-type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter"]
-```
-
-The same, for an agreed design component.
+Report the drift verdict per chapter and write nothing — no chapter, no brief, no status. The
+report's action column names which of the other two a verdict calls for. It is the step both of
+the others take before they write, offered on its own for the question "is this chapter still
+true".

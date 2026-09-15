@@ -116,6 +116,7 @@ later reversed is the part a reader most needs.
 | [64. 1.0.0 Is the First Release](64-1-0-0-is-the-first-release.md) | 2026-09-14 |
 | [65. The Repository Is Named devbook](65-the-repository-is-named-devbook.md) | 2026-09-14 |
 | [66. The Marketplace Is Named jsdotnet-devbook](66-the-marketplace-is-named-jsdotnet-devbook.md) | 2026-09-14 |
+| [67. The Converters Are Three Skills Named After OpenSpec's Verbs](67-the-converters-are-three-skills-named-after-openspec.md) | 2026-09-15 |
 
 Four records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
