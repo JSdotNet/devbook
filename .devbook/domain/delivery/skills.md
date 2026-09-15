@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The fifteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The fourteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-code
@@ -45,19 +45,10 @@ type: feature
 related: [".devbook/domain/delivery/flow.flow-project.md"]
 ```
 
-Scaffold a development project into a repository that already exists and is governed: the
-repository's own configuration, CI, tooling, dependencies, and a structure that builds.
-
-## flow-repo
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-repo.md"]
-```
-
-Create and govern a repository before there is a project in it — README, MCP configuration,
-instructions, branch protection, templates, governance. Creating the repository itself stays
-manual.
+Take a repository from nothing to a project that builds: create it, expand the README, protect
+the branch, add the templates and the governance, run the stack setup, then CI, tooling,
+dependencies, and a structure that builds. Creating the repository itself stays manual, and a
+repository that already exists enters at the stage it has reached.
 
 ## flow-spec
 

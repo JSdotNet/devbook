@@ -99,7 +99,7 @@ related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/a
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
-the Personal Validation gate. Five ship here, one for the code and one for the five devbook
+the Personal Validation gate. Four ship here, one for the code and one for the five devbook
 folders, and each owns its stage order and the tier it closes through.
 
 A flow is the unit a request is routed to, so its category is the boundary that matters: a
@@ -127,7 +127,7 @@ aliases: [shared step, phase skill]
 A shared step several flows run identically — Update Base, Build & Test, Validation,
 Personal Validation, Create Pull Request, Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
-of restated in five.
+of restated in four.
 
 ### Phase Tier
 

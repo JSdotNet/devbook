@@ -82,7 +82,7 @@ whose **Typical Stages** names it.
 | **Verification** | Verification | the `verify` service | `opus` | A verdict on whether the change set is what was agreed is review judgment: `aligned` called on drift ships a wrong pull request, so it takes the strongest reasoning. |
 | **Domain Design** | `.domain/` drafting in `flow-spec`; bounded-context and boundary review for `flow-code`'s create kind | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
 | **Design Authoring** | `.design/` drafting in `flow-spec` | the `ux` role | `sonnet` | Prescriptive tables, token names, and guideline prose: drafting work, not a trade-off. |
-| **Documentation & Low-Complexity** | `.ai/` drafting in `flow-spec`, `flow-repo` documentation/README stages, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
+| **Documentation & Low-Complexity** | `.ai/` drafting in `flow-spec`, `flow-project`'s README stage, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
 | **Human-in-the-Loop** | Personal Validation | *(none)* | *(none)* | No agent and no model: this phase always hands control back to the user. |
 | **Fallback / Unclassified** | Any stage whose role or service is not yet listed above, and any `(default)` stage with no clear category match | *(any)* | *(session default)* | Let the session's own model run it until the entry is added to this table — safer than guessing a family for an uncategorized case. |
 

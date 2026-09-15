@@ -80,8 +80,8 @@ Defaults, for a point the repository leaves absent:
 A default is only a name until the repository declares the server behind it.
 `resources/mcp-template.json` declares all three in the `.mcp.json` shape, which Claude Code
 and the Copilot CLI both read from the repository root; `resources/mcp-vscode-template.json`
-is the same three in the `.vscode/mcp.json` shape VS Code reads. `devbook-config:setup` and
-`flow-repo` copy them into a repository that has neither; a repository that already declares
+is the same three in the `.vscode/mcp.json` shape VS Code reads. `devbook-config:setup` copies
+them into a repository that has neither, and `flow-project` runs that setup; a repository that already declares
 its servers keeps its own files and adds only the ids it is missing.
 
 A bound server is matched from the live tool list by pattern at the stage that uses it, since

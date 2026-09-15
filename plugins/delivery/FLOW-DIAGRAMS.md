@@ -12,44 +12,14 @@ The **MCP servers** column names the engine's default servers by id, and *server
 point* for whatever the repository binds under `bindings["delivery.mcp"]` — none of which this
 plugin ships. See **MCP Server Strategy** in `resources/flow-execution-model.md`.
 
-## flow-repo
-
-```mermaid
-flowchart TD
-    A["Repository Creation (Manual)"] --> B["README"]
-    B --> C["MCP Configuration"]
-    C --> D["Repository Instructions"]
-    D --> E["Branch Protection"]
-    E --> F["Issue and PR Templates"]
-    F --> G["Repository Governance"]
-    G --> H["Personal Validation"]
-    H --> I{User approves?}
-    I -->|Yes| J["Create Pull Request or Skip"]
-    I -->|No| K["Return to the relevant earlier stage"]
-    K --> A
-    J --> U["Work Item Update or Skip"]
-    U --> L["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Repository Creation (Manual) | — | — |
-| README | the `docs` role, default agent | — |
-| MCP Configuration | Default agent | writes `bindings["delivery.mcp"]` |
-| Repository Instructions | Default agent | servers bound to `spec` |
-| Branch Protection | Default agent | — |
-| Issue and PR Templates | Default agent | servers bound to `spec` |
-| Repository Governance | Default agent | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
 ## flow-project
 
 ```mermaid
 flowchart TD
-    A["GitHub Folder Setup (Foundation)"] --> B["GitHub Actions Workflows"]
+    A["Repository Creation (Manual)"] --> S["Stack Setup"]
+    S --> R["README and Repository Instructions"]
+    R --> GV["Repository Governance"]
+    GV --> B["GitHub Actions Workflows"]
     B --> C["Specification & Architecture Intake"]
     C --> D["Tooling & Dependencies"]
     D --> E["Implementation"]
@@ -59,7 +29,7 @@ flowchart TD
     H --> I{User approves?}
     I -->|Yes| J["Create Pull Request or Skip"]
     I -->|No| K["Return to the relevant earlier stage"]
-    K --> A
+    K --> S
     J --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> L["Summary"]
@@ -67,7 +37,10 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| GitHub Folder Setup (Foundation) | the `implement` service | servers bound to `implement` |
+| Repository Creation (Manual) | — | — |
+| Stack Setup | the `implement` service, running `devbook-config:setup` | — |
+| README and Repository Instructions | the `docs` role, the `implement` service | servers bound to `spec` |
+| Repository Governance | *(default)*, through the `pr-lane` slot | servers bound to `spec` |
 | GitHub Actions Workflows | the `implement` service | — |
 | Specification & Architecture Intake | the `architecture` role | servers bound to `spec` |
 | Tooling & Dependencies | the `implement` service | `microsoft-learn` |
