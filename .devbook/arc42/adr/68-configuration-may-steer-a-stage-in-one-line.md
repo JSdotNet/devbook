@@ -59,6 +59,17 @@ against the artifacts as written.
   is carried out; it cannot add a stage, reorder one, or hand one to a plugin. An unknown key
   or an over-long line is rejected by name, as every other key is.
 
+## What it replaces
+
+Nothing in the engine. `flow-phases.md` and the two `phase-*` skills are the engine's own
+stage instruction — the part that follows the guidance, unchanged; `.agents/rules/` still
+fires by file glob on read, which is a different trigger from a stage; a repo-native `flow-*`
+skill is still how a repository changes a flow's shape, and this only shrinks the cases that
+need one. The one thing it absorbs is repository prose that already is stage guidance
+without the name: the caveat bullets under `## QA Depth` in `.devbook/flow-context.md`
+("payment scenarios always need capture, even in `targeted`") are `guidance.qa.run` lines,
+and that section then carries only its value — which already yields to `policy.qa.depth`.
+
 ## What it costs
 
 `check.mjs` gains one refusal and the schema one property; the flow-runner gains one read
