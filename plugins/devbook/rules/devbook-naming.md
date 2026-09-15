@@ -9,17 +9,18 @@ description: File and folder naming conventions inside devbook folders, includin
 
 Anything that exists **for tooling rather than for reading directly** carries a
 leading underscore, so a human scanning a folder can tell specification from
-data that must be interpreted by a tool at a glance. Folders with a leading
-underscore are always for data that needs tool interpretation.
+machinery at a glance. Folders with a leading underscore are always machinery:
+what a generator reads, what it writes, or the generator itself.
 
-- **Tooling folders** are prefixed: `_meta/` (derived artifacts). Files
-  *inside* such a folder are not prefixed again — the folder already carries
-  the signal, so it is `_meta/graph.json`, never `_meta/_graph.json`.
+- **Tooling folders** are prefixed: `_meta/` (derived artifacts),
+  `.devbook/_tools/` (the generators). Files *inside* such a folder are not
+  prefixed again — the folder already carries the signal, so it is
+  `_meta/graph.json`, never `_meta/_graph.json`.
 - **Tooling files** sitting alongside content are prefixed individually:
   `_template.md`, `_schema.json`.
 
-Use the prefix when the asset is a template, a schema, a generated artifact, or
-input consumed only by a generator or viewer. Do not use it for documents meant
+Use the prefix when the asset is a template, a schema, a generated artifact,
+input consumed only by a generator or viewer, or the generator. Do not use it for documents meant
 to be read as content, even if tooling also parses them — the `.domain`,
 `.arc42`, `.tech`, `.design`, and `.ai` Markdown files are read by both
 humans and tooling and stay unprefixed.

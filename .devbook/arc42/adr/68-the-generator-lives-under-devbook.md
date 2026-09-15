@@ -1,4 +1,4 @@
-# 68. The Generator Lives Under .devbook/tools/
+# 68. The Generator Lives Under .devbook/_tools/
 
 ```meta
 date: 2026-09-15
@@ -6,7 +6,7 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-buil
 ```
 
 `devbook:install` materializes `tools/devbook-meta/` and `tools/devbook-tech/` into
-`.devbook/tools/`, not `.github/tools/`, and every command that names the generator names it
+`.devbook/_tools/`, not `.github/tools/`, and every command that names the generator names it
 there.
 
 The generator is plain Node with no host in it: it reads Markdown and writes JSON, and a
@@ -20,14 +20,17 @@ not belong in it. That argument was never applied to the generator because
 `.devbook/` existed, and nothing revisited it when record 11 gave the folder a home.
 
 `.devbook/` is the right parent because it exists in both layouts: the flat one keeps its
-chapter folders at the root but its config at `.devbook/config.json`, so `.devbook/tools/` is
+chapter folders at the root but its config at `.devbook/config.json`, so `.devbook/_tools/` is
 never the only thing under `.devbook/`. Discovery probes `.devbook/<name>` for the five chapter
 folders and ignores anything else, so a `tools/` sibling is invisible to the layout check. The
 shared rules' nested-layout glob was `.devbook/**` and would have fired on the generator and on
-the config alike; it narrows to the five chapter folders in the same change.
+the config alike; it narrows to the five chapter folders in the same change. The folder is
+`_tools/`, not `tools/`: under `.github/` nothing is content and a plain name needed no marker,
+but beside five chapter folders the underscore is what `devbook-naming.md` reserves for
+machinery, and a managed copy nobody edits is machinery in the same sense `_meta/` is.
 
 **Record 25 weakens and stands.** It argued that `devbook-` is not redundant at the destination
-because `.github/tools/` is shared. Under `.devbook/tools/` the prefix is redundant on the path,
+because `.github/tools/` is shared. Under `.devbook/_tools/` the prefix is redundant on the path,
 and the name is kept anyway: `devbook-meta` is the tool's name in the plugin, in every command,
 and in the workflow that runs it, and a tool renamed on the way in is a tool nobody can find
 from its own README. The workflows and the per-rule instruction wrappers stay under `.github/`,

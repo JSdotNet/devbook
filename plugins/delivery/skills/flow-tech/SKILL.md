@@ -47,7 +47,7 @@ continue.
 - The graph diagram's nodes and edges match the `depends-on` fields exactly; every
   `depends-on` resolves to a `.tech` chapter.
 - Update every reference elsewhere when a heading or file was renamed or moved.
-- Run `node .devbook/tools/devbook-meta/build.mjs --check` when the repository ships it, and
+- Run `node .devbook/_tools/devbook-meta/build.mjs --check` when the repository ships it, and
   fix what it reports here. Never regenerate `_meta/` in this run: the refresh is the
   repository's own path.
 - Summarize the changed chapters for the user, naming every status change.

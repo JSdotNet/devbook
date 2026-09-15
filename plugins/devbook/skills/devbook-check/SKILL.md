@@ -22,7 +22,7 @@ compressing a lookup table costs a repair, not a sentence.
 1. **Check the authored Markdown** from the repository root:
 
    ```
-   node .devbook/tools/devbook-meta/build.mjs --check
+   node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
    Exit codes:
@@ -65,7 +65,7 @@ compressing a lookup table costs a repair, not a sentence.
    | Unrecognized field | A field the folder's schema does not define, usually a typo (warning) | Correct the name against `devbook-chapter-metadata.md`, or move it under `ext.<namespace>` if it is an extension's own state |
    | Empty or null field value | A field set to `[]` or `null` (warning) | Delete the line. An absence is spelled by omitting the field, never by writing it empty |
    | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `devbook-chapter-metadata.md`. A link to another chapter belongs in `related` |
-   | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.devbook/tools/devbook-meta/metadata.mjs` to make it runnable |
+   | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.devbook/_tools/devbook-meta/metadata.mjs` to make it runnable |
    | Literal escape sequence in body text | A `` `r`n `` or `\n` was written instead of a line break, usually by a tool writing the file through a shell | Replace it with a real line break. Check whether a heading was glued onto the previous line and silently stopped being a heading |
    | Annotation before the first heading | An `annotation` fence with no chapter above it | Move it under the chapter it is about. A note is addressed by chapter and ordinal, so one outside a chapter has no address |
    | Annotation missing `author`, `date`, or `body` | The three required fields of a note | Add them. `author` is written, never inferred — a note outlives the rewrite `git blame` would have had to follow |

@@ -268,17 +268,17 @@ chapter's Markdown beside its parsed `meta` block and a metadata lint.
 ```
 
 ```bash
-node .devbook/tools/devbook-meta/build.mjs            # write every adopted scope
-node .devbook/tools/devbook-meta/build.mjs --check    # CI: verify only
-node .devbook/tools/devbook-meta/build.mjs --scope .tech
-node .devbook/tools/devbook-meta/build.mjs --root ../other-repo
+node .devbook/_tools/devbook-meta/build.mjs            # write every adopted scope
+node .devbook/_tools/devbook-meta/build.mjs --check    # CI: verify only
+node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 ```bash
-node .devbook/tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
-node .devbook/tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
-node .devbook/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-node .devbook/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
+node .devbook/_tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
 ```
 
 `annotations.mjs` is the only writer of an annotation fence — the CLI above and
@@ -294,8 +294,8 @@ output shape and for when to refresh.
 ### Tooling: `devbook-tech`
 
 ```bash
-node .devbook/tools/devbook-tech/dotnet-packages.mjs --root .
-node .devbook/tools/devbook-tech/frontend-packages.mjs --root .
+node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root .
+node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 The inventory scripts emit deterministic JSON from repository manifests. Use them

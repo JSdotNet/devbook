@@ -137,8 +137,8 @@ not copy.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .devbook/tools/devbook-meta/build.mjs --scope .arc42
-   node .devbook/tools/devbook-meta/build.mjs --scope .arc42 --check
+   node .devbook/_tools/devbook-meta/build.mjs --scope .arc42
+   node .devbook/_tools/devbook-meta/build.mjs --scope .arc42 --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter

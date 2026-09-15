@@ -57,7 +57,7 @@ continue.
 - Every pointer or gesture rule has a keyboard alternative and an announced state change in
   the accessibility guideline.
 - Update every reference elsewhere when a heading or file was renamed or moved.
-- Run `node .devbook/tools/devbook-meta/build.mjs --check` when the repository ships it, and
+- Run `node .devbook/_tools/devbook-meta/build.mjs --check` when the repository ships it, and
   fix what it reports here. Never regenerate `_meta/` in this run: the refresh is the
   repository's own path.
 - Summarize the changed chapters for the user.

@@ -32,8 +32,8 @@ packages, and versions, emit JSON with no timestamps, and ignore build output fo
 From a repository that installed the devbook tools:
 
 ```bash
-node .devbook/tools/devbook-tech/dotnet-packages.mjs --root . > .tech/_inventory-dotnet.json
-node .devbook/tools/devbook-tech/frontend-packages.mjs --root . > .tech/_inventory-frontend.json
+node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root . > .tech/_inventory-dotnet.json
+node .devbook/_tools/devbook-tech/frontend-packages.mjs --root . > .tech/_inventory-frontend.json
 ```
 
 When running directly from the plugin source during development, use the plugin paths:
@@ -87,8 +87,8 @@ chapters and generated `_meta/*.json` indexes.
 6. **Regenerate and validate indexes.** Run:
 
    ```bash
-   node .devbook/tools/devbook-meta/build.mjs --scope .tech
-   node .devbook/tools/devbook-meta/build.mjs --scope .tech --check
+   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+   node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check
    ```
 
    If either command reports unresolved references, schema violations, or stale generated

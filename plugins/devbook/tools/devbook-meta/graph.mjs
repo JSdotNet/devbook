@@ -74,7 +74,7 @@ export const REPO_SCOPE = ".";
 // plain Node and `.github/` is one host's folder. The fallback for
 // `generatedBy`, and still the right answer whenever the generator is not
 // inside the repository it is indexing — a plugin install, or `--root`.
-export const GENERATOR = ".devbook/tools/devbook-meta/build.mjs";
+export const GENERATOR = ".devbook/_tools/devbook-meta/build.mjs";
 
 const GENERATOR_FILE = fileURLToPath(new URL("./build.mjs", import.meta.url));
 

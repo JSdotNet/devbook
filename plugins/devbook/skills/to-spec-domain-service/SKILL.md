@@ -135,8 +135,8 @@ evidence either way.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .devbook/tools/devbook-meta/build.mjs --scope .domain
-   node .devbook/tools/devbook-meta/build.mjs --scope .domain --check
+   node .devbook/_tools/devbook-meta/build.mjs --scope .domain
+   node .devbook/_tools/devbook-meta/build.mjs --scope .domain --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter

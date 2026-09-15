@@ -27,7 +27,7 @@ result.
    body, and the reply that answered it:
 
    ```
-   node .devbook/tools/devbook-meta/annotations.mjs list --chapter <path#slug> --status resolved
+   node .devbook/_tools/devbook-meta/annotations.mjs list --chapter <path#slug> --status resolved
    ```
 
    Report an empty list and stop. Nothing to sweep is the ordinary case.
@@ -35,7 +35,7 @@ result.
 3. **Sweep**, once the user has seen the list:
 
    ```
-   node .devbook/tools/devbook-meta/annotations.mjs sweep --chapter <path#slug>
+   node .devbook/_tools/devbook-meta/annotations.mjs sweep --chapter <path#slug>
    ```
 
    It deletes every `status: resolved` fence and no open one. Never delete a

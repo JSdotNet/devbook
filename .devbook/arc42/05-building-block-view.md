@@ -213,7 +213,7 @@ flowchart TB
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
         wf[".github/workflows/ - the check, and the nightly refresh"]
-        tools[".devbook/tools/ - the generator, at the path flows name"]
+        tools[".devbook/_tools/ - the generator, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
         cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
@@ -242,7 +242,7 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/tools/` holds devbook's generator at the path devbook's install writes it to, and five
+`.devbook/_tools/` holds devbook's generator at the path devbook's install writes it to, and five
 of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
 knowledge of, and a repository that hand-authored its folders without installing devbook gets a
 check line pointing at a file that is not there.
