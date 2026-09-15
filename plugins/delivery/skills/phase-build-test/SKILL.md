@@ -11,8 +11,7 @@ Validation — so build and test behavior lives in one place instead of in each 
 
 ## When To Run
 
-- Run for code-modifying flows (`flow-code`, `flow-update-packages`, `flow-aspire-update`,
-  `flow-project`).
+- Run for code-modifying flows (`flow-code`, `flow-update-packages`, `flow-project`).
 - Always run this phase **first**, after the skill's own unique stages produce a change set.
 - Documentation/config flows skip this phase.
 

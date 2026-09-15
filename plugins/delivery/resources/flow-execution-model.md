@@ -10,8 +10,8 @@ Read this file once, at the start of a run.
 
 ## Code-Modifying Flow Context
 
-- `flow-code`, `flow-update-packages`, `flow-aspire-update`, and `flow-project` are
-  **implementation-focused** flows.
+- `flow-code`, `flow-update-packages`, and `flow-project` are **implementation-focused**
+  flows.
 - Each of these skills **owns establishing its own implementation context** in its first
   stage — scope, acceptance or verification criteria, impacted code paths, and the
   governing instructions and guidelines for the affected area.

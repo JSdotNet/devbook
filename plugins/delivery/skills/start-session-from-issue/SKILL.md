@@ -108,8 +108,7 @@ item, because the previous one is filtered out as in flight.
    | Item is about | Flow |
    |---|---|
    | A defect, new or changed behavior, a new module or service, folder moves or layout changes — any change to the code | `flow-code`, which derives the kind |
-   | Dependency or package updates | `flow-update-packages` |
-   | An Aspire version upgrade | `flow-aspire-update` |
+   | Dependency or package updates, or a framework upgrade such as an Aspire version move | `flow-update-packages` |
    | A devbook folder — an architecture chapter, decision or debt record, the domain model, technology graph, design guidelines, or AI adoption record | `flow-spec` |
    | Tooling, CI, scripting, documentation outside the devbook folders, housekeeping | `flow-code`, config kind |
 

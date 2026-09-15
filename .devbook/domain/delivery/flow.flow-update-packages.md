@@ -6,7 +6,7 @@ related: [".devbook/domain/delivery/skills.md#flow-update-packages", ".devbook/d
 ```
 
 > `flow-update-packages` — dependencies moved forward, with the security question asked before the
-> build. What the skill does is in [skills.md](skills.md#flow-update-packages); the shared spine
+> build, and a framework upgrade as the same flow at a deeper setting. What the skill does is in [skills.md](skills.md#flow-update-packages); the shared spine
 > every flow runs is in [flow.md](flow.md).
 
 ## flow-update-packages
@@ -18,6 +18,8 @@ flowchart TD
     s1["Update Planning"]
     s2["Implementation"]
     s3["Security Validation"]
+    d{"depth"}
+    s4["New Feature Adoption"]
     c0["Build & Test"]
     c1["Validation"]
     c2["Personal Validation"]
@@ -26,7 +28,9 @@ flowchart TD
     s0 --> s1
     s1 --> s2
     s2 --> s3
-    s3 --> c0
+    s3 --> d
+    d -->|framework upgrade| s4 --> c0
+    d -->|routine| c0
     c0 --> c1
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
@@ -45,6 +49,10 @@ flowchart TD
 It closes through the code-modifying tier. Every tier opens with Update Base, prepended by the
 runner and named by no skill.
 
+- **A framework upgrade is a depth, not a flow.** Dependency Analysis settles it, and it adds two
+  things: a baseline gate — green before anything moves, or a red recorded as pre-existing and
+  excluded by agreement — and a New Feature Adoption stage after the upgrade, because what the new
+  version makes possible is a separate decision from taking it.
 - **Security Validation sits between the change and the build.** A dependency update that compiles
   is not the same as one that is safe, and asking after Build & Test would mean asking about a
   change already treated as good.

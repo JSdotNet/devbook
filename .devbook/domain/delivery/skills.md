@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The sixteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The fifteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-code
@@ -33,17 +33,10 @@ related: [".devbook/domain/delivery/flow.flow-update-packages.md"]
 ```
 
 Move dependencies forward and prove the result still builds and starts — NuGet, npm, SDKs, and
-tools — with the security question asked before the build rather than after it.
-
-## flow-aspire-update
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-aspire-update.md"]
-```
-
-Upgrade a .NET Aspire stack plan-first: record the baseline, agree the staging while backing out is
-still cheap, then upgrade, and decide separately what the new version makes possible.
+tools — with the security question asked before the build rather than after it. A framework
+upgrade, an Aspire version move included, is the same flow at a deeper setting: a recorded
+baseline before anything moves, reversible batches, and a separate decision about what the new
+version makes possible.
 
 ## flow-project
 

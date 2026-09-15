@@ -87,7 +87,10 @@ flowchart TD
     A["Dependency Analysis"] --> B["Update Planning"]
     B --> C["Implementation"]
     C --> D["Security Validation"]
-    D --> E["Build & Test"]
+    D --> N{Framework upgrade?}
+    N -->|Yes| NF["New Feature Adoption"]
+    NF --> E["Build & Test"]
+    N -->|No| E
     E --> F["Validation"]
     F --> G["Personal Validation"]
     G --> H{User approves?}
@@ -102,44 +105,12 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Dependency Analysis | the `implement` service | `microsoft-learn` |
-| Update Planning | the `implement` service | — |
+| Update Planning | the `implement` service; the `architecture` role for a framework upgrade | `microsoft-learn` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Security Validation | the `implement` service | — |
+| New Feature Adoption *(framework upgrade)* | the `implement` service, the `architecture` role | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-aspire-update
-
-```mermaid
-flowchart TD
-    A["Upgrade Intake & Baseline"] --> B["Plan Refinement"]
-    B --> C["Implementation"]
-    C --> D["New Feature Adoption"]
-    D --> E["Build & Test"]
-    E --> F["Validation"]
-    F --> G["Personal Validation"]
-    G --> H{User approves?}
-    H -->|Yes| I["Create Pull Request or Skip"]
-    H -->|No| J["Return to the relevant earlier stage"]
-    J --> A
-    I --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> K["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Upgrade Intake & Baseline | the `implement` service | `microsoft-learn` |
-| Plan Refinement | the `architecture` role | `microsoft-learn` |
-| Implementation | the `implement` service | `microsoft-learn` |
-| New Feature Adoption | the `implement` service, the `architecture` role | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(smoke checks for a framework upgrade; otherwise only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
