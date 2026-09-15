@@ -57,6 +57,7 @@ node scripts/report.mjs --root <repository>
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
 | `.devbook/config.local.json` | Whether this checkout carries a machine-scope overlay, and which engine keys it touches |
+| `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
 | The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 

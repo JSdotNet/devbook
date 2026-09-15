@@ -43,13 +43,24 @@ work this skill did not do.
    so it is nobody's to create on somebody else's behalf; mention that it exists, and that
    `resources/config.local-template.json` in the delivery plugin is where it starts.
 
-5. **Let each component install itself.** For every component this repository is adopting,
+5. **Declare the default MCP servers.** Every point left absent in step 2 takes the engine
+   default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
+   host can start the server. The report's **MCP servers** lines say which of those ids
+   `.mcp.json`, `.vscode/mcp.json`, and `.github/mcp.json` already declare. When the
+   repository has none of the three files, copy the delivery plugin's
+   `resources/mcp-template.json` to `.mcp.json` and `resources/mcp-vscode-template.json` to
+   `.vscode/mcp.json`; drop `aspire` and `playwright` when nothing here runs, and drop
+   `microsoft-learn` when the stack is not Microsoft's. When a file exists, add only the
+   missing ids in its own shape and change nothing else in it. These files are the
+   repository's, unstamped, and never touched again by this plugin.
+
+6. **Let each component install itself.** For every component this repository is adopting,
    invoke that component's own install skill and let it materialize its payload and write its
    own stamp — `devbook:install` for the devbook folders. Do not copy a component's
    files by hand: a copy made here lands unstamped, and the next reconcile cannot tell it
    from a file someone deliberately customized.
 
-6. **Verify and report.** Re-run the report, run each component's own check skill, and say
+7. **Verify and report.** Re-run the report, run each component's own check skill, and say
    plainly what was set up, what was deliberately left unbound, and anything that ended
    failing. A setup that ends on a failing check is reported as failing, never as done.
 
@@ -61,6 +72,8 @@ forward — version drift, migrations, the fan-out across components — belongs
 
 - Do not write, edit, or remove a `components.<name>` key. It is not yours.
 - Do not write the local overlay. It is gitignored and belongs to whoever runs here.
+- Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
+  rename, or reshape a server somebody declared.
 - Do not invent a policy switch, an extension point, or a gate purpose. All three sets are
   closed and declared by the engine; configuration chooses among behaviour it already has.
 - Do not remove a gate. Configuration may add one anywhere and may never take one away.
