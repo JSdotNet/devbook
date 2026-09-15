@@ -46,7 +46,7 @@ const COMPONENTS = {
 // install refuses to run until `components.devbook` names an adopted folder, and
 // delivery-schedule checks its targets against the plugins this repository enables, so it
 // wants the settled state. `delivery` is the one free position — its install reads the engine
-// keys and `.claude/flow-context.md` and no other component's stamp — and it sits before
+// keys and `.devbook/flow-context.md` and no other component's stamp — and it sits before
 // schedule because schedule's targets call the procedures it seeds. Anything not named here
 // follows, alphabetically.
 const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
@@ -312,6 +312,11 @@ function buildRepository(repoRoot) {
     const config = load('stack config', path);
     const legacyPath = join(repoRoot, '.github', 'ai-agent-stack.json');
     const legacy = existsSync(legacyPath) ? legacyPath : null;
+    // The flow context moved the same way the config did, and for the same reason: `.claude/`
+    // is one host's folder. Nothing reads the old path; the report names it so the move is a
+    // named instruction rather than a context file that silently stopped applying.
+    const legacyFlowContextPath = join(repoRoot, '.claude', 'flow-context.md');
+    const legacyFlowContext = existsSync(legacyFlowContextPath) ? legacyFlowContextPath : null;
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const flat = join(repoRoot, `.${folder}`);
         const nested = join(repoRoot, '.devbook', folder);
@@ -326,6 +331,7 @@ function buildRepository(repoRoot) {
     return {
         path,
         legacyPath: legacy,
+        legacyFlowContextPath: legacyFlowContext,
         overlayPath: overlay ? overlayPath : null,
         overlayKeys: overlay ? ENGINE_KEYS.filter((key) => key in overlay) : null,
         present: Boolean(config),
@@ -480,6 +486,10 @@ function render(model) {
     out.push('');
     if (repo.legacyPath) {
         out.push(`\`${repo.legacyPath}\` is still present. The stack config moved to \`.devbook/config.json\`; nothing reads the old path any more, so move the file before anything else.`);
+        out.push('');
+    }
+    if (repo.legacyFlowContextPath) {
+        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context moved to \`.devbook/flow-context.md\`; nothing reads the old path any more, so move the file before anything else.`);
         out.push('');
     }
     if (repo.overlayPath) {

@@ -22,8 +22,10 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Repository paths whose presence means this repository uses what the guidance describes.
-// A marker is an existence probe, not a config read.
-const MARKERS = ['.devbook/config.json', '.claude/flow-context.md'];
+// A marker is an existence probe, not a config read, which is why the pre-move
+// `.claude/flow-context.md` stays on the list: nothing reads it there any more, and a
+// repository that has not moved it yet still routes (decision 41, then 67).
+const MARKERS = ['.devbook/config.json', '.devbook/flow-context.md', '.claude/flow-context.md'];
 
 // A worktree's .git is a file, not a directory, so test for presence rather than for a
 // directory. CLAUDE_PROJECT_DIR is the host's own answer and is trusted first.

@@ -19,7 +19,7 @@ companion files so a run reads the part it is actually in.
 | `flow-execution-model.md` | Context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, run state and resume, **Session Handoff** | Once, at the start of the run |
 | `flow-model-selection.md` | Category → model resolution and the personal override | Once, before `start_run` |
 | `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
-| `flow-repo-context.md` | The `.claude/flow-context.md` convention | **Only if that file exists.** Check first; when it is absent there is no convention to apply |
+| `flow-repo-context.md` | The `.devbook/flow-context.md` convention | **Only if that file exists.** Check first; when it is absent there is no convention to apply |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
@@ -148,7 +148,7 @@ the phase:
   functionality gets Playwright QA with capture, a bug fix or a change to existing behavior
   gets targeted verification, a dependency update gets startup-only validation, and a change
   with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
-  `policy.qa.depth` and then `.claude/flow-context.md` outrank it, and `policy.qa.ceiling` caps
+  `policy.qa.depth` and then `.devbook/flow-context.md` outrank it, and `policy.qa.ceiling` caps
   the result — the full order is in `surface-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire
   MCP server and it is unavailable, mark the phase `blocked`, name the missing server and

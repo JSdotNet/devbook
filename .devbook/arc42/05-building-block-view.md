@@ -462,6 +462,8 @@ plugin is behind a stamp whose plugin this machine has not installed.
 It sits beside the devbook chapter folders and is read by every host, which is the whole reason
 it left `.github/` — see [the decision](adr/11-the-stack-config-lives-in-devbook.md).
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
+The optional flow context file, `.devbook/flow-context.md`, sits beside it on the same rule —
+see [decision 67](adr/67-the-flow-context-lives-in-devbook.md).
 
 ## Schedule Plugin
 

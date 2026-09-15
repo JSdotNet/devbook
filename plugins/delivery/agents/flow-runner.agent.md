@@ -51,7 +51,7 @@ those contracts; it does not re-decide them per skill.
    the stack config carries no model key. Resolve each family to the current latest
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether
-   `.claude/flow-context.md` exists — **read `flow-repo-context.md` only if it
+   `.devbook/flow-context.md` exists — **read `flow-repo-context.md` only if it
    does.** When present, persist its startup command, AppHost path, base URLs,
    healthy-startup signals, credential pointer, QA depth, and any declared repo-native
    `flow-*` skills, and pass them to the stages that need them. A repo-native skill takes
@@ -173,7 +173,7 @@ those contracts; it does not re-decide them per skill.
 - **No pull request** unless the user explicitly approved it and that approval is persisted.
 - **Model choice is personal; repo context and policy are not model choice.** A personal
   override changes the category default for that user only. The repository has no say in
-  model selection at all. `.claude/flow-context.md` and `policy` override startup and QA
+  model selection at all. `.devbook/flow-context.md` and `policy` override startup and QA
   depth; neither ever sets a model.
 - **Shared-worktree sub-agents first.** An agent launched with its own checkout cannot see
   this session's uncommitted change set, so reserve that for work that would otherwise

@@ -456,7 +456,7 @@ Contract** for the tool cadence.
 - **Concurrency is safe but not free.** Two runs claim different issues and work disjoint
   worktrees, so they cannot corrupt each other. They still both build, and a build that
   assumes exclusive use of a port, a container, or a local database will fight. Serialise the
-  schedule, or give each run its own ports via `.claude/flow-context.md`.
+  schedule, or give each run its own ports via `.devbook/flow-context.md`.
 - **The worktree is not cleaned up automatically.** Remove it after the pull request merges
   with `git worktree remove <path>`, or let `pr-merge-ready` report it as reclaimable.
 - **No QA validation phase.** The workflow verifies with the unit suite only. Browser-level

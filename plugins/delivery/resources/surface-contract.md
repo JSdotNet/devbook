@@ -85,7 +85,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 - **No model ever appears in this file.** Model choice is personal — see
   `flow-model-selection.md`.
 - **No secrets.** The file is committed. A credential pointer belongs in
-  `.claude/flow-context.md`, and the value belongs in a secret store.
+  `.devbook/flow-context.md`, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself, and
@@ -256,7 +256,7 @@ pull-request lane opens against it — because a config check that reached for t
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then the
-`## QA Depth` section of `.claude/flow-context.md`, then `phase-qa-validation`'s change-kind
+`## QA Depth` section of `.devbook/flow-context.md`, then `phase-qa-validation`'s change-kind
 selection. The first one present wins, and `policy.qa.ceiling` caps the result however it was
 reached. The config outranks the context file because it is the validated, versioned surface a
 repository commits; the context file describes the application, and says what to do when
@@ -305,7 +305,7 @@ is the normal case and never a gap.
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
-| `repo-flow-context` | The repository's flow context file, `.claude/flow-context.md` by convention | Discovery as today |
+| `repo-flow-context` | The repository's flow context file, `.devbook/flow-context.md` by convention | Discovery as today |
 | `model-override` | Where a user's personal model preferences live | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |

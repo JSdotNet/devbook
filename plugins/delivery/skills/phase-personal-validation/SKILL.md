@@ -31,7 +31,7 @@ A link to a process that is not listening is worse than no link.
 - **Reuse the instance QA Validation left running** when there is one. Start a second only
   after confirming the first is gone.
 - **Otherwise start it** with the `app.start` service, using the `## How to Run` command from
-  `.claude/flow-context.md` (convention: `resources/flow-repo-context.md`) or the command QA
+  `.devbook/flow-context.md` (convention: `resources/flow-repo-context.md`) or the command QA
   proved this run. **Never hand the person a command to run themselves** — starting it is
   this phase's job, and stopping at a command list is a failed handback, not a shortcut.
 - **Confirm health before publishing anything**, against the repository's
@@ -90,7 +90,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 
 - The change set, the run's scope and acceptance criteria, and the change kind.
 - The QA result and evidence from `phase-qa-validation`, when that phase ran.
-- The repo context the flow-runner resolved from `.claude/flow-context.md` — startup command,
+- The repo context the flow-runner resolved from `.devbook/flow-context.md` — startup command,
   base URLs, healthy-startup signals, credential pointer.
 
 ## Outputs

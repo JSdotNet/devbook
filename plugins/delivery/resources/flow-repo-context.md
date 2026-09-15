@@ -1,6 +1,6 @@
 ---
 name: flow-repo-context
-description: Defines the optional .claude/flow-context.md convention a consuming repository uses to declare how its application starts, where to validate it, and how deep QA should go, so flows do not have to guess or ask.
+description: Defines the optional .devbook/flow-context.md convention a consuming repository uses to declare how its application starts, where to validate it, and how deep QA should go, so flows do not have to guess or ask.
 ---
 
 # Flow Repo Context (Flow-Owned)
@@ -22,7 +22,10 @@ description: Defines the optional .claude/flow-context.md convention a consuming
 
 ## The File
 
-- A consuming repository may create `.claude/flow-context.md` at its repo root.
+- A consuming repository may create `.devbook/flow-context.md`, beside `.devbook/config.json`
+  and for the same reason: both hosts read it, so it lives in neither host's folder. The
+  pre-move `.claude/flow-context.md` is not read; `devbook-config`'s report names it when it
+  is still present.
 - The file is **optional**. When it is missing, behavior is unchanged: flows
   discover the AppHost and entry points as they do today, record ambiguous discovery in the
   relevant stage output, and continue with the appropriate validation result.

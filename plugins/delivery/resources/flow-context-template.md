@@ -1,7 +1,7 @@
 # Flow Repo Context
 
 <!--
-Copy this file to `.claude/flow-context.md` in your repository and fill it in.
+Copy this file to `.devbook/flow-context.md` in your repository and fill it in.
 The file is optional; delete any section that does not apply.
 Never put actual secrets here — `## Test Credentials` takes a pointer only.
 Never pin a model here — model choice is personal and never comes from the repository.

@@ -47,7 +47,7 @@ Location** below, which is why the QA sub-agent shares the worktree rather than 
 
 ## Repo Context
 
-The consuming repository may supply `.claude/flow-context.md`, read once per run by
+The consuming repository may supply `.devbook/flow-context.md`, read once per run by
 the flow-runner. The convention is defined in
 `resources/flow-repo-context.md` — do not restate it here. Use it as
 follows:
@@ -119,7 +119,7 @@ If required MCP tooling is unavailable:
   validation policy allows a degraded result; they do not satisfy required Playwright
   evidence capture.
 
-Applies when the repository does not declare a QA depth in `.claude/flow-context.md`.
+Applies when the repository does not declare a QA depth in `.devbook/flow-context.md`.
 
 - **New functionality → QA validation with capture:**
   1. **Run the application locally** via the `app.start` service.
@@ -171,7 +171,7 @@ or a restart, and do not ask the user to restart the app manually as the normal 
 - The change kind (functional / bug fix / dependency update / none) from the calling
   flow.
 - The affected scenarios or critical paths to exercise.
-- The repo context resolved by the flow-runner from `.claude/flow-context.md`
+- The repo context resolved by the flow-runner from `.devbook/flow-context.md`
   (startup command, AppHost path, base URLs, healthy-startup signals, credential pointer,
   QA depth), when the repository supplies it.
 

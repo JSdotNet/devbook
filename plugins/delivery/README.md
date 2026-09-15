@@ -135,11 +135,11 @@ seed changes who runs capture, never whether it runs.
 | `resources/surface-contract.md` | Extension points, gates, the stack config, host slots, and the surface capability |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |
-| `resources/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
+| `resources/flow-repo-context.md` | The optional `.devbook/flow-context.md` runtime convention |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
-| `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
+| `resources/flow-context-template.md` | A filled-in `.devbook/flow-context.md` to copy |
 | `assets/skills/` | The `start` and `capture` seeds `delivery:install` writes into a repository |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a pointer wrapper per host |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

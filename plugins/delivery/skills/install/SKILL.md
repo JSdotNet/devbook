@@ -27,7 +27,7 @@ The pointer line is the whole body of both wrappers, never a second copy of the 
 
 ## The run
 
-1. **Resolve what this repository needs.** Skip `start` when `.claude/flow-context.md`
+1. **Resolve what this repository needs.** Skip `start` when `.devbook/flow-context.md`
    declares `**Runnable application:** none`; skip `capture` when `policy.qa.depth` is
    `skipped`. Ask before writing either, and say which was skipped and why.
 2. **Plan.** One table — `create`, `update`, `skip-customized` — and write nothing. Never

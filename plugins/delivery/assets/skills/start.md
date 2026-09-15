@@ -12,7 +12,7 @@ running application behind.
 
 ## Read the facts first
 
-`.claude/flow-context.md` holds the declared facts: `## How to Run`, `## Base URLs`,
+`.devbook/flow-context.md` holds the declared facts: `## How to Run`, `## Base URLs`,
 `## Healthy Startup`, `## Test Credentials`. This file holds the procedure. When the two
 disagree, the context file is right — fix it there, not here.
 
