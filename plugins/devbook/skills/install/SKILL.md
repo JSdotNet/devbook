@@ -14,9 +14,11 @@ in adoption, and a migration are one operation — the stamp says which.
 
 1. **Detect.** Stamp, installed version, disk state. Disk wins on existence,
    the stamp wins on provenance.
-2. **Resolve.** Ask only about genuinely new choices. Adopt only folders the
-   repository will actually maintain — an empty devbook folder is worse than
-   an absent one, and partial adoption is the normal case.
+2. **Resolve.** Ask only about genuinely new choices. Ask adoption as one
+   question naming all five folders; `.ai`'s stage set is a follow-up, asked
+   only when `.ai` was adopted. Adopt only folders the repository will actually
+   maintain — an empty devbook folder is worse than an absent one, and partial
+   adoption is the normal case.
 3. **Plan.** Show the diff table and write nothing. Never skip this.
 4. **Migrate.** Ledger forward, oldest first, `--check` before and after each.
 5. **Materialize.** Overwrite stale, report customized, never both.
@@ -50,8 +52,10 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 - The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`
   and `.devbook/config.local.json`. Ignore both; create neither. An empty overlay
   reads as a setting somebody chose.
-- Offer `assets/routing-snippet.md` for the user to merge. Never apply it
-  silently, and never put routing inside the `AGENTS.md` markers.
+- Always offer the `.claude/settings.json` deny rule from `assets/routing-snippet.md`:
+  nothing else enforces the `_meta/` rule mechanically. Offer its routing sections only
+  when a flow engine or specialist agents are installed — with neither, they name nothing.
+  Never apply any of it silently, and never put routing inside the `AGENTS.md` markers.
 - Without GitHub Actions, install `build/Update-DevbookIndex.ps1` alone and
   say plainly that index refresh is now manual.
 - Report a reconcile that ends on a failing check as failing, never as installed.
