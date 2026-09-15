@@ -19,7 +19,7 @@ flowchart TD
     s2["Refactor Planning"]
     s3["Implementation"]
     c0["Build & Test"]
-    c1["QA Validation"]
+    c1["Validation"]
     c2["Personal Validation"]
 
     base --> s0
@@ -31,7 +31,7 @@ flowchart TD
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Documentation Update"]
+    t1["Verification"]
     t2["Work Item Update"]
     t3["Summary"]
     g -->|approve| t0
@@ -45,8 +45,9 @@ flowchart TD
 It closes through the code-modifying tier. Every tier opens with Update Base, prepended by the
 runner and named by no skill.
 
-- **Documentation Update matters more here than anywhere.** A move invalidates every path written
-  down anywhere, so the stage that fixes them is part of the flow rather than a follow-up.
+- **Verification matters more here than anywhere.** A move invalidates every path a chapter
+  wrote down, so the verdict that names which chapters now point at nothing is part of the flow
+  rather than something a reader discovers later.
 - Refactor Planning is separate from Implementation because the value is in agreeing the target
   layout before anything moves — a half-finished move is worse than either layout.
 - Behaviour is held still on purpose. Anything that changes what the code does belongs in

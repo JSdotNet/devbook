@@ -64,8 +64,8 @@ const SCOPE = {
 };
 const DEVBOOK_FOLDERS = ['arc42', 'domain', 'tech', 'design', 'ai'];
 const ENGINE_KEYS = ['bindings', 'extensions', 'policy', 'gates'];
-const SERVICES = ['spec', 'implement', 'verify', 'app.start', 'qa.run', 'deliver'];
-const CHORES = ['session.start', 'flow.start', 'data.prepare', 'docs.update', 'flow.end'];
+const SERVICES = ['spec', 'implement', 'validate', 'app.start', 'qa.run', 'verify', 'deliver'];
+const CHORES = ['session.start', 'flow.start', 'data.prepare', 'flow.end'];
 
 // The engine default per extension point, from **MCP Server Strategy** in `delivery`'s
 // `resources/flow-execution-model.md`. Repeated here for the same reason COMPONENTS is: the
@@ -73,7 +73,7 @@ const CHORES = ['session.start', 'flow.start', 'data.prepare', 'docs.update', 'f
 // this machine. A point not listed defaults to none.
 const MCP_DEFAULTS = {
     implement: ['microsoft-learn'],
-    verify: ['microsoft-learn'],
+    validate: ['microsoft-learn'],
     'app.start': ['aspire', 'playwright'],
     'qa.run': ['aspire', 'playwright'],
 };

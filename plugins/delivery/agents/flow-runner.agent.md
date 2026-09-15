@@ -51,7 +51,7 @@ those contracts; it does not re-decide them per skill.
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether the
    repository has a `start` skill at `.agents/skills/start.md`. When it does, persist the
-   path and name it to whichever provider fills `app.start` and to QA Validation as the
+   path and name it to whichever provider fills `app.start` and to Validation as the
    repository's declared runtime facts — command, entry points, readiness signals,
    credential pointer. Do not read it yourself; the `app.start` result carries what later
    stages need. Both files are optional; a missing or malformed one never blocks the run.
@@ -89,14 +89,14 @@ those contracts; it does not re-decide them per skill.
 9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
    `flow-phases.md`.
 10. **Invoke the phase skills rather than re-describing their logic.** `phase-build-test` and
-    `phase-qa-validation` own build, test, and QA; pass the change kind so QA depth is selected
+    `phase-validation` own build, test, and QA; pass the change kind so QA depth is selected
     automatically, together with the resolved repo context. Both are **delegated by default** —
     one `Agent` call each in the same worktree, returning a summary rather than build logs or
     browser snapshots. Running them inline is the single most expensive mistake available to a
     run. Reserve inline execution for startup-only QA and for a host where `stage-delegation`
     resolves to nothing. `phase-personal-validation` is the opposite case and is **never
     delegated** — see step 12.
-11. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
+11. **Enforce Build & Test first.** Never start Validation or Personal Validation on a red
     build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
 12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the point it attaches to and asks its question. `approve` continues; `revise`
@@ -118,8 +118,9 @@ those contracts; it does not re-decide them per skill.
 14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
     mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
-    **Documentation Update** and **Work Item Update** as defined in
-    `flow-phases.md`.
+    **Verification** and **Work Item Update** as defined in `flow-phases.md`. Spec
+    Verification has no phase skill: run the `verify` provider, or reach the verdicts yourself
+    with the reading delegated — it reports, repairs nothing, and commits nothing.
 15. **Stay in one owner session and delegate deliberately.** Run the flow in the invoking
     session and keep sole ownership of the surface actions and the approval gate. Delegate
     build, test, browser execution, and large code changes to **sub-agents in the same
@@ -187,12 +188,12 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 
 ## Handoffs
 
-This agent delegates to whatever the stack config binds — the `implement`, `verify`,
-`app.start`, `qa.run`, `spec`, and `deliver` service providers, and the `architecture`, `qa`,
-`domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test`,
-`phase-qa-validation`, and `phase-personal-validation` skills directly — the first two
-delegated to a sub-agent, the third never. It hands a run off to a fresh session rather than
-spawning one, and it is never itself spawned as a sub-agent.
+This agent delegates to whatever the stack config binds — the `implement`, `validate`,
+`app.start`, `qa.run`, `verify`, `spec`, and `deliver` service providers, and the
+`architecture`, `qa`, `domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the
+`phase-build-test`, `phase-validation`, and `phase-personal-validation` skills directly —
+the first two delegated to a sub-agent, the third never. It hands a run off to a fresh session
+rather than spawning one, and it is never itself spawned as a sub-agent.
 
 ## Example Usage
 
@@ -208,5 +209,5 @@ spawning one, and it is never itself spawned as a sub-agent.
 - `resources/surface-contract.md`
 - `resources/flow-model-selection.md`
 - `skills/phase-build-test/SKILL.md`
-- `skills/phase-qa-validation/SKILL.md`
+- `skills/phase-validation/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`

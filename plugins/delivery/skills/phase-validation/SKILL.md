@@ -1,11 +1,11 @@
 ---
-name: phase-qa-validation
-description: 'Shared QA Validation phase for code-modifying flow-* flows. Runs after Build & Test; depth is driven by change kind (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, dependency update = startup-only, otherwise skipped). Invoked by the flow-runner agent.'
+name: phase-validation
+description: 'Shared Validation phase for code-modifying flow-* flows. Runs after Build & Test; depth is driven by change kind (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, dependency update = startup-only, otherwise skipped). Invoked by the flow-runner agent.'
 ---
 
-# Phase: QA Validation
+# Phase: Validation
 
-Reusable **QA Validation** phase shared by every code-modifying `flow-*` flow. The
+Reusable **Validation** phase shared by every code-modifying `flow-*` flow. The
 `flow-runner` agent invokes this skill after Build & Test. Its depth is decided
 automatically from the kind of change so callers do not re-describe QA rules.
 
@@ -104,7 +104,7 @@ say which of the two forms the agent's allowlist used.
 
 If required MCP tooling is unavailable:
 
-- Mark **QA Validation** `blocked`, not `done` or `skipped`.
+- Mark **Validation** `blocked`, not `done` or `skipped`.
 - Prompt the user with the missing MCP server or tool name, why it is required, and the
   setup or enablement action needed before QA can continue.
 - Stop before Personal Validation, pull request creation, issue updates, or Summary.
@@ -185,7 +185,7 @@ the evidence file is the record, and the surface renders it from disk on demand.
 
 ## Dashboard Reporting
 
-- Report as the `QA Validation` stage via the shared **Reporting Contract** in
+- Report as the `Validation` stage via the shared **Reporting Contract** in
   `resources/surface-contract.md`. Also pass `scenarios` (per-scenario
   `status`, `notes`, `evidence`) and `monitoring` (log/trace summary) so the surface
   renders QA results with evidence inline.

@@ -48,24 +48,23 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
       "security":     null
     },
     "delivery.mcp": {
-      "spec":        [ "your-guidelines-server" ],
-      "docs.update": [ "your-guidelines-server" ]
+      "spec":        [ "your-guidelines-server" ]
     }
   },
   "extensions": {
     "session.start": [ "devbook:devbook-check" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
-    "verify":        "your-coding-plugin:coding",
+    "validate":        "your-coding-plugin:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
     "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
     "qa.run":        { "provider": "your-qa-plugin:qa" },
-    "docs.update":   [ "repo:refresh-api-docs" ],
+    "verify":        "devbook:verify-change",
     "flow.end":      [ "repo:capture-improvement" ]
   },
   "policy": {
     "qa.depth":               "targeted",
-    "verify.retryBudget":     2,
+    "validate.retryBudget":     2,
     "gate.reviseBudget":      3,
     "commit.at":              "gate",
     "pr.required":            true,
@@ -166,13 +165,13 @@ producing side effects and a report.
 | `session.start` | chore | Once, before the first flow | Load context, check environment and tooling, warn early. Distinct from the host's own session-start hook, which is settings-level and knows nothing about flows. |
 | `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it. |
 | `spec` | service | Specification and architecture intake | Scope and acceptance criteria → the specification the rest of the flow builds on. Unbound: the flow-runner writes it inline. The highest-value gate attaches here. |
-| `implement` | service | The implementation stage | An area plus a change brief, or a `verify` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
-| `verify` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
+| `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
+| `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
 | `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
-| `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-qa-validation`. |
-| `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-qa-validation`. |
+| `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-validation`. |
+| `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-validation`. |
 | `deliver` | service | After approval | Open the change for review and update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
-| `docs.update` | chore | After `deliver` | Refresh governed documentation. A clean no-op when nothing is stale. |
+| `verify` | service | After `deliver` | The specification the run built on, the governed chapters the change set touches, and the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it and what each calls for. Report-only: it edits nothing and commits nothing. Unbound: the flow-runner reaches the verdicts itself. |
 | `flow.end` | chore | Always, last | Contribute to the run summary and capture what this run learned. |
 
 **Services decide; chores contribute.** A chore may fail, and its failure is fatal when it
@@ -215,7 +214,7 @@ below, not a second mechanism.
 | `approval` | after `spec` | The specification itself, rendered. The one most repositories should turn on. |
 | `resource` | before `app.start` | Just the question — "only one runtime instance runs here, OK to start?" |
 | `cost` | before `qa.run` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
-| `risk` | after `verify` | What the change set actually touched — migrations, auth, a public contract. |
+| `risk` | after `validate` | What the change set actually touched — migrations, auth, a public contract. |
 | `handoff` | Personal Validation | The code review, the QA evidence, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
 
 ### Three outcomes, not two
@@ -250,16 +249,16 @@ key means the engine's own choice rather than undefined.
 
 | Key | Values | Default |
 | --- | --- | --- |
-| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-qa-validation` |
+| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-validation` |
 | `qa.ceiling` | same set | `full` |
-| `verify.retryBudget` | integer ≥ 0 | `2` |
+| `validate.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
 | `commit.at` | `gate`, `manual` | `manual` |
 | `pr.required` | boolean | `true` |
 | `pr.base` | a branch name | the repository's default branch |
 | `phases.updateBase` | boolean | `true` |
-| `phases.documentationUpdate` | boolean | `true` |
+| `phases.verification` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that
@@ -275,7 +274,7 @@ pull-request lane opens against it — because a config check that reached for t
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
-`phase-qa-validation`'s change-kind selection. The first one present wins, and
+`phase-validation`'s change-kind selection. The first one present wins, and
 `policy.qa.ceiling` caps the result however it was reached. The repository's `start` skill
 describes the application and never sets a depth. `qa.depth` may be overlaid per machine,
 `qa.ceiling` may not.
@@ -310,7 +309,7 @@ dependencies: one missing specialist must not demote every skill that names it.
   `resources/mcp-template.json` and `resources/mcp-vscode-template.json` declare the
   defaults in each host's shape for a repository to copy.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
-  verification, so it binds as the `implement` and `verify` services above rather than as an
+  validation, so it binds as the `implement` and `validate` services above rather than as an
   advisor a stage delegates a question to.
 
 ## Host Slots
@@ -386,7 +385,7 @@ With `delivery.surface.lifecycle@1` bound:
   stay visible.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
   surface renders direct buttons instead of making the user copy commands.
-- **For QA Validation**, also pass `scenarios` (one entry per tested scenario with
+- **For Validation**, also pass `scenarios` (one entry per tested scenario with
   `status: "pass"|"fail"|"flaky"`, `notes`, and optional evidence paths) and `monitoring` (the
   log and trace summary with any error findings), so evidence renders inline.
 - **Keep the gate and `deliver` as separate stages.** Gate `deliver` on the approval recorded
@@ -468,7 +467,7 @@ the session's own tool calls and transcript. The flow-runner reads these; it nev
 - **Read the sub-agent subtotal the opposite way:** it is the share of a stage kept *out* of
   the owner session's context window. A heavy stage with a large subtotal is delegation
   working; a heavy stage with none ran inline and charged the whole run for it. Build & Test
-  and QA Validation are delegated by default, so a zero subtotal on either is a finding.
+  and Validation are delegated by default, so a zero subtotal on either is a finding.
 - **Act on the run-level gauge before it forces compaction.** The ladder is in
   `flow-execution-model.md`: **Delegation Order** first, then **Session Handoff**
   once delegation is no longer enough. The gauge ignores sub-agent samples, so delegating

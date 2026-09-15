@@ -63,12 +63,12 @@
             "flow.start": { "$ref": "#/$defs/mcpServers" },
             "spec": { "$ref": "#/$defs/mcpServers" },
             "implement": { "$ref": "#/$defs/mcpServers" },
-            "verify": { "$ref": "#/$defs/mcpServers" },
+            "validate": { "$ref": "#/$defs/mcpServers" },
             "data.prepare": { "$ref": "#/$defs/mcpServers" },
             "app.start": { "$ref": "#/$defs/mcpServers" },
             "qa.run": { "$ref": "#/$defs/mcpServers" },
+            "verify": { "$ref": "#/$defs/mcpServers" },
             "deliver": { "$ref": "#/$defs/mcpServers" },
-            "docs.update": { "$ref": "#/$defs/mcpServers" },
             "flow.end": { "$ref": "#/$defs/mcpServers" }
           }
         }
@@ -83,12 +83,12 @@
         "flow.start": { "$ref": "#/$defs/chorePoint" },
         "spec": { "$ref": "#/$defs/servicePoint" },
         "implement": { "$ref": "#/$defs/servicePoint" },
-        "verify": { "$ref": "#/$defs/servicePoint" },
+        "validate": { "$ref": "#/$defs/servicePoint" },
         "data.prepare": { "$ref": "#/$defs/chorePoint" },
         "app.start": { "$ref": "#/$defs/servicePoint" },
         "qa.run": { "$ref": "#/$defs/servicePoint" },
+        "verify": { "$ref": "#/$defs/servicePoint" },
         "deliver": { "$ref": "#/$defs/servicePoint" },
-        "docs.update": { "$ref": "#/$defs/chorePoint" },
         "flow.end": { "$ref": "#/$defs/chorePoint" }
       }
     },
@@ -99,7 +99,7 @@
       "properties": {
         "qa.depth": { "enum": ["full", "targeted", "startup-only", "skipped"] },
         "qa.ceiling": { "enum": ["full", "targeted", "startup-only", "skipped"] },
-        "verify.retryBudget": { "type": "integer", "minimum": 0 },
+        "validate.retryBudget": { "type": "integer", "minimum": 0 },
         "gate.reviseBudget": { "type": "integer", "minimum": 0 },
         "gate.personalValidation": { "const": "required" },
         "commit.at": {
@@ -115,7 +115,7 @@
           "pattern": "^(?![./])(?!.*(?:/[.]|//|[.][.]|@[{]|[.]lock(?:/|$)))(?!.*[/.]$)[^\\s~^:?*[\\\\]+$"
         },
         "phases.updateBase": { "type": "boolean" },
-        "phases.documentationUpdate": { "type": "boolean" },
+        "phases.verification": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" }
       }
     },
@@ -129,8 +129,8 @@
         "properties": {
           "at": {
             "enum": [
-              "session.start", "flow.start", "spec", "implement", "verify",
-              "data.prepare", "app.start", "qa.run", "deliver", "docs.update", "flow.end"
+              "session.start", "flow.start", "spec", "implement", "validate",
+              "data.prepare", "app.start", "qa.run", "verify", "deliver", "flow.end"
             ]
           },
           "when": { "enum": ["before", "after"] },

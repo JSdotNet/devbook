@@ -629,7 +629,7 @@ const tools = [
                 changeKind: {
                     type: "string",
                     enum: VALID_CHANGE_KINDS,
-                    description: "Kind of change this run produces; drives QA Validation depth and is persisted so a resumed run keeps the same depth.",
+                    description: "Kind of change this run produces; drives Validation depth and is persisted so a resumed run keeps the same depth.",
                 },
                 resume: {
                     type: "boolean",

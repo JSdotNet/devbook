@@ -62,11 +62,11 @@ and rollback boundaries, and the runtime validation target.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
+Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow. Build & Test
 covers the compatibility and pipeline checks for the updated dependencies.
 
-A dependency update with no functional change, so QA Validation is startup-only: start the
+A dependency update with no functional change, so Validation is startup-only: start the
 app, confirm a healthy dashboard and health endpoints, confirm no new errors in the logs.
 Escalate to full Playwright validation, with capture, only when an update brings new
 user-facing behavior.
@@ -78,6 +78,6 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-update-packages"` and stages: Dependency Analysis, Update
-  Planning, Implementation, Security Validation, Build & Test, QA Validation, Personal
-  Validation, Create Pull Request, Documentation Update, Work Item Update, Summary.
+  Planning, Implementation, Security Validation, Build & Test, Validation, Personal
+  Validation, Create Pull Request, Verification, Work Item Update, Summary.
 - During Update Planning, open/update `render_markdown` with the update and rollback plan.

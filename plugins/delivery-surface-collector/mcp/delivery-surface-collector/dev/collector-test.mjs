@@ -88,7 +88,7 @@ try {
     const run = await call("start_run", {
         skillId: "example-feature",
         title: "Export endpoint",
-        stages: [{ name: "Scope" }, { name: "Implementation" }, { name: "QA Validation" }, { name: "Work Item Update" }, { name: "Summary" }],
+        stages: [{ name: "Scope" }, { name: "Implementation" }, { name: "Validation" }, { name: "Work Item Update" }, { name: "Summary" }],
         originalPrompt: "add the export endpoint",
         changeKind: "new-functionality",
     });
@@ -112,7 +112,7 @@ try {
 
     await call("update_stage", {
         runId: run.runId,
-        stageName: "QA Validation",
+        stageName: "Validation",
         status: "done",
         output: "Two scenarios.",
         scenarios: [
@@ -121,7 +121,7 @@ try {
         ],
         monitoring: { summary: "One unhandled exception.", findings: [{ level: "error", resource: "api", message: "NullReference in ExportController" }] },
     });
-    const qa = (await call("get_run", { runId: run.runId })).stages.find((s) => s.name === "QA Validation");
+    const qa = (await call("get_run", { runId: run.runId })).stages.find((s) => s.name === "Validation");
     check("QA scenarios and their evidence are recorded", qa.scenarios.length === 2 && qa.scenarios[0].evidence[0].path === ".wip/qa/export.png");
     check("monitoring findings are recorded", qa.monitoring.findings[0].level === "error");
 

@@ -67,7 +67,7 @@ line). Every one used across the `flow-*` skills maps to a category below. Add a
 this table when a new `flow-*` skill introduces one.
 
 Category follows the **work**, not only the point. Most points appear once, so the point
-names the category on its own. `implement` and `verify` are the exception, because a
+names the category on its own. `implement` and `validate` are the exception, because a
 repository usually binds both to the same provider, and that one agent both runs the suites
 and repairs them: **the stage decides**. Build & Test resolves it
 to `sonnet`; Implementation — including the fix for a build that Build & Test just returned
@@ -78,7 +78,8 @@ whose **Typical Stages** names it.
 | --- | --- | --- | --- | --- |
 | **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | the `architecture` role, the `spec` service | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
 | **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | the `implement` service | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
-| **Testing, QA & Monitoring** | Build & Test, QA Validation, runtime monitoring | the `qa` role, the `app.start` and `qa.run` services, the runtime monitor, the `verify` service *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
+| **Testing, QA & Monitoring** | Build & Test, Validation, runtime monitoring | the `qa` role, the `app.start` and `qa.run` services, the runtime monitor, the `validate` service *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
+| **Verification** | Verification | the `verify` service | `opus` | A verdict on whether the change set is what was agreed is review judgment: `aligned` called on drift ships a wrong pull request, so it takes the strongest reasoning. |
 | **Domain Design** | Bounded-context and boundary review during service/module creation | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
 | **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
 | **Human-in-the-Loop** | Personal Validation | *(none)* | *(none)* | No agent and no model: this phase always hands control back to the user. |
@@ -94,12 +95,12 @@ resolve to the model the owner session is already running and change nothing on 
 they are here to state intent, and to stay correct if that pin ever changes. The categories
 that genuinely move cost today are **Testing, QA & Monitoring** (`sonnet`) and **Documentation
 & Low-Complexity** (`haiku`). Expect a run's `tokenUsage.models` to show `opus` plus `sonnet`
-whenever Build & Test or QA Validation ran.
+whenever Build & Test or Validation ran.
 
 A stage may list entries from more than one category (for example `flow-bug`'s "Bug Intake &
 Reproduction", naming the `implement` service and the `app.start` service). Resolve the model
 per named entry, not once per stage, so each still gets its own category's model — and where
-one provider fills both `implement` and `verify`, resolve per named entry **in that stage**,
+one provider fills both `implement` and `validate`, resolve per named entry **in that stage**,
 so the same agent can be `sonnet` in Build & Test and `opus` in Implementation within a
 single run.
 

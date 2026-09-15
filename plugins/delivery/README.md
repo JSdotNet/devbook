@@ -17,7 +17,7 @@ instead of by repository.
 | Kind | Members |
 |---|---|
 | `flow-*` (16) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`, `flow-fallback` |
-| `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-qa-validation`, `phase-personal-validation` |
+| `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-validation`, `phase-personal-validation` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
@@ -42,11 +42,11 @@ them — is another, and lives in `delivery-schedule`.
 
 Three things, and only three, and none of them is a stage definition.
 
-**Extension points.** The point set is closed and declared by the engine. Six are
+**Extension points.** The point set is closed and declared by the engine. Seven are
 **services** — exactly one provider, returning a result the flow acts on: `spec`,
-`implement`, `verify`, `app.start`, `qa.run`, `deliver`. Five are **chores** — zero or more,
+`implement`, `validate`, `app.start`, `qa.run`, `verify`, `deliver`. Four are **chores** — zero or more,
 in declared order, contributing side effects and a report and never changing a decision:
-`session.start`, `flow.start`, `data.prepare`, `docs.update`, `flow.end`.
+`session.start`, `flow.start`, `data.prepare`, `flow.end`.
 
 **Gates.** A gate presents the output of the point it attaches to and asks a question, with
 three outcomes: `approve` continues, `revise` re-runs that point with the human's notes, and
@@ -55,7 +55,7 @@ hand one to a plugin. Personal Validation is the mandatory instance of that patt
 separate mechanism. `spec → gate → implement` is the highest-value one to turn on.
 
 **Bindings and policy.** Which plugin fills each role, which tracker the repository uses,
-which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
+which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the validate retry budget, the gate revise
 budget, whether the flow commits its change set at each handback, whether a pull request is
 required.
 
@@ -68,7 +68,7 @@ All four live in `.devbook/config.json`:
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }]
   },
   "gates": [{ "at": "spec", "when": "after", "purpose": "approval", "show": "artifact" }],
-  "policy": { "qa.depth": "targeted", "verify.retryBudget": 2 },
+  "policy": { "qa.depth": "targeted", "validate.retryBudget": 2 },
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.mcp": { "spec": ["your-guidelines-server"] }
@@ -104,7 +104,7 @@ So `delivery:install` seeds two skills into the repository and hands them over:
 | Seed | Fills | The repository owns |
 |---|---|---|
 | `start` | the `app.start` point, as `repo:start` | the facts — command, entry points, readiness signals, credential pointer — and the procedure: startup, sign-in, the branch-to-area map |
-| `capture` | evidence capture inside QA Validation | the layout, the naming, the tooling |
+| `capture` | evidence capture inside Validation | the layout, the naming, the tooling |
 
 Each lands as one editable copy under `.agents/skills/` with a pointer wrapper per host. Edit
 the copy and it is yours: its hash matches no release, so every later reconcile reports it and

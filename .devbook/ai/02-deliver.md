@@ -32,7 +32,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   `CLAUDE.md`, including the ones that built the flows.
 - **Evidence** — none yet. Every stage now names the role or service it delegates to rather
   than a plugin, so nothing dangles and nothing resolves either: the seven specialists that
-  answered `spec`, `implement`, `verify`, `app.start`, `qa.run`, and five roles
+  answered `spec`, `implement`, `validate`, `app.start`, `qa.run`, and five roles
   [left the marketplace](../arc42/adr/24-the-specialists-leave-the-marketplace.md).
   A flow run here therefore runs those stages unbound unless the specialist marketplace is
   installed too. What is untested is the routing itself. Promote to `adopted` once a change

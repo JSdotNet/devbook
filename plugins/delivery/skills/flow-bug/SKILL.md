@@ -67,10 +67,10 @@ application running.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
+Validation → Personal Validation → Create Pull Request → Verification → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
-A bug fix, so QA Validation is targeted: the `qa.run` provider re-runs the original reproduction
+A bug fix, so Validation is targeted: the `qa.run` provider re-runs the original reproduction
 steps plus the regression scenario under the runtime monitor. Capture evidence only on request, or when a
 failure needs it.
 
@@ -80,9 +80,9 @@ Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 
-- `start_run` with `skillId: "flow-bug"` and stages: Scope Discovery, Bug Intake &
-  Reproduction, Root Cause Analysis, Implementation, Build & Test, QA Validation, Personal
-  Validation, Create Pull Request, Documentation Update, Work Item Update, Summary.
+- `start_run` with `skillId: "flow-bug"` and stages: Scope Discovery, Bug Intake & Reproduction,
+  Root Cause Analysis, Implementation, Build & Test, Validation, Personal Validation, Create
+  Pull Request, Verification, Work Item Update, Summary.
 - During Scope Discovery, put the restated observed versus expected behavior, the derived
   verification criterion, and the suspected code paths in the stage output.
 - During Bug Intake & Reproduction, open/update `render_markdown` with the drafted bug report.

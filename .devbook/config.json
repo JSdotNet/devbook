@@ -13,7 +13,7 @@
     },
     "delivery.mcp": {
       "implement": null,
-      "verify": null,
+      "validate": null,
       "app.start": null,
       "qa.run": null
     }
@@ -22,7 +22,8 @@
     "session.start": ["devbook:devbook-check"],
     "app.start": null,
     "qa.run": null,
-    "docs.update": ["devbook:install"]
+    "verify": "devbook:verify-change",
+    "flow.end": ["devbook:install"]
   },
   "policy": {
     "qa.depth": "skipped",

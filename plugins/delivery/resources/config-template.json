@@ -13,32 +13,31 @@
       "security": null
     },
     "delivery.mcp": {
-      "spec": ["your-guidelines-server"],
-      "docs.update": ["your-guidelines-server"]
+      "spec": ["your-guidelines-server"]
     }
   },
   "extensions": {
     "session.start": ["devbook:devbook-check"],
     "spec": null,
     "implement": null,
-    "verify": null,
+    "validate": null,
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
     "app.start": null,
     "qa.run": null,
-    "docs.update": ["devbook:install"],
-    "flow.end": []
+    "verify": "devbook:verify-change",
+    "flow.end": ["devbook:install"]
   },
   "policy": {
     "qa.depth": "targeted",
     "qa.ceiling": "full",
-    "verify.retryBudget": 2,
+    "validate.retryBudget": 2,
     "gate.reviseBudget": 3,
     "gate.personalValidation": "required",
     "commit.at": "gate",
     "pr.required": true,
     "pr.base": "main",
     "phases.updateBase": true,
-    "phases.documentationUpdate": true,
+    "phases.verification": true,
     "phases.workItemUpdate": true
   },
   "gates": [

@@ -22,17 +22,17 @@ flowchart TD
     spec --> specGate{"optional gate"}
     specGate -->|revise| spec
     specGate -->|approve| implement["implement · service"]
-    implement --> verify["verify · service"]
-    verify -->|"failing, within retry budget"| implement
-    verify -->|green| dataPrepare(["data.prepare · chore"])
+    implement --> validate["validate · service"]
+    validate -->|"failing, within retry budget"| implement
+    validate -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
     qaRun --> gate{"Personal Validation · mandatory"}
     gate -->|approve| deliver["deliver · service"]
     gate -->|revise| implement
     gate -->|decline| blocked(["Blocked · never a silent skip"])
-    deliver --> docsUpdate(["docs.update · chore"])
-    docsUpdate --> workItem["Work Item Update"]
+    deliver --> verify["verify · service"]
+    verify --> workItem["Work Item Update"]
     workItem --> flowEnd(["flow.end · chore"])
     flowEnd --> summary(["Summary"])
 ```
@@ -42,9 +42,14 @@ flowchart TD
   step a provider performs on its own behalf. What the person is *shown* there — the running
   app, the links, the what-to-check list — is a phase skill and repeats on every revise round;
   the decision itself is not, and cannot be configured away.
-- **`implement` and `verify` are the only cycle**, bounded by the retry budget rather than by
+- **`implement` and `validate` are the only cycle**, bounded by the retry budget rather than by
   the providers — which is why the two commonly bind to one provider and still resolve their
   model per stage.
+- **`verify` reports and never repairs.** Validation says the change runs; verification says it
+  is what was agreed and that what is written down is still true — one verdict per item of the
+  specification the run built on and the chapters the change set touches. It runs after
+  `deliver`, where a documentation refresh used to guess at staleness, and it commits nothing:
+  the table reaches the reviewer and the work item, and a row becomes work outside this run.
 - **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline
   and `deliver` produces file artifacts only; the run continues and says so once.
 - **Update Base is prepended by the runner and named by no skill.** The closing tier differs per
@@ -64,10 +69,10 @@ flowchart LR
         direction TB
         c1["Update Base"] --> c2["the flow's own stages"]
         c2 --> c3["Build & Test"]
-        c3 --> c4["QA Validation"]
+        c3 --> c4["Validation"]
         c4 --> c5["Personal Validation"]
         c5 --> c6["Create Pull Request"]
-        c6 --> c7["Documentation Update"]
+        c6 --> c7["Verification"]
         c7 --> c8["Work Item Update"]
         c8 --> c9["Summary"]
     end
@@ -82,10 +87,11 @@ flowchart LR
     end
 ```
 
-- **The documentation tier drops three phases because there is nothing runnable to validate**,
-  not because the change matters less. A chapter change still passes Personal Validation and
-  still opens for review.
-- **QA depth inside QA Validation is driven by change kind**: new functionality gets a browser
+- **The documentation tier drops three phases because there is nothing runnable to validate
+  and nothing to verify a chapter against** — the chapter is the specification — not because
+  the change matters less. A chapter change still passes Personal Validation and still opens
+  for review.
+- **QA depth inside Validation is driven by change kind**: new functionality gets a browser
   pass with captured evidence, an existing-flow change gets targeted verification, a dependency
   update gets startup only, and where there is no runnable application the depth is recorded as
   skipped rather than claimed.

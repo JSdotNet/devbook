@@ -19,7 +19,7 @@ flowchart TD
     s2["Root Cause Analysis"]
     s3["Implementation"]
     c0["Build & Test"]
-    c1["QA Validation"]
+    c1["Validation"]
     c2["Personal Validation"]
 
     base --> s0
@@ -31,7 +31,7 @@ flowchart TD
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Documentation Update"]
+    t1["Verification"]
     t2["Work Item Update"]
     t3["Summary"]
     g -->|approve| t0
@@ -50,7 +50,7 @@ runner and named by no skill.
   the request away.
 - Root Cause Analysis sits between reproduction and the fix so the change is aimed at a cause. A
   fix written before this stage is a guess with a test attached.
-- The fix is test-first: the failing test is the reproduction, promoted. QA Validation is targeted
+- The fix is test-first: the failing test is the reproduction, promoted. Validation is targeted
   rather than full capture, because the flow is changing behaviour that already exists.
 
 The roles and MCP servers each stage resolves are in the engine's own `FLOW-DIAGRAMS.md`, which

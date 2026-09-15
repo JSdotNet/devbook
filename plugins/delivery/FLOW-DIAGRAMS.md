@@ -54,13 +54,13 @@ flowchart TD
     C --> D["Tooling & Dependencies"]
     D --> E["Implementation"]
     E --> F["Build & Test"]
-    F --> G["QA Validation"]
+    F --> G["Validation"]
     G --> H["Personal Validation"]
     H --> I{User approves?}
     I -->|Yes| J["Create Pull Request or Skip"]
     I -->|No| K["Return to the relevant earlier stage"]
     K --> A
-    J --> DU["Documentation Update or Skip"]
+    J --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> L["Summary"]
 ```
@@ -73,10 +73,10 @@ flowchart TD
 | Tooling & Dependencies | the `implement` service | `microsoft-learn` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -88,13 +88,13 @@ flowchart TD
     A --> B["Implementation Planning"]
     B --> C["Implementation"]
     C --> D["Build & Test"]
-    D --> E["QA Validation"]
+    D --> E["Validation"]
     E --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Documentation Update or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -106,10 +106,10 @@ flowchart TD
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -121,13 +121,13 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Security Validation"]
     D --> E["Build & Test"]
-    E --> F["QA Validation"]
+    E --> F["Validation"]
     F --> G["Personal Validation"]
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> A
-    I --> DU["Documentation Update or Skip"]
+    I --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> K["Summary"]
 ```
@@ -139,10 +139,10 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Security Validation | the `implement` service | — |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -154,13 +154,13 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["New Feature Adoption"]
     D --> E["Build & Test"]
-    E --> F["QA Validation"]
+    E --> F["Validation"]
     F --> G["Personal Validation"]
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> A
-    I --> DU["Documentation Update or Skip"]
+    I --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> K["Summary"]
 ```
@@ -172,10 +172,10 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | New Feature Adoption | the `implement` service, the `architecture` role | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -315,13 +315,13 @@ flowchart TD
     S["Scope Discovery"] --> A["Specification & Architecture Intake"]
     A --> B["Implementation"]
     B --> C["Build & Test"]
-    C --> D["QA Validation"]
+    C --> D["Validation"]
     D --> E["Personal Validation"]
     E --> F{User approves?}
     F -->|Yes| G["Create Pull Request or Skip"]
     F -->|No| H["Return to the relevant earlier stage"]
     H --> A
-    G --> DU["Documentation Update or Skip"]
+    G --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> I["Summary"]
 ```
@@ -332,10 +332,10 @@ flowchart TD
 | Specification & Architecture Intake | the `architecture` role | servers bound to `spec` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -347,13 +347,13 @@ flowchart TD
     A --> B["Root Cause Analysis"]
     B --> C["Implementation"]
     C --> D["Build & Test"]
-    D --> E["QA Validation"]
+    D --> E["Validation"]
     E --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Documentation Update or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -365,10 +365,10 @@ flowchart TD
 | Root Cause Analysis | the `implement` service | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -380,13 +380,13 @@ flowchart TD
     A --> B["Refactor Planning"]
     B --> C["Implementation"]
     C --> D["Build & Test"]
-    D --> E["QA Validation"]
+    D --> E["Validation"]
     E --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> V["Documentation Update or Skip"]
+    H --> V["Verification or Skip"]
     V --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -398,10 +398,10 @@ flowchart TD
 | Refactor Planning | the `architecture` role, the `implement` service | — |
 | Implementation | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -413,13 +413,13 @@ flowchart TD
     A --> B["Implementation Planning"]
     B --> C["Implementation"]
     C --> D["Build & Test"]
-    D --> E["QA Validation"]
+    D --> E["Validation"]
     E --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Documentation Update or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -431,10 +431,10 @@ flowchart TD
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -446,13 +446,13 @@ flowchart TD
     A --> B["Implementation Planning"]
     B --> C["Implementation"]
     C --> D["Build & Test"]
-    D --> E["QA Validation"]
+    D --> E["Validation"]
     E --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
     I --> A
-    H --> DU["Documentation Update or Skip"]
+    H --> DU["Verification or Skip"]
     DU --> U["Work Item Update or Skip"]
     U --> J["Summary"]
 ```
@@ -464,10 +464,10 @@ flowchart TD
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -482,14 +482,14 @@ flowchart TD
     C --> D["Review & Recommend"]
     D --> K{Change kind?}
     K -->|Code-modifying| E["Build & Test"]
-    E --> F["QA Validation"]
+    E --> F["Validation"]
     F --> G["Personal Validation"]
     K -->|Documentation/config| G
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
     J --> B
-    I --> V["Documentation Update or Skip (code-modifying tier only)"]
+    I --> V["Verification or Skip (code-modifying tier only)"]
     V --> U["Work Item Update or Skip"]
     U --> S["Summary"]
 ```
@@ -501,9 +501,9 @@ flowchart TD
 | Execute | The closest specialist agent for the task category | `microsoft-learn` *(targeted lookups only)* |
 | Review & Recommend | The closest specialist agent for the task category | — |
 | Build & Test | the `implement` service *(code-modifying change kind only)* | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
+| Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role *(code-modifying change kind only)* | servers bound to `docs.update` *(governed docs only)* |
+| Verification | the `verify` provider, or *(default)* *(code-modifying change kind only)* | servers bound to `verify` |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |

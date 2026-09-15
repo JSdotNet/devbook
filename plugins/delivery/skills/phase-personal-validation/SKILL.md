@@ -16,7 +16,7 @@ soften that gate.
 
 ## When To Run
 
-- **Every tier**, after QA Validation for code-modifying flows and after the flow's own
+- **Every tier**, after Validation for code-modifying flows and after the flow's own
   stages for documentation/config flows.
 - **Again on every revise round.** A revised change set is a new thing to look at: re-run
   this whole skill rather than pointing back at the previous handback. The gate re-opens with
@@ -28,7 +28,7 @@ soften that gate.
 
 A link to a process that is not listening is worse than no link.
 
-- **Reuse the instance QA Validation left running** when there is one. Start a second only
+- **Reuse the instance Validation left running** when there is one. Start a second only
   after confirming the first is gone.
 - **Otherwise start it** with the `app.start` service — the repository's `start` skill when
   that is the provider — or the command QA proved this run. **Never hand the person a
@@ -38,7 +38,7 @@ A link to a process that is not listening is worse than no link.
   `## Healthy Startup` signals: the resources that must reach running, the health endpoints,
   the log lines that mean ready. Do not report its declared benign warnings as failures.
 - **On a repeat pass, refresh over restart** where the repository's startup mode supports it,
-  per **Revalidation After Requested Changes** in `skills/phase-qa-validation/SKILL.md`.
+  per **Revalidation After Requested Changes** in `skills/phase-validation/SKILL.md`.
   Record which one happened, and re-check the URLs — they move on a restart.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command;
   never hand back a review the person cannot perform.
@@ -79,7 +79,7 @@ look, what to do, and what should happen.**
 ## Step 4 — Present The Reviews
 
 - **The code review** of the change set, for the person to read.
-- **The recorded QA review** when QA Validation ran: scenarios with pass/fail, monitoring
+- **The recorded QA review** when Validation ran: scenarios with pass/fail, monitoring
   findings, and the captured evidence paths. When it was skipped, say so and why — never
   imply a result that was not produced.
 
@@ -89,7 +89,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Inputs
 
 - The change set, the run's scope and acceptance criteria, and the change kind.
-- The QA result and evidence from `phase-qa-validation`, when that phase ran.
+- The QA result and evidence from `phase-validation`, when that phase ran.
 - The `app.start` result — base URLs and health verdict — and the path of the repository's
   `start` skill when the flow-runner found one.
 
@@ -115,4 +115,4 @@ of it are the gate's, in `resources/flow-phases.md`.
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
 Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
-Revalidation on a repeat pass: `skills/phase-qa-validation/SKILL.md`.
+Revalidation on a repeat pass: `skills/phase-validation/SKILL.md`.

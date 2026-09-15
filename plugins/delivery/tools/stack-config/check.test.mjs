@@ -85,7 +85,7 @@ test('the worked example from the surface contract validates', () => {
                 'data.prepare': [{ run: 'repo:seed-test-data', 'on-failure': 'required' }],
                 'app.start': { provider: 'your-qa-plugin:qa', host: 'aspire' },
             },
-            policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2, 'pr.base': 'main' },
+            policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2, 'pr.base': 'main' },
             gates: [
                 {
                     at: 'spec',
@@ -110,6 +110,20 @@ test('a point outside the closed set is rejected', () => {
     const errors = check({ extensions: { 'deploy.run': 'repo:ship' } });
     assert.equal(errors.length, 1);
     assert.match(errors[0], /unknown key "deploy\.run"/);
+});
+
+test('validate and verify are two points: the build point takes a retry budget, the spec check does not', () => {
+    assert.deepEqual(
+        check({
+            extensions: { validate: 'your-coding-plugin:coding', verify: 'devbook:verify-change' },
+            policy: { 'validate.retryBudget': 2 },
+            gates: [{ at: 'verify', when: 'after', purpose: 'risk' }],
+        }),
+        [],
+    );
+    const errors = check({ policy: { 'verify.retryBudget': 2 } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown key "verify\.retryBudget"/);
 });
 
 test('an out-of-enum policy value is rejected', () => {
@@ -152,7 +166,7 @@ test('a chore point takes a list, not a bare provider', () => {
 });
 
 test('a chore on-failure value is a closed enum', () => {
-    const errors = check({ extensions: { 'docs.update': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
+    const errors = check({ extensions: { 'flow.end': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
     assert.equal(errors.length, 1);
 });
 
@@ -188,10 +202,10 @@ test('no model key exists anywhere in the engine-owned config', () => {
 
 test('the overlay wins key by key and leaves its siblings standing', () => {
     const merged = mergeStackConfig(
-        { policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2 } },
+        { policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2 } },
         { policy: { 'qa.depth': 'startup-only' } },
     );
-    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 2 });
+    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'validate.retryBudget': 2 });
 });
 
 test('the overlay merges into a nested binding without flattening its neighbours', () => {
@@ -256,7 +270,7 @@ test('the overlay may not touch what the repository produces', () => {
 test('an ordinary overlay is refused nothing', () => {
     assert.deepEqual(
         checkLocalOverlay({
-            policy: { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 },
+            policy: { 'qa.depth': 'startup-only', 'validate.retryBudget': 0 },
             bindings: { 'delivery.roles': { qa: 'my-local-qa' } },
             gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
         }),

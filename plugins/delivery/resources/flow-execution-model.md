@@ -61,15 +61,15 @@ stage uses the servers bound to the point it serves:
 | --- | --- |
 | Scope Discovery; every intake, retrieval, drafting, and review stage of a documentation/config flow | `spec` |
 | Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
-| Build & Test | `verify` |
-| QA Validation | `app.start`, `qa.run` |
+| Build & Test | `validate` |
+| Validation | `app.start`, `qa.run` |
 | Create Pull Request, Work Item Update | `deliver` |
-| Documentation Update | `docs.update` |
+| Verification | `verify` |
 | Update Base, Personal Validation, Summary | none |
 
 Defaults, for a point the repository leaves absent:
 
-- `implement` and `verify`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
+- `implement` and `validate`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
   lookups tied to the stack being changed — never a broad research pass.
 - `app.start` and `qa.run`: `aspire` and `playwright`, under the required-tooling rule in
   `flow-phases.md`; not used when the depth is startup-only or the change has no
@@ -115,10 +115,13 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    running application all stay valid for the owner session. This keeps verbose output out of
    the flow-runner's context without breaking the run record.
 
-   Four kinds of work are delegated by default, and running them inline is a defect in the
+   Five kinds of work are delegated by default, and running them inline is a defect in the
    run rather than a shortcut:
    - **Build & Test** — per `skills/phase-build-test/SKILL.md`.
-   - **QA Validation** — per `skills/phase-qa-validation/SKILL.md`.
+   - **Validation** — per `skills/phase-validation/SKILL.md`.
+   - **Verification's reading** — the change set and its tests against the
+     specification and the chapters, per the phase in `flow-phases.md`; the verdict table
+     comes back, the reading stays out.
    - **Scope Discovery's search half** — see **Splitting Scope Discovery** below.
    - **Broad exploration and large edits** — reading across many files to find something,
      or a refactor whose diff is larger than the reasoning about it.

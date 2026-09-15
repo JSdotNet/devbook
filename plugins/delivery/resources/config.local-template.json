@@ -10,7 +10,7 @@
   },
   "policy": {
     "qa.depth": "startup-only",
-    "verify.retryBudget": 0
+    "validate.retryBudget": 0
   },
   "gates": [
     {
