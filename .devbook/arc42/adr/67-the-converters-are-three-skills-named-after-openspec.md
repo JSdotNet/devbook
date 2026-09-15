@@ -54,6 +54,7 @@ only then. `apply-change` still edits no source or test tree itself and keeps
 Consequence: [record 20](20-budgets-are-disclosure-triggers-not-gates.md)'s row for the
 converters moves from the skills to the kind files, which are the assets that are long by kind
 now — a mapping stated by half is still wrong, and it is stated once. The three skills sit at
-or near the forty-line budget. A consumer invoking a `to-spec-*` or `from-spec-*` name finds it
-gone; `UPGRADING.md` says what to call instead, and nothing in a repository's devbook folders
-moved, so no migration ships.
+or near the forty-line budget. The plugin stays at 1.0.0 and `UPGRADING.md` carries no entry: the
+ten names were published to no consumer under that version, so this lands in the baseline the
+way [record 64](64-1-0-0-is-the-first-release.md) folded everything before it — and nothing in
+a repository's devbook folders moved, so no migration ships.
