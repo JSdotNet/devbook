@@ -76,8 +76,8 @@ architecture interpretation.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
-Update → Summary. That file defines them; change them there, for every flow.
+QA Validation → Spec Verification → Personal Validation → Create Pull Request → Documentation
+Update → Work Item Update → Summary. That file defines them; change them there, for every flow.
 
 A change to existing structure, so QA Validation is targeted at the affected flows — and
 skipped with a recorded reason when the repository has no runnable surface.
@@ -89,8 +89,9 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-structure"` and stages: Scope Discovery, Structure &
-  Architecture Intake, Refactor Planning, Implementation, Build & Test, QA Validation,
-  Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary.
+  Architecture Intake, Refactor Planning, Implementation, Build & Test, QA Validation, Spec
+  Verification, Personal Validation, Create Pull Request, Documentation Update, Work Item
+  Update, Summary.
 - During Scope Discovery, put the restated change, the derived target layout, the affected
   surfaces, and the verification criteria in the stage output, so the user can correct them.
 - During Structure & Architecture Intake or Refactor Planning, optionally open/update

@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (the Personal Validation gate, Create Pull Request, Documentation Update, Work Item Update, Summary).
+description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (Spec Verification, the Personal Validation gate, Create Pull Request, Documentation Update, Work Item Update, Summary).
 ---
 
 # Flow Phases (Engine-Owned)
@@ -20,7 +20,7 @@ companion files so a run reads the part it is actually in.
 | `flow-model-selection.md` | Category → model resolution and the personal override | Once, before `start_run` |
 | `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
-| **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
+| **This file, from Spec Verification onward** | Spec Verification, Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Spec Verification** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
 | `skills/phase-personal-validation/SKILL.md` | The Personal Validation **review handoff** — starting the app, the links, the what-to-check list — in full | When the run reaches Personal Validation, and again on every revise round. The flow-runner reads it itself: the phase runs inline and is never delegated |
 
@@ -37,8 +37,8 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **Code-modifying flows** — `flow-feature`, `flow-bug`, `flow-structure`,
   `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`,
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
-  Personal Validation → Create Pull Request → Documentation Update → Work Item Update →
-  Summary**.
+  Spec Verification → Personal Validation → Create Pull Request → Documentation Update →
+  Work Item Update → Summary**.
 - **Documentation/config flows** — `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`,
   `flow-ai`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
   Update → Summary**. They produce no runnable code change, so Build & Test and QA Validation
@@ -77,7 +77,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
   `surface-contract.md`.
 - Internal transitions **do not require separate user approval**. The flow-runner may move
   between its own stages, sub-agents, and phase skills without pausing, so the run can
-  build, test, and continue up to Personal Validation.
+  build, test, verify, and continue up to Personal Validation.
 - The required approval gate is **Personal Validation**. Stop there before creating a pull
   request, updating a work item, or marking the flow complete. A repository may add further
   gates; it may never remove this one.
@@ -124,8 +124,8 @@ Validation.
 
 **Defined in `skills/phase-build-test/SKILL.md`** — steps, agents, MCP servers, and stage
 reporting all live there. What stays here is its place in the tier: build every project, run
-the unit suite, run the automated end-to-end suite, and never continue to QA Validation or
-Personal Validation on a red build or a failing test. When all three are green, continue to
+the unit suite, run the automated end-to-end suite, and never continue to QA Validation,
+Spec Verification, or Personal Validation on a red build or a failing test. When all three are green, continue to
 QA Validation without a confirmation prompt.
 
 This phase is the `validate` service point. When a repository binds `validate`, that provider
@@ -163,6 +163,40 @@ run before both.
 
 **Model Category:** Testing, QA & Monitoring.
 
+## Phase: Spec Verification
+
+Code-modifying tier. Runs after QA Validation and before Personal Validation. This is the
+`verify` service point, and the word is OpenSpec's: Build & Test and QA Validation say whether
+the change **runs**; this phase says whether it is **what was agreed**. The verdict is what
+the person decides on at the gate, so it is reached before the gate and never after it.
+
+- **The specification is the run's own.** The `spec` stage's output — the approved version
+  when a gate sat after `spec` — and the acceptance criteria Scope Discovery recorded. When
+  that specification is a governed chapter the scope names, the chapter is what the change
+  set is checked against, and a provider that reads chapters is the one to bind.
+- **Bound**, the provider takes the specification and the change set and returns one verdict
+  per item with the evidence that settles it: `aligned`; `spec-ahead`, agreed and not built;
+  `code-ahead`, built and not agreed; `conflict`; or `unresolved`.
+- **Unbound**, the flow-runner reaches the same verdicts itself: each acceptance criterion and
+  each claim of the specification against the change set and its tests, with only code that
+  executes and tests that pass counting as evidence. The reading goes to a read-only sub-agent
+  in the same worktree; the verdict table is what comes back.
+- **Report; never repair.** The phase edits no source, test, or chapter, and it is `done`
+  whatever the verdicts say: a `spec-ahead` or `conflict` row is not a failed stage, it is the
+  finding the gate exists to put in front of a person. Never loop back to Implementation from
+  here — `implement` and `validate` are the run's only cycle, and a revise decision at
+  Personal Validation is how a verdict becomes work.
+- **Carry the verdict table into the handoff.** `phase-personal-validation` presents it
+  beside the code review and the QA review; an unattended run puts it in the handoff brief.
+- **Skip this phase** (`skipped`) with the reason when the run recorded no specification and
+  no acceptance criteria to check against — a dependency update with no functional change is
+  the usual case.
+
+**Agents:** the provider bound to `verify`; unbound, the flow-runner, with the reading
+delegated per **Delegation Order** in `flow-execution-model.md`.
+
+**Model Category:** Spec Verification.
+
 ## Phase: Personal Validation
 
 Every tier. Two things happen here, and keeping them apart is the point: a **review handoff**
@@ -173,7 +207,8 @@ handoff is a procedure and repeats freely; the gate is mandatory and decides onc
 
 **Defined in `skills/phase-personal-validation/SKILL.md`** — bringing the application up and
 confirming its health, publishing the review links as clickable URLs, writing the what-to-check
-list, and presenting the code review and the recorded QA review all live there. It is invoked
+list, and presenting the code review, the recorded QA review, and the spec verdict all live
+there. It is invoked
 on the first handback and again on every revise round, because a revised change set is a new
 thing to look at.
 
@@ -184,9 +219,9 @@ it can approve, skip, or soften the gate below.
 ### The gate
 
 The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
-`validate` with purpose `handoff`. A repository may declare further gates **in front of** this
-one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that is
-the whole of what configuration may change here.
+`verify` with purpose `handoff`. A repository may declare further gates **in front of** this
+one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that
+is the whole of what configuration may change here.
 
 - **Do not delegate to an agent and do not auto-approve.** Wait for the user's explicit
   decision.
@@ -202,7 +237,8 @@ the whole of what configuration may change here.
 - **Wait for explicit user approval** before any pull request is created.
 - **When the user requests changes**, record `approval: "rejected"` with the user's wording,
   reopen the appropriate implementation or specification stage in the same run, apply the
-  requested changes, then repeat Build & Test, QA Validation, and the review handoff above.
+  requested changes, then repeat Build & Test, QA Validation, Spec Verification, and the
+  review handoff above.
   The run must not advance to Create Pull Request while a rejected decision is persisted.
 - **When returning to Personal Validation after requested changes**, record
   `approval: "pending"` before the handoff, so the revised change set still requires

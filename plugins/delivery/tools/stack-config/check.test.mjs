@@ -97,6 +97,20 @@ test('a point outside the closed set is rejected', () => {
     assert.match(errors[0], /unknown key "deploy\.run"/);
 });
 
+test('validate and verify are two points: the build point takes a retry budget, the spec check does not', () => {
+    assert.deepEqual(
+        check({
+            extensions: { validate: 'your-coding-plugin:coding', verify: 'devbook:verify-change' },
+            policy: { 'validate.retryBudget': 2 },
+            gates: [{ at: 'verify', when: 'after', purpose: 'risk' }],
+        }),
+        [],
+    );
+    const errors = check({ policy: { 'verify.retryBudget': 2 } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown key "verify\.retryBudget"/);
+});
+
 test('an out-of-enum policy value is rejected', () => {
     const errors = check({ policy: { 'qa.depth': 'thorough' } });
     assert.equal(errors.length, 1);

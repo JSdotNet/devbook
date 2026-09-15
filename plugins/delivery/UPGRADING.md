@@ -7,7 +7,10 @@ Behaviour changes a consumer would notice, newest first.
 The service point Build & Test serves was `verify` and is now `validate`, so that `verify`
 can mean what it means in OpenSpec — checking the change set against the specification it
 was built from (`.devbook/arc42/adr/72-verify-is-the-spec-check-and-build-and-test-is-validate.md`).
-Rename the key wherever a repository wrote it; `check.mjs` rejects the old spelling as unknown:
+Rename the key wherever a repository wrote it. `check.mjs` rejects `verify.retryBudget` as
+unknown; the other three old spellings are **still valid keys and now name the new point**, so
+a stale `extensions.verify` binds your coding plugin as the spec check without a warning —
+move it by hand:
 
 | Was | Now |
 | --- | --- |
@@ -19,6 +22,16 @@ Rename the key wherever a repository wrote it; `check.mjs` rejects the old spell
 The engine default behind the point is unchanged: `phase-build-test` when unbound,
 `microsoft-learn` as its MCP server. A binding a coding plugin filled as `verify` fills
 `validate` now — it was always the build and the suites, and the name follows the work.
+
+The new `verify` point is **Spec Verification**, a phase the code-modifying tier runs after QA
+Validation and before Personal Validation: the change set against the specification the run
+built on, one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`,
+`unresolved` — reported at the gate and never repaired. It has no retry budget and no MCP
+default. Unbound, the flow-runner reaches the verdicts itself; a repository with devbook
+chapters binds `"verify": "devbook:verify-change"`, as the template now does. A flow with no
+specification and no acceptance criteria to check against — a dependency update, usually —
+records the phase as `skipped`. The `start_run` stage list of every code-modifying flow gains
+the stage, so a surface that renders it shows one more row.
 
 ## Unreleased: the flow context file is retired
 

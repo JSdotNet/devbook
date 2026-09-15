@@ -57,8 +57,8 @@ impact is suspected.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
-Update → Summary. That file defines them; change them there, for every flow.
+QA Validation → Spec Verification → Personal Validation → Create Pull Request → Documentation
+Update → Work Item Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright scenarios drawn from the
 acceptance criteria, runtime monitoring active throughout, evidence recorded.
@@ -70,8 +70,8 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-feature"` and stages: Scope Discovery, Specification &
-  Architecture Intake, Implementation, Build & Test, QA Validation, Personal Validation,
-  Create Pull Request, Documentation Update, Work Item Update, Summary.
+  Architecture Intake, Implementation, Build & Test, QA Validation, Spec Verification, Personal
+  Validation, Create Pull Request, Documentation Update, Work Item Update, Summary.
 - During Scope Discovery, put the restated behavior, the derived acceptance criteria, and the
   impacted code paths in the stage output — Personal Validation reads them there.
 - During Specification & Architecture Intake, optionally open/update `render_markdown` or

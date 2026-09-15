@@ -69,9 +69,10 @@ Stages 2 through 4 run on the specialist agent selected in Stage 1.
 ## Final Phases (Shared)
 
 The tier in `resources/flow-phases.md` matching the change kind from Stage 1:
-code-modifying runs Build & Test → QA Validation → Personal Validation → Create Pull Request →
-Documentation Update → Work Item Update → Summary; documentation/config runs Personal
-Validation → Create Pull Request → Work Item Update → Summary. That file defines them.
+code-modifying runs Build & Test → QA Validation → Spec Verification → Personal Validation →
+Create Pull Request → Documentation Update → Work Item Update → Summary; documentation/config
+runs Personal Validation → Create Pull Request → Work Item Update → Summary. That file defines
+them.
 
 ## Surface Reporting
 

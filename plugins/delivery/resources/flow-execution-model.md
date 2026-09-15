@@ -63,6 +63,7 @@ stage uses the servers bound to the point it serves:
 | Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
 | Build & Test | `validate` |
 | QA Validation | `app.start`, `qa.run` |
+| Spec Verification | `verify` |
 | Create Pull Request, Work Item Update | `deliver` |
 | Documentation Update | `docs.update` |
 | Update Base, Personal Validation, Summary | none |
@@ -115,10 +116,13 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    running application all stay valid for the owner session. This keeps verbose output out of
    the flow-runner's context without breaking the run record.
 
-   Four kinds of work are delegated by default, and running them inline is a defect in the
+   Five kinds of work are delegated by default, and running them inline is a defect in the
    run rather than a shortcut:
    - **Build & Test** — per `skills/phase-build-test/SKILL.md`.
    - **QA Validation** — per `skills/phase-qa-validation/SKILL.md`.
+   - **Spec Verification's reading** — the change set and its tests against the
+     specification, per the phase in `flow-phases.md`; the verdict table comes back, the
+     reading stays out.
    - **Scope Discovery's search half** — see **Splitting Scope Discovery** below.
    - **Broad exploration and large edits** — reading across many files to find something,
      or a refactor whose diff is larger than the reasoning about it.

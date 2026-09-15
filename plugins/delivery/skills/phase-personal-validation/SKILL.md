@@ -16,7 +16,7 @@ soften that gate.
 
 ## When To Run
 
-- **Every tier**, after QA Validation for code-modifying flows and after the flow's own
+- **Every tier**, after Spec Verification for code-modifying flows and after the flow's own
   stages for documentation/config flows.
 - **Again on every revise round.** A revised change set is a new thing to look at: re-run
   this whole skill rather than pointing back at the previous handback. The gate re-opens with
@@ -82,6 +82,9 @@ look, what to do, and what should happen.**
 - **The recorded QA review** when QA Validation ran: scenarios with pass/fail, monitoring
   findings, and the captured evidence paths. When it was skipped, say so and why — never
   imply a result that was not produced.
+- **The spec verdict** when Spec Verification ran: the table, one row per item, with the
+  `spec-ahead` and `conflict` rows first — those are what a revise decision acts on. When it
+  was skipped, say so and why.
 
 Then stop. Hand control back and wait. The decision, its recording, and everything downstream
 of it are the gate's, in `resources/flow-phases.md`.
@@ -90,6 +93,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 
 - The change set, the run's scope and acceptance criteria, and the change kind.
 - The QA result and evidence from `phase-qa-validation`, when that phase ran.
+- The verdict table from Spec Verification, when that phase ran.
 - The `app.start` result — base URLs and health verdict — and the path of the repository's
   `start` skill when the flow-runner found one.
 
@@ -98,7 +102,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 - A running application with confirmed health, or a `blocked` result naming the startup
   failure and the recovery command, or a recorded reason there was nothing to start.
 - The labelled review links, in the stage's `links` and in the conversation.
-- The what-to-check list, the code review, and the QA review.
+- The what-to-check list, the code review, the QA review, and the spec verdict.
 
 ## Dashboard Reporting
 

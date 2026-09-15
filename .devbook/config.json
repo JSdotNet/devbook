@@ -21,6 +21,7 @@
     "session.start": ["devbook:devbook-check"],
     "app.start": null,
     "qa.run": null,
+    "verify": "devbook:verify-change",
     "docs.update": ["devbook:install"]
   },
   "policy": {

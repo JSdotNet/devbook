@@ -55,7 +55,8 @@ flowchart TD
     D --> E["Implementation"]
     E --> F["Build & Test"]
     F --> G["QA Validation"]
-    G --> H["Personal Validation"]
+    G --> SV["Spec Verification"]
+    SV --> H["Personal Validation"]
     H --> I{User approves?}
     I -->|Yes| J["Create Pull Request or Skip"]
     I -->|No| K["Return to the relevant earlier stage"]
@@ -74,6 +75,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -89,7 +91,8 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Build & Test"]
     D --> E["QA Validation"]
-    E --> F["Personal Validation"]
+    E --> SV["Spec Verification"]
+    SV --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
@@ -107,6 +110,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -122,7 +126,8 @@ flowchart TD
     C --> D["Security Validation"]
     D --> E["Build & Test"]
     E --> F["QA Validation"]
-    F --> G["Personal Validation"]
+    F --> SV["Spec Verification"]
+    SV --> G["Personal Validation"]
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
@@ -140,6 +145,7 @@ flowchart TD
 | Security Validation | the `implement` service | — |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -155,7 +161,8 @@ flowchart TD
     C --> D["New Feature Adoption"]
     D --> E["Build & Test"]
     E --> F["QA Validation"]
-    F --> G["Personal Validation"]
+    F --> SV["Spec Verification"]
+    SV --> G["Personal Validation"]
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
     H -->|No| J["Return to the relevant earlier stage"]
@@ -173,6 +180,7 @@ flowchart TD
 | New Feature Adoption | the `implement` service, the `architecture` role | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -316,7 +324,8 @@ flowchart TD
     A --> B["Implementation"]
     B --> C["Build & Test"]
     C --> D["QA Validation"]
-    D --> E["Personal Validation"]
+    D --> SV["Spec Verification"]
+    SV --> E["Personal Validation"]
     E --> F{User approves?}
     F -->|Yes| G["Create Pull Request or Skip"]
     F -->|No| H["Return to the relevant earlier stage"]
@@ -333,6 +342,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -348,7 +358,8 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Build & Test"]
     D --> E["QA Validation"]
-    E --> F["Personal Validation"]
+    E --> SV["Spec Verification"]
+    SV --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
@@ -366,6 +377,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -381,7 +393,8 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Build & Test"]
     D --> E["QA Validation"]
-    E --> F["Personal Validation"]
+    E --> SV["Spec Verification"]
+    SV --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
@@ -399,6 +412,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -414,7 +428,8 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Build & Test"]
     D --> E["QA Validation"]
-    E --> F["Personal Validation"]
+    E --> SV["Spec Verification"]
+    SV --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
@@ -432,6 +447,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -447,7 +463,8 @@ flowchart TD
     B --> C["Implementation"]
     C --> D["Build & Test"]
     D --> E["QA Validation"]
-    E --> F["Personal Validation"]
+    E --> SV["Spec Verification"]
+    SV --> F["Personal Validation"]
     F --> G{User approves?}
     G -->|Yes| H["Create Pull Request or Skip"]
     G -->|No| I["Return to the relevant earlier stage"]
@@ -465,6 +482,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role | servers bound to `docs.update` *(governed docs only)* |
@@ -483,7 +501,8 @@ flowchart TD
     D --> K{Change kind?}
     K -->|Code-modifying| E["Build & Test"]
     E --> F["QA Validation"]
-    F --> G["Personal Validation"]
+    F --> SV["Spec Verification"]
+    SV --> G["Personal Validation"]
     K -->|Documentation/config| G
     G --> H{User approves?}
     H -->|Yes| I["Create Pull Request or Skip"]
@@ -502,6 +521,7 @@ flowchart TD
 | Review & Recommend | The closest specialist agent for the task category | — |
 | Build & Test | the `implement` service *(code-modifying change kind only)* | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
+| Spec Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Documentation Update | the `docs` role *(code-modifying change kind only)* | servers bound to `docs.update` *(governed docs only)* |

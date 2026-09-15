@@ -86,7 +86,8 @@ flowchart TD
     validate -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
-    qaRun --> gate{"Personal Validation"}
+    qaRun --> verify["verify · service"]
+    verify --> gate{"Personal Validation"}
     gate -->|approve| deliver["deliver · service"]
     gate -->|revise| implement
     gate -->|decline| stop(["Blocked · never a silent skip"])
@@ -99,12 +100,14 @@ flowchart TD
   a step a provider can perform on its own behalf.
 - `implement` and `validate` are the only cycle. It is bounded by the flow, not by the providers,
   which is why the two commonly bind to one provider and resolve their model per stage.
+- `verify` is the last service before the gate and repairs nothing: the change set against the
+  specification the run built on, one verdict per item, for the person to decide on.
 - **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline
   and `deliver` produces file artifacts only; the run continues and says so once.
 - Whether the surface renders any of this is resolved from the live tool list, and none
   answering is normal — the file artifacts are written either way.
 - The documentation tier of flows runs the same picture without `implement`, `validate`,
-  `data.prepare`, `app.start`, and `qa.run`: gate, then `deliver`. The tier a bridge plugin's
+  `data.prepare`, `app.start`, `qa.run`, and `verify`: gate, then `deliver`. The tier a bridge plugin's
   flow declares is its own, because the engine may not name a skill in a layer above it.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
   never self-approves, which is the boundary between a flow and a [fleet skill](domain.md#fleet-skill).

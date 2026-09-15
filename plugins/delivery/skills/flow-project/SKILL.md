@@ -92,8 +92,8 @@ AppHost configuration, service discovery, and health checks.
 ## Final Phases (Shared)
 
 Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
-QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
-Update → Summary. That file defines them; change them there, for every flow.
+QA Validation → Spec Verification → Personal Validation → Create Pull Request → Documentation
+Update → Work Item Update → Summary. That file defines them; change them there, for every flow.
 
 A new runnable scaffold, so QA Validation runs with capture: start the AppHost, confirm the
 dashboard and the service health endpoints are green — default `localhost:18888`, or the
@@ -112,8 +112,8 @@ surface bound, skip the calls, say so once, and continue — file artifacts rema
 of truth.
 
 - `start_run` with `skillId: "flow-project"` and stages: GitHub Folder Setup, GitHub Actions
-  Workflows, Specification & Architecture Intake, Tooling & Dependencies, Implementation,
-  Build & Test, QA Validation, Personal Validation, Create Pull Request, Documentation
-  Update, Work Item Update, Summary.
+  Workflows, Specification & Architecture Intake, Tooling & Dependencies, Implementation, Build
+  & Test, QA Validation, Spec Verification, Personal Validation, Create Pull Request,
+  Documentation Update, Work Item Update, Summary.
 - During Specification & Architecture Intake, open/update `render_markdown` with the reviewed
   or derived architecture, plus `render_diagram` for any Mermaid that goes with it.

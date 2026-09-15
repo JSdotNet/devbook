@@ -21,6 +21,7 @@ flowchart TD
     s4["Implementation"]
     c0["Build & Test"]
     c1["QA Validation"]
+    cv["Spec Verification"]
     c2["Personal Validation"]
 
     base --> s0
@@ -30,7 +31,8 @@ flowchart TD
     s3 --> s4
     s4 --> c0
     c0 --> c1
-    c1 --> c2
+    c1 --> cv
+    cv --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
     t1["Documentation Update"]

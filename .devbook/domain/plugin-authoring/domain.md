@@ -257,7 +257,7 @@ A point is one of two kinds, and the difference is authority, not cardinality:
 | Service | Exactly one provider | A result the flow acts on | Yes — that is the point |
 | Chore | Zero or more, in declared order | Side effects and a report | Never |
 
-`spec`, `implement`, `validate`, `app.start`, `qa.run`, and `deliver` are services.
+`spec`, `implement`, `validate`, `app.start`, `qa.run`, `verify`, and `deliver` are services.
 `session.start`, `flow.start`, `data.prepare`, `docs.update`, and `flow.end` are chores. A
 chore may declare itself required and stop the run when it fails; it still may not rewrite a
 stage's result or stand in for a gate.

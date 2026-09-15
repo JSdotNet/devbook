@@ -152,6 +152,7 @@ producing side effects and a report.
 | `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
 | `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-qa-validation`. |
 | `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-qa-validation`. |
+| `verify` | service | After QA Validation, before Personal Validation | The specification the run built on plus the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it. Report-only: it edits nothing, and the gate is where a verdict becomes work. Unbound: the flow-runner reaches the verdicts itself against the run's own specification record. |
 | `deliver` | service | After approval | Open the change for review and update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
 | `docs.update` | chore | After `deliver` | Refresh governed documentation. A clean no-op when nothing is stale. |
 | `flow.end` | chore | Always, last | Contribute to the run summary and capture what this run learned. |
@@ -197,7 +198,7 @@ below, not a second mechanism.
 | `resource` | before `app.start` | Just the question — "only one runtime instance runs here, OK to start?" |
 | `cost` | before `qa.run` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
 | `risk` | after `validate` | What the change set actually touched — migrations, auth, a public contract. |
-| `handoff` | Personal Validation | The code review, the QA evidence, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
+| `handoff` | Personal Validation | The code review, the QA evidence, the spec verdict, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
 
 ### Three outcomes, not two
 

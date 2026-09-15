@@ -95,9 +95,12 @@ those contracts; it does not re-decide them per skill.
     browser snapshots. Running them inline is the single most expensive mistake available to a
     run. Reserve inline execution for startup-only QA and for a host where `stage-delegation`
     resolves to nothing. `phase-personal-validation` is the opposite case and is **never
-    delegated** — see step 12.
-11. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
-    build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
+    delegated** — see step 12. **Spec Verification** has no phase skill: run the `verify`
+    provider, or reach the verdicts yourself with the reading delegated, per the phase in
+    `flow-phases.md` — it reports and repairs nothing, and its verdict table goes to the gate.
+11. **Enforce Build & Test first.** Never start QA Validation, Spec Verification, or Personal
+    Validation on a red build or failing tests. Mark the failing stage `blocked`, report, and
+    stop for fixes.
 12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the point it attaches to and asks its question. `approve` continues; `revise`
     re-runs that point with the human's notes, bounded by `policy.gate.reviseBudget`;
@@ -106,9 +109,9 @@ those contracts; it does not re-decide them per skill.
     At Personal Validation, run `phase-personal-validation` **inline, in this session** — no
     agent and no model — for the review handoff: the application up and healthy, the review
     links published both on the stage and as clickable URLs in the conversation, the
-    what-to-check list, and the code and QA reviews. Then wait for explicit approval. **Run that
-    skill again on every revise round**, before asking again. Never auto-approve. Record every
-    decision with `set_run_context`.
+    what-to-check list, the code and QA reviews, and the spec verdict. Then wait for explicit
+    approval. **Run that skill again on every revise round**, before asking again. Never
+    auto-approve. Record every decision with `set_run_context`.
 13. **Never complete a gate as a sub-agent.** This gate is why the agent runs as the
     session's main loop and is never spawned by another agent: a sub-agent has no user turn
     to hand control back to. If this agent finds itself without `AskUserQuestion` — the
@@ -156,8 +159,8 @@ those contracts; it does not re-decide them per skill.
 - **Configuration chooses among behaviour the engine implements.** A stack-config key never
   adds a stage. A repository that needs a different flow shape writes a repo-native `flow-*`
   skill, which takes precedence over the plugin-provided one for the categories it covers.
-- **No separate approval before internal transitions.** Continue through Build & Test and QA
-  Validation, then stop at Personal Validation before any pull request.
+- **No separate approval before internal transitions.** Continue through Build & Test, QA
+  Validation, and Spec Verification, then stop at Personal Validation before any pull request.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
   for a decision the run does not own. There is no fan-out over issues or PRs anywhere: the
   pickup skills select a single item per run. Fan-out across sessions belongs to the `fleet`
@@ -188,11 +191,11 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 ## Handoffs
 
 This agent delegates to whatever the stack config binds — the `implement`, `validate`,
-`app.start`, `qa.run`, `spec`, and `deliver` service providers, and the `architecture`, `qa`,
-`domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test`,
-`phase-qa-validation`, and `phase-personal-validation` skills directly — the first two
-delegated to a sub-agent, the third never. It hands a run off to a fresh session rather than
-spawning one, and it is never itself spawned as a sub-agent.
+`app.start`, `qa.run`, `verify`, `spec`, and `deliver` service providers, and the
+`architecture`, `qa`, `domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the
+`phase-build-test`, `phase-qa-validation`, and `phase-personal-validation` skills directly —
+the first two delegated to a sub-agent, the third never. It hands a run off to a fresh session
+rather than spawning one, and it is never itself spawned as a sub-agent.
 
 ## Example Usage
 
