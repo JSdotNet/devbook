@@ -117,7 +117,6 @@ later reversed is the part a reader most needs.
 | [65. The Repository Is Named devbook](65-the-repository-is-named-devbook.md) | 2026-09-14 |
 | [66. The Marketplace Is Named jsdotnet-devbook](66-the-marketplace-is-named-jsdotnet-devbook.md) | 2026-09-14 |
 | [67. The Flow Context Lives in devbook](67-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
-| [68. Configuration May Steer a Stage in One Line](68-configuration-may-steer-a-stage-in-one-line.md) | proposed 2026-09-15 |
 
 Four records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
