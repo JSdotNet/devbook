@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own install skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json and its local overlay. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
+description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own install skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json and the overlays over it. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
 ---
 
 # devbook-config update
@@ -68,8 +68,9 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
    against the config; take its checkout root from the report's catalog line, or the plugin's
-   `installPath` from `--json`. It picks up `.devbook/config.local.json` beside the committed
-   file on its own. An upgrade can retire a key, and an unknown key is an error rather than a
+   `installPath` from `--json`. It picks up every overlay on its own — the checkout's beside
+   the committed file, the user's from the devbook config directory and the committed `id`.
+   An upgrade can retire a key, and an unknown key is an error rather than a
    silently absent setting. Fix against `resources/surface-contract.md` in that same plugin.
 
 6. **Verify and report honestly.** Re-run the report and each component's own check skill.

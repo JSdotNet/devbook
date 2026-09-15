@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 // Validates the delivery-owned keys of .devbook/config.json against
-// resources/config.schema.json, and merges the gitignored .devbook/config.local.json
-// over it when that file is present.
+// resources/config.schema.json, and merges the gitignored overlays over it — up to three,
+// applied in this order, each optional and absent by default:
+//
+//   <config dir>/config.local.json               this user, every repository
+//   <config dir>/repos/<id>/config.local.json    this user, the repository `id` names
+//   .devbook/config.local.json                   this checkout
+//
+// where <config dir> is $XDG_CONFIG_HOME/devbook when that variable is set, else
+// %APPDATA%\devbook on Windows and ~/.config/devbook elsewhere. The first two survive a
+// fresh worktree, which is what they are for; the last is found beside the committed file,
+// never passed separately, because one config has one checkout overlay and naming them
+// independently invites checking a pair that never meet at run time.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
 // setting. That holds at the top level too: `components` is the one key the engine does not
@@ -10,21 +20,18 @@
 //
 //   node check.mjs [path-to-config.json]
 //
-// The local sibling is found next to the path given, never passed separately: one config
-// has one overlay, and naming them independently invites checking a pair that never meet
-// at run time.
-//
 // Exit 0 when the files are valid or absent, 1 when they are not.
 
 import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'config.schema.json');
 
-// What the overlay may not say. The committed file describes what this repository
-// produces; the overlay describes how one machine runs it, and these four are the first
+// What an overlay may not say. The committed file describes what this repository
+// produces; an overlay describes how one machine runs it, and these four are the first
 // kind wearing the second's clothes. Personal Validation is already `const` in the schema
 // and is listed anyway, so the refusal names the invariant rather than a type error.
 const LOCKED = [
@@ -161,7 +168,7 @@ function isPlainObject(value) {
 }
 
 /**
- * What the overlay is forbidden from saying, independent of whether it is well-typed.
+ * What an overlay is forbidden from saying, independent of whether it is well-typed.
  * Returns human-readable refusals; an empty array means the overlay is allowed to apply.
  */
 export function checkLocalOverlay(local) {
@@ -171,6 +178,13 @@ export function checkLocalOverlay(local) {
         errors.push(
             'components: a stamp is repo-scope and committed, and an overlay is neither. ' +
                 "Remove it — the owning component's install skill writes it.",
+        );
+    }
+
+    if ('id' in local) {
+        errors.push(
+            'id: names the repository, and is what found this overlay in the first place. ' +
+                'It is set in the committed config or not at all.',
         );
     }
 
@@ -189,13 +203,16 @@ export function checkLocalOverlay(local) {
 }
 
 /**
- * Merge the overlay over the committed config.
+ * Merge an overlay over the config beneath it.
  *
  * Objects merge key by key and the overlay wins. Arrays replace wholesale rather than
  * concatenating, because an extension point's chore list is an ordered whole and half of
  * one from each file is a run nobody wrote down. `gates` is the deliberate exception: it
- * appends, so the overlay can add a checkpoint and has no way of spelling the removal of
- * one. `null` in the overlay is a value — deliberately unbound — and never a delete.
+ * appends, so an overlay can add a checkpoint and has no way of spelling the removal of
+ * one. `null` in an overlay is a value — deliberately unbound — and never a delete.
+ *
+ * The same rules apply at every layer, so `layers.reduce(mergeStackConfig, base)` is the
+ * whole merge and no layer can undo what the one beneath it said about gates.
  */
 export function mergeStackConfig(base, local) {
     const merged = { ...base };
@@ -213,6 +230,37 @@ export function mergeStackConfig(base, local) {
     return merged;
 }
 
+/**
+ * Where this user's devbook config lives. `XDG_CONFIG_HOME` wins on every platform when it
+ * is set; otherwise Windows uses `%APPDATA%` and everything else `~/.config`, which is the
+ * XDG default. Host-neutral on purpose: the reader of these files is this script, and
+ * Copilot runs it as readily as Claude does.
+ */
+export function userConfigDir({ env = process.env, platform = process.platform, home = homedir() } = {}) {
+    if (env.XDG_CONFIG_HOME) return join(env.XDG_CONFIG_HOME, 'devbook');
+    if (platform === 'win32' && env.APPDATA) return join(env.APPDATA, 'devbook');
+    return join(home, '.config', 'devbook');
+}
+
+/** `.devbook/config.json` -> `.devbook/config.local.json`. */
+function localSiblingOf(path) {
+    return join(dirname(path), basename(path).replace(/\.json$/, '.local.json'));
+}
+
+/**
+ * Every overlay that applies to the config at `target`, outermost first — the order they
+ * merge in, so the later a layer the more it wins. The repository layer exists only when
+ * the committed file carries an `id`: a machine cannot key a folder on a name the
+ * repository never chose.
+ */
+export function overlayPaths(target, id, options) {
+    const user = userConfigDir(options);
+    const layers = [{ scope: 'user', path: join(user, 'config.local.json') }];
+    if (id) layers.push({ scope: 'repository', path: join(user, 'repos', id, 'config.local.json') });
+    layers.push({ scope: 'checkout', path: localSiblingOf(target) });
+    return layers;
+}
+
 /** Read and parse one config file. Returns null when absent, throws on bad JSON. */
 function readConfig(path) {
     if (!existsSync(path)) return null;
@@ -223,11 +271,6 @@ function readConfig(path) {
     }
 }
 
-/** `.devbook/config.json` -> `.devbook/config.local.json`. */
-function localSiblingOf(path) {
-    return join(dirname(path), basename(path).replace(/\.json$/, '.local.json'));
-}
-
 function report(label, errors) {
     console.error(`${label}: ${errors.length} problem(s)`);
     for (const error of errors) console.error(`  ${error}`);
@@ -235,29 +278,33 @@ function report(label, errors) {
 
 function main() {
     const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
-    const localPath = localSiblingOf(target);
     const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
 
     let config;
-    let local;
+    let layers;
     try {
         config = readConfig(target);
-        local = readConfig(localPath);
+        layers = overlayPaths(target, typeof config?.id === 'string' ? config.id : null)
+            .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
+            .filter((layer) => layer.overlay !== null);
     } catch (error) {
         console.error(error.message);
         return 1;
     }
 
-    if (config === null && local === null) {
+    if (config === null) {
+        // A user-scope overlay applies to every repository, including one that keeps no
+        // stack config; only the checkout's own overlay is an orphan without one.
+        const orphan = layers.find((layer) => layer.scope === 'checkout');
+        if (orphan) {
+            console.error(
+                `${orphan.path}: an overlay with nothing under it. Write ${target} first — the ` +
+                    "overlay adjusts a repository's wiring and cannot stand in for it.",
+            );
+            return 1;
+        }
         console.log(`no stack config at ${target} — every point falls back to its default`);
         return 0;
-    }
-    if (config === null) {
-        console.error(
-            `${localPath}: an overlay with nothing under it. Write ${target} first — the ` +
-                "overlay adjusts a repository's wiring and cannot stand in for it.",
-        );
-        return 1;
     }
 
     let failed = false;
@@ -270,25 +317,27 @@ function main() {
         console.log(`${target}: ok`);
     }
 
-    if (local === null) return failed ? 1 : 0;
-
-    // The overlay is checked three times over: what it may not say, whether it is
+    // Each overlay is checked three times over: what it may not say, whether it is
     // well-typed on its own, and whether what it produces still validates. The third
-    // catches the pair that is only wrong together.
-    const refusals = checkLocalOverlay(local);
-    const localErrors = [...refusals, ...checkStackConfig(local, schema)];
-    if (localErrors.length) {
-        report(localPath, localErrors);
-        return 1;
-    }
-    console.log(`${localPath}: ok (overlay)`);
+    // catches the pair that is only wrong together, and runs after every layer so the
+    // report names the layer that broke it.
+    let merged = config;
+    for (const { scope, path, overlay } of layers) {
+        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema)];
+        if (localErrors.length) {
+            report(path, localErrors);
+            return 1;
+        }
+        console.log(`${path}: ok (${scope} overlay)`);
 
-    const mergedErrors = checkStackConfig(mergeStackConfig(config, local), schema);
-    if (mergedErrors.length) {
-        report(`${target} + ${basename(localPath)}`, mergedErrors);
-        return 1;
+        merged = mergeStackConfig(merged, overlay);
+        const mergedErrors = checkStackConfig(merged, schema);
+        if (mergedErrors.length) {
+            report(`${target} + ${scope} overlay`, mergedErrors);
+            return 1;
+        }
     }
-    console.log(`merged: ok`);
+    if (layers.length) console.log('merged: ok');
 
     return failed ? 1 : 0;
 }

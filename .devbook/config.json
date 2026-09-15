@@ -1,4 +1,5 @@
 {
+  "id": "jsdotnet-devbook",
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
@@ -47,7 +48,7 @@
       "materialized": {
         "AGENTS.md#devbook": {
           "from": "1.0.0",
-          "hash": "sha256:3afc612ae8298e78c53247a473dd4bfab4e4b90e269fc3502ec353cff517c6a6",
+          "hash": "sha256:f6e1be423f6b4d91afd67e1cec9b7b23dbf4e1d0c6ac462e6873330c4ddaade4",
           "managed": true
         },
         ".gitignore#devbook": {
