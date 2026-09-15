@@ -33,10 +33,10 @@ framework preferences, and the Aspire services to include.
 - Create the host's repository settings file for the repository-level plugin combination, and
   `.devbook/config.json` for the bindings, extensions, policy, and gates. See **The
   Stack Config** in `resources/surface-contract.md`.
-- Create `.devbook/flow-context.md` so later flows know how to start and validate this
-  project, per `resources/flow-repo-context.md` and the template at
-  `resources/flow-context-template.md`. A repository with nothing to run declares that in the
-  file rather than omitting it.
+- Run `delivery:install` so the `start` seed lands, then fill its facts — the command, the
+  entry points, the readiness signals, the credential pointer — so later flows know how to
+  start and validate this project. A repository with nothing to run binds
+  `extensions.app.start` to `null` instead.
 
 **Agents:** the `implement` service
 
@@ -97,7 +97,7 @@ Update → Summary. That file defines them; change them there, for every flow.
 
 A new runnable scaffold, so QA Validation runs with capture: start the AppHost, confirm the
 dashboard and the service health endpoints are green — default `localhost:18888`, or the
-entry points Stage 1 declared in `.devbook/flow-context.md` — confirm database connectivity,
+entry points Stage 1 declared in the `start` skill — confirm database connectivity,
 and run Playwright smoke checks on the example service under the runtime monitor.
 
 Two expectations are specific to this scaffold: Build & Test compiles the AppHost, service,

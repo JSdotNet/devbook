@@ -382,8 +382,8 @@ to write it.
   isolation means they cannot corrupt each other — the cost is a rebase, not a lost change set.
 - **Workers contend for machine resources even in separate worktrees.** Five parallel builds
   will fight over ports, containers, and local databases. `dispatchGapSeconds` only spaces out
-  the launches; for real contention, give each worker its own ports via
-  `.devbook/flow-context.md`, or lower `maxParallel`.
+  the launches; for real contention, give each worker its own ports in the repository's
+  `start` skill, or lower `maxParallel`.
 - **A sweep is resumable through its labels, not its session.** If this session dies after
   marking an issue but before dispatching it, the label is what survives — the next sweep's
   Phase 1 reconciliation releases the claim unconditionally, because a `ready-for-pickup` label

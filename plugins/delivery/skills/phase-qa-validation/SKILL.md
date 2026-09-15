@@ -47,28 +47,24 @@ Location** below, which is why the QA sub-agent shares the worktree rather than 
 
 ## Repo Context
 
-The consuming repository may supply `.devbook/flow-context.md`, read once per run by
-the flow-runner. The convention is defined in
-`resources/flow-repo-context.md` — do not restate it here. Use it as
-follows:
+The repository's runtime facts live in its `start` skill — `.agents/skills/start.md`, seeded
+by `delivery:install` and edited by the repository — and reach this phase two ways: the
+`app.start` service returns base URLs and a health verdict, and the flow-runner names the
+file when it exists. Use them as follows:
 
-- **How to run** — use the declared startup command and AppHost path instead of discovering
-  or guessing them, and instead of asking the user.
-- **Base URLs** — validate against the declared runtime dashboard, front end, and API entry points.
-- **Healthy startup** — judge startup against the declared resources, health endpoints, and
-  log signals, and do not report the declared benign warnings as failures.
-- **Test credentials** — follow the declared pointer to obtain credentials; the file never
-  contains secrets.
-- **QA depth** — the declared depth overrides the automatic change-kind selection below but
-  yields to `policy.qa.depth` in the stack config, per the order in `surface-contract.md`. Any
-  repo-specific caveats it lists still apply.
-- **No runnable application** — when the repository declares
-  `**Runnable application:** none`, mark this phase `skipped`, record that the repository
-  declares no runnable application, and attempt no startup, Playwright run, or `qa.run`
-  delegation.
+- **How to run** — while the file declares the startup command and AppHost, never discover or
+  guess them, and never ask the user for them.
+- **Base URLs** — validate against the entry points the `app.start` result returned.
+- **Healthy startup** — judge startup against the file's readiness signals, and do not report
+  the warnings it names as benign as failures.
+- **Test credentials** — follow the file's pointer to obtain credentials; it never contains a
+  secret.
+- **No runnable application** — when `extensions.app.start` is `null` in
+  `.devbook/config.json`, mark this phase `skipped`, record that the repository binds no
+  runtime, and attempt no startup, Playwright run, or `qa.run` delegation.
 
-When the file is absent, a section is missing, or a value is unrecognized, fall back to the
-behavior described below, note the fallback once, and continue.
+When the file is absent or a section is missing, fall back to the behavior described below,
+note the fallback once, and continue.
 
 ## Depth Selection (Automatic)
 
@@ -119,7 +115,7 @@ If required MCP tooling is unavailable:
   validation policy allows a degraded result; they do not satisfy required Playwright
   evidence capture.
 
-Applies when the repository does not declare a QA depth in `.devbook/flow-context.md`.
+Applies when `policy.qa.depth` is absent from the stack config.
 
 - **New functionality → QA validation with capture:**
   1. **Run the application locally** via the `app.start` service.
@@ -171,9 +167,8 @@ or a restart, and do not ask the user to restart the app manually as the normal 
 - The change kind (functional / bug fix / dependency update / none) from the calling
   flow.
 - The affected scenarios or critical paths to exercise.
-- The repo context resolved by the flow-runner from `.devbook/flow-context.md`
-  (startup command, AppHost path, base URLs, healthy-startup signals, credential pointer,
-  QA depth), when the repository supplies it.
+- The `app.start` result — base URLs, health verdict — and the path of the repository's
+  `start` skill when the flow-runner found one.
 
 ## Outputs
 
@@ -225,4 +220,4 @@ comes back, and what an unavailable capture does to this stage. It holds whether
 scenario that had visual evidence to give.
 
 Phase definition: `resources/flow-phases.md`.
-Repo context convention: `resources/flow-repo-context.md`.
+Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.

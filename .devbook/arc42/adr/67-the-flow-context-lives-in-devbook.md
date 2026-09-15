@@ -5,6 +5,10 @@ date: 2026-09-15
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/arc42/adr/41-a-session-start-hook-fires-only-where-the-repository-adopted-the-plugin.md"]
 ```
 
+**Superseded, 2026-09-15** by [The start Skill Holds the Runtime Facts](68-the-start-skill-holds-the-runtime-facts.md):
+the file is retired, so where it lived no longer matters. The rule it applied — a file both
+hosts read lives in neither host's folder — stands, and record 11 still carries it.
+
 The optional flow context file is `.devbook/flow-context.md`. It was `.claude/flow-context.md`,
 and the folder was wrong for the reason [the config move](11-the-stack-config-lives-in-devbook.md)
 already gave: `.claude/` is one host's folder, and a file both hosts read does not belong in

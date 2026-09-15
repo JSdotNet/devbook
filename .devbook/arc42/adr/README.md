@@ -117,11 +117,15 @@ later reversed is the part a reader most needs.
 | [65. The Repository Is Named devbook](65-the-repository-is-named-devbook.md) | 2026-09-14 |
 | [66. The Marketplace Is Named jsdotnet-devbook](66-the-marketplace-is-named-jsdotnet-devbook.md) | 2026-09-14 |
 | [67. The Flow Context Lives in devbook](67-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
+| [68. The start Skill Holds the Runtime Facts](68-the-start-skill-holds-the-runtime-facts.md) | 2026-09-15 |
 
-Four records carry a supersession note and stay where they are.
+Five records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
 warning it gave — [66](66-the-marketplace-is-named-jsdotnet-devbook.md) renames the
 marketplace on that warning's own terms.
+[67](67-the-flow-context-lives-in-devbook.md) moved a file that
+[68](68-the-start-skill-holds-the-runtime-facts.md) then retired the same day; the rule it
+moved the file under is record 11's and stands.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the
 flows moved twice and the bridge is gone.
 [8](8-comments-are-findings-until-the-fence-lands.md) and

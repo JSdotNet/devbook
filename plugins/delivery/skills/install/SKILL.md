@@ -27,9 +27,10 @@ The pointer line is the whole body of both wrappers, never a second copy of the 
 
 ## The run
 
-1. **Resolve what this repository needs.** Skip `start` when `.devbook/flow-context.md`
-   declares `**Runnable application:** none`; skip `capture` when `policy.qa.depth` is
-   `skipped`. Ask before writing either, and say which was skipped and why.
+1. **Resolve what this repository needs.** Skip `start` when `extensions.app.start` is
+   `null` — somebody decided there is nothing to start; skip `capture` when
+   `policy.qa.depth` is `skipped`. Ask before writing either, and say which was skipped and
+   why.
 2. **Plan.** One table — `create`, `update`, `skip-customized` — and write nothing. Never
    skip this, not even when the plan is empty.
 3. **Materialize.** Overwrite only a file whose hash matches a release this plugin shipped;

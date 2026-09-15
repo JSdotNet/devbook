@@ -130,8 +130,8 @@ stopping at the first match:
 There is deliberately **no repository-level model override**. Model choice is a personal cost
 and speed preference, not a property of the repository being worked on, and a committed
 override would silently change what every collaborator's runs cost. A repository that needs
-to influence a run does so through `.devbook/flow-context.md`
-(`flow-repo-context.md`), which sets runtime and QA context and never a model.
+to influence a run does so through `.devbook/config.json` and its own `start` skill, which
+set QA depth and runtime facts and never a model.
 
 None of the agents invoked by a flow pin their own `model`, so there is no
 "agent's pinned model" tier to consider — the flow-runner's resolution above is the only

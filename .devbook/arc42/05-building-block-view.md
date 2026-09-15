@@ -330,7 +330,7 @@ date: 2026-09-05
 related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/17-no-host-profile-plugins.md"]
 ```
 
-`delivery` declares a closed set of six names a shared asset reads instead of a host's own
+`delivery` declares a closed set of five names a shared asset reads instead of a host's own
 file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
 [deleted](adr/17-no-host-profile-plugins.md), and nowhere in the stack is a
 host's own file, path, or capability named now.
@@ -338,7 +338,6 @@ host's own file, path, or capability named now.
 | Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | `bindings["delivery.slots"]` | `AGENTS.md` if present, else nothing |
-| `repo-flow-context` | `bindings["delivery.slots"]` | discovery |
 | `pr-lane` | `bindings["delivery.slots"]` | no pull request; `deliver` writes file artifacts only |
 | `stage-delegation` | the live session | stages run inline |
 | `surface` | the live tool list | file artifacts only |
@@ -462,8 +461,9 @@ plugin is behind a stamp whose plugin this machine has not installed.
 It sits beside the devbook chapter folders and is read by every host, which is the whole reason
 it left `.github/` — see [the decision](adr/11-the-stack-config-lives-in-devbook.md).
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
-The optional flow context file, `.devbook/flow-context.md`, sits beside it on the same rule —
-see [decision 67](adr/67-the-flow-context-lives-in-devbook.md).
+It is the only engine file in the folder: the runtime facts a run needs live in the
+repository's own `start` skill, not in a second file here — see
+[decision 68](adr/68-the-start-skill-holds-the-runtime-facts.md).
 
 ## Schedule Plugin
 

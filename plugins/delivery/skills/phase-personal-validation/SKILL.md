@@ -30,9 +30,9 @@ A link to a process that is not listening is worse than no link.
 
 - **Reuse the instance QA Validation left running** when there is one. Start a second only
   after confirming the first is gone.
-- **Otherwise start it** with the `app.start` service, using the `## How to Run` command from
-  `.devbook/flow-context.md` (convention: `resources/flow-repo-context.md`) or the command QA
-  proved this run. **Never hand the person a command to run themselves** — starting it is
+- **Otherwise start it** with the `app.start` service — the repository's `start` skill when
+  that is the provider — or the command QA proved this run. **Never hand the person a
+  command to run themselves** — starting it is
   this phase's job, and stopping at a command list is a failed handback, not a shortcut.
 - **Confirm health before publishing anything**, against the repository's
   `## Healthy Startup` signals: the resources that must reach running, the health endpoints,
@@ -42,8 +42,8 @@ A link to a process that is not listening is worse than no link.
   Record which one happened, and re-check the URLs — they move on a restart.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command;
   never hand back a review the person cannot perform.
-- **Nothing to start** — a documentation/config flow, or a repository declaring
-  `**Runnable application:** none` — skips the startup and the links, says so in one line,
+- **Nothing to start** — a documentation/config flow, or a repository binding
+  `extensions.app.start` to `null` — skips the startup and the links, says so in one line,
   and goes to Step 3 over the changed files.
 
 ## Step 2 — Publish The Links
@@ -90,8 +90,8 @@ of it are the gate's, in `resources/flow-phases.md`.
 
 - The change set, the run's scope and acceptance criteria, and the change kind.
 - The QA result and evidence from `phase-qa-validation`, when that phase ran.
-- The repo context the flow-runner resolved from `.devbook/flow-context.md` — startup command,
-  base URLs, healthy-startup signals, credential pointer.
+- The `app.start` result — base URLs and health verdict — and the path of the repository's
+  `start` skill when the flow-runner found one.
 
 ## Outputs
 
@@ -114,5 +114,5 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Reference
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
-Repo context convention: `resources/flow-repo-context.md`.
+Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
 Revalidation on a repeat pass: `skills/phase-qa-validation/SKILL.md`.
