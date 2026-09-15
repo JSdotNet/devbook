@@ -51,7 +51,7 @@ deliberately narrow.
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/skills.md#flow-tech"]
+related: [".devbook/domain/delivery/skills.md#flow-spec"]
 ```
 
 Refresh a repository's technology graph from deterministic package inventories, then analyse the

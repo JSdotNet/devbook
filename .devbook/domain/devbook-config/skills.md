@@ -71,7 +71,7 @@ marketplace rather than a unit of work.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook-config/domain.md#adoption-drift", ".devbook/domain/delivery/skills.md#flow-ai"]
+related: [".devbook/domain/devbook-config/domain.md#adoption-drift", ".devbook/domain/delivery/skills.md#flow-spec"]
 ```
 
 Report where the adoption record no longer matches what is installed, enabled, and wired, and hand

@@ -16,7 +16,7 @@ instead of by repository.
 
 | Kind | Members |
 |---|---|
-| `flow-*` (16) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`, `flow-fallback` |
+| `flow-*` (12) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-spec`, `flow-fallback` |
 | `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-validation`, `phase-personal-validation` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |

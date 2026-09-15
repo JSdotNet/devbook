@@ -18,8 +18,8 @@ Read this file once, at the start of a run.
   governing instructions and guidelines for the affected area.
 - When a specification, acceptance criteria, architecture decision, or equivalent
   implementation note already exists, that first stage is a short intake: read it, align
-  to it, and continue. The documentation flows — `flow-arc42` and `flow-domain` — remain
-  the preferred upstream source of that context when they have already run.
+  to it, and continue. The devbook flow — `flow-spec` — remains the preferred upstream
+  source of that context when it has already run.
 - When it does not exist, the first stage **derives it from the request and the codebase**
   and records the derived assumptions before continuing. Missing context is a reason to run
   that stage — never a reason to stop, hand the request back, or skip the flow and
@@ -35,11 +35,11 @@ user to run something themselves.
 
 | Situation | Route to |
 |---|---|
-| The change requires a new architectural decision | `flow-arc42`, which records it |
-| The change requires a new bounded context or service boundary | `flow-create-service`, or `flow-arc42` for the boundary decision |
-| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-domain`, which owns the domain model; skip this row when the repository keeps no `.domain/` folder |
-| The change requires a cross-cutting redesign | `flow-arc42`, as a proposed decision first |
-| Accepting known debt instead of fixing it | `flow-arc42`, as a technical debt record |
+| The change requires a new architectural decision | `flow-spec`, which records it in `.arc42/` |
+| The change requires a new bounded context or service boundary | `flow-create-service`, or `flow-spec` for the boundary decision |
+| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-spec`, which owns `.domain/`; skip this row when the repository keeps no `.domain/` folder |
+| The change requires a cross-cutting redesign | `flow-spec`, as a proposed decision first |
+| Accepting known debt instead of fixing it | `flow-spec`, as a technical debt record |
 
 Everything else — an unwritten specification, absent acceptance criteria, a bug with no
 reproduction, a request that arrived as one sentence — is derived in the skill's first

@@ -72,7 +72,7 @@ host enforces, and that one for who has to live with whose model.
 | Plain, labelled with a capability | Conformance to a published language neither side declares | The caller resolves the group unanswered and continues |
 | Dashed | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
 
-The dashed `delivery → devbook` edge is the one to read twice. Eleven of the engine's sixteen
+The dashed `delivery → devbook` edge is the one to read twice. Eleven of the engine's twelve
 flows work with devbook absent, so it is not an L1 extension; it is one stack rather than two, so
 it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
@@ -398,7 +398,7 @@ because no other plugin is allowed to name every plugin.
 | `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
 | `update` | The same four keys, moved forward, after each component reconciled itself |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
-| `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
+| `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-spec` |
 
 The four take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
@@ -416,7 +416,7 @@ derivable half of `.ai` — which plugins are installed and enabled, which `flow
 exactly what the report already prints. The other half rates whether people work that way, which
 no file on disk records, so a `status`, an **Adopted by**, or an **Evidence** line is never
 derived from an install. Reporting drift is inside the plugin's subject; writing a chapter is
-`flow-ai`'s.
+`flow-spec`'s.
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
 stays with that component's own install skill, which is the only thing that knows what it

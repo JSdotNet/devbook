@@ -63,7 +63,7 @@ framework preferences, and the Aspire services to include.
   installs anything.
 
 Escalate instead when the project needs a documented target architecture or a recorded
-decision in its own right: recommend `flow-arc42` and ask the user.
+decision in its own right: recommend `flow-spec` and ask the user.
 
 **Agents:** the `architecture` role
 

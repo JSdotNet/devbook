@@ -258,8 +258,8 @@ the write to whatever flow covers the folder, resolved in this order:
 
 1. **A repo-native `flow-*` skill** for that folder — it takes precedence over anything a
    plugin provides.
-2. **The flow engine's own flow for the folder**, named after it — `flow-<folder>` —
-   when an engine is installed.
+2. **The flow engine's own flow for the devbook folders** — `flow-spec`, which derives the
+   folder and drafts through the role it maps to — when an engine is installed.
 3. **Directly**, following that folder's `devbook-*.md` rule and
    `devbook-chapter-metadata.md`, when no flow engine is installed at all.
 

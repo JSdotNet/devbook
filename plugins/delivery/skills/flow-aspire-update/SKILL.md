@@ -11,7 +11,7 @@ a request as small as "move us to the latest Aspire" is in scope. An approved up
 aligns those stages instead of replacing them.
 
 Escalate only when the upgrade forces a new architectural decision, or when adopting a new
-Aspire capability changes the target architecture. Recommend `flow-arc42` and ask the user.
+Aspire capability changes the target architecture. Recommend `flow-spec` and ask the user.
 
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
 follows `resources/flow-model-selection.md`.

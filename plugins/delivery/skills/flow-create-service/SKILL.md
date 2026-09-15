@@ -35,7 +35,7 @@ derivation when it does not.
 
 Escalate instead when the work is really a module inside an existing service, or when the
 service boundary is itself an open architectural question: recommend `flow-create-module` or
-`flow-arc42` and ask the user.
+`flow-spec` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
@@ -56,7 +56,7 @@ review.
 
 **Agents:** the `architecture` role; the `domain` role when the service introduces, splits, or renames a
 bounded context — a service wholly inside one existing context needs no domain pass. Full
-domain modeling belongs to `flow-domain`; route there rather than modeling here.
+domain modeling belongs to `flow-spec`; route there rather than modeling here.
 
 ## Stage 2: Implementation Planning
 

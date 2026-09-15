@@ -31,7 +31,7 @@ when it does not.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the defect is really a missing feature, or when the fix needs a new
-architectural decision or a cross-cutting redesign: recommend `flow-feature` or `flow-arc42`
+architectural decision or a cross-cutting redesign: recommend `flow-feature` or `flow-spec`
 and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a

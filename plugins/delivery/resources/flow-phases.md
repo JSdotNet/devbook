@@ -6,7 +6,7 @@ description: The shared phase contract every flow-* flow runs — which phases e
 # Flow Phases (Engine-Owned)
 
 Defines the phases every `flow-*` skill shares, **once**, so a maintainer edits them here
-instead of in 16 `SKILL.md` files. Each `flow-*/SKILL.md` keeps only its own stages inline
+instead of in 12 `SKILL.md` files. Each `flow-*/SKILL.md` keeps only its own stages inline
 and names the shared phases it runs.
 
 ## Where Each Part Lives
@@ -39,8 +39,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → Validation →
   Personal Validation → Create Pull Request → Verification → Work Item Update →
   Summary**.
-- **Documentation/config flows** — `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`,
-  `flow-ai`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
+- **Documentation/config flows** — `flow-spec`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
   Update → Summary**. They produce no runnable code change, so Build & Test and Validation
   do not apply.
 - **`flow-fallback`** has no fixed tier: it runs the code-modifying tier when its Routing

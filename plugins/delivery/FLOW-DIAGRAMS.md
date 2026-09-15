@@ -179,7 +179,7 @@ flowchart TD
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-arc42
+## flow-spec
 
 ```mermaid
 flowchart TD
@@ -197,112 +197,8 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Context Loading | — | servers bound to `spec` |
-| Drafting | the `architecture` role | — |
-| Check & Review | the `architecture` role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-domain
-
-```mermaid
-flowchart TD
-    A["Context Loading"] --> B["Domain Modeling"]
-    B --> C["Check & Review"]
-    C --> D["Personal Validation"]
-    D --> E{User approves?}
-    E -->|Yes| F["Create Pull Request or Skip"]
-    E -->|No| G["Return to the relevant earlier stage"]
-    G --> A
-    F --> U["Work Item Update or Skip"]
-    U --> H["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Context Loading | — | — |
-| Domain Modeling | the `domain` role | — |
-| Check & Review | the `domain` role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-tech
-
-```mermaid
-flowchart TD
-    A["Context Loading"] --> B["Technology Reasoning"]
-    B --> C["Check & Review"]
-    C --> D["Personal Validation"]
-    D --> E{User approves?}
-    E -->|Yes| F["Create Pull Request or Skip"]
-    E -->|No| G["Return to the relevant earlier stage"]
-    G --> A
-    F --> U["Work Item Update or Skip"]
-    U --> H["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Context Loading | — | — |
-| Technology Reasoning | the `architecture` role | — |
-| Check & Review | the `architecture` role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-design
-
-```mermaid
-flowchart TD
-    A["Context Loading"] --> B["Authoritative Grounding"]
-    B --> C["Design Authoring"]
-    C --> D["Check & Review"]
-    D --> E["Personal Validation"]
-    E --> F{User approves?}
-    F -->|Yes| G["Create Pull Request or Skip"]
-    F -->|No| H["Return to the relevant earlier stage"]
-    H --> A
-    G --> U["Work Item Update or Skip"]
-    U --> I["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Context Loading | — | — |
-| Authoritative Grounding | — | servers bound to `spec` |
-| Design Authoring | the `ux` role | — |
-| Check & Review | the `ux` role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-ai
-
-```mermaid
-flowchart TD
-    A["Context Loading"] --> B["Placement & Boundary Check"]
-    B --> C["Authoring"]
-    C --> D["Check & Review"]
-    D --> E["Personal Validation"]
-    E --> F{User approves?}
-    F -->|Yes| G["Create Pull Request or Skip"]
-    F -->|No| H["Return to the relevant earlier stage"]
-    H --> A
-    G --> U["Work Item Update or Skip"]
-    U --> I["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Context Loading | — | — |
-| Placement & Boundary Check | — | — |
-| Authoring | the `docs` role | — |
-| Check & Review | the `docs` role | — |
+| Drafting | the role the folder maps to — `architecture` for `.arc42/` and `.tech/`, `domain`, `ux` for `.design/`, `docs` for `.ai/` | servers bound to `spec` *(design source for `.design/`)* |
+| Check & Review | the same role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |

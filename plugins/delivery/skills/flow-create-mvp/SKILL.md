@@ -35,7 +35,7 @@ derivation when it does not.
 
 Escalate instead when the product direction itself is the open question, or when the MVP
 needs a new architectural decision or a documented target architecture first: recommend
-`flow-arc42` and ask the user.
+`flow-spec` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
@@ -52,7 +52,7 @@ architecture needs shaping.
 
 **Agents:** the `architecture` role; the `domain` role when the MVP defines a new domain rather than
 extending a documented one — vocabulary and context boundaries only, since full domain
-modeling belongs to `flow-domain`.
+modeling belongs to `flow-spec`.
 
 ## Stage 2: Implementation Planning
 

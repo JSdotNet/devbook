@@ -95,12 +95,12 @@ skipped stage reads as a decision nobody made.
 ```meta
 type: aggregate
 aliases: [flow skill, staged procedure]
-related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md"]
+related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/74-four-flows-named-for-what-changes.md"]
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
-the Personal Validation gate. Sixteen ship here, five of them one per devbook folder, and each
-owns its stage order and the tier it closes through.
+the Personal Validation gate. Twelve ship here, one of them for the five devbook folders, and
+each owns its stage order and the tier it closes through.
 
 A flow is the unit a request is routed to, so its category is the boundary that matters: a
 repository needing a different shape writes its own `flow-*`, which takes precedence for the
@@ -113,7 +113,7 @@ categories it covers, rather than configuring this one into something else.
 | A flow never leaves its session | all stages | untested |
 | A flow ends at Personal Validation and holds no other mandatory gate | tier close | untested |
 | Configuration chooses among behaviour the engine already implements and never introduces new behaviour | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| A folder flow in a repository that has not adopted the folder stops and says so | stage 1 | untested |
+| The devbook flow in a repository that has not adopted the target folder stops and says so | stage 1 | untested |
 | A flow shipped by a higher layer declares its own tier; the engine never assigns one | tier resolution | untested |
 | A flow names an extension point and never a plugin | authoring | untested |
 
@@ -127,7 +127,7 @@ aliases: [shared step, phase skill]
 A shared step several flows run identically — Update Base, Build & Test, Validation,
 Personal Validation, Create Pull Request, Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
-of restated in sixteen.
+of restated in twelve.
 
 ### Phase Tier
 

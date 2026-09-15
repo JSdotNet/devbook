@@ -170,8 +170,8 @@ and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds sixteen `flow-*` — five
-of them one per devbook folder, since
+only as the English description of what `fleet-` does. `delivery` holds twelve `flow-*` — one
+of them for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/34-flows-belong-to-delivery.md) —
 and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
 `fleet` holds three

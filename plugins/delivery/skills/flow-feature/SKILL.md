@@ -31,7 +31,7 @@ when they do not.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the request needs a new architectural decision, a new bounded context,
-or a cross-cutting redesign: recommend `flow-arc42` and ask the user.
+or a cross-cutting redesign: recommend `flow-spec` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in

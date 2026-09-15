@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The twenty-six skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The twenty-two skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-feature
@@ -115,57 +115,20 @@ Create and govern a repository before there is a project in it — README, MCP c
 instructions, branch protection, templates, governance. Creating the repository itself stays
 manual.
 
-## flow-arc42
+## flow-spec
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/flow.flow-arc42.md"]
+related: [".devbook/domain/delivery/flow.flow-spec.md"]
 ```
 
-Write or correct an architecture chapter, a decision record, or a debt record. One flow for all
-three, because they are one shape with three templates — and the escalation target when any other
+Write or correct a devbook folder — an architecture chapter, decision record, or debt record; a
+bounded context or the context map; the technology graph; design principles, tokens, and
+component guidance; the AI adoption record. One flow for the five folders, because the procedure
+is the same and only the role differs: the folder picks who drafts, and the repository's own
+instruction file for that folder says what a chapter must look like. It runs the repository's
+check and never regenerates the derived indexes, and it is the escalation target when any other
 flow discovers it needs a decision.
-
-## flow-domain
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-domain.md"]
-```
-
-Write or correct a bounded context: its model, its features or skills, its dependencies, and its
-language. It runs the repository's own check and never regenerates the derived indexes.
-
-## flow-tech
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-tech.md"]
-```
-
-Write or correct the technology graph — what is used, at what version, and how settled it is —
-grounded in package inventories where one exists and in repository analysis where none does.
-
-## flow-design
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-design.md"]
-```
-
-Write or correct design principles, tokens, and component guidance, each traced to an
-authoritative source. Wireframes, user flows, and UI review are a specialist's work, not this
-flow's.
-
-## flow-ai
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-ai.md"]
-```
-
-Record how the team works with AI, stage by stage. It records a way of working and never instructs
-one, and an adoption rating is never derived from something being installed.
 
 ## flow-fallback
 

@@ -34,7 +34,7 @@ derivation when it does not.
 
 Escalate instead when the module is really a separate deployable service, or needs a new
 architectural decision, a new bounded context, or a cross-cutting redesign: recommend
-`flow-create-service` or `flow-arc42` and ask the user.
+`flow-create-service` or `flow-spec` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
