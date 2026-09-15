@@ -168,8 +168,8 @@ producing side effects and a report.
 | `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
 | `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
 | `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
-| `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-qa-validation`. |
-| `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-qa-validation`. |
+| `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-validation`. |
+| `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-validation`. |
 | `deliver` | service | After approval | Open the change for review and update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
 | `verify` | service | After `deliver` | The specification the run built on, the governed chapters the change set touches, and the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it and what each calls for. Report-only: it edits nothing and commits nothing. Unbound: the flow-runner reaches the verdicts itself. |
 | `flow.end` | chore | Always, last | Contribute to the run summary and capture what this run learned. |
@@ -249,7 +249,7 @@ key means the engine's own choice rather than undefined.
 
 | Key | Values | Default |
 | --- | --- | --- |
-| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-qa-validation` |
+| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-validation` |
 | `qa.ceiling` | same set | `full` |
 | `validate.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
@@ -274,7 +274,7 @@ pull-request lane opens against it — because a config check that reached for t
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
-`phase-qa-validation`'s change-kind selection. The first one present wins, and
+`phase-validation`'s change-kind selection. The first one present wins, and
 `policy.qa.ceiling` caps the result however it was reached. The repository's `start` skill
 describes the application and never sets a depth. `qa.depth` may be overlaid per machine,
 `qa.ceiling` may not.

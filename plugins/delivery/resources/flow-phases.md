@@ -21,7 +21,7 @@ companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Verification, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
+| `skills/phase-build-test/SKILL.md` and `skills/phase-validation/SKILL.md` | Build & Test and Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
 | `skills/phase-personal-validation/SKILL.md` | The Personal Validation **review handoff** — starting the app, the links, the what-to-check list — in full | When the run reaches Personal Validation, and again on every revise round. The flow-runner reads it itself: the phase runs inline and is never delegated |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
@@ -139,7 +139,7 @@ default provider when nothing is bound.
 
 Code-modifying tier. Runs after Build & Test.
 
-**Defined in `skills/phase-qa-validation/SKILL.md`** — depth selection per change kind, the
+**Defined in `skills/phase-validation/SKILL.md`** — depth selection per change kind, the
 required-tooling policy, Playwright and Aspire preflight, evidence rules, repo context, and
 revalidation after requested changes all live there. What stays here is the contract around
 the phase:

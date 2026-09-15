@@ -1,5 +1,5 @@
 ---
-name: phase-qa-validation
+name: phase-validation
 description: 'Shared Validation phase for code-modifying flow-* flows. Runs after Build & Test; depth is driven by change kind (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, dependency update = startup-only, otherwise skipped). Invoked by the flow-runner agent.'
 ---
 

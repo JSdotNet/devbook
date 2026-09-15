@@ -189,7 +189,7 @@ Build every project and run the unit and end-to-end suites, failing fast on the 
 Invoked by a flow and never directly, so its definition lives in one file rather than restated in
 sixteen.
 
-## phase-qa-validation
+## phase-validation
 
 ```meta
 type: feature

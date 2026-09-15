@@ -38,7 +38,7 @@ A link to a process that is not listening is worse than no link.
   `## Healthy Startup` signals: the resources that must reach running, the health endpoints,
   the log lines that mean ready. Do not report its declared benign warnings as failures.
 - **On a repeat pass, refresh over restart** where the repository's startup mode supports it,
-  per **Revalidation After Requested Changes** in `skills/phase-qa-validation/SKILL.md`.
+  per **Revalidation After Requested Changes** in `skills/phase-validation/SKILL.md`.
   Record which one happened, and re-check the URLs — they move on a restart.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command;
   never hand back a review the person cannot perform.
@@ -89,7 +89,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Inputs
 
 - The change set, the run's scope and acceptance criteria, and the change kind.
-- The QA result and evidence from `phase-qa-validation`, when that phase ran.
+- The QA result and evidence from `phase-validation`, when that phase ran.
 - The `app.start` result — base URLs and health verdict — and the path of the repository's
   `start` skill when the flow-runner found one.
 
@@ -115,4 +115,4 @@ of it are the gate's, in `resources/flow-phases.md`.
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
 Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
-Revalidation on a repeat pass: `skills/phase-qa-validation/SKILL.md`.
+Revalidation on a repeat pass: `skills/phase-validation/SKILL.md`.

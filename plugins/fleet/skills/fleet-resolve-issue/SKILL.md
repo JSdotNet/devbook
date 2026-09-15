@@ -463,7 +463,7 @@ Contract** for the tool cadence.
   validation needs a running application and evidence paths a scheduled run cannot review —
   which is exactly what `touchesRuntimeSurface` detects, and why such a change parks instead
   of reaching a pull request. Resume the parked worktree and run `delivery`'s
-  `phase-qa-validation` there, or work the issue through `start-session-from-issue` and
+  `phase-validation` there, or work the issue through `start-session-from-issue` and
   `flow-feature` from the start.
 - **Three labels, three states.** `ready-for-pickup` means a sweep marked it and a worker has
   not started; `in-progress` means a worker holds it; `needs-validation` means the work is

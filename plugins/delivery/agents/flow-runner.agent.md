@@ -89,7 +89,7 @@ those contracts; it does not re-decide them per skill.
 9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
    `flow-phases.md`.
 10. **Invoke the phase skills rather than re-describing their logic.** `phase-build-test` and
-    `phase-qa-validation` own build, test, and QA; pass the change kind so QA depth is selected
+    `phase-validation` own build, test, and QA; pass the change kind so QA depth is selected
     automatically, together with the resolved repo context. Both are **delegated by default** —
     one `Agent` call each in the same worktree, returning a summary rather than build logs or
     browser snapshots. Running them inline is the single most expensive mistake available to a
@@ -191,7 +191,7 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 This agent delegates to whatever the stack config binds — the `implement`, `validate`,
 `app.start`, `qa.run`, `verify`, `spec`, and `deliver` service providers, and the
 `architecture`, `qa`, `domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the
-`phase-build-test`, `phase-qa-validation`, and `phase-personal-validation` skills directly —
+`phase-build-test`, `phase-validation`, and `phase-personal-validation` skills directly —
 the first two delegated to a sub-agent, the third never. It hands a run off to a fresh session
 rather than spawning one, and it is never itself spawned as a sub-agent.
 
@@ -209,5 +209,5 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 - `resources/surface-contract.md`
 - `resources/flow-model-selection.md`
 - `skills/phase-build-test/SKILL.md`
-- `skills/phase-qa-validation/SKILL.md`
+- `skills/phase-validation/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`
