@@ -255,9 +255,10 @@ related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/de
 
 The two directions between a chapter and the code that implements it, plus the check that
 says which one a chapter needs, as three skills over five kinds: `sync-specs` reads an
-implementation and writes the chapter, `propose-change` reads an agreed chapter and emits a
-change brief, then stops without touching a source or test tree, and `verify-change` reports the
-drift verdict and writes nothing. The names are OpenSpec's verbs for the same moves.
+implementation and writes the chapter, `apply-change` reads an agreed chapter and turns it into
+a change brief for the flow that implements it, touching no source or test tree itself, and
+`verify-change` reports the drift verdict and writes nothing. The names are OpenSpec's verbs for
+the same moves, one of them approximate — debt record 6 holds the exact one.
 
 Invocation semantics: command-invoked, one skill and one kind per run. The kind is the
 chapter's `type`, or the file where the folder defines none, and everything a kind needs lives

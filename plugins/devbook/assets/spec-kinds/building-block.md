@@ -1,6 +1,6 @@
 # Kind: building-block
 
-What `sync-specs`, `propose-change`, and `verify-change` need to know about the
+What `sync-specs`, `apply-change`, and `verify-change` need to know about the
 building block view that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -11,7 +11,7 @@ carries the kind.
 | Chapters | The whole view, or one `##` section of it — a single container, or one level of decomposition |
 | File | `.arc42/05-building-block-view.md` |
 | Folder rule | `devbook-arc42.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.domain/context-map.md` only for bounded-context alignment; when proposing, `09-architecture-decisions.md` for the decisions that constrain the structure |
+| Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
 | Write path | The `.arc42` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope .arc42` |
 | Extra input | Level depth: default to level 1 (containers) and level 2 (the blocks inside them that carry real responsibility) |
@@ -71,7 +71,7 @@ distinct responsibilities. Draft with `status` and no `type`. Draw the diagram
 from the edges that exist, in their direction, and note where an edge
 contradicts the intended layering.
 
-## Proposing — `propose-change`
+## Applying — `apply-change`
 
 A structural brief's invariants are almost entirely about **dependency
 direction** — which block may reference which. The acceptance checks are mostly

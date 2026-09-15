@@ -1,6 +1,6 @@
 # Kind: domain-service
 
-What `sync-specs`, `propose-change`, and `verify-change` need to know about a
+What `sync-specs`, `apply-change`, and `verify-change` need to know about a
 domain service, policy, or process manager that `assets/code-sync-protocol.md`
 does not already say. The protocol carries the resolution ladder, the evidence
 rules, the five verdicts, the status rules, the brief contract, and the report
@@ -68,7 +68,7 @@ Draft with `type: domain-service`, and say what it coordinates and whether the
 mutations share a transaction; for a process manager, where the state lives or
 that there is none.
 
-## Proposing — `propose-change`
+## Applying — `apply-change`
 
 The invocation semantics is the part of the brief that most constrains
 delivery: a scheduled service and an event-triggered policy are different work

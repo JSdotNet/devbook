@@ -1,6 +1,6 @@
 # Kind: aggregate
 
-What `sync-specs`, `propose-change`, and `verify-change` need to know about an
+What `sync-specs`, `apply-change`, and `verify-change` need to know about an
 aggregate that `assets/code-sync-protocol.md` does not already say. The protocol
 carries the resolution ladder, the evidence rules, the five verdicts, the status
 rules, the brief contract, and the report table; this file carries the kind.
@@ -144,7 +144,7 @@ the aggregate's `##` — there are no `### Entities` / `### Value Objects` /
 `### Payload`, `### Consumers`, and `### Published language rules` are structural
 sub-sections of one chapter and carry no `meta` blocks.
 
-## Proposing — `propose-change`
+## Applying — `apply-change`
 
 Apply the status gate **per chapter**. A root at `active` with a sub-chapter at
 `draft` is the common case: brief the settled parts and name the unsettled ones

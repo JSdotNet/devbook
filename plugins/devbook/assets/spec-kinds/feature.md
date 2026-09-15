@@ -1,6 +1,6 @@
 # Kind: feature
 
-What `sync-specs`, `propose-change`, and `verify-change` need to know about a
+What `sync-specs`, `apply-change`, and `verify-change` need to know about a
 feature that `assets/code-sync-protocol.md` does not already say. The protocol
 carries the resolution ladder, the evidence rules, the five verdicts, the status
 rules, the brief contract, and the report table; this file carries the kind.
@@ -10,7 +10,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature` |
 | File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `stakeholders.md` where the context has one; when proposing, every chapter in `depends-on` and every `related` `domain.md` chapter too |
+| Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `stakeholders.md` where the context has one; when applying, every chapter in `depends-on` and every `related` `domain.md` chapter too |
 | Write path | The `.domain` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope .domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
@@ -96,7 +96,7 @@ preferring the observed flow over the code's structure where they suggest
 different breakdowns. Draft with `type: feature` or `type: sub-feature`, and set
 `feature-flag` and `depends-on` only from a real key and a real ordering.
 
-## Proposing — `propose-change`
+## Applying — `apply-change`
 
 Check `depends-on` first. A feature whose prerequisites are themselves unbuilt
 cannot be briefed as one change: report the chain and let the user decide the

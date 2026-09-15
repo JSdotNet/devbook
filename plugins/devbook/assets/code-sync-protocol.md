@@ -6,12 +6,12 @@ to its running code:
 - **`sync-specs`** — something already exists in the application, the matching
   chapter is missing, thin, or stale, so read the implementation and write the
   chapter.
-- **`propose-change`** — a chapter is agreed but not built, so turn it into a
-  change brief and hand it off.
+- **`apply-change`** — a chapter is agreed but not built, so turn it into a
+  change brief and hand it to the flow that implements it.
 - **`verify-change`** — report where the two stand, and write nothing.
 
 Throughout this file and the files that load it, **capture** is what `sync-specs`
-does and **propose** is what `propose-change` does. The names carry the endpoints;
+does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
 Each skill covers five kinds — `aggregate`, `domain-service`, `feature`,
@@ -31,16 +31,16 @@ silent everywhere else.
 
 ## The two directions
 
-| | `sync-specs` | `propose-change` | `verify-change` |
+| | `sync-specs` | `apply-change` | `verify-change` |
 |---|---|---|---|
 | Starting point | Implementation exists | Chapter exists and is agreed | Both exist |
 | Missing thing | The chapter | The implementation | The knowledge of which side moved |
 | Reads | Source, tests, and the chapter as it stands | The chapter, plus code only to establish what is already there | Source, tests, and the chapter |
-| Writes | The chapter, through the folder's flow | A change brief, and nothing else | The report table, and nothing else |
-| Never | Changes source or test code | Edits source trees, test trees, or the chapter's substance | Writes a chapter or a brief |
+| Writes | The chapter, through the folder's flow | A change brief, handed to the code-side flow | The report table, and nothing else |
+| Never | Changes source or test code | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
 
 A single request often needs both directions, in sequence: `sync-specs` what is
-built, then `propose-change` what the corrected chapter now says is missing. Run
+built, then `apply-change` what the corrected chapter now says is missing. Run
 them as two passes with the chapter settled in between — never interleave them,
 or the chapter becomes both the question and the answer. `verify-change` is the
 pass that says which one a chapter needs, and it is what both of the others do
@@ -177,7 +177,7 @@ Entries go in with the drafted content, so they route through the folder's
 flow along with everything else — a capture pass does not edit a
 chapter file directly, and that includes this field.
 
-A propose pass writes no `tests` entries: the tests in its brief do not exist yet.
+An apply pass writes no `tests` entries: the tests in its brief do not exist yet.
 Its acceptance checks are what those entries will name once someone has written
 them, which is a reason to phrase each check as something a single test can
 assert.
@@ -191,8 +191,8 @@ chapter in scope. For `verify-change` the verdict is the whole result, and the
 | Verdict | Meaning | What to do |
 |---|---|---|
 | `aligned` | The chapter and the code say the same thing. | Report it and stop. No write in either direction. Say what was compared, so the pass is not repeated. |
-| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Propose: stop — there is nothing to build; hand the scope to `sync-specs`. |
-| `spec-ahead` | The chapter carries agreed content the code does not implement. | Propose: emit the change brief. Capture: stop — the chapter is not stale, it is unbuilt; hand the scope to `propose-change`. |
+| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Apply: stop — there is nothing to build; hand the scope to `sync-specs`. |
+| `spec-ahead` | The chapter carries agreed content the code does not implement. | Apply: emit the change brief and hand it to the code-side flow. Capture: stop — the chapter is not stale, it is unbuilt; hand the scope to `apply-change`. |
 | `conflict` | The chapter and the code make **incompatible** claims: a different invariant, a contradictory state transition, an event with a different meaning, a term used for two different concepts. | **Always stop and ask.** Never resolve a conflict by writing. |
 | `unresolved` | The counterpart could not be paired, or the evidence is too thin to tell which side is ahead. | Stop. Report the resolution attempts, the candidates found, and what evidence would settle it. |
 
@@ -229,7 +229,7 @@ So:
   `code-ahead` with the removal as the finding, and let the flow
   and the user decide.
 
-**Propose must not brief an unsettled chapter without confirmation.** A
+**Apply must not brief an unsettled chapter without confirmation.** A
 chapter at `draft` or `proposed` has not been agreed:
 
 - `approved` — proceed. The approval gate's rung: a person read this chapter and
@@ -247,7 +247,7 @@ shared by every folder and sits on top of each one's ladder.
 
 **No skill here writes the `approved` rung.** Capture never sets it: finding
 code is not a person approving a chapter, and the same rule that forbids
-promoting to `active` forbids this more strongly. Propose never sets it either —
+promoting to `active` forbids this more strongly. Apply never sets it either —
 it reads the rung and stops or proceeds. Only the approval gate, and the person
 answering it, writes `approved`, `approved-by`, and `approved-at`.
 
@@ -272,7 +272,7 @@ accommodate this. `devbook-tech-update` has the same relationship with the `.tec
 
 ### A brief covers both from scratch and update
 
-A propose pass is **not** limited to greenfield work. It handles
+An apply pass is **not** limited to greenfield work. It handles
 the whole range of "the chapter says something the code does not do":
 
 - **From scratch** — no counterpart exists at all. The chapter describes a
@@ -286,9 +286,9 @@ the whole range of "the chapter says something the code does not do":
 
 Those three are exactly the change categories below, and counterpart resolution
 is what picks between them: it runs before the brief is written precisely so the
-pass knows which case it is in. This is why `propose-change` reads code at all —
+pass knows which case it is in. This is why `apply-change` reads code at all —
 not to change it, but to establish what is already there, so the brief asks only
-for the delta. A propose pass that skipped that step would re-specify working
+for the delta. An apply pass that skipped that step would re-specify working
 behaviour as though it were missing.
 
 An update brief carries one thing a from-scratch brief does not: the list of
@@ -298,10 +298,11 @@ kind files call that list out as required output.
 
 ### The brief itself
 
-`propose-change` produces a **change brief** and then stops. It does not name a
-flow, does not choose an implementation approach, and does
-not touch a source or test tree. Handing the brief to whatever delivery flow the
-repository uses is the user's decision, made after reading it.
+`apply-change` produces a **change brief** and hands it to the flow that
+implements it, per **Where the code-side write goes** below. It does not choose
+an implementation approach and does not itself touch a source or test tree: the
+brief is the contract between the chapter and the flow, and the flow owns the
+how.
 
 The brief has five parts, and a change category.
 
@@ -335,6 +336,27 @@ A brief that cannot state its invariants or its acceptance checks is not ready.
 That is an `unresolved` verdict on the chapter's own completeness — report the
 gap rather than emitting a vague brief.
 
+### Where the code-side write goes
+
+The mirror of the spec-side ladder. An apply pass never edits a source or test
+tree itself; it hands the brief to whatever flow implements a change of its
+category, resolved in this order:
+
+1. **A repo-native `flow-*` skill** that covers the change category — it takes
+   precedence over anything a plugin provides.
+2. **The flow engine's own flow for the category**, when an engine is installed:
+   `flow-feature` for `new functionality` and `change to existing behaviour`,
+   `flow-bug` for `defect`. The brief is the flow's approved specification —
+   its outcomes are the requested behaviour, its acceptance checks the
+   acceptance criteria, its invariants the constraints Stage 0 would otherwise
+   derive.
+3. **Nowhere**, when no flow engine is installed: stop with the brief, which is
+   then the whole result, and say so. Which flow picks it up is the user's
+   decision, made after reading it.
+
+Name the rung that answered, once, in the report. The dependency stays one-way:
+no flow knows these skills exist, and a brief reaches a flow as ordinary input.
+
 ## Index regeneration
 
 Whenever a capture pass results in a chapter being added, renamed, or re-linked,
@@ -354,7 +376,7 @@ stale committed index, fix the source Markdown; run `devbook-check`
 for anything that does not resolve from the message alone. Never hand-edit a
 file under `_meta/`.
 
-A propose pass changes no chapter file and therefore regenerates nothing, and
+An apply pass changes no chapter file and therefore regenerates nothing, and
 neither does a verify pass.
 
 ## Report table

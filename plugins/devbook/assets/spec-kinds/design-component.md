@@ -1,6 +1,6 @@
 # Kind: design-component
 
-What `sync-specs`, `propose-change`, and `verify-change` need to know about a
+What `sync-specs`, `apply-change`, and `verify-change` need to know about a
 component guideline that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -81,7 +81,7 @@ gaps as the chapter's own section, with a comparison table where more than one
 library is in play, prescriptive and testable — token names and thresholds, not
 prose.
 
-## Proposing — `propose-change`
+## Applying — `apply-change`
 
 Component adoption is nearly always `change to existing behaviour`: something
 already renders, and the guideline asks it to render through the library and

@@ -106,27 +106,32 @@ does; how a change is carried — stages, roles, the approval gate, a pull reque
 delivery engine's, which ships one flow per folder and reads these rules from the repository.
 With `devbook` alone, a folder edit follows the folder's instruction file directly.
 
-### Skills: `sync-specs`, `propose-change`, `verify-change`
+### Skills: `sync-specs`, `apply-change`, `verify-change`
 
 Three skills between a devbook chapter and the code that implements it, named
 after the verbs [OpenSpec](https://openspec.dev/docs/skills) uses for the same
-moves. The chapter is the **spec**.
+moves — `apply-change` and `verify-change` exactly, `sync-specs` approximately,
+since OpenSpec has no skill that reads code to update a spec (debt record 6 in
+this repository's `.devbook/arc42/tdr/`). The chapter is the **spec**.
 
 - **`sync-specs`** — something exists in the application and the chapter is
   missing, thin, or stale, so read the implementation and write the chapter.
   Source and tests are the only evidence; comments, TODOs, and disabled tests
   are not. The write routes per **Where the spec-side write goes** in
   `assets/code-sync-protocol.md`.
-- **`propose-change`** — a chapter is agreed but unbuilt, so turn it into a
+- **`apply-change`** — a chapter is agreed but unbuilt, so turn it into a
   change brief (outcomes, invariants, ubiquitous language, out of scope,
-  acceptance checks) plus a change category, then stop. It never edits a source
-  or test tree, and never names a code-side flow — which delivery flow picks the
-  brief up is the user's decision, made after reading it.
+  acceptance checks) plus a change category, and hand the brief to the flow that
+  implements a change of that category, per **Where the code-side write goes**
+  in the protocol: a repo-native `flow-*` skill first, then the engine's
+  `flow-feature` or `flow-bug`, and nowhere when no engine is installed — then
+  it stops with the brief, and which flow picks it up is the user's decision.
+  It never edits a source or test tree itself.
 - **`verify-change`** — report which side moved, per chapter, and write
   nothing: the drift verdict is the whole result, and its `Action` column names
   which of the other two the verdict calls for.
 
-**`propose-change` covers both from scratch and update.** The change category
+**`apply-change` covers both from scratch and update.** The change category
 is that axis, and counterpart resolution picks between them before the brief is
 written: `new functionality` when no counterpart exists at all, `change to
 existing behaviour` when one exists and the chapter asks for more, and `defect`
@@ -199,7 +204,8 @@ building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
 The dependency on the flows is one-way. `sync-specs` names its folder's write
-path and hands over grounded input; no flow knows these skills exist.
+path and `apply-change` its category's, and both hand over grounded input; no
+flow knows these skills exist.
 
 **Trigger keywords:** `document what we built`, `capture from code`,
 `.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
@@ -324,7 +330,7 @@ for technologies that do not appear in package manifests.
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
-| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `propose-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration

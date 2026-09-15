@@ -95,7 +95,7 @@ the one capture that **runs the application**. Reading a controller tells you a 
 using the feature tells you what the product lets someone do, in what order, with what wording.
 Screenshots are report evidence and are never committed into a devbook folder.
 
-## propose-change
+## apply-change
 
 ```meta
 type: feature
@@ -103,9 +103,10 @@ related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/ad
 ```
 
 Turn an agreed but unbuilt chapter of any of the five kinds into a change brief — outcomes,
-invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, then
-stop. It never edits a source or test tree, and which flow picks the brief up is the user's
-decision, taken after reading it — no skill here names a code-side flow.
+invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, and
+hand it to the flow that implements a change of that category, resolved the way the spec-side
+write is: a repo-native flow first, then the engine's, and nowhere when no engine is installed,
+where it stops with the brief. It never edits a source or test tree itself.
 
 ### Read Code Without Changing It
 

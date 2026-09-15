@@ -1,10 +1,10 @@
 ---
-name: propose-change
-description: 'Turn an agreed devbook chapter the code does not yet satisfy into a change brief — outcomes, invariants, ubiquitous language, out of scope, acceptance checks — plus one change category (new functionality, change to existing behaviour, defect), then stop. Covers five kinds: an aggregate whole or a domain service in .domain/<context>/domain.md, a feature in features.md, the building block view in .arc42, a component guideline in .design. Reads code only to establish what already exists, so the brief asks for the delta; never edits a source or test tree, never names a delivery flow. Use when: build the aggregate we agreed, build this chapter, the chapter says X and the code does not, change brief. DO NOT USE FOR: writing a chapter from code (sync-specs), or checking drift without a brief (verify-change).'
+name: apply-change
+description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way sync-specs hands a chapter to the folder flow. Covers five kinds: an aggregate whole or a domain service in .domain/<context>/domain.md, a feature in features.md, the building block view in .arc42, a component guideline in .design. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (sync-specs), or checking drift without changing anything (verify-change).'
 disable-model-invocation: true
 ---
 
-# propose-change
+# apply-change
 
 Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`, then the folder rule that file names. Nothing in them is
@@ -44,10 +44,13 @@ context where the kind has one, and the repository root.
    Quote every invariant row with its `Enforced at`; name an `open` row as a
    decision, never as work. An update brief lists where the current behaviour
    lives.
-7. Emit the brief and stop. No source file opened for editing, no test created,
-   no flow named — which flow picks the brief up is the user's decision.
+7. Hand the brief to the code-side flow, per **Where the code-side write
+   goes** in the protocol: a repo-native flow first, then the engine's flow for
+   the category, and no flow at all when no engine is installed — then stop
+   with the brief, which is the whole result. Name the rung that answered,
+   once. This skill opens no source file for editing and creates no test.
 8. Close with the protocol's report table, one row per chapter in scope, with
-   the brief attached.
+   the brief attached and the flow it went to.
 
 ## Do not
 
@@ -55,4 +58,5 @@ context where the kind has one, and the repository root.
 - Do not carry an `annotation` fence into the brief: an open question is a
   reason to stop at the gate, not a line item to implement.
 - Do not summarize invariants by reference, or drop a row's `Enforced at`.
-- Do not choose a representation, persistence, dispatch, layout, or library.
+- Do not choose a representation, persistence, dispatch, layout, or library —
+  the brief states what must be true, and the flow decides how.

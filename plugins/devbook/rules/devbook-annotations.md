@@ -99,7 +99,7 @@ before, so the discipline is explicit, the same way `_meta/` has one:
 - A reader loading a chapter **for context skips every annotation fence.**
 - A reader working **in review mode** — a review skill, an inbox, the approval
   gate — reads them, and reads nothing else in the chapter as instruction.
-- `sync-specs` never writes one. `propose-change` never carries one into
+- `sync-specs` never writes one. `apply-change` never carries one into
   a change brief. An open question is a reason to stop at the gate, not a line
   item to implement.
 
