@@ -78,7 +78,11 @@ All four live in `.devbook/config.json`:
 
 Copy `resources/config-template.json` and validate with
 `node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
-never become a silently absent setting. A point left out of `delivery.mcp` takes the engine
+never become a silently absent setting. The checker also merges the overlays a machine keeps
+over the committed file — this checkout's gitignored `.devbook/config.local.json`, and the
+user's own under `$XDG_CONFIG_HOME/devbook` (`%APPDATA%\devbook`, `~/.config/devbook`) for
+every repository and for this one's `id` — per *The overlays* in
+`resources/surface-contract.md`. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
 `resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
 `devbook-config:setup` can copy them into a repository that declares no server yet.
@@ -140,7 +144,7 @@ seed changes who runs capture, never whether it runs.
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |
 | `resources/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
-| `resources/config.schema.json` | The four engine-owned keys, as a schema |
+| `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |

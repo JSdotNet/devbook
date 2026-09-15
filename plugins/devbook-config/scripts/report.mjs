@@ -368,14 +368,34 @@ function buildRepository(repoRoot) {
         return { folder, layout: null, path: null };
     });
 
-    const overlayPath = join(repoRoot, '.devbook', 'config.local.json');
-    const overlay = load('local overlay', overlayPath);
+    // The three overlay layers the delivery checker merges, outermost first. The path rule is
+    // the checker's (plugins/delivery/tools/stack-config/check.mjs) and is restated here only
+    // because this script reports and never imports across plugins.
+    const env = process.env;
+    const userDir = env.XDG_CONFIG_HOME
+        ? join(env.XDG_CONFIG_HOME, 'devbook')
+        : process.platform === 'win32' && env.APPDATA
+          ? join(env.APPDATA, 'devbook')
+          : join(homedir(), '.config', 'devbook');
+    const id = typeof config?.id === 'string' ? config.id : null;
+    const overlays = [
+        { scope: 'user', path: join(userDir, 'config.local.json') },
+        ...(id ? [{ scope: 'repository', path: join(userDir, 'repos', id, 'config.local.json') }] : []),
+        { scope: 'checkout', path: join(repoRoot, '.devbook', 'config.local.json') },
+    ]
+        .map((layer) => ({ ...layer, overlay: load(`${layer.scope} overlay`, layer.path) }))
+        .filter((layer) => layer.overlay)
+        .map(({ scope, path: overlayPath, overlay }) => ({
+            scope,
+            path: overlayPath,
+            keys: ENGINE_KEYS.filter((key) => key in overlay),
+        }));
 
     return {
         path,
         legacyPath: legacy,
-        overlayPath: overlay ? overlayPath : null,
-        overlayKeys: overlay ? ENGINE_KEYS.filter((key) => key in overlay) : null,
+        id,
+        overlays,
         present: Boolean(config),
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
@@ -550,8 +570,18 @@ function render(model) {
         out.push(`\`${repo.legacyPath}\` is still present. The stack config moved to \`.devbook/config.json\`; nothing reads the old path any more, so move the file before anything else.`);
         out.push('');
     }
-    if (repo.overlayPath) {
-        out.push(`\`${repo.overlayPath}\` is present and overlays ${repo.overlayKeys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key'}. It is gitignored and machine-scope, so what it says is true of this checkout and of nobody else's - read the merged values, not the committed file alone.`);
+    for (const layer of repo.overlays) {
+        const touches = layer.keys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key';
+        const scope = {
+            user: 'true of this user in every repository',
+            repository: `true of this user in the repository whose id is \`${repo.id}\``,
+            checkout: "true of this checkout and of nobody else's",
+        }[layer.scope];
+        out.push(`\`${layer.path}\` is present (${layer.scope} overlay) and overlays ${touches}. It is never committed, so what it says is ${scope} - read the merged values, not the committed file alone.`);
+        out.push('');
+    }
+    if (repo.present && !repo.id) {
+        out.push('`.devbook/config.json` carries no `id`, so no per-repository overlay is looked up for it. Add one - lowercase, digits, hyphens - to let a machine keep settings for this repository outside every clone of it.');
         out.push('');
     }
     if (!repo.present) {

@@ -2,9 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/JSdotNet/devbook/plugins/delivery/resources/config.schema.json",
   "title": "config.json — delivery-owned keys",
-  "description": "The four top-level keys the delivery engine owns in .devbook/config.json. Other components own their own entry under `components` and are not described here.",
+  "description": "The four top-level keys the delivery engine owns in .devbook/config.json — bindings, extensions, policy, gates — and `id`, which names the repository so a machine can find its overlay for it. Other components own their own entry under `components` and are not described here.",
   "type": "object",
   "properties": {
+    "id": {
+      "title": "a repository id — lowercase letters, digits, and single hyphens",
+      "description": "Names this repository across every clone and worktree of it. A machine keeps its own overlay for this repository under repos/<id>/ in its devbook config directory, so the key must be a folder name; it configures nothing else. Absent, no per-repository machine overlay is looked up.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
     "bindings": {
       "type": "object",
       "additionalProperties": false,

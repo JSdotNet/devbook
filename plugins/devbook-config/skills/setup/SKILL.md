@@ -32,16 +32,20 @@ work this skill did not do.
 3. **Write the engine keys.** Start from the delivery plugin's
    `resources/config-template.json` — take its checkout root from the report's
    catalog line, or the plugin's `installPath` from `--json` — and keep only the keys step
-   2 chose. Read `resources/surface-contract.md` in that same plugin for
-   what each point and gate means. Never put a model or a secret in this file.
+   2 chose. Set `id` to a name for the repository — lowercase, digits, hyphens; the
+   repository name is usually right — and never rename it after: it is what a machine
+   keys its own overlay for this repository on. Read `resources/surface-contract.md` in
+   that same plugin for what each point and gate means. Never put a model or a secret in
+   this file.
 
 4. **Validate.** Run that plugin's `tools/stack-config/check.mjs` against the file. An
    unknown key is an error, not a warning: a typo must never become a silently absent
    setting. Fix and re-run until it exits `0`.
 
-   Write no `.devbook/config.local.json` here. The overlay is gitignored and machine-scope,
-   so it is nobody's to create on somebody else's behalf; mention that it exists, and that
-   `resources/config.local-template.json` in the delivery plugin is where it starts.
+   Write no overlay here — not `.devbook/config.local.json`, and not the user-scope copies
+   under the devbook config directory. An overlay is machine-scope, so it is nobody's to
+   create on somebody else's behalf; mention that the three exist, and that
+   `resources/config.local-template.json` in the delivery plugin is where each starts.
 
 5. **Declare the default MCP servers.** Every point left absent in step 2 takes the engine
    default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
@@ -71,7 +75,7 @@ forward — version drift, migrations, the fan-out across components — belongs
 ## Do not
 
 - Do not write, edit, or remove a `components.<name>` key. It is not yours.
-- Do not write the local overlay. It is gitignored and belongs to whoever runs here.
+- Do not write an overlay, at any of its three layers. It belongs to whoever runs here.
 - Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
   rename, or reshape a server somebody declared.
 - Do not invent a policy switch, an extension point, or a gate purpose. All three sets are

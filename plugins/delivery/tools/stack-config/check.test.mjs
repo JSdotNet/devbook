@@ -4,7 +4,13 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { checkLocalOverlay, checkStackConfig, mergeStackConfig } from './check.mjs';
+import {
+    checkLocalOverlay,
+    checkStackConfig,
+    mergeStackConfig,
+    overlayPaths,
+    userConfigDir,
+} from './check.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const schema = JSON.parse(
@@ -35,6 +41,15 @@ test('a stray top-level key is caught even when everything owned is valid', () =
 
 test('a JSON annotation belongs to nobody and is neither owned nor unknown', () => {
     assert.deepEqual(check({ $schema: './config.schema.json', $comment: 'ours' }), []);
+});
+
+test('id is a folder name: lowercase, digits, single hyphens', () => {
+    assert.deepEqual(check({ id: 'jsdotnet-devbook' }), []);
+    assert.deepEqual(check({ id: 'app2' }), []);
+    for (const bad of ['JSdotNet/devbook', 'My Repo', '-lead', 'trail-', 'a--b', '']) {
+        assert.ok(check({ id: bad }).length, bad);
+    }
+    assert.match(check({ id: 'My Repo' })[0], /is not a repository id/);
 });
 
 test('the shipped template validates as it stands', () => {
@@ -224,6 +239,12 @@ test('the overlay never carries a component stamp', () => {
     assert.match(errors[0], /repo-scope/);
 });
 
+test('the overlay never carries an id — the id is what found it', () => {
+    const errors = checkLocalOverlay({ id: 'other' });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /found this overlay/);
+});
+
 test('the overlay may not touch what the repository produces', () => {
     for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation']) {
         const errors = checkLocalOverlay({ policy: { [key]: key === 'pr.required' ? false : 'full' } });
@@ -247,4 +268,68 @@ test('an overlay is still schema-checked, so a typo in it is rejected by name', 
     const errors = check({ policy: { 'qa.dpeth': 'full' } });
     assert.equal(errors.length, 1);
     assert.match(errors[0], /unknown key "qa.dpeth"/);
+});
+
+// Where the overlays are found — three layers, outermost first, resolved from the
+// committed id and the user's config directory rather than from the checkout alone.
+
+const unixHome = { env: {}, platform: 'linux', home: '/home/me' };
+
+test('XDG_CONFIG_HOME wins on every platform when it is set', () => {
+    for (const platform of ['linux', 'darwin', 'win32']) {
+        const dir = userConfigDir({ env: { XDG_CONFIG_HOME: '/xdg', APPDATA: 'C:\\AppData' }, platform, home: '/h' });
+        assert.equal(dir, join('/xdg', 'devbook'), platform);
+    }
+});
+
+test('without it, Windows uses APPDATA and everything else ~/.config', () => {
+    assert.equal(
+        userConfigDir({ env: { APPDATA: 'C:\\Users\\me\\AppData\\Roaming' }, platform: 'win32', home: 'C:\\Users\\me' }),
+        join('C:\\Users\\me\\AppData\\Roaming', 'devbook'),
+    );
+    assert.equal(userConfigDir(unixHome), join('/home/me', '.config', 'devbook'));
+});
+
+test('three layers, outermost first, when the config carries an id', () => {
+    const layers = overlayPaths('/repo/.devbook/config.json', 'my-repo', unixHome);
+    assert.deepEqual(
+        layers.map((l) => l.scope),
+        ['user', 'repository', 'checkout'],
+    );
+    assert.equal(layers[0].path, join('/home/me/.config/devbook', 'config.local.json'));
+    assert.equal(layers[1].path, join('/home/me/.config/devbook', 'repos', 'my-repo', 'config.local.json'));
+    assert.equal(layers[2].path, join('/repo/.devbook', 'config.local.json'));
+});
+
+test('no id, no repository layer — a machine cannot key on a name the repo never chose', () => {
+    const layers = overlayPaths('/repo/.devbook/config.json', null, unixHome);
+    assert.deepEqual(
+        layers.map((l) => l.scope),
+        ['user', 'checkout'],
+    );
+});
+
+test('the checkout layer is found beside the config, whatever the config is called', () => {
+    const [, , checkout] = overlayPaths('/x/stack.json', 'r', unixHome);
+    assert.equal(checkout.path, join('/x', 'stack.local.json'));
+});
+
+test('layers merge in order: the later wins per key, and every layer keeps its gates', () => {
+    const base = {
+        policy: { 'qa.depth': 'full', 'verify.retryBudget': 2 },
+        gates: [{ at: 'spec', when: 'after', purpose: 'approval' }],
+    };
+    const user = { policy: { 'verify.retryBudget': 0 }, gates: [] };
+    const repo = {
+        policy: { 'qa.depth': 'targeted' },
+        gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
+    };
+    const checkout = { policy: { 'qa.depth': 'startup-only' } };
+
+    const merged = [user, repo, checkout].reduce(mergeStackConfig, base);
+    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 });
+    assert.deepEqual(
+        merged.gates.map((g) => g.at),
+        ['spec', 'implement'],
+    );
 });

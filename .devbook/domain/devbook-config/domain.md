@@ -27,7 +27,7 @@ related: [".devbook/domain/devbook-config/domain.md#report"]
 
 What is on disk, read and nothing else: the catalog in the working tree and in the host's clone,
 the host's installed-plugin state, three settings layers merged nearest-last, the stack config
-and any machine overlay, the devbook folders in both layouts, and the `skills/` folders of the
+and every machine overlay layer, the devbook folders in both layouts, and the `skills/` folders of the
 engine and the schedule plugin.
 
 It is the aggregate because a fact here is only usable with its source attached. "Already latest"
@@ -110,13 +110,17 @@ also why `devbook:install` did not move here.
 
 ```meta
 type: value-object
+related: [".devbook/arc42/adr/70-the-overlay-has-three-layers-keyed-by-a-committed-id.md"]
 ```
 
-A per-checkout overlay merged over the committed file, holding what is true of this machine only.
-It may add a gate and may never remove one — the same asymmetry the engine holds for
-configuration, applied one layer down.
+An overlay merged over the committed file, holding what is true of this machine only. Three
+layers, outermost first: the user's for every repository, the user's for the repository whose
+committed `id` names it, and the checkout's own gitignored file. The first two live under the
+user's devbook config directory and survive a fresh worktree; the last does not. Each may add
+a gate and may never remove one — the same asymmetry the engine holds for configuration,
+applied one layer down, at every layer — and none may carry the `id` that found it.
 
-It is gitignored and absent by default, and gitignored is not private: nothing secret goes in it.
+Every layer is absent by default, and none is private: nothing secret goes in any of them.
 
 ## Setup
 
