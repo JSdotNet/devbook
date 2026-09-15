@@ -70,7 +70,7 @@ test('the worked example from the surface contract validates', () => {
                 'data.prepare': [{ run: 'repo:seed-test-data', 'on-failure': 'required' }],
                 'app.start': { provider: 'your-qa-plugin:qa', host: 'aspire' },
             },
-            policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2, 'pr.base': 'main' },
+            policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2, 'pr.base': 'main' },
             gates: [
                 {
                     at: 'spec',
@@ -173,10 +173,10 @@ test('no model key exists anywhere in the engine-owned config', () => {
 
 test('the overlay wins key by key and leaves its siblings standing', () => {
     const merged = mergeStackConfig(
-        { policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2 } },
+        { policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2 } },
         { policy: { 'qa.depth': 'startup-only' } },
     );
-    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 2 });
+    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'validate.retryBudget': 2 });
 });
 
 test('the overlay merges into a nested binding without flattening its neighbours', () => {
@@ -235,7 +235,7 @@ test('the overlay may not touch what the repository produces', () => {
 test('an ordinary overlay is refused nothing', () => {
     assert.deepEqual(
         checkLocalOverlay({
-            policy: { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 },
+            policy: { 'qa.depth': 'startup-only', 'validate.retryBudget': 0 },
             bindings: { 'delivery.roles': { qa: 'my-local-qa' } },
             gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
         }),

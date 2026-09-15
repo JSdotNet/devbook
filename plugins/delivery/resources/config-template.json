@@ -20,7 +20,7 @@
     "session.start": ["devbook:devbook-check"],
     "spec": null,
     "implement": null,
-    "verify": null,
+    "validate": null,
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
     "app.start": null,
     "qa.run": null,
@@ -30,7 +30,7 @@
   "policy": {
     "qa.depth": "targeted",
     "qa.ceiling": "full",
-    "verify.retryBudget": 2,
+    "validate.retryBudget": 2,
     "gate.reviseBudget": 3,
     "gate.personalValidation": "required",
     "commit.at": "gate",

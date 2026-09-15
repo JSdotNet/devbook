@@ -46,7 +46,7 @@ runner and named by no skill.
 - **A thin request is the normal case.** Scope Discovery derives what is missing rather than
   refusing the run for lacking it — the flow that only works on a well-specified request is the
   flow nobody reaches.
-- `Implementation` and `Build & Test` are the `implement` and `verify` services, and their loop is
+- `Implementation` and `Build & Test` are the `implement` and `validate` services, and their loop is
   the only cycle here. It is bounded by the retry budget rather than by the provider.
 - QA Validation runs at full depth with captured evidence, because new functionality is the change
   kind that earns it.

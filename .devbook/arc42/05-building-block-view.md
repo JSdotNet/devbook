@@ -273,7 +273,7 @@ repository names the plugin that fills it: a role in `bindings["delivery.roles"]
 | `product`, `security` | role | Nothing here fills them, and nothing did. Both are `null` in the stack config template, which the vocabulary distinguishes from absent: deliberately unbound |
 | `spec` | service | The specification the rest of a flow builds on. Unbound, the flow-runner writes it inline |
 | `implement` | service | A change set and what was tested |
-| `verify` | service | Build and suite results. Default provider: `phase-build-test` |
+| `validate` | service | Build and suite results. Default provider: `phase-build-test` |
 | `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-qa-validation`. `app.start` is normally filled by the seeded `repo:start`, and the evidence rules hold from `capture-contract.md` whichever provider answers |
 
 A missing provider costs capability, not a load. `delivery` and `devbook-flows` used to carry
@@ -286,7 +286,7 @@ and the plugin is whatever is installed in it; binding the key to its current oc
 make the key un-rebindable, which is the one thing a binding must stay.
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
-verification, so it binds as the `implement` and `verify` services instead — commonly to one
+validation, so it binds as the `implement` and `validate` services instead — commonly to one
 provider, which is why model selection resolves those two per stage rather than per provider.
 
 Nothing here holds flow control either, and that stays true now that no specialist ships from

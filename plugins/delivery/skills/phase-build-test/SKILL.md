@@ -73,7 +73,7 @@ error that identifies it, not with the surrounding log.
 
 ## Agents
 
-- The provider bound to the `verify` service, invoked as a sub-agent per **Run This Phase In
+- The provider bound to the `validate` service, invoked as a sub-agent per **Run This Phase In
   A Sub-Agent** above. Unbound, this phase is the default provider and runs the builds and
   suites itself. Continue without a separate approval prompt before this phase.
 

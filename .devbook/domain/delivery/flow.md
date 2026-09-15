@@ -22,9 +22,9 @@ flowchart TD
     spec --> specGate{"optional gate"}
     specGate -->|revise| spec
     specGate -->|approve| implement["implement · service"]
-    implement --> verify["verify · service"]
-    verify -->|"failing, within retry budget"| implement
-    verify -->|green| dataPrepare(["data.prepare · chore"])
+    implement --> validate["validate · service"]
+    validate -->|"failing, within retry budget"| implement
+    validate -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
     qaRun --> gate{"Personal Validation · mandatory"}
@@ -42,7 +42,7 @@ flowchart TD
   step a provider performs on its own behalf. What the person is *shown* there — the running
   app, the links, the what-to-check list — is a phase skill and repeats on every revise round;
   the decision itself is not, and cannot be configured away.
-- **`implement` and `verify` are the only cycle**, bounded by the retry budget rather than by
+- **`implement` and `validate` are the only cycle**, bounded by the retry budget rather than by
   the providers — which is why the two commonly bind to one provider and still resolve their
   model per stage.
 - **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline

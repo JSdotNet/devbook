@@ -45,7 +45,7 @@ in another context.
 | One item per run, and never a fan-out | flow entry | untested |
 | A run belongs to one session; a resumed run reattaches to the same run rather than opening a second | `start_run()` | untested |
 | Every tier opens with Update Base, prepended by the runner and named by no skill | stage sequencing | untested |
-| `implement` and `verify` are the only cycle, bounded by `verify.retryBudget` | `verify()` | untested |
+| `implement` and `validate` are the only cycle, bounded by `validate.retryBudget` | `validate()` | untested |
 | Personal Validation is reached before `deliver`, exactly once, and never inside it | gate evaluation | untested |
 | A chore contributes side effects and a report and never rewrites a stage's result | chore invocation | untested |
 | A stage repeated after a revise decision is recorded as repeated, not as one long stage | `update_stage()` | untested |
@@ -175,7 +175,7 @@ may never change an outcome.
 type: enum
 ```
 
-`service` or `chore`. `spec`, `implement`, `verify`, `app.start`, `qa.run`, and `deliver` are
+`service` or `chore`. `spec`, `implement`, `validate`, `app.start`, `qa.run`, and `deliver` are
 services; `session.start`, `flow.start`, `data.prepare`, `docs.update`, and `flow.end` are
 chores. Nothing is both, and no point changes kind — a chore promoted to a service would be a
 provider gaining the authority to change an outcome without anybody re-reading the flow.
@@ -265,7 +265,7 @@ vocabulary distinguishes from a key nobody wrote.
 type: value-object
 ```
 
-One member of a closed set: QA depth and its ceiling, the verify retry budget, the gate revise
+One member of a closed set: QA depth and its ceiling, the validate retry budget, the gate revise
 budget, whether the flow commits at each handback, whether a pull request is required. Closed
 because an open one would be a stage definition wearing a shorter name.
 

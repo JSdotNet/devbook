@@ -257,7 +257,7 @@ A point is one of two kinds, and the difference is authority, not cardinality:
 | Service | Exactly one provider | A result the flow acts on | Yes — that is the point |
 | Chore | Zero or more, in declared order | Side effects and a report | Never |
 
-`spec`, `implement`, `verify`, `app.start`, `qa.run`, and `deliver` are services.
+`spec`, `implement`, `validate`, `app.start`, `qa.run`, and `deliver` are services.
 `session.start`, `flow.start`, `data.prepare`, `docs.update`, and `flow.end` are chores. A
 chore may declare itself required and stop the run when it fails; it still may not rewrite a
 stage's result or stand in for a gate.
@@ -363,7 +363,7 @@ no session spawning, no delegation — because all four belong to whatever consu
 [the decision](../../arc42/adr/19-a-role-plugin-holds-no-flow-control.md).
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
-verification, so it binds as the `implement` and `verify` services instead.
+validation, so it binds as the `implement` and `validate` services instead.
 
 ### Tracker
 

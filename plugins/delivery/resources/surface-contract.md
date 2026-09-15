@@ -53,7 +53,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     "session.start": [ "devbook:devbook-check" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
-    "verify":        "your-coding-plugin:coding",
+    "validate":        "your-coding-plugin:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
     "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
     "qa.run":        { "provider": "your-qa-plugin:qa" },
@@ -62,7 +62,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   },
   "policy": {
     "qa.depth":               "targeted",
-    "verify.retryBudget":     2,
+    "validate.retryBudget":     2,
     "gate.reviseBudget":      3,
     "commit.at":              "gate",
     "pr.required":            true,
@@ -147,8 +147,8 @@ producing side effects and a report.
 | `session.start` | chore | Once, before the first flow | Load context, check environment and tooling, warn early. Distinct from the host's own session-start hook, which is settings-level and knows nothing about flows. |
 | `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it. |
 | `spec` | service | Specification and architecture intake | Scope and acceptance criteria → the specification the rest of the flow builds on. Unbound: the flow-runner writes it inline. The highest-value gate attaches here. |
-| `implement` | service | The implementation stage | An area plus a change brief, or a `verify` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
-| `verify` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
+| `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
+| `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
 | `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
 | `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-qa-validation`. |
 | `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-qa-validation`. |
@@ -196,7 +196,7 @@ below, not a second mechanism.
 | `approval` | after `spec` | The specification itself, rendered. The one most repositories should turn on. |
 | `resource` | before `app.start` | Just the question — "only one runtime instance runs here, OK to start?" |
 | `cost` | before `qa.run` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
-| `risk` | after `verify` | What the change set actually touched — migrations, auth, a public contract. |
+| `risk` | after `validate` | What the change set actually touched — migrations, auth, a public contract. |
 | `handoff` | Personal Validation | The code review, the QA evidence, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
 
 ### Three outcomes, not two
@@ -233,7 +233,7 @@ key means the engine's own choice rather than undefined.
 | --- | --- | --- |
 | `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-qa-validation` |
 | `qa.ceiling` | same set | `full` |
-| `verify.retryBudget` | integer ≥ 0 | `2` |
+| `validate.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
 | `commit.at` | `gate`, `manual` | `manual` |
@@ -291,7 +291,7 @@ dependencies: one missing specialist must not demote every skill that names it.
   `resources/mcp-template.json` and `resources/mcp-vscode-template.json` declare the
   defaults in each host's shape for a repository to copy.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
-  verification, so it binds as the `implement` and `verify` services above rather than as an
+  validation, so it binds as the `implement` and `validate` services above rather than as an
   advisor a stage delegates a question to.
 
 ## Host Slots

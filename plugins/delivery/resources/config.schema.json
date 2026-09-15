@@ -57,7 +57,7 @@
             "flow.start": { "$ref": "#/$defs/mcpServers" },
             "spec": { "$ref": "#/$defs/mcpServers" },
             "implement": { "$ref": "#/$defs/mcpServers" },
-            "verify": { "$ref": "#/$defs/mcpServers" },
+            "validate": { "$ref": "#/$defs/mcpServers" },
             "data.prepare": { "$ref": "#/$defs/mcpServers" },
             "app.start": { "$ref": "#/$defs/mcpServers" },
             "qa.run": { "$ref": "#/$defs/mcpServers" },
@@ -77,7 +77,7 @@
         "flow.start": { "$ref": "#/$defs/chorePoint" },
         "spec": { "$ref": "#/$defs/servicePoint" },
         "implement": { "$ref": "#/$defs/servicePoint" },
-        "verify": { "$ref": "#/$defs/servicePoint" },
+        "validate": { "$ref": "#/$defs/servicePoint" },
         "data.prepare": { "$ref": "#/$defs/chorePoint" },
         "app.start": { "$ref": "#/$defs/servicePoint" },
         "qa.run": { "$ref": "#/$defs/servicePoint" },
@@ -93,7 +93,7 @@
       "properties": {
         "qa.depth": { "enum": ["full", "targeted", "startup-only", "skipped"] },
         "qa.ceiling": { "enum": ["full", "targeted", "startup-only", "skipped"] },
-        "verify.retryBudget": { "type": "integer", "minimum": 0 },
+        "validate.retryBudget": { "type": "integer", "minimum": 0 },
         "gate.reviseBudget": { "type": "integer", "minimum": 0 },
         "gate.personalValidation": { "const": "required" },
         "commit.at": {
@@ -123,7 +123,7 @@
         "properties": {
           "at": {
             "enum": [
-              "session.start", "flow.start", "spec", "implement", "verify",
+              "session.start", "flow.start", "spec", "implement", "validate",
               "data.prepare", "app.start", "qa.run", "deliver", "docs.update", "flow.end"
             ]
           },

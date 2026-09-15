@@ -128,7 +128,7 @@ the unit suite, run the automated end-to-end suite, and never continue to QA Val
 Personal Validation on a red build or a failing test. When all three are green, continue to
 QA Validation without a confirmation prompt.
 
-This phase is the `verify` service point. When a repository binds `verify`, that provider
+This phase is the `validate` service point. When a repository binds `validate`, that provider
 supplies the build and suite run and returns the failing targets; the phase skill is the
 default provider when nothing is bound.
 
@@ -184,8 +184,8 @@ it can approve, skip, or soften the gate below.
 ### The gate
 
 The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
-`verify` with purpose `handoff`. A repository may declare further gates **in front of** this
-one — `{ "at": "verify", "when": "after", "purpose": "risk" }` is the usual shape — and that is
+`validate` with purpose `handoff`. A repository may declare further gates **in front of** this
+one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that is
 the whole of what configuration may change here.
 
 - **Do not delegate to an agent and do not auto-approve.** Wait for the user's explicit

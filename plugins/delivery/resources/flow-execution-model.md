@@ -61,7 +61,7 @@ stage uses the servers bound to the point it serves:
 | --- | --- |
 | Scope Discovery; every intake, retrieval, drafting, and review stage of a documentation/config flow | `spec` |
 | Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
-| Build & Test | `verify` |
+| Build & Test | `validate` |
 | QA Validation | `app.start`, `qa.run` |
 | Create Pull Request, Work Item Update | `deliver` |
 | Documentation Update | `docs.update` |
@@ -69,7 +69,7 @@ stage uses the servers bound to the point it serves:
 
 Defaults, for a point the repository leaves absent:
 
-- `implement` and `verify`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
+- `implement` and `validate`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
   lookups tied to the stack being changed — never a broad research pass.
 - `app.start` and `qa.run`: `aspire` and `playwright`, under the required-tooling rule in
   `flow-phases.md`; not used when the depth is startup-only or the change has no

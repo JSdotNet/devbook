@@ -187,7 +187,7 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 
 ## Handoffs
 
-This agent delegates to whatever the stack config binds — the `implement`, `verify`,
+This agent delegates to whatever the stack config binds — the `implement`, `validate`,
 `app.start`, `qa.run`, `spec`, and `deliver` service providers, and the `architecture`, `qa`,
 `domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test`,
 `phase-qa-validation`, and `phase-personal-validation` skills directly — the first two

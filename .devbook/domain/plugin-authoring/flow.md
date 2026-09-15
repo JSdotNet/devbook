@@ -37,7 +37,7 @@ flowchart LR
   other, which is what makes authoring in a host the practice recorded in
   [.devbook/ai/01-author.md](../../ai/01-author.md#claude-code-as-authoring-host).
 - The loop through `check` is the whole verification story today. Whether a skill *triggers* is
-  not on this path — see [.devbook/ai/03-verify.md](../../ai/03-verify.md#plugin-evaluation).
+  not on this path — see [.devbook/ai/03-validate.md](../../ai/03-validate.md#plugin-evaluation).
 
 ## Materializing a Component
 
@@ -81,9 +81,9 @@ flowchart TD
     stage0 --> flowStart(["flow.start · chore"])
     flowStart --> spec["spec · service"]
     spec --> implement["implement · service"]
-    implement --> verify["verify · service"]
-    verify -->|failing| implement
-    verify -->|green| dataPrepare(["data.prepare · chore"])
+    implement --> validate["validate · service"]
+    validate -->|failing| implement
+    validate -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
     qaRun --> gate{"Personal Validation"}
@@ -97,13 +97,13 @@ flowchart TD
 - **The gate is the only place a run stops for a human, and configuration may only add more.**
   It sits before `deliver` and never inside it, so approval is a recorded decision rather than
   a step a provider can perform on its own behalf.
-- `implement` and `verify` are the only cycle. It is bounded by the flow, not by the providers,
+- `implement` and `validate` are the only cycle. It is bounded by the flow, not by the providers,
   which is why the two commonly bind to one provider and resolve their model per stage.
 - **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline
   and `deliver` produces file artifacts only; the run continues and says so once.
 - Whether the surface renders any of this is resolved from the live tool list, and none
   answering is normal — the file artifacts are written either way.
-- The documentation tier of flows runs the same picture without `implement`, `verify`,
+- The documentation tier of flows runs the same picture without `implement`, `validate`,
   `data.prepare`, `app.start`, and `qa.run`: gate, then `deliver`. The tier a bridge plugin's
   flow declares is its own, because the engine may not name a skill in a layer above it.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and

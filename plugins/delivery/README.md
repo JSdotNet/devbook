@@ -44,7 +44,7 @@ Three things, and only three, and none of them is a stage definition.
 
 **Extension points.** The point set is closed and declared by the engine. Six are
 **services** — exactly one provider, returning a result the flow acts on: `spec`,
-`implement`, `verify`, `app.start`, `qa.run`, `deliver`. Five are **chores** — zero or more,
+`implement`, `validate`, `app.start`, `qa.run`, `deliver`. Five are **chores** — zero or more,
 in declared order, contributing side effects and a report and never changing a decision:
 `session.start`, `flow.start`, `data.prepare`, `docs.update`, `flow.end`.
 
@@ -55,7 +55,7 @@ hand one to a plugin. Personal Validation is the mandatory instance of that patt
 separate mechanism. `spec → gate → implement` is the highest-value one to turn on.
 
 **Bindings and policy.** Which plugin fills each role, which tracker the repository uses,
-which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
+which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the validate retry budget, the gate revise
 budget, whether the flow commits its change set at each handback, whether a pull request is
 required.
 
@@ -68,7 +68,7 @@ All four live in `.devbook/config.json`:
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }]
   },
   "gates": [{ "at": "spec", "when": "after", "purpose": "approval", "show": "artifact" }],
-  "policy": { "qa.depth": "targeted", "verify.retryBudget": 2 },
+  "policy": { "qa.depth": "targeted", "validate.retryBudget": 2 },
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.mcp": { "spec": ["your-guidelines-server"] }
