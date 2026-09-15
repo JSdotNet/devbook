@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/domain/plugin-authoring/domain.md#layer"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/74-four-flows-named-for-what-changes.md", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/domain/plugin-authoring/domain.md#layer"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -47,6 +47,15 @@ decision argued for survives — three implementations of one operation set — 
 devbook supplies the folder does not. What the repair does not touch is the coupling this
 record is about: the five folder flows still name devbook's paths, and no check spans the two
 plugins, so the next payload-path rename still lands the way this one did.
+
+**2026-09-15. The first option is taken, by way of a fold.** The five folder flows are one,
+`flow-spec`, under [record 74](../adr/74-four-flows-named-for-what-changes.md). It runs the check
+the repository's own `AGENTS.md` devbook section names rather than devbook's payload path, and
+carries none of the folder-specific rules the five restated — the keyboard rule, the edge check,
+the alias check, the vendor-and-version test, the authoritative-source stage are each in the
+instruction file that owns them. What remains of the coupling is the folder names the flow is
+called after and the `meta` block it expects every chapter to carry; still undeclared, still
+unchecked across the two plugins, and now one skill wide instead of five.
 
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
 [the surface contract](../../../plugins/delivery/resources/surface-contract.md) says: the engine

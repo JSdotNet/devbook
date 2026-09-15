@@ -76,12 +76,13 @@ whose **Typical Stages** names it.
 
 | Category | Typical Stages | Roles & services | Model | Rationale |
 | --- | --- | --- | --- | --- |
-| **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | the `architecture` role, the `spec` service | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
-| **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | the `implement` service | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
+| **Architecture & Design** | Architecture & Design intake, `.arc42/` and `.tech/` drafting in `flow-spec` | the `architecture` role, the `spec` service | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
+| **Implementation & Coding** | Implementation, Reproduction & Root Cause, module/service scaffolding, fixing a red build | the `implement` service | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
 | **Testing, QA & Monitoring** | Build & Test, Validation, runtime monitoring | the `qa` role, the `app.start` and `qa.run` services, the runtime monitor, the `validate` service *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
 | **Verification** | Verification | the `verify` service | `opus` | A verdict on whether the change set is what was agreed is review judgment: `aligned` called on drift ships a wrong pull request, so it takes the strongest reasoning. |
-| **Domain Design** | Bounded-context and boundary review during service/module creation | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
-| **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
+| **Domain Design** | `.domain/` drafting in `flow-spec`; bounded-context and boundary review for `flow-code`'s create kind | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
+| **Design Authoring** | `.design/` drafting in `flow-spec` | the `ux` role | `sonnet` | Prescriptive tables, token names, and guideline prose: drafting work, not a trade-off. |
+| **Documentation & Low-Complexity** | `.ai/` drafting in `flow-spec`, `flow-project`'s README stage, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
 | **Human-in-the-Loop** | Personal Validation | *(none)* | *(none)* | No agent and no model: this phase always hands control back to the user. |
 | **Fallback / Unclassified** | Any stage whose role or service is not yet listed above, and any `(default)` stage with no clear category match | *(any)* | *(session default)* | Let the session's own model run it until the entry is added to this table — safer than guessing a family for an uncategorized case. |
 
@@ -97,8 +98,8 @@ that genuinely move cost today are **Testing, QA & Monitoring** (`sonnet`) and *
 & Low-Complexity** (`haiku`). Expect a run's `tokenUsage.models` to show `opus` plus `sonnet`
 whenever Build & Test or Validation ran.
 
-A stage may list entries from more than one category (for example `flow-bug`'s "Bug Intake &
-Reproduction", naming the `implement` service and the `app.start` service). Resolve the model
+A stage may list entries from more than one category (for example `flow-code`'s "Reproduction &
+Root Cause", naming the `implement` service and the `app.start` service). Resolve the model
 per named entry, not once per stage, so each still gets its own category's model — and where
 one provider fills both `implement` and `validate`, resolve per named entry **in that stage**,
 so the same agent can be `sonnet` in Build & Test and `opus` in Implementation within a

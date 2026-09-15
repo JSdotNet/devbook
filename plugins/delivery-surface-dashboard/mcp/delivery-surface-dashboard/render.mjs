@@ -390,7 +390,7 @@ export function renderShell() {
     }
 
     // A run has a declared trailing Summary stage when its last stage is named
-    // "Summary" (flow-feature and friends declare one). finish_run also sets
+    // "Summary" (flow-code and friends declare one). finish_run also sets
     // run.summary; without this check the nav/detail would render Summary twice
     // — once for the declared stage and once synthesised from run.summary.
     function declaredSummaryIndex(run) {

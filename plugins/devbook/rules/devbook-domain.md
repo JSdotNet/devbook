@@ -87,7 +87,7 @@ beside the thing it names.
 
 **`flow.<name>.md` splits one flow out of `flow.md`.** The suffix is the flow's
 own name — for a procedure the repository ships, its skill name, so
-`flow.flow-feature.md` sits beside `flow.flow-bug.md`. It carries `type: flow`
+`flow.flow-code.md` sits beside `flow.flow-spec.md`. It carries `type: flow`
 like the file it came from, because it is the same kind of document at a
 smaller scope. Split when a flow is large enough that `flow.md` stops being
 readable, or when readers arrive looking for one flow rather than for the

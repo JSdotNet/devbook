@@ -124,7 +124,7 @@ this repository's `.devbook/arc42/tdr/`). The chapter is the **spec**.
   acceptance checks) plus a change category, and hand the brief to the flow that
   implements a change of that category, per **Where the code-side write goes**
   in the protocol: a repo-native `flow-*` skill first, then the engine's
-  `flow-feature` or `flow-bug`, and nowhere when no engine is installed — then
+  `flow-code`, and nowhere when no engine is installed — then
   it stops with the brief, and which flow picks it up is the user's decision.
   It never edits a source or test tree itself.
 - **`verify-change`** — report which side moved, per chapter, and write

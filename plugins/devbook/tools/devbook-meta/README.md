@@ -480,7 +480,7 @@ node, the approval gate showing the objections raised since `approved-at`.
       "quote": "one indexed range read",
       "body": "Does this hold after the outline gained the roadmap rollup?",
       "replies": [
-        { "author": "claude/flow-arc42", "date": "2026-09-02", "body": "No second scan." }
+        { "author": "claude/flow-spec", "date": "2026-09-02", "body": "No second scan." }
       ],
       // Opaque: validated as a mapping of namespaces, never read into.
       "ext": { "your-plugin": { "raised-in": "2026-09-02" } }

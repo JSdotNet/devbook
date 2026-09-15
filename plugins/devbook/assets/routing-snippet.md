@@ -10,9 +10,9 @@ the flows, agents, and MCP servers that repository actually has installed. Delet
 
 The plugin ships no flow of its own, and names none. A folder's write goes to the flow that
 covers that folder, resolved the way `code-sync-protocol.md` resolves it: a repo-native
-`flow-*` skill first, then the flow engine's own flow for the folder, named after it —
-`flow-<folder>` — when an engine is installed, and directly under the folder's instruction
-files when no engine is installed at all. Substitute the skill names the target repository
+`flow-*` skill first, then the flow engine's own flow for the devbook folders — `flow-spec` —
+when an engine is installed, and directly under the folder's instruction files when no engine
+is installed at all. Substitute the skill names the target repository
 actually has as you copy the routes below.
 
 The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
@@ -25,8 +25,8 @@ is routing only, and none of it goes inside that section's markers.
 ## Context loading by flow and agent
 
 Every edit to a devbook folder routes through the flow that covers that folder: a
-repo-native `flow-*` skill first, then the flow engine's `flow-<folder>`, and directly
-under the folder's instruction files when no engine is installed. Say which one answered.
+repo-native `flow-*` skill first, then the flow engine's `flow-spec`, and directly under
+the folder's instruction files when no engine is installed. Say which one answered.
 
 - Architecture, arc42, blueprint, ADR, and TDR workflows may load `.arc42/` as
   working context, but should load only the chapter(s) relevant to the requested
