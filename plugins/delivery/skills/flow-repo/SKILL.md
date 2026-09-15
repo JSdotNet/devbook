@@ -52,8 +52,10 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 - Decide the MCP servers this repository will use, by project type: a standards or
   guidelines server where the team runs one, `microsoft-learn` for a .NET stack, `aspire` and
   `playwright` for a runnable application, a design server when UX design flows are expected.
-- Declare each server in the repository's own MCP configuration — `.mcp.json` for Claude
-  Code, `.github/github-app.yml` for Copilot — with its permissions and scopes.
+- Declare each server in the repository's own MCP configuration: `.mcp.json` at the root,
+  which Claude Code and the Copilot CLI both read, and `.vscode/mcp.json` for VS Code. Start
+  from `resources/mcp-template.json` and `resources/mcp-vscode-template.json`, which declare
+  the three engine defaults, and drop or add servers to match the decision above.
 - Bind each server to the extension points that use it under `bindings["delivery.mcp"]` in
   `.devbook/config.json`, creating the file with that key alone when it does not exist
   yet (`flow-project` fills the rest), and validate it with `node tools/stack-config/check.mjs`.

@@ -288,7 +288,9 @@ dependencies: one missing specialist must not demote every skill that names it.
   stage continues on the repository's own instruction files and chapters — it costs that
   stage its grounding, never the run. An absent point takes the engine default in **MCP
   Server Strategy** (`flow-execution-model.md`); `null` binds none. The engine
-  names no server of its own beyond those defaults, and no server is ever a dependency.
+  names no server of its own beyond those defaults, and no server is ever a dependency;
+  `resources/mcp-template.json` and `resources/mcp-vscode-template.json` declare the
+  defaults in each host's shape for a repository to copy.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   verification, so it binds as the `implement` and `verify` services above rather than as an
   advisor a stage delegates a question to.
