@@ -77,9 +77,11 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 }
 ```
 
-- **The file is optional.** Absent, every point falls back to its default provider, no extra
-  gate exists, and every policy key takes the default in the table below. A malformed file is
-  reported once and then ignored; it never blocks a run.
+- **The file is optional, and so is every engine key in it.** Absent, every point falls back
+  to its default provider, no extra gate exists, and every policy key takes the default in the
+  table below. Only the engine reads the four keys, so a repository that adopted devbook and
+  not `delivery` carries `id` alone and validates. A malformed file is reported once and then
+  ignored; it never blocks a run.
 - **An unknown key is rejected, not ignored** — the same way a plugin manifest rejects an
   unknown field. Report it by name and stop, so a typo is never a silently absent setting.
 - **`null` means deliberately unbound**, which is different from absent. Absent means nobody

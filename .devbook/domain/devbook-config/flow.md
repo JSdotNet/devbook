@@ -10,16 +10,22 @@ related: [".devbook/domain/devbook-config/domain.md#update", ".devbook/domain/de
 
 ## Setup, Then Every Component
 
-Setup writes four keys and then gets out of the way. Everything that materializes anything is
-invoked, never reimplemented.
+Setup asks which installed components the repository adopts, writes `id` and — only when the
+engine is among them — the four engine keys, and then gets out of the way. Everything that
+materializes anything is invoked, never reimplemented.
 
 ```mermaid
 flowchart TD
-    start(["devbook-config:setup"]) --> intent["Ask about intent: roles, tracker, providers, policy, gates"]
-    intent --> keys["Write bindings, extensions, policy, gates"]
+    start(["devbook-config:setup"]) --> report["The read-only report: which plugins are installed and enabled here"]
+    report --> adopt["Ask which adoptable components the repository takes. Not installed: reported, never offered"]
+    adopt --> delivery{"delivery among them?"}
+    delivery -->|no| idOnly["Write id alone. Nothing here reads an engine key"]
+    delivery -->|yes| intent["Ask about intent: roles, tracker, providers, policy, gates"]
+    intent --> keys["Write id, bindings, extensions, policy, gates"]
     keys --> validate{"Validates against the engine's schema?"}
     validate -->|"unknown key"| reject["Reject. A typo is an error, never a silently absent setting"]
-    validate -->|clean| fanout["Invoke each component's own install skill"]
+    validate -->|clean| fanout["Invoke each adopted component's own install skill"]
+    idOnly --> fanout
     fanout --> devbookInstall["devbook:install"]
     fanout --> collabInstall["devbook-collaboration:install"]
     fanout --> deliveryInstall["delivery:install"]
@@ -34,6 +40,10 @@ flowchart TD
 - **Setup is a conversation and update is not.** They answer *what should this repository use?*
   and *is what it uses current?*; merging them would put an interview in front of an operation
   people run to change nothing.
+- **Nothing is set up that this machine has not installed.** Installing a plugin is the user's
+  act; a stamp written for one the machine lacks is `blocked` on the very next update.
+- **The engine keys exist only for the engine.** They are `delivery.*` settings, so a repository
+  adopting devbook without `delivery` is asked nothing about roles, points, policy, or gates.
 - **The fan-out is a delegation, always.** A component's install skill is the only thing that
   knows what that component materialized, which is why nothing here writes a stamp.
 - **An unknown key is rejected rather than ignored.** That single property is most of what the
