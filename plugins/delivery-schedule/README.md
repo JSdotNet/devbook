@@ -25,7 +25,7 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
-| `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-bug` on it | A branch at Personal Validation |
+| `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |

@@ -40,7 +40,7 @@ const full = [
     "  Does this hold after the outline gained the roadmap rollup?",
     "  The rollup looked like it needed a second scan.",
     "replies:",
-    "  - author: claude/flow-arc42",
+    "  - author: claude/flow-spec",
     "    date: 2026-09-02",
     "    body: No second scan — the rollup is a view over the same index.",
     "ext:",
@@ -68,7 +68,7 @@ check(
 check(
     Array.isArray(parsed.replies) &&
         parsed.replies.length === 1 &&
-        parsed.replies[0].author === "claude/flow-arc42" &&
+        parsed.replies[0].author === "claude/flow-spec" &&
         parsed.replies[0].body === "No second scan — the rollup is a view over the same index.",
     "replies parse as an ordered list of mappings",
     JSON.stringify(parsed.replies)

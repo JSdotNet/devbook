@@ -26,7 +26,7 @@ body: |
   Does this hold after the outline gained the roadmap rollup?
   The rollup looked like it needed a second scan.
 replies:
-  - author: claude/flow-arc42
+  - author: claude/flow-spec
     date: 2026-09-02
     body: No second scan — the rollup is a view over the same index.
 ext:

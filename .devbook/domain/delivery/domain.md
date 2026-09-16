@@ -95,12 +95,12 @@ skipped stage reads as a decision nobody made.
 ```meta
 type: aggregate
 aliases: [flow skill, staged procedure]
-related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md"]
+related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/74-four-flows-named-for-what-changes.md"]
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
-the Personal Validation gate. Sixteen ship here, five of them one per devbook folder, and each
-owns its stage order and the tier it closes through.
+the Personal Validation gate. Four ship here, one for the code and one for the five devbook
+folders, and each owns its stage order and the tier it closes through.
 
 A flow is the unit a request is routed to, so its category is the boundary that matters: a
 repository needing a different shape writes its own `flow-*`, which takes precedence for the
@@ -113,7 +113,7 @@ categories it covers, rather than configuring this one into something else.
 | A flow never leaves its session | all stages | untested |
 | A flow ends at Personal Validation and holds no other mandatory gate | tier close | untested |
 | Configuration chooses among behaviour the engine already implements and never introduces new behaviour | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| A folder flow in a repository that has not adopted the folder stops and says so | stage 1 | untested |
+| The devbook flow in a repository that has not adopted the target folder stops and says so | stage 1 | untested |
 | A flow shipped by a higher layer declares its own tier; the engine never assigns one | tier resolution | untested |
 | A flow names an extension point and never a plugin | authoring | untested |
 
@@ -127,7 +127,7 @@ aliases: [shared step, phase skill]
 A shared step several flows run identically — Update Base, Build & Test, Validation,
 Personal Validation, Create Pull Request, Verification, Work Item Update, Summary. It
 is invoked by a flow and never directly, which is what keeps its definition in one file instead
-of restated in sixteen.
+of restated in four.
 
 ### Phase Tier
 
@@ -139,8 +139,8 @@ related: [".devbook/domain/delivery/domain.md#phase"]
 Which closing phases a flow runs: the code-modifying tier, which builds, tests, validates,
 opens a pull request, and verifies the result against the specification, or the documentation
 tier, which does none of those but the pull request because there is no runnable change to
-validate and the chapter it writes is the specification. `flow-fallback` has no fixed tier and resolves one
-from the change kind it determined.
+validate and the chapter it writes is the specification. `flow-code` has no fixed tier and resolves one from
+the change kind it determined.
 
 Session Handoff belongs to no tier. It is an interrupt rather than a step, firing at whatever
 stage the run has reached when the context gauge crosses its threshold.
@@ -465,7 +465,7 @@ defect, a dependency update, or a documentation change. It is resolved once, ear
 the input to two decisions that would otherwise each need their own switch — which phase tier
 runs, and how deep QA validation goes.
 
-It is a claim about the change, never about the flow that carried it: `flow-fallback` resolves
+It is a claim about the change, never about the flow that carried it: `flow-code` resolves
 one at run time and reports it, and a flow with a fixed tier still records it because the QA
 depth downstream depends on it.
 

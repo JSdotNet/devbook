@@ -111,8 +111,8 @@ flowchart LR
   lets the brief ask only for the delta, and it is why the update case can name where the
   current behaviour lives.
 - **The brief goes where the chapter goes.** The code-side write resolves like the spec-side one:
-  a repo-native `flow-*` skill first, then the engine's flow for the change category —
-  `flow-feature`, or `flow-bug` for a defect — and nowhere when no engine is installed, where the
+  a repo-native `flow-*` skill first, then the engine's flow for the code —
+  `flow-code`, which derives its kind from the category — and nowhere when no engine is installed, where the
   run stops with the brief and which flow picks it up is the user's decision. No flow knows these
   skills exist; a brief reaches one as ordinary input, so the dependency still runs one way.
 - **A term chapter has no pair of its own.** Each capture pass that resolves a counterpart by

@@ -5,74 +5,25 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The twenty-six skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The fourteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
-## flow-feature
+## flow-code
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/flow.flow-feature.md"]
+related: [".devbook/domain/delivery/flow.flow-code.md"]
 ```
 
-Carry a feature from a request to a review-ready change: new functionality, an incremental change
-to something that exists, or a small UI tweak. The default lane, and the one the other
-code-modifying flows are variations of.
+Carry any change to the code from a request to a review-ready change: a feature or an incremental
+change, a defect, a structure or layout refactor, a new module, service, or first runnable
+increment, and the tooling, CI, scripting, and housekeeping around them. One flow, because the
+opening and the close are the same for all of them; the kind is derived in the first stage and
+selects the one middle stage that differs — planning for a create or a refactor, reproduction and
+root cause for a defect.
 
-A thin request is the normal case rather than a reason to refuse the run.
-
-## flow-bug
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-bug.md"]
-```
-
-Take a defect from "this is broken" to a fix that has a test behind it: reproduce it, find the
-cause, fix it test-first, and verify. Missing reproduction steps, severity, or root cause are
-derived rather than demanded.
-
-## flow-structure
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-structure.md"]
-```
-
-Move what already works without changing what it does — folder moves, project and solution layout,
-test and harness placement, and every reference that has to follow. Behaviour is held still on
-purpose, so the diff stays reviewable as a move.
-
-## flow-create-module
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-module.md"]
-```
-
-Add a module to an existing project, or carve an existing area into one. Both end with a boundary
-somebody agreed, which is where the work actually is.
-
-## flow-create-service
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-service.md"]
-```
-
-Add a service to an existing project, or extract an existing area into one. Same shape as the
-module flow, plus a process boundary — wiring, configuration, and how it starts are part of the
-plan rather than of the implementation.
-
-## flow-create-mvp
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-create-mvp.md"]
-```
-
-Get to a first runnable increment of a product. What makes it an MVP is that it runs, not that it
-is small, so the flow is the same for a weekend prototype and a first release.
+A thin request is the normal case rather than a reason to refuse the run. A defect's fix has a
+test in front of it; a refactor holds behaviour still on purpose.
 
 ## flow-update-packages
 
@@ -82,17 +33,10 @@ related: [".devbook/domain/delivery/flow.flow-update-packages.md"]
 ```
 
 Move dependencies forward and prove the result still builds and starts — NuGet, npm, SDKs, and
-tools — with the security question asked before the build rather than after it.
-
-## flow-aspire-update
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-aspire-update.md"]
-```
-
-Upgrade a .NET Aspire stack plan-first: record the baseline, agree the staging while backing out is
-still cheap, then upgrade, and decide separately what the new version makes possible.
+tools — with the security question asked before the build rather than after it. A framework
+upgrade, an Aspire version move included, is the same flow at a deeper setting: a recorded
+baseline before anything moves, reversible batches, and a separate decision about what the new
+version makes possible.
 
 ## flow-project
 
@@ -101,82 +45,25 @@ type: feature
 related: [".devbook/domain/delivery/flow.flow-project.md"]
 ```
 
-Scaffold a development project into a repository that already exists and is governed: the
-repository's own configuration, CI, tooling, dependencies, and a structure that builds.
+Take a repository from nothing to a project that builds: create it, expand the README, protect
+the branch, add the templates and the governance, run the stack setup, then CI, tooling,
+dependencies, and a structure that builds. Creating the repository itself stays manual, and a
+repository that already exists enters at the stage it has reached.
 
-## flow-repo
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-repo.md"]
-```
-
-Create and govern a repository before there is a project in it — README, MCP configuration,
-instructions, branch protection, templates, governance. Creating the repository itself stays
-manual.
-
-## flow-arc42
+## flow-spec
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/flow.flow-arc42.md"]
+related: [".devbook/domain/delivery/flow.flow-spec.md"]
 ```
 
-Write or correct an architecture chapter, a decision record, or a debt record. One flow for all
-three, because they are one shape with three templates — and the escalation target when any other
+Write or correct a devbook folder — an architecture chapter, decision record, or debt record; a
+bounded context or the context map; the technology graph; design principles, tokens, and
+component guidance; the AI adoption record. One flow for the five folders, because the procedure
+is the same and only the role differs: the folder picks who drafts, and the repository's own
+instruction file for that folder says what a chapter must look like. It runs the repository's
+check and never regenerates the derived indexes, and it is the escalation target when any other
 flow discovers it needs a decision.
-
-## flow-domain
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-domain.md"]
-```
-
-Write or correct a bounded context: its model, its features or skills, its dependencies, and its
-language. It runs the repository's own check and never regenerates the derived indexes.
-
-## flow-tech
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-tech.md"]
-```
-
-Write or correct the technology graph — what is used, at what version, and how settled it is —
-grounded in package inventories where one exists and in repository analysis where none does.
-
-## flow-design
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-design.md"]
-```
-
-Write or correct design principles, tokens, and component guidance, each traced to an
-authoritative source. Wireframes, user flows, and UI review are a specialist's work, not this
-flow's.
-
-## flow-ai
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-ai.md"]
-```
-
-Record how the team works with AI, stage by stage. It records a way of working and never instructs
-one, and an adoption rating is never derived from something being installed.
-
-## flow-fallback
-
-```meta
-type: feature
-related: [".devbook/domain/delivery/flow.flow-fallback.md"]
-```
-
-The lane for a category no other flow covers. Its first stage will send you away when a dedicated
-flow exists: it is a last resort, never an escape hatch from a matching flow whose preconditions
-are inconvenient.
 
 ## phase-build-test
 
@@ -187,7 +74,7 @@ related: [".devbook/domain/delivery/domain.md#phase"]
 
 Build every project and run the unit and end-to-end suites, failing fast on the first red result.
 Invoked by a flow and never directly, so its definition lives in one file rather than restated in
-sixteen.
+four.
 
 ## phase-validation
 
