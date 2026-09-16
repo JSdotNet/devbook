@@ -78,6 +78,37 @@ that has to read an event payload and write a file is a command hook; the other 
 hooks are prompts, and a prompt cannot measure anything. On a host without command hooks
 the run is still tracked in full — the panels simply have nothing to show.
 
+## Naming the session
+
+`start_run` and `update_stage` return a `sessionTitle` — `<prefix>[:<context>] — <run title>`
+— derived from where the run's writes landed: `artifact` for a published Artifact, one of
+`domain`, `arc42`, `tech`, `design`, `ai` for a devbook folder, `code` for anything else, and
+`:<context>` when the winning files sit in exactly one declared bounded context. The runner
+sets it as the session's name, per the surface contract's *Naming the session*.
+
+The words are the repository's to choose, in its own entry of `.devbook/config.json`:
+
+```json
+"components": {
+  "delivery-surface-dashboard": {
+    "sessionNaming": {
+      "labels": { "artifact": "Artifact", "devbook": "devbook", "code": null }
+    }
+  }
+}
+```
+
+`labels` maps a kind to the word shown for it. The keys are `artifact`, `code`, the five
+folder kinds, and `devbook`, which stands for all five at once — a folder's own key wins over
+it. `null` means that kind carries no prefix: a run it dominates is not renamed, and the host's
+own name stands. Kinds sharing a label are tallied as one before the dominant kind is picked,
+so under one `devbook` word a run that wrote two chapters and two source files is a devbook
+run. Nothing else is configurable. An unknown key or a bad value is reported on stderr and
+takes the default rather than silently applying, and the file is re-read on every stage, so an
+edit lands on the next stage rather than the next run. The entry is hand-edited: this plugin
+materializes nothing and ships no install skill, so nothing else writes it — see
+`.devbook/arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md`.
+
 ## Evidence
 
 QA evidence paths are resolved against the git worktree root and anything resolving
