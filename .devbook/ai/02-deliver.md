@@ -73,7 +73,7 @@ related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
 session with nobody watching, and lands what it produced as a pull request or a report issue.
 
-- **Used for** — nothing here yet. Seven schedules are defined; none is scheduled against this
+- **Used for** — nothing here yet. Eight schedules are defined; none is scheduled against this
   repository.
 - **Adopted by** — nobody. The first repository to schedule one should be one where a draft
   pull request nobody asked for costs a glance, not a rebase.

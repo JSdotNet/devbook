@@ -1,7 +1,7 @@
 # delivery-schedule
 
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: ten
-`schedule-*` entry points that pick their own input and run a flow or a review, seven trigger
+`schedule-*` entry points that pick their own input and run a flow or a review, eight trigger
 files that fire one on a cadence, and three skills that put those triggers in the host's
 scheduler and read them back.
 
@@ -50,6 +50,7 @@ Validation, and no unattended run can pass a gate.
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Wednesday 04:00 | `devbook-tech-update`, every `.tech` layer | `devbook` | A draft pull request |
+| `prose-check` | Saturday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a

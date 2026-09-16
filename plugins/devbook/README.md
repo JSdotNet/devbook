@@ -86,6 +86,18 @@ tooling before delegating graph authoring to the `.tech` write path.
 **Trigger keywords:** `update technology graph`, `refresh .tech`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
+### Skill: `prose-check`
+
+Reads every adopted folder and reports the prose that does not earn its lines
+— a name that no longer exists in the tree, a term defined a second time, a
+hedge in a statement of fact, a paragraph restating its heading — beside what
+`devbook-check` reports about structure. Report only: it writes nothing, and a
+finding becomes an edit when a person makes it through the folder's flow. ADRs
+and TDRs are records and stay out of the prose classes.
+
+**Trigger keywords:** `prose check`, `check the chapters' prose`,
+`what is stale in the devbook`, `tighten the chapters`
+
 ### Skill: `annotation-sweep`
 
 Deletes every resolved annotation fence in one chapter and nothing else. It is

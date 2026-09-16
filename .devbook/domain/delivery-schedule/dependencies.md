@@ -30,7 +30,7 @@ related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/ad
 
 ## Notes
 
-- **Naming a target is deliberately weaker than depending on one.** Two of the seven schedules
+- **Naming a target is deliberately weaker than depending on one.** Three of the eight schedules
   target another plugin's skills, and the plugin declares one dependency. A target that is not
   enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
   the engine uses for a role.

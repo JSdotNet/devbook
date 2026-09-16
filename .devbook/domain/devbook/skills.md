@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#devbook"]
 ```
 
-> Seven skills: four that own the convention in a repository, and three that cross the
+> Eight skills: five that own the convention in a repository, and three that cross the
 > boundary between a chapter and the code implementing it, each over five chapter kinds. None of them is a flow — this context
 > ships the shape and the check, and the procedure for carrying a change belongs to the engine.
 
@@ -57,6 +57,19 @@ related: [".devbook/domain/delivery/skills.md#flow-spec"]
 Refresh a repository's technology graph from deterministic package inventories, then analyse the
 repository for what appears in no package manifest — runtimes, services, platforms, protocols,
 tooling — and hand the authoring to the folder's own write path.
+
+## prose-check
+
+```meta
+type: feature
+related: [".devbook/domain/devbook/skills.md#devbook-check", ".devbook/domain/devbook/domain.md#chapter"]
+```
+
+The prose half beside `devbook-check`'s structural half: read every adopted folder and report
+the sentence that says nothing a reader needs or names something the tree no longer has — a
+stale name after a fold, a term defined twice, a hedge on a fact. It writes nothing. A chapter
+is content, so the standard is narrower than an instruction tightening and a record stays as
+it was taken: an edit is a person's, through the folder's flow.
 
 ## annotation-sweep
 
