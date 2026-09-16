@@ -66,6 +66,11 @@
     "schedule": {
       "pluginVersion": "1.0.0",
       "enabled": ["devbook-check", "tech-update", "merge-review", "package-update"]
+    },
+    "delivery-surface-dashboard": {
+      "sessionNaming": {
+        "labels": { "devbook": "devbook", "code": null }
+      }
     }
   }
 }
