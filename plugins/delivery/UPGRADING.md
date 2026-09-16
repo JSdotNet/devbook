@@ -2,7 +2,7 @@
 
 Behaviour changes a consumer would notice, newest first.
 
-## Unreleased: the flow context file is retired
+## 1.0.1: the flow context file is retired
 
 `.claude/flow-context.md` is gone as a convention, and so is the `repo-flow-context` slot
 (`.devbook/arc42/adr/71-the-start-skill-holds-the-runtime-facts.md`). Its eight sections
