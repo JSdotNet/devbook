@@ -17,6 +17,8 @@ this is the account.
 - Repository: `owner/repo` (default: the current repository).
 - Base branch (default: the repository's default branch).
 - Window: days to look back (default: `7`), or an ISO range `YYYY-MM-DD:YYYY-MM-DD`.
+- Sections (optional): named extras — a label, a milestone, a path — each rendered as one
+  block before *Carry-over*, in the order given, and dropped without a heading when empty.
 
 ## Skill Dependencies
 
@@ -34,7 +36,9 @@ Nothing here restates it.
 ### Phase 2 — Write the Update
 
 3. Open with three sentences of prose, no list: what shipped, what is open, and what is
-   waiting on a decision. Write them from the items, never from the counts alone.
+   waiting on a decision. Write them from the items, never from the counts alone, and when one
+   thing made the week distinct — a release, a week-long stall, a red base branch — say it
+   first.
 4. Then the numbers, in one table:
 
    | Commits on `<base>` | Merged | Opened | Open now | Issues closed | Issues opened | Open now | Releases | Failed runs on `<base>` |

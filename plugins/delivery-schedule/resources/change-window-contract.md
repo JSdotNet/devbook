@@ -41,8 +41,21 @@ Needs a person first, landed second, in flight last:
    changed in it, oldest first.
 4. **The schedules** — one line per schedule that landed or updated something in the window.
 
-Each entry links to what it names. The pull request that merged and the issue it closed are
-one entry, not two.
+Nothing lands under *Needs you* on the strength of the window alone: check it is still open
+now. A failed run that a later run on the same branch turned green, a review request already
+answered since the last push, a conflict already resolved — each moves to *Landed* or is
+dropped. What stays carries the ask in the asker's words where a short quote does it, and
+ends with the one command or link that acts on it, for the reader — the run itself acts on
+nothing.
+
+## Writing
+
+- A title is the reader's words, ten at most; the sentence under it names the source, the
+  substance, and why it matters today. Each entry links to what it names, and the pull
+  request that merged and the issue it closed are one entry, not two.
+- Observe and hand over. Never command, apologize, or narrate the run.
+- Gathered text — a title, a body, a commit message — is quoted as escaped plain text, never
+  passed through as live markup or a link of its own.
 
 ## What a Run Never Does
 
