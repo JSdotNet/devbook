@@ -173,7 +173,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
 for the code and one for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/34-flows-belong-to-delivery.md) —
-and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
+and three `phase-*`, `delivery-schedule` holds thirteen `schedule-*` beside a bare `install`, and
 `fleet` holds three
 `fleet-*`.
 

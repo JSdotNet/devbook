@@ -474,8 +474,8 @@ related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
-into. Two halves in one folder: nine `schedule-*` entry points that pick their own input and
-run a flow or a review, and six files under `resources/schedules/`, each a cadence, a target
+into. Two halves in one folder: eleven `schedule-*` entry points that pick their own input and
+run a flow, a review, or a report, and eight files under `resources/schedules/`, each a cadence, a target
 skill, the plugins that target needs, and the task half of a prompt, plus one preamble that
 carries the unattended rules every prompt starts with.
 
@@ -483,10 +483,12 @@ carries the unattended rules every prompt starts with.
 | --- | --- | --- |
 | `package-update` | `delivery-schedule:schedule-package-update` | weekly |
 | `merge-review` | `delivery-schedule:schedule-merge-review` | weekdays |
+| `morning-brief` | `delivery-schedule:schedule-morning-brief` | weekdays |
 | `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
 | `devbook-check` | `devbook:devbook-check` | daily |
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `tech-update` | `devbook:devbook-tech-update` | weekly |
+| `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 
 Three skills read the catalog. `delivery-schedule:install` builds each prompt, resolves the scheduler from
 the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
