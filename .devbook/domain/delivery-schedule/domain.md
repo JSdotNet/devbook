@@ -91,7 +91,8 @@ aliases: [schedule skill, schedulable procedure]
 
 A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the top
 open bug, every pull request waiting on a reviewer, the outdated packages, the week's changes in
-the tracked repositories, the repository's own day or week. Eleven ship here.
+the tracked repositories, the repository's own day or week, the instruction assets a model loads.
+Twelve ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
