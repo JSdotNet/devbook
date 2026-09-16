@@ -1,7 +1,7 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: nine
-`schedule-*` entry points that pick their own input and run a flow or a review, six trigger
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: ten
+`schedule-*` entry points that pick their own input and run a flow or a review, seven trigger
 files that fire one on a cadence, and three skills that put those triggers in the host's
 scheduler and read them back.
 
@@ -26,6 +26,7 @@ hand it one. Every one of them is also runnable by hand.
 | Skill | Does | Lands as |
 |---|---|---|
 | `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
+| `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
@@ -47,6 +48,7 @@ Validation, and no unattended run can pass a gate.
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `devbook-check`, every adopted folder | `devbook` | A pull request when something was fixed |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
+| `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Wednesday 04:00 | `devbook-tech-update`, every `.tech` layer | `devbook` | A draft pull request |
 
 Each is one file under `resources/schedules/`, and every prompt starts with

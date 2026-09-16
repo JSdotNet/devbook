@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery-schedule"]
 ```
 
-> Twelve skills in two halves: nine entry points that pick their own input, and three that put a
+> Thirteen skills in two halves: ten entry points that pick their own input, and three that put a
 > trigger in the scheduler and read it back. Every one of them is also runnable by hand, which is
 > how a cadence gets proved before it is trusted.
 
@@ -18,6 +18,21 @@ related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/d
 
 Pick the top open `bug` item and run the bug flow on it, unattended. It lands as a branch parked
 where Personal Validation would be, with a handoff brief naming what a person has to judge.
+
+## schedule-instruction-review
+
+```meta
+type: feature
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/plugin-authoring/domain.md#skill", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
+```
+
+Read every instruction asset a model loads — repository instructions, rules, skills, agents,
+prompts, contracts — and cut what changes nothing: a sentence the model does by default, a rule
+stated twice, a hedge, a prohibition with a positive form. It lands as a draft pull request with
+one commit per file and a ledger of every cut, because no check proves a rewritten instruction
+and a reviewer must be able to drop one file without losing the rest. A file the previous run's
+rejected pull request touched is skipped: a rejection is an answer, and the run converges on what
+the repository will accept. It adds nothing but a pointer that replaces a duplicate.
 
 ## schedule-merge-review
 
