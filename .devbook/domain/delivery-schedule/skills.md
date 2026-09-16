@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery-schedule"]
 ```
 
-> Thirteen skills in two halves: ten entry points that pick their own input, and three that put a
+> Fifteen skills in two halves: twelve entry points that pick their own input, and three that put a
 > trigger in the scheduler and read it back. Every one of them is also runnable by hand, which is
 > how a cadence gets proved before it is trusted.
 
@@ -43,6 +43,17 @@ related: [".devbook/domain/delivery-schedule/domain.md#entry-point"]
 
 Review every pull request waiting on a reviewer and leave one comment per pull request. It reviews
 and never approves — approving is a decision, and no unattended run takes one.
+
+## schedule-morning-brief
+
+```meta
+type: feature
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery-schedule/skills.md#schedule-weekly-update"]
+```
+
+Report what changed in this repository since yesterday and what needs a person today, in one
+screen, needs-you first. It is triage, read once: the weekly update is the record. Both read the
+same sources over different windows, stated once in the plugin's change window contract.
 
 ## schedule-package-update
 
@@ -104,6 +115,17 @@ related: [".devbook/domain/delivery-surface-dashboard/domain.md#telemetry"]
 Read the week's token telemetry from the run surface and report the cost. It reads measured
 numbers or it reports none — a surface that does not capture telemetry leaves this empty rather
 than estimated.
+
+## schedule-weekly-update
+
+```meta
+type: feature
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief"]
+```
+
+Report the repository's week as one update a stakeholder can read — shipped, in flight, issues,
+releases, what the schedules landed, and what carries over — with the numbers beside the
+narrative. One per week, kept as the record of everything that changed.
 
 ## schedule-whats-new
 

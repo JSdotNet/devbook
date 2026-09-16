@@ -1,9 +1,9 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: ten
-`schedule-*` entry points that pick their own input and run a flow or a review, eight trigger
-files that fire one on a cadence, and three skills that put those triggers in the host's
-scheduler and read them back.
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: twelve
+`schedule-*` entry points that pick their own input and run a flow, a review, or a report,
+ten trigger files that fire one on a cadence, and three skills that put those triggers in
+the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
@@ -28,16 +28,23 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
+| `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
 | `schedule-review` | TODOs, suggestions, and the code review checklist | A findings report, optionally issues |
 | `schedule-security-review` | Dependencies, secrets, CI hardening, code | One issue per new high finding |
 | `schedule-week-starter` | Digests what the tracked topics published this week | A digest |
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
+| `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
 | `schedule-whats-new` | What changed in the tracked repositories since last run | A change report |
 
 None of them is a flow, and none may be scheduled as one: a `flow-*` skill ends at Personal
 Validation, and no unattended run can pass a gate.
+
+The two change reports read the same sources over different windows, stated once in
+`resources/change-window-contract.md`: the morning brief is triage for one day, the weekly
+update is the record for one week. `schedule-whats-new` is the third and older one: pull
+requests across several repositories, with a checkpoint and ticket correlation.
 
 ## The catalog
 
@@ -45,11 +52,13 @@ Validation, and no unattended run can pass a gate.
 |---|---|---|---|---|
 | `package-update` | Monday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
+| `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `devbook-check`, every adopted folder | `devbook` | A pull request when something was fixed |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Wednesday 04:00 | `devbook-tech-update`, every `.tech` layer | `devbook` | A draft pull request |
+| `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `prose-check` | Saturday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
@@ -62,6 +71,11 @@ renamed — are exactly the ones a per-folder split would not see.
 
 `devbook` is named, not depended on: a schedule whose target plugin the repository has not
 enabled is reported and skipped, never scheduled.
+
+The two report schedules keep one open issue each. While the previous brief or update is
+still open nobody has read it, so the next run extends its window back to that issue's date
+and replaces the body: nothing between two runs is lost, and closing the issue is how it is
+acknowledged. The closed issues are the record.
 
 ## The three catalog skills
 
