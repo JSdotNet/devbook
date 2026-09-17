@@ -133,12 +133,12 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
+related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/78-one-layout-under-devbook.md"]
 ```
 
 One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
-`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block. A
-repository adopts any subset, in one of two layouts, and never mixes them.
+`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block, at
+`.devbook/<name>/`. A repository adopts any subset; there is one layout.
 
 The convention's own name is the only noun for these; there is no common-noun synonym, because
 a convention that has a name does not need one. What `_meta/graph.json` derives from their

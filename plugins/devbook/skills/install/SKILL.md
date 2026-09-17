@@ -29,8 +29,9 @@ in adoption, and a migration are one operation — the stamp says which.
 
 ## Creating a folder
 
-Each adopted folder gets its directory and one starting chapter with a valid
-`meta` block, written to the shape its rule states: `devbook-arc42.md`,
+Each adopted folder gets its directory under `.devbook/` — `.devbook/domain/`, never a
+root-level `.domain/` — and one starting chapter with a valid `meta` block, written to the
+shape its rule states: `devbook-arc42.md`,
 `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md`.
 Required block fields are in `devbook-chapter-metadata.md`.
 

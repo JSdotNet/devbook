@@ -1,7 +1,8 @@
 # Devbook metadata tooling
 
-Derives machine-readable indexes from the `meta` blocks embedded in
-`.arc42/`, `.domain/`, `.tech/`, `.design/`, and `.ai/`:
+Derives machine-readable indexes from the `meta` blocks embedded in the
+devbook folders under `.devbook/` — `.arc42`, `.domain`, `.tech`, `.design`,
+and `.ai`, at `.devbook/arc42/` and so on:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
@@ -40,9 +41,12 @@ node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 The repository root defaults to the working directory. Only devbook folders
-that actually exist produce a scope, so a repository that adopts just `.domain`
-and `.arc42` never grows `_meta/` folders for the rest. The generator exits `2`
-when no devbook folder is present at all.
+that actually exist under `.devbook/` produce a scope, so a repository that
+adopts just `.domain` and `.arc42` never grows `_meta/` folders for the rest.
+`--scope` takes `tech`, `.tech`, or `.devbook/tech` for the same scope. The
+generator exits `2` when no devbook folder is present at all, and a root-level
+`.tech/` is reported as an error and never indexed — the only layout is
+`.devbook/`.
 
 ### When to run it
 
@@ -72,12 +76,12 @@ Three artifacts per adopted scope, each co-located with what it describes:
 
 | Path | Scope |
 |---|---|
-| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
-| `.arc42/_meta/*.json` | `.arc42` only |
-| `.domain/_meta/*.json` | `.domain` only |
-| `.tech/_meta/*.json` | `.tech` only |
-| `.design/_meta/*.json` | `.design` only |
-| `.ai/_meta/*.json` | `.ai` only |
+| `.devbook/_meta/graph.json`, `.devbook/_meta/index.json`, `.devbook/_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
+| `.devbook/arc42/_meta/*.json` | `.arc42` only |
+| `.devbook/domain/_meta/*.json` | `.domain` only |
+| `.devbook/tech/_meta/*.json` | `.tech` only |
+| `.devbook/design/_meta/*.json` | `.design` only |
+| `.devbook/ai/_meta/*.json` | `.ai` only |
 
 A scoped graph contains every node in its folder, plus any node **outside** it
 that an in-scope node references. Those boundary nodes are flagged
@@ -110,28 +114,28 @@ mappable to D3, vis.js, or Sigma.
 {
   "schemaVersion": 5,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".tech",
-  "sources": [".tech"],
+  "scope": ".devbook/tech",
+  "sources": [".devbook/tech"],
   "stats": { "nodes": 57, "edges": 120, "nodesByFolder": { }, "nodesByKind": { }, "nodesByStatus": { } },
   "problems": [],
   "elements": {
     "nodes": [
       { "data": {
-          "id": ".tech/desktop.md#winui-3",
+          "id": ".devbook/tech/desktop.md#winui-3",
           "label": "WinUI 3",
           "type": "chapter",
           "kind": "framework",
           "folder": "tech",
-          "path": ".tech/desktop.md",
+          "path": ".devbook/tech/desktop.md",
           "status": "candidate",
-          "depends-on": [".tech/desktop.md#windows-app-sdk"]
+          "depends-on": [".devbook/tech/desktop.md#windows-app-sdk"]
       } }
     ],
     "edges": [
       { "data": {
-          "id": "depends-on:.tech/desktop.md#winui-3->.tech/desktop.md#windows-app-sdk",
-          "source": ".tech/desktop.md#winui-3",
-          "target": ".tech/desktop.md#windows-app-sdk",
+          "id": "depends-on:.devbook/tech/desktop.md#winui-3->.devbook/tech/desktop.md#windows-app-sdk",
+          "source": ".devbook/tech/desktop.md#winui-3",
+          "target": ".devbook/tech/desktop.md#windows-app-sdk",
           "type": "depends-on"
       } }
     ]
@@ -316,21 +320,21 @@ sorting filenames.
 {
   "schemaVersion": 5,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".domain",
-  "sources": [".domain"],
+  "scope": ".devbook/domain",
+  "sources": [".devbook/domain"],
   "problems": [],
   "entries": [
-    { "type": "file", "name": "context-map.md", "path": ".domain/context-map.md",
+    { "type": "file", "name": "context-map.md", "path": ".devbook/domain/context-map.md",
       "title": "Shop", "kind": "context-map", "status": "draft",
       "summary": "How the shop's bounded contexts relate.", "root": true },
-    { "type": "directory", "name": "ordering", "path": ".domain/ordering",
+    { "type": "directory", "name": "ordering", "path": ".devbook/domain/ordering",
       "title": "Ordering",
       "children": [
-        { "type": "file", "name": "domain.md", "path": ".domain/ordering/domain.md",
+        { "type": "file", "name": "domain.md", "path": ".devbook/domain/ordering/domain.md",
           "title": "Ordering", "kind": "domain", "status": "draft",
           "summary": "Owns the lifecycle of a customer order.", "diagrams": 1,
           "root": true },
-        { "type": "file", "name": "features.md", "path": ".domain/ordering/features.md",
+        { "type": "file", "name": "features.md", "path": ".devbook/domain/ordering/features.md",
           "title": "Ordering", "kind": "features", "status": "draft" }
       ] }
   ]
@@ -342,13 +346,13 @@ A numbered area carries `number` on every entry it could resolve one for, and
 
 ```jsonc
 "entries": [
-  { "type": "file", "name": "README.md", "path": ".arc42/adr/README.md",
+  { "type": "file", "name": "README.md", "path": ".devbook/arc42/adr/README.md",
     "title": "Architecture Decisions", "status": "active", "statusDeclared": false, "root": true },
-  { "type": "file", "name": "2-record-decisions.md", "path": ".arc42/adr/2-record-decisions.md",
+  { "type": "file", "name": "2-record-decisions.md", "path": ".devbook/arc42/adr/2-record-decisions.md",
     "title": "Record Decisions", "status": "active", "statusDeclared": false, "number": 2, "date": "2025-11-02" },
-  { "type": "file", "name": "7-use-postgres.md", "path": ".arc42/adr/7-use-postgres.md",
+  { "type": "file", "name": "7-use-postgres.md", "path": ".devbook/arc42/adr/7-use-postgres.md",
     "title": "Use PostgreSQL", "status": "active", "statusDeclared": false, "number": 7, "date": "2026-03-04" },
-  { "type": "file", "name": "10-adopt-aspire.md", "path": ".arc42/adr/10-adopt-aspire.md",
+  { "type": "file", "name": "10-adopt-aspire.md", "path": ".devbook/arc42/adr/10-adopt-aspire.md",
     "title": "Adopt .NET Aspire", "status": "active", "statusDeclared": false, "number": 10, "date": "2026-07-19" }
 ]
 ```
@@ -454,18 +458,18 @@ node, the approval gate showing the objections raised since `approved-at`.
 {
   "schemaVersion": 6,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".arc42",
-  "sources": [".arc42"],
+  "scope": ".devbook/arc42",
+  "sources": [".devbook/arc42"],
   "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
   "problems": [],
   "threads": [
     {
-      "path": ".arc42/05-building-block-view.md",
+      "path": ".devbook/arc42/05-building-block-view.md",
       "folder": "arc42",
       // A thread has no id. It is addressed the way devbook addresses
       // everything — a path plus a heading slug — with `ordinal` standing in
       // for the id the schema deliberately does not assign.
-      "address": ".arc42/05-building-block-view.md#devbook-meta",
+      "address": ".devbook/arc42/05-building-block-view.md#devbook-meta",
       "chapter": "devbook-meta",
       "chapterTitle": "Devbook Meta",
       "ordinal": 1,

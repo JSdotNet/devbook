@@ -23,7 +23,7 @@ is adopted.
 
 | Part | What it is |
 |---|---|
-| `tools/devbook-meta/` | `build.mjs` parses every `meta` block, resolves every reference, and writes `_meta/graph.json`, `_meta/index.json`, and `_meta/annotations.json` per adopted folder and for the repository. `--check` validates and writes nothing; `--print` emits the same documents on stdout. `annotations.mjs` is the only writer of an annotation fence. Shape and rules: [`tools/devbook-meta/README.md`](tools/devbook-meta/README.md) |
+| `tools/devbook-meta/` | `build.mjs` parses every `meta` block, resolves every reference, and writes `graph.json`, `index.json`, and `annotations.json` into a `_meta/` beside each adopted folder's chapters and, for the repository rollup, into `.devbook/_meta/`. `--check` validates and writes nothing; `--print` emits the same documents on stdout. `annotations.mjs` is the only writer of an annotation fence. Shape and rules: [`tools/devbook-meta/README.md`](tools/devbook-meta/README.md) |
 | `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rendered from the same modules the generator writes with, and a single chapter beside its parsed block |
 | `assets/workflows/devbook-meta.yml` | The CI check: fails on a broken reference or a schema violation, warns on a drifted index |
 | `assets/workflows/devbook-meta-nightly.yml` | The scheduled refresh: one pull request when the indexes moved, nothing when they did not |

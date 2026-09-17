@@ -59,7 +59,7 @@ const lints = [
     { name: "a scalar entry is accepted", tests: "unit:dotnet:A.B", errors: 0, warnings: 0 },
     { name: "an unknown level is an error", tests: ["smoke:dotnet:A.B"], errors: 1, warnings: 0 },
     { name: "an unknown runner is only a warning", tests: ["e2e:cypress:a.cy.ts"], errors: 0, warnings: 1 },
-    { name: "a chapter reference is an error", tests: [".domain/ordering/domain.md#order"], errors: 1, warnings: 0 },
+    { name: "a chapter reference is an error", tests: [".devbook/domain/ordering/domain.md#order"], errors: 1, warnings: 0 },
     { name: "a malformed entry is an error", tests: ["OrderTests"], errors: 1, warnings: 0 },
     { name: "no field at all reports nothing", tests: undefined, errors: 0, warnings: 0 },
 ];

@@ -1,7 +1,7 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-    Refresh the derived devbook indexes (`_meta/graph.json`, `_meta/index.json`).
+    Refresh the derived devbook indexes under .devbook/ (`.devbook/_meta/`, and one `_meta/` per adopted folder).
 
 .DESCRIPTION
     On-demand wrapper around `.devbook/_tools/devbook-meta/build.mjs`, installed

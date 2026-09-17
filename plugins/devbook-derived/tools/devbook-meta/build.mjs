@@ -4,24 +4,25 @@
 //   node .devbook/_tools/devbook-meta/build.mjs           # every adopted scope
 //   node .devbook/_tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
 //   node .devbook/_tools/devbook-meta/build.mjs --print   # verify, and emit the documents as JSON on stdout
-//   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+//   node .devbook/_tools/devbook-meta/build.mjs --scope tech     # .tech and .devbook/tech spell the same scope
 //   node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 //
 // Writes three artifacts per scope, per the derived-artifacts convention:
 //
-//   _meta/graph.json          the reference graph (repository-wide rollup)
-//   _meta/index.json          the ordered reading outline
-//   _meta/annotations.json    the open-note index, from the annotation fences
-//   .tech/_meta/graph.json    the same set, scoped to .tech
+//   .devbook/_meta/graph.json          the reference graph (repository-wide rollup)
+//   .devbook/_meta/index.json          the ordered reading outline
+//   .devbook/_meta/annotations.json    the open-note index, from the annotation fences
+//   .devbook/tech/_meta/graph.json     the same set, scoped to .tech
 //   ...one set per devbook folder the repository actually has
 //
-// Only folders present in the repository produce a scope, so a repository that
-// adopts just .domain and .arc42 never grows _meta folders for the rest.
+// Only folders present under .devbook/ produce a scope, so a repository that
+// adopts just .domain and .arc42 never grows _meta folders for the rest. A
+// dot-folder at the repository root is reported as an error and not indexed.
 //
 // Graph construction lives in graph.mjs, which the devbook-graph canvas also
 // imports, so the written indexes and the live view are always the same graph.
 // `--print` is for a viewer that can spawn Node but not import these modules:
-// it writes nothing and emits `{ layout, scopes: { "<scope>": { graph, outline,
+// it writes nothing and emits `{ folders, scopes: { "<scope>": { graph, outline,
 // annotations } } }` on stdout, with the usual diagnostics on stderr.
 
 import { writeFile, mkdir } from "node:fs/promises";
@@ -31,8 +32,8 @@ import {
     buildGraphDocument,
     outputPathFor,
     discoverLayout,
+    resolveScope,
     DEVBOOK_FOLDERS,
-    NESTED_DEVBOOK_FOLDERS,
     REPO_SCOPE,
 } from "./graph.mjs";
 import { buildOutlineDocument, outlinePathFor } from "./outline.mjs";
@@ -56,7 +57,7 @@ function optionValue(name) {
 // Defaults to the working directory, which is the repository root in CI and in
 // the documented usage above. `--root` keeps the generator usable from anywhere.
 const REPO_ROOT = path.resolve(optionValue("--root") ?? process.cwd());
-const requestedScope = optionValue("--scope");
+const requestedScope = optionValue("--scope") ? resolveScope(optionValue("--scope")) ?? optionValue("--scope") : null;
 
 const layout = await discoverLayout(REPO_ROOT);
 const availableScopes = layout.folders.length ? [REPO_SCOPE, ...layout.folders] : [];
@@ -64,8 +65,10 @@ const availableScopes = layout.folders.length ? [REPO_SCOPE, ...layout.folders] 
 if (!availableScopes.length) {
     console.error(
         `No devbook folders found under ${REPO_ROOT}. ` +
-            `Expected at least one of: ${DEVBOOK_FOLDERS.join(", ")} ` +
-            `(flat layout), or ${NESTED_DEVBOOK_FOLDERS.join(", ")} (nested).`
+            `Expected at least one of: ${DEVBOOK_FOLDERS.join(", ")}.` +
+            (layout.stray.length
+                ? ` Found ${layout.stray.join(", ")} at the repository root: only the .devbook/ layout is supported, so move them under it.`
+                : "")
     );
     process.exit(2);
 }
@@ -81,13 +84,13 @@ if (requestedScope && !availableScopes.includes(requestedScope)) {
 const scopes = requestedScope ? [requestedScope] : availableScopes;
 const folders = availableScopes.filter((scope) => scope !== REPO_SCOPE);
 
-log(`layout ${layout.layout}: ${folders.join(", ")}`);
+log(`folders: ${folders.join(", ")}`);
 
 // Parse the corpus once and project it per scope.
 const graph = await buildGraph(REPO_ROOT, folders);
 const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
-const printed = { layout: layout.layout, scopes: {} };
+const printed = { folders, scopes: {} };
 
 async function emit(outPath, document, summary) {
     if (!checkOnly) {

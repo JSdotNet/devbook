@@ -41,12 +41,11 @@ deleting it, and a reader loading a chapter for context skips every fence.
 Adoption is partial by design — a repository may take only `.domain` and
 `.arc42`, and the tooling emits scopes for the folders that actually exist.
 
-Those five sit at the repository root, or nested under one `.devbook/` parent
-with the leading dot dropped — `.devbook/arc42`, `.devbook/domain`, and so on.
-Pick one layout and never mix them; the generator recognizes both, reports which
-one it found, and treats a repository containing both as an error. Nothing else
-changes: an address is the chapter's real repository path either way, and each
-folder's `_meta/` is written beside its own chapters.
+Those five live under one `.devbook/` parent with the leading dot dropped —
+`.devbook/arc42`, `.devbook/domain`, and so on — beside the stack config, the
+tooling under `.devbook/_tools/`, and the repository rollup under
+`.devbook/_meta/`. A root-level `.arc42/` is not a layout: the check reports it
+and does not index it. An address is the chapter's real repository path.
 
 ## Features
 
@@ -230,16 +229,15 @@ flow knows these skills exist.
 | File | Pattern | Purpose |
 |------|---------|---------|
 | `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, the approval and review triads, and the `tests` test-case link format |
-| `devbook-domain.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
-| `devbook-arc42.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
-| `devbook-tech.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
-| `devbook-design.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-domain.md` | `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
+| `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
+| `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
+| `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
+| `devbook-ai.md` | `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
-Every glob carries both layouts — the five root dot-folders and their `.devbook/`
-nesting — and is scoped to the devbook folders, so the plugin stays silent in
+Every glob is scoped to the `.devbook/` folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
 #### How they reach a session

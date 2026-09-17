@@ -28,7 +28,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 // --- Together or not at all ----------------------------------------------
 
 {
-    const issues = validateDocument(".domain/ordering/domain.md", chapter("review: requested\n"));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter("review: requested\n"));
     check(
         Boolean(find(issues, "error", "written together or not at all")),
         "`review` without `reviewer` and `review-at` is an error",
@@ -36,7 +36,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
     );
 }
 {
-    const issues = validateDocument(".domain/ordering/domain.md", chapter(triad("requested")));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter(triad("requested")));
     check(
         !issues.some((i) => i.message.includes("review")),
         "the full triad in `requested` over no notes is clean",
@@ -48,7 +48,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 
 {
     const issues = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         chapter('review: pending\nreviewer: "@reviewer"\nreview-at: 17-09-2026\n')
     );
     check(Boolean(find(issues, "error", '`review` "pending"')), "an unknown review state is an error", dump(issues));
@@ -58,7 +58,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 // --- A verdict is held to its findings -----------------------------------
 
 {
-    const issues = validateDocument(".domain/ordering/domain.md", chapter(triad("changes-requested")));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter(triad("changes-requested")));
     check(
         Boolean(find(issues, "error", "`review: changes-requested` with no open annotation")),
         "`changes-requested` over no open note is a verdict without findings",
@@ -67,7 +67,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 }
 {
     const open = note('author: "@reviewer"\ndate: 2026-09-17\nkind: suggestion\nbody: Tighten this.\n');
-    const issues = validateDocument(".domain/ordering/domain.md", chapter(triad("changes-requested"), `Prose.\n\n${open}`));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter(triad("changes-requested"), `Prose.\n\n${open}`));
     check(
         !issues.some((i) => i.message.includes("review")),
         "`changes-requested` over one open note is consistent",
@@ -76,7 +76,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 }
 {
     const open = note('author: "@reviewer"\ndate: 2026-09-17\nkind: question\nbody: Which test proves it?\n');
-    const issues = validateDocument(".domain/ordering/domain.md", chapter(triad("cleared"), `Prose.\n\n${open}`));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter(triad("cleared"), `Prose.\n\n${open}`));
     check(
         Boolean(find(issues, "error", "`review: cleared` over 1 open annotation")),
         "`cleared` over an open note is an error",
@@ -85,7 +85,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 }
 {
     const resolved = note('author: "@reviewer"\ndate: 2026-09-17\nkind: question\nstatus: resolved\nbody: Answered.\n');
-    const issues = validateDocument(".domain/ordering/domain.md", chapter(triad("cleared"), `Prose.\n\n${resolved}`));
+    const issues = validateDocument(".devbook/domain/ordering/domain.md", chapter(triad("cleared"), `Prose.\n\n${resolved}`));
     check(
         !issues.some((i) => i.message.includes("review")),
         "a resolved note does not count against `cleared`",
@@ -97,7 +97,7 @@ check(reviewIssues({ status: "draft" }).length === 0, "no review fields is no re
 
 {
     const issues = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         chapter('status: approved\napproved-by: "@lead"\napproved-at: 2026-09-17\n' + triad("cleared"))
     );
     check(

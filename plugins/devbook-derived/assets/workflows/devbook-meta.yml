@@ -10,33 +10,31 @@ name: Devbook metadata
 # ./build/Update-DevbookIndex.ps1 on demand, devbook-meta-nightly.yml on a
 # schedule. See devbook-derived-artifacts.md.
 #
-# The two path filters below are rendered, not copied. Replace <prefix> with
-# `.` in the flat layout and `.devbook/` in the nested one — build.mjs prints
-# which layout it found on every run — and delete the rows for folders this
-# repository has not adopted. A surviving <prefix> matches nothing, which
-# leaves the repository with no gate at all and no error saying so.
+# The two path filters below are rendered, not copied: delete the rows for
+# folders this repository has not adopted. Every devbook folder lives under
+# .devbook/, so there is one spelling and nothing else to substitute.
 
 on:
   push:
     branches:
       - main
     paths:
-      - '<prefix>arc42/**'
-      - '<prefix>domain/**'
-      - '<prefix>tech/**'
-      - '<prefix>design/**'
-      - '<prefix>ai/**'
+      - '.devbook/arc42/**'
+      - '.devbook/domain/**'
+      - '.devbook/tech/**'
+      - '.devbook/design/**'
+      - '.devbook/ai/**'
       - '.devbook/_tools/devbook-meta/**'
       - '.github/workflows/devbook-meta.yml'
   pull_request:
     branches:
       - main
     paths:
-      - '<prefix>arc42/**'
-      - '<prefix>domain/**'
-      - '<prefix>tech/**'
-      - '<prefix>design/**'
-      - '<prefix>ai/**'
+      - '.devbook/arc42/**'
+      - '.devbook/domain/**'
+      - '.devbook/tech/**'
+      - '.devbook/design/**'
+      - '.devbook/ai/**'
       - '.devbook/_tools/devbook-meta/**'
       - '.github/workflows/devbook-meta.yml'
   workflow_dispatch:

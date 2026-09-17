@@ -16,16 +16,17 @@
 // stands, and drops back to its ordinary rung the moment the content changes —
 // an approval is of what was read, not of the heading.
 /**
- * The five devbook folders, by kind. A repository adopts any subset and lays
- * them out one of two ways: flat, as five root-level dot-folders (`.arc42`), or
- * nested, under one `.devbook/` parent whose subfolders drop the dot
- * (`.devbook/arc42`). A repository picks one and never mixes them.
+ * The five devbook folders, by kind. A repository adopts any subset, and every
+ * one of them lives under the one `.devbook/` parent: `.devbook/arc42`,
+ * `.devbook/domain`, and so on. The parent already carries the "hidden support
+ * directory" signal, so the subfolders drop the dot. There is no other layout
+ * (record 78); five root-level dot-folders are reported, never indexed.
  */
 export const DEVBOOK_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
 
-/** The parent folder of the nested layout, and the prefix that identifies it. */
-export const NESTED_ROOT = ".devbook";
-export const NESTED_PREFIX = `${NESTED_ROOT}/`;
+/** The one parent folder, and the prefix that identifies a path inside it. */
+export const DEVBOOK_ROOT = ".devbook";
+export const DEVBOOK_PREFIX = `${DEVBOOK_ROOT}/`;
 
 const APPROVED_STATUS = "approved";
 
@@ -356,18 +357,12 @@ const FIELD_TYPE_SCOPE = {
 /** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
     const normalized = String(relPath).replace(/\\/g, "/");
-    // Both layouts resolve to the same five kinds. Flat is five root-level
-    // dot-folders; nested is one `.devbook/` parent whose subfolders drop the
-    // dot, because the parent already carries the "hidden support directory"
-    // signal for everything inside it. Nothing else in the schema knows which
-    // layout a repository picked — an address is just a repository path.
-    const nested = normalized.startsWith(NESTED_PREFIX)
-        ? normalized.slice(NESTED_PREFIX.length)
-        : null;
-    const subject = nested ?? normalized;
-    const prefix = nested === null ? "." : "";
+    // An address is just a repository path, and every devbook path starts with
+    // the one parent. Nothing else in the schema knows about the layout.
+    if (!normalized.startsWith(DEVBOOK_PREFIX)) return null;
+    const subject = normalized.slice(DEVBOOK_PREFIX.length);
     for (const name of DEVBOOK_FOLDER_NAMES) {
-        if (subject.startsWith(`${prefix}${name}/`)) return name;
+        if (subject.startsWith(`${name}/`)) return name;
     }
     return null;
 }

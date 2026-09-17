@@ -19,7 +19,7 @@ import path from "node:path";
 import { joinSession, createCanvas } from "@github/copilot-sdk/extension";
 import { renderPage } from "./render.mjs";
 import { renderGraphPage } from "./graph-render.mjs";
-import { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE } from "../../tools/devbook-meta/graph.mjs";
+import { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE, resolveScope as resolveKnownScope } from "../../tools/devbook-meta/graph.mjs";
 import { buildOutlineDocument } from "../../tools/devbook-meta/outline.mjs";
 import {
     parseDocument,
@@ -183,8 +183,8 @@ async function startGraphServer(defaultScope) {
 
 function resolveScope(value) {
     if (!value) return REPO_SCOPE;
-    const normalized = String(value).replace(/\\/g, "/").replace(/\/+$/, "");
-    if (SCOPES.includes(normalized)) return normalized;
+    const resolved = resolveKnownScope(value);
+    if (resolved) return resolved;
     throw new Error(`Unknown scope "${value}". Known scopes: ${SCOPES.join(", ")}`);
 }
 

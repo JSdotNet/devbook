@@ -8,8 +8,6 @@ matches the stamped hash. The rules — key, hash, customized, orphan — are in
 Render it from the stamp's `adopted` list, never from what happens to be on disk:
 
 - Keep one table row per adopted folder and delete the others.
-- Replace `<prefix>` with `.` in the flat layout and `.devbook/` in the nested one —
-  the generator reports which layout it found on every run.
 - Change nothing else. The `_meta/` rule, the refresh paths, and the check command are
   `devbook-derived`'s and live in its own section, written after this one by its install. A wording change belongs in this template, so every adopting
   repository gets it on its next reconcile.
@@ -34,11 +32,11 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 
 | Folder | Holds | Rules |
 | --- | --- | --- |
-| `<prefix>arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
-| `<prefix>domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
-| `<prefix>tech/` | The technology graph and its ratings | `devbook-tech.md` |
-| `<prefix>design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
-| `<prefix>ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
+| `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
+| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
+| `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.md` |
+| `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
+| `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
 
 Every chapter carries a fenced `meta` block; write it in the same change as the content,
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a

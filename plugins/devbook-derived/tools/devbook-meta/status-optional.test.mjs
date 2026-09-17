@@ -60,35 +60,35 @@ const lints = [
     // The editorial three: omitting `status` is correct and silent.
     {
         name: ".domain: a chapter omitting status is clean",
-        path: ".domain/ordering/domain.md",
+        path: ".devbook/domain/ordering/domain.md",
         markdown: `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\n")}\nProse.\n`,
         errors: 0,
         warnings: 0,
     },
     {
         name: ".arc42: an empty meta fence is clean",
-        path: ".arc42/03-context.md",
+        path: ".devbook/arc42/03-context.md",
         markdown: `# 03. Context\n\n${fence("")}\nProse.\n\n## Interfaces\n\n${fence("")}\nProse.\n`,
         errors: 0,
         warnings: 0,
     },
     {
         name: ".design: an empty meta fence is clean",
-        path: ".design/color-scheme.md",
+        path: ".devbook/design/color-scheme.md",
         markdown: `# Color Scheme\n\n${fence("")}\nProse.\n\n## Tokens\n\n${fence("")}\nProse.\n`,
         errors: 0,
         warnings: 0,
     },
     {
         name: ".domain: a status in transition is clean",
-        path: ".domain/ordering/domain.md",
+        path: ".devbook/domain/ordering/domain.md",
         markdown: `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("status: draft\ntype: aggregate\n")}\nProse.\n`,
         errors: 0,
         warnings: 0,
     },
     {
         name: ".domain: deprecated is a standing warning and stays written",
-        path: ".domain/ordering/domain.md",
+        path: ".devbook/domain/ordering/domain.md",
         markdown: `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("status: deprecated\ntype: aggregate\n")}\nProse.\n`,
         errors: 0,
         warnings: 0,
@@ -96,21 +96,21 @@ const lints = [
     // The editorial three: stating the resting value is reported.
     {
         name: ".domain: an explicit `status: active` warns",
-        path: ".domain/ordering/domain.md",
+        path: ".devbook/domain/ordering/domain.md",
         markdown: `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("status: active\ntype: aggregate\n")}\nProse.\n`,
         errors: 0,
         warnings: 1,
     },
     {
         name: ".design: an explicit `status: active` warns at file level too",
-        path: ".design/color-scheme.md",
+        path: ".devbook/design/color-scheme.md",
         markdown: `# Color Scheme\n\n${fence("status: active\n")}\nProse.\n`,
         errors: 0,
         warnings: 1,
     },
     {
         name: ".arc42: `status: null` warns — an absence is spelled by omission",
-        path: ".arc42/03-context.md",
+        path: ".devbook/arc42/03-context.md",
         markdown: `# 03. Context\n\n${fence("status: null\n")}\nProse.\n`,
         errors: 0,
         warnings: 1,
@@ -118,28 +118,28 @@ const lints = [
     // The other three: a missing status is still an error.
     {
         name: ".tech: a chapter omitting status errors",
-        path: ".tech/backend.md",
+        path: ".devbook/tech/backend.md",
         markdown: `# Backend\n\n${fence("status: adopted\n")}\n## PostgreSQL\n\n${fence("type: service\n")}\nProse.\n`,
         errors: 1,
         warnings: 0,
     },
     {
         name: ".ai: a chapter omitting status errors",
-        path: ".ai/02-build.md",
+        path: ".devbook/ai/02-build.md",
         markdown: `# 02. Build\n\n${fence("status: trial\ntype: stage\n")}\n## Agent-Driven TDD\n\n${fence("type: practice\n")}\nProse.\n`,
         errors: 1,
         warnings: 0,
     },
     {
         name: ".tech: `active` is not this folder's resting value, it is off the ladder",
-        path: ".tech/backend.md",
+        path: ".devbook/tech/backend.md",
         markdown: `# Backend\n\n${fence("status: adopted\n")}\n## PostgreSQL\n\n${fence("status: active\ntype: service\n")}\nProse.\n`,
         errors: 1,
         warnings: 0,
     },
     {
         name: ".tech: `status: adopted` on every block stays silent — a rating is meant to be stated",
-        path: ".tech/backend.md",
+        path: ".devbook/tech/backend.md",
         markdown: `# Backend\n\n${fence("status: adopted\n")}\n## PostgreSQL\n\n${fence("status: adopted\ntype: service\n")}\nProse.\n`,
         errors: 0,
         warnings: 0,
@@ -169,25 +169,25 @@ check(
 
 const repoRoot = await mkdtemp(path.join(tmpdir(), "devbook-status-"));
 try {
-    await mkdir(path.join(repoRoot, ".design"), { recursive: true });
-    await mkdir(path.join(repoRoot, ".domain", "ordering"), { recursive: true });
-    await mkdir(path.join(repoRoot, ".tech"), { recursive: true });
+    await mkdir(path.join(repoRoot, ".devbook", "design"), { recursive: true });
+    await mkdir(path.join(repoRoot, ".devbook", "domain", "ordering"), { recursive: true });
+    await mkdir(path.join(repoRoot, ".devbook", "tech"), { recursive: true });
 
     // A settled .design file: nothing but empty fences, top to bottom.
     await writeFile(
-        path.join(repoRoot, ".design", "README.md"),
+        path.join(repoRoot, ".devbook", "design", "README.md"),
         `# Design\n\n${fence("")}\nProse.\n\n## Principles\n\n${fence("")}\nProse.\n`,
         "utf8"
     );
     // A .domain file mixing a resting chapter with one in transition.
     await writeFile(
-        path.join(repoRoot, ".domain", "ordering", "domain.md"),
+        path.join(repoRoot, ".devbook", "domain", "ordering", "domain.md"),
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\n")}\nProse.\n\n## Basket\n\n${fence("status: draft\ntype: aggregate\n")}\nProse.\n`,
         "utf8"
     );
     // .tech, where the rating is always written.
     await writeFile(
-        path.join(repoRoot, ".tech", "technology-graph.md"),
+        path.join(repoRoot, ".devbook", "tech", "technology-graph.md"),
         `# Technology Graph\n\n${fence("status: adopted\n")}\nProse.\n`,
         "utf8"
     );
@@ -195,28 +195,28 @@ try {
     const graph = await buildGraph(repoRoot);
     const byId = new Map(graph.nodes.map((n) => [n.id, n]));
 
-    const restingChapter = byId.get(".domain/ordering/domain.md#order");
+    const restingChapter = byId.get(".devbook/domain/ordering/domain.md#order");
     check(
         restingChapter?.status === "active" && restingChapter?.statusDeclared === false,
         "graph.json: a resting .domain chapter carries active plus statusDeclared: false",
         JSON.stringify(restingChapter)
     );
 
-    const transitionChapter = byId.get(".domain/ordering/domain.md#basket");
+    const transitionChapter = byId.get(".devbook/domain/ordering/domain.md#basket");
     check(
         transitionChapter?.status === "draft" && !("statusDeclared" in transitionChapter),
         "graph.json: a declared status carries no statusDeclared key, so existing nodes do not churn",
         JSON.stringify(transitionChapter)
     );
 
-    const emptyFenceChapter = byId.get(".design/README.md#principles");
+    const emptyFenceChapter = byId.get(".devbook/design/README.md#principles");
     check(
         emptyFenceChapter !== undefined && emptyFenceChapter.status === "active",
         "graph.json: a chapter whose meta block is empty is still a node",
         JSON.stringify([...byId.keys()])
     );
 
-    const techFile = byId.get(".tech/technology-graph.md");
+    const techFile = byId.get(".devbook/tech/technology-graph.md");
     check(
         techFile?.status === "adopted" && !("statusDeclared" in techFile),
         "graph.json: .tech keeps its stated rating untouched",
@@ -230,16 +230,16 @@ try {
         JSON.stringify(doc.stats.nodesByStatus)
     );
 
-    const outline = await buildOutlineDocument(repoRoot, ".design");
-    const designRoot = outline.entries.find((e) => e.path === ".design/README.md");
+    const outline = await buildOutlineDocument(repoRoot, ".devbook/design");
+    const designRoot = outline.entries.find((e) => e.path === ".devbook/design/README.md");
     check(
         designRoot?.status === "active" && designRoot?.statusDeclared === false,
         "index.json: a .design file that states no status is listed as active, flagged undeclared",
         JSON.stringify(designRoot)
     );
 
-    const techOutline = await buildOutlineDocument(repoRoot, ".tech");
-    const techEntry = techOutline.entries.find((e) => e.path === ".tech/technology-graph.md");
+    const techOutline = await buildOutlineDocument(repoRoot, ".devbook/tech");
+    const techEntry = techOutline.entries.find((e) => e.path === ".devbook/tech/technology-graph.md");
     check(
         techEntry?.status === "adopted" && !("statusDeclared" in techEntry),
         "index.json: a stated status is listed unchanged",

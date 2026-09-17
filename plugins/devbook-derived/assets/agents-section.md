@@ -29,8 +29,9 @@ Render it from devbook's stamp, never from disk:
 
 Managed by `devbook-derived:install`. Edit outside these markers.
 
-Files under any `_meta/` folder are generated tool input, written by
-`<generator>`. Never read one as a source of fact and never hand-edit one.
+Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
+generated tool input, written by `<generator>`. Never read one as a source of fact and
+never hand-edit one.
 <refresh> Fix what the check reports in the source Markdown, and run it before
 committing:
 

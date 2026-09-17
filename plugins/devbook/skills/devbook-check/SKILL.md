@@ -35,7 +35,7 @@ compressing a lookup table costs a repair, not a sentence.
    |------|---------|--------|
    | `0` | Every reference resolves, every block matches the schema | Go to step 4 |
    | `1` | One or more problems at `error` severity | Go to step 2 |
-   | `2` | No devbook folder found | Wrong directory, or the repo has not adopted the convention — run `devbook:install` instead |
+   | `2` | No devbook folder found under `.devbook/` | Wrong directory, the repo has not adopted the convention — run `devbook:install` — or its folders sit at the repository root, which the message names: move them under `.devbook/` |
 
    `--check` parses and reports without writing. Add `--root <path>` when running
    from outside the repository root, and `--scope <folder>` to narrow the run to

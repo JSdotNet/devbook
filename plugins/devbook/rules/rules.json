@@ -2,18 +2,12 @@
   "rules": {
     "devbook-ai": {
       "paths": [
-        ".ai/**",
         ".devbook/ai/**"
       ],
       "install": "ai"
     },
     "devbook-annotations": {
       "paths": [
-        ".domain/**",
-        ".arc42/**",
-        ".tech/**",
-        ".design/**",
-        ".ai/**",
         ".devbook/arc42/**",
         ".devbook/domain/**",
         ".devbook/tech/**",
@@ -24,18 +18,12 @@
     },
     "devbook-arc42": {
       "paths": [
-        ".arc42/**",
         ".devbook/arc42/**"
       ],
       "install": "arc42"
     },
     "devbook-chapter-metadata": {
       "paths": [
-        ".domain/**",
-        ".arc42/**",
-        ".tech/**",
-        ".design/**",
-        ".ai/**",
         ".devbook/arc42/**",
         ".devbook/domain/**",
         ".devbook/tech/**",
@@ -46,25 +34,18 @@
     },
     "devbook-design": {
       "paths": [
-        ".design/**",
         ".devbook/design/**"
       ],
       "install": "design"
     },
     "devbook-domain": {
       "paths": [
-        ".domain/**",
         ".devbook/domain/**"
       ],
       "install": "domain"
     },
     "devbook-naming": {
       "paths": [
-        ".arc42/**",
-        ".domain/**",
-        ".tech/**",
-        ".design/**",
-        ".ai/**",
         ".devbook/arc42/**",
         ".devbook/domain/**",
         ".devbook/tech/**",
@@ -76,7 +57,6 @@
     },
     "devbook-tech": {
       "paths": [
-        ".tech/**",
         ".devbook/tech/**"
       ],
       "install": "tech"

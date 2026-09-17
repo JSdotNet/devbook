@@ -32,9 +32,10 @@ const FOLDER_PREFIXES = [
     [".ai", "ai"],
 ];
 
-// The nested layout puts every folder under one `.devbook/` parent whose subfolders drop the
-// dot. Stripping the parent is what lets both layouts classify through the table above.
-const NESTED_ROOT = ".devbook";
+// Every devbook folder lives under one `.devbook/` parent whose subfolders drop the dot
+// (record 78). Stripping the parent is what lets a path classify through the table above,
+// which keeps the dotted names the convention calls the folders by.
+const DEVBOOK_ROOT = ".devbook";
 
 const DOMAIN_PREFIX = "domain";
 const CODE_PREFIX = "code";
@@ -120,17 +121,12 @@ async function knownContexts(run, cwd) {
     if (Array.isArray(destinations.contexts)) return destinations.contexts;
     let contexts = [];
     if (typeof cwd === "string" && cwd) {
-        // Whichever layout the repository picked. A repository never mixes the two, so the
-        // first of these that reads is the one it uses.
-        for (const dir of [path.join(cwd, ".domain"), path.join(cwd, NESTED_ROOT, "domain")]) {
-            try {
-                const entries = await readdir(dir, { withFileTypes: true });
-                contexts = entries.filter((e) => e.isDirectory() && !e.name.startsWith("_")).map((e) => e.name);
-                break;
-            } catch {
-                // No such folder, or unreadable. Boundaries simply stay unresolved.
-                contexts = [];
-            }
+        try {
+            const entries = await readdir(path.join(cwd, DEVBOOK_ROOT, "domain"), { withFileTypes: true });
+            contexts = entries.filter((e) => e.isDirectory() && !e.name.startsWith("_")).map((e) => e.name);
+        } catch {
+            // No such folder, or unreadable. Boundaries simply stay unresolved.
+            contexts = [];
         }
     }
     destinations.contexts = contexts;
@@ -138,13 +134,15 @@ async function knownContexts(run, cwd) {
 }
 
 // `.devbook/domain/billing/domain.md` to `.domain/billing/domain.md`, so everything downstream
-// — the prefix table and the boundary in `segments[1]` — sees one shape.
+// — the prefix table and the boundary in `segments[1]` — sees the dotted name. A path that
+// does not start under `.devbook/` is left alone and classifies as code.
 function unnest(segments) {
-    if (segments[0] !== NESTED_ROOT || segments.length < 2) return segments;
-    return [`.${segments[1]}`, ...segments.slice(2)];
+    if (segments[0] !== DEVBOOK_ROOT || segments.length < 2) return { segments, devbook: false };
+    return { segments: [`.${segments[1]}`, ...segments.slice(2)], devbook: true };
 }
 
-function prefixFor(segments) {
+function prefixFor(segments, devbook) {
+    if (!devbook) return CODE_PREFIX;
     const head = segments[0];
     for (const [folder, prefix] of FOLDER_PREFIXES) {
         if (head === folder) return prefix;
@@ -187,9 +185,9 @@ export async function recordDestination(run, { toolName, input, cwd }) {
     if (!raw) return;
     // Derived indexes are generated output; a run that regenerated them is not *about* them.
     if (raw.includes("_meta")) return;
-    const segments = unnest(raw);
+    const { segments, devbook } = unnest(raw);
 
-    const prefix = prefixFor(segments);
+    const prefix = prefixFor(segments, devbook);
     // Boundaries are tallied per prefix, not globally: the boundary shown has to belong to the
     // files that won the prefix. A run that edited one `.domain/billing/` chapter and two
     // unrelated source files is `code`, and calling it `code:billing` would overclaim.

@@ -12,7 +12,7 @@ import { add, reply, resolve, sweep, list } from "./annotations.mjs";
 import { validateDocument } from "./metadata.mjs";
 
 const FENCE = "```";
-const REL = ".arc42/05-building-block-view.md";
+const REL = ".devbook/arc42/05-building-block-view.md";
 const ADDRESS = `${REL}#devbook-meta`;
 
 const SOURCE = [
@@ -51,7 +51,7 @@ const check = (ok, name, detail) => {
 
 async function fixture(source) {
     const root = await mkdtemp(path.join(tmpdir(), "devbook-annotations-"));
-    await mkdir(path.join(root, ".arc42"), { recursive: true });
+    await mkdir(path.join(root, ".devbook", "arc42"), { recursive: true });
     await writeFile(path.join(root, REL), source, "utf8");
     return root;
 }

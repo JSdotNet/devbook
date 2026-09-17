@@ -9,7 +9,8 @@ Materialize the tooling the way `devbook` materializes its rules: copy what is s
 report what is customized, stamp what landed. Read `devbook`'s
 `assets/reconcile-protocol.md` first for **The stamp**'s two shared fields, the hash rules,
 and the plan-before-write phase; this plugin writes `components.derived` and touches no
-other entry. The layout rule and the folder list come from devbook's stamp, never from disk.
+other entry. The folder list comes from devbook's stamp, never from disk; every folder
+lives under `.devbook/`.
 
 Stop and say so if `components.devbook` names no adopted folder: there is nothing to check
 yet — run `devbook:install` first.
@@ -26,9 +27,8 @@ yet — run `devbook:install` first.
 | `rules/devbook-derived-artifacts.md` and its `paths` | `.agents/rules/`, `.claude/rules/`, `.github/instructions/` — the trio devbook's `assets/rule-wrappers.md` describes | always |
 
 Both workflows are edited on the way in — branch name, the nightly `cron` and
-`REFRESH_BRANCH`, and the path filters' `<prefix>` rendered to the layout and the adopted
-folders. A surviving `<prefix>` matches nothing and leaves the repository with no gate; verify
-none survived. The edit makes both files customized from the first run, which is intended.
+`REFRESH_BRANCH`, and the path filters trimmed to the adopted folders. The edit makes both
+files customized from the first run, which is intended.
 
 The `AGENTS.md` section is rendered whole from `assets/agents-section.md`, appended after
 devbook's section, keyed `AGENTS.md#devbook-derived`, and follows devbook's marker rules —

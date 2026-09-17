@@ -363,12 +363,12 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
+    // Every devbook folder lives under `.devbook/` (record 78). A root-level `.tech/` is the
+    // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
-        const flat = join(repoRoot, `.${folder}`);
-        const nested = join(repoRoot, '.devbook', folder);
-        if (existsSync(flat)) return { folder, layout: 'flat', path: `.${folder}/` };
-        if (existsSync(nested)) return { folder, layout: 'nested', path: `.devbook/${folder}/` };
-        return { folder, layout: null, path: null };
+        const stray = existsSync(join(repoRoot, `.${folder}`));
+        if (existsSync(join(repoRoot, '.devbook', folder))) return { folder, path: `.devbook/${folder}/`, stray };
+        return { folder, path: null, stray };
     });
 
     // The three overlay layers the delivery checker merges, outermost first. The path rule is
@@ -693,7 +693,10 @@ function render(model) {
     out.push('');
     out.push(table(
         ['Folder', 'Present as'],
-        repo.folders.map((f) => [`\`.${f.folder}\``, f.path ? `\`${f.path}\` (${f.layout})` : 'absent']),
+        repo.folders.map((f) => [
+            `\`.${f.folder}\``,
+            (f.path ? `\`${f.path}\`` : 'absent') + (f.stray ? ` — a root-level \`.${f.folder}/\` also exists; only \`.devbook/\` is a layout, move it` : ''),
+        ]),
     ));
     out.push('');
 

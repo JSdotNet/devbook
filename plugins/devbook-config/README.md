@@ -58,7 +58,7 @@ node scripts/report.mjs --root <repository>
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
 | The overlays — `config.local.json` in this checkout's `.devbook/`, and under the user's devbook config directory for every repository and for this repository's `id` | Which layers this machine applies over the committed config, and which engine keys each touches |
 | `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
-| The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
+| The devbook folders under `.devbook/` | Which of the five this repository adopted, and any stray root-level copy that has to move |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 
 It also prints a **scope** verdict per plugin, which is what `devbook-config:update` fans out

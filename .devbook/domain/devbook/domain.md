@@ -119,22 +119,23 @@ heading level.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/78-one-layout-under-devbook.md"]
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
-subset, and the tooling emits scopes for the folders that actually exist. The folder owns its
-own derived `_meta/`, written beside its chapters, and the reading order of the files inside it
-comes from each folder's convention rather than from a stored field.
+subset, and the tooling emits scopes for the folders that actually exist. The folder lives at
+`.devbook/<kind>/`, owns its own derived `_meta/`, written beside its chapters, and the reading
+order of the files inside it comes from each folder's convention rather than from a stored
+field.
 
 ### Invariants
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A repository uses one layout for every folder and never mixes them | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
-| A nested folder drops the leading dot — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
-| An address is the chapter's real repository path under either layout | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
-| A repository containing both layouts is an error, not a preference | layout detection | untested |
+| Every folder lives under `.devbook/` and drops its leading dot there — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
+| An address is the chapter's real repository path | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
+| A root-level dot-folder is reported as an error naming the move, and never indexed | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
+| A folder's convention orders its files — root first, pinned first and last around the rest | outline build | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
 | Dropping a folder from `adopted` orphans its materialized files rather than deleting them | reconcile | untested |
 
 ### Folder Layout
@@ -143,9 +144,11 @@ comes from each folder's convention rather than from a stored field.
 type: value-object
 ```
 
-Flat or nested, and nothing else: the five folders at the repository root, or the same five
-under one `.devbook/` parent with the leading dot dropped. The value is detected rather than
-declared, and it changes no other rule.
+One `.devbook/` parent, five subfolders without their dots, the repository rollup in
+`.devbook/_meta/`, the tooling in `.devbook/_tools/`, and the stack config beside them. The
+layout is a constant rather than a detected value since
+[record 78](../../arc42/adr/78-one-layout-under-devbook.md); what is detected is which of
+the five exist.
 
 ### Folder Kind
 

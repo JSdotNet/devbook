@@ -19,9 +19,9 @@ A derived artifact lives in an `_meta/` subfolder **of the thing it
 describes**:
 
 ```
-.tech/_meta/graph.json        # derived from .tech only
-.domain/_meta/graph.json      # derived from .domain only
-_meta/graph.json              # repo-root: spans multiple source folders
+.devbook/tech/_meta/graph.json     # derived from .tech only
+.devbook/domain/_meta/graph.json   # derived from .domain only
+.devbook/_meta/graph.json          # rollup: spans multiple source folders
 ```
 
 - **Scoped artifact** — derived from exactly one folder: it belongs in that
@@ -29,7 +29,8 @@ _meta/graph.json              # repo-root: spans multiple source folders
   self-contained, and moving or removing the folder takes its derived data
   with it.
 - **Cross-cutting artifact** — derived from two or more source folders: it
-  belongs in the repository-root `_meta/`.
+  belongs in `.devbook/_meta/`, beside the folders it spans. Nothing derived
+  ever lands at the repository root.
 
 Never nest `_meta/` deeper than one level below its scope, and never put a
 derived artifact anywhere other than an `_meta/` folder.
@@ -45,7 +46,7 @@ readable content — see `devbook-naming.md`.
 
 - **`<artifact>`** — kebab-case, describing *what the artifact is*, not what
   produced it or what it covers. The enclosing folder already states the
-  scope, so `.tech/_meta/graph.json` — not `tech-graph.json`.
+  scope, so `.devbook/tech/_meta/graph.json` — not `tech-graph.json`.
 - **`<format>`** — the real file extension (`json`, `ndjson`, `csv`).
 - Files inside `_meta/` are **not** underscore-prefixed again; the folder
   already carries that signal.
@@ -123,7 +124,7 @@ payload:
 
 ## Adding a new derived artifact
 
-1. Decide the scope: one folder (scoped) or several (repository-root).
+1. Decide the scope: one folder (scoped) or several (the `.devbook/_meta/` rollup).
 2. Add the generator under `.devbook/_tools/<tool-name>/`, with a README.
 3. Emit the required envelope and keep the output deterministic.
 4. Write it to `<scope>/_meta/<artifact>.<format>`.
@@ -175,14 +176,14 @@ repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |
 |---|---|---|---|
-| `_meta/graph.json` | repository-wide | reference graph | `.devbook/_tools/devbook-meta/build.mjs` |
-| `_meta/index.json` | repository-wide | ordered reading outline | same |
-| `_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
-| `.arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |
-| `.domain/_meta/*.json` | `.domain` | all three of the above, scoped | same |
-| `.tech/_meta/*.json` | `.tech` | all three of the above, scoped | same |
-| `.design/_meta/*.json` | `.design` | all three of the above, scoped | same |
-| `.ai/_meta/*.json` | `.ai` | all three of the above, scoped | same |
+| `.devbook/_meta/graph.json` | repository-wide | reference graph | `.devbook/_tools/devbook-meta/build.mjs` |
+| `.devbook/_meta/index.json` | repository-wide | ordered reading outline | same |
+| `.devbook/_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
+| `.devbook/arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |
+| `.devbook/domain/_meta/*.json` | `.domain` | all three of the above, scoped | same |
+| `.devbook/tech/_meta/*.json` | `.tech` | all three of the above, scoped | same |
+| `.devbook/design/_meta/*.json` | `.design` | all three of the above, scoped | same |
+| `.devbook/ai/_meta/*.json` | `.ai` | all three of the above, scoped | same |
 
 `annotations.json` is derived like the other two: the notes themselves are
 authored Markdown in the chapters, so deleting this file loses nothing. Write a
