@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Weekly Cost Analysis
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Read the token usage the bound delivery surface recorded for each flow run

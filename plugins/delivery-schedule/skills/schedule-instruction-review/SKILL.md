@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Instruction Review
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Instructions decay the opposite way from code: nobody deletes a sentence, so every asset grows

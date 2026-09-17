@@ -23,20 +23,20 @@ const find = (problems, severity, needle) =>
 
 const repoRoot = await mkdtemp(path.join(tmpdir(), "devbook-schema-gate-"));
 try {
-    await mkdir(path.join(repoRoot, ".tech"), { recursive: true });
-    await mkdir(path.join(repoRoot, ".domain", "ordering"), { recursive: true });
+    await mkdir(path.join(repoRoot, ".devbook", "tech"), { recursive: true });
+    await mkdir(path.join(repoRoot, ".devbook", "domain", "ordering"), { recursive: true });
 
     // An out-of-ladder rating. `.tech` has no resting value, so the ladder is
     // the whole of what `status` may say.
     await writeFile(
-        path.join(repoRoot, ".tech", "technology-graph.md"),
+        path.join(repoRoot, ".devbook", "tech", "technology-graph.md"),
         `# Technology Graph\n\n${fence("status: nonsense-rung\n")}\nProse.\n`,
         "utf8"
     );
 
     // A structural heading with no block, which is legal and stays a warning.
     await writeFile(
-        path.join(repoRoot, ".domain", "ordering", "domain.md"),
+        path.join(repoRoot, ".devbook", "domain", "ordering", "domain.md"),
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
             `${fence("type: aggregate\n")}\n` +
             `Prose.\n\n### Notes\n\nProse.\n`,
@@ -48,7 +48,7 @@ try {
     // Written on a `feature` chapter, where the field is in scope, so the only
     // thing wrong with it is the value.
     await writeFile(
-        path.join(repoRoot, ".domain", "ordering", "features.md"),
+        path.join(repoRoot, ".devbook", "domain", "ordering", "features.md"),
         `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
             `${fence("type: feature\nfeature-flag: [.domain/ordering/domain.md#order]\n")}\n` +
             `Prose.\n`,

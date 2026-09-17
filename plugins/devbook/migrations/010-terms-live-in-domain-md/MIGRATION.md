@@ -8,7 +8,7 @@ breaking: yes
 
 ## What
 
-`naming.md` is no longer a `.domain` file kind, and `naming` is no longer a
+`naming.md` is no longer a `domain/` file kind, and `naming` is no longer a
 file `type`. A bounded context keeps its vocabulary in `domain.md`: a term that
 is already a chapter — an aggregate, an entity, a value object, an enum, a
 domain service, a domain event, an actor — carries its surface names in that
@@ -28,14 +28,14 @@ which is what the merge behind record 45 found: twenty-eight of seventy-three
 terms restated a chapter beside them. Record 45 made the file optional and
 stopped using it; this finishes the move, so that resolving a term never has
 to ask which of two layouts a context picked. The decision is
-`.devbook/arc42/adr/77-a-term-is-a-chapter-or-an-alias.md` in the marketplace.
+`.devbook/arc42/adr/82-a-term-is-a-chapter-or-an-alias.md` in the marketplace.
 
 ## What breaks
 
-A `.domain/<context>/naming.md` fails validation: `naming` is not a file type
+A `domain/<context>/naming.md` fails validation: `naming` is not a file type
 the generator knows, and the file sits outside the reading order. Every
 `related` reference and Markdown link that resolved to
-`.domain/<context>/naming.md#<term>` resolves to nothing until this runs.
+`.devbook/domain/<context>/naming.md#<term>` resolves to nothing until this runs.
 
 A context that already keeps its terms in `domain.md` — every context in a
 repository that adopted devbook at 1.0.0 or later, unless it wrote the file by
@@ -50,8 +50,7 @@ node migrate.mjs --check
 `--check` exits `1` while work remains and `0` when the repository is clean; it
 writes nothing, and it is what CI and the plan phase of `devbook:install` call.
 Drop the flag to apply. Running it twice changes nothing. Both forms take
-`--root <path>`, defaulting to the working directory, and find the flat
-`.domain/` or the nested `.devbook/domain/` layout on their own.
+`--root <path>`, defaulting to the working directory.
 
 ## What the script does, and does not
 

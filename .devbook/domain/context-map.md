@@ -8,10 +8,10 @@ related: [".devbook/arc42/adr/44-one-plugin-one-bounded-context.md", ".devbook/a
 
 **One plugin, one bounded context.** A plugin is the unit a host installs, versions, and can
 refuse to load, so it is already the line a model cannot cross without somebody declaring it —
-which is what a bounded context has to be before it earns a folder here. Nine folders follow
-the nine plugin folders under `plugins/`, name for name, plus
+which is what a bounded context has to be before it earns a folder here. Ten folders follow
+the ten plugin folders under `plugins/`, name for name, plus
 [Plugin Authoring](#plugin-authoring), the only one that is not a plugin: it is the language
-the other nine are written in. See
+the other ten are written in. See
 [the decision](../arc42/adr/44-one-plugin-one-bounded-context.md).
 
 This repository ships authoring assets rather than a running product, so a *user* here is a
@@ -24,6 +24,7 @@ and every context conforms to them rather than the other way round.
 |---|---|---|
 | How an asset is written, packaged, and installed | Supporting | [Plugin Authoring](#plugin-authoring) |
 | Durable, addressed documentation | Core | [Devbook](#devbook) |
+| Keeping the derived index committed and current | Supporting | [Devbook Derived](#devbook-derived) |
 | Review and approval of a chapter | Supporting | [Devbook Collaboration](#devbook-collaboration) |
 | Which stack a repository runs, and what it has | Supporting | [Devbook Config](#devbook-config) |
 | Carrying one unit of work to a review-ready change | Core | [Delivery](#delivery) |
@@ -44,6 +45,7 @@ flowchart TB
 
     subgraph devbookStack["devbook stack"]
         DB["Devbook"]
+        DBD["Devbook Derived"]
         DBC["Devbook Collaboration"]
     end
 
@@ -66,6 +68,7 @@ flowchart TB
     PA -.->|"Shared Kernel"| surfaces
     PA -.->|"Shared Kernel"| CFG
 
+    DB -->|"Customer/Supplier, declared"| DBD
     DB -->|"Customer/Supplier, declared"| DBC
     DEL -->|"Customer/Supplier, declared"| FLT
     DEL -->|"Customer/Supplier, declared"| SCH
@@ -89,11 +92,13 @@ relationship that exists in the assets and in no manifest.
 | Upstream | Downstream | Pattern | Declared |
 |---|---|---|---|
 | Plugin Authoring | every context | Shared Kernel | No — it is the vocabulary, not a plugin |
+| Devbook | Devbook Derived | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
-| Devbook | Delivery Schedule | Separate Ways | No — `devbook-check` and `devbook-tech-update` are named as targets and skipped when absent |
+| Devbook | Delivery Schedule | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
+| Devbook Derived | Delivery Schedule | Separate Ways | No — `schedule-devbook-check` refreshes where the script exists and skips where it does not |
 | Devbook | Delivery | **Undeclared** | No, and it should be — see [debt record 4](../arc42/tdr/4-delivery-depends-on-devbook.md) |
 | every context | Devbook Config | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every context | Conformist | Not declarable; the host decides what loads |
@@ -108,8 +113,11 @@ devbook is absent.
 
 | Published language | Owned by | Consumed by | Carried as |
 |---|---|---|---|
-| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter, and every `_meta/` reader | `rules/devbook-chapter-metadata.md`, materialized into a repository |
-| The `ext.<plugin>.<key>` extension namespace | Devbook | Devbook Collaboration, and any later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
+| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter | `rules/devbook-chapter-metadata.md`, materialized into a repository |
+| The checker's CLI — `--check`, `--print`, `--write`, `--scope` | Devbook | Devbook Derived's refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
+| The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | Devbook Derived | Devbook Collaboration's queue and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
+| The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
+| The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Delivery | The three surfaces | `resources/surface-contract.md`; tool names matched by pattern |
 | The extension-point set and the gate contract | Delivery | Fleet, Delivery Schedule, and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
 | `.devbook/config.json` — four engine keys plus one stamp per component | Delivery owns the four keys; each component owns its own stamp | Devbook Config reads all of it; every install skill writes one key | `resources/config.schema.json` |
@@ -144,7 +152,7 @@ related: [".devbook/domain/plugin-authoring/domain.md", ".devbook/arc42/05-build
 
 The shared kernel: the folder shape of a plugin, the two manifests, the marketplace listing,
 the layer order, and what a plugin leaves behind in a repository that installs it. It is the
-one context that is not a plugin, because it is the language the other nine are written in.
+one context that is not a plugin, because it is the language the other ten are written in.
 Everything it defines is co-owned — a change to the plugin folder shape is a change to every
 context at once, which is what a shared kernel means and why it stays small.
 
@@ -160,6 +168,20 @@ ladders, the reference graph derived from them, annotation fences, the reconcile
 materializes the convention into a repository, and the converters between a chapter and the
 code that implements it. It ships the shape and the check, and never a flow.
 
+## Devbook Derived
+
+```meta
+type: bounded-context
+related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+```
+
+The committed index and the canvas that draws it: for a repository that keeps the derived
+`_meta/` files in its tree, the `refresh` skill, the refresh script, the nightly refresh, the
+drift warning, the rule that places them, the `devbook-graph` canvas, and the install that
+puts those in. It computes nothing — every byte under `_meta/` and every node the canvas
+draws is devbook's checker's output, reached by `--write` or by loading its modules from
+their materialized path.
+
 ## Devbook Collaboration
 
 ```meta
@@ -168,9 +190,9 @@ related: [".devbook/domain/devbook-collaboration/domain.md", ".devbook/arc42/adr
 ```
 
 Who owes the next move on a chapter: request a review, record findings and a verdict, and run
-the approval decision that writes devbook's own `approved` rung. Every fact it remembers lives
-in devbook's `ext` namespace, which is what lets it version independently of the schema it
-writes beside.
+the approval decision that writes devbook's own `approved` rung. Every fact it remembers is
+one of devbook's own review fields, so it owns procedure and no vocabulary — four skills,
+nothing installed, nothing stamped.
 
 ## Devbook Config
 

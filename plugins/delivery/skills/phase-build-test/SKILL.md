@@ -5,6 +5,8 @@ description: 'Shared Build & Test phase for code-modifying flow-* flows. Builds 
 
 # Phase: Build & Test
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Reusable **Build & Test** phase shared by every code-modifying `flow-*` flow. The
 `flow-runner` agent invokes this skill first — before Validation and Personal
 Validation — so build and test behavior lives in one place instead of in each skill.

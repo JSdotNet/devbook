@@ -5,6 +5,8 @@ description: 'Set a repository up for this marketplace for the first time — de
 
 # devbook-config setup
 
+Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Turn a repository with no stack config into one the engine can run in. This runs **before any

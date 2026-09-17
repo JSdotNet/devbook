@@ -34,9 +34,9 @@ user to run something themselves.
 
 | Situation | Route to |
 |---|---|
-| The change requires a new architectural decision | `flow-spec`, which records it in `.arc42/` |
+| The change requires a new architectural decision | `flow-spec`, which records it in `arc42/` |
 | The change requires a new bounded context or service boundary | `flow-spec` for the boundary decision, then `flow-code`'s create kind |
-| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-spec`, which owns `.domain/`; skip this row when the repository keeps no `.domain/` folder |
+| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-spec`, which owns `domain/`; skip this row when the repository keeps no `domain/` folder |
 | The change requires a cross-cutting redesign | `flow-spec`, as a proposed decision first |
 | Accepting known debt instead of fixing it | `flow-spec`, as a technical debt record |
 

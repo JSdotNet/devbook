@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Fleet: Morning Brief
 
+Open the reply with `fleet@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Answer one question in one screen: **what happened overnight, and what needs me?**

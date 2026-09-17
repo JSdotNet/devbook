@@ -5,16 +5,18 @@ description: 'Run the approval decision on a devbook chapter — show the chapte
 
 # chapter approve
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Turn a cleared review into devbook's recorded decision, or refuse to. This is
 the one place `status: approved` is written, and it is never written without a
 person choosing it in this session.
 
-`status`, `approved-by`, and `approved-at` are devbook's fields — see
+`status`, `approved-by`, and `approved-at` are devbook's fields, and so are
+the `review`, `reviewer`, and `review-at` this skill clears — see
 `devbook-chapter-metadata.md`. So is the annotation fence a finding is written
-as: `devbook-annotations.md`. The three collaboration keys this skill clears are
-in `../../rules/chapter-collaboration.md`.
+as: `devbook-annotations.md`.
 
 This file exceeds the 40-line body budget on purpose. Most of what is over is
 the confirmation before a recorded decision and the three outcomes it can take,
@@ -78,11 +80,12 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    ```
 
    `approved-by` is the person who just chose it, never the reviewer by default
-   and never you. In the same change, delete every
-   `ext.devbook-collaboration.*` key on the chapter and sweep its resolved
-   notes — `annotations.mjs sweep --chapter <path#slug>`. The decision is now
-   the record, and both the review state and an answered note are stale by
-   construction on an approved chapter.
+   and never you. In the same change, delete `review`, `reviewer`, and
+   `review-at` from the chapter and sweep its resolved notes —
+   `annotations.mjs sweep --chapter <path#slug>`. The decision is now the
+   record, and both the review state and an answered note are stale by
+   construction on an approved chapter; devbook's check refuses review state
+   on an approved chapter.
 
 5. **Report** the chapter, who approved it, and the day. Commit the chapter with
    its metadata, and stop.
@@ -102,7 +105,7 @@ that is a new decision, and it starts at step 1.
 - Do not approve on your own judgment, however clear the chapter is.
 - Do not write `approved-by` or `approved-at` without `status: approved`, or the
   rung without both — devbook reports either half left alone.
-- Do not leave collaboration keys or resolved notes behind on an approved
+- Do not leave review fields or resolved notes behind on an approved
   chapter, and never sweep an open note to clear the way for an approval.
 - Do not approve a chapter to unblock a flow. An unapproved chapter parks the
   run; that is the designed outcome, not a failure to route around.

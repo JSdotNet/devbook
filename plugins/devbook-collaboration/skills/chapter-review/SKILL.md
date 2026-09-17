@@ -5,16 +5,19 @@ description: 'Review one devbook chapter and record the verdict on the chapter i
 
 # chapter review
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Review one chapter and leave the verdict where the next reader will find it: in
 the chapter's own `meta` block. Findings are recorded, not merely reported, so
 an unanswered question survives the session that raised it.
 
-State keys and the three review states are in
-`../../rules/chapter-collaboration.md`. A finding is an annotation fence, not a
-key — devbook's `devbook-annotations.md` has its schema and lifecycle, and
-`tools/devbook-meta/annotations.mjs` is the only thing that writes one. Read
+The three review fields and their states are devbook's — `review`, `reviewer`,
+`review-at` in `devbook-chapter-metadata.md`. A finding is an annotation fence,
+not a field — `devbook-annotations.md` has its schema and lifecycle, and
+devbook's `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing that
+writes one. Read
 both first.
 
 This file exceeds the 40-line body budget on purpose: the lens table in step 3
@@ -47,7 +50,7 @@ lens is a review that misses the finding.
    | Evidence | Does every claim that could be proven carry a `tests` entry, and does the named test still exist? |
    | Edges | Does every `related` and `depends-on` target resolve, and is each one a real relationship rather than a stale one? |
    | Vocabulary | Are the terms the ones `domain.md` defines, used the way it defines them? |
-   | Status | Does `status` match reality — a `draft` that shipped, a `deprecated` still in use, a `.tech` rating nobody has revisited? |
+   | Status | Does `status` match reality — a `draft` that shipped, a `deprecated` still in use, a `tech/` rating nobody has revisited? |
    | Scope | Does the chapter say one thing, or has a second subject grown inside it that wants its own chapter? |
    | Gaps | What does a reader need that the chapter does not say? |
 

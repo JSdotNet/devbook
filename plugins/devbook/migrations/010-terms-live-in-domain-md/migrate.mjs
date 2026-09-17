@@ -18,14 +18,11 @@ const checkOnly = args.includes("--check");
 const rootIndex = args.indexOf("--root");
 const ROOT = path.resolve(rootIndex !== -1 ? args[rootIndex + 1] : process.cwd());
 
-// Both layouts: five flat dot-folders, or the same five under `.devbook/`. A
-// repository picks one, but a reference into `naming.md` can sit in any folder
-// of either, so every folder that exists is scanned for references.
+// The five folders under `.devbook/`, the one layout the convention has
+// (record 80). A reference into `naming.md` can sit in any of them, so every
+// folder that exists is scanned for references.
 const FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
-const CANDIDATES = [
-    ...FOLDER_NAMES.map((name) => `.${name}`),
-    ...FOLDER_NAMES.map((name) => `.devbook/${name}`),
-];
+const CANDIDATES = FOLDER_NAMES.map((name) => `.devbook/${name}`);
 
 const GROUPING = "## Ubiquitous Language";
 const GROUPING_BLOCK = `${GROUPING}\n\n\`\`\`meta\ntype: ubiquitous-language\n\`\`\`\n`;

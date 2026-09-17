@@ -11,8 +11,8 @@ rules, the brief contract, and the report table; this file carries the kind.
 | File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `stakeholders.md` where the context has one; when applying, every chapter in `depends-on` and every `related` `domain.md` chapter too |
-| Write path | The `.domain` flow, per **Where the spec-side write goes** in the protocol |
-| Index scope | `--scope .domain` |
+| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
 
 ## Business language, from the user's point of view
@@ -24,7 +24,7 @@ delivers. A chapter that lists routes has captured the wrong thing; a capability
 that cannot be stated without naming a technical artifact is an implementation
 detail, not a feature.
 
-Feature chapters are the only `.domain` chapters that carry `depends-on` and
+Feature chapters are the only `domain/` chapters that carry `depends-on` and
 `feature-flag`. `feature-flag` is an **identity** link only — this chapter and
 that flag are the same capability — and never a status mapping in either
 direction: a flag at full rollout does not make a chapter `active`, and a `draft`
@@ -78,7 +78,7 @@ code and tests. Never toggle a flag in an environment other people use.
 
 **Screenshots are evidence, not chapters.** They belong in the report, and where
 the repository has a convention for run artifacts, there. `features.md` stays
-prose; `.design` explicitly does not hold screenshots either.
+prose; `design/` explicitly does not hold screenshots either.
 
 From the code, trace the reachable paths and the flag and role checks gating
 them, then read the acceptance and end-to-end tests — their names are often the
@@ -137,5 +137,5 @@ invariants from the `related` chapters hold.
   the flow was observed when it was not.
 - Do not run the feature against a shared, staging, or production environment;
   do not exercise a destructive step to document it.
-- Do not commit screenshots into `.domain/` or `.design/`.
+- Do not commit screenshots into `domain/` or `design/`.
 - Do not design the user interface, the API shape, or the screen flow in a brief.
