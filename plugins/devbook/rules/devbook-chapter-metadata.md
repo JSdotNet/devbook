@@ -315,7 +315,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   `YYYY-MM-DD` form: the day a decision was taken, debt was logged, or a record
   was dated. It is **not** a last-modified timestamp — git already knows that,
   and a hand-maintained one goes stale the first time someone forgets. Set it
-  where the date is part of the content (an ADR's decision date, a TDR's logged
+  where the date is part of the content (a decision record's newest decision, a TDR's logged
   date) and omit it everywhere else. Available in every folder.
 - **tests** (optional) — list of the test cases that assert what this chapter
   or file claims, each written as a `<level>:<runner>:<selector>` test
@@ -333,9 +333,9 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   runner vocabularies, and why this field exists where a code-path field
   deliberately does not.
 - **number** (optional, **file-level blocks only**) — this document's number
-  within its directory, as a single non-negative integer: arc42 chapter 9, ADR
-  7, TDR 2. A numbered filename (`09-architecture-decisions.md`,
-  `7-use-postgres.md`) supplies the number on its own, so the field is only
+  within its directory, as a single non-negative integer: arc42 chapter 9,
+  TDR 2. A numbered filename (`09-architecture-decisions.md`,
+  `7-no-retry-budget.md`) supplies the number on its own, so the field is only
   needed when the filename does not carry one, or carries the wrong one. See
   "[Where reading order comes from](#where-reading-order-comes-from)".
 - **index** (optional, **file-level blocks only**) — how this document steers
@@ -567,8 +567,8 @@ chapter.
 
 Files in a devbook folder have an intended reading order that alphabetical
 sorting does not capture — `.domain` reads `domain` → `features` → `model`
-before `naming`, not the other way round, and ADR 10 comes after ADR 7 rather
-than after ADR 1.
+before `naming`, not the other way round, and TDR 10 comes after TDR 7 rather
+than after TDR 1.
 
 That order is never declared by *listing siblings* in one document's block. It
 comes from the folder convention, and from what a document says about **itself**
@@ -593,11 +593,11 @@ Per directory, `_meta/index.json` is generated like this:
    them in one directory is an error.
 
 2. **If anything left carries a number, the directory is a numbered set** and
-   sorts by that number ascending — arc42 chapters, ADRs, TDRs, `.ai` stage
+   sorts by that number ascending — arc42 chapters, TDRs, `.ai` stage
    files. The number comes
    from the `number` field, or from a numbered filename when there is no field:
-   `09-architecture-decisions.md`, `7-use-postgres.md`, and
-   `ADR-0007-use-postgres.md` all read as numbers. Numbering by filename is
+   `09-architecture-decisions.md`, `7-no-retry-budget.md`, and
+   `TDR-0007-no-retry-budget.md` all read as numbers. Numbering by filename is
    worth preferring, because it is the ordering a reader sees in a directory
    listing too. Two documents claiming one number is an error; anything
    unnumbered is filename-sorted after the numbered run.

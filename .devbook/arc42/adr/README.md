@@ -8,6 +8,13 @@ related: [".devbook/arc42/09-architecture-decisions.md"]
 A choice this repository made and can defend. One record per decision, numbered by filename,
 each carrying the day the decision was taken.
 
+That is the shape `devbook-arc42.md` prescribed when the set was written. Since 2026-09-17 the
+rule keeps one record per technical concern, updated in place with a history table, and leaves
+a naming or process choice to the file that states it. This set is still in the old shape;
+[debt record 7](../tdr/7-the-decision-set-predates-the-concern-rule.md) owes the fold and says
+how. Until it lands, a new decision on a concern one of these records covers is written into
+that record, not as a seventy-seventh file.
+
 A record belongs here rather than in
 [chapter 11](../11-risks-and-technical-debt.md) when **something was decided**. A decision
 records a choice somebody made and can defend; a debt record names a gap somebody found and
