@@ -41,7 +41,7 @@ whose install rewrites content the repository authored, which is devbook alone:
   "components": {
     "devbook": {
       "pluginVersion": "1.0.0",
-      "contractVersion": 9,
+      "contractVersion": 10,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
         ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
@@ -52,7 +52,7 @@ whose install rewrites content the repository authored, which is devbook alone:
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
         ".github/instructions/devbook-arc42.instructions.md": { "from": "1.0.0", "hash": "sha256:e3f0…", "managed": true }
       },
-      "migrations": []
+      "migrations": [{ "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" }]
     }
   }
 }

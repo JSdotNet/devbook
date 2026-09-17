@@ -211,7 +211,7 @@ rules, index regeneration, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
-signal when it does. It goes through a `term` chapter's `aliases`, then the `.arc42`
+signal when it does. It goes through the chapter's `aliases`, then the `.arc42`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
@@ -362,7 +362,8 @@ migrations/
     └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
 
-1.0.0 ships none, so the folder is absent until the first breaking change after it. The
+1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which folds a
+context's optional `naming.md` into `domain.md` now that the file kind is gone. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
@@ -389,7 +390,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **9**, covering the metadata schema a repository authors
+One number, currently **10**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -397,10 +398,10 @@ releases leave it alone: plugin semver moves for prose and new skills,
 `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
 `tools/devbook-meta/graph.mjs`.
 
-1.0.0 ships at 9. The number counts schema shapes rather than releases and was not
+1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
-the contract a 1.0.0 generator writes, and the first breaking change after 1.0.0 ships as
-`010-<slug>`.
+the contract a 1.0.0 generator writes. 10 removed the `naming` file type from `.domain`,
+and ships as `010-terms-live-in-domain-md`.
 
 ## Upgrade notes
 

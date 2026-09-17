@@ -21,8 +21,8 @@ already treat as an addressable unit:
   carry their own metadata block; they are not covered by their parent
   Aggregate's block.
 - `.domain/<context>/features.md` — each Feature and Sub-feature.
-- `.domain/<context>/naming.md`, or `domain.md`'s `## Ubiquitous Language`
-  grouping where the context has no `naming.md` — each `Term` chapter.
+- `.domain/<context>/domain.md`, under its `## Ubiquitous Language` grouping —
+  each `Term` chapter.
 - `.domain/<context>/skills.md` — each Feature and Sub-feature, where the
   context describes skills rather than product features.
 - `.domain/<context>/stakeholders.md` — each Actor and each Party.

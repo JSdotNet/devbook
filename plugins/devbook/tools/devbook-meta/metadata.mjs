@@ -111,7 +111,6 @@ const TYPE_BY_FOLDER = {
             "model",
             "flow",
             "dependencies",
-            "naming",
         ],
     },
     tech: {
@@ -320,12 +319,11 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
 // visibly wrong: `depends-on` on an aggregate generates a real graph edge the
 // model never claimed.
 //
-// A field a folder rule scopes only by *convention* stays out of this table.
-// `.domain`'s `aliases` is the case in point: the rule gives it to `term`
-// chapters, but a term that is already an aggregate, service, event, or field
-// carries its aliases on that chapter rather than earning a duplicate `term`
-// chapter beside it, so the field is legal on any chapter and only the
-// file-level prohibition above applies.
+// A field a folder rule gives to every chapter stays out of this table.
+// `.domain`'s `aliases` is the case in point: a modelled concept carries its
+// surface names on its own chapter and a `term` chapter exists only for a word
+// that has no chapter to carry them, so the field is legal on any chapter and
+// only the file-level prohibition above applies.
 const FIELD_TYPE_SCOPE = {
     // `.domain`: delivery order and the feature flag both belong to a
     // capability. `domain.md` chapters describe standing structure and relate

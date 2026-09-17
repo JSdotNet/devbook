@@ -74,7 +74,6 @@ const DIRECTORY_CONVENTION = {
             "model.md",
             "flow.md",
             "dependencies.md",
-            "naming.md",
         ],
         last: [],
     },

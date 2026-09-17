@@ -44,14 +44,12 @@ across `.domain`, ADRs, and code module names where practical.
     flow.<name>.md   # optional: one flow, split out of flow.md when it is
                      # large enough or invoked often enough to stand alone
     dependencies.md
-    naming.md        # optional: the terms may live in domain.md instead
 ```
 
 When starting a new bounded context, create the folder with `domain.md`,
 `stakeholders.md`, `model.md`, `dependencies.md`, and one of `features.md` or
 `skills.md`, using the templates below. Add `flow.md` when the context has
-lifecycle or process flows, and `naming.md` when its vocabulary is large enough
-to want a file of its own.
+lifecycle or process flows.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -77,13 +75,15 @@ in `.design` where a repository wants one. A context nobody operates directly �
 a library, or one reached only by another context — omits the file, and its
 absence is not a missing file.
 
-**`naming.md` is optional and its absence is not a missing file.** A context
-either gives its vocabulary a file or keeps the same `term` chapters at the end
-of `domain.md`; the chapter, its `type`, its `aliases`, and the `related` link
-to where the term is modelled are identical either way, and so is the address
-that resolves to it. Prefer the file where a context has enough terms that they
-would bury the model, and `domain.md` where a reader wants the vocabulary
-beside the thing it names.
+**The ubiquitous language is the model, so it lives on the model.** A term that
+is already a chapter — an aggregate, an entity, a value object, an enum, a
+domain service, a domain event, an actor — carries its surface names in that
+chapter's `aliases` field and earns no second chapter. Only a term with no
+chapter to sit on — a role word, a process word, a name a consumer uses for
+something this context never models as a thing — becomes a `term` chapter, under
+the `## Ubiquitous Language` grouping at the end of `domain.md`. There is no
+separate glossary file: a registry that names what the model already names is a
+second copy, and it goes stale on the side nobody reads.
 
 **`flow.<name>.md` splits one flow out of `flow.md`.** The suffix is the flow's
 own name — for a procedure the repository ships, its skill name, so
@@ -99,8 +99,7 @@ filenames. `context-map.md` is `.domain`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
 tree above — `stakeholders.md`, `skills.md` or `features.md`, `model.md`,
-`flow.md`, `dependencies.md`, `naming.md`, then any `flow.<name>.md` in
-filename order.
+`flow.md`, `dependencies.md`, then any `flow.<name>.md` in filename order.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
@@ -195,19 +194,6 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     another bounded context, a module, or a technical system is a dependency,
     not a stakeholder. One file describes a relationship, so the two have no way
     of contradicting each other.
-- **naming.md** — The context's ubiquitous-language naming registry: one
-  chapter per key term, headed by the canonical term itself. Surface synonyms
-  are recorded in the `aliases` metadata field; a `related` reference links the
-  term to the chapter where it is modeled. This gives every synonym (code class
-  name, id field, consumer-side copy) a single canonical concept.
-
-  **Optional.** A context may keep the same `term` chapters at the end of
-  `domain.md` instead, under a `## Ubiquitous Language` grouping heading. The
-  chapters are identical either way — same `type: term`, same `aliases`, same
-  `related` link to where the term is modelled — and only the path in front of
-  the anchor changes. Nothing outside the context should have to know which
-  layout was picked: resolve a term by searching the context for a `term`
-  chapter, never by assuming a filename.
 
 ## Folder rules
 
@@ -218,16 +204,16 @@ instructions.
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
   `features.md` or `skills.md`, every Actor and Party chapter in
-  `stakeholders.md`, and every Term chapter — in `naming.md` or
-  under `domain.md`'s `## Ubiquitous Language` grouping — must carry a
+  `stakeholders.md`, and every Term chapter under `domain.md`'s
+  `## Ubiquitous Language` grouping must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
 - Every file in `.domain` — `context-map.md` and, per bounded context,
   `domain.md`, `stakeholders.md`, `features.md` or `skills.md`, `model.md`,
-  `flow.md` and each `flow.<name>.md` (when present), `dependencies.md`, and
-  `naming.md` (when present) — must also carry the file-level
+  `flow.md` and each `flow.<name>.md` (when present), and `dependencies.md` —
+  must also carry the file-level
   metadata block described in
   `devbook-chapter-metadata.md`, placed directly
   under the file's top-level `#` heading. This applies even to
@@ -255,7 +241,7 @@ instructions.
   | Level | Values |
   |---|---|
   | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `actor`, `party`, `term` |
-  | File | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | File | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies` |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -273,8 +259,7 @@ instructions.
   (`.domain/order-management/domain.md#order`). The two exceptions are the
   `## Shared Value Objects` and `## Shared Enums` chapters, whose headings name
   a grouping rather than a single thing, so the descriptive text *is* the name.
-  `## Ubiquitous Language`, where a context keeps its terms in `domain.md`, is a
-  third of the same kind.
+  `## Ubiquitous Language` is a third of the same kind.
   File titles are the bounded-context name alone (`# Order Management`), with
   the file's own `type` distinguishing the files of a context. A
   `flow.<name>.md` is the one exception, and it is still not a kind in the
@@ -373,19 +358,17 @@ instructions.
   just to document process-manager behavior; keep that semantics in the
   relevant Domain Service chapter unless a separate structure is later decided
   explicitly.
-- Term chapters carry an `aliases` field: a list of
-  plain-string surface names the term is also known by (code class/identifier
-  names, snake_case id fields, or a consumer context's local copy name).
-  Unlike `related`/`depends-on`, `aliases` entries are plain strings, not
-  `<path>#<heading-slug>` references — the link to the canonical modeling
-  chapter is carried by that term's `related` field instead. Omit `aliases`
-  when the term has none.
-
-  **`aliases` is not restricted to `type: term`.** A term that is already a
-  chapter — an aggregate, an entity, a value object, an enum, a domain service,
-  a domain event — carries its aliases on that chapter, rather than earning a
-  duplicate `term` chapter beside it. Any chapter may carry the field; the
-  file-level block may not, like every other folder-specific field.
+- Any chapter may carry an `aliases` field: a list of plain-string surface
+  names the thing is also known by — a code class or identifier name, a
+  snake_case id field, a consumer context's local copy name, a host's own word
+  for it. Unlike `related`/`depends-on`, `aliases` entries are plain strings,
+  not `<path>#<heading-slug>` references. Omit the field when there are none;
+  the file-level block may not carry it, like every other folder-specific
+  field. This is how a modelled concept is its own glossary entry: the aggregate
+  chapter `## Order` with `aliases: [OrderRoot, order_id]` is the term *Order*,
+  and every synonym resolves to that one chapter. A `term` chapter exists only
+  for a word that has no chapter to carry the field, and its `related` field
+  points at the chapters it is about.
 
 ## Templates
 
@@ -575,8 +558,9 @@ status: draft
 type: ubiquitous-language
 \`\`\`
 
-> Present only where the context keeps its terms here rather than in
-> `domain.md`. A grouping heading, so its descriptive text *is* its name.
+> The terms this context owns that are not chapters above. A term that is a
+> chapter carries its aliases on that chapter instead. A grouping heading, so
+> its descriptive text *is* its name; omit the grouping when there are none.
 
 ### <Canonical Term>
 
@@ -869,31 +853,3 @@ type: dependencies
   artifact if one exists for this relationship, instead of duplicating it.
 ```
 
-
-### naming.md
-
-```markdown
-# <Bounded Context Name>
-
-\`\`\`meta
-status: draft
-type: naming
-\`\`\`
-
-> Canonical ubiquitous-language terms for this bounded context and their
-> aliases. Each term links to where it is modeled (related); surface names it
-> is also known by are recorded in the aliases metadata field so any synonym
-> resolves back to one canonical concept.
-
-## <Canonical Term>
-
-\`\`\`meta
-status: draft
-type: term
-aliases: [<AliasA>, <AliasB>]
-related: [.domain/<context>/domain.md#<heading-slug>]
-\`\`\`
-
-Definition of the term and, where useful, when each alias appears (code
-identifier, id field used by other contexts, consumer-side copy name).
-```
