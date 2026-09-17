@@ -175,10 +175,12 @@ type: bounded-context
 related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
-The committed index: for a repository that keeps the derived `_meta/` files in its tree, the
-refresh script, the nightly refresh, the drift warning, the rule that places them, and the
-install that puts those in. It computes nothing — every byte under `_meta/` is devbook's
-checker's output, asked for with `--write`, the one flag nothing in devbook passes.
+The committed index and the canvas that draws it: for a repository that keeps the derived
+`_meta/` files in its tree, the `refresh` skill, the refresh script, the nightly refresh, the
+drift warning, the rule that places them, the `devbook-graph` canvas, and the install that
+puts those in. It computes nothing — every byte under `_meta/` and every node the canvas
+draws is devbook's checker's output, reached by `--write` or by loading its modules from
+their materialized path.
 
 ## Devbook Collaboration
 

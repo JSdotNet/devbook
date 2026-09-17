@@ -309,16 +309,15 @@ nothing else, so its two operations arrive as canvas actions rather than namespa
 which is why the contract matches operation names and never a transport. See
 [the decision](../../arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
 
-The fourth, `devbook-graph`, ships in `devbook` beside the checker whose modules it
-imports, renders the reference graph `_meta/graph.json` produces, and opens a single chapter
+The fourth, `devbook-graph`, ships in `devbook-derived` and loads devbook's checker modules
+from their materialized path at runtime; it renders the reference graph `_meta/graph.json` produces, and opens a single chapter
 beside its parsed `meta` block in a second canvas, `devbook-chapter`. It answers no operation
 group and substitutes for nothing, which is why it takes devbook's stem and the thing it
 draws rather than the surface word — see
 [the decision](../../arc42/adr/36-devbooks-canvas-carries-no-surface-word.md).
-It is packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
-generator modules by relative path — no host resolves the two together, so this is a source
-coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md).
+It is packaged in `devbook-derived`, which declares `devbook`, and reaches devbook's modules
+through the path devbook's install materializes rather than through a relative import — the
+shape [record 5](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md) waited for.
 
 ### Host Slot
 
@@ -453,7 +452,7 @@ plugins it may name. A lower layer never names a higher one.
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
 | L1 extension | One foundation | `devbook-derived`, `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
-| L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook`, see record 5 |
+| L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
 sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live

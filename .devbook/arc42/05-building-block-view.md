@@ -132,16 +132,16 @@ else in the plugin has to know the folder exists. `delivery-surface-dashboard` a
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
-resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
-ships one, `devbook-graph`, which renders the reference graph its checker builds. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
+resolves it at runtime, and a host without an extension mechanism never sees it. `devbook-derived`
+ships one, `devbook-graph`, which renders the reference graph devbook's checker builds. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
-What coupling exists runs one way and only in source: `devbook-graph` imports the generator's
-graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
-the live view and the committed index cannot disagree. Nothing in the generator imports the
-canvas. Those three imports are also the reason lifting the folder into its own plugin is more
-than a move — see [the decision](adr/5-devbook-still-ships-the-graph-canvas.md).
+What coupling exists runs one way and at runtime: `devbook-graph` loads devbook's graph,
+outline, and metadata modules from `.devbook/_tools/devbook-meta/`, the path devbook's install
+materializes, which is why the live view, the check, and the committed index cannot disagree.
+Nothing in the checker knows the canvas exists. That runtime load is what let the folder leave
+`devbook` — see [the decision](adr/5-devbook-still-ships-the-graph-canvas.md).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
 payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run

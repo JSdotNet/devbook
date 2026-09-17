@@ -60,3 +60,12 @@ what they sequence — the catalog names a schedule skill, never a foundation sk
 Record 77's context chapters — Index Generator, Canvas, Fence Writer, Tech Inventory — return
 to devbook's `domain.md`; `devbook-derived`'s context keeps the Derived Index and gains the
 Refresh it runs. Debt record 5 is resolved by its own first option.
+
+**Amended 2026-09-17, the same day.** Two additions on the derived side. The canvas
+`devbook-graph` does not stay with the checker after all: it ships in `devbook-derived` and
+loads devbook's three modules from `.devbook/_tools/devbook-meta/` at runtime, which closes
+[record 5](5-devbook-still-ships-the-graph-canvas.md) — a runtime load of the materialized
+path is the published shape it waited for, and `devbook` now ships no surface. And
+`devbook-derived` gains a second skill, `refresh`: the session-time form of the refresh
+script, allowed only when a person asks for this branch to be current, so the on-demand
+path is a skill someone can find rather than a script someone has to know about.

@@ -36,6 +36,11 @@ own folder, so the claim that a surface is never packaged with what it renders s
 unenforced here. Close it by lifting `devbook-graph` into its own plugin once the generator
 modules have a published shape to import.
 
-**Reopened on 2026-09-17.** [Record 77](77-the-tooling-is-devbook-deriveds.md) closed this by
-moving the canvas out with the generator; [record 79](79-the-checker-is-devbooks-the-committed-index-is-derived.md)
-brought both back the same day. The consequence above stands as written.
+**Closed on 2026-09-17, on the terms above.** [Record 77](77-the-tooling-is-devbook-deriveds.md)
+had moved the canvas out with the generator and [record 79](79-the-checker-is-devbooks-the-committed-index-is-derived.md)
+brought both back the same day; the canvas then left alone, into `devbook-derived`, once the
+three imports became a runtime load of `graph.mjs`, `outline.mjs`, and `metadata.mjs` from
+`.devbook/_tools/devbook-meta/` — the path devbook's install materializes, or
+`plugins/devbook/tools/devbook-meta/` in the repository that vendors them. That is the
+"published shape to import": not a package, but the materialized path every consuming
+repository already has. `devbook` ships no surface.

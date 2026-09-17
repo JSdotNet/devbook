@@ -669,6 +669,5 @@ node .devbook/_tools/devbook-meta/build.mjs
 
 These are derived output — never edit them by hand. CI
 (`.github/workflows/devbook-meta.yml`) fails when a reference does not
-resolve or when a committed index is stale. Open the **Reference graph**
-canvas (optionally scoped to one folder) to explore it visually. See
+resolve or when a committed index is stale. See
 the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`) for the output shape.

@@ -1,7 +1,7 @@
 // Extension: devbook-graph
 //
-// Two canvases over this repository's checked-in devbook folders
-// (.domain/, .arc42/, .tech/, .design/, .ai/). `devbook-graph` draws the
+// Two canvases over this repository's checked-in devbook folders under
+// .devbook/ (arc42/, domain/, tech/, design/, ai/). `devbook-graph` draws the
 // reference graph the `meta` blocks describe; `devbook-chapter` renders one
 // chapter's Markdown with its embedded Mermaid diagrams and parses each
 // chapter/file's `meta` fenced-YAML block (per
@@ -14,24 +14,51 @@
 // fixed schema.
 
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, access } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { joinSession, createCanvas } from "@github/copilot-sdk/extension";
 import { renderPage } from "./render.mjs";
 import { renderGraphPage } from "./graph-render.mjs";
-import { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE, resolveScope as resolveKnownScope } from "../../tools/devbook-meta/graph.mjs";
-import { buildOutlineDocument } from "../../tools/devbook-meta/outline.mjs";
-import {
-    parseDocument,
-    validateDocument,
-    folderKindForPath,
-    restingStatusFor,
-    testCommand,
-} from "../../tools/devbook-meta/metadata.mjs";
 
 // Repository root: the CLI launches project-scoped extensions with cwd set
-// to the git root, which is also where .domain/.arc42/.tech/.design/.ai live.
+// to the git root, which is also where .devbook/ lives.
 const REPO_ROOT = process.cwd();
+
+// The graph, outline, and metadata modules are devbook's checker, and this
+// plugin never bundles a copy of them: a second implementation would be a
+// second thing to keep true. They are loaded from where devbook's install
+// materializes them — or, in the repository that authors the checker and
+// vendors it under plugins/, from there — so the canvas and the check are one
+// parser (record 5, record 79). Absent both, the canvas says which install to
+// run rather than drawing from nothing.
+const CHECKER_CANDIDATES = [
+    path.join(REPO_ROOT, ".devbook", "_tools", "devbook-meta"),
+    path.join(REPO_ROOT, "plugins", "devbook", "tools", "devbook-meta"),
+];
+
+async function loadChecker() {
+    for (const dir of CHECKER_CANDIDATES) {
+        try {
+            await access(path.join(dir, "graph.mjs"));
+        } catch {
+            continue;
+        }
+        const mod = (name) => import(pathToFileURL(path.join(dir, name)).href);
+        const [graph, outline, metadata] = await Promise.all([mod("graph.mjs"), mod("outline.mjs"), mod("metadata.mjs")]);
+        return { dir, graph, outline, metadata };
+    }
+    throw new Error(
+        "devbook-graph: devbook's checker is not installed — none of " +
+            CHECKER_CANDIDATES.map((d) => path.relative(REPO_ROOT, d)).join(", ") +
+            " holds graph.mjs. Run devbook:install first."
+    );
+}
+
+const checker = await loadChecker();
+const { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE, resolveScope: resolveKnownScope } = checker.graph;
+const { buildOutlineDocument } = checker.outline;
+const { parseDocument, validateDocument, folderKindForPath, restingStatusFor, testCommand, DEVBOOK_FOLDER_NAMES } = checker.metadata;
 
 // One local HTTP server + current document path per open canvas instance.
 const instances = new Map();
@@ -145,7 +172,7 @@ async function startGraphServer(defaultScope) {
             const url = new URL(req.url ?? "/", "http://127.0.0.1");
             if (url.pathname === "/") {
                 res.setHeader("Content-Type", "text/html; charset=utf-8");
-                res.end(renderGraphPage({ scopes: SCOPES, scope: entry.scope }));
+                res.end(renderGraphPage({ scopes: SCOPES, scope: entry.scope, folderNames: DEVBOOK_FOLDER_NAMES }));
                 return;
             }
             if (url.pathname === "/api/graph") {

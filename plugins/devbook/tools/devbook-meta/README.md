@@ -93,8 +93,8 @@ followed, so a scoped graph stays about its own folder.
 
 | File | Role |
 |---|---|
-| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Shared with the `devbook-graph` canvas. |
-| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
+| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Loaded by `devbook-derived`'s canvas from the materialized path. |
+| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI and loaded by `devbook-derived`'s canvas from the materialized path, so the check, the written indexes, and the live view are one parser. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
@@ -503,23 +503,9 @@ this index makes visible; `devbook:annotation-sweep` is what removes it.
 
 ## Viewing
 
-Open the **Reference graph** canvas in Copilot CLI for an Obsidian-style
-force-directed view with folder colouring, status shading, search, filters, and
-click-to-inspect neighbourhoods. Open it scoped to one folder:
-
-```text
-open the reference graph canvas with scope tech/
-```
-
-The canvas has a scope selector, rebuilds from disk on open (so it never shows
-a stale index), and exposes `refresh_graph` and `set_scope` actions. It also
-serves the live outline at `/api/outline?scope=<scope>` for tools that want the
-reading order without reading the committed `index.json`.
-
-Its node inspector lists a node's test links — level badge, selector, and the
-command that runs it. The canvas's `/api/graph` response carries one extra
-top-level key for that, `testCommands`, mapping each `tests` entry in the graph
-to its resolved argv. It is canvas-only and deliberately absent from the
-committed `graph.json`: a command depends on the tooling version, not on the
-Markdown, so baking it into a derived artifact would make that artifact stale
-for a reason the Markdown cannot explain.
+The **Reference graph** canvas is `devbook-derived`'s `devbook-graph` extension. It loads
+`graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at
+runtime, rebuilds from disk on open, and adds one canvas-only key to its `/api/graph`
+response, `testCommands`, mapping each `tests` entry to its resolved argv. That key is
+deliberately absent from the committed `graph.json`: a command depends on the tooling
+version, not on the Markdown.

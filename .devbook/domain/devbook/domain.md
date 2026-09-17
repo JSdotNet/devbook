@@ -250,22 +250,6 @@ per-block rule reaches the gate through the schema validator the graph build cal
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
 request and the daily `devbook-check` schedule runs `check` through its own wrapper.
 
-## Canvas
-
-```meta
-type: domain-service
-aliases: [devbook-graph, reference graph canvas]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/36-devbooks-canvas-carries-no-surface-word.md"]
-```
-
-Two Copilot canvases over the same modules the generator writes with: the reference graph,
-rebuilt from disk on open so it can never show a stale index, with a node inspector that
-lists a chapter's test links and the command that runs each; and one chapter beside its
-parsed block and a metadata lint. It reads the Markdown, never `_meta/`, and writes nothing.
-
-Packaged with the checker whose modules it imports, which is why
-[record 5](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md)'s question is still open.
-
 ## Fence Writer
 
 ```meta

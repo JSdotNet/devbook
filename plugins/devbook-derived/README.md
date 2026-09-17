@@ -28,18 +28,20 @@ repository, after `devbook:install` — there is nothing to derive until a folde
 | `rules/devbook-derived-artifacts.md` | Placement, naming, and envelope rules for everything under `_meta/`, installed as a trio so both hosts apply it |
 | `assets/agents-section.md` | The plugin's own marker-fenced section of `AGENTS.md`: the `_meta/` rule and the refresh paths |
 | `assets/settings-snippet.md` | The `Read(_meta/**)` deny rule for `.claude/settings.json`, offered and never applied |
+| `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rebuilt from disk on open, with a node inspector that lists a chapter's test links; and one chapter beside its parsed `meta` block. It loads devbook's `graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at runtime and bundles no copy |
 | `hooks/` | A session-start guardrail: `_meta/` is tool input, never regenerated in a session |
 
-### Skill: `install`
+## Skills
 
-Materializes the table above and stamps `components.derived` in `.devbook/config.json`.
-Payload-only: no contract version and no migration ledger, per devbook's
-`assets/reconcile-protocol.md`. Idempotent; first install and upgrade are one run.
+| Skill | What it does |
+|---|---|
+| `install` | Materializes the table above and stamps `components.derived` in `.devbook/config.json`. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md`. Idempotent |
+| `refresh` | Rewrites the committed indexes from this branch's chapters and says which files moved — the one session-time way to write a derived file, and only when a person asks for this branch to be current, never inside a flow or beside a chapter edit |
 
 ## The line
 
 devbook's `build.mjs` checks by default and writes only on `--write`. Nothing in devbook
-passes that flag; everything here does — at `.devbook/_tools/devbook-meta/build.mjs`, the
+passes that flag; everything here does — the script, both workflows, and `refresh` — at `.devbook/_tools/devbook-meta/build.mjs`, the
 path devbook's install materializes. That one option is the whole boundary between the two
 plugins: `.devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md`.
 

@@ -2,8 +2,8 @@
 
 Encapsulates the `arc42/` / `domain/` / `tech/` / `design/` / `ai/`
 devbook convention: durable, cross-linked Markdown chapters with
-machine-readable `meta` blocks, a checker that keeps references honest, a graph
-canvas, and a CI check. The checker writes nothing on its own; a repository
+machine-readable `meta` blocks, a checker that keeps references honest, and a
+CI check. The checker writes nothing on its own; a repository
 that wants the derived `_meta/` indexes committed enables
 [`devbook-derived`](../devbook-derived), which asks the same tool to write them.
 
@@ -288,15 +288,6 @@ unvalidated, and emits them as one `ext` object per node — so an extension can
 remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. Reserved and currently
 unused. See `devbook-chapter-metadata.md`.
-
-### Extension: `devbook-graph`
-
-Two canvases. `devbook-graph` renders the reference graph — chapters as nodes,
-`related` / `depends-on` as edges — from the same graph modules the checker
-uses, rebuilt from disk on open, so the live view and the check never disagree.
-The node inspector lists a chapter's test links with the command that runs each
-one. `devbook-chapter` opens one chapter's Markdown beside its parsed `meta`
-block and a metadata lint.
 
 ### Tooling: `devbook-meta`
 

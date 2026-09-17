@@ -5,9 +5,9 @@ type: skills
 related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/devbook/skills.md"]
 ```
 
-> One skill. Everything this context does at run time is a workflow or a script passing
-> `--write` to devbook's checker; the one procedure it needs a person for is putting those in
-> place.
+> Two skills: the install that puts the refresh paths and the canvas in place, and the refresh
+> a person runs when this branch has to be current. Everything else this context does at run
+> time is a workflow or a script passing `--write` to devbook's checker.
 
 ## install
 
@@ -24,3 +24,15 @@ whole migration mechanism, per devbook's reconcile protocol.
 Refuses to run until devbook's stamp names an adopted folder and devbook's checker is
 materialized, and ends by running that check — a run that ends on a failing check is reported
 as failing, never as installed.
+
+## refresh
+
+```meta
+type: feature
+related: [".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+```
+
+Rewrite the committed indexes from the chapters on this branch and say which files moved. The
+one session-time way to write a derived file, and the deliberate exception to the rule that
+a session never regenerates: only when a person asks for this branch to be current, never
+inside a flow, never beside a chapter edit, and committed on its own.
