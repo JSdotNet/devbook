@@ -77,6 +77,24 @@ const corpus = [
     [`${at("tech")}/tooling.md`, `# Tooling\n\n${fence("status: adopted\n")}\nLast by convention.\n`],
     [`${at("tech")}/shared.md`, `# Shared\n\n${fence("status: adopted\n")}\nFirst by convention.\n`],
     [`${at("tech")}/backend.md`, `# Backend\n\n${fence("status: adopted\n")}\nIn between.\n`],
+    // A bounded context with split files: beside their base (`domain`, `flow`),
+    // in a dropped base's slot (`features`, `model`), two for one base, and an
+    // unprescribed extra that must stay filename-sorted among the rest.
+    ...[
+        ["domain.md", "domain"],
+        ["domain.order.md", "domain"],
+        ["domain.invoice.md", "domain"],
+        ["actors.md", "actors"],
+        ["features.checkout.md", "features"],
+        ["model.order.md", "model"],
+        ["flow.md", "flow"],
+        ["flow.fulfilment.md", "flow"],
+        ["dependencies.md", "dependencies"],
+        ["notes.md", "flow"],
+    ].map(([name, type]) => [
+        `${at("domain")}/order-management/${name}`,
+        `# Order Management\n\n${fence(`type: ${type}\n`)}\nA file.\n`,
+    ]),
 ];
 
 const root = await mkdtemp(path.join(tmpdir(), "devbook-layout-"));
@@ -110,6 +128,29 @@ try {
         JSON.stringify(tech.entries.map((e) => e.name)) === JSON.stringify(["technology-graph.md", "shared.md", "backend.md", "tooling.md"]),
         "the folder convention orders a .devbook folder: root, pinned first, the rest, pinned last",
         JSON.stringify(tech.entries.map((e) => e.name))
+    );
+    const domain = await buildOutlineDocument(root, `${DEVBOOK_ROOT}/domain`);
+    const context = domain.entries.find((e) => e.name === "order-management");
+    const expected = [
+        "domain.md",
+        "domain.invoice.md",
+        "domain.order.md",
+        "actors.md",
+        "features.checkout.md",
+        "model.order.md",
+        "flow.md",
+        "flow.fulfilment.md",
+        "dependencies.md",
+        "notes.md",
+    ];
+    check(
+        JSON.stringify(context?.children.map((e) => e.name)) === JSON.stringify(expected),
+        "a split file reads after the file it is named after, or in that file's slot when it is gone",
+        JSON.stringify(context?.children.map((e) => e.name))
+    );
+    check(
+        context?.children.find((e) => e.name === "domain.order.md")?.kind === "domain",
+        "a split file keeps the kind of the file it is named after"
     );
 
     // -- The spelling that is no longer a layout ------------------------------
