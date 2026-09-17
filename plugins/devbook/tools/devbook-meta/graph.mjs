@@ -43,7 +43,7 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // document, with `feature-flag` and `setting` chapters, and changes the shape
 // of a feature's `feature-flag` field from a bare application key to a
 // reference to one of those chapters — so it produces a `gated-by` edge now,
-// beside the new `setting` field. A repository whose contexts have no
+// beside the new `setting` field and its `configured-by` edge. A repository whose contexts have no
 // `context.md`, or whose features still carry bare keys, stops validating, so
 // `migrations/011-context-md/` writes the file and rewrites the keys.
 // Version 10 removes `naming` from the `domain/` file types and with it the
@@ -114,14 +114,14 @@ export function generatorPath(repoRoot) {
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
 // `role`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
 //
-// `feature-flag` and `setting` both produce `gated-by`: the feature is switched
-// by the chapter it points at, and which of the two levels does the switching
-// is the target's `kind`. The target's kind is held to the field below, since a
-// reference that resolves to the wrong kind of chapter parses like a right one.
+// A `feature-flag` gates the feature — `gated-by`; a `setting` gates or shapes
+// it, so the edge says `configured-by` and leaves which to the setting's own
+// values. The target's kind is held to the field below, since a reference that
+// resolves to the wrong kind of chapter parses like a right one.
 const REFERENCE_FIELDS = {
     "depends-on": "depends-on",
     "feature-flag": "gated-by",
-    setting: "gated-by",
+    setting: "configured-by",
     related: "related",
 };
 

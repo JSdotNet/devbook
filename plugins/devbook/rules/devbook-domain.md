@@ -61,8 +61,8 @@ when it has grown past what one file reads well with.
 with what the context is responsible for — inside the boundary, outside it,
 and where the outside is answered — as prose under the file-level block, with
 no chapter of its own. After that come the chapters that describe the context
-as a whole rather than its model: the feature flags and settings its
-capabilities are switched by, its actors, and its dependencies. A reader
+as a whole rather than its model: the feature flags its capabilities are
+switched by, the settings a person chooses, its actors, and its dependencies. A reader
 arrives here first and leaves with the shape of the context before opening
 `domain.md`, which is the model and nothing else.
 
@@ -76,16 +76,19 @@ it sits, so a move changes addresses and nothing else; a context with an actor
 in each place has split one answer across two files, exactly as one holding
 both `features.md` and `skills.md` has.
 
-**A capability is switched at one of two levels, and `context.md` names
-both.** A `feature-flag` chapter is a switch decided at release, from
-configuration: the team turns it on for an environment, a ring, or everyone,
-and retires it once the capability is simply there. A `setting` chapter is a
-switch decided at runtime, by a person: a user for themselves, an
-administrator for a tenant, an operator for the system — which is what its
-`scope` records. Both carry `key`, the identifier as the code spells it, which
-is what lets a flag check or a configuration read found in code resolve to a
-chapter instead of to prose. The feature chapter that the switch delivers
-points back at it through `feature-flag` or `setting`.
+**A flag is decided at release; a setting is decided by a person.** A
+`feature-flag` chapter is a switch decided at release, from configuration: the
+team turns it on for an environment, a ring, or everyone, and retires it once
+the capability is simply there. A `setting` chapter is a value a person
+chooses at runtime — a user for themselves, an administrator for a tenant, an
+operator for the system, which is what its `scope` records. Whether that value
+turns a capability on or shapes how it behaves is not a second kind: a setting
+that enables a feature is a setting whose values are `on` and `off`, and the
+feature chapter's `setting` reference is what says the capability hangs on it.
+Both carry `key`, the identifier as the code spells it, which is what lets a
+flag check or a configuration read found in code resolve to a chapter instead
+of to prose. A feature points at what gates or configures it through
+`feature-flag` or `setting`.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -168,13 +171,15 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     configuration. Carries `key` (the flag key the code checks) and, where the
     catalog states one, `default: on` or `off`. The prose says who owns the
     rollout, what turning it on changes, and when the flag is retired.
-  - **`type: setting`** — a capability switch decided at runtime by a person.
-    Carries `key` (the setting key the code reads), `scope` (`user`, `tenant`,
-    or `system` — who may change it), and `default`, the value the product
-    ships with. The prose says what each value does.
-  - Both are headed by the switch's name in business language, never the key;
-    the key is the field. Their `related` points at the feature chapters they
-    switch, and those chapters point back through `feature-flag` or `setting`.
+  - **`type: setting`** — a value a person chooses at runtime, whether it
+    turns a capability on or shapes how it behaves. Carries `key` (the setting
+    key the code reads), `scope` (`user`, `tenant`, or `system` — who may
+    change it), and `default`, the value the product ships with. The prose
+    says what each value does.
+  - Both are headed by their name in business language, never the key; the
+    key is the field. Their `related` points at the feature chapters they gate
+    or configure, and those chapters point back through `feature-flag` or
+    `setting`.
   - The actor chapters, exactly as `actors.md` describes them, when the
     context keeps them here.
   - A structural `## Dependencies` section, last, holding the tables
@@ -381,17 +386,19 @@ instructions.
   tables, or the `related` field instead.
 - `features.md` and `skills.md` Feature/Sub-feature chapters may carry a
   `feature-flag` field and a `setting` field: `<path>#<heading-slug>`
-  references to the `feature-flag` and `setting` chapters in the context's
-  `context.md` that switch this capability, e.g.
+  references to the `feature-flag` chapters that gate this capability and the
+  `setting` chapters that gate or configure it, in the context's `context.md`,
+  e.g.
   `feature-flag: .devbook/domain/inbox/context.md#inbox-pane` or, when several
   together deliver one chapter,
   `feature-flag: [.devbook/domain/inbox/context.md#inbox-pane, .devbook/domain/inbox/context.md#inbox-filters]`.
-  One switch may equally be pointed at by several chapters. Each reference
-  produces a `gated-by` edge and must resolve to a chapter of the matching
+  One flag or setting may equally be pointed at by several chapters. A
+  `feature-flag` reference produces a `gated-by` edge, a `setting` reference a
+  `configured-by` edge, and each must resolve to a chapter of the matching
   type — a `feature-flag` reference to an aggregate is an error. Omit either
-  field when the chapter has no switch. `domain.md` chapters and `term`
-  chapters use neither: a switch delivers a capability, not a structural
-  element or a term.
+  field when the chapter has nothing to point at. `domain.md` chapters and
+  `term` chapters use neither: a flag or a setting belongs to a capability,
+  not to a structural element or a term.
 
   Before contract 11 `feature-flag` held the bare application key, because the
   flag's catalog lived outside the repository. The catalog is `context.md` now;
@@ -573,7 +580,8 @@ default: <the shipped value>
 related: [.devbook/domain/<context>/features.md#<heading-slug>]
 \`\`\`
 
-Chosen at runtime by whoever `scope` names. What each value does.
+Chosen at runtime by whoever `scope` names. What each value does — whether it
+turns the capability on or shapes how it behaves.
 
 ## <User Name>
 

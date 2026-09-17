@@ -281,7 +281,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
@@ -580,9 +580,9 @@ chapter.
 ## Where reading order comes from
 
 Files in a devbook folder have an intended reading order that alphabetical
-sorting does not capture — `domain/` reads `domain` → `features` → `model`
-before `naming`, not the other way round, and TDR 10 comes after TDR 7 rather
-than after TDR 1.
+sorting does not capture — `domain/` reads `context` → `domain` → `features`
+before `model`, not alphabetically, and TDR 10 comes after TDR 7 rather than
+after TDR 1.
 
 That order is never declared by *listing siblings* in one document's block. It
 comes from the folder convention, and from what a document says about **itself**

@@ -359,8 +359,8 @@ migrations/
     └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
 
-1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which folds a
-context's optional `naming.md` into `domain.md` now that the file kind is gone; the second
+1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which moves a
+context's `term` chapters into `domain.md` now that the glossary file kind is gone; the second
 is `011-context-md`, which gives every context its `context.md` and moves each feature's
 bare flag key onto a `feature-flag` chapter there. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
@@ -410,7 +410,7 @@ reserved for the release that raises the floor.
 
 1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
-the contract a 1.0.0 generator writes. 10 removed the `naming` file type from `.domain`,
+the contract a 1.0.0 generator writes. 10 removed the glossary file type from `.domain`,
 and ships as `010-terms-live-in-domain-md`. 11 adds `context.md` as a bounded context's
 root — the boundary, its feature flags and settings, and its actors and dependencies until
 they outgrow it — and turns a feature's `feature-flag` from a bare key into a reference to

@@ -79,9 +79,9 @@ try {
     );
 
     check(
-        edges.some((e) => e.type === "gated-by" && e.target === ".devbook/domain/ordering/context.md#refund-notices"),
-        "a `setting` reference produces a `gated-by` edge",
-        JSON.stringify(edges.filter((e) => e.type === "gated-by"), null, 2)
+        edges.some((e) => e.type === "configured-by" && e.target === ".devbook/domain/ordering/context.md#refund-notices"),
+        "a `setting` reference produces a `configured-by` edge",
+        JSON.stringify(edges.filter((e) => e.type === "configured-by"), null, 2)
     );
 
     check(

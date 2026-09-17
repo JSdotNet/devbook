@@ -16,15 +16,17 @@ carries the kind.
 | Index scope | `--scope domain` |
 | Extra input | Where the repository keeps its flag catalog and its configuration — a flag provider, an options class, a settings table, an environment file — since the key is resolved there and never guessed |
 
-## Two levels, one kind
+## Two types, one kind
 
 A `feature-flag` is decided at release, from configuration: the team turns it
 on for an environment, a ring, or everyone, and retires it when the capability
-is simply there. A `setting` is decided at runtime by a person — a user for
-themselves, an administrator for a tenant, an operator for the system — which
-is what its `scope` records. The same kind covers both because the evidence is
-the same: a key the code reads, and the branch it takes on each value. What
-differs is who holds the key, and that is a field, not a second procedure.
+is simply there. A `setting` is a value a person chooses at runtime — a user
+for themselves, an administrator for a tenant, an operator for the system —
+which is what its `scope` records; whether the value turns a capability on or
+shapes how it behaves is the value's business, not a third type. The same kind
+covers both because the evidence is the same: a key the code reads, and the
+branch it takes on each value. What differs is who holds the key, and that is
+a field, not a second procedure.
 
 `domain/` folder rules that apply:
 
@@ -48,7 +50,7 @@ differs is who holds the key, and that is a field, not a second procedure.
 |---|---|---|
 | Heading (the bare name) | The capability the switch delivers, in business language, reconciled with the feature chapter that points at it — never the key | A switch a user or an operator can name |
 | `key` | The identifier as the code spells it, found where it is read: the flag check, the options binding, the settings lookup | The key existing in the catalog or the configuration schema, spelled exactly so |
-| `type` | Where the value comes from: configuration read at startup or from a flag provider is `feature-flag`; a value a person changes through the product is `setting` | The value read from the level the type names — a `setting` bound to an environment variable is the wrong level |
+| `type` | Where the value comes from: configuration read at startup or from a flag provider is `feature-flag`; a value a person changes through the product is `setting`, an on/off one included | The value read from the level the type names — a `setting` bound to an environment variable is the wrong level |
 | `default` | The value the code takes when the key is absent: the fallback in the read, the seed in the settings table | The fallback in code matching the chapter |
 | `scope` | Who the code lets change it: the user record, the tenant record, a system-wide store | The change path guarded at that scope, and no wider |
 | What each value does | The branches the read selects, walked end to end: what is reachable, what is hidden, what behaves differently | Each value producing the behaviour the chapter states — check the branches and their tests |

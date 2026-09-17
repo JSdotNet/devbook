@@ -11,15 +11,17 @@ breaking: yes
 Every bounded context has a `context.md`, its root document: the boundary
 prose — what the context is responsible for, inside, outside — followed by the
 chapters that describe the context as a whole rather than its model. Two of
-those are new chapter types, `feature-flag` and `setting`: the two levels a
-capability is switched at, one decided at release from configuration and one
-decided at runtime by a person, each carrying `key` as the code spells it. The
+those are new chapter types: a `feature-flag`, a switch decided at release
+from configuration, and a `setting`, a value a person chooses at runtime —
+whether it turns a capability on or shapes it — each carrying `key` as the
+code spells it. The
 actor chapters and the dependency tables live there too until they outgrow it.
 
 With the catalog inside the repository, a feature's `feature-flag` field
 changes shape: a `<path>#<slug>` reference to the switch's chapter instead of a
 bare application key, beside a new `setting` field of the same shape. Both
-resolve, both produce a `gated-by` edge, and both are held to the target's type.
+resolve, produce an edge — `gated-by` for a flag, `configured-by` for a
+setting — and are held to the target's type.
 
 This migration writes each context's `context.md` from the boundary prose its
 `domain.md` opened with, hands `index: root` from `domain.md` to the new file,

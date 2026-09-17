@@ -118,12 +118,12 @@ const TYPE_BY_FOLDER = {
             "organisation",
             "technical",
             "term",
-            // `context.md`: the two levels a capability is switched at. A
-            // `feature-flag` is decided at release, from configuration; a
-            // `setting` is decided at runtime by whoever its `scope` names.
-            // Both carry `key` — the identifier as the code spells it — and
-            // are what a feature chapter's `feature-flag` and `setting`
-            // references resolve to.
+            // `context.md`: a `feature-flag` is a switch decided at release,
+            // from configuration; a `setting` is a value a person chooses at
+            // runtime, whoever its `scope` names, whether it turns a capability
+            // on or shapes it. Both carry `key` — the identifier as the code
+            // spells it — and are what a feature chapter's `feature-flag` and
+            // `setting` references resolve to.
             "feature-flag",
             "setting",
         ],
@@ -366,8 +366,9 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
 // that has no chapter to carry them, so the field is legal on any chapter and
 // only the file-level prohibition above applies.
 const FIELD_TYPE_SCOPE = {
-    // `.domain`: delivery order, the feature flag, and the setting all belong
-    // to a capability. `domain.md` chapters describe standing structure and
+    // `.domain`: delivery order, the feature flag that gates a capability,
+    // and the setting that gates or configures it all belong to that
+    // capability. `domain.md` chapters describe standing structure and
     // relate through `model.md`, the context's dependencies, and `related`
     // instead.
     // `role` is the authorization role an actor holds: the fourth beat of a

@@ -14,7 +14,7 @@ context opens with `context.md` — its boundary, the `feature-flag` and `settin
 capabilities are switched by, and its actors and dependencies until they outgrow the file —
 describes its skills or its features, says who acts with `user`, `organisation`, `technical`
 chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
-the chapter it names, and there is no `naming.md`. The rule files under
+the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
 ## Why
@@ -76,9 +76,11 @@ context-scoped, named in the ubiquitous language, and made addressable by a plai
 which is what `role` already is for an actor; so they are chapters, `feature-flag` decided at
 release from configuration and `setting` decided at runtime by whoever its `scope` names, each
 carrying `key` as the code spells it, and the feature's field becomes a reference that resolves,
-produces a `gated-by` edge, and is held to the target's type. The two levels are two types and
-one sync kind, `setting`, because the evidence is the same read-and-branch and only who holds
-the key differs. They sit in `context.md`, which also takes the boundary prose `domain.md`
+produces an edge — `gated-by` for a flag, `configured-by` for a setting — and is held to the
+target's type. A setting that enables a capability is not a third type beside one that tunes it:
+who decides is the distinction, on/off is a value, and the feature's `setting` reference is what
+records that the capability hangs on it. The two are two types and one sync kind, `setting`,
+because the evidence is the same read-and-branch and only who holds the key differs. They sit in `context.md`, which also takes the boundary prose `domain.md`
 opened with — what the context is before what it models, read first — and the actor chapters
 and dependency tables while they are small: a kind lives in its own file or in `context.md`,
 never both, so a small context is three files in the outline instead of six, and a large one
@@ -95,8 +97,10 @@ splits without changing what any chapter is. Contract 11, with migration `011-co
 - *Stakeholder* as the umbrella; a `personas.md`; a second classifier beside `type`.
 - A `settings.md` beside the others, adding a file to every context's outline; a `boundary.md`
   name; keeping `feature-flag` a bare key and validating it against nothing; one chapter type
-  with a `level` field, which would put the who-decides question on every flag; folding
-  `actors.md` and `dependencies.md` by migration, which is a reading and not a rewrite.
+  with a `level` field, which would put the who-decides question on every flag; a
+  `feature-setting` type for the setting that enables a capability, which would split settings
+  by the shape of their value; folding `actors.md` and `dependencies.md` by migration, which is
+  a reading and not a rewrite.
 
 ## History
 
