@@ -14,7 +14,7 @@ const SERVER_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".
 const STATE = path.join(SERVER_DIR, ".session-title-test-state");
 const WORKTREE = path.join(STATE, "worktree");
 rmSync(STATE, { recursive: true, force: true });
-mkdirSync(path.join(WORKTREE, ".domain", "order-management"), { recursive: true });
+mkdirSync(path.join(WORKTREE, ".devbook", "domain", "order-management"), { recursive: true });
 // The server finds the repository's config at the git toplevel of its project directory. A
 // bare folder inside this repository would resolve to *this* repository's config, so the test
 // worktree is made a repository of its own and named as the project directory.
@@ -109,7 +109,7 @@ const afterCode = await callTool("update_stage", { runId, stageName: "Implement"
 check("code writes name the run and resolve the boundary", afterCode.sessionTitle, "code:order-management — Partial shipment rounding");
 
 // Documentation drift updates one devbook chapter — not enough to outweigh two code files.
-toolCall("Edit", { file_path: ".domain/order-management/domain.md" });
+toolCall("Edit", { file_path: ".devbook/domain/order-management/domain.md" });
 const afterDrift = await callTool("update_stage", { runId, stageName: "Summary", status: "in_progress" });
 check("one drift edit does not flip the prefix", afterDrift.sessionTitle, "code:order-management — Partial shipment rounding");
 

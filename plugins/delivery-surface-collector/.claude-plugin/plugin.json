@@ -1,6 +1,6 @@
 {
   "name": "delivery-surface-collector",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A headless run surface: where a run becomes recorded rather than watched. An MCP server implementing two surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) and export (export_report) — keeping stage status, output, gate decisions, QA scenarios and the handoff marker on disk so a resumed session picks the run up where it stopped, and writing the run's Markdown report at the end. No page, no port, nothing rendered: the right surface for scheduled and unattended runs. Declares no dependency and names no engine.",
   "author": {
     "name": "Job Schepers"

@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "devbook-derived-artifacts": {
+      "paths": [
+        "**/_meta/**"
+      ],
+      "install": "always"
+    }
+  }
+}

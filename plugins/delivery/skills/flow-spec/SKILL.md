@@ -1,9 +1,9 @@
 ---
 name: flow-spec
-description: 'Run any change to a devbook folder — an .arc42 chapter, decision record, debt record, or proposal; a .domain context map or bounded context; the .tech technology graph; .design tokens and guidelines; the .ai adoption record. One flow for the five folders: it derives the folder and the kind, loads the repository''s own instruction files for that folder, drafts through the role the folder maps to, runs the repository''s check, and closes through the documentation tier. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter (flow-code), the dependency behind a .tech entry (flow-update-packages), or wireframes, prototypes, and UI reviews (the ux role directly).'
+description: 'Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; a domain/ context map or bounded context; the tech/ technology graph; design/ tokens and guidelines; the ai/ adoption record. One flow for the five folders: it derives the folder and the kind, loads the repository''s own instruction files for that folder, drafts through the role the folder maps to, runs the repository''s check, and closes through the documentation tier. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter (flow-code), the dependency behind a tech/ entry (flow-update-packages), or wireframes, prototypes, and UI reviews (the ux role directly).'
 ---
 
-# Flow: Devbook Folder (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`)
+# Flow: Devbook Folder (`arc42/`, `domain/`, `tech/`, `design/`, `ai/`)
 
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
@@ -17,7 +17,7 @@ This flow restates none of them.
 
 - Target folder and scope: which chapters or files are in scope.
 - Change goal, and whether it is new scaffolding or a refinement of what exists.
-- For `.arc42/`, the kind: chapter content, decision record, debt record, or a proposal not
+- For `arc42/`, the kind: chapter content, decision record, debt record, or a proposal not
   yet decided.
 
 If any of these is not stated, derive it in Stage 1 from the request and the folder's
@@ -29,11 +29,11 @@ The folder decides who drafts, and the role decides the model category:
 
 | Folder | Role | Model category (`flow-model-selection.md`) |
 |---|---|---|
-| `.arc42/` | `architecture` | Architecture & Design |
-| `.domain/` | `domain` | Domain Design |
-| `.tech/` | `architecture` | Architecture & Design |
-| `.design/` | `ux` | Design Authoring |
-| `.ai/` | `docs` | Documentation & Low-Complexity |
+| `arc42/` | `architecture` | Architecture & Design |
+| `domain/` | `domain` | Domain Design |
+| `tech/` | `architecture` | Architecture & Design |
+| `design/` | `ux` | Design Authoring |
+| `ai/` | `docs` | Documentation & Low-Complexity |
 
 A repository binds a different agent per folder through `bindings["delivery.roles"]`; a
 person picks a different model per folder through the personal override for that category.
@@ -45,9 +45,9 @@ person picks a different model per folder through the personal override for that
   a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the chapters
   in scope plus the ones the change links to — never the whole folder.
-- Settle the kind. A `.arc42/` proposal, comparison, or target-architecture draft is a
+- Settle the kind. A `arc42/` proposal, comparison, or target-architecture draft is a
   decision record in `proposed` status: written to be decided, not left as a loose document.
-  A `.ai/` usage whose tool has no `.tech/` chapter, or a `.tech/` entry whose choice is an
+  A `ai/` usage whose tool has no `tech/` chapter, or a `tech/` entry whose choice is an
   open decision, routes through this flow for that folder first.
 - State the derived folder, scope, kind, and goal before continuing.
 
@@ -58,7 +58,7 @@ person picks a different model per folder through the personal override for that
 - Hand off to the role the table maps the folder to. Fallback: draft inline under the same
   instruction files.
 - Link to a decision or debt record; never restate one inside a chapter. Keep terms aligned
-  with the ubiquitous language in `.domain/` when that folder exists.
+  with the ubiquitous language in `domain/` when that folder exists.
 - Never write the `approved` rung: that is a person's decision at a gate, not an author's.
 
 **Agents:** the role from the table

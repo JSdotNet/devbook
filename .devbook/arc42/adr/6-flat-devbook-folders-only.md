@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/80-one-layout-under-devbook.md"]
 ```
 
 The convention permits two layouts: five root-level dot-folders, or all five nested under one
@@ -39,3 +39,7 @@ which left one with no gate at all. Both fail the same way, which is why both we
 unnoticed — a glob matching nothing is indistinguishable from a quiet branch. What this
 decision should carry forward is the list of places that still name a folder literally, not
 the claim that the generator's own indifference to the layout settled it everywhere.
+
+**Superseded on 2026-09-17 by [record 80](80-one-layout-under-devbook.md).** The list of
+places that named a folder literally was the cost of two layouts; there is now one, under
+`.devbook/`, and the flat spelling is reported as an error rather than indexed.

@@ -24,9 +24,9 @@ instead of by repository.
 | [`setup`](skills/setup/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component installs itself. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own install skill, and a re-validated config. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/domain.md`, the arc42 chapters, and `delivery`'s surface contract. |
-| [`adoption`](skills/adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
+| [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
 
-`devbook-config:adoption` is the one that writes nothing at all, and deliberately: `.ai` rates whether
+`devbook-config:adoption` is the one that writes nothing at all, and deliberately: `ai/` rates whether
 people actually work a certain way, and the report can only see what is on disk. It says which
 plugins, flows, and bindings a chapter's prose no longer matches, and leaves `status`,
 **Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:setup` and
@@ -58,7 +58,7 @@ node scripts/report.mjs --root <repository>
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
 | The overlays — `config.local.json` in this checkout's `.devbook/`, and under the user's devbook config directory for every repository and for this repository's `id` | Which layers this machine applies over the committed config, and which engine keys each touches |
 | `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
-| The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
+| The devbook folders under `.devbook/` | Which of the five this repository adopted, and any stray root-level copy that has to move |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 
 It also prints a **scope** verdict per plugin, which is what `devbook-config:update` fans out

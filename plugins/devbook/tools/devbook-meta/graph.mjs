@@ -23,23 +23,17 @@ import {
     parseAnnotations,
     resolveAnnotation,
     DEVBOOK_FOLDER_NAMES,
-    NESTED_ROOT,
+    DEVBOOK_ROOT,
 } from "./metadata.mjs";
 
-/** Every devbook folder this convention recognizes. A repository adopts any subset. */
-export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `.${name}`);
-
 /**
- * The same five in the nested layout, under one `.devbook/` parent with the
- * leading dot dropped. Both spellings are just repository paths — every scope,
- * output path, and reference below works off the path it is given, so nothing
- * downstream of discovery knows which layout it is looking at.
+ * Every devbook folder this convention recognizes, as the repository path it
+ * lives at: `.devbook/arc42`, `.devbook/domain`, and so on. A repository adopts
+ * any subset. A scope is one of these, or the repository rollup.
  */
-export const NESTED_DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map(
-    (name) => `${NESTED_ROOT}/${name}`
-);
+export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `${DEVBOOK_ROOT}/${name}`);
 
-export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
+export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // The repo-visible contract: one number covering the metadata schema a
 // repository authors and the derived artifacts a consumer reads. It moves only
 // when something repo-visible changes shape, which is why a plugin release
@@ -228,14 +222,13 @@ export async function buildGraph(repoRoot, folders = null) {
 
     const layout = folders ? null : await discoverLayout(repoRoot);
     const scanned = folders ?? layout.folders;
-    if (layout?.mixed) {
+    for (const stray of layout?.stray ?? []) {
         problems.push({
             severity: "error",
             message:
-                `Both layouts are present: ${layout.flat.join(", ")} beside ` +
-                `${layout.nested.join(", ")}. A repository picks one and never mixes them. ` +
-                `Both are indexed here so nothing is invisible, but addresses will not agree ` +
-                `until one is moved.`,
+                `${stray}/ sits at the repository root. Only the \`${DEVBOOK_ROOT}/\` layout is ` +
+                `supported: move it to ${DEVBOOK_ROOT}/${stray.slice(1)}/ and repoint every reference. ` +
+                `It is not indexed here.`,
         });
     }
 
@@ -527,7 +520,22 @@ export async function buildGraphDocument(
 }
 
 /** Every scope this generator knows about: the repo-wide rollup plus one per folder. */
-export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS, ...NESTED_DEVBOOK_FOLDERS];
+export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS];
+
+/**
+ * A scope as a caller may spell it — `tech`, `.tech`, `.devbook/tech`, or `.`
+ * — resolved to the one spelling the generator uses, or null when it names no
+ * scope. The short forms exist because a folder is called `.tech` in every
+ * rule and every conversation, and `--scope .tech` should keep meaning it.
+ */
+export function resolveScope(value) {
+    if (value == null || value === "") return null;
+    const normalized = String(value).replace(/\\/g, "/").replace(/\/+$/, "");
+    if (SCOPES.includes(normalized)) return normalized;
+    const name = normalized.startsWith(".") ? normalized.slice(1) : normalized;
+    const full = `${DEVBOOK_ROOT}/${name}`;
+    return SCOPES.includes(full) ? full : null;
+}
 
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
@@ -540,34 +548,24 @@ export async function discoverScopes(repoRoot) {
 }
 
 /**
- * Which devbook folders this repository actually has, and in which layout.
+ * Which devbook folders this repository actually has.
  *
- * `folders` holds real repository paths, so a caller never has to know whether
- * it is looking at `.tech` or `.devbook/tech`. Both are probed because a
- * repository picks one layout and never mixes them — and `mixed` is how the
- * caller learns that this one did, rather than the generator quietly indexing
- * half a corpus.
+ * `folders` holds the real repository paths under `.devbook/`. `stray` lists
+ * any of the five spelled as a root-level dot-folder — the layout this
+ * convention no longer supports (record 80). A stray folder is reported by the
+ * graph build and never indexed, so a repository that has not moved yet learns
+ * it from an error rather than from a quiet half-corpus.
  */
 export async function discoverLayout(repoRoot) {
-    const flat = [];
-    const nested = [];
+    const folders = [];
+    const stray = [];
     for (const name of DEVBOOK_FOLDER_NAMES) {
-        if (await isDirectory(path.join(repoRoot, `.${name}`))) flat.push(`.${name}`);
-        if (await isDirectory(path.join(repoRoot, NESTED_ROOT, name))) {
-            nested.push(`${NESTED_ROOT}/${name}`);
+        if (await isDirectory(path.join(repoRoot, DEVBOOK_ROOT, name))) {
+            folders.push(`${DEVBOOK_ROOT}/${name}`);
         }
+        if (await isDirectory(path.join(repoRoot, `.${name}`))) stray.push(`.${name}`);
     }
-    const mixed = flat.length > 0 && nested.length > 0;
-    return {
-        flat,
-        nested,
-        mixed,
-        // Both are indexed even when mixed, so nothing becomes invisible while
-        // the repository is being straightened out. `mixed` is what makes it an
-        // error rather than a silent half-corpus.
-        folders: [...flat, ...nested],
-        layout: mixed ? "mixed" : nested.length ? "nested" : flat.length ? "flat" : "none",
-    };
+    return { folders, stray };
 }
 
 async function isDirectory(absolutePath) {
@@ -578,7 +576,10 @@ async function isDirectory(absolutePath) {
     }
 }
 
-/** Repo-relative output path for a scope, per the derived-index convention. */
+/**
+ * Repo-relative output path for a scope, per the derived-index convention: a
+ * folder's beside its chapters, the rollup's under the parent itself.
+ */
 export function outputPathFor(scope) {
-    return scope === REPO_SCOPE ? "_meta/graph.json" : `${scope}/_meta/graph.json`;
+    return scope === REPO_SCOPE ? `${DEVBOOK_ROOT}/_meta/graph.json` : `${scope}/_meta/graph.json`;
 }

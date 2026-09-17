@@ -1,6 +1,6 @@
 ---
 name: sync-specs
-description: 'Bring a devbook chapter level with the code that implements it: read the implementation and its unit tests and write or refresh the chapter, for any of five kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .domain/<context>/domain.md, a feature in features.md (this one runs the application), the building block view in .arc42, or a component guideline in .design. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, .domain is stale. Routes the write through the folder''s flow and never edits source or tests. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without writing (verify-change).'
+description: 'Bring a devbook chapter level with the code that implements it: read the implementation and its unit tests and write or refresh the chapter, for any of five kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md (this one runs the application), the building block view in arc42/, or a component guideline in design/. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Routes the write through the folder''s flow and never edits source or tests. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without writing (verify-change).'
 ---
 
 # sync-specs
@@ -44,7 +44,7 @@ has one, and the repository root. The kind's file lists what else it needs.
 6. Route the write through the folder's flow, per **Where the spec-side write
    goes**; hand over the drafts, the evidence behind each claim, and the
    proposed terms. Name the rung that answered, once.
-7. Regenerate and check the index at the kind's scope, per the protocol.
+7. Run the check at the kind's scope, per the protocol.
 8. Close with the protocol's report table, one row per chapter in scope,
    `aligned` rows included.
 

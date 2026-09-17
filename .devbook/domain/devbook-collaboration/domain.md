@@ -14,9 +14,10 @@ the sweep that reports what is waiting on whom.
 
 Outside it: what a chapter says, what its folder's rules are, the schema the state is stored
 in, and the [annotation](../devbook/domain.md#annotation) a finding is written as — all
-[Devbook](../devbook/domain.md)'s. This context adds no field to that schema and needs no
-release of it: the state it remembers lives in the `ext` namespace devbook reserves and never
-interprets, and a finding lives in devbook's own device.
+[Devbook](../devbook/domain.md)'s. This context owns no schema and no state of its own: the
+three review fields it writes are devbook's, defined beside the approval triad and held to
+their meaning by devbook's check, and a finding lives in devbook's own device
+([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
 
 ## Chapter Review
 
@@ -25,29 +26,29 @@ type: aggregate
 related: [".devbook/domain/devbook-collaboration/domain.md#review-pass", ".devbook/domain/devbook/domain.md#meta-block"]
 ```
 
-One chapter's position in a review, held in three `ext.devbook-collaboration.*` keys inside
-that chapter's own block, over the notes in the chapter body. It is the consistency boundary
-because the keys are only ever consistent together and against those notes: a state without a
-reviewer says nobody owes anything, and `changes-requested` over no open note says the review
-was never written down.
+One chapter's position in a review, held in devbook's `review`, `reviewer`, and `review-at`
+fields inside that chapter's own block, over the notes in the chapter body. It is the
+consistency boundary because the fields are only ever consistent together and against those
+notes: a state without a reviewer says nobody owes anything, and `changes-requested` over no
+open note says the review was never written down. Devbook's check enforces both.
 
 Its lifecycle is deliberately short. The state exists to be cleared — an approved chapter
 carries the decision and not the road to it — so the resting shape of a chapter in this context
-is no keys at all.
+is no review fields at all.
 
 ### Invariants
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| Every remembered fact lives under `ext.devbook-collaboration.`, and this context writes no other field except devbook's `approved` rung | all mutations | untested |
-| A chapter in `requested` or `changes-requested` names exactly one reviewer | `chapter-handoff()`, `chapter-review()` | untested |
-| A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | `chapter-review()` | untested |
-| A finding is written through devbook's `annotations.mjs` and never as a key here | `chapter-review()`, `chapter-approve()` | untested |
-| Approval clears every key in this namespace, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()` | untested |
+| Every remembered fact is one of `review`, `reviewer`, `review-at`, and this context writes no other field except devbook's `approved` rung | all mutations | untested |
+| A chapter in any review state names exactly one reviewer and one day — the three are written together or not at all | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
+| A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
+| A finding is written through devbook's `annotations.mjs` and never as a field here | `chapter-review()`, `chapter-approve()` | untested |
+| Approval clears all three review fields, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()`, devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | No chapter is approved over an open `kind: question` note | `chapter-approve()` | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | The gate shows every open note on the chapter, from the chapter itself, before the decision is asked | `chapter-approve()` | untested |
 | No skill here writes `approved` without a person choosing it in that session | `chapter-approve()` | untested |
-| Review state is never read as chapter content | convention | open — the rule is installed into the repository; nothing checks a reader obeyed it |
+| Review state is never read as chapter content | convention | open — devbook's rules state it beside the annotation rule; nothing checks a reader obeyed it |
 
 ### Finding
 
