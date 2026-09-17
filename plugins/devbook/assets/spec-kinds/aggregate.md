@@ -8,7 +8,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | | |
 |---|---|
 | Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event` |
-| File | `.domain/<context>/domain.md` |
+| File | `.domain/<context>/domain.md`, or the `domain.<name>.md` the chapter was split into |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `domain.md`, `.domain/context-map.md`, and `dependencies.md` for the published-language entries event consumers rely on. Never the whole `domain/` folder |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
