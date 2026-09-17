@@ -66,7 +66,7 @@ being rewritten.
 ```
 
 **A re-synced repository ends up with two spellings of the same tooling**, and nothing warns
-it will: neither the plugin README nor `UPGRADING.md` mentions the rename. Both workflows fire,
+it will: the plugin README does not mention the rename. Both workflows fire,
 both point at a generator, and the stale copy is the one nothing updates again.
 
 Nothing fails loudly. The new tooling works; the old tooling keeps working until the schema it

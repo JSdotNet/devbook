@@ -41,7 +41,7 @@ their reason to the rule or chapter that states the choice, are decisions of the
 ```
 
 `.devbook/arc42/adr/` and its index, chapter 9's table, and every path that names a record by
-number: `AGENTS.md`, `.agents/rules/plugin-rules.md`, the `UPGRADING.md` files, `context-map.md`
+number: `AGENTS.md`, `.agents/rules/plugin-rules.md`, `context-map.md`
 and the bounded contexts under `.devbook/domain/`, and the `related` lists of other records.
 Nothing a consumer installs: the rule is right, and the debt is in this repository's own copy.
 

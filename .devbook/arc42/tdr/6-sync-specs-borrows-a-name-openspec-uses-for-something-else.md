@@ -62,12 +62,12 @@ skill's own description says what it does in its first line.
 | Option | Trade-off |
 | --- | --- |
 | Keep `sync-specs` | Three OpenSpec names, one of them approximate. Costs a sentence in the README and this record |
-| Rename to `capture-specs` | The protocol's own word, and no false cognate. Costs a second rename of the same skill inside a week, an `UPGRADING.md` entry, and one OpenSpec name fewer — the direction OpenSpec does not have is then visibly the one it does not have |
+| Rename to `capture-specs` | The protocol's own word, and no false cognate. Costs a second rename of the same skill inside a week and one OpenSpec name fewer — the direction OpenSpec does not have is then visibly the one it does not have |
 | Rename to `capture` | Shortest and the protocol's word exactly, at the cost of the `-specs` / `-change` object pattern the other two names follow |
 
 Decide after the three names have been used in anger for a while. The trigger is a reader —
 or the maintainer — reaching for `sync-specs` and expecting a merge, or reaching for
 `capture` and finding nothing.
 
-**Trigger:** the first confusion between the two meanings, or the next `UPGRADING.md` entry
-for devbook that would carry a rename anyway.
+**Trigger:** the first confusion between the two meanings, or the next devbook change that
+would carry a rename anyway.

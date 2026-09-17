@@ -105,7 +105,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `README.md`, and any sibling `*.md` at the plugin root | people, never a host |
 
 Documentation for a reader sits at the plugin root beside `README.md` — `delivery`'s
-`FLOW-DIAGRAMS.md`, `devbook`'s `UPGRADING.md`. `resources/` is not that shelf: what goes
+`FLOW-DIAGRAMS.md`. `resources/` is not that shelf: what goes
 there is reference an asset points at by path, so a file no skill or rule names has no
 way to be loaded and only costs every consumer bytes.
 

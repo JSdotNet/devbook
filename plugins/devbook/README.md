@@ -402,11 +402,6 @@ restarted with the version: a derived artifact stamped 9 before the reset still 
 the contract a 1.0.0 generator writes, and the first breaking change after 1.0.0 ships as
 `010-<slug>`.
 
-## Upgrade notes
-
-Behaviour changes a consumer would notice, release by release, are in
-[UPGRADING.md](UPGRADING.md); 1.0.0 is its first entry.
-
 ## Folder structure
 
 After running `devbook:install`, a repository that adopted everything has:

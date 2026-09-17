@@ -70,8 +70,10 @@ plugins/<name>/
                                   executables a skill or a check runs from the plugin itself
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
   README.md                       what the plugin is. Every plugin has one
-  UPGRADING.md                    behaviour changes a consumer would notice, newest first
 ```
+
+No plugin carries an `UPGRADING.md` or a changelog. The marketplace has one consumer, git
+history is the upgrade note, and a migration is the only record a behaviour change leaves.
 
 A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`, `source`
 (`./plugins/<name>`), `description`, `version` — or Claude Code will not offer it.
@@ -89,7 +91,7 @@ are in `plugins/devbook/README.md` under *Migrations*. Neither is repeated here.
 Three cases decide whether one is owed:
 
 - An added field with a safe default — a chapter, stamp, or config that omits it still
-  validates and reads as before — needs no migration. Note it in `UPGRADING.md` and stop.
+  validates and reads as before — needs no migration and no note.
 - A renamed or removed field always needs one, in a chapter `meta` block, the stamp, or a
   config key alike: every repository holding the old spelling is broken until a script rewrites
   it, and a prose note asking each one to do so by hand is not a migration.
