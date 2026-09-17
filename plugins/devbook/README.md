@@ -377,7 +377,7 @@ Rules that keep a ledger trustworthy:
   previous major's last release first. The folder is bounded by one major's
   worth of breaking changes, and a dropped folder is never a hole, because the
   floor sits above it. The decision is
-  `.devbook/arc42/adr/83-a-migration-lives-for-one-major-version.md`.
+  `.devbook/arc42/adr/84-a-migration-lives-for-one-major-version.md`.
 - A migration is idempotent by rule: the second run changes nothing.
 - `--check` is mandatory. CI calls it, and so does `devbook:check`; it is what
   makes a plan worth reading before anything is written.

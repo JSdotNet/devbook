@@ -2,8 +2,14 @@
 
 ```meta
 date: 2026-09-09
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#chapter-type", ".devbook/arc42/adr/45-a-context-describes-its-skills-and-keeps-its-terms-in-domainmd.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#chapter-type", ".devbook/arc42/adr/45-a-context-describes-its-skills-and-keeps-its-terms-in-domainmd.md", ".devbook/arc42/adr/82-who-works-with-a-context-is-an-actor.md"]
 ```
+
+**Superseded in part, 2026-09-17** by [Who Works With a Context Is an Actor](82-who-works-with-a-context-is-an-actor.md):
+the file is `actors.md` and its chapters are `user`, `organisation`, or `technical` — the word
+*stakeholder* named a larger set than the chapter holds, and the rename cost one edit per index
+rather than the ripple argued below. Everything else stands: an actor and not a persona, and
+the exclusion rule that keeps another context, a module, and a tenant out of the file.
 
 A context's chapters said what the model is and what the context lets someone do, and nothing
 said which role that someone is. `features.md` names "the case worker" and no file defines the

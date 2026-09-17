@@ -1,8 +1,8 @@
-# 83. A Migration Lives for One Major Version
+# 84. A Migration Lives for One Major Version
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/82-a-term-is-a-chapter-or-an-alias.md", ".devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/domain/devbook/domain.md#reconciler"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/83-a-term-is-a-chapter-or-an-alias.md", ".devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/domain/devbook/domain.md#reconciler"]
 ```
 
 A migration folder ships in a minor release and lives until the next major. A major release

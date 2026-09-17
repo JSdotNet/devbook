@@ -106,18 +106,23 @@ const TYPE_BY_FOLDER = {
             "domain-event",
             "feature",
             "sub-feature",
-            // `stakeholders.md`: who operates this context, and who it acts
-            // toward. An actor is the EventStorming and Domain Storytelling
-            // actor — the role that issues a command — and never a persona,
-            // which is a UX archetype and belongs in `.design`.
-            "actor",
-            "party",
+            // `actors.md`: who works with this context. An actor is the
+            // EventStorming and Domain Storytelling actor — the one that issues
+            // a command — and never a persona, which is a UX archetype and
+            // belongs in `.design`. A `user` operates the context and holds a
+            // right, an `organisation` is acted toward without operating it,
+            // and a `technical` actor is a system or timer that triggers a use
+            // case from outside — named for what it triggers, its contract
+            // staying in `dependencies.md`.
+            "user",
+            "organisation",
+            "technical",
             "term",
         ],
         file: [
             "context-map",
             "domain",
-            "stakeholders",
+            "actors",
             "features",
             "skills",
             "model",
@@ -302,7 +307,7 @@ const REMOVED_FIELDS = {
 };
 
 const FOLDER_EXTRA_FIELDS = {
-    domain: ["depends-on", "aliases", "feature-flag"],
+    domain: ["depends-on", "aliases", "feature-flag", "role"],
     arc42: [],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
@@ -312,7 +317,7 @@ const FOLDER_EXTRA_FIELDS = {
 // The folder-specific fields that describe a chapter and never a document, per
 // devbook-chapter-metadata.md: "a file's overall relationships are expressed
 // through `related` only". A file has no dependencies, no version, no feature
-// flag and no aliases — the chapters inside it do.
+// flag, no aliases and no role — the chapters inside it do.
 //
 // `stage` is deliberately absent: a `.ai` file *does* have a stage, and its own
 // rule governs where it may say so.
@@ -320,6 +325,7 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "depends-on",
     "aliases",
     "feature-flag",
+    "role",
     "version",
     "alternatives",
 ];
@@ -342,9 +348,13 @@ const FIELD_TYPE_SCOPE = {
     // `.domain`: delivery order and the feature flag both belong to a
     // capability. `domain.md` chapters describe standing structure and relate
     // through `model.md`, `dependencies.md`, and `related` instead.
+    // `role` is the authorization role an actor holds: the fourth beat of a
+    // `user` chapter made addressable. An `organisation` or `technical` actor
+    // rarely has one but may; nothing outside `actors.md` does.
     domain: {
         "depends-on": ["feature", "sub-feature"],
         "feature-flag": ["feature", "sub-feature"],
+        role: ["user", "organisation", "technical"],
     },
     arc42: {},
     tech: {},
@@ -986,7 +996,7 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
         if (meta[field] == null || allowed.includes(declared)) continue;
         issues.push({
             severity: "error",
-            message: `has \`${field}\` on a chapter of type "${declared}" — .${folder} scopes the field to ${allowed.map((value) => `\`${value}\``).join(" and ")} chapters. See devbook-${folder}.md.`,
+            message: `has \`${field}\` on a chapter of type "${declared}" — .${folder} scopes the field to ${allowed.map((value) => `\`${value}\``).join(", ")} chapters. See devbook-${folder}.md.`,
         });
     }
 

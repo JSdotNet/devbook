@@ -210,10 +210,10 @@ fallback does not render as `Context Map (context-map)`.
 | `depends-on` | The `depends-on` metadata field. |
 | `related` | The `related` metadata field. |
 
-`aliases` (`domain/`), `alternatives` (`tech/`), `feature-flag` (`domain/`),
+`aliases` (`domain/`), `alternatives` (`tech/`), `feature-flag` and `role` (`domain/`),
 `stage` (`ai/`), and `roadmap` and `tests` (every folder) are plain-string
 fields, not references, so they stay node attributes and produce no edges.
-`feature-flag`, `roadmap`, `stage`, and `tests` accept a scalar or a list but
+`feature-flag`, `role`, `roadmap`, `stage`, and `tests` accept a scalar or a list but
 are always emitted as a list, so a consumer never has to branch on shape. `effort` is emitted as a number rather than the authored
 string, so a viewer can total or threshold it directly; a value that is not a
 non-negative integer is left off the node and reported as a lint error instead.
@@ -289,8 +289,8 @@ each expects, without building a command.
 | A `tests` entry whose level is outside `unit`, `integration`, `e2e` | error |
 | A `tests` entry that is a `<path>#<slug>` chapter reference rather than a test identifier | error |
 | A `tests` entry naming a runner the tooling has no command for | warning |
-| A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `version`, `alternatives`) on the file-level block | error |
-| `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature` | error |
+| A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) on the file-level block | error |
+| `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
 | An `approved` chapter carrying an open `kind: question` annotation | error |
 | `ai/` `stage` on a block inside a stage file, where the file already says it | warning |
 | A directory missing the root document its folder convention names | warning |
