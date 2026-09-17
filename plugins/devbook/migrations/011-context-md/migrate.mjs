@@ -26,6 +26,18 @@ const { slugify } = await import(new URL("../../tools/devbook-meta/metadata.mjs"
 const DOMAIN = ".devbook/domain";
 const FEATURE_FILES = ["features.md", "skills.md"];
 
+// Files are read as LF and written back with the line ending they had, so a
+// CRLF checkout is migrated without a whole-file diff.
+async function readText(relPath) {
+    const raw = await readFile(path.join(ROOT, relPath), "utf8");
+    const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+    return { text: raw.replace(/\r\n/g, "\n"), eol };
+}
+
+async function writeText(relPath, text, eol) {
+    await writeFile(path.join(ROOT, relPath), eol === "\n" ? text : text.replace(/\n/g, eol), "utf8");
+}
+
 async function exists(relPath) {
     try {
         await stat(path.join(ROOT, relPath));
@@ -106,10 +118,12 @@ if (await exists(DOMAIN)) {
         const context = path.posix.join(DOMAIN, entry.name);
         const contextFile = path.posix.join(context, "context.md");
         const domainFile = path.posix.join(context, "domain.md");
-        const plan = { context, contextFile, create: null, trimDomain: null, flags: [], rewrites: [] };
+        const plan = { context, contextFile, create: null, trimDomain: null, flags: [], rewrites: [], eol: "\n" };
 
         if (await exists(domainFile)) {
-            const parts = dissect(await readFile(path.join(ROOT, domainFile), "utf8"));
+            const { text: domainText, eol } = await readText(domainFile);
+            plan.eol = eol;
+            const parts = dissect(domainText);
             if (parts) {
                 const rootLine = parts.block.findIndex((line) => /^index:\s*root\s*$/.test(line));
                 if (!(await exists(contextFile))) {
@@ -141,7 +155,7 @@ if (await exists(DOMAIN)) {
         for (const name of FEATURE_FILES) {
             const file = path.posix.join(context, name);
             if (!(await exists(file))) continue;
-            const text = await readFile(path.join(ROOT, file), "utf8");
+            const { text, eol } = await readText(file);
             let chapter = null;
             let changed = false;
             const lines = walk(text, (all, i, fence) => {
@@ -170,7 +184,7 @@ if (await exists(DOMAIN)) {
                 changed = true;
                 all[i] = `${m[1]}${out.length === 1 && !isList ? out[0] : `[${out.join(", ")}]`}`;
             });
-            if (changed) plan.rewrites.push({ file, text: lines.join("\n") });
+            if (changed) plan.rewrites.push({ file, text: lines.join("\n"), eol });
         }
 
         if (plan.create || plan.trimDomain || plan.flags.length || plan.rewrites.length) plans.push(plan);
@@ -209,13 +223,13 @@ if (checkOnly) {
 }
 
 for (const plan of plans) {
-    if (plan.trimDomain) await writeFile(path.join(ROOT, plan.trimDomain.file), plan.trimDomain.text, "utf8");
-    let contextText = plan.create ?? (await exists(plan.contextFile) ? await readFile(path.join(ROOT, plan.contextFile), "utf8") : "");
+    if (plan.trimDomain) await writeText(plan.trimDomain.file, plan.trimDomain.text, plan.eol);
+    let contextText = plan.create ?? (await exists(plan.contextFile) ? (await readText(plan.contextFile)).text : "");
     for (const flag of plan.flags) {
         contextText = `${contextText.trimEnd()}\n\n## ${flag.key}\n\n\`\`\`meta\nstatus: draft\ntype: feature-flag\nkey: ${flag.key}\nrelated: ["${flag.feature}"]\n\`\`\`\n\nDecided at release, from configuration. Name the switch in business language, and say who owns the rollout, what turning it on changes, and when the flag is retired.\n`;
     }
-    if (plan.create || plan.flags.length) await writeFile(path.join(ROOT, plan.contextFile), contextText, "utf8");
-    for (const { file, text } of plan.rewrites) await writeFile(path.join(ROOT, file), text, "utf8");
+    if (plan.create || plan.flags.length) await writeText(plan.contextFile, contextText, plan.eol);
+    for (const { file, text, eol } of plan.rewrites) await writeText(file, text, eol);
 }
 
 console.log(`\n011-context-md: applied ${count} change(s).`);
