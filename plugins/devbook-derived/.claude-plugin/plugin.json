@@ -1,0 +1,27 @@
+{
+  "name": "devbook-derived",
+  "version": "1.1.0",
+  "description": "The devbook tooling: the checker and generator over devbook's addressed Markdown chapters, in one plugin. build.mjs parses every meta block, resolves every reference, and writes the derived _meta/ indexes — the reference graph, the reading outline, and the open-note index — per adopted folder and for the repository; --check validates and writes nothing, --print emits the same documents on stdout. Ships annotations.mjs, the only writer of an annotation fence; the devbook-graph canvas that renders the graph from the same modules; the CI check and nightly refresh workflows; the on-demand refresh script; and the derived-artifacts rule. An L1 extension over devbook: devbook-derived:install materializes all of it into a repository under .devbook/_tools/devbook-meta/ and stamps components.derived. devbook is the convention; this is what enforces and derives from it.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "devbook",
+    "metadata",
+    "graph",
+    "index",
+    "checker",
+    "generator",
+    "annotations",
+    "canvas",
+    "tooling"
+  ],
+  "dependencies": [
+    {
+      "name": "devbook",
+      "version": ">=1.1.0 <2.0.0",
+      "marketplace": "jsdotnet"
+    }
+  ]
+}

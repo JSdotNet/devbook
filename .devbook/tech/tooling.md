@@ -59,8 +59,8 @@ related: [".devbook/arc42/adr/4-no-generated-sync-layer.md", ".devbook/arc42/05-
 ```
 
 The second runtime a plugin's executable parts run on, and the only one whose script runs in a
-*consuming* repository rather than here. `devbook` ships
-`assets/build/Update-DevbookIndex.ps1` and `devbook:install` installs it into `build/`
+*consuming* repository rather than here. `devbook-derived` ships
+`assets/build/Update-DevbookIndex.ps1` and `devbook-derived:install` installs it into `build/`
 unconditionally — one of only two payload entries with no adoption condition, the other being
 the generator it wraps, because a repository that skips GitHub Actions gets this script alone
 and manual refresh. It wraps `build.mjs` to add what the raw `node` call cannot say: which

@@ -46,7 +46,7 @@ jobs:
         run: node tools/check-assets.mjs
 
       - name: Check devbook metadata and references
-        run: node plugins/devbook/tools/devbook-meta/build.mjs --check
+        run: node plugins/devbook-derived/tools/devbook-meta/build.mjs --check
 
       # Deliberately unpinned. The validator earns its place by knowing the
       # host's current manifest schema, so pinning it would freeze the one

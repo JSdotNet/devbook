@@ -132,17 +132,18 @@ else in the plugin has to know the folder exists. `delivery-surface-dashboard` a
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
-resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
-ships one, `devbook-graph`, which renders the reference graph the generator writes to
+resolves it at runtime, and a host without an extension mechanism never sees it. `devbook-derived`
+ships one, `devbook-graph`, which renders the reference graph the generator beside it writes to
 `_meta/graph.json`. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
 What coupling exists runs one way and only in source: `devbook-graph` imports the generator's
 graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
-the live view and the committed index cannot disagree. Nothing in `devbook` imports the canvas.
-Those three imports are also the reason lifting the folder into its own plugin is more than a
-move — see [the decision](adr/5-devbook-still-ships-the-graph-canvas.md).
+the live view and the committed index cannot disagree. Nothing in the generator imports the
+canvas. Those three imports are why the two ship in one plugin —
+[record 77](adr/77-the-tooling-is-devbook-deriveds.md) closes
+[record 5](adr/5-devbook-still-ships-the-graph-canvas.md)'s question that way.
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
 payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run
@@ -213,7 +214,7 @@ flowchart TB
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
         wf[".github/workflows/ - the check, and the nightly refresh"]
-        tools[".devbook/_tools/ - the generator, at the path flows name"]
+        tools[".devbook/_tools/ - devbook-derived's checker and generator, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
         cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
@@ -242,7 +243,7 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's generator at the path devbook's install writes it to, and five
+`.devbook/_tools/` holds `devbook-derived`'s generator at the path its install writes it to, and five
 of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
 knowledge of, and a repository that hand-authored its folders without installing devbook gets a
 check line pointing at a file that is not there.
@@ -450,9 +451,10 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
-Three components stamp themselves, and `delivery` is the third: `components.devbook` from
-`devbook:install`, `components.delivery` from `delivery:install` for the `start` and `capture`
-copies it seeds, and `components.schedule` from `delivery-schedule:install`.
+Four components stamp themselves, and `delivery` is the fourth: `components.devbook` from
+`devbook:install`, `components.derived` from `devbook-derived:install` for the tool, the
+workflows, and the script, `components.delivery` from `delivery:install` for the `start` and
+`capture` copies it seeds, and `components.schedule` from `delivery-schedule:install`.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([record 75](adr/75-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
 of the table at once — schema owner for the four engine keys, installer for one stamp — and the

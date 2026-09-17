@@ -245,4 +245,4 @@ rather than listing every one.
 
 - `devbook-chapter-metadata.md` — required `meta` block fields.
 - `devbook-tech.md` — the technology registry `.ai` links into.
-- `devbook-derived-artifacts.md` — rules for `_meta/`.
+- `devbook-derived-artifacts.md` (`devbook-derived`'s rule) — rules for `_meta/`.

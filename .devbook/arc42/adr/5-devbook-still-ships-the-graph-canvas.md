@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/2-one-folder-per-plugin.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md"]
 ```
 
 The layered design puts the five folder-writing skills — one per adopted folder — in
@@ -35,3 +35,7 @@ five dashboard-referencing skills previously made untrue. It still ships a surfa
 own folder, so the claim that a surface is never packaged with what it renders stays
 unenforced here. Close it by lifting `devbook-graph` into its own plugin once the generator
 modules have a published shape to import.
+
+**Closed on 2026-09-17 by [record 77](77-the-tooling-is-devbook-deriveds.md).** The canvas
+left `devbook` with the generator rather than ahead of it: both are `devbook-derived`'s, the
+imports stay relative, and the surface is packaged with the tool that builds what it renders.

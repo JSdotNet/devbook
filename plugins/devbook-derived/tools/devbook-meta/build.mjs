@@ -3,6 +3,7 @@
 //
 //   node .devbook/_tools/devbook-meta/build.mjs           # every adopted scope
 //   node .devbook/_tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
+//   node .devbook/_tools/devbook-meta/build.mjs --print   # verify, and emit the documents as JSON on stdout
 //   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
 //   node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 //
@@ -19,6 +20,9 @@
 //
 // Graph construction lives in graph.mjs, which the devbook-graph canvas also
 // imports, so the written indexes and the live view are always the same graph.
+// `--print` is for a viewer that can spawn Node but not import these modules:
+// it writes nothing and emits `{ layout, scopes: { "<scope>": { graph, outline,
+// annotations } } }` on stdout, with the usual diagnostics on stderr.
 
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -39,7 +43,10 @@ import {
 } from "./annotations-index.mjs";
 
 const args = process.argv.slice(2);
-const checkOnly = args.includes("--check");
+const printMode = args.includes("--print");
+const checkOnly = args.includes("--check") || printMode;
+// Diagnostics go to stderr in print mode so stdout stays one parseable document.
+const log = printMode ? console.error : console.log;
 
 function optionValue(name) {
     const index = args.indexOf(name);
@@ -74,12 +81,13 @@ if (requestedScope && !availableScopes.includes(requestedScope)) {
 const scopes = requestedScope ? [requestedScope] : availableScopes;
 const folders = availableScopes.filter((scope) => scope !== REPO_SCOPE);
 
-console.log(`layout ${layout.layout}: ${folders.join(", ")}`);
+log(`layout ${layout.layout}: ${folders.join(", ")}`);
 
 // Parse the corpus once and project it per scope.
 const graph = await buildGraph(REPO_ROOT, folders);
 const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
+const printed = { layout: layout.layout, scopes: {} };
 
 async function emit(outPath, document, summary) {
     if (!checkOnly) {
@@ -87,9 +95,9 @@ async function emit(outPath, document, summary) {
         await mkdir(path.dirname(absoluteOut), { recursive: true });
         await writeFile(absoluteOut, `${JSON.stringify(document, null, 2)}\n`, "utf8");
     }
-    console.log(`${checkOnly ? "checked" : "wrote  "} ${outPath.padEnd(26)} ${summary}`);
+    log(`${checkOnly ? "checked" : "wrote  "} ${outPath.padEnd(26)} ${summary}`);
     for (const problem of document.problems) {
-        console.log(`  [${problem.severity}] ${problem.message}`);
+        log(`  [${problem.severity}] ${problem.message}`);
         if (problem.severity === "error") errorCount++;
     }
 }
@@ -129,7 +137,11 @@ for (const scope of scopes) {
         `${String(annotationsDocument.stats.threads).padStart(4)} threads, ` +
             `${String(annotationsDocument.stats.open).padStart(4)} open`
     );
+
+    printed.scopes[scope] = { graph: graphDocument, outline: outlineDocument, annotations: annotationsDocument };
 }
+
+if (printMode) process.stdout.write(`${JSON.stringify(printed, null, 2)}\n`);
 
 if (errorCount) {
     console.error(`\n${errorCount} problem(s) at error severity.`);

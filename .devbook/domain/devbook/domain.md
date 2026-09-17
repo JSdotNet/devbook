@@ -11,8 +11,7 @@ pointing at it still resolves, and that a repository can adopt the convention, u
 be told when the two have drifted apart.
 
 Inside the boundary: the `meta` block and its field set, the address a chapter is reached by,
-the annotation fence, the derived indexes, the reconcile that materializes the convention into
-a repository, and the two directions between a chapter and the code that implements it.
+the annotation fence, the reconcile that materializes the convention into a repository, and the two directions between a chapter and the code that implements it.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [Delivery](../delivery/domain.md). Who reviews
@@ -39,21 +38,21 @@ top-level heading carries a block of its own describing the document as a whole.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
-| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
-| A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs` |
+| A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/status-optional.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | untested |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
-| Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
+| Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
-| An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
-| A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook-derived/tools/devbook-meta/annotations-write.test.mjs` |
+| A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
+| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
+| An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
+| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Meta Block
 
@@ -132,9 +131,9 @@ comes from each folder's convention rather than from a stored field.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A repository uses one layout for every folder and never mixes them | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
-| A nested folder drops the leading dot — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
-| An address is the chapter's real repository path under either layout | graph build | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
+| A repository uses one layout for every folder and never mixes them | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
+| A nested folder drops the leading dot — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
+| An address is the chapter's real repository path under either layout | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/nested-layout.test.mjs` |
 | A repository containing both layouts is an error, not a preference | layout detection | untested |
 | Dropping a folder from `adopted` orphans its materialized files rather than deleting them | reconcile | untested |
 
@@ -163,7 +162,7 @@ set and adding a sixth is a contract change rather than a folder.
 ```meta
 type: aggregate
 aliases: [graph, graph.json]
-related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook-derived/domain.md#index-generator"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -171,9 +170,10 @@ the corpus and owned by nobody who writes prose. It is the answer to *what point
 which no single chapter can hold, and it is the reason a reference is a first-class field
 rather than a Markdown link.
 
-The graph is derived, never authored. Its committed form under `_meta/` is a build output, and
-a session never regenerates or commits it — two branches that each touch one chapter both
-rewrite the same JSON, and the conflict is only resolvable by re-running the generator.
+The graph is derived, never authored, and what a reference *is* — the fields, the address
+form, what resolving means — is this context's. Building it is
+[Devbook Derived](../devbook-derived/domain.md#index-generator)'s: its committed form under
+`_meta/` is that context's output, and a session never regenerates or commits it.
 
 ### Invariants
 
@@ -181,10 +181,9 @@ rewrite the same JSON, and the conflict is only resolvable by re-running the gen
 |---|---|---|
 | One node per heading that carries a `meta` fence, and none per heading without one | graph build | untested |
 | An edge exists only where a reference field resolves; an unresolved one is an error, not a dangling edge | graph build | untested |
-| Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook/tools/devbook-meta/anchor-collision.test.mjs` |
-| `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
-| Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | emit | untested |
-| A session never writes `_meta/`; the scheduled refresh owns it | convention | open — nothing enforces it but the host's deny list and this rule |
+| Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/anchor-collision.test.mjs` |
+| `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/tests-field.test.mjs` |
+| Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | `devbook-derived`'s emit | untested |
 
 ### Graph Node
 
@@ -228,23 +227,6 @@ It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component
 is the only thing in this context that touches a file outside a devbook folder: the rule
 wrappers each host reads, the CI workflow templates, and devbook's own marker-fenced section of
 `AGENTS.md`.
-
-## Index Generator
-
-```meta
-type: domain-service
-related: [".devbook/domain/devbook/domain.md#derived-index"]
-```
-
-Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
-the annotation index for the repository and for each adopted folder. It is the only writer of
-`_meta/`, and the only thing that decides whether a problem is an error or a warning: an
-unresolved reference fails, a heading with no block is reported and tolerated. Every
-per-block rule reaches the gate through the schema validator the graph build calls per file
-(`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
-
-Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-check` schedule opens a pull request when the output moved.
 
 ## Spec Converter
 
@@ -334,23 +316,6 @@ type: ubiquitous-language
 > event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
 > layer, stamp, migration, host — is defined once in [Plugin Authoring](../plugin-
 > authoring/domain.md#ubiquitous-language).
-
-### Derived Index
-
-```meta
-type: term
-date: 2026-09-08
-aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
-```
-
-Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
-emitted deterministically so a clean `git diff` proves they are current.
-
-A session never reads one as a source of fact and never regenerates one. Two branches that each
-touch one chapter both rewrite the same JSON, and the conflict is only resolvable by re-running
-the generator — so the refresh belongs to automation, and the check that runs in a session
-writes nothing.
 
 ### Adoption
 

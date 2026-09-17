@@ -19,7 +19,7 @@ into the repository. None of that is copied here. `materialized` records the two
 whole from `adopted` rather than copied — and nothing else.
 
 **Because this repository is their source.** A consuming repository has no generator until the
-install brings one; here it is `plugins/devbook/tools/devbook-meta/build.mjs`, and a second
+install brings one; here it is `plugins/devbook-derived/tools/devbook-meta/build.mjs`, and a second
 copy under `.github/` would drift from it on the first edit to either. `assets/agents-section.md`
 already anticipates exactly this: `<generator>` is *the conventional
 `.github/tools/devbook-meta/build.mjs` in a repository this materialized into, and a

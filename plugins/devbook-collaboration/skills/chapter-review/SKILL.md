@@ -14,7 +14,8 @@ an unanswered question survives the session that raised it.
 The three review fields and their states are devbook's — `review`, `reviewer`,
 `review-at` in `devbook-chapter-metadata.md`. A finding is an annotation fence,
 not a field — `devbook-annotations.md` has its schema and lifecycle, and
-`tools/devbook-meta/annotations.mjs` is the only thing that writes one. Read
+`devbook-derived`'s `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing
+that writes one. Read
 both first.
 
 This file exceeds the 40-line body budget on purpose: the lens table in step 3

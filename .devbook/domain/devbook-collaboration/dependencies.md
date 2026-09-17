@@ -5,15 +5,17 @@ type: dependencies
 related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/domain/devbook/dependencies.md"]
 ```
 
-> What this context depends on and who depends on it. It is an L1 extension: exactly one
-> declared dependency, on the foundation whose schema it writes into.
+> What this context depends on and who depends on it. Two declared dependencies: the
+> foundation whose schema it writes into, and the tooling whose fence writer it writes
+> findings through.
 
 ## Outbound dependencies
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
 | [Devbook](../devbook/dependencies.md) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | `review`, `reviewer`, `review-at` in a chapter's own `meta` block | The review triad in `devbook-chapter-metadata.md`: three optional fields, validated together and against the chapter's open notes | It has no store and no vocabulary of its own. The state it remembers about a chapter is three of devbook's fields in that chapter — [record 75](../../arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md). |
-| [Devbook](../devbook/domain.md#annotation) | Conformist, for the whole device | Writes findings through `tools/devbook-meta/annotations.mjs` | The [annotation](../devbook/domain.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this context's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md). |
+| [Devbook Derived](../devbook-derived/dependencies.md) | Customer-Supplier, declared `devbook-derived >=1.1.0 <2.0.0` | Writes every finding through `.devbook/_tools/devbook-meta/annotations.mjs`; the queue prefers its `_meta/` indexes | The fence writer's verbs and the derived-artifacts envelope | Nothing else may write a fence, so the plugin that writes findings depends on the tool that writes them. |
+| [Devbook](../devbook/domain.md#annotation) | Conformist, for the whole device | Writes findings through `devbook-derived`'s `annotations.mjs` | The [annotation](../devbook/domain.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this context's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md). |
 | [Devbook](../devbook/domain.md#chapter) | Conformist, for one field | Writes `status: approved`, `approved-by`, `approved-at` directly | The shared `approved` rung and its two record fields | Approval is devbook's field and keeps devbook's meaning. This context runs the decision; it does not own the vocabulary. |
 | Plugin Authoring | Shared Kernel | Plugin folder and two manifests | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like every other plugin here, and — alone among them — materializes nothing and stamps nothing. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests and skills | Each host's own schemas | Enabling the plugin is the whole adoption; the rules its skills follow are devbook's, and reach a host through devbook's install. |

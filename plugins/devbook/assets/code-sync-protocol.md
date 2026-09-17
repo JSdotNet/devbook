@@ -369,7 +369,9 @@ node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
 ```
 
 Scope is the folder that changed — `.domain`, `.arc42`, or `.design`. Run
-`build.mjs` with no `--scope` when the pass touched more than one folder.
+`build.mjs` with no `--scope` when the pass touched more than one folder. The tool is
+`devbook-derived`'s; when `.devbook/_tools/devbook-meta/` is absent, say so in the
+report, name `devbook-derived:install`, and close the pass without it.
 
 If `--check` reports unresolved references, a schema violation, or a
 stale committed index, fix the source Markdown; run `devbook-check`

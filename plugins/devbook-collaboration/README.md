@@ -2,11 +2,12 @@
 
 Review, comment, and hand-off workflows over [devbook](../devbook) chapters.
 
-An L1 extension: it depends on `devbook` and nothing else, and it owns no
-schema and no state. What it remembers about a chapter is devbook's own review
-triad — `review`, `reviewer`, `review-at` in that chapter's `meta` block,
-validated by devbook's check — and a finding is one of devbook's own
-`annotation` fences, beside the passage it is about. It ships four skills and
+An extension over `devbook`, and over `devbook-derived` for the fence writer
+every finding goes through. It owns no schema and no state. What it remembers
+about a chapter is devbook's own review triad — `review`, `reviewer`,
+`review-at` in that chapter's `meta` block, validated by the check — and a
+finding is one of devbook's own `annotation` fences, beside the passage it is
+about. It ships four skills and
 nothing else: no rule, no install, no hook, and no entry in the stamp. Enable
 it and the four skills are there; a repository that never enables it can still
 write the three fields by hand and is held to the same rules.
@@ -17,9 +18,9 @@ write the three fields by hand and is held to the same rules.
 claude plugin marketplace add JSdotNet/devbook
 ```
 
-Then enable `devbook-collaboration` with `/plugin`. `devbook` is a declared
-dependency, so the host installs and enables it alongside. There is nothing to
-install into the repository.
+Then enable `devbook-collaboration` with `/plugin`. `devbook` and `devbook-derived`
+are declared dependencies, so the host installs and enables them alongside; run
+their installs in the repository. This plugin itself installs nothing.
 
 ## The pass
 
@@ -83,9 +84,10 @@ refuses an approval standing over one. `kind: flag` is the one the approver
 reads first: the gate shows open notes flags-first and, on a chapter already
 approved, names every note dated after `approved-at` as raised since the
 approval — a reason to lift it, never a block. Every write goes through
-devbook's `tools/devbook-meta/annotations.mjs`; nothing here writes a fence
-itself, and the gate reads the chapter, so a note written on the branch a
-minute ago is already in front of the person.
+`devbook-derived`'s `.devbook/_tools/devbook-meta/annotations.mjs`; nothing here
+writes a fence itself, and the gate reads the chapter rather than the derived
+index, so a note written on the branch a minute ago is already in front of the
+person.
 
 The reason the state is devbook's and not this plugin's is
 `.devbook/arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md`.

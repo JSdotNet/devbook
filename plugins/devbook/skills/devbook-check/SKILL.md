@@ -25,6 +25,10 @@ compressing a lookup table costs a repair, not a sentence.
    node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
+   The tool is `devbook-derived`'s. When `.devbook/_tools/devbook-meta/` is absent,
+   report that no checker is installed, name `devbook-derived:install`, and continue
+   from step 4 — the ledger and the stamp are devbook's own and need no tool.
+
    Exit codes:
 
    | Code | Meaning | Action |
@@ -106,7 +110,8 @@ compressing a lookup table costs a repair, not a sentence.
    the same reason: a stale generated file must not block an unrelated pull
    request.
 
-6. **Refresh the derived indexes** if you want this branch current:
+6. **Refresh the derived indexes** if you want this branch current, where
+   `devbook-derived` materialized the script:
 
    ```
    ./build/Update-DevbookIndex.ps1

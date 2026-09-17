@@ -651,9 +651,9 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 
 ## Derived metadata index
 
-These metadata blocks are compiled into derived indexes by
-`.devbook/_tools/devbook-meta/build.mjs` — one pair per devbook folder plus
-a repository-wide rollup, placed per
+These metadata blocks are compiled into derived indexes by `devbook-derived`'s
+`.devbook/_tools/devbook-meta/build.mjs`, where that plugin is installed — one
+set per devbook folder plus a repository-wide rollup, placed per its
 `devbook-derived-artifacts.md`:
 
 ```text

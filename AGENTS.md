@@ -21,7 +21,7 @@ as a decision in `.devbook/arc42/adr/` with the reason. Never leave the two sile
 Before committing, run the checker and the generator over this repository's own devbook:
 
 ```bash
-node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
+node tools/check-assets.mjs && node plugins/devbook-derived/tools/devbook-meta/build.mjs --check
 ```
 
 The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
@@ -39,7 +39,9 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 `devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
-`plugins/devbook/rules/devbook-derived-artifacts.md`.
+`plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker and generator are
+`devbook-derived`'s, per `.devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md`; this
+repository vendors them from that plugin rather than materializing them.
 
 ## Committing
 
@@ -169,12 +171,6 @@ Every chapter carries a fenced `meta` block; write it in the same change as the 
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
-Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.
-Never regenerate or commit them in a session — the scheduled job owns that refresh. Run
-the check before committing:
-
-    node plugins/devbook/tools/devbook-meta/build.mjs --check
-
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
 it as this file's last word. `config.local.json` overlays the committed stack config
@@ -186,3 +182,20 @@ repository. The directory is `$XDG_CONFIG_HOME/devbook` when set, else
 `%APPDATA%\devbook` on Windows and `~/.config/devbook` elsewhere. Put no secret in
 any of them — gitignored is not private, and neither is your home directory.
 <!-- devbook:end -->
+
+<!-- devbook-derived:begin -->
+## Devbook tooling
+
+Managed by `devbook-derived:install`. Edit outside these markers.
+
+Files under any `_meta/` folder are generated tool input, written by
+`plugins/devbook-derived/tools/devbook-meta/build.mjs`. Never read one as a source of
+fact and never hand-edit one. Never regenerate or commit them in a session — the
+scheduled job owns that refresh. Fix what the check reports in the source Markdown, and
+run it before committing:
+
+    node plugins/devbook-derived/tools/devbook-meta/build.mjs --check
+
+An annotation fence is written only through
+`plugins/devbook-derived/tools/devbook-meta/annotations.mjs`.
+<!-- devbook-derived:end -->

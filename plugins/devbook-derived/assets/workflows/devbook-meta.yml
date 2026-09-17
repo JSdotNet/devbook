@@ -2,7 +2,7 @@ name: Devbook metadata
 
 # Enforces the devbook convention: every metadata reference must
 # resolve and every `meta` block must match the schema. Installed by the
-# `devbook:install` skill.
+# `devbook-derived:install` skill.
 #
 # Staleness of the committed _meta indexes is reported but does not fail the
 # run — forcing every devbook pull request to carry a regenerated index is

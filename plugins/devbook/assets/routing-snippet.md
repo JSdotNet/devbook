@@ -15,7 +15,7 @@ when an engine is installed, and directly under the folder's instruction files w
 is installed at all. Substitute the skill names the target repository
 actually has as you copy the routes below.
 
-The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
+The task-scoped rule is in the section of `AGENTS.md` that
 `devbook:install` writes (`agents-section.md`), so do not restate them here. What follows
 is routing only, and none of it goes inside that section's markers.
 
@@ -55,46 +55,6 @@ context. Load `.arc42/`, `.domain/`, `.tech/`, `.design/`, or `.ai/` only
 when the selected flow or specialist agent needs that context, and
 then prefer only the relevant chapter(s) over whole-folder reads.
 ```
-
-## For `.claude/settings.json`
-
-Generated `_meta/` files are tool output, not agent context. One deny rule keeps
-them out of Claude Code's file tools — `Read`, `Grep`, `Glob`, `@file` mentions,
-the open-file context a connected IDE shares, and the Bash file commands Claude
-Code recognises (`cat`, `head`, `tail`, `sed`):
-
-```json
-{
-  "permissions": {
-    "deny": ["Read(_meta/**)"]
-  }
-}
-```
-
-Notes on that rule:
-
-- Deny rules match a directory name at **any depth**, so the single entry covers
-  `.arc42/_meta/`, `.domain/_meta/`, and the repository-root `_meta/`. An
-  *allow* rule would need `**/_meta/**` to do the same.
-- Write it against `Read`. Claude Code accepts a path rule on `Glob` or `Write`
-  but never consults it, and warns at startup.
-- A `Read` deny also blocks `Edit` and `Write` on the same paths, so it enforces
-  the "never hand-edit generated files" rule above mechanically rather than by
-  convention.
-- Index generation is unaffected: `build.mjs` is a subprocess that opens files
-  itself, and deny rules do not reach those.
-- Deny rules cannot carry allowlist exceptions, so `Read(_meta/**)` cannot be
-  reopened for `index.json`. To keep the reading outline readable while still
-  excluding the large graph, narrow the rule to `Read(_meta/graph.json)`.
-
-Keep `_meta/` committed either way — the reference graph canvas and the CI drift
-check both read it from the repository.
-
-GitHub Copilot content exclusion is not an equivalent lever: it does not apply
-to Copilot CLI or to agent mode in Copilot Chat, which is where these
-flows run. The prose guardrail stays the enforcement mechanism there.
-`search.exclude` and `files.exclude` in `.vscode/settings.json` cut
-workspace-search noise for interactive use.
 
 ## Documentation-drift checkpoint
 

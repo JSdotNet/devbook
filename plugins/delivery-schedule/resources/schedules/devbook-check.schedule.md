@@ -4,7 +4,7 @@ title: Devbook check
 cadence: daily
 cron: "0 3 * * *"
 target: devbook:devbook-check
-requires: [devbook]
+requires: [devbook, devbook-derived]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
 ---
 

@@ -37,7 +37,7 @@ for.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/domain/devbook/domain.md#index-generator"]
+related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/domain/devbook-derived/domain.md#index-generator"]
 ```
 
 The check-only half of the same protocol. It asks the same three questions — does the Markdown

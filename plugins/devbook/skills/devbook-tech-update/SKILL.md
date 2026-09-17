@@ -92,7 +92,9 @@ chapters and generated `_meta/*.json` indexes.
    ```
 
    If either command reports unresolved references, schema violations, or stale generated
-   indexes, fix the source Markdown or run `devbook-check`.
+   indexes, fix the source Markdown or run `devbook-check`. The tool is `devbook-derived`'s;
+   when `.devbook/_tools/devbook-meta/` is absent, say so, name `devbook-derived:install`,
+   and skip this step.
 
 ## Output expectations
 
