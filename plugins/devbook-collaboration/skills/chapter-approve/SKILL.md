@@ -29,8 +29,10 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    ordered by kind: questions, then flags, then suggestions and comments. When
    the chapter carries `approved-at`, mark every note dated after it as
    **raised since the approval** — those are the objections the approval never
-   saw. Read the chapter itself: a summary is not what is being approved, and
-   a person cannot approve what they have not read.
+   saw. Read the chapter, never `_meta/annotations.json`: the index is
+   refreshed on a schedule, so the note written on this branch an hour ago is
+   exactly the one it lacks. A summary is not what is being approved, and a
+   person cannot approve what they have not read.
 
 2. **Say plainly what stands in the way**, if anything:
 

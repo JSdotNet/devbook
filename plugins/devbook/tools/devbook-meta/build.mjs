@@ -1,34 +1,45 @@
 #!/usr/bin/env node
-// build.mjs — CLI wrapper over the devbook metadata modules. It writes no file.
+// build.mjs — CLI wrapper that writes the derived devbook metadata artifacts.
 //
-//   node .devbook/_tools/devbook-meta/build.mjs                  # check every adopted scope
-//   node .devbook/_tools/devbook-meta/build.mjs --check          # the same; kept so every documented command still runs
-//   node .devbook/_tools/devbook-meta/build.mjs --print          # the documents as JSON on stdout, diagnostics on stderr
+//   node .devbook/_tools/devbook-meta/build.mjs           # every adopted scope
+//   node .devbook/_tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
 //   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
 //   node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 //
-// Three documents per scope, built in memory from the Markdown:
+// Writes three artifacts per scope, per the derived-artifacts convention:
 //
-//   graph          the reference graph (nodes, edges, problems)
-//   outline        the ordered reading outline
-//   annotations    the open-note index, from the annotation fences
+//   _meta/graph.json          the reference graph (repository-wide rollup)
+//   _meta/index.json          the ordered reading outline
+//   _meta/annotations.json    the open-note index, from the annotation fences
+//   .tech/_meta/graph.json    the same set, scoped to .tech
+//   ...one set per devbook folder the repository actually has
 //
-// A scope is the repository rollup `.` or one adopted folder. `--check` exits 1
-// on any problem at error severity and prints nothing else; `--print` emits
-// `{ layout, scopes: { "<scope>": { graph, outline, annotations } } }` for a
-// viewer that cannot import graph.mjs, outline.mjs, and annotations-index.mjs
-// in-process. Nothing is committed: a derived document is a function of the
-// chapters and is computed where it is read (record 76).
+// Only folders present in the repository produce a scope, so a repository that
+// adopts just .domain and .arc42 never grows _meta folders for the rest.
+//
+// Graph construction lives in graph.mjs, which the devbook-graph canvas also
+// imports, so the written indexes and the live view are always the same graph.
 
+import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { buildGraph, buildGraphDocument, discoverLayout, DEVBOOK_FOLDERS, NESTED_DEVBOOK_FOLDERS, REPO_SCOPE } from "./graph.mjs";
-import { buildOutlineDocument } from "./outline.mjs";
-import { buildAnnotationsDocument, collectAnnotations } from "./annotations-index.mjs";
+import {
+    buildGraph,
+    buildGraphDocument,
+    outputPathFor,
+    discoverLayout,
+    DEVBOOK_FOLDERS,
+    NESTED_DEVBOOK_FOLDERS,
+    REPO_SCOPE,
+} from "./graph.mjs";
+import { buildOutlineDocument, outlinePathFor } from "./outline.mjs";
+import {
+    buildAnnotationsDocument,
+    annotationsPathFor,
+    collectAnnotations,
+} from "./annotations-index.mjs";
 
 const args = process.argv.slice(2);
-const printMode = args.includes("--print");
-// Diagnostics go to stderr in print mode so stdout stays one parseable document.
-const log = printMode ? console.error : console.log;
+const checkOnly = args.includes("--check");
 
 function optionValue(name) {
     const index = args.indexOf(name);
@@ -63,18 +74,22 @@ if (requestedScope && !availableScopes.includes(requestedScope)) {
 const scopes = requestedScope ? [requestedScope] : availableScopes;
 const folders = availableScopes.filter((scope) => scope !== REPO_SCOPE);
 
-log(`layout ${layout.layout}: ${folders.join(", ")}`);
+console.log(`layout ${layout.layout}: ${folders.join(", ")}`);
 
 // Parse the corpus once and project it per scope.
 const graph = await buildGraph(REPO_ROOT, folders);
 const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
-const output = { layout: layout.layout, scopes: {} };
 
-function report(scope, name, document, summary) {
-    log(`checked ${`${scope} ${name}`.padEnd(22)} ${summary}`);
+async function emit(outPath, document, summary) {
+    if (!checkOnly) {
+        const absoluteOut = path.resolve(REPO_ROOT, outPath);
+        await mkdir(path.dirname(absoluteOut), { recursive: true });
+        await writeFile(absoluteOut, `${JSON.stringify(document, null, 2)}\n`, "utf8");
+    }
+    console.log(`${checkOnly ? "checked" : "wrote  "} ${outPath.padEnd(26)} ${summary}`);
     for (const problem of document.problems) {
-        log(`  [${problem.severity}] ${problem.message}`);
+        console.log(`  [${problem.severity}] ${problem.message}`);
         if (problem.severity === "error") errorCount++;
     }
 }
@@ -89,34 +104,32 @@ function countFiles(entries) {
 for (const scope of scopes) {
     const graphDocument = await buildGraphDocument(REPO_ROOT, scope, graph, folders);
     const { stats } = graphDocument;
-    report(
-        scope,
-        "graph",
+    await emit(
+        outputPathFor(scope),
         graphDocument,
         `${String(stats.nodes).padStart(4)} nodes, ${String(stats.edges).padStart(4)} edges`
     );
 
     const outlineDocument = await buildOutlineDocument(REPO_ROOT, scope, folders);
-    report(
-        scope,
-        "outline",
+    await emit(
+        outlinePathFor(scope),
         outlineDocument,
         `${String(countFiles(outlineDocument.entries)).padStart(4)} files ordered`
     );
 
-    const annotationsDocument = await buildAnnotationsDocument(REPO_ROOT, scope, annotations, folders);
-    report(
+    const annotationsDocument = await buildAnnotationsDocument(
+        REPO_ROOT,
         scope,
-        "annotations",
+        annotations,
+        folders
+    );
+    await emit(
+        annotationsPathFor(scope),
         annotationsDocument,
         `${String(annotationsDocument.stats.threads).padStart(4)} threads, ` +
             `${String(annotationsDocument.stats.open).padStart(4)} open`
     );
-
-    output.scopes[scope] = { graph: graphDocument, outline: outlineDocument, annotations: annotationsDocument };
 }
-
-if (printMode) process.stdout.write(`${JSON.stringify(output, null, 2)}\n`);
 
 if (errorCount) {
     console.error(`\n${errorCount} problem(s) at error severity.`);

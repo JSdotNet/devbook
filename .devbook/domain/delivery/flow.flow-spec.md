@@ -48,7 +48,7 @@ runner and named by no skill.
   folder through the category each role resolves to.
 - **It carries none of the folder's rules.** What a chapter must look like is the repository's own
   instruction file for that folder; the flow loads it task-scoped, runs the check the repository's
-  `AGENTS.md` names.
+  `AGENTS.md` names, and never regenerates the derived indexes.
 - It is the escalation target for a new decision, a cross-cutting redesign, a boundary question, and
   accepted debt. A stage that discovers it needs a decision escalates here rather than taking one
   inline.

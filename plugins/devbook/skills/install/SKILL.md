@@ -1,6 +1,6 @@
 ---
 name: install
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install or refresh the devbook-meta checker and its CI workflow, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations", "devbook-install".'
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations", "devbook-install".'
 ---
 
 # devbook install
@@ -52,8 +52,10 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 - The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`
   and `.devbook/config.local.json`. Ignore both; create neither. An empty overlay
   reads as a setting somebody chose.
-- Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
-  specialist agents are installed — with neither, they name nothing. Never apply any of
-  it silently, and never put routing inside the `AGENTS.md` markers.
-- Without GitHub Actions, say plainly that the check runs locally only.
+- Always offer the `.claude/settings.json` deny rule from `assets/routing-snippet.md`:
+  nothing else enforces the `_meta/` rule mechanically. Offer its routing sections only
+  when a flow engine or specialist agents are installed — with neither, they name nothing.
+  Never apply any of it silently, and never put routing inside the `AGENTS.md` markers.
+- Without GitHub Actions, install `build/Update-DevbookIndex.ps1` alone and
+  say plainly that index refresh is now manual.
 - Report a reconcile that ends on a failing check as failing, never as installed.

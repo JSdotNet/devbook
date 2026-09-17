@@ -77,9 +77,9 @@ relations has nothing left to write:
 ```
 
 That is correct and deliberate, not leftover punctuation. The fence is what
-marks the heading as an **addressable chapter** — the reference graph makes one
+marks the heading as an **addressable chapter** — the derived graph makes one
 node per heading that carries a block — so deleting it as noise silently drops
-the chapter out of the graph and out of every reference that points at it.
+the chapter out of `graph.json` and out of every reference that points at it.
 
 ## Headings carry the name, `type` carries the kind
 
@@ -180,7 +180,8 @@ Nothing else in this convention changes with the layout. An address is the
 chapter's real repository path, so a reference reads
 `.devbook/domain/order-management/features.md#feature-checkout` under one layout
 and `.domain/order-management/features.md#feature-checkout` under the other, and
-both resolve the same way.
+both resolve the same way. Derived `_meta/` folders are written beside the
+chapters they index either way.
 
 A repository with both is an error, not a preference: the generator indexes both
 so nothing becomes invisible, and reports that addresses will not agree until
@@ -359,7 +360,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   "[Where reading order comes from](#where-reading-order-comes-from)".
 - **index** (optional, **file-level blocks only**) — how this document steers
   the generated outline. `index: root` makes it its directory's entry point, so
-  it sorts first; `index: exclude` keeps it out of the outline altogether
+  it sorts first; `index: exclude` keeps it out of `_meta/index.json` altogether
   while leaving it in the reference graph. Omit the field for an ordinary listed
   document, which is nearly every file.
 
@@ -569,7 +570,8 @@ chapter.
   a runner selector rather than a path.
 - Do not invent additional top-level fields without updating either this
   file (for a universal field) or the relevant folder's instructions file
-  (for a folder-specific field) first — the check depends on a fixed schema. State owned by a plugin on top of devbook is the exception, and
+  (for a folder-specific field) first — the derived index tooling depends on a
+  fixed schema. State owned by a plugin on top of devbook is the exception, and
   goes under `ext.<plugin>.<key>` instead of becoming a new field.
 - Optional fields are included only when they carry a value. Empty list-valued
   fields (`related: []`, `depends-on: []`, `roadmap: []`) and null values
@@ -591,7 +593,7 @@ That order is never declared by *listing siblings* in one document's block. It
 comes from the folder convention, and from what a document says about **itself**
 — its number, or that it is its directory's entry point.
 
-Per directory, the outline is built like this:
+Per directory, `_meta/index.json` is generated like this:
 
 1. **The root document sorts first** — the file declaring `index: root`, or
    failing that the entry point its folder convention names:
@@ -629,12 +631,12 @@ Per directory, the outline is built like this:
    filename.**
 
 `index: exclude` drops a document from the outline entirely. It stays a node in
-the reference graph, because it is still real content that other chapters may
+`graph.json`, because it is still real content that other chapters may
 reference — it is just not something a viewer lists.
 
 Nothing here lists a directory's contents from inside one of its documents, so
-adding or removing a file needs no edit to any *other* file: the next build of
-the outline places it.
+adding or removing a file needs no edit to any *other* file. Regenerate `_meta/`
+and it lands in the right place.
 
 Reading order used to be declared in an `order` field on the file-level block,
 listing the names of a directory's other entries. That field is **removed** from
@@ -647,23 +649,34 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 `.devbook/_tools/devbook-meta/outline.mjs`. Keep that table and the folders'
 **Structure** blocks in step with each other.
 
-## The check, and the documents behind it
+## Derived metadata index
 
-These metadata blocks are compiled in memory by
-`.devbook/_tools/devbook-meta/build.mjs` into three documents per scope — the
-reference graph, the reading outline, and the open-note index — one scope per
-adopted folder plus a repository-wide rollup. Nothing is written to disk: a
-derived document is a function of the chapters and is computed where it is
-read, by the check, by the **Reference graph** canvas, and by any viewer that
-imports the modules or reads `build.mjs --print`.
+These metadata blocks are compiled into derived indexes by
+`.devbook/_tools/devbook-meta/build.mjs` — one pair per devbook folder plus
+a repository-wide rollup, placed per
+`devbook-derived-artifacts.md`:
 
-Run the check whenever a chapter or file is added, renamed, or re-linked:
-
-```bash
-node .devbook/_tools/devbook-meta/build.mjs --check
+```text
+_meta/graph.json          # reference graph, all adopted folders
+_meta/index.json          # reading outline, all adopted folders
+.arc42/_meta/graph.json   # .arc42 only
+.arc42/_meta/index.json
+.domain/_meta/…
+.tech/_meta/…
+.design/_meta/…
+.ai/_meta/…
 ```
 
-CI (`.github/workflows/devbook-meta.yml`) runs the same command and fails when
-a reference does not resolve or a block violates the schema. See the
-devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`) for the
-document shapes.
+Only folders the repository actually has produce a scope.
+
+Regenerate whenever a chapter or file is added, renamed, or re-linked:
+
+```bash
+node .devbook/_tools/devbook-meta/build.mjs
+```
+
+These are derived output — never edit them by hand. CI
+(`.github/workflows/devbook-meta.yml`) fails when a reference does not
+resolve or when a committed index is stale. Open the **Reference graph**
+canvas (optionally scoped to one folder) to explore it visually. See
+the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`) for the output shape.

@@ -23,7 +23,7 @@ standard, and a class stated by half reports the wrong sentence.
 
 ## Hard Constraints
 
-- Writes nothing. Not a chapter, not an annotation. A finding becomes an edit
+- Writes nothing. Not a chapter, not an annotation, not `_meta/`. A finding becomes an edit
   only when a person makes it through the folder's flow, or a note through
   `devbook-collaboration:chapter-review` where that plugin is installed.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, and every table.

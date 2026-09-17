@@ -10,12 +10,12 @@ description: File and folder naming conventions inside devbook folders, includin
 Anything that exists **for tooling rather than for reading directly** carries a
 leading underscore, so a human scanning a folder can tell specification from
 machinery at a glance. Folders with a leading underscore are always machinery:
-the checker and the tooling beside it, never content.
+what a generator reads, what it writes, or the generator itself.
 
-- **Tooling folders** are prefixed: `.devbook/_tools/` (the checker and the
-  inventory scripts). Files *inside* such a folder are not prefixed again — the
-  folder already carries the signal, so it is `_tools/devbook-meta/build.mjs`,
-  never `_tools/_devbook-meta/`.
+- **Tooling folders** are prefixed: `_meta/` (derived artifacts),
+  `.devbook/_tools/` (the generators). Files *inside* such a folder are not
+  prefixed again — the folder already carries the signal, so it is
+  `_meta/graph.json`, never `_meta/_graph.json`.
 - **Tooling files** sitting alongside content are prefixed individually:
   `_template.md`, `_schema.json`.
 
@@ -39,6 +39,8 @@ theirs — `.devbook/domain/`, never `.devbook/.domain/`; see
 
 A name should not repeat what its location already says.
 
+- Derived artifacts are named after what they are, not their scope:
+  `.tech/_meta/graph.json`, not `.tech/_meta/tech-graph.json`.
 - Files within a bounded context are named after their role, not the context:
   `.domain/ordering/features.md`, not `.domain/ordering/ordering-features.md`.
 
@@ -47,3 +49,8 @@ A name should not repeat what its location already says.
 Use kebab-case for files and folders (`.domain/order-management/`,
 `technology-graph.md`). Keep any casing that an external tool requires, such as
 `README.md`.
+
+## Reference
+
+- `devbook-derived-artifacts.md` — placement, naming,
+  and envelope rules for generated artifacts under `_meta/`.

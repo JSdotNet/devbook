@@ -45,6 +45,7 @@ whose install rewrites content the repository authored, which is devbook alone:
       "materialized": {
         ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
+        "build/Update-DevbookIndex.ps1": { "from": "1.0.0", "hash": "sha256:7e10…", "managed": false },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
         ".agents/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:b17e…", "managed": true },
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
@@ -85,6 +86,8 @@ file wrong the moment a second person opens the repository.
 | `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
 | `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `.tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
+| `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
+| `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
 | `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
@@ -93,15 +96,17 @@ file wrong the moment a second person opens the repository.
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
-The workflow is edited on the way in — the branch name corrected and its two path
-filters rendered. Those filters carry `<prefix>`: replace it with `.` in the flat
-layout and `.devbook/` in the nested one — `build.mjs` prints which layout it
-found on every run — and drop the rows for folders `adopted` does not name. A
-`<prefix>` reaching `.github/` is a failed reconcile, not a cosmetic defect: the
-filter then matches nothing, so the check never fires and nothing reports its
-absence. Verify in phase 6 that none survived. This editing makes the file
-customized from the first reconcile onward, which is the intended outcome: its
-hash matches no shipped release, so reconcile reports it and leaves it alone.
+Both workflows are edited on the way in — the branch name corrected, the nightly
+`cron` and `REFRESH_BRANCH` chosen, and the two path filters of
+`devbook-meta.yml` rendered. Those filters carry `<prefix>`: replace it with `.`
+in the flat layout and `.devbook/` in the nested one — `build.mjs` prints which
+layout it found on every run — and drop the rows for folders `adopted` does not
+name. A `<prefix>` reaching `.github/` is a failed reconcile, not a cosmetic
+defect: the filter then matches nothing, so the check never fires and nothing
+reports its absence. Verify in phase 6 that none survived. This editing makes
+both files customized from the first reconcile onward, which is the
+intended outcome: their hash matches no shipped release, so reconcile reports
+them and leaves them alone.
 
 The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
 read natively by Copilot and not by Claude, so a repository owes each host a root file that

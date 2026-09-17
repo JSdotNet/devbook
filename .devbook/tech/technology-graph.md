@@ -50,9 +50,7 @@ graph LR
   pwsh --> node
   classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
   classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
-  classDef retired fill:#e6e6e6,stroke:#7a7a7a,color:#333333,stroke-dasharray:4 2;
-  class markdown,mcp,claudeApi,copilotApi,node adopted;
-  class pwsh retired;
+  class markdown,mcp,claudeApi,copilotApi,node,pwsh adopted;
   class mcpApps,claudeCli,copilotSdk,scheduler trial;
 ```
 
@@ -65,5 +63,5 @@ here has exercised them yet, and each says what a first real run would test.
 To add a technology, write its `##` chapter in the layer file it belongs to, with `status`,
 `type`, and any `depends-on` edges, then add its node and edges to the graph above in the same
 change. To change a rating, change it in the chapter and in the `class` line here together.
-The reference graph the checker builds is derived from the chapters, never from this
-diagram, so when the two disagree the diagram is what is stale.
+The generated `_meta/graph.json` beside this file is derived from the chapters, never from
+this diagram, so when the two disagree the diagram is what is stale.

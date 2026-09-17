@@ -133,8 +133,8 @@ An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/doma
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
-ships one, `devbook-graph`, which renders the reference graph the checker builds in memory.
-`delivery-surface-canvas` ships one too, and it is that plugin's only transport:
+ships one, `devbook-graph`, which renders the reference graph the generator writes to
+`_meta/graph.json`. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
@@ -211,8 +211,9 @@ flowchart TB
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
         folders[".devbook/arc42 domain tech design ai"]
-        wf[".github/workflows/ - the check"]
-        tools[".devbook/_tools/ - the checker, at the path flows name"]
+        meta["_meta/ - generated, refreshed by a schedule"]
+        wf[".github/workflows/ - the check, and the nightly refresh"]
+        tools[".devbook/_tools/ - the generator, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
         cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
@@ -231,6 +232,7 @@ flowchart TB
     inst --> cfgC
     setup --> cfgE
     setup -.->|"invokes, never reimplements"| inst
+    folders --> meta
 ```
 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
@@ -240,14 +242,14 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and five
+`.devbook/_tools/` holds devbook's generator at the path devbook's install writes it to, and five
 of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
 knowledge of, and a repository that hand-authored its folders without installing devbook gets a
 check line pointing at a file that is not there.
 
-The dashed edge is the only one an upgrade re-runs wholesale. Nothing generated is in the
-picture: the graph and the outline are built in memory wherever they are read, per
-[record 76](adr/76-derived-artifacts-are-computed-never-committed.md).
+The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
+install skill: it is derived from the chapters and refreshed by the `devbook-check` schedule,
+because two branches each touching one chapter both rewrite the same JSON.
 
 ## Roles and Services
 

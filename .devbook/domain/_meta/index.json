@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/domain",
+  "sources": [
+    ".devbook/domain"
+  ],
+  "problems": [],
+  "entries": [
+    {
+      "type": "file",
+      "name": "context-map.md",
+      "path": ".devbook/domain/context-map.md",
+      "title": "Context Map",
+      "kind": "context-map",
+      "status": "active",
+      "statusDeclared": false,
+      "summary": "This repository has one bounded context. It builds authoring assets, not a running product, so there is no second context to integrate with — the hosts that load the assets are outside the boundary.",
+      "root": true
+    },
+    {
+      "type": "directory",
+      "name": "plugin-authoring",
+      "path": ".devbook/domain/plugin-authoring",
+      "title": "Plugin Authoring",
+      "children": [
+        {
+          "type": "file",
+          "name": "domain.md",
+          "path": ".devbook/domain/plugin-authoring/domain.md",
+          "title": "Plugin Authoring",
+          "kind": "domain",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "What this context is responsible for: that an asset written once loads correctly in every host that reads it, and that a plugin can be installed on its own.",
+          "root": true
+        },
+        {
+          "type": "file",
+          "name": "dependencies.md",
+          "path": ".devbook/domain/plugin-authoring/dependencies.md",
+          "title": "Plugin Authoring",
+          "kind": "dependencies",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "What this context depends on and who depends on it. The hosts sit outside the boundary and are conformed to; the repositories that adopt a plugin sit outside it and are supplied."
+        },
+        {
+          "type": "file",
+          "name": "features.md",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "title": "Plugin Authoring",
+          "kind": "features",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "What this context lets a maintainer do, in the language of naming.md rather than in file paths. Four features, and each is a thing a host or a consuming repository can observe."
+        },
+        {
+          "type": "file",
+          "name": "flow.md",
+          "path": ".devbook/domain/plugin-authoring/flow.md",
+          "title": "Plugin Authoring",
+          "kind": "flow",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "How the terms in model.md move over time: a file becoming something a host loads, payload becoming state in somebody else's repository, and the run a flow skill describes. Structure lives in model.md; responsibilities and boundary live in domain.md.",
+          "diagrams": 3
+        },
+        {
+          "type": "file",
+          "name": "model.md",
+          "path": ".devbook/domain/plugin-authoring/model.md",
+          "title": "Plugin Authoring",
+          "kind": "model",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "Structural view of the context: what a marketplace holds, what a plugin is made of, and what a plugin leaves behind in a repository that adopts it. domain.md says what the context is responsible for; this file says how its terms relate.",
+          "diagrams": 1
+        },
+        {
+          "type": "file",
+          "name": "naming.md",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "title": "Naming",
+          "kind": "naming",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The terms this repository trades in. Where a host uses a different word for the same thing, the host's word is recorded as an alias rather than adopted."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/design",
+  "sources": [
+    ".devbook/design"
+  ],
+  "problems": [],
+  "entries": [
+    {
+      "type": "file",
+      "name": "README.md",
+      "path": ".devbook/design/README.md",
+      "title": "Design",
+      "status": "draft",
+      "summary": "Design guidance for the surfaces this repository's plugins render. Both chapters below now have an implementation. The dashboard stays draft because the intent was written first so the shipped surface would be reviewed against something other than itself, and that review has not happened yet.",
+      "root": true
+    }
+  ]
+}

@@ -18,7 +18,7 @@ When the repository and a chapter disagree, one of them is wrong and neither may
 way: change the other in the same commit, or — when the divergence is deliberate — record it
 as a decision in `.devbook/arc42/adr/` with the reason. Never leave the two silently apart.
 
-Before committing, run the asset checker and the devbook check over this repository's own devbook:
+Before committing, run the checker and the generator over this repository's own devbook:
 
 ```bash
 node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
@@ -31,12 +31,15 @@ resolve.
 `.github/workflows/repo-checks.yml` runs both on every pull request, and a third beside them:
 `claude plugin validate --strict` over the marketplace and every plugin manifest, which is what
 catches an unknown manifest field or a bad dependency range. Run it locally before a manifest
-change.
+change. The workflow calls `--check` only and never refreshes `_meta/`.
 
-The devbook check writes nothing. There is no generated index in this tree and none is ever
-committed: the reference graph and the reading outline are built in memory by the check, by the
-canvas, and by any viewer, per
-`.devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md`.
+`--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
+branches that each touch one chapter both rewrite the same JSON, and the conflict is only
+resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
+`devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
+`.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
+at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
+`plugins/devbook/rules/devbook-derived-artifacts.md`.
 
 ## Committing
 
@@ -166,7 +169,9 @@ Every chapter carries a fenced `meta` block; write it in the same change as the 
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
-Run the check before committing; it writes nothing:
+Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.
+Never regenerate or commit them in a session — the scheduled job owns that refresh. Run
+the check before committing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
 

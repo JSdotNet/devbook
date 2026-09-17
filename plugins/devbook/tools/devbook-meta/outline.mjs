@@ -39,7 +39,7 @@ import {
     fileNumberFromPath,
     indexRole,
 } from "./metadata.mjs";
-import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE } from "./graph.mjs";
+import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, generatorPath } from "./graph.mjs";
 
 /**
  * A document's `tests` entries as a list, whatever shape they were authored in.
@@ -308,7 +308,8 @@ async function readDirectory(repoRoot, relDir, problems) {
 }
 
 /**
- * Build the serializable outline document for one scope.
+ * Build the serializable outline document for one scope, following the
+ * derived-artifacts convention.
  *
  * `folders` is the set of devbook folders this repository actually adopts.
  */
@@ -339,11 +340,18 @@ export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders
 
     return {
         schemaVersion: SCHEMA_VERSION,
+        generatedBy: generatorPath(repoRoot),
         scope,
         sources: roots,
-        // Deliberately no timestamp: the document is a deterministic function
-        // of the Markdown, so two runs over one commit agree byte for byte.
+        // Deliberately no timestamp: the index is a deterministic function of
+        // the Markdown, so re-running it produces a byte-identical file and CI
+        // can diff it to detect a stale commit.
         problems,
         entries,
     };
+}
+
+/** Repo-relative output path for a scope, per the derived-artifacts convention. */
+export function outlinePathFor(scope) {
+    return scope === REPO_SCOPE ? "_meta/index.json" : `${scope}/_meta/index.json`;
 }

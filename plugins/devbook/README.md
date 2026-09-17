@@ -2,8 +2,8 @@
 
 Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.ai`
 devbook convention: durable, cross-linked Markdown chapters with
-machine-readable `meta` blocks, a graph canvas, and a CI check that keeps
-references honest. Nothing generated lands in the tree.
+machine-readable `meta` blocks, derived `_meta/` indexes, a graph canvas, and a
+CI check that keeps references honest.
 
 ## Installation
 
@@ -18,11 +18,9 @@ path instead of by repository.
 
 Each devbook folder holds Markdown chapters. Every chapter carries a `meta`
 block declaring its identity, status, number, date, its relationships to other
-chapters, and the test cases that assert what it claims. A checker walks the
-corpus, builds the reference graph and the reading outline in memory, and fails
-on a reference that does not resolve; CI runs it on every pull request. No
-derived file is ever committed — a viewer computes the same documents where it
-reads them.
+chapters, and the test cases that assert what it claims. A generator walks the
+corpus and writes derived indexes under `_meta/`, which CI validates on every
+pull request and a scheduled job keeps current.
 
 A chapter may also carry `annotation` fences — review notes written in the
 chapter, beside the passage they are about. Markdown stays canonical,
@@ -46,7 +44,8 @@ Those five sit at the repository root, or nested under one `.devbook/` parent
 with the leading dot dropped — `.devbook/arc42`, `.devbook/domain`, and so on.
 Pick one layout and never mix them; the generator recognizes both, reports which
 one it found, and treats a repository containing both as an error. Nothing else
-changes: an address is the chapter's real repository path either way.
+changes: an address is the chapter's real repository path either way, and each
+folder's `_meta/` is written beside its own chapters.
 
 ## Features
 
@@ -74,7 +73,8 @@ schema no longer defines, stale committed indexes — and hands the rest back to
 `devbook:install`, which owns every write.
 
 **Trigger keywords:** `devbook check`, `devbook-meta failed`,
-`broken reference`, `validate devbook folders`, `build.mjs --check`
+`broken reference`, `stale _meta`, `validate devbook folders`,
+`build.mjs --check`
 
 ### Skill: `devbook-tech-update`
 
@@ -207,7 +207,7 @@ skills reference and none repeats: counterpart resolution, the evidence rules
 (including why unit tests are first-class evidence for capture rather than a
 cross-check), a five-way drift verdict (`aligned`, `code-ahead`, `spec-ahead`,
 `conflict`, `unresolved`, where `conflict` always stops and asks), the status
-rules, the check, and a shared report table.
+rules, index regeneration, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
@@ -235,7 +235,8 @@ flow knows these skills exist.
 | `devbook-design.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
-| `devbook-naming.md` | all five folders | Underscore and dot prefixes, kebab-case, no redundant suffixes |
+| `devbook-derived-artifacts.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
+| `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob carries both layouts — the five root dot-folders and their `.devbook/`
 nesting — and is scoped to the devbook folders, so the plugin stays silent in
@@ -300,18 +301,18 @@ chapter's Markdown beside its parsed `meta` block and a metadata lint.
 
 ### Tooling: `devbook-meta`
 
-```bash
-node .devbook/_tools/devbook-meta/build.mjs --check    # every adopted scope; CI runs this
-node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check
-node .devbook/_tools/devbook-meta/build.mjs --print    # the documents as JSON on stdout
-node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
+```powershell
+./build/Update-DevbookIndex.ps1                      # refresh, and say what moved
+./build/Update-DevbookIndex.ps1 -Scope .tech
+./build/Update-DevbookIndex.ps1 -Check               # validate, write nothing
 ```
 
-The checker writes no file. It builds the reference graph, the reading outline,
-and the open-note index in memory and reports what does not resolve; `--print`
-emits the same three documents per scope for a viewer that cannot import
-`graph.mjs`, `outline.mjs`, and `annotations-index.mjs` in-process. The canvas
-imports them, so the check and the live view are one parser.
+```bash
+node .devbook/_tools/devbook-meta/build.mjs            # write every adopted scope
+node .devbook/_tools/devbook-meta/build.mjs --check    # CI: verify only
+node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
+```
 
 ```bash
 node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
@@ -326,8 +327,9 @@ note with a regular expression of its own. Its edits are surgical, and it never
 commits: adding a note dirties a tracked file, and that is the caller's to
 review.
 
-Output is deterministic — no timestamps — so two runs over one commit agree
-byte for byte. See `tools/devbook-meta/README.md` for the document shapes.
+Output is deterministic — no timestamps — so a clean `git diff` proves the
+committed indexes are current. See `tools/devbook-meta/README.md` for the
+output shape and for when to refresh.
 
 ### Tooling: `devbook-tech`
 
@@ -345,18 +347,20 @@ for technologies that do not appear in package manifests.
 | File | Purpose |
 |------|---------|
 | `assets/reconcile-protocol.md` | Shared rules for `devbook:install` and `devbook-check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`, its path filters rendered to the layout and the adopted folders: fails on broken references and schema violations |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`, its path filters rendered to the layout and the adopted folders: fails on broken references, warns on drifted indexes |
+| `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
+| `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
-| `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
-| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
+| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
 
 - `hooks.json` adds a session-start guardrail: devbook folders are task-scoped
-  context rather than baseline context, and `meta` blocks are mandatory on every
-  chapter.
+  context rather than baseline context, `meta` blocks are mandatory on every
+  chapter, and `_meta/` is never hand-edited.
 
 ### Migrations
 
@@ -396,15 +400,17 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **9**, covering the metadata schema a repository authors —
-`schemaVersion` on every document the checker builds is the same number under the
-name a viewer reads it by. It moves only when an authored chapter changes shape,
-so most plugin releases leave it alone: plugin semver moves for prose and new
-skills, `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION`
-in `tools/devbook-meta/graph.mjs`.
+One number, currently **9**, covering the metadata schema a repository authors
+and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
+`index.json` is the same number under the name those files stamp themselves
+with. It moves only when something repo-visible changes shape, so most plugin
+releases leave it alone: plugin semver moves for prose and new skills,
+`contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
+`tools/devbook-meta/graph.mjs`.
 
 1.0.0 ships at 9. The number counts schema shapes rather than releases and was not
-restarted with the version, and the first breaking change after 1.0.0 ships as
+restarted with the version: a derived artifact stamped 9 before the reset still follows
+the contract a 1.0.0 generator writes, and the first breaking change after 1.0.0 ships as
 `010-<slug>`.
 
 ## Upgrade notes
@@ -418,26 +424,32 @@ After running `devbook:install`, a repository that adopted everything has:
 
 ```
 .arc42/
+├── _meta/{graph.json,index.json,annotations.json}
 └── <chapter>.md
 .domain/
+├── _meta/{graph.json,index.json,annotations.json}
 └── <bounded-context>/<chapter>.md
 .tech/
+├── _meta/{graph.json,index.json,annotations.json}
 ├── technology-graph.md
 └── <layer>.md
 .design/
+├── _meta/{graph.json,index.json,annotations.json}
 └── <guideline>.md
 .ai/
+├── _meta/{graph.json,index.json,annotations.json}
 ├── adoption-map.md
 ├── <nn>-<stage>.md
 └── concepts.md
+_meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
-.devbook/
-├── config.json                      # the stack config, with devbook's stamp
-└── _tools/
-    ├── devbook-meta/                # the checker
-    └── devbook-tech/                # deterministic package inventory scripts
+build/
+└── Update-DevbookIndex.ps1          # on-demand index refresh
 .github/
-└── workflows/devbook-meta.yml       # the CI check
+├── tools/devbook-meta/              # the generator
+├── tools/devbook-tech/              # deterministic package inventory scripts
+├── workflows/devbook-meta.yml       # the CI check
+└── workflows/devbook-meta-nightly.yml   # the scheduled index refresh
 ```
 
 ## Enforcement
@@ -448,14 +460,18 @@ Five layers, weakest to strongest:
    `devbook:install`, which installs each one where both hosts already look. Before that,
    they are reached by path only.
 2. **The session-start hook** stops agents treating devbook folders as baseline
-   context, and is what carries the folder rules in a repository that has not
-   installed them.
+   context or hand-editing derived files, and is what carries the folder rules in a
+   repository that has not installed them.
 3. **`meta` block rules** make every chapter's relationships explicit and
    checkable.
 4. **`build.mjs --check`** fails on unresolved references and schema violations.
 5. **The CI workflow** fails the pull request on broken references or a `meta`
-   block that violates the schema. There is no generated file to drift: a viewer
-   builds the graph and the outline from the chapters when it opens them.
+   block that violates the schema. Drifted `_meta/` indexes are reported as a
+   warning, not a failure — making every devbook pull request carry a
+   regenerated index is what turns those files into merge conflicts. Refresh is
+   deliberate instead: `build/Update-DevbookIndex.ps1` on demand, the nightly
+   workflow on a schedule. A consumer that reads an index at runtime owes the
+   other half of that contract — re-read any source newer than the index.
 
 ## License
 

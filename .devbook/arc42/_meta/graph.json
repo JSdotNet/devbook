@@ -1,0 +1,2878 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/arc42",
+  "sources": [
+    ".devbook/arc42"
+  ],
+  "stats": {
+    "nodes": 88,
+    "edges": 158,
+    "nodesByFolder": {
+      "arc42": 66,
+      "domain": 18,
+      "tech": 4
+    },
+    "nodesByType": {
+      "file": 9,
+      "chapter": 79
+    },
+    "nodesByKind": {
+      "none": 66,
+      "bounded-context": 1,
+      "term": 15,
+      "platform": 3,
+      "runtime": 1,
+      "sub-feature": 1,
+      "naming": 1
+    },
+    "nodesByStatus": {
+      "active": 84,
+      "adopted": 2,
+      "trial": 2
+    },
+    "edgesByType": {
+      "contains": 58,
+      "related": 100
+    }
+  },
+  "problems": [],
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": ".devbook/arc42/01-introduction-and-goals.md",
+          "label": "Introduction and Goals",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/01-introduction-and-goals.md",
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/context-map.md#plugin-authoring"
+          ],
+          "number": 1
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/01-introduction-and-goals.md#quality-goals",
+          "label": "Quality Goals",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/01-introduction-and-goals.md",
+          "slug": "quality-goals",
+          "level": 2,
+          "line": 11,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/01-introduction-and-goals.md#stakeholders",
+          "label": "Stakeholders",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/01-introduction-and-goals.md",
+          "slug": "stakeholders",
+          "level": 2,
+          "line": 23,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md",
+          "label": "Building Block View",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 5
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "label": "Marketplace Root",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "marketplace-root",
+          "level": 2,
+          "line": 7,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "label": "Plugin Folder",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "plugin-folder",
+          "level": 2,
+          "line": 18,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "label": "Roles and Services",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "roles-and-services",
+          "level": 2,
+          "line": 85,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#role",
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "label": "Surface Plugins",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "surface-plugins",
+          "level": 2,
+          "line": 127,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "label": "Host Slots",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "host-slots",
+          "level": 2,
+          "line": 157,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#host-slot",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#fan-out-state",
+          "label": "Fan-Out State",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "fan-out-state",
+          "level": 2,
+          "line": 187,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "label": "Guide Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "guide-plugin",
+          "level": 2,
+          "line": 215,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "label": "Stack Config",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "stack-config",
+          "level": 2,
+          "line": 252,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp",
+            ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 271,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#asset-kinds",
+          "label": "Asset Kinds",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "asset-kinds",
+          "level": 2,
+          "line": 310,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#agent"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md",
+          "label": "Architecture Decisions",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md"
+          ],
+          "number": 9
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "label": "Marketplace Named jsdotnet",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "marketplace-named-jsdotnet",
+          "level": 2,
+          "line": 11,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "label": "One Folder Per Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-folder-per-plugin",
+          "level": 2,
+          "line": 27,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/domain/plugin-authoring/naming.md#plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "label": "One Authored Copy Per Asset",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-authored-copy-per-asset",
+          "level": 2,
+          "line": 48,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/tech/hosts.md#copilot-plugin-api"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "label": "No Generated Sync Layer",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "no-generated-sync-layer",
+          "level": 2,
+          "line": 60,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/tech/tooling.md#powershell"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "label": "devbook Still Ships the Graph Canvas",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-still-ships-the-graph-canvas",
+          "level": 2,
+          "line": 81,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#flat-knowledge-folders-only",
+          "label": "Flat Knowledge Folders Only",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "flat-knowledge-folders-only",
+          "level": 2,
+          "line": 117,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung",
+          "label": "approved Is a Status Rung",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "approved-is-a-status-rung",
+          "level": 2,
+          "line": 150,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "label": "Comments Are Findings Until the Fence Lands",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "comments-are-findings-until-the-fence-lands",
+          "level": 2,
+          "line": 169,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+            ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "label": "The Point Set Is Closed",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-point-set-is-closed",
+          "level": 2,
+          "line": 216,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "label": "One Config File, Two Kinds of Key",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-config-file-two-kinds-of-key",
+          "level": 2,
+          "line": 243,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#stack-config",
+            ".devbook/domain/plugin-authoring/naming.md#stamp"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#extension-points-and-gates-live-in-the-surface-contract",
+          "label": "Extension Points and Gates Live in the Surface Contract",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "extension-points-and-gates-live-in-the-surface-contract",
+          "level": 2,
+          "line": 269,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#a-tracker-is-a-binding-not-a-phase-name",
+          "label": "A Tracker Is a Binding, Not a Phase Name",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "a-tracker-is-a-binding-not-a-phase-name",
+          "level": 2,
+          "line": 293,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#tracker"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "label": "delivery Ships No Surface",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "delivery-ships-no-surface",
+          "level": 2,
+          "line": 313,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "label": "Three Surfaces, One Contract",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "three-surfaces-one-contract",
+          "level": 2,
+          "line": 338,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+            ".devbook/arc42/05-building-block-view.md#surface-plugins"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names",
+          "label": "A Surface Declares Only the Contract's Tool Names",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "a-surface-declares-only-the-contracts-tool-names",
+          "level": 2,
+          "line": 369,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+            ".devbook/domain/plugin-authoring/naming.md#surface"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "label": "No Host Profile Plugins",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "no-host-profile-plugins",
+          "level": 2,
+          "line": 401,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#host-slot",
+            ".devbook/arc42/05-building-block-view.md#host-slots"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only",
+          "label": "delivery-canvas Ships the Canvas Only",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "delivery-canvas-ships-the-canvas-only",
+          "level": 2,
+          "line": 438,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "label": "A Role Plugin Holds No Flow Control",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "a-role-plugin-holds-no-flow-control",
+          "level": 2,
+          "line": 471,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#role",
+            ".devbook/domain/plugin-authoring/naming.md#gate",
+            ".devbook/arc42/05-building-block-view.md#roles-and-services",
+            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "label": "Budgets Are Disclosure Triggers, Not Gates",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "budgets-are-disclosure-triggers-not-gates",
+          "level": 2,
+          "line": 524,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+            ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "label": "Four arc42 Chapters",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "four-arc42-chapters",
+          "level": 2,
+          "line": 561,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/01-introduction-and-goals.md",
+            ".devbook/arc42/05-building-block-view.md",
+            ".devbook/arc42/11-risks-and-technical-debt.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "label": "Fan-Out Is Its Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "fan-out-is-its-own-plugin",
+          "level": 2,
+          "line": 582,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "label": "The Guide Names Every Plugin and Depends on None",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-guide-names-every-plugin-and-depends-on-none",
+          "level": 2,
+          "line": 604,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/05-building-block-view.md#guide-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config",
+            ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "label": "The Specialists Leave the Marketplace",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-specialists-leave-the-marketplace",
+          "level": 2,
+          "line": 657,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#roles-and-services",
+            ".devbook/domain/plugin-authoring/naming.md#role",
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+            ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "label": "Devbook Payload Named After Its Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-payload-named-after-its-plugin",
+          "level": 2,
+          "line": 707,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+            ".devbook/arc42/11-risks-and-technical-debt.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 743,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "label": "devbook Owns One Section of AGENTS.md",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-owns-one-section-of-agentsmd",
+          "level": 2,
+          "line": 790,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/05-building-block-view.md#host-slots",
+            ".devbook/domain/plugin-authoring/naming.md#stamp"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "label": "Risks and Technical Debt",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/tdr/README.md",
+            ".devbook/arc42/09-architecture-decisions.md"
+          ],
+          "number": 11
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
+          "label": "Technical Debt",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "slug": "technical-debt",
+          "level": 2,
+          "line": 12,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/tdr/README.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/11-risks-and-technical-debt.md#risks",
+          "label": "Risks",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "slug": "risks",
+          "level": 2,
+          "line": 28,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/11-risks-and-technical-debt.md#known-gaps-in-this-chapter-set",
+          "label": "Known Gaps in This Chapter Set",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "slug": "known-gaps-in-this-chapter-set",
+          "level": 2,
+          "line": 41,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "label": "1. The Body Budgets Are Unenforced",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/arc42/01-introduction-and-goals.md#quality-goals"
+          ],
+          "number": 1
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#the-debt",
+          "label": "The debt",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "slug": "the-debt",
+          "level": 2,
+          "line": 51,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#origin",
+          "label": "Origin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "slug": "origin",
+          "level": 2,
+          "line": 69,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#affected-components",
+          "label": "Affected components",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "slug": "affected-components",
+          "level": 2,
+          "line": 85,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#impact",
+          "label": "Impact",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "slug": "impact",
+          "level": 2,
+          "line": 107,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#remediation-options",
+          "label": "Remediation options",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "slug": "remediation-options",
+          "level": 2,
+          "line": 120,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "label": "2. fleet Names the Claude CLI Directly",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/domain/plugin-authoring/naming.md#host-slot",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+            ".devbook/tech/hosts.md#claude-code-cli"
+          ],
+          "number": 2
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#the-debt",
+          "label": "The debt",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "slug": "the-debt",
+          "level": 2,
+          "line": 10,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#origin",
+          "label": "Origin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "slug": "origin",
+          "level": 2,
+          "line": 23,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#affected-components",
+          "label": "Affected components",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "slug": "affected-components",
+          "level": 2,
+          "line": 36,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#impact",
+          "label": "Impact",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "slug": "impact",
+          "level": 2,
+          "line": 46,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#remediation-options",
+          "label": "Remediation options",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "slug": "remediation-options",
+          "level": 2,
+          "line": 60,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "label": "3. The devbook Asset Rename Ships No Migration",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ],
+          "number": 3
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "label": "The debt",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "the-debt",
+          "level": 2,
+          "line": 10,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "label": "Origin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "origin",
+          "level": 2,
+          "line": 35,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "label": "Affected components",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "affected-components",
+          "level": 2,
+          "line": 47,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "label": "Consequences",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "consequences",
+          "level": 2,
+          "line": 57,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
+          "label": "Remediation options",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "remediation-options",
+          "level": 2,
+          "line": 69,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/README.md",
+          "label": "Technical Debt Records",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/README.md",
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/README.md#remediation-state-is-not-status",
+          "label": "Remediation state is not `status`",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/README.md",
+          "slug": "remediation-state-is-not-status",
+          "level": 2,
+          "line": 18,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/README.md#the-set",
+          "label": "The set",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/README.md",
+          "slug": "the-set",
+          "level": 2,
+          "line": 34,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/context-map.md#plugin-authoring",
+          "label": "Plugin Authoring",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/context-map.md",
+          "slug": "plugin-authoring",
+          "level": 2,
+          "line": 12,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "bounded-context",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "label": "Marketplace",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "marketplace",
+          "level": 2,
+          "line": 10,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "label": "Plugin",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "plugin",
+          "level": 2,
+          "line": 22,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/domain/plugin-authoring/naming.md#layer"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#role",
+          "label": "Role",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "role",
+          "level": 2,
+          "line": 260,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#agent"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "label": "Extension Point",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "extension-point",
+          "level": 2,
+          "line": 165,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "label": "Surface",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "surface",
+          "level": 2,
+          "line": 206,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "label": "Host Slot",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "host-slot",
+          "level": 2,
+          "line": 240,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#host",
+            ".devbook/arc42/05-building-block-view.md#host-slots"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "label": "Fleet Skill",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "fleet-skill",
+          "level": 2,
+          "line": 122,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "label": "Layer",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "layer",
+          "level": 2,
+          "line": 346,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "label": "Flow Skill",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "flow-skill",
+          "level": 2,
+          "line": 83,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/ai/02-deliver.md#flow-skills"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "label": "Stamp",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "stamp",
+          "level": 2,
+          "line": 298,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#migration",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "label": "Routine",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "routine",
+          "level": 2,
+          "line": 144,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "label": "Agent",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "agent",
+          "level": 2,
+          "line": 45,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "label": "Copilot Plugin API",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "copilot-plugin-api",
+          "level": 2,
+          "line": 42,
+          "status": "adopted",
+          "kind": "platform",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md#powershell",
+          "label": "PowerShell",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "slug": "powershell",
+          "level": 2,
+          "line": 50,
+          "status": "adopted",
+          "kind": "runtime",
+          "date": "2026-09-04",
+          "depends-on": [
+            ".devbook/tech/tooling.md#node"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "label": "Extension Namespace",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "extension-namespace",
+          "level": 2,
+          "line": 368,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#tracker",
+          "label": "Tracker",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "tracker",
+          "level": 2,
+          "line": 286,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "label": "Gate",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "gate",
+          "level": 2,
+          "line": 188,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-point"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "label": "Stay Within Budget",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "stay-within-budget",
+          "level": 3,
+          "line": 32,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+            ".devbook/arc42/tdr/1-body-budgets-unenforced.md"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md",
+          "label": "Naming",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "naming",
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-routines",
+          "label": "Claude Code Routines",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-routines",
+          "level": 2,
+          "line": 74,
+          "status": "trial",
+          "kind": "platform",
+          "date": "2026-09-07",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-cli",
+          "label": "Claude Code CLI",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-cli",
+          "level": 2,
+          "line": 23,
+          "status": "trial",
+          "kind": "platform",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md"
+          ],
+          "outOfScope": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/01-introduction-and-goals.md->.devbook/arc42/01-introduction-and-goals.md#quality-goals",
+          "source": ".devbook/arc42/01-introduction-and-goals.md",
+          "target": ".devbook/arc42/01-introduction-and-goals.md#quality-goals",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/01-introduction-and-goals.md->.devbook/arc42/01-introduction-and-goals.md#stakeholders",
+          "source": ".devbook/arc42/01-introduction-and-goals.md",
+          "target": ".devbook/arc42/01-introduction-and-goals.md#stakeholders",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#marketplace-root",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#roles-and-services",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#surface-plugins",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#fan-out-state",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#fan-out-state",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#guide-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#asset-kinds",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#asset-kinds",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#flat-knowledge-folders-only",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#flat-knowledge-folders-only",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#extension-points-and-gates-live-in-the-surface-contract",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#extension-points-and-gates-live-in-the-surface-contract",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#a-tracker-is-a-binding-not-a-phase-name",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#a-tracker-is-a-binding-not-a-phase-name",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#risks",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md#risks",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#known-gaps-in-this-chapter-set",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md#known-gaps-in-this-chapter-set",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/tdr/1-body-budgets-unenforced.md#the-debt",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#the-debt",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/tdr/1-body-budgets-unenforced.md#origin",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#origin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/tdr/1-body-budgets-unenforced.md#affected-components",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#affected-components",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/tdr/1-body-budgets-unenforced.md#impact",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#impact",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/tdr/1-body-budgets-unenforced.md#remediation-options",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md#remediation-options",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#the-debt",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#the-debt",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#origin",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#origin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#affected-components",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#affected-components",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#impact",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#impact",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#remediation-options",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#remediation-options",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/README.md->.devbook/arc42/tdr/README.md#remediation-state-is-not-status",
+          "source": ".devbook/arc42/tdr/README.md",
+          "target": ".devbook/arc42/tdr/README.md#remediation-state-is-not-status",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/README.md->.devbook/arc42/tdr/README.md#the-set",
+          "source": ".devbook/arc42/tdr/README.md",
+          "target": ".devbook/arc42/tdr/README.md#the-set",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/01-introduction-and-goals.md->.devbook/domain/context-map.md#plugin-authoring",
+          "source": ".devbook/arc42/01-introduction-and-goals.md",
+          "target": ".devbook/domain/context-map.md#plugin-authoring",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#marketplace-root->.devbook/domain/plugin-authoring/naming.md#marketplace",
+          "source": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "target": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#plugin-folder->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#plugin-folder->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "target": ".devbook/domain/plugin-authoring/naming.md#role",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#surface-plugins->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#surface-plugins->.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "source": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "target": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#host-slots->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#host-slots->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#fan-out-state->.devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "source": ".devbook/arc42/05-building-block-view.md#fan-out-state",
+          "target": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#fan-out-state->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md#fan-out-state",
+          "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#stack-config->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#stack-config->.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "source": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#asset-kinds->.devbook/domain/plugin-authoring/naming.md#agent",
+          "source": ".devbook/arc42/05-building-block-view.md#asset-kinds",
+          "target": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet->.devbook/domain/plugin-authoring/naming.md#marketplace",
+          "source": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "target": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset->.devbook/tech/hosts.md#copilot-plugin-api",
+          "source": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "target": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer->.devbook/tech/tooling.md#powershell",
+          "source": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "target": ".devbook/tech/tooling.md#powershell",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#flat-knowledge-folders-only->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/09-architecture-decisions.md#flat-knowledge-folders-only",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands->.devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "source": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands->.devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "source": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#extension-points-and-gates-live-in-the-surface-contract->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "source": ".devbook/arc42/09-architecture-decisions.md#extension-points-and-gates-live-in-the-surface-contract",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-tracker-is-a-binding-not-a-phase-name->.devbook/domain/plugin-authoring/naming.md#tracker",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-tracker-is-a-binding-not-a-phase-name",
+          "target": ".devbook/domain/plugin-authoring/naming.md#tracker",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract->.devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "target": ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract->.devbook/arc42/05-building-block-view.md#surface-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "target": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names->.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names",
+          "target": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only->.devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "source": ".devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only",
+          "target": ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "target": ".devbook/domain/plugin-authoring/naming.md#role",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/domain/plugin-authoring/naming.md#gate",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "target": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/arc42/05-building-block-view.md#roles-and-services",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "source": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates->.devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates->.devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "source": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "target": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#four-arc42-chapters->.devbook/arc42/01-introduction-and-goals.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "target": ".devbook/arc42/01-introduction-and-goals.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#four-arc42-chapters->.devbook/arc42/05-building-block-view.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "target": ".devbook/arc42/05-building-block-view.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#four-arc42-chapters->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#four-arc42-chapters",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin->.devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "source": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/05-building-block-view.md#guide-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/05-building-block-view.md#roles-and-services",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/domain/plugin-authoring/naming.md#role",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/domain/plugin-authoring/naming.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/tech/hosts.md#claude-code-routines",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/tdr/README.md",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "target": ".devbook/arc42/tdr/README.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/09-architecture-decisions.md",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/11-risks-and-technical-debt.md#technical-debt->.devbook/arc42/tdr/README.md",
+          "source": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
+          "target": ".devbook/arc42/tdr/README.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/1-body-budgets-unenforced.md->.devbook/arc42/01-introduction-and-goals.md#quality-goals",
+          "source": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "target": ".devbook/arc42/01-introduction-and-goals.md#quality-goals",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/tech/hosts.md#claude-code-cli",
+          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "target": ".devbook/tech/hosts.md#claude-code-cli",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/README.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/tdr/README.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      }
+    ]
+  }
+}

@@ -5,9 +5,12 @@ name: Repository checks
 # validator, which is the only thing that catches an unknown manifest field or
 # a bad dependency range, and which nothing ran automatically before.
 #
-# The devbook check writes nothing and there is nothing generated to keep
-# fresh: every derived document is built in memory
-# (.devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md).
+# This workflow never regenerates and never commits the derived `_meta/`
+# indexes. `--check` reads them and reports; the refresh stays with the
+# `devbook-check` schedule, which is what
+# .devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md decided and
+# .devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md
+# narrows.
 #
 # No path filters, deliberately. Every folder here is authored assets that one
 # of the three checks reads, and a filter that silently matches nothing leaves

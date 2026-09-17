@@ -66,6 +66,8 @@ concepts, and guardrails have no product behind them.
   02-<stage>.md
   …
   concepts.md           # cross-stage concepts and practices
+  _meta/graph.json      # derived: generated reference graph, never hand-edited
+  _meta/index.json      # derived: generated reading outline, never hand-edited
 ```
 
 **Stage files are numbered, and the number is the flow.** `01-discover.md`,
@@ -96,6 +98,8 @@ the same change that adds a file.
   metadata block. A chapter here needs no `stage` field: the file is the stage.
 - **concepts.md** — The ideas the practices rest on, and anything that genuinely
   spans the flow. Chapters here carry a `stage` field naming where they apply.
+- **`_meta/*.json`** — Derived, generated indexes for this folder. Never
+  hand-edited; see `devbook-derived-artifacts.md`.
 
 ## Chapter template
 
@@ -241,3 +245,4 @@ rather than listing every one.
 
 - `devbook-chapter-metadata.md` — required `meta` block fields.
 - `devbook-tech.md` — the technology registry `.ai` links into.
+- `devbook-derived-artifacts.md` — rules for `_meta/`.

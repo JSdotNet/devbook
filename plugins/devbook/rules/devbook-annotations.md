@@ -57,7 +57,8 @@ heading's `meta` block, it annotates the chapter as a whole. Consecutive
 fences all attach to the same passage, so one passage can carry several
 threads.
 
-A fence never appears inside `meta` and never before the first heading.
+A fence never appears inside `meta`, never before the first heading, and never
+in a `_meta/` file.
 
 Everything else follows from position. Reword the passage and the note stays
 attached; move the passage with its note and it stays attached; move it
@@ -93,7 +94,7 @@ Notes live in the canonical file, so anything loading a chapter for task
 context will read reviewer chatter as settled content unless it is told
 not to. A question about whether a rule still holds, ingested as context,
 becomes the rule. This is the one failure mode the convention did not have
-before, so the discipline is explicit:
+before, so the discipline is explicit, the same way `_meta/` has one:
 
 - A reader loading a chapter **for context skips every annotation fence**, and
   the `review`, `reviewer`, and `review-at` fields beside it — a chapter someone

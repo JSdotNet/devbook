@@ -119,7 +119,7 @@ output leaves that aggregate entirely: the review state is deleted and a devbook
 which is a coordination across two owners rather than a transition of one.
 
 It lives in this context and not in the flow engine because it writes the rung it decides, and
-the engine reads that rung and never writes it. It reads the chapter, not a derived document:
+the engine reads that rung and never writes it. It reads the chapter, not the derived index:
 every fact the decision needs is in the one file it is already showing, and the index is
 refreshed on a schedule, so the note written on this branch an hour ago is the one it lacks.
 See [the decision](../../arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md).

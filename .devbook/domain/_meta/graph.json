@@ -1,0 +1,1773 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/domain",
+  "sources": [
+    ".devbook/domain"
+  ],
+  "stats": {
+    "nodes": 57,
+    "edges": 85,
+    "nodesByFolder": {
+      "domain": 39,
+      "arc42": 14,
+      "tech": 3,
+      "ai": 1
+    },
+    "nodesByType": {
+      "file": 8,
+      "chapter": 49
+    },
+    "nodesByKind": {
+      "context-map": 1,
+      "bounded-context": 1,
+      "dependencies": 1,
+      "domain": 1,
+      "features": 1,
+      "feature": 4,
+      "sub-feature": 6,
+      "flow": 1,
+      "model": 1,
+      "naming": 1,
+      "term": 21,
+      "none": 14,
+      "platform": 2,
+      "skill": 1,
+      "protocol": 1
+    },
+    "nodesByStatus": {
+      "active": 53,
+      "adopted": 3,
+      "trial": 1
+    },
+    "edgesByType": {
+      "contains": 32,
+      "related": 53
+    }
+  },
+  "problems": [],
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": ".devbook/domain/context-map.md",
+          "label": "Context Map",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/context-map.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "context-map"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/context-map.md#plugin-authoring",
+          "label": "Plugin Authoring",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/context-map.md",
+          "slug": "plugin-authoring",
+          "level": 2,
+          "line": 12,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "bounded-context",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/dependencies.md",
+          "label": "Plugin Authoring (dependencies)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/dependencies.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "dependencies",
+          "related": [
+            ".devbook/domain/context-map.md#plugin-authoring",
+            ".devbook/tech/hosts.md#claude-code-plugin-api",
+            ".devbook/tech/hosts.md#copilot-plugin-api"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/domain.md",
+          "label": "Plugin Authoring (domain)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/domain.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "domain",
+          "related": [
+            ".devbook/domain/context-map.md#plugin-authoring"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md",
+          "label": "Plugin Authoring (features)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "features"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "label": "Author an Asset",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "author-an-asset",
+          "level": 2,
+          "line": 11,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "feature",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#agent",
+            ".devbook/domain/plugin-authoring/naming.md#skill",
+            ".devbook/domain/plugin-authoring/naming.md#instruction-file",
+            ".devbook/domain/plugin-authoring/naming.md#hook"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#author-for-both-hosts",
+          "label": "Author for Both Hosts",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "author-for-both-hosts",
+          "level": 3,
+          "line": 21,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "label": "Stay Within Budget",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "stay-within-budget",
+          "level": 3,
+          "line": 32,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+            ".devbook/arc42/tdr/1-body-budgets-unenforced.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "label": "Package a Plugin",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "package-a-plugin",
+          "level": 2,
+          "line": 42,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "feature",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#declare-the-manifests",
+          "label": "Declare the Manifests",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "declare-the-manifests",
+          "level": 3,
+          "line": 51,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#declare-a-dependency",
+          "label": "Declare a Dependency",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "declare-a-dependency",
+          "level": 3,
+          "line": 61,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#offer-a-plugin",
+          "label": "Offer a Plugin",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "offer-a-plugin",
+          "level": 2,
+          "line": 72,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "feature",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace",
+            ".devbook/arc42/05-building-block-view.md#marketplace-root"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "label": "Materialize a Component",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "materialize-a-component",
+          "level": 2,
+          "line": 83,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "feature",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp",
+            ".devbook/domain/plugin-authoring/naming.md#migration"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#stamp-the-repository",
+          "label": "Stamp the Repository",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "stamp-the-repository",
+          "level": 3,
+          "line": 93,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/features.md#migrate-a-contract",
+          "label": "Migrate a Contract",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/features.md",
+          "slug": "migrate-a-contract",
+          "level": 3,
+          "line": 103,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "sub-feature"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/flow.md",
+          "label": "Plugin Authoring (flow)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/flow.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "flow",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp",
+            ".devbook/domain/plugin-authoring/naming.md#migration",
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/domain/plugin-authoring/naming.md#gate",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/model.md",
+          "label": "Plugin Authoring (model)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/model.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "model",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md",
+          "label": "Naming",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "naming"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "label": "Marketplace",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "marketplace",
+          "level": 2,
+          "line": 10,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "label": "Plugin",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "plugin",
+          "level": 2,
+          "line": 22,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/domain/plugin-authoring/naming.md#layer"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#host",
+          "label": "Host",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "host",
+          "level": 2,
+          "line": 35,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "aliases": [
+            "client"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "label": "Agent",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "agent",
+          "level": 2,
+          "line": 45,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#skill",
+          "label": "Skill",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "skill",
+          "level": 2,
+          "line": 55,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#instruction-file",
+          "label": "Instruction File",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "instruction-file",
+          "level": 2,
+          "line": 64,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#hook",
+          "label": "Hook",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "hook",
+          "level": 2,
+          "line": 74,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "label": "Flow Skill",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "flow-skill",
+          "level": 2,
+          "line": 83,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/ai/02-deliver.md#flow-skills"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "label": "Fleet Skill",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "fleet-skill",
+          "level": 2,
+          "line": 122,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "label": "Routine",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "routine",
+          "level": 2,
+          "line": 144,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "label": "Extension Point",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "extension-point",
+          "level": 2,
+          "line": 165,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "label": "Gate",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "gate",
+          "level": 2,
+          "line": 188,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-point"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "label": "Surface",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "surface",
+          "level": 2,
+          "line": 206,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "label": "Host Slot",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "host-slot",
+          "level": 2,
+          "line": 240,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#host",
+            ".devbook/arc42/05-building-block-view.md#host-slots"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#role",
+          "label": "Role",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "role",
+          "level": 2,
+          "line": 260,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#agent"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#tracker",
+          "label": "Tracker",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "tracker",
+          "level": 2,
+          "line": 286,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "label": "Stamp",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "stamp",
+          "level": 2,
+          "line": 298,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#migration",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "label": "Migration",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "migration",
+          "level": 2,
+          "line": 317,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "label": "MCP Server",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "mcp-server",
+          "level": 2,
+          "line": 335,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/tech/shared.md#model-context-protocol"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "label": "Layer",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "layer",
+          "level": 2,
+          "line": 346,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "label": "Extension Namespace",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "extension-namespace",
+          "level": 2,
+          "line": 368,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "label": "Plugin Folder",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "plugin-folder",
+          "level": 2,
+          "line": 18,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "label": "Claude Code Plugin API",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-plugin-api",
+          "level": 2,
+          "line": 11,
+          "status": "adopted",
+          "kind": "platform",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#marketplace-root"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "label": "Copilot Plugin API",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "copilot-plugin-api",
+          "level": 2,
+          "line": 42,
+          "status": "adopted",
+          "kind": "platform",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "label": "One Authored Copy Per Asset",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-authored-copy-per-asset",
+          "level": 2,
+          "line": 48,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/tech/hosts.md#copilot-plugin-api"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "label": "Budgets Are Disclosure Triggers, Not Gates",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "budgets-are-disclosure-triggers-not-gates",
+          "level": 2,
+          "line": 524,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+            ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "label": "1. The Body Budgets Are Unenforced",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/arc42/01-introduction-and-goals.md#quality-goals"
+          ],
+          "number": 1,
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "label": "One Folder Per Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-folder-per-plugin",
+          "level": 2,
+          "line": 27,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/domain/plugin-authoring/naming.md#plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "label": "Marketplace Root",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "marketplace-root",
+          "level": 2,
+          "line": 7,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "label": "Marketplace Named jsdotnet",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "marketplace-named-jsdotnet",
+          "level": 2,
+          "line": 11,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/ai/02-deliver.md#flow-skills",
+          "label": "Flow Skills",
+          "type": "chapter",
+          "folder": "ai",
+          "path": ".devbook/ai/02-deliver.md",
+          "slug": "flow-skills",
+          "level": 2,
+          "line": 11,
+          "status": "trial",
+          "kind": "skill",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "label": "Fan-Out Is Its Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "fan-out-is-its-own-plugin",
+          "level": 2,
+          "line": 582,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 271,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 743,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "label": "The Point Set Is Closed",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-point-set-is-closed",
+          "level": 2,
+          "line": 216,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "label": "Host Slots",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "host-slots",
+          "level": 2,
+          "line": 157,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#host-slot",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "label": "Stack Config",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "stack-config",
+          "level": 2,
+          "line": 252,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp",
+            ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/shared.md#model-context-protocol",
+          "label": "Model Context Protocol",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/shared.md",
+          "slug": "model-context-protocol",
+          "level": 2,
+          "line": 20,
+          "status": "adopted",
+          "kind": "protocol",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "label": "Comments Are Findings Until the Fence Lands",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "comments-are-findings-until-the-fence-lands",
+          "level": 2,
+          "line": 169,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+            ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"
+          ],
+          "outOfScope": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "contains:.devbook/domain/context-map.md->.devbook/domain/context-map.md#plugin-authoring",
+          "source": ".devbook/domain/context-map.md",
+          "target": ".devbook/domain/context-map.md#plugin-authoring",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md->.devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "source": ".devbook/domain/plugin-authoring/features.md",
+          "target": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/features.md#author-for-both-hosts",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/features.md#author-for-both-hosts",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md->.devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "source": ".devbook/domain/plugin-authoring/features.md",
+          "target": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#package-a-plugin->.devbook/domain/plugin-authoring/features.md#declare-the-manifests",
+          "source": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "target": ".devbook/domain/plugin-authoring/features.md#declare-the-manifests",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#package-a-plugin->.devbook/domain/plugin-authoring/features.md#declare-a-dependency",
+          "source": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "target": ".devbook/domain/plugin-authoring/features.md#declare-a-dependency",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md->.devbook/domain/plugin-authoring/features.md#offer-a-plugin",
+          "source": ".devbook/domain/plugin-authoring/features.md",
+          "target": ".devbook/domain/plugin-authoring/features.md#offer-a-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md->.devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "source": ".devbook/domain/plugin-authoring/features.md",
+          "target": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#materialize-a-component->.devbook/domain/plugin-authoring/features.md#stamp-the-repository",
+          "source": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "target": ".devbook/domain/plugin-authoring/features.md#stamp-the-repository",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/features.md#materialize-a-component->.devbook/domain/plugin-authoring/features.md#migrate-a-contract",
+          "source": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "target": ".devbook/domain/plugin-authoring/features.md#migrate-a-contract",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#marketplace",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#host",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#agent",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#skill",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#instruction-file",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#instruction-file",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#hook",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#hook",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#gate",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#role",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#tracker",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#tracker",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#migration",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/context-map.md#plugin-authoring->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/context-map.md#plugin-authoring",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/context-map.md#plugin-authoring->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/domain/context-map.md#plugin-authoring",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/dependencies.md->.devbook/domain/context-map.md#plugin-authoring",
+          "source": ".devbook/domain/plugin-authoring/dependencies.md",
+          "target": ".devbook/domain/context-map.md#plugin-authoring",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/dependencies.md->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/domain/plugin-authoring/dependencies.md",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/dependencies.md->.devbook/tech/hosts.md#copilot-plugin-api",
+          "source": ".devbook/domain/plugin-authoring/dependencies.md",
+          "target": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/domain.md->.devbook/domain/context-map.md#plugin-authoring",
+          "source": ".devbook/domain/plugin-authoring/domain.md",
+          "target": ".devbook/domain/context-map.md#plugin-authoring",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/naming.md#agent",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/naming.md#skill",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/naming.md#skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/naming.md#instruction-file",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/naming.md#instruction-file",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#author-an-asset->.devbook/domain/plugin-authoring/naming.md#hook",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-an-asset",
+          "target": ".devbook/domain/plugin-authoring/naming.md#hook",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#author-for-both-hosts->.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "source": ".devbook/domain/plugin-authoring/features.md#author-for-both-hosts",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#stay-within-budget->.devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "source": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "target": ".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#stay-within-budget->.devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "source": ".devbook/domain/plugin-authoring/features.md#stay-within-budget",
+          "target": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#package-a-plugin->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#package-a-plugin->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/features.md#package-a-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#declare-a-dependency->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/domain/plugin-authoring/features.md#declare-a-dependency",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#declare-a-dependency->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/domain/plugin-authoring/features.md#declare-a-dependency",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#offer-a-plugin->.devbook/domain/plugin-authoring/naming.md#marketplace",
+          "source": ".devbook/domain/plugin-authoring/features.md#offer-a-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#offer-a-plugin->.devbook/arc42/05-building-block-view.md#marketplace-root",
+          "source": ".devbook/domain/plugin-authoring/features.md#offer-a-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#materialize-a-component->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/features.md#materialize-a-component->.devbook/domain/plugin-authoring/naming.md#migration",
+          "source": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
+          "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#migration",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#gate",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/model.md->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/domain/plugin-authoring/model.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/model.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/model.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#marketplace->.devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "source": ".devbook/domain/plugin-authoring/naming.md#marketplace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#plugin->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#plugin->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#flow-skill->.devbook/ai/02-deliver.md#flow-skills",
+          "source": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "target": ".devbook/ai/02-deliver.md#flow-skills",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#fleet-skill->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#fleet-skill->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#extension-point->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "source": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#gate->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#surface->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#surface->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#surface->.devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "source": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "target": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#host-slot->.devbook/domain/plugin-authoring/naming.md#host",
+          "source": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "target": ".devbook/domain/plugin-authoring/naming.md#host",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#host-slot->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/domain/plugin-authoring/naming.md#host-slot",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#role->.devbook/domain/plugin-authoring/naming.md#agent",
+          "source": ".devbook/domain/plugin-authoring/naming.md#role",
+          "target": ".devbook/domain/plugin-authoring/naming.md#agent",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#stamp->.devbook/domain/plugin-authoring/naming.md#migration",
+          "source": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#stamp->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#migration->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#mcp-server->.devbook/tech/shared.md#model-context-protocol",
+          "source": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "target": ".devbook/tech/shared.md#model-context-protocol",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#layer->.devbook/domain/plugin-authoring/naming.md#plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "target": ".devbook/domain/plugin-authoring/naming.md#plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#layer->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#extension-namespace->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#extension-namespace->.devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "source": ".devbook/domain/plugin-authoring/naming.md#extension-namespace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands",
+          "type": "related"
+        }
+      }
+    ]
+  }
+}

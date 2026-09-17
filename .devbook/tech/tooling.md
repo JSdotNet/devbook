@@ -51,21 +51,31 @@ server-sent event stream, a Markdown renderer, and a Mermaid page are all reacha
 ## PowerShell
 
 ```meta
-status: retired
+status: adopted
 type: runtime
-date: 2026-09-17
+date: 2026-09-04
 depends-on: [".devbook/tech/tooling.md#node"]
-related: [".devbook/arc42/adr/4-no-generated-sync-layer.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/adr/4-no-generated-sync-layer.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-Retired twice, for two different scripts. The Copilot-to-Claude sync generator was written and
-dropped the same day — [No Generated Sync Layer](../arc42/adr/4-no-generated-sync-layer.md) —
-and the runtime went with it. It came back as `adopted` on 2026-09-04 because `devbook` still
-shipped `assets/build/Update-DevbookIndex.ps1`, a wrapper over `build.mjs` that reported which
-index files a refresh moved, installed into every consuming repository's `build/`. That script
-is gone with the derived files it refreshed
-([record 76](../arc42/adr/76-derived-artifacts-are-computed-never-committed.md)): nothing is
-written, so nothing moves, so there is nothing for a wrapper to report.
+The second runtime a plugin's executable parts run on, and the only one whose script runs in a
+*consuming* repository rather than here. `devbook` ships
+`assets/build/Update-DevbookIndex.ps1` and `devbook:install` installs it into `build/`
+unconditionally — one of only two payload entries with no adoption condition, the other being
+the generator it wraps, because a repository that skips GitHub Actions gets this script alone
+and manual refresh. It wraps `build.mjs` to add what the raw `node` call cannot say: which
+index files actually moved, so a refresh that changed nothing is visibly a no-op. `-Scope`
+narrows it to one folder, `-Check` validates without writing.
 
-No plugin here ships a `.ps1` any more. Node is the one runtime a plugin's executable parts run
-on, in this repository and in the repositories it installs into.
+It requires PowerShell 7, stated as `#Requires -Version 7.0` in the script itself. The
+generator README, `devbook-check`, both shipped workflows, and the pull-request check's own
+warning text all name it as the way to refresh a branch, with `node build.mjs` as the fallback
+for CI and for anywhere `pwsh` is not installed.
+
+Previously `retired`, and the entry read only as far as the repository's own tooling: the
+Copilot-to-Claude sync generator was written and dropped the same day, and the runtime was
+retired alongside it. That decision stands and this entry does not reopen it — see
+[No Generated Sync Layer](../arc42/adr/4-no-generated-sync-layer.md).
+Retiring the *runtime* with it was the error. A repository-level generator was removed; a
+shipped payload script was not, and `retired` reads as "no longer used" to everyone downstream
+of a plugin that installs it into their repository on every sync.

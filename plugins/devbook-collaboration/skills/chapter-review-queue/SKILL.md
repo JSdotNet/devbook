@@ -26,13 +26,13 @@ chapter that never appears in the queue.
    protocol. Fall back to the devbook folders present on disk when the
    repository has no stamp; do not ask.
 
-2. **Collect the `meta` blocks and the notes** in those folders in one pass:
-   `node .devbook/_tools/devbook-meta/build.mjs --print` emits, per scope, the
-   graph with each node's `status`, `review`, `reviewer`, `review-at`,
-   `approved-by`, and `approved-at`, and the annotations document with every
-   thread, its address, status, and kind. Read the repository scope `.` from
-   its output. Scan the chapters directly only
-   where the checker is not installed, and say so in the report.
+2. **Collect the `meta` blocks and the notes** in those folders. Prefer the
+   derived indexes under `_meta/`: `index.json` carries each node's `status`,
+   `review`, `reviewer`, `review-at`, `approved-by`, and `approved-at`, and
+   `annotations.json` carries every thread with its address, status, and kind.
+   That is what they are for. Read them, never hand-edit them. When there is
+   no `_meta/`, scan the chapters directly and say in the report that the
+   queue was built from a scan.
 
 3. **Sort every chapter into one row**, first match wins:
 

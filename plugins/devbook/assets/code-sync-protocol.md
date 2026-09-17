@@ -357,24 +357,26 @@ category, resolved in this order:
 Name the rung that answered, once, in the report. The dependency stays one-way:
 no flow knows these skills exist, and a brief reaches a flow as ordinary input.
 
-## The check
+## Index regeneration
 
 Whenever a capture pass results in a chapter being added, renamed, or re-linked,
-run the check. The write itself happens inside the flow; the check is part of
-closing the pass, and it writes nothing:
+the derived indexes need regenerating. The write itself happens inside the
+flow; regeneration is part of closing the pass:
 
 ```bash
+node .devbook/_tools/devbook-meta/build.mjs --scope <folder>
 node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
 ```
 
 Scope is the folder that changed — `.domain`, `.arc42`, or `.design`. Run
-`build.mjs --check` with no `--scope` when the pass touched more than one folder.
+`build.mjs` with no `--scope` when the pass touched more than one folder.
 
-If it reports unresolved references or a schema violation, fix the source
-Markdown; run `devbook-check` for anything that does not resolve from the
-message alone.
+If `--check` reports unresolved references, a schema violation, or a
+stale committed index, fix the source Markdown; run `devbook-check`
+for anything that does not resolve from the message alone. Never hand-edit a
+file under `_meta/`.
 
-An apply pass changes no chapter file and therefore checks nothing, and
+An apply pass changes no chapter file and therefore regenerates nothing, and
 neither does a verify pass.
 
 ## Report table

@@ -1,0 +1,663 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/tech",
+  "sources": [
+    ".devbook/tech"
+  ],
+  "stats": {
+    "nodes": 23,
+    "edges": 26,
+    "nodesByFolder": {
+      "tech": 14,
+      "arc42": 8,
+      "domain": 1
+    },
+    "nodesByType": {
+      "file": 5,
+      "chapter": 18
+    },
+    "nodesByKind": {
+      "none": 12,
+      "platform": 4,
+      "library": 1,
+      "format": 1,
+      "protocol": 2,
+      "runtime": 2,
+      "term": 1
+    },
+    "nodesByStatus": {
+      "adopted": 10,
+      "trial": 4,
+      "active": 9
+    },
+    "edgesByType": {
+      "contains": 10,
+      "related": 11,
+      "depends-on": 5
+    }
+  },
+  "problems": [],
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md",
+          "label": "Hosts",
+          "type": "file",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "status": "adopted"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "label": "Claude Code Plugin API",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-plugin-api",
+          "level": 2,
+          "line": 11,
+          "status": "adopted",
+          "kind": "platform",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#marketplace-root"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-cli",
+          "label": "Claude Code CLI",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-cli",
+          "level": 2,
+          "line": 23,
+          "status": "trial",
+          "kind": "platform",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "label": "Copilot Plugin API",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "copilot-plugin-api",
+          "level": 2,
+          "line": 42,
+          "status": "adopted",
+          "kind": "platform",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#copilot-extension-sdk",
+          "label": "Copilot Extension SDK",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "copilot-extension-sdk",
+          "level": 2,
+          "line": 53,
+          "status": "trial",
+          "kind": "library",
+          "date": "2026-09-04",
+          "depends-on": [
+            ".devbook/tech/hosts.md#copilot-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-routines",
+          "label": "Claude Code Routines",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-routines",
+          "level": 2,
+          "line": 74,
+          "status": "trial",
+          "kind": "platform",
+          "date": "2026-09-07",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/shared.md",
+          "label": "Shared",
+          "type": "file",
+          "folder": "tech",
+          "path": ".devbook/tech/shared.md",
+          "status": "adopted"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/shared.md#markdown",
+          "label": "Markdown",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/shared.md",
+          "slug": "markdown",
+          "level": 2,
+          "line": 10,
+          "status": "adopted",
+          "kind": "format"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/shared.md#model-context-protocol",
+          "label": "Model Context Protocol",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/shared.md",
+          "slug": "model-context-protocol",
+          "level": 2,
+          "line": 20,
+          "status": "adopted",
+          "kind": "protocol",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/shared.md#mcp-apps",
+          "label": "MCP Apps",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/shared.md",
+          "slug": "mcp-apps",
+          "level": 2,
+          "line": 34,
+          "status": "trial",
+          "kind": "protocol",
+          "date": "2026-09-03",
+          "depends-on": [
+            ".devbook/tech/shared.md#model-context-protocol"
+          ],
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#surface-plugins"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/technology-graph.md",
+          "label": "Technology Graph",
+          "type": "file",
+          "folder": "tech",
+          "path": ".devbook/tech/technology-graph.md",
+          "status": "adopted"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md",
+          "label": "Tooling",
+          "type": "file",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "status": "adopted"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md#node",
+          "label": "Node",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "slug": "node",
+          "level": 2,
+          "line": 10,
+          "status": "adopted",
+          "kind": "runtime",
+          "date": "2026-09-04",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md#powershell",
+          "label": "PowerShell",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "slug": "powershell",
+          "level": 2,
+          "line": 50,
+          "status": "adopted",
+          "kind": "runtime",
+          "date": "2026-09-04",
+          "depends-on": [
+            ".devbook/tech/tooling.md#node"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "label": "Marketplace Root",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "marketplace-root",
+          "level": 2,
+          "line": 7,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "label": "2. fleet Names the Claude CLI Directly",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/domain/plugin-authoring/naming.md#host-slot",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+            ".devbook/tech/hosts.md#claude-code-cli"
+          ],
+          "number": 2,
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "label": "One Authored Copy Per Asset",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "one-authored-copy-per-asset",
+          "level": 2,
+          "line": 48,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/tech/hosts.md#copilot-plugin-api"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "label": "Plugin Folder",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "plugin-folder",
+          "level": 2,
+          "line": 18,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 743,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 271,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "label": "MCP Server",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "mcp-server",
+          "level": 2,
+          "line": 335,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "related": [
+            ".devbook/tech/shared.md#model-context-protocol"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "label": "Surface Plugins",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "surface-plugins",
+          "level": 2,
+          "line": 127,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "label": "No Generated Sync Layer",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "no-generated-sync-layer",
+          "level": 2,
+          "line": 60,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-02",
+          "related": [
+            ".devbook/tech/tooling.md#powershell"
+          ],
+          "outOfScope": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-cli",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#claude-code-cli",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#copilot-plugin-api",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#copilot-extension-sdk",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#copilot-extension-sdk",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-routines",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/shared.md->.devbook/tech/shared.md#markdown",
+          "source": ".devbook/tech/shared.md",
+          "target": ".devbook/tech/shared.md#markdown",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/shared.md->.devbook/tech/shared.md#model-context-protocol",
+          "source": ".devbook/tech/shared.md",
+          "target": ".devbook/tech/shared.md#model-context-protocol",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/shared.md->.devbook/tech/shared.md#mcp-apps",
+          "source": ".devbook/tech/shared.md",
+          "target": ".devbook/tech/shared.md#mcp-apps",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#node",
+          "source": ".devbook/tech/tooling.md",
+          "target": ".devbook/tech/tooling.md#node",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#powershell",
+          "source": ".devbook/tech/tooling.md",
+          "target": ".devbook/tech/tooling.md#powershell",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-plugin-api->.devbook/arc42/05-building-block-view.md#marketplace-root",
+          "source": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "target": ".devbook/arc42/05-building-block-view.md#marketplace-root",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/hosts.md#claude-code-cli->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md#claude-code-cli",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-cli->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "source": ".devbook/tech/hosts.md#claude-code-cli",
+          "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#copilot-plugin-api->.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "source": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/hosts.md#copilot-extension-sdk->.devbook/tech/hosts.md#copilot-plugin-api",
+          "source": ".devbook/tech/hosts.md#copilot-extension-sdk",
+          "target": ".devbook/tech/hosts.md#copilot-plugin-api",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#copilot-extension-sdk->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/tech/hosts.md#copilot-extension-sdk",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/hosts.md#claude-code-routines->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/shared.md#model-context-protocol->.devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "source": ".devbook/tech/shared.md#model-context-protocol",
+          "target": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/shared.md#mcp-apps->.devbook/tech/shared.md#model-context-protocol",
+          "source": ".devbook/tech/shared.md#mcp-apps",
+          "target": ".devbook/tech/shared.md#model-context-protocol",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/shared.md#mcp-apps->.devbook/arc42/05-building-block-view.md#surface-plugins",
+          "source": ".devbook/tech/shared.md#mcp-apps",
+          "target": ".devbook/arc42/05-building-block-view.md#surface-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/tooling.md#node->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/tech/tooling.md#node",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/tooling.md#powershell->.devbook/tech/tooling.md#node",
+          "source": ".devbook/tech/tooling.md#powershell",
+          "target": ".devbook/tech/tooling.md#node",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/tech/tooling.md#powershell",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/tech/tooling.md#powershell",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      }
+    ]
+  }
+}

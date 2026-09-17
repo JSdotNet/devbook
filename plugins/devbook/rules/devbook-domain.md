@@ -101,8 +101,8 @@ followed by the bounded contexts in alphabetical order; inside a context,
 tree above — `stakeholders.md`, `skills.md` or `features.md`, `model.md`,
 `flow.md`, `dependencies.md`, `naming.md`, then any `flow.<name>.md` in
 filename order.
-Adding a context or a file needs no declaration anywhere. See
-`devbook-chapter-metadata.md`.
+Adding a context or a file needs no declaration anywhere; just regenerate
+`_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
 
 - **context-map.md** — Strategic DDD view across bounded contexts at the

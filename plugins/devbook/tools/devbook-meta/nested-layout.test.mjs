@@ -22,6 +22,7 @@ import {
     buildGraphDocument,
     discoverLayout,
     discoverScopes,
+    outputPathFor,
     SCOPES,
     DEVBOOK_FOLDERS,
     NESTED_DEVBOOK_FOLDERS,
@@ -76,6 +77,11 @@ check(
     NESTED_DEVBOOK_FOLDERS.every((f) => SCOPES.includes(f)) &&
         DEVBOOK_FOLDERS.every((f) => SCOPES.includes(f)),
     "SCOPES carries both spellings, so a scope argument is accepted in either layout"
+);
+check(
+    outputPathFor(`${NESTED_ROOT}/tech`) === `${NESTED_ROOT}/tech/_meta/graph.json`,
+    "a nested scope writes its _meta beside its own chapters",
+    outputPathFor(`${NESTED_ROOT}/tech`)
 );
 
 // -- The same corpus, both ways round ---------------------------------------

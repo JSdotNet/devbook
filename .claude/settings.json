@@ -1,4 +1,7 @@
 {
+  "permissions": {
+    "deny": ["Read(_meta/**)"]
+  },
   "extraKnownMarketplaces": {
     "jsdotnet-devbook": {
       "source": {

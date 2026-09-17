@@ -1,0 +1,9 @@
+{
+  "// _meta": "Generated tool input, not content. Copilot has no content-exclusion lever that reaches Copilot CLI or agent mode, so these two only cut workspace-search noise — the guardrail itself is prose, in AGENTS.md.",
+  "search.exclude": {
+    "**/_meta": true
+  },
+  "files.exclude": {
+    "**/_meta": true
+  }
+}

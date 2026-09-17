@@ -141,7 +141,7 @@ One of the five folders the `devbook` convention governs — `arc42`, `domain`, 
 repository adopts any subset, in one of two layouts, and never mixes them.
 
 The convention's own name is the only noun for these; there is no common-noun synonym, because
-a convention that has a name does not need one. What the reference graph derives from their
+a convention that has a name does not need one. What `_meta/graph.json` derives from their
 `meta` blocks is the **reference graph**.
 
 ### Flow Skill
@@ -309,7 +309,7 @@ nothing else, so its two operations arrive as canvas actions rather than namespa
 which is why the contract matches operation names and never a transport. See
 [the decision](../../arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
 
-The fourth, `devbook-graph`, renders the reference graph the checker builds in memory, and opens
+The fourth, `devbook-graph`, renders the reference graph `_meta/graph.json` produces, and opens
 a single chapter beside its parsed `meta` block in a second canvas, `devbook-chapter`. It
 answers no operation group and substitutes for nothing, which is why it takes devbook's stem
 and the thing it draws rather than the surface word — see

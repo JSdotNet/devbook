@@ -49,4 +49,4 @@ skill reports the first half and never asserts the second.
   `flow-spec`'s, and a chapter written here bypasses the folder's own check.
 - Do not propose promoting a `status`. The ladder rates whether people work this way; an
   install proves only that they could. Demotion is equally a person's call.
-- Do not register a technology in `.tech`.
+- Do not register a technology in `.tech`, and do not read or regenerate `_meta/`.

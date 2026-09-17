@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "scope": ".devbook/design",
+  "sources": [
+    ".devbook/design"
+  ],
+  "stats": {
+    "nodes": 6,
+    "edges": 5,
+    "nodesByFolder": {
+      "design": 3,
+      "ai": 1,
+      "domain": 1,
+      "arc42": 1
+    },
+    "nodesByType": {
+      "file": 1,
+      "chapter": 5
+    },
+    "nodesByKind": {
+      "none": 4,
+      "skill": 1,
+      "term": 1
+    },
+    "nodesByStatus": {
+      "draft": 2,
+      "active": 3,
+      "trial": 1
+    },
+    "edgesByType": {
+      "contains": 2,
+      "related": 3
+    }
+  },
+  "problems": [],
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": ".devbook/design/README.md",
+          "label": "Design",
+          "type": "file",
+          "folder": "design",
+          "path": ".devbook/design/README.md",
+          "status": "draft"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/design/README.md#dashboard",
+          "label": "Dashboard",
+          "type": "chapter",
+          "folder": "design",
+          "path": ".devbook/design/README.md",
+          "slug": "dashboard",
+          "level": 2,
+          "line": 13,
+          "status": "draft",
+          "related": [
+            ".devbook/ai/02-deliver.md#flow-skills"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/design/README.md#canvas",
+          "label": "Canvas",
+          "type": "chapter",
+          "folder": "design",
+          "path": ".devbook/design/README.md",
+          "slug": "canvas",
+          "level": 2,
+          "line": 40,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#surface",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/ai/02-deliver.md#flow-skills",
+          "label": "Flow Skills",
+          "type": "chapter",
+          "folder": "ai",
+          "path": ".devbook/ai/02-deliver.md",
+          "slug": "flow-skills",
+          "level": 2,
+          "line": 11,
+          "status": "trial",
+          "kind": "skill",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "label": "Surface",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "surface",
+          "level": 2,
+          "line": 206,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-03",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "label": "Plugin Folder",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "plugin-folder",
+          "level": 2,
+          "line": 18,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#plugin",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "contains:.devbook/design/README.md->.devbook/design/README.md#dashboard",
+          "source": ".devbook/design/README.md",
+          "target": ".devbook/design/README.md#dashboard",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/design/README.md->.devbook/design/README.md#canvas",
+          "source": ".devbook/design/README.md",
+          "target": ".devbook/design/README.md#canvas",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/design/README.md#dashboard->.devbook/ai/02-deliver.md#flow-skills",
+          "source": ".devbook/design/README.md#dashboard",
+          "target": ".devbook/ai/02-deliver.md#flow-skills",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/design/README.md#canvas->.devbook/domain/plugin-authoring/naming.md#surface",
+          "source": ".devbook/design/README.md#canvas",
+          "target": ".devbook/domain/plugin-authoring/naming.md#surface",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/design/README.md#canvas->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/design/README.md#canvas",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      }
+    ]
+  }
+}

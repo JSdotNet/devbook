@@ -44,6 +44,12 @@
       ],
       "install": "always"
     },
+    "devbook-derived-artifacts": {
+      "paths": [
+        "**/_meta/**"
+      ],
+      "install": "always"
+    },
     "devbook-design": {
       "paths": [
         ".design/**",
@@ -69,7 +75,8 @@
         ".devbook/domain/**",
         ".devbook/tech/**",
         ".devbook/design/**",
-        ".devbook/ai/**"
+        ".devbook/ai/**",
+        "**/_meta/**"
       ],
       "install": "always"
     },

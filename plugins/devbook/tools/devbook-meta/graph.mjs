@@ -61,27 +61,26 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
 export const CONTRACT_VERSION = 9;
 
-// What every document built here stamps itself with, so a viewer reading
-// `--print` output or importing these modules can refuse a shape it does not
-// know. The same number under the name a consumer reads it by: the document
-// shape *is* the contract, so keeping two counters would only let them drift.
-// A contract bump with no migration folder is normal and harmless — presence
-// of a migration decides whether one runs, never the version number.
+// What the derived artifacts stamp themselves with. The same number under the
+// name a consumer of `graph.json` / `index.json` reads it by: the schema those
+// files follow *is* the contract, so keeping two counters would only let them
+// drift. A contract bump with no migration folder is normal and harmless —
+// presence of a migration decides whether one runs, never the version number.
 export const SCHEMA_VERSION = CONTRACT_VERSION;
 export const REPO_SCOPE = ".";
 
 // Where a repository that adopts the convention keeps this folder: under
 // `.devbook/`, beside the stack config and the stamp, because the generator is
-// plain Node and `.github/` is one host's folder. What the `AGENTS.md` section
-// names as the check command, and still the right answer whenever the
-// generator is not inside the repository it is checking — a plugin install,
-// or `--root`.
+// plain Node and `.github/` is one host's folder. The fallback for
+// `generatedBy`, and still the right answer whenever the generator is not
+// inside the repository it is indexing — a plugin install, or `--root`.
 export const GENERATOR = ".devbook/_tools/devbook-meta/build.mjs";
 
 const GENERATOR_FILE = fileURLToPath(new URL("./build.mjs", import.meta.url));
 
 /**
- * The repo-relative path the `AGENTS.md` section names for the check.
+ * What a derived artifact stamps as `generatedBy`: a repo-relative path to the
+ * generator, so anyone finding a `_meta/` file knows how to regenerate it.
  *
  * A repository that vendors this folder somewhere other than the conventional
  * location — the one that authors the convention, for instance — gets a path
@@ -493,7 +492,8 @@ export function projectScope(graph, scope) {
 }
 
 /**
- * Build the serializable graph document for one scope.
+ * Build the serializable index document for one scope, following the
+ * derived-artifacts convention.
  *
  * Pass a pre-built graph to project several scopes without re-reading disk.
  * `folders` is the set of devbook folders this repository actually adopts,
@@ -511,10 +511,12 @@ export async function buildGraphDocument(
     return {
         // Bumped whenever the emitted shape changes, so consumers detect drift.
         schemaVersion: SCHEMA_VERSION,
+        generatedBy: generatorPath(repoRoot),
         scope,
         sources: scope === REPO_SCOPE ? folders : [scope],
-        // Deliberately no timestamp: the document is a deterministic function
-        // of the Markdown, so two runs over one commit agree byte for byte.
+        // Deliberately no timestamp: the index is a deterministic function of
+        // the Markdown, so re-running it produces a byte-identical file and CI
+        // can diff it to detect a stale commit.
         stats: summarize(nodes, edges),
         problems,
         elements: {
@@ -529,8 +531,8 @@ export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS, ...NESTED_DEVBOOK_FOLDERS
 
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
- * `.domain` and `.arc42` never gets scopes for conventions it does not use.
- * Returns an empty array when no devbook folder is present.
+ * `.domain` and `.arc42` never gets `_meta/` folders for conventions it does
+ * not use. Returns an empty array when no devbook folder is present.
  */
 export async function discoverScopes(repoRoot) {
     const { folders } = await discoverLayout(repoRoot);
@@ -576,3 +578,7 @@ async function isDirectory(absolutePath) {
     }
 }
 
+/** Repo-relative output path for a scope, per the derived-index convention. */
+export function outputPathFor(scope) {
+    return scope === REPO_SCOPE ? "_meta/graph.json" : `${scope}/_meta/graph.json`;
+}

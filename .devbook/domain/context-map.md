@@ -108,7 +108,7 @@ devbook is absent.
 
 | Published language | Owned by | Consumed by | Carried as |
 |---|---|---|---|
-| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter, and every reader of the documents the check builds | `rules/devbook-chapter-metadata.md`, materialized into a repository |
+| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter, and every `_meta/` reader | `rules/devbook-chapter-metadata.md`, materialized into a repository |
 | The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Delivery | The three surfaces | `resources/surface-contract.md`; tool names matched by pattern |
