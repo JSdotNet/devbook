@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 What this context is responsible for: that a run is visible while it happens, that what it shows
@@ -98,7 +98,7 @@ panels simply have nothing to show, which is why this costs a column and not a c
 ```meta
 type: value-object
 aliases: [session name, prefix]
-related: [".devbook/arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md"]
+related: [".devbook/arc42/adr/configuration.md"]
 ```
 
 `<prefix>[:<context>] — <run title>`, computed from where the run's writes landed: a published

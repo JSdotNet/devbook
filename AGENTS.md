@@ -101,7 +101,7 @@ Three cases decide whether one is owed:
   script moves it. A file reconcile would replace on its own needs none.
 
 The reason this obligation starts at 1.0.0 and not before is
-`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
+`.devbook/arc42/adr/releases.md`.
 
 ## Where the rest of the rules are
 
@@ -131,7 +131,7 @@ behaviour.
   The budget is a disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
   branch, or state the reason in the file. Full rule: [AUTHORING.md](AUTHORING.md). Staged
   procedures, converters, schema and contract instruction files, and the `flow-runner` agent
-  are long by kind, recorded once in `.devbook/arc42/09-architecture-decisions.md` rather than
+  are long by kind, recorded once in [AUTHORING.md](AUTHORING.md) rather than
   in each file.
 - A rule that must survive a long session says so in the asset, and repeats itself at the point
   of use. Instructions decay as context fills.

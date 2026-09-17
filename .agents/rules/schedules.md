@@ -18,6 +18,6 @@ inputs — a `schedule-*` entry point, or another plugin's skill that picks its 
 reports, as `devbook-check` and `tech-update` do; the steps belong to the skill it names, and the unattended rules belong to
 `resources/schedule-preamble.md`, which every prompt already carries. A body that restates
 either is the duplication the plugin exists to prevent — see
-[The Unattended Lane Is Its Own Plugin](../../.devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md).
+[The Unattended Lane Is Its Own Plugin](../../.devbook/arc42/adr/plugin-boundaries.md).
 
 Never `target` a `flow-*` skill: no unattended run can pass a flow's gate.

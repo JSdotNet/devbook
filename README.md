@@ -26,7 +26,7 @@ and `docs` roles and the `spec`, `implement`, `verify`, `app.start`, `qa.run`, a
 services are points the engine declares and a repository fills, naming whichever specialist plugin it installed in
 `.devbook/config.json`. Unbound, a flow loses that stage's expertise and runs on — a
 provider that does not resolve costs capability, never a load. The seven specialists that used
-to live here are [published from their own marketplace](.devbook/arc42/adr/24-the-specialists-leave-the-marketplace.md).
+to live here are [published from their own marketplace](.devbook/arc42/adr/plugin-boundaries.md).
 
 The design lives in `.devbook/`: the vocabulary in `domain/`, the structure and every
 recorded decision in `arc42/`, the technology graph in `tech/`, how the repository itself is

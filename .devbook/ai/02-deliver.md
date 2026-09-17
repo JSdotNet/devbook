@@ -32,7 +32,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 - **Evidence** — none yet. Every stage now names the role or service it delegates to rather
   than a plugin, so nothing dangles and nothing resolves either: the seven specialists that
   answered `spec`, `implement`, `validate`, `app.start`, `qa.run`, and five roles
-  [left the marketplace](../arc42/adr/24-the-specialists-leave-the-marketplace.md).
+  [left the marketplace](../arc42/adr/plugin-boundaries.md).
   A flow run here therefore runs those stages unbound unless the specialist marketplace is
   installed too. What is untested is the routing itself. Promote to `adopted` once a change
   here has been carried by a flow end to end, reporting into one of those surfaces.
@@ -45,7 +45,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 ```meta
 status: candidate
 type: skill
-related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 `fleet` sweeps a backlog and works it five issues at a time across sessions and worktrees,
@@ -67,7 +67,7 @@ instead of one session at a time.
 ```meta
 status: candidate
 type: skill
-related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
@@ -86,4 +86,4 @@ session with nobody watching, and lands what it produced as a pull request or a 
   brief to resume by hand.
 - **Limits** — one platform: the scheduler is resolved from the live tool list and only one
   host has one, so on the other the prompts print and a person pastes them. No schedule fires
-  a flow; see [the decision](../arc42/adr/26-the-unattended-lane-is-its-own-plugin.md).
+  a flow; see [the decision](../arc42/adr/plugin-boundaries.md).

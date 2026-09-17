@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 > What this context depends on and who depends on it. It is the one plugin here that ships a
@@ -29,7 +29,7 @@ related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/ar
 - **Being absent from the marketplace is the standing exception, and it is allowed on one test.**
   A plugin ships the manifest of every host that can load something in it; here that is one host,
   so this is the folder rule applied rather than waived — see
-  [the decision](../../arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
+  [the decision](../../arc42/adr/surfaces.md).
   A plugin holding one host-only asset still ships both manifests.
 - **It knows nothing about what produced its content**, and nothing knows it exists. It is
   resolved at run time like every surface, and none answering is a normal outcome.

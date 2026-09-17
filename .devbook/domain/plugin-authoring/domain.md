@@ -43,7 +43,7 @@ type: ubiquitous-language
 
 ```meta
 type: term
-related: [".devbook/arc42/adr/1-marketplace-named-jsdotnet.md"]
+related: [".devbook/arc42/adr/releases.md"]
 ```
 
 A repository that offers plugins for installation, identified by the `name` in
@@ -93,8 +93,8 @@ type: term
 A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
 trigger — the sentence a host matches a request against — not a summary of its contents.
 Every skill opens its reply with `<plugin>@<version>`, read from the manifest beside it rather
-than recalled, so the answer names the release that gave it
-([76](../../arc42/adr/76-every-skill-opens-with-its-plugin-version.md)).
+than recalled, so the answer names the release that gave it; `.agents/rules/skills.md` says
+why the line is in every skill.
 
 ### Plugin Rule
 
@@ -136,7 +136,7 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
+related: [".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
@@ -144,8 +144,11 @@ One of the five folders the `devbook` convention governs — `arc42`, `domain`, 
 repository adopts any subset, in one of two layouts, and never mixes them.
 
 The convention's own name is the only noun for these; there is no common-noun synonym, because
-a convention that has a name does not need one. What `_meta/graph.json` derives from their
-`meta` blocks is the **reference graph**.
+a convention that has a name does not need one — *knowledge* was that synonym until
+2026-09-07, and a reader meeting "the knowledge folders" beside `devbook-meta` had to work out
+that the two named one thing. Everything the plugin ships is named `devbook-` for the same
+reason: the old prefix said only which plugin used to own the folder. What `_meta/graph.json`
+derives from their `meta` blocks is the **reference graph**.
 
 ### Flow Skill
 
@@ -175,7 +178,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
 only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
 for the code and one for the five devbook folders, since
-[flows belong to delivery](../../arc42/adr/34-flows-belong-to-delivery.md) —
+[flows belong to delivery](../../arc42/adr/plugin-boundaries.md) —
 and three `phase-*`, `delivery-schedule` holds thirteen `schedule-*` beside a bare `install`, and
 `fleet` holds three
 `fleet-*`.
@@ -185,10 +188,10 @@ A plugin takes its subsystem's stem; the things inside it are named for what the
 subsystem while `flow-code` and `phase-build-test` are the procedures inside them — which is
 why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
 a contract other surfaces answer carries the contract word after the stem and the
-implementation after that, so the three are read as one kind from the marketplace list alone;
-see [the decision](../../arc42/adr/33-surfaces-carry-the-surface-word.md).
-A surface interchangeable with nothing does not — see
-[the decision](../../arc42/adr/36-devbooks-canvas-carries-no-surface-word.md).
+implementation after that, so the three are read as one kind from the marketplace list alone.
+A surface interchangeable with nothing does not: the contract word marks membership, and
+`devbook-graph` beside `delivery-surface-canvas` would read as a second implementation of the
+render group, which it is not.
 `fleet` is its own stem, not a package inside `delivery`, because fan-out is a different
 subsystem.
 
@@ -197,7 +200,7 @@ subsystem.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 A procedure that turns one queue into work across several sessions, each in its own worktree —
@@ -220,7 +223,7 @@ that cannot demonstrate itself never reaches one.
 type: term
 date: 2026-09-07
 aliases: [routine, automation]
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 A trigger that fires a procedure the stack already ships, in a cloud session that starts with
@@ -247,7 +250,7 @@ A schedule names an entry point, a `fleet-*` skill, or a read-and-report skill, 
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/arc42/adr/9-the-point-set-is-closed.md"]
+related: [".devbook/arc42/adr/flow-engine.md"]
 ```
 
 A named place in a flow where a repository plugs a provider in. The set is closed and declared
@@ -288,7 +291,7 @@ it never self-approves.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/domain/plugin-authoring/domain.md#mcp-server"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/domain/plugin-authoring/domain.md#mcp-server"]
 ```
 
 Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, and a headless
@@ -305,22 +308,21 @@ Three ship here. `delivery-surface-dashboard` answers all three groups, `deliver
 render only, and `delivery-surface-collector` lifecycle and export only. Each declares exactly
 the tool names its groups name and nothing more, which is what makes one substitutable for
 another. See
-[the decision](../../arc42/adr/15-three-surfaces-one-contract.md).
+[the decision](../../arc42/adr/surfaces.md).
 
 A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
 nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
 which is why the contract matches operation names and never a transport. See
-[the decision](../../arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
+[the decision](../../arc42/adr/surfaces.md).
 
 The fourth, `devbook-graph`, renders the reference graph `_meta/graph.json` produces, and opens
 a single chapter beside its parsed `meta` block in a second canvas, `devbook-chapter`. It
 answers no operation group and substitutes for nothing, which is why it takes devbook's stem
-and the thing it draws rather than the surface word — see
-[the decision](../../arc42/adr/36-devbooks-canvas-carries-no-surface-word.md).
+and the thing it draws rather than the surface word, per the [naming rule](#flow-skill).
 It is packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
 generator modules by relative path — no host resolves the two together, so this is a source
 coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md).
+[the decision](../../arc42/adr/surfaces.md).
 
 ### Host Slot
 
@@ -363,7 +365,7 @@ No provider for any of them ships in this marketplace; see
 The key is not the plugin's name, and a plugin whose name matches a key matches it by
 coincidence. A specialist filling a role also holds no flow control — no sequencing, no gate,
 no session spawning, no delegation — because all four belong to whatever consults it. See
-[the decision](../../arc42/adr/19-a-role-plugin-holds-no-flow-control.md).
+[the decision](../../arc42/adr/plugin-boundaries.md).
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
 validation, so it binds as the `implement` and `validate` services instead.
@@ -385,7 +387,7 @@ because it enabled the flows.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/install.md"]
 ```
 
 A component's entry under `components` in `.devbook/config.json`, recording what that plugin
@@ -393,7 +395,7 @@ put in the repository: the plugin version it is on, and every file copied in or 
 section written with the hash it had when it landed. A component whose install rewrites content
 the repository authored carries three fields more — the contract version, which features it
 adopted, and the [migration](#migration) ledger — and `devbook` is
-[the only one](../../arc42/adr/56-payload-only-components-carry-no-contract-version.md). One
+[the only one](../../arc42/adr/install.md). One
 that writes no files stamps its own selection in place of the file map. The same file's other
 top-level keys are the engine's — see
 [Stack Config](../../arc42/05-building-block-view.md#stack-config).
@@ -404,7 +406,7 @@ anything ships one `<component>-install` that writes its own entry and one `<com
 that reads it, and neither touches another component's. A component that materializes nothing
 and ships no install skill has its selection written by hand — `delivery-surface-dashboard`'s
 session-naming words are
-[the one case](../../arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md)
+[the one case](../../arc42/adr/configuration.md)
 — and the boundary holds unchanged: the entry is still that component's alone.
 
 ### Migration
@@ -430,7 +432,7 @@ Which changes owe one is decided once, in `AGENTS.md` under *When a change ships
 
 ```meta
 type: term
-related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/adr/32-an-mcp-server-is-bound-per-point.md"]
+related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
@@ -441,14 +443,14 @@ The engine requires none. A repository declares its servers in its own MCP confi
 binds them per extension point under `bindings["delivery.mcp"]`; a bound server is resolved
 from the live tool list the way a surface is, and one that does not answer costs a stage its
 grounding, never the run. See
-[the decision](../../arc42/adr/32-an-mcp-server-is-bound-per-point.md).
+[the decision](../../arc42/adr/flow-engine.md).
 
 ### Layer
 
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/adr/2-one-folder-per-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 A plugin's position in the dependency order, and the only thing that decides which other
@@ -470,7 +472,7 @@ tool list and no-ops when absent, so nothing may declare one.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/adr/8-comments-are-findings-until-the-fence-lands.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/adr/annotations.md"]
 ```
 
 The seam a higher layer stores state through without a release of the layer beneath it: a

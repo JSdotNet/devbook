@@ -66,7 +66,7 @@ classDiagram
 - **The two dashed edges into `ComponentStamp` are the whole boundary.** This context reads every
   stamp and writes none. `EngineConfiguration` and `ComponentStamp` share one file and never a
   key, which is what
-  [one config file, two kinds of key](../../arc42/adr/10-one-config-file-two-kinds-of-key.md)
+  [one config file, two kinds of key](../../arc42/adr/configuration.md)
   means in a diagram.
 - **`ScopeVerdict` decides whether an install skill runs and never runs one itself.** The fan-out
   is a delegation, so a component's install skill remains the only thing that knows what that

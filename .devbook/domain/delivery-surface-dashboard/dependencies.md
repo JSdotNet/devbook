@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 > What this context depends on and who depends on it. It declares no dependency in either

@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/14-delivery-ships-no-surface.md"]
+related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 > What this context depends on and who depends on it. Its `dependencies` array is empty and its

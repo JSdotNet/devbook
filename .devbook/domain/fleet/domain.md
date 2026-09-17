@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#fleet", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
+related: [".devbook/domain/context-map.md#fleet", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 What this context is responsible for: that a backlog becomes parallel work without two workers

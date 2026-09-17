@@ -107,7 +107,7 @@ run. Nothing else is configurable. An unknown key or a bad value is reported on 
 takes the default rather than silently applying, and the file is re-read on every stage, so an
 edit lands on the next stage rather than the next run. The entry is hand-edited: this plugin
 materializes nothing and ships no install skill, so nothing else writes it — see
-`.devbook/arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md`.
+`.devbook/arc42/adr/configuration.md`.
 
 ## Evidence
 

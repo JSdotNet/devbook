@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 What this context is responsible for: that a diagram or a document written to a file can be

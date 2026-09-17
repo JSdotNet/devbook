@@ -11,7 +11,7 @@ paths:
 
 A plugin rule is a template an install writes into a repository, and `rules/` holds nothing
 else — shared text a skill or an agent reads by path is a contract and belongs in `resources/`,
-per [the decision](../../.devbook/arc42/adr/43-only-a-delivered-rule-lives-in-rules.md).
+because the folder announces a delivery mechanism and a contract does not use it.
 Two plugins here deliver rules: `devbook` and `devbook-collaboration`. Adding a `rules/` folder
 to a third means writing the install that materializes it, in the same change.
 

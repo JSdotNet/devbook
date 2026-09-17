@@ -5,7 +5,7 @@ date: 2026-09-17
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/README.md", ".devbook/arc42/09-architecture-decisions.md"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
 
 ## The debt
 
@@ -70,3 +70,14 @@ The third option is the one the rule describes. It is a single change, made once
 begun until it can be finished, because a folder half in each shape is worse than either.
 
 **Trigger:** the next decision that would open a seventy-seventh numbered file.
+
+## Resolution
+
+```meta
+```
+
+Resolved 2026-09-17, the same day, by the third option: eleven concern records under
+[`adr/`](../adr/README.md), each folding its records into a standing choice and a history row
+per decision, and thirteen records whose reason moved into the file that states the choice.
+The [index](../adr/README.md) says which number went where, so a citation written against the
+old set still resolves.

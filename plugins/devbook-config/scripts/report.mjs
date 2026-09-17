@@ -23,14 +23,14 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 // `devbook-collaboration`, `schedule` by `delivery-schedule` — and it is needed in the
 // direction a manifest cannot answer: naming the plugin behind a stamp whose plugin is not
 // installed here. Hardcoding it is the same bargain the rest of this script already takes,
-// recorded at `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
+// recorded at `.devbook/arc42/adr/plugin-boundaries.md`.
 //
 // `contract: false` is not "has not got round to it". Only a component whose install rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
 // it owns whole has hash-matching as its whole migration mechanism. So three of these four will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
-// `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
+// `.devbook/arc42/adr/install.md`.
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
     collaboration: {
@@ -685,7 +685,7 @@ function render(model) {
                     'nothing shipped belongs to the repository and is never overwritten either way.',
                     'Only `devbook` rewrites content the repository authored, so only `devbook` carries',
                     'the other three fields -',
-                    '`.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.',
+                    '`.devbook/arc42/adr/install.md`.',
                 ].join(' '));
                 out.push('');
             }

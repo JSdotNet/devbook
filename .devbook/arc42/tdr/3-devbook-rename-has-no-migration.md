@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-05
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/25-devbook-payload-named-after-its-plugin.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -12,7 +12,8 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/2
 ```meta
 ```
 
-[Devbook Payload Named After Its Plugin](../adr/25-devbook-payload-named-after-its-plugin.md)
+The `knowledge-` to `devbook-` rename of 2026-09-05 — the
+[devbook folder](../../domain/plugin-authoring/domain.md#devbook-folder) term says why —
 renamed six materialized paths. Five of them are things `devbook-install` copies into a consuming
 repository and records in the stamp:
 

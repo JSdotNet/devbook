@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -28,7 +28,7 @@ do not count as session activity. The artifact is written here and read nowhere.
 header of `annotations-index.mjs` listed three consumers the annotation design intended for
 the index, and one of them — "the approval gate rendering the objections raised since
 `approved-at`" — was built here. It reads the chapter instead.
-[Record 62](../adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md)
+[the annotations record](../adr/annotations.md)
 says why: the gate shows one chapter and has that file open already, every fact it needs is in
 it, and the index is refreshed nightly, so the note a reviewer wrote on this branch an hour
 ago is exactly the one it would miss. That sharpens this record rather than closing it. A
@@ -82,7 +82,7 @@ six skill call sites. Every repository it reconciles, which receives the refresh
 nightly workflow unconditionally. The Backlog app, whose knowledge and roadmap views are the
 only thing the committed artifacts are for. `devbook-graph` is untouched — it rebuilds from
 Markdown — but its own lift is blocked on the same modules, for a different reason recorded in
-[the decision](../adr/5-devbook-still-ships-the-graph-canvas.md).
+[the decision](../adr/surfaces.md).
 
 ## Impact
 

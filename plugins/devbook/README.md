@@ -365,7 +365,7 @@ migrations/
 1.0.0 ships none, so the folder is absent until the first breaking change after it. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
-`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
+`.devbook/arc42/adr/releases.md`.
 Whether a change owes one — and the three cases that are easy to get wrong — is decided once,
 in `AGENTS.md` under *When a change ships a migration*.
 

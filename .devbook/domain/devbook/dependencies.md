@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
 > What this context depends on and who depends on it. It is an L0 foundation: its
@@ -41,7 +41,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
 - The graph canvas lives inside this plugin and imports the generator's modules by relative
   path. No host resolves the two together, so that is a source coupling to undo rather than a
   dependency to declare — see
-  [the decision](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md).
+  [the decision](../../arc42/adr/surfaces.md).
 - Every relationship above degrades rather than fails. A host that cannot load the extension
   loses the canvas, a repository that has not run the install still has readable Markdown, and
   a consumer of the `ext` namespace that is not installed leaves keys that parse and mean

@@ -55,7 +55,7 @@ status: adopted
 type: runtime
 date: 2026-09-04
 depends-on: [".devbook/tech/tooling.md#node"]
-related: [".devbook/arc42/adr/4-no-generated-sync-layer.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/adr/hosts.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 The second runtime a plugin's executable parts run on, and the only one whose script runs in a
@@ -75,7 +75,7 @@ for CI and for anywhere `pwsh` is not installed.
 Previously `retired`, and the entry read only as far as the repository's own tooling: the
 Copilot-to-Claude sync generator was written and dropped the same day, and the runtime was
 retired alongside it. That decision stands and this entry does not reopen it — see
-[No Generated Sync Layer](../arc42/adr/4-no-generated-sync-layer.md).
+[the hosts record](../arc42/adr/hosts.md).
 Retiring the *runtime* with it was the error. A repository-level generator was removed; a
 shipped payload script was not, and `retired` reads as "no longer used" to everyone downstream
 of a plugin that installs it into their repository on every sync.

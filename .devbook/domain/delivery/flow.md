@@ -2,7 +2,7 @@
 
 ```meta
 type: flow
-related: [".devbook/domain/delivery/domain.md#run", ".devbook/domain/delivery/domain.md#gate", ".devbook/arc42/adr/31-every-run-opens-with-update-base.md"]
+related: [".devbook/domain/delivery/domain.md#run", ".devbook/domain/delivery/domain.md#gate", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
 > How a run moves: the spine of services with chores hanging off it, the two tiers a flow closes

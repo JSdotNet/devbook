@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/74-four-flows-named-for-what-changes.md", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/domain/plugin-authoring/domain.md#layer"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/domain/plugin-authoring/domain.md#layer"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -30,7 +30,7 @@ addressed by name from a plugin that claims not to know it exists.
 **Restated rules.** Each of the five requires the `meta` block, forbids writing the `approved`
 rung, and forbids regenerating `_meta/` in the run. Those are three of devbook's own rules,
 restated in `delivery`. It is the fault
-[Flows Belong to Delivery](../adr/34-flows-belong-to-delivery.md) charged
+[Flows Belong to Delivery](../adr/plugin-boundaries.md) charged
 `devbook-flows` with — a Metadata Enforcement stage restating what devbook's instruction files
 already state — surviving the change that was supposed to remove it.
 
@@ -49,7 +49,7 @@ record is about: the five folder flows still name devbook's paths, and no check 
 plugins, so the next payload-path rename still lands the way this one did.
 
 **2026-09-15. The first option is taken, by way of a fold.** The five folder flows are one,
-`flow-spec`, under [record 74](../adr/74-four-flows-named-for-what-changes.md). It runs the check
+`flow-spec`, under [the flow engine record](../adr/flow-engine.md). It runs the check
 the repository's own `AGENTS.md` devbook section names rather than devbook's payload path, and
 carries none of the folder-specific rules the five restated — the keyboard rule, the edge check,
 the alias check, the vendor-and-version test, the authoritative-source stage are each in the

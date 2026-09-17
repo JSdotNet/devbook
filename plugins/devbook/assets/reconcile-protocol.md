@@ -8,7 +8,7 @@ Two other installs read one section of it. `delivery:install` and
 `devbook-collaboration:install` take **The stamp**'s two shared fields and its hash
 rules, and nothing else here describes them: the three fields beside those, the asset
 table, and the six phases are devbook's own. The reason is
-`.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
+`.devbook/arc42/adr/install.md`.
 
 ## One reconcile, four situations
 
@@ -115,7 +115,7 @@ points at it: `CLAUDE.md` is an `@AGENTS.md` import, `.github/copilot-instructio
 sentence. Both are copied only where absent and stamped `managed: false` from the first
 reconcile — the file is the repository's from the moment it lands, and a later reconcile
 reports drift on it and never writes to it. A present one, whatever it holds, is left alone.
-The reason is `.devbook/arc42/adr/67-the-install-creates-the-root-wrappers-where-absent.md`.
+The reason is `.devbook/arc42/adr/install.md`.
 
 The `AGENTS.md` section is rendered whole rather than copied at all. It is generated
 from the stamp's `adopted` list per `assets/agents-section.md`, keyed `AGENTS.md#devbook`,

@@ -12,7 +12,7 @@ paths:
   `claude-*` id; anything else fails to load. Put the preference in a `## Model` body section.
 - `tools` is an exact-match allowlist. Include `Skill` to let the agent reach plugin skills,
   and `Agent` only when it delegates. Only a runner plugin's agent carries flow control —
-  `.devbook/arc42/adr/19-a-role-plugin-holds-no-flow-control.md`.
+  `.devbook/arc42/adr/plugin-boundaries.md`.
 - For MCP, grant the whole server and emit both spellings — `mcp__plugin_<plugin>_<server>`
   (plugin-provided, namespaced) and `mcp__<server>` (from a repo `.mcp.json`) — because the
   prefix depends on how the server was registered.

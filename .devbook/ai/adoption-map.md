@@ -27,7 +27,7 @@ the same change that adds its file.
 Stages in flow order, with the chapters that sit at each one. Shading is `status`. Scheduling
 reaches fan-out and the `schedule-*` entry points, never a flow — the missing edge to
 `Flow Skills` is the
-[decision](../arc42/adr/26-the-unattended-lane-is-its-own-plugin.md), not an
+[decision](../arc42/adr/plugin-boundaries.md), not an
 omission.
 
 ```mermaid

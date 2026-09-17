@@ -27,6 +27,6 @@ related: [".devbook/domain/context-map.md#plugin-authoring", ".devbook/tech/host
 
 - Both outbound rows are Conformist by choice: there is no anti-corruption layer between an
   asset and its host because the asset *is* the host's format. The cost is paid in the
-  authored file, see [One Authored Copy Per Asset](../../arc42/adr/3-one-authored-copy-per-asset.md).
+  authored file, see [One Authored Copy Per Asset](../../arc42/adr/hosts.md).
 - Nothing here depends on a host's runtime behaviour — how it ranks a skill, when it applies
   an instruction — which is what keeps the boundary in [domain.md](domain.md) honest.

@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 What this context is responsible for: that a run nobody watched is still legible afterwards —
@@ -126,7 +126,7 @@ page would be the wrong one.
 type: term
 date: 2026-09-08
 aliases: [absent capability, not implemented]
-related: [".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md"]
+related: [".devbook/arc42/adr/surfaces.md"]
 ```
 
 A capability group whose tool names this surface does not declare, so a caller resolving it finds
