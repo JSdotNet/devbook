@@ -32,7 +32,7 @@ import { summarizeInsights, summarizeContext } from "./insight.mjs";
 import { renderReportMarkdown, renderReportHtml } from "./report.mjs";
 import { runsDir, stateDir, worktreeRoot, readActive, writeActive } from "./state.mjs";
 import { isIdle, clearIdle, isHandoffPending, markHandoff, clearHandoff } from "./idle.mjs";
-import { computeSessionTitle } from "./session-title.mjs";
+import { computeSessionTitle, loadSessionNaming } from "./session-title.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -671,7 +671,13 @@ const tools = [
                     }
                     await writeActive({ runId: existing.id, stage: null, updatedAt: new Date().toISOString() });
                     bus.emit("update");
-                    return { runId: existing.id, resumed: true, run: existing, dashboardUrl, sessionTitle: computeSessionTitle(existing) };
+                    return {
+                        runId: existing.id,
+                        resumed: true,
+                        run: existing,
+                        dashboardUrl,
+                        sessionTitle: computeSessionTitle(existing, await loadSessionNaming(worktreeRoot())),
+                    };
                 }
             }
             const normalizedOriginalPrompt = typeof originalPrompt === "string" && originalPrompt.trim() ? originalPrompt.trim() : "";
@@ -708,7 +714,7 @@ const tools = [
             await writeRun(baseDir, run);
             await writeActive({ runId: run.id, stage: null, updatedAt: now });
             bus.emit("update");
-            return { runId: run.id, resumed: false, dashboardUrl, sessionTitle: computeSessionTitle(run) };
+            return { runId: run.id, resumed: false, dashboardUrl, sessionTitle: computeSessionTitle(run, await loadSessionNaming(worktreeRoot())) };
         },
     },
     {
@@ -940,7 +946,9 @@ const tools = [
                 clearIdle(run);
                 // Read inside the lock, off the same run the telemetry hook has been folding
                 // write destinations into, so the name reflects everything observed up to now.
-                sessionTitle = computeSessionTitle(run);
+                // The naming config is read fresh each time, so an edit to it lands on the
+                // next stage rather than the next run.
+                sessionTitle = computeSessionTitle(run, await loadSessionNaming(worktreeRoot()));
                 await writeRun(baseDir, run);
             });
             // Written outside the run lock: the telemetry hook reads this pointer to

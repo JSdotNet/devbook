@@ -41,6 +41,7 @@ folds what it is told, adds what its own hooks measured, and answers questions a
 | Evidence paths resolve inside the git worktree root; anything outside is refused | `update_stage()` | untested |
 | Telemetry is captured from tool events and never accepted from a caller | telemetry hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
 | Idleness and the session title are derived on read, never stored as status | `get_run()`, `list_runs()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/session-title-test.mjs` |
+| The record holds destination kinds, never the words shown for them; the words are read from the repository's own stack-config entry on every title | `start_run()`, `update_stage()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/session-title-integration-test.mjs` |
 | The declared tool surface is exactly the contract's eleven names and nothing more | server start | untested |
 | The record survives a session restart | store | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 
@@ -91,6 +92,23 @@ number is an estimate wearing a measurement's clothes.
 It is captured through a command hook that reads an event payload and writes a file — work a
 prompt hook cannot do. On a host without command hooks the run is still tracked in full and the
 panels simply have nothing to show, which is why this costs a column and not a capability group.
+
+### Session Title
+
+```meta
+type: value-object
+aliases: [session name, prefix]
+related: [".devbook/arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md"]
+```
+
+`<prefix>[:<context>] — <run title>`, computed from where the run's writes landed: a published
+Artifact, one of the five devbook folders, or code, with the bounded context appended when the
+winning files sit in exactly one. The record tallies kinds; the word each kind is shown as
+comes from `components.delivery-surface-dashboard.sessionNaming.labels` in the repository's
+stack config, where `null` means no prefix — and no rename, since an unprefixed copy of the run
+title is worse than the host's own name — and `devbook` stands for all five folders. Kinds
+sharing a word are tallied as one before the dominant kind is picked. `null` before anything
+has been written, for the same reason.
 
 ### Handoff Marker
 

@@ -5,7 +5,7 @@ Behaviour changes a consumer would notice, newest first.
 ## Unreleased: every skill opens with its plugin version
 
 Each `delivery` skill now opens its reply with `delivery@<version>`, the version read from the
-plugin manifest beside it (`.devbook/arc42/adr/75-every-skill-opens-with-its-plugin-version.md`).
+plugin manifest beside it (`.devbook/arc42/adr/76-every-skill-opens-with-its-plugin-version.md`).
 Nothing a repository holds changes, so there is nothing to reconcile.
 
 ## 1.0.1: the flow context file is retired

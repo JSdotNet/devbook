@@ -1,4 +1,4 @@
-# 75. Every Skill Opens With Its Plugin Version
+# 76. Every Skill Opens With Its Plugin Version
 
 ```meta
 date: 2026-09-17

@@ -16,7 +16,7 @@ The first body line after the title is the version line, verbatim with the plugi
 > Open the reply with `<plugin>@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 It is authored in every skill because an installed plugin never sees this rule;
-`node tools/check-assets.mjs` fails a skill without it. Why: [ADR 75](../../.devbook/arc42/adr/75-every-skill-opens-with-its-plugin-version.md).
+`node tools/check-assets.mjs` fails a skill without it. Why: [ADR 76](../../.devbook/arc42/adr/76-every-skill-opens-with-its-plugin-version.md).
 
 Reference instruction and resource files by relative path. Neither host auto-applies an
 instruction file from inside a plugin, so the explicit reference is what loads the guidance —
