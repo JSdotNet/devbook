@@ -11,8 +11,7 @@ pointing at it still resolves, and that a repository can adopt the convention, u
 be told when the two have drifted apart.
 
 Inside the boundary: the `meta` block and its field set, the address a chapter is reached by,
-the annotation fence, the derived indexes, the reconcile that materializes the convention into
-a repository, and the two directions between a chapter and the code that implements it.
+the annotation fence, the reconcile that materializes the convention into a repository, and the two directions between a chapter and the code that implements it.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [Delivery](../delivery/domain.md). Who reviews
@@ -51,9 +50,9 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `domain/`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `ai/`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Meta Block
 
@@ -100,7 +99,7 @@ chapter carrying an open question is not agreed whatever its `status` says.
 type: enum
 ```
 
-Where the content stands. Each folder defines its own ladder — `.domain` uses `draft`,
+Where the content stands. Each folder defines its own ladder — `domain/` uses `draft`,
 `proposed`, `active`, `deprecated` — and one shared rung, `approved`, sits on top of all of
 them. Three folders have a resting value written by omitting the field; two make the field
 mandatory because there the value is a rating, and unrated is not the same as the lowest rung.
@@ -112,8 +111,8 @@ type: enum
 ```
 
 What kind of thing the chapter is: the classification that is never written into the heading.
-Three folders define a value set, at chapter level and at file level separately; `.arc42` and
-`.design` deliberately define none, because their only kind distinction is already carried by
+Three folders define a value set, at chapter level and at file level separately; `arc42/` and
+`design/` deliberately define none, because their only kind distinction is already carried by
 heading level.
 
 ## Devbook Folder
@@ -124,18 +123,19 @@ related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
-subset, and the tooling emits scopes for the folders that actually exist. The folder owns its
-own derived `_meta/`, written beside its chapters, and the reading order of the files inside it
-comes from each folder's convention rather than from a stored field.
+subset, and the tooling emits scopes for the folders that actually exist. The folder lives at
+`.devbook/<kind>/`, owns its own derived `_meta/`, written beside its chapters, and the reading
+order of the files inside it comes from each folder's convention rather than from a stored
+field.
 
 ### Invariants
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A repository uses one layout for every folder and never mixes them | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
-| A nested folder drops the leading dot — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
-| An address is the chapter's real repository path under either layout | graph build | `unit:node:plugins/devbook/tools/devbook-meta/nested-layout.test.mjs` |
-| A repository containing both layouts is an error, not a preference | layout detection | untested |
+| Every folder lives under `.devbook/` and drops its leading dot there — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| An address is the chapter's real repository path | graph build | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| A root-level dot-folder is reported as an error naming the move, and never indexed | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| A folder's convention orders its files — root first, pinned first and last around the rest | outline build | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | Dropping a folder from `adopted` orphans its materialized files rather than deleting them | reconcile | untested |
 
 ### Folder Layout
@@ -144,9 +144,11 @@ comes from each folder's convention rather than from a stored field.
 type: value-object
 ```
 
-Flat or nested, and nothing else: the five folders at the repository root, or the same five
-under one `.devbook/` parent with the leading dot dropped. The value is detected rather than
-declared, and it changes no other rule.
+One `.devbook/` parent, five subfolders without their dots, the repository rollup in
+`.devbook/_meta/`, the tooling in `.devbook/_tools/`, and the stack config beside them. The
+layout is a constant rather than a detected value since
+[the chapter schema record](../../arc42/adr/chapter-schema.md); what is detected is which of
+the five exist.
 
 ### Folder Kind
 
@@ -163,7 +165,7 @@ set and adding a sixth is a contract change rather than a folder.
 ```meta
 type: aggregate
 aliases: [graph, graph.json]
-related: [".devbook/arc42/adr/checks-and-indexes.md"]
+related: [".devbook/arc42/adr/checks-and-indexes.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -171,9 +173,10 @@ the corpus and owned by nobody who writes prose. It is the answer to *what point
 which no single chapter can hold, and it is the reason a reference is a first-class field
 rather than a Markdown link.
 
-The graph is derived, never authored. Its committed form under `_meta/` is a build output, and
-a session never regenerates or commits it — two branches that each touch one chapter both
-rewrite the same JSON, and the conflict is only resolvable by re-running the generator.
+The graph is derived, never authored: the [Index Generator](#index-generator) builds it
+from the chapters every time it checks. Its committed form under `_meta/` is
+[Devbook Derived](../devbook-derived/domain.md#refresh)'s to write, and a session never
+regenerates or commits it.
 
 ### Invariants
 
@@ -183,8 +186,7 @@ rewrite the same JSON, and the conflict is only resolvable by re-running the gen
 | An edge exists only where a reference field resolves; an unresolved one is an error, not a dangling edge | graph build | untested |
 | Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook/tools/devbook-meta/anchor-collision.test.mjs` |
 | `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
-| Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | emit | untested |
-| A session never writes `_meta/`; the scheduled refresh owns it | convention | open — nothing enforces it but the host's deny list and this rule |
+| Output is deterministic — no timestamps — so a clean `git diff` proves a committed index is current | `build.mjs --write` | untested |
 
 ### Graph Node
 
@@ -233,18 +235,47 @@ wrappers each host reads, the CI workflow templates, and devbook's own marker-fe
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#derived-index"]
+related: [".devbook/domain/devbook/domain.md#reference-graph", ".devbook/domain/devbook-derived/domain.md#derived-index", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
-Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
-the annotation index for the repository and for each adopted folder. It is the only writer of
-`_meta/`, and the only thing that decides whether a problem is an error or a warning: an
+Walks the corpus once and projects it per scope, building the reference graph, the outline, and
+the annotation index for the repository and for each adopted folder. It checks by default and
+writes only on `--write`, which nothing in this context passes — the committed `_meta/` is
+[Devbook Derived](../devbook-derived/domain.md#refresh)'s to ask for. It is the only thing that
+decides whether a problem is an error or a warning: an
 unresolved reference fails, a heading with no block is reported and tolerated. Every
 per-block rule reaches the gate through the schema validator the graph build calls per file
 (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-check` schedule opens a pull request when the output moved.
+request and the daily `devbook-check` schedule runs `check` through its own wrapper.
+
+## Fence Writer
+
+```meta
+type: domain-service
+aliases: [annotations.mjs]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
+```
+
+`annotations.mjs`: `list`, `add`, `reply`, `resolve`, `sweep`, as a CLI and as the same
+five functions in-process. It is the only writer of an annotation fence anywhere — devbook's
+`annotation-sweep` and every `devbook-collaboration` skill go through it — and its edits are
+surgical, so a field a later version adds survives a write by one that does not know it.
+It never commits: adding a note dirties a tracked file, and that is the caller's to review.
+
+## Tech Inventory
+
+```meta
+type: domain-service
+aliases: [devbook-tech, package inventory]
+related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/domain/devbook/domain.md#devbook-folder"]
+```
+
+Two scripts that read a repository's package manifests — .NET and frontend — and emit
+deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
+grounds a `tech/` chapter in, so a package-derived fact is reproducible and a hand-written
+one is visibly not. Materialized by the install only where `tech/` is adopted.
 
 ## Spec Converter
 
@@ -334,23 +365,6 @@ type: ubiquitous-language
 > event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
 > layer, stamp, migration, host — is defined once in [Plugin Authoring](../plugin-
 > authoring/domain.md#ubiquitous-language).
-
-### Derived Index
-
-```meta
-type: term
-date: 2026-09-08
-aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/checks-and-indexes.md"]
-```
-
-Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
-emitted deterministically so a clean `git diff` proves they are current.
-
-A session never reads one as a source of fact and never regenerates one. Two branches that each
-touch one chapter both rewrite the same JSON, and the conflict is only resolvable by re-running
-the generator — so the refresh belongs to automation, and the check that runs in a session
-writes nothing.
 
 ### Adoption
 

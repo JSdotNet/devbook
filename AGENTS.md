@@ -39,7 +39,10 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 `devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
-`plugins/devbook/rules/devbook-derived-artifacts.md`.
+`plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
+the committed index is `devbook-derived`'s, per
+`.devbook/arc42/adr/checks-and-indexes.md`; this
+repository vendors both from the plugins rather than materializing them.
 
 ## Committing
 
@@ -103,7 +106,9 @@ Three cases decide whether one is owed:
   script moves it. A file reconcile would replace on its own needs none.
 
 The reason this obligation starts at 1.0.0 and not before is
-`.devbook/arc42/adr/releases.md`.
+`.devbook/arc42/adr/releases.md`. A migration lives for the major
+version it ships in: a major release raises the floor and drops the folders below it, per
+`plugins/devbook/README.md` under *Migrations*, so the folder never grows past one major.
 
 ## Where the rest of the rules are
 
@@ -171,11 +176,12 @@ Every chapter carries a fenced `meta` block; write it in the same change as the 
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
-Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.
-Never regenerate or commit them in a session — the scheduled job owns that refresh. Run
-the check before committing:
+Run the check before committing; it writes nothing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
+
+An annotation fence is written only through
+`plugins/devbook/tools/devbook-meta/annotations.mjs`.
 
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
@@ -188,3 +194,15 @@ repository. The directory is `$XDG_CONFIG_HOME/devbook` when set, else
 `%APPDATA%\devbook` on Windows and `~/.config/devbook` elsewhere. Put no secret in
 any of them — gitignored is not private, and neither is your home directory.
 <!-- devbook:end -->
+
+<!-- devbook-derived:begin -->
+## Devbook tooling
+
+Managed by `devbook-derived:install`. Edit outside these markers.
+
+Files under any `_meta/` folder are generated tool input, written by
+`plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
+fact and never hand-edit one. Never regenerate or commit them in a session — the
+scheduled job owns that refresh. Fix what devbook's check reports in the source
+Markdown; the check itself is in devbook's section above.
+<!-- devbook-derived:end -->

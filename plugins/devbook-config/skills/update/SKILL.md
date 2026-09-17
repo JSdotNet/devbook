@@ -58,11 +58,12 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    until they have. Every step is idempotent, so resuming costs nothing.
 
 4. **Fan out, in the report's order.** For each `reconcile` row, invoke that component's own
-   install skill — `devbook:install`, then `devbook-collaboration:install`, then
-   `delivery:install`, then `delivery-schedule:install` — and let it run its migrations oldest
-   first, overwrite what is stale, leave what is customized, and rewrite its own stamp.
+   install skill — `devbook:install`, then `devbook-derived:install`, then `delivery:install`,
+   then `delivery-schedule:install` — and let it run its migrations oldest first, overwrite what
+   is stale, leave what is customized, and rewrite its own stamp. `devbook-collaboration` has
+   no install: enabling it is the whole adoption.
 
-   The order is load-bearing at both ends: collaboration's install refuses to run until
+   The order is load-bearing at both ends: derived's install refuses to run until
    `components.devbook` names an adopted folder, and schedule checks its targets against what
    the repository enables. `delivery:install` re-seeds the `start` and `capture` copies and
    depends on no other component. Each is **required**: a failure does not abort the rest, and

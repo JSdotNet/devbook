@@ -1,7 +1,7 @@
 # Annotations
 
 ```meta
-date: 2026-09-14
+date: 2026-09-17
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#annotation", ".devbook/domain/devbook-collaboration/domain.md", ".devbook/domain/devbook-collaboration/dependencies.md", ".devbook/domain/plugin-authoring/domain.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -11,7 +11,9 @@ resolved → gone, and the sweep — is `devbook`'s. It reaches the five devbook
 nothing else. The gate that shows a chapter with its open notes and writes `status: approved`
 is `devbook-collaboration:chapter-approve`, in the review plugin and not the engine, and it
 reads the chapter rather than the derived index. Only an open `kind: question` blocks; a
-`flag` is shown first and never blocks.
+`flag` is shown first and never blocks. Where a review stands — `review`, `reviewer`,
+`review-at` — is three fields in devbook's own schema, validated by the check, and the review
+plugin ships its four skills and nothing else: no rule, no install, no hook, no stamp.
 
 ## Why
 
@@ -55,6 +57,18 @@ chapter that stands. Making a flag block from the review plugin would change wha
 field means from one layer up. A stricter chapter gate would be a committed switch under
 `components.collaboration` that only ever tightens, and nobody has asked for one.
 
+**Review state is devbook's vocabulary.** The triad mirrored `approved` / `approved-by` /
+`approved-at` from the day it was written, and lived in the opaque `ext` namespace only
+because it was the extension's to write. Every invariant on a review — one reviewer at a time,
+`changes-requested` over at least one open note, no review beside `status: approved` — was
+untested there, because `ext.*` is carried unvalidated by design; in the schema each is one
+clause on the same path the hard gate runs. The one sentence the collaboration rule added for a
+reader — skip these keys when loading a chapter — is the sentence devbook already states for a
+fence, so the rule, its install, its stamp, and its hook go with it. Independence from devbook
+was asked for and declined: every skill reads a `meta` block, writes through the fence writer,
+or writes the rung, and a collaboration plugin over arbitrary Markdown would rebuild devbook's
+schema inside itself.
+
 ## Rejected
 
 ```meta
@@ -65,6 +79,7 @@ field means from one layer up. A stricter chapter gate would be a committed swit
 - A folder-wide sweep, and a lint that reports fences outside the folders — the second is the
   answer when someone first wants to annotate a rule.
 - `kind: flag` as a blocker, or a reviewer's choice of kind as a gate.
+- Review state in the `ext` namespace, and a collaboration plugin independent of devbook.
 
 ## History
 
@@ -73,6 +88,7 @@ field means from one layer up. A stricter chapter gate would be a committed swit
 
 | Date | Change |
 | --- | --- |
+| 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |
 | 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. |
 | 2026-09-14 | The chapter gate is `devbook-collaboration:chapter-approve` and reads the chapter, not the index. |
 | 2026-09-09 | The sweep is `devbook:annotation-sweep`, chapter-scoped; promotion to a work item is unbuilt on purpose. |

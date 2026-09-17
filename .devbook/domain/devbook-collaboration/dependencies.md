@@ -6,37 +6,36 @@ related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/doma
 ```
 
 > What this context depends on and who depends on it. It is an L1 extension: exactly one
-> declared dependency, on the foundation whose namespace it stores its state in.
+> declared dependency, on the foundation whose schema it writes into.
 
 ## Outbound dependencies
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
-| [Devbook](../devbook/dependencies.md) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | `ext.devbook-collaboration.*` keys in a chapter's own `meta` block | The [extension namespace](../plugin-authoring/domain.md#extension-namespace): keys carried through untouched, unvalidated, producing no edge | It has no store of its own. The state it remembers about a chapter is three keys in that chapter, which is what lets it release without a devbook release. |
-| [Devbook](../devbook/domain.md#annotation) | Conformist, for the whole device | Writes findings through `tools/devbook-meta/annotations.mjs` | The [annotation](../devbook/domain.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this context's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [the annotations record](../../arc42/adr/annotations.md). |
+| [Devbook](../devbook/dependencies.md) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | `review`, `reviewer`, `review-at` in a chapter's own `meta` block | The review triad in `devbook-chapter-metadata.md`: three optional fields, validated together and against the chapter's open notes | It has no store and no vocabulary of its own. The state it remembers about a chapter is three of devbook's fields in that chapter — [the annotations record](../../arc42/adr/annotations.md). |
+| [Devbook](../devbook/domain.md#annotation) | Conformist, for the whole device | Writes findings through `.devbook/_tools/devbook-meta/annotations.mjs` | The [annotation](../devbook/domain.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this context's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [the annotations record](../../arc42/adr/annotations.md). |
 | [Devbook](../devbook/domain.md#chapter) | Conformist, for one field | Writes `status: approved`, `approved-by`, `approved-at` directly | The shared `approved` rung and its two record fields | Approval is devbook's field and keeps devbook's meaning. This context runs the decision; it does not own the vocabulary. |
-| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its install delivers, the `components.collaboration` stamp | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged, installed, and stamped like every other plugin here. |
-| Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, and the two rule wrappers its install writes | Each host's own schemas | Its contract has to fire when either host opens a chapter, which only a materialized wrapper achieves. |
-| A consuming repository | Customer-Supplier, this context supplying | `devbook-collaboration:install` writes one rule plus a wrapper per host, stamped under `components.collaboration` | Rule name, contract version, the four `ext` keys | The contract is only applied where it was installed. |
+| Plugin Authoring | Shared Kernel | Plugin folder and two manifests | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like every other plugin here, and — alone among them — materializes nothing and stamps nothing. |
+| Claude Code and Copilot Plugin APIs | Conformist | Manifests and skills | Each host's own schemas | Enabling the plugin is the whole adoption; the rules its skills follow are devbook's, and reach a host through devbook's install. |
 
 ## Inbound dependents (known)
 
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
-| [Devbook](../devbook/dependencies.md), as a reader | Conformist, reversed | Its check reads `status: approved` and reports an unsigned, undated, or orphaned approval | The three approval fields | That this context never writes the rung without both records, and never leaves them behind. |
+| [Devbook](../devbook/dependencies.md), as a reader | Conformist, reversed | Its check reads `status: approved` and the review triad, and reports an unsigned, undated, or orphaned approval, a half-written review, a verdict without its findings, or review state left on an approved chapter | The three approval fields and the three review fields | That this context writes the triads whole, and clears the review triad in the change that writes the rung. |
 | [Delivery](../delivery/dependencies.md) | Separate Ways | A flow's approval gate reads whether a chapter was agreed before building from it | The `approved` rung, read from the chapter | Nothing from this plugin. It reads devbook's field, which is why the two never name each other. |
-| [Devbook Config](../devbook-config/dependencies.md) | Conformist, read-only | Reads `components.collaboration` to report scope and version | The stamp shape | That the stamp exists and keeps its shape; it writes none of it. |
+| [Devbook Config](../devbook-config/dependencies.md) | Conformist, read-only | Reports whether the plugin is installed and enabled | The marketplace entry and manifests | Nothing: there is no stamp to read and no install to invoke. |
 
 ## Notes
 
-- **The `ext` namespace is the entire dependency, and it is deliberately inert.** Uninstall this
-  plugin and the keys stay parseable, render as they always did, and mean nothing to anyone —
-  which is what made the seam safe to reserve before anything needed it.
-- **This context reads no other plugin's `ext` keys**, and nothing reads its own as if they were
-  schema. An opaque namespace two plugins interpret has stopped being opaque.
+- **The review triad is the entire dependency, and it is devbook's.** Disable this plugin and
+  the fields stay defined, validated, and meaningful — a person can write them by hand and be
+  held to the same rules. What goes is the procedure, not the vocabulary.
+- **This context reads no `ext` key.** The namespace it once stored its state in is reserved
+  and unused; the first extension's state became schema instead.
 - **Nothing declares this context.** It is above devbook in the layer order and below nothing,
-  so no manifest anywhere names it — a repository that has not enabled it simply has no review
-  state, and every chapter still reads correctly.
+  so no manifest anywhere names it — a repository that has not enabled it simply has no skill
+  that writes review state, and every chapter still reads correctly.
 - **Promotion to a work item is not here, and the Separate Ways row above is why.** A note that
   has become tracked work should be promoted through `bindings["delivery.tracker"]`, but the
   operations, their resolution order, and the key naming them are declared in `delivery`'s own

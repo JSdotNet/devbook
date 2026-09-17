@@ -19,11 +19,14 @@ import { fileURLToPath } from 'node:url';
 const DEFAULT_MARKETPLACE = 'jsdotnet';
 
 // Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
-// contract-versioned. The mapping is not derivable — `collaboration` is written by
-// `devbook-collaboration`, `schedule` by `delivery-schedule` — and it is needed in the
-// direction a manifest cannot answer: naming the plugin behind a stamp whose plugin is not
-// installed here. Hardcoding it is the same bargain the rest of this script already takes,
-// recorded at `.devbook/arc42/adr/plugin-boundaries.md`.
+// contract-versioned. The mapping is not derivable — `derived` is written by
+// `devbook-derived`, `schedule` by `delivery-schedule` — and it is needed in the direction a
+// manifest cannot answer: naming the plugin behind a stamp whose plugin is not installed here.
+// Hardcoding it is the same bargain the rest of this script already takes, recorded at
+// `.devbook/arc42/adr/plugin-boundaries.md`.
+// `devbook-collaboration` is absent on purpose: it materializes nothing and stamps nothing
+// (`.devbook/arc42/adr/annotations.md`), so a
+// repository adopts it by enabling it and nothing here reconciles it.
 //
 // `contract: false` is not "has not got round to it". Only a component whose install rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
@@ -33,23 +36,17 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 // `.devbook/arc42/adr/install.md`.
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
-    collaboration: {
-        plugin: 'devbook-collaboration',
-        install: 'devbook-collaboration:install',
-        contract: false,
-    },
+    derived: { plugin: 'devbook-derived', install: 'devbook-derived:install', contract: false },
     delivery: { plugin: 'delivery', install: 'delivery:install', contract: false },
     schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install', contract: false },
 };
 
-// The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
-// install refuses to run until `components.devbook` names an adopted folder, and
-// delivery-schedule checks its targets against the plugins this repository enables, so it
-// wants the settled state. `delivery` is the one free position — its install reads the engine
-// keys and no other component's stamp — and it sits before
-// schedule because schedule's targets call the procedures it seeds. Anything not named here
-// follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
+// The order the reconcile list is run in, and it is not cosmetic: devbook-derived's install
+// refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
+// checks its targets against the plugins this repository enables, so it wants the settled
+// state. `delivery` sits before schedule because schedule's targets call the procedures it
+// seeds. Anything not named here follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and
@@ -366,12 +363,12 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
+    // Every devbook folder lives under `.devbook/` (record 80). A root-level `.tech/` is the
+    // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
-        const flat = join(repoRoot, `.${folder}`);
-        const nested = join(repoRoot, '.devbook', folder);
-        if (existsSync(flat)) return { folder, layout: 'flat', path: `.${folder}/` };
-        if (existsSync(nested)) return { folder, layout: 'nested', path: `.devbook/${folder}/` };
-        return { folder, layout: null, path: null };
+        const stray = existsSync(join(repoRoot, `.${folder}`));
+        if (existsSync(join(repoRoot, '.devbook', folder))) return { folder, path: `.devbook/${folder}/`, stray };
+        return { folder, path: null, stray };
     });
 
     // The three overlay layers the delivery checker merges, outermost first. The path rule is
@@ -540,7 +537,7 @@ function render(model) {
         .filter((p) => p.scope === 'reconcile')
         .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
     if (reconcile.length) {
-        out.push('Run these **in this order** — collaboration needs devbook adopted first, and schedule reads the settled enable state — and let each write its own stamp:');
+        out.push('Run these **in this order** — derived needs devbook adopted first, and schedule reads the settled enable state — and let each write its own stamp:');
         out.push('');
         for (const p of reconcile) {
             const drift = p.stampedVersion && p.stampedVersion !== p.installed
@@ -696,7 +693,10 @@ function render(model) {
     out.push('');
     out.push(table(
         ['Folder', 'Present as'],
-        repo.folders.map((f) => [`\`.${f.folder}\``, f.path ? `\`${f.path}\` (${f.layout})` : 'absent']),
+        repo.folders.map((f) => [
+            `\`.${f.folder}\``,
+            (f.path ? `\`${f.path}\`` : 'absent') + (f.stray ? ` — a root-level \`.${f.folder}/\` also exists; only \`.devbook/\` is a layout, move it` : ''),
+        ]),
     ));
     out.push('');
 

@@ -1,16 +1,18 @@
 # Releases
 
 ```meta
-date: 2026-09-14
+date: 2026-09-17
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/domain/plugin-authoring/domain.md#marketplace", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin is `1.0.0`, in both manifests and the marketplace entry, and every version before
-it is collapsed: no consumer installed under the old numbers. From this baseline a change to a
-chapter schema, a stamp shape, a config key, or a materialized path ships its migration in the
-same commit; `AGENTS.md` states which changes owe one. `contractVersion` stays at 9, because it
-counts schema shapes and the schema did not move. Three names are keys a consumer installs
-under: the marketplace is `jsdotnet-devbook` under the rule `jsdotnet-<repository>`, the
+Every plugin carries the same version — `1.1.0` — in both manifests and the marketplace
+entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
+is collapsed, because no consumer installed under it. From that baseline a change to a chapter
+schema, a stamp shape, a config key, or a materialized path ships its migration in the same
+commit, and `AGENTS.md` states which changes owe one. A contract bump with its migration is a
+minor release; a migration lives until the next major, which raises the floor
+`MINIMUM_CONTRACT_VERSION` and deletes the folders at or below it. The floor is 9. Three
+names are keys a consumer installs under: the marketplace is `jsdotnet-devbook` under the rule `jsdotnet-<repository>`, the
 repository is `JSdotNet/devbook`, and the marketplace name is never renamed after the first
 install.
 
@@ -41,6 +43,17 @@ said "not Copilot-specific" while it was the only such marketplace; beside `jsdo
 it read as that marketplace's parent. A name that follows a rule needs no explaining, and the
 rename was done on the last day it cost one machine and two plugins.
 
+**A migration lives for one major.** What grows without bound is not the folder but the
+promise that every shipped migration keeps working against every intermediate state forever.
+A separate migrations plugin saves nothing — same checkout, and released in lockstep with the
+generator it is written against; one script instead of one folder per change is the same lines
+minus the `MIGRATION.md`; fetching from a tag adds a network dependency to save disk already
+spent. So the cap is the one every migration framework a consumer knows uses: a major raises
+the floor, a reconcile below it stops and says to pass through the previous major's last
+release, and ledger ids are still never rewritten — an entry outlives its folder. Contract 10
+and `010-terms-live-in-domain-md` therefore ship in `1.1.0`, and the `>=1.0.0 <2.0.0`
+ranges hold.
+
 **The repository name is a separate key, and cheap to move once.** A host stores it once as the
 marketplace's source and GitHub redirects a renamed repository for git, the API, and the web.
 `ai-agent-stack` described the repository before the specialists left; what remains is the
@@ -53,6 +66,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 ```
 
 - Keeping the version spread as provenance, or restarting `contractVersion` at 1.
+- A migrations plugin, one migration script, or migrations fetched from a tag.
 - Keeping migrations that can only exit `0`, to seed a ledger no run applied.
 - `jsdotnet` as the marketplace name once a second marketplace followed the rule.
 - A suffix to avoid `devbook` naming three things.
@@ -64,6 +78,8 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-17 | Every plugin is `1.1.0`; contract 10 ships in it with migration 010. |
+| 2026-09-17 | A migration lives for one major; the floor starts at 9 and a major raises it. |
 | 2026-09-14 | The marketplace is `jsdotnet-devbook` under `jsdotnet-<repository>`; `jsdotnet` is retired, not reused. |
 | 2026-09-14 | The repository is `JSdotNet/devbook`. |
 | 2026-09-14 | Every plugin is `1.0.0`, the pre-release migrations are deleted, and a migration ships with its change from here on. |

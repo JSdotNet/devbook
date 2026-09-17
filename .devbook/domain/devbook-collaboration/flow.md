@@ -34,7 +34,7 @@ stateDiagram-v2
 - **There is no `in-progress`.** A review nobody has recorded a verdict on is still
   `requested`; a fourth value would let a chapter sit in a state that obliges no one.
 - **Approval clears everything in one change.** The rung, `approved-by`, and `approved-at` go
-  in; every `ext.devbook-collaboration.` key comes out, and the chapter's resolved notes are
+  in; `review`, `reviewer`, and `review-at` come out, and the chapter's resolved notes are
   swept with them. A chapter that carries both is a half-finished write, not a state.
 - **An open question is the one thing that blocks the decision.** Devbook's check reports an
   approval standing over one as an error, so `chapter-approve` refuses rather than warns. Every

@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery-schedule"]
 ```
 
-> Fifteen skills in two halves: twelve entry points that pick their own input, and three that put a
+> Seventeen skills in two halves: fourteen entry points that pick their own input, and three that put a
 > trigger in the scheduler and read it back. Every one of them is also runnable by hand, which is
 > how a cadence gets proved before it is trusted.
 
@@ -18,6 +18,18 @@ related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/d
 
 Pick the top open `bug` item and run the bug flow on it, unattended. It lands as a branch parked
 where Personal Validation would be, with a handoff brief naming what a person has to judge.
+
+## schedule-devbook-check
+
+```meta
+type: feature
+related: [".devbook/domain/devbook/skills.md#check", ".devbook/domain/devbook-derived/skills.md#install", ".devbook/arc42/adr/checks-and-indexes.md"]
+```
+
+Run `devbook:check` over every adopted folder, fix what it reports in the chapters, refresh the
+committed indexes where `devbook-derived` keeps them, and land one pull request — or a
+schedule-report issue when the ledger or the stamp needs a person. The daily `devbook-check`
+trigger's target: the catalog names a schedule skill, never a foundation skill directly.
 
 ## schedule-instruction-review
 
@@ -95,6 +107,17 @@ related: [".devbook/domain/delivery-schedule/domain.md#entry-point"]
 
 Check dependencies, secrets, CI hardening, and code, and open one issue per new high finding. New
 is the operative word: a run updates what its previous run left open rather than re-reporting it.
+
+## schedule-tech-update
+
+```meta
+type: feature
+related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/arc42/adr/checks-and-indexes.md"]
+```
+
+Run `devbook:tech-update` over every `tech/` layer and land what moved as one draft pull
+request, never a merge — a rating is a person's decision. The weekly `tech-update` trigger's
+target.
 
 ## schedule-week-starter
 

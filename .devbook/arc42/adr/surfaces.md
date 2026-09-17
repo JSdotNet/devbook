@@ -1,7 +1,7 @@
 # Surfaces
 
 ```meta
-date: 2026-09-09
+date: 2026-09-17
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
 ```
 
@@ -11,8 +11,8 @@ with no surface bound produces its file artifacts and continues. `delivery` ship
 plugins implement the contract and none depends on the engine or on each other:
 `delivery-surface-dashboard` answers every group, `delivery-surface-collector` lifecycle and
 export, `delivery-surface-canvas` render, as Copilot canvas actions with no server. Each
-exposes exactly the contract's tool names. `devbook`'s own graph canvas is not a surface and
-ships inside `devbook`.
+exposes exactly the contract's tool names. `devbook`'s graph canvas is not a surface; it
+ships in `devbook-derived` and loads the checker's modules from their materialized path.
 
 ## Why
 
@@ -53,11 +53,13 @@ the contract something to resolve, not a second resolution rule. A fourth lifecy
 unreachable until someone adds its two spellings, and that line is part of the new surface's
 release. It closes when a host allows a prefix match in `tools`.
 
-**`devbook-graph` stays in `devbook`.** It imports `graph.mjs`, `outline.mjs`, and
-`metadata.mjs` from `tools/devbook-meta/` by relative path — deliberately, so the rendered
-graph and the committed index are the same code — and those paths are what a lift breaks. It
-answers no operation group and substitutes for nothing, so it is not a surface and its name
-carries no surface word. Lift it once the generator modules have a published shape to import.
+**`devbook-graph` is not a surface, and it left `devbook`.** It answers no operation group
+and substitutes for nothing, so its name carries no surface word. It imported `graph.mjs`,
+`outline.mjs`, and `metadata.mjs` by relative path — deliberately, so the rendered graph and
+the committed index are the same code — and those imports kept it inside `devbook` until the
+modules had a shape a separate plugin could reach. That shape is the materialized path
+`.devbook/_tools/devbook-meta/`, loaded at runtime, so the canvas now ships with the committed
+index in `devbook-derived` and `devbook` ships no surface at all.
 
 ## Rejected
 
@@ -76,6 +78,7 @@ carries no surface word. Lift it once the generator modules have a published sha
 
 | Date | Change |
 | --- | --- |
+| 2026-09-17 | `devbook-graph` moves to `devbook-derived`, loading devbook's modules from the materialized path. |
 | 2026-09-09 | The runner's allowlist names the two shipped servers' four ids, the one sanctioned exception to matching by operation name. |
 | 2026-09-05 | `delivery-surface-canvas` drops its MCP half; the render group has one implementation per host. |
 | 2026-09-03 | Each surface exposes exactly the contract's tool names; `workItem` and `approval.state` in the run schema. |

@@ -1,6 +1,6 @@
 ---
 name: flow-update-packages
-description: 'Run dependency and package update workflows — routine NuGet, npm, SDK, and tool updates, and framework upgrades such as a .NET Aspire version move that carry a baseline gate and new-feature adoption. Scans the graph, plans by risk with security first, updates in reversible batches, and validates runtime behavior with recorded results. Use for: update the packages, move us to the latest Aspire, bump the SDK. DO NOT USE FOR: the maintenance policy behind an update (flow-spec, as a decision record) or the .tech chapter that records the outcome (flow-spec).'
+description: 'Run dependency and package update workflows — routine NuGet, npm, SDK, and tool updates, and framework upgrades such as a .NET Aspire version move that carry a baseline gate and new-feature adoption. Scans the graph, plans by risk with security first, updates in reversible batches, and validates runtime behavior with recorded results. Use for: update the packages, move us to the latest Aspire, bump the SDK. DO NOT USE FOR: the maintenance policy behind an update (flow-spec, as a decision record) or the tech/ chapter that records the outcome (flow-spec).'
 ---
 
 # Flow: Update Packages

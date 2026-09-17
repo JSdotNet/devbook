@@ -108,7 +108,7 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Context Loading | — | servers bound to `spec` |
-| Drafting | the role the folder maps to — `architecture` for `.arc42/` and `.tech/`, `domain`, `ux` for `.design/`, `docs` for `.ai/` | servers bound to `spec` *(design source for `.design/`)* |
+| Drafting | the role the folder maps to — `architecture` for `arc42/` and `tech/`, `domain`, `ux` for `design/`, `docs` for `ai/` | servers bound to `spec` *(design source for `design/`)* |
 | Check & Review | the same role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |

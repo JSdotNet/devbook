@@ -57,7 +57,7 @@ graph LR
 
 ## How to Read It
 
-`status` reuses the `.tech` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
+`status` reuses the `tech/` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
 here has been made. One is `trial` because everything it needs has landed and nothing has used
 it. Three are `candidate` because the honest first use is somewhere else, or has not happened.

@@ -16,16 +16,17 @@
 // stands, and drops back to its ordinary rung the moment the content changes —
 // an approval is of what was read, not of the heading.
 /**
- * The five devbook folders, by kind. A repository adopts any subset and lays
- * them out one of two ways: flat, as five root-level dot-folders (`.arc42`), or
- * nested, under one `.devbook/` parent whose subfolders drop the dot
- * (`.devbook/arc42`). A repository picks one and never mixes them.
+ * The five devbook folders, by kind. A repository adopts any subset, and every
+ * one of them lives under the one `.devbook/` parent: `.devbook/arc42`,
+ * `.devbook/domain`, and so on. The parent already carries the "hidden support
+ * directory" signal, so the subfolders drop the dot. There is no other layout
+ * (record 80); five root-level dot-folders are reported, never indexed.
  */
 export const DEVBOOK_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
 
-/** The parent folder of the nested layout, and the prefix that identifies it. */
-export const NESTED_ROOT = ".devbook";
-export const NESTED_PREFIX = `${NESTED_ROOT}/`;
+/** The one parent folder, and the prefix that identifies a path inside it. */
+export const DEVBOOK_ROOT = ".devbook";
+export const DEVBOOK_PREFIX = `${DEVBOOK_ROOT}/`;
 
 const APPROVED_STATUS = "approved";
 
@@ -44,6 +45,17 @@ const STATUS_BY_FOLDER = {
 // decision travels with the content and lands in the git history, rather than
 // living in flow configuration or in someone's memory.
 const APPROVAL_FIELDS = ["approved-by", "approved-at"];
+
+// Where a chapter's review stands, who owes the next move, and since when. The
+// triad mirrors the approval triad on purpose — a chapter reads the same way on
+// its way to a decision as it does past one — and, like it, is devbook's
+// vocabulary written by the review workflow layered on top (record 77). Each
+// state names who is waiting: `requested` the reviewer, `changes-requested`
+// the author, `cleared` nobody. The notes in the chapter body are the evidence
+// a state stands on, so the two are checked against each other below.
+const REVIEW_FIELD = "review";
+const REVIEW_STATES = ["requested", "changes-requested", "cleared"];
+const REVIEW_FIELDS = [REVIEW_FIELD, "reviewer", "review-at"];
 
 // The value a folder's content settles on, which is therefore *omitted* rather
 // than written. A folder listed here makes `status` optional: absence means the
@@ -94,24 +106,28 @@ const TYPE_BY_FOLDER = {
             "domain-event",
             "feature",
             "sub-feature",
-            // `stakeholders.md`: who operates this context, and who it acts
-            // toward. An actor is the EventStorming and Domain Storytelling
-            // actor — the role that issues a command — and never a persona,
-            // which is a UX archetype and belongs in `.design`.
-            "actor",
-            "party",
+            // `actors.md`: who works with this context. An actor is the
+            // EventStorming and Domain Storytelling actor — the one that issues
+            // a command — and never a persona, which is a UX archetype and
+            // belongs in `.design`. A `user` operates the context and holds a
+            // right, an `organisation` is acted toward without operating it,
+            // and a `technical` actor is a system or timer that triggers a use
+            // case from outside — named for what it triggers, its contract
+            // staying in `dependencies.md`.
+            "user",
+            "organisation",
+            "technical",
             "term",
         ],
         file: [
             "context-map",
             "domain",
-            "stakeholders",
+            "actors",
             "features",
             "skills",
             "model",
             "flow",
             "dependencies",
-            "naming",
         ],
     },
     tech: {
@@ -153,12 +169,13 @@ const TYPE_BY_FOLDER = {
 // generator sync, but it lints as a warning and is not documented any more.
 const LEGACY_TYPE_FIELD_BY_FOLDER = { tech: "kind" };
 
-// The extension namespace. A plugin layered on top of devbook — devbook-
-// collaboration is the first — persists its own state on a chapter under `ext`,
-// and this schema deliberately says nothing about what it holds: the generator
-// carries every `ext` key through untouched, validates none of it, and produces
-// no edges from it. That is the whole point. Without it, every extension would
-// force a devbook schema bump and a migration in every consuming repository.
+// The extension namespace. A plugin layered on top of devbook may persist its
+// own state on a chapter under `ext`, and this schema deliberately says nothing
+// about what it holds: the generator carries every `ext` key through untouched,
+// validates none of it, and produces no edges from it. That is the whole point.
+// Without it, every extension would force a devbook schema bump and a migration
+// in every consuming repository. Reserved and currently unused: the first
+// extension's state became schema fields instead (record 77).
 //
 // The block grammar is flat single-line scalars, so the namespace is spelled
 // with dotted keys — `ext.<plugin>.<key>: <value>` — rather than by nesting.
@@ -184,6 +201,7 @@ const COMMON_OPTIONAL_FIELDS = [
     "date",
     "tests",
     ...APPROVAL_FIELDS,
+    ...REVIEW_FIELDS,
 ];
 
 // `roadmap` entries are lowercase kebab-case tag slugs, not chapter references.
@@ -289,7 +307,7 @@ const REMOVED_FIELDS = {
 };
 
 const FOLDER_EXTRA_FIELDS = {
-    domain: ["depends-on", "aliases", "feature-flag"],
+    domain: ["depends-on", "aliases", "feature-flag", "role"],
     arc42: [],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
@@ -299,7 +317,7 @@ const FOLDER_EXTRA_FIELDS = {
 // The folder-specific fields that describe a chapter and never a document, per
 // devbook-chapter-metadata.md: "a file's overall relationships are expressed
 // through `related` only". A file has no dependencies, no version, no feature
-// flag and no aliases — the chapters inside it do.
+// flag, no aliases and no role — the chapters inside it do.
 //
 // `stage` is deliberately absent: a `.ai` file *does* have a stage, and its own
 // rule governs where it may say so.
@@ -307,6 +325,7 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "depends-on",
     "aliases",
     "feature-flag",
+    "role",
     "version",
     "alternatives",
 ];
@@ -320,19 +339,22 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
 // visibly wrong: `depends-on` on an aggregate generates a real graph edge the
 // model never claimed.
 //
-// A field a folder rule scopes only by *convention* stays out of this table.
-// `.domain`'s `aliases` is the case in point: the rule gives it to `term`
-// chapters, but a term that is already an aggregate, service, event, or field
-// carries its aliases on that chapter rather than earning a duplicate `term`
-// chapter beside it, so the field is legal on any chapter and only the
-// file-level prohibition above applies.
+// A field a folder rule gives to every chapter stays out of this table.
+// `.domain`'s `aliases` is the case in point: a modelled concept carries its
+// surface names on its own chapter and a `term` chapter exists only for a word
+// that has no chapter to carry them, so the field is legal on any chapter and
+// only the file-level prohibition above applies.
 const FIELD_TYPE_SCOPE = {
     // `.domain`: delivery order and the feature flag both belong to a
     // capability. `domain.md` chapters describe standing structure and relate
     // through `model.md`, `dependencies.md`, and `related` instead.
+    // `role` is the authorization role an actor holds: the fourth beat of a
+    // `user` chapter made addressable. An `organisation` or `technical` actor
+    // rarely has one but may; nothing outside `actors.md` does.
     domain: {
         "depends-on": ["feature", "sub-feature"],
         "feature-flag": ["feature", "sub-feature"],
+        role: ["user", "organisation", "technical"],
     },
     arc42: {},
     tech: {},
@@ -343,18 +365,12 @@ const FIELD_TYPE_SCOPE = {
 /** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
     const normalized = String(relPath).replace(/\\/g, "/");
-    // Both layouts resolve to the same five kinds. Flat is five root-level
-    // dot-folders; nested is one `.devbook/` parent whose subfolders drop the
-    // dot, because the parent already carries the "hidden support directory"
-    // signal for everything inside it. Nothing else in the schema knows which
-    // layout a repository picked — an address is just a repository path.
-    const nested = normalized.startsWith(NESTED_PREFIX)
-        ? normalized.slice(NESTED_PREFIX.length)
-        : null;
-    const subject = nested ?? normalized;
-    const prefix = nested === null ? "." : "";
+    // An address is just a repository path, and every devbook path starts with
+    // the one parent. Nothing else in the schema knows about the layout.
+    if (!normalized.startsWith(DEVBOOK_PREFIX)) return null;
+    const subject = normalized.slice(DEVBOOK_PREFIX.length);
     for (const name of DEVBOOK_FOLDER_NAMES) {
-        if (subject.startsWith(`${prefix}${name}/`)) return name;
+        if (subject.startsWith(`${name}/`)) return name;
     }
     return null;
 }
@@ -980,7 +996,7 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
         if (meta[field] == null || allowed.includes(declared)) continue;
         issues.push({
             severity: "error",
-            message: `has \`${field}\` on a chapter of type "${declared}" — .${folder} scopes the field to ${allowed.map((value) => `\`${value}\``).join(" and ")} chapters. See devbook-${folder}.md.`,
+            message: `has \`${field}\` on a chapter of type "${declared}" — .${folder} scopes the field to ${allowed.map((value) => `\`${value}\``).join(", ")} chapters. See devbook-${folder}.md.`,
         });
     }
 
@@ -1034,6 +1050,78 @@ export function approvalIssues(meta) {
                 });
             }
         }
+    }
+
+    return issues;
+}
+
+/**
+ * Lint the review record: `review`, `reviewer`, and `review-at`, written
+ * together or not at all, against the open notes on the chapter.
+ *
+ * `openNotes` is how many unresolved annotation fences the chapter carries; the
+ * fences are the evidence a verdict stands on, so `changes-requested` over none
+ * and `cleared` over one are both a verdict written without its findings.
+ * Review state never survives the decision: an approved chapter carries the
+ * decision, not the road to it.
+ */
+export function reviewIssues(meta, openNotes = 0) {
+    if (!meta) return [];
+    const issues = [];
+    const present = REVIEW_FIELDS.filter((field) => meta[field] != null);
+    if (!present.length) return issues;
+
+    for (const field of present) {
+        const raw = meta[field];
+        if (Array.isArray(raw) || String(raw).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${field}\` set to an empty or list value — a review names one state, one reviewer, and one day.`,
+            });
+        }
+    }
+
+    const missing = REVIEW_FIELDS.filter((field) => meta[field] == null);
+    if (missing.length) {
+        issues.push({
+            severity: "error",
+            message: `carries ${present.map((f) => `\`${f}\``).join(", ")} without ${missing.map((f) => `\`${f}\``).join(", ")} — the three are written together or not at all.`,
+        });
+    }
+
+    const state = meta[REVIEW_FIELD];
+    if (state != null && !REVIEW_STATES.includes(String(state))) {
+        issues.push({
+            severity: "error",
+            message: `has \`review\` "${state}" — one of ${REVIEW_STATES.map((s) => `\`${s}\``).join(", ")}.`,
+        });
+    }
+
+    if (meta["review-at"] != null && !DATE_PATTERN.test(String(meta["review-at"]))) {
+        issues.push({
+            severity: "error",
+            message: `has \`review-at\` "${meta["review-at"]}" — a review date is a single calendar day in \`YYYY-MM-DD\` form.`,
+        });
+    }
+
+    if (meta.status === APPROVED_STATUS) {
+        issues.push({
+            severity: "error",
+            message: `states \`status: ${APPROVED_STATUS}\` while carrying review state — approval clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
+        });
+    }
+
+    if (state === "changes-requested" && openNotes === 0) {
+        issues.push({
+            severity: "error",
+            message: `states \`review: changes-requested\` with no open annotation — a verdict without its findings. Write the objections as fences, or set \`cleared\`.`,
+        });
+    }
+    if (state === "cleared" && openNotes > 0) {
+        issues.push({
+            severity: "error",
+            message: `states \`review: cleared\` over ${openNotes} open annotation${openNotes === 1 ? "" : "s"} — cleared means no open note remains. Resolve them, or set \`changes-requested\`.`,
+        });
     }
 
     return issues;
@@ -1108,12 +1196,16 @@ export function validateDocument(relPath, markdown) {
     // question and never its parent's — the same rule the annotation grammar
     // states, applied here rather than re-derived.
     const openQuestions = new Map();
+    // How many open notes each chapter carries, keyed the same way, so the
+    // review state can be held to the findings it claims to stand on.
+    const openNotes = new Map();
     for (const note of parseAnnotations(markdown)) {
         const fields = note.fields ?? {};
         const kindOf = fields.kind ?? "comment";
         const statusOf = fields.status ?? "open";
-        if (kindOf !== "question" || statusOf !== "open") continue;
-        if (!note.chapter || openQuestions.has(note.chapter.line)) continue;
+        if (statusOf !== "open" || !note.chapter) continue;
+        openNotes.set(note.chapter.line, (openNotes.get(note.chapter.line) ?? 0) + 1);
+        if (kindOf !== "question" || openQuestions.has(note.chapter.line)) continue;
         openQuestions.set(note.chapter.line, note.line);
     }
 
@@ -1261,6 +1353,12 @@ export function validateDocument(relPath, markdown) {
         // The approval gate writes into the chapter, so the chapter is where
         // the record is checked.
         for (const issue of approvalIssues(chapter.meta)) {
+            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
+        // The review workflow writes into the chapter too, and its state is
+        // only consistent against the notes beside it.
+        for (const issue of reviewIssues(chapter.meta, openNotes.get(chapter.line) ?? 0)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 

@@ -136,12 +136,12 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
-`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block. A
-repository adopts any subset, in one of two layouts, and never mixes them.
+`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block, at
+`.devbook/<name>/`. A repository adopts any subset; there is one layout.
 
 The convention's own name is the only noun for these; there is no common-noun synonym, because
 a convention that has a name does not need one — *knowledge* was that synonym until
@@ -315,14 +315,14 @@ nothing else, so its two operations arrive as canvas actions rather than namespa
 which is why the contract matches operation names and never a transport. See
 [the decision](../../arc42/adr/surfaces.md).
 
-The fourth, `devbook-graph`, renders the reference graph `_meta/graph.json` produces, and opens
-a single chapter beside its parsed `meta` block in a second canvas, `devbook-chapter`. It
-answers no operation group and substitutes for nothing, which is why it takes devbook's stem
-and the thing it draws rather than the surface word, per the [naming rule](#flow-skill).
-It is packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
-generator modules by relative path — no host resolves the two together, so this is a source
-coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/adr/surfaces.md).
+The fourth, `devbook-graph`, ships in `devbook-derived` and loads devbook's checker modules
+from their materialized path at runtime; it renders the reference graph `_meta/graph.json` produces, and opens a single chapter
+beside its parsed `meta` block in a second canvas, `devbook-chapter`. It answers no operation
+group and substitutes for nothing, which is why it takes devbook's stem and the thing it
+draws rather than the surface word, per the [naming rule](#flow-skill).
+It is packaged in `devbook-derived`, which declares `devbook`, and reaches devbook's modules
+through the path devbook's install materializes rather than through a relative import — the
+shape [the surfaces record](../../arc42/adr/surfaces.md) waited for.
 
 ### Host Slot
 
@@ -459,9 +459,9 @@ plugins it may name. A lower layer never names a higher one.
 | Layer | Depends on | Example |
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-collaboration` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
-| L3 surface | Neither direction. Reads generated files | `devbook-graph` |
+| L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
 sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
@@ -486,4 +486,7 @@ namespace two plugins interpret is no longer opaque.
 
 An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
 render as they always did, and mean nothing to anyone. That is what makes the seam safe to
-reserve before anything needs it.
+reserve before anything needs it. It is reserved and unused: the first extension to store
+state through it, `devbook-collaboration`, moved that state into devbook's schema instead,
+because the fields mirrored ones devbook already owned
+([the annotations record](../../arc42/adr/annotations.md)).

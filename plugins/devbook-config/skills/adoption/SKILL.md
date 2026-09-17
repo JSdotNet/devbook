@@ -1,6 +1,6 @@
 ---
 name: adoption
-description: 'Check whether a repository''s .ai adoption record still describes the stack it actually has — which plugins are installed and enabled, which flows and schedules the copies on disk ship, and what the stack config wires — then hand every edit to flow-spec. Reports drift; never writes a chapter and never rates one. Use when: the adoption record has gone stale after an upgrade, a plugin was added or removed, or you are reviewing how this repository works with AI. Triggers on: "refresh the adoption record", "is my .ai still accurate", "update .devbook/ai", "which plugins are missing from the adoption map", "does the ai folder match what is installed".'
+description: 'Check whether a repository''s ai/ adoption record still describes the stack it actually has — which plugins are installed and enabled, which flows and schedules the copies on disk ship, and what the stack config wires — then hand every edit to flow-spec. Reports drift; never writes a chapter and never rates one. Use when: the adoption record has gone stale after an upgrade, a plugin was added or removed, or you are reviewing how this repository works with AI. Triggers on: "refresh the adoption record", "is my ai/ still accurate", "update .devbook/ai", "which plugins are missing from the adoption map", "does the ai folder match what is installed".'
 ---
 
 # devbook-config adoption
@@ -9,7 +9,7 @@ Open the reply with `devbook-config@<version>`, `version` read from `../../.clau
 
 ## Purpose
 
-Say whether `.ai` still describes the stack this repository has, and hand what moved to the
+Say whether `ai/` still describes the stack this repository has, and hand what moved to the
 flow that owns the write. Only half the folder is derivable: what is installed, enabled, and
 wired is a fact with a file behind it; whether anyone actually works that way is not. This
 skill reports the first half and never asserts the second.
@@ -40,8 +40,8 @@ skill reports the first half and never asserts the second.
    in the report and are not inferred from one. Show the drift and ask.
 
 6. **Hand off the write.** `delivery:flow-spec` carries every edit under the repository's own
-   `.ai` instruction files. A usage whose `depends-on` names an unregistered technology goes
-   through the same flow for `.tech` first, or the reference will not resolve.
+   `ai/` instruction files. A usage whose `depends-on` names an unregistered technology goes
+   through the same flow for `tech/` first, or the reference will not resolve.
 
 7. **Report honestly.** What moved, what was handed off, and what the report could not see.
 
@@ -51,4 +51,4 @@ skill reports the first half and never asserts the second.
   `flow-spec`'s, and a chapter written here bypasses the folder's own check.
 - Do not propose promoting a `status`. The ladder rates whether people work this way; an
   install proves only that they could. Demotion is equally a person's call.
-- Do not register a technology in `.tech`, and do not read or regenerate `_meta/`.
+- Do not register a technology in `tech/`, and do not read or regenerate `_meta/`.

@@ -2,10 +2,19 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+
+**Resolved on 2026-09-17 by [the checks and indexes record](../adr/checks-and-indexes.md),
+by the first option below exactly as written** — after [the checks and indexes record](../adr/checks-and-indexes.md)
+had taken it a folder wider for one day. `devbook` keeps `tools/devbook-meta/`,
+`devbook-meta.yml`, and the `--check` gate; `devbook-derived` holds the script, the nightly
+and drift workflows, the rule, and its own install and stamp, and invokes `build.mjs --write`
+at the path devbook materializes it to. The third option was taken with it: every devbook
+call site is `--check`-only, and `build.mjs` writes nothing unless asked. The record below is
+kept as written.
 
 ## The debt
 

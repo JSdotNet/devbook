@@ -6,8 +6,9 @@ related: [".devbook/domain/context-map.md#devbook"]
 ```
 
 > Eight skills: five that own the convention in a repository, and three that cross the
-> boundary between a chapter and the code implementing it, each over five chapter kinds. None of them is a flow — this context
-> ships the shape and the check, and the procedure for carrying a change belongs to the engine.
+> boundary between a chapter and the code implementing it, each over five chapter kinds. None
+> of them is a flow — this context ships the shape and the check, and the procedure for
+> carrying a change belongs to the engine.
 
 ## install
 
@@ -33,7 +34,7 @@ A materialized file that changed underneath is reported and left, never overwrit
 a marker-fenced section makes the next reconcile skip the section, which is what the markers exist
 for.
 
-## devbook-check
+## check
 
 ```meta
 type: feature
@@ -41,28 +42,30 @@ related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/domain/devbo
 ```
 
 The check-only half of the same protocol. It asks the same three questions — does the Markdown
-satisfy the schema, is the migration ledger current, does the stamp still describe what is on disk
-— then repairs what it can prove and hands every other write back.
+satisfy the schema, is the migration ledger current, does the stamp still describe what is on
+disk — then repairs what it can prove and hands every other write back. The daily
+`devbook-check` schedule reaches it through `delivery-schedule`'s own wrapper.
 
-Two writers for one file is how a reconcile stops being idempotent, which is why this half is
+Two writers for one file is how a reconcile stops being idempotent, which is why this skill is
 deliberately narrow.
 
-## devbook-tech-update
+## tech-update
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/skills.md#flow-spec"]
+related: [".devbook/domain/devbook/domain.md#tech-inventory", ".devbook/domain/delivery/skills.md#flow-spec"]
 ```
 
-Refresh a repository's technology graph from deterministic package inventories, then analyse the
-repository for what appears in no package manifest — runtimes, services, platforms, protocols,
-tooling — and hand the authoring to the folder's own write path.
+Refresh a repository's technology graph from the deterministic package inventories, then analyse the repository for what appears in no package manifest — runtimes,
+services, platforms, protocols, tooling — and hand the authoring to the folder's own write
+path. It runs the check and never the writer; the weekly `tech-update` schedule reaches it
+through `delivery-schedule`'s own wrapper.
 
 ## prose-check
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/skills.md#devbook-check", ".devbook/domain/devbook/domain.md#chapter"]
+related: [".devbook/domain/devbook/skills.md#check", ".devbook/domain/devbook/domain.md#chapter"]
 ```
 
 The prose half beside `devbook-check`'s structural half: read every adopted folder and report
@@ -75,7 +78,7 @@ it was taken: an edit is a person's, through the folder's flow.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
+related: [".devbook/domain/devbook/domain.md#fence-writer", ".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
 ```
 
 Delete every resolved annotation fence in one chapter and nothing else — the last step of the

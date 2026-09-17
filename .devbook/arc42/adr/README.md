@@ -26,22 +26,23 @@ whether the document can end in an answer; if it ends in two options and no pick
 | [Hosts](hosts.md) | One authored copy per asset, a wrapper per host where filenames differ, nothing names a host's own file or capability, a checker over hand-authored files. | 2026-09-09 |
 | [Configuration](configuration.md) | One committed `.devbook/config.json` with the engine's four keys and every component's entry; a three-layer overlay that can only tighten; runtime facts in the `start` skill. | 2026-09-17 |
 | [Install](install.md) | A plugin reaches a repository only through its `install`, one way, hash-tracked; only `devbook` carries a ledger; this repository stamps itself and materializes nothing. | 2026-09-15 |
-| [Checks and Indexes](checks-and-indexes.md) | Three checks on every pull request, the validator on the `--check` path, and the `_meta/` refresh owned by the schedule alone. | 2026-09-09 |
-| [Chapter Schema](chapter-schema.md) | Two layouts never mixed; `approved` a rung on every ladder; three folders rest at `active`; a context describes its skills and its actors and keeps its terms in `domain.md`. | 2026-09-09 |
-| [Annotations](annotations.md) | The fence and its lifecycle are `devbook`'s and reach the five folders only; the chapter gate is the review plugin's and reads the chapter; only an open question blocks. | 2026-09-14 |
-| [Surfaces](surfaces.md) | A viewer resolved by operation name from the live tool list; the engine ships none, three plugins implement the contract, each exposing only its names. | 2026-09-09 |
+| [Checks and Indexes](checks-and-indexes.md) | Three checks on every pull request and the validator on the `--check` path, all `devbook`'s; the committed `_meta/` index, its refresh, and the canvas are `devbook-derived`'s, enabled only where the index is wanted. | 2026-09-17 |
+| [Chapter Schema](chapter-schema.md) | One layout under `.devbook/`; `approved` a rung on every ladder; three folders rest at `active`; a context describes its skills and its actors, and a term is a chapter or an alias in `domain.md`. | 2026-09-17 |
+| [Annotations](annotations.md) | The fence, its lifecycle, and the review triad are `devbook`'s schema and reach the five folders only; the chapter gate is the review plugin's and reads the chapter; only an open question blocks. | 2026-09-17 |
+| [Surfaces](surfaces.md) | A viewer resolved by operation name from the live tool list; the engine ships none, three plugins implement the contract, each exposing only its names; the graph canvas is not one and lives with the committed index. | 2026-09-17 |
 | [Hooks](hooks.md) | A session-start hook speaks only where the repository adopted the plugin; a tool matcher names its tools. | 2026-09-07 |
 | [Flow Engine](flow-engine.md) | Four flows named for what changes over a closed set of eleven points; every outside party is a binding; the runner holds every gate and prepends Update Base; `verify` is the spec check. | 2026-09-15 |
-| [Plugin Boundaries](plugin-boundaries.md) | One folder per plugin, three ways to couple, a lower layer never names a higher one; fan-out, the unattended lane, and the guide are their own plugins; the specialists live elsewhere. | 2026-09-07 |
-| [Releases](releases.md) | Every plugin `1.0.0` with the earlier history collapsed; a migration ships with its change from here on; the marketplace name is a frozen per-machine key. | 2026-09-14 |
+| [Plugin Boundaries](plugin-boundaries.md) | One folder per plugin, three ways to couple, a lower layer never names a higher one; review, the committed index, fan-out, the unattended lane, and the guide are their own plugins; the specialists live elsewhere. | 2026-09-17 |
+| [Releases](releases.md) | Every plugin `1.1.0`, moved together; a migration ships with its change and lives for one major; the marketplace name is a frozen per-machine key. | 2026-09-17 |
 
 ## Where a numbered record went
 
 ```meta
 ```
 
-Until 2026-09-17 this folder held seventy-six numbered files, one per decision, and text
-elsewhere still says "record 47" where it was written against that set. Git history holds the
+Until 2026-09-17 this folder held numbered files, one per decision — eighty-four by the time
+the last one landed — and text elsewhere still says "record 47" where it was written against
+that set. Git history holds the
 files; this table says which concern each one folded into, so an old number still resolves.
 
 | Concern | Records |
@@ -49,14 +50,14 @@ files; this table says which concern each one folded into, so an old number stil
 | Hosts | 3, 4, 17, 27, 58 |
 | Configuration | 10, 11, 40, 70, 71, 72, 75 |
 | Install | 28, 37, 38, 39, 56, 61, 67, 68 |
-| Checks and Indexes | 29, 53, 57 |
-| Chapter Schema | 6, 7, 45, 48, 55 |
-| Annotations | 8, 52, 60, 62, 63 |
+| Checks and Indexes | 29, 53, 57, 78, 79, 81 |
+| Chapter Schema | 6, 7, 45, 48, 55, 80, 82, 83 |
+| Annotations | 8, 52, 60, 62, 63, 77 |
 | Surfaces | 5, 14, 15, 16, 18, 47 |
 | Hooks | 41, 42 |
 | Flow Engine | 9, 12, 13, 30, 31, 32, 46, 49, 50, 51, 54, 73, 74 |
 | Plugin Boundaries | 2, 19, 22, 23, 24, 26, 34 |
-| Releases | 1, 64, 65, 66 |
+| Releases | 1, 64, 65, 66, 84 |
 
 Thirteen were not technical choices and their reasons moved to the file that states the
 choice: 20 to `AUTHORING.md`, 21 to [chapter 1](../01-introduction-and-goals.md), 25, 33, 35,

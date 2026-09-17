@@ -10,9 +10,9 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature` |
 | File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `stakeholders.md` where the context has one; when applying, every chapter in `depends-on` and every `related` `domain.md` chapter too |
-| Write path | The `.domain` flow, per **Where the spec-side write goes** in the protocol |
-| Index scope | `--scope .domain` |
+| Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `actors.md` where the context has one; when applying, every chapter in `depends-on` and every `related` `domain.md` chapter too |
+| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
 
 ## Business language, from the user's point of view
@@ -24,7 +24,7 @@ delivers. A chapter that lists routes has captured the wrong thing; a capability
 that cannot be stated without naming a technical artifact is an implementation
 detail, not a feature.
 
-Feature chapters are the only `.domain` chapters that carry `depends-on` and
+Feature chapters are the only `domain/` chapters that carry `depends-on` and
 `feature-flag`. `feature-flag` is an **identity** link only — this chapter and
 that flag are the same capability — and never a status mapping in either
 direction: a flag at full rollout does not make a chapter `active`, and a `draft`
@@ -46,7 +46,7 @@ it has no value.
 | `feature-flag` | The flag key actually checked in code to gate the capability; several when several together deliver it | The named key existing and gating the capability — check the flag catalog and the checks in code |
 | `depends-on` | A genuine ordering constraint between features, not a code reference | Every prerequisite delivered before this one starts — check the referenced chapters' own counterparts |
 | `related` | The `domain.md` aggregates, events, and services the capability exercises | Those chapters present and correct, with their counterparts |
-| Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of an actor chapter in `stakeholders.md`, never a line in `features.md` | The role an actor chapter points at this feature with, holding the right that chapter states — check `stakeholders.md` and the repository's authorization configuration |
+| Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of a `user` chapter in `actors.md`, never a line in `features.md`; the checked name is that chapter's `role` | The `user` whose `role` matches the check and whose chapter points at this feature, holding the right that chapter states — check `actors.md` and the repository's authorization configuration |
 
 ## Capturing — `sync-specs`: run the application
 
@@ -78,7 +78,7 @@ code and tests. Never toggle a flag in an environment other people use.
 
 **Screenshots are evidence, not chapters.** They belong in the report, and where
 the repository has a convention for run artifacts, there. `features.md` stays
-prose; `.design` explicitly does not hold screenshots either.
+prose; `design/` explicitly does not hold screenshots either.
 
 From the code, trace the reachable paths and the flag and role checks gating
 them, then read the acceptance and end-to-end tests — their names are often the
@@ -87,8 +87,8 @@ scope (the scenarios covered map onto the sub-features; an untested one is
 thinly covered), flag behaviour (a scenario run with the flag on and off
 establishes what it gates), and outcomes (a test naming an endpoint is evidence
 of the path, not the feature). A role check is the actor's right: carry it into
-the same routed write as the fourth beat of that actor's chapter, and where no
-actor chapter names the role, report the missing actor — three beats a role
+the same routed write as the fourth beat and the `role` of that `user` chapter, and where no
+`user` chapter carries the role, report the missing actor — three beats a role
 check cannot supply are needed before one is written.
 
 Restate everything as what the product lets someone do, in the context's terms,
@@ -107,7 +107,7 @@ substance, since the chapter is written in business language. The invariants
 come from the `related` `domain.md` chapters, not from the feature chapter:
 quote their `### Invariants` rows with each `Enforced at`, and report `open`
 rows as decisions the feature depends on. The actor comes from
-`stakeholders.md` where the context has one — the brief carries the role and
+`actors.md` where the context has one — the brief carries the `role` and
 the right, so the build authorizes the capability rather than meeting the
 question afterwards; a right the chapter leaves open is reported like an `open`
 row, never guessed.
@@ -124,7 +124,7 @@ invariants from the `related` chapters hold.
 
 - Do not write endpoints, controllers, components, table names, routes,
   selectors, or screenshots into `features.md`.
-- Do not write an authorization rule into `features.md`, or create an actor
+- Do not write an authorization rule into `features.md`, or create a `user`
   chapter from a role check alone.
 - Do not infer `status` from a flag's maturity, or a flag's state from `status`;
   do not infer that a feature is delivered because its flag exists.
@@ -137,5 +137,5 @@ invariants from the `related` chapters hold.
   the flow was observed when it was not.
 - Do not run the feature against a shared, staging, or production environment;
   do not exercise a destructive step to document it.
-- Do not commit screenshots into `.domain/` or `.design/`.
+- Do not commit screenshots into `domain/` or `design/`.
 - Do not design the user interface, the API shape, or the screen flow in a brief.

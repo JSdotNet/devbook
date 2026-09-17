@@ -1,16 +1,21 @@
 # Checks and Indexes
 
 ```meta
-date: 2026-09-09
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md"]
+date: 2026-09-17
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Three checks gate this repository, and `.github/workflows/repo-checks.yml` runs all of them on
 every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, and rules; the
 generator's `build.mjs --check` over `.devbook/`, which runs the schema validator on every
-file; and `claude plugin validate --strict`, deliberately unpinned. The derived `_meta/`
-indexes are refreshed by the `devbook-check` schedule alone, which opens a pull request when
-they moved. A session runs `--check` and never regenerates.
+file; and `claude plugin validate --strict`, deliberately unpinned. The checker — the
+validator, the graph, the outline, the fence writer, the `check`, `annotation-sweep`, and
+`tech-update` skills — is `devbook`'s. `build.mjs` checks by default, emits the same documents
+on `--print`, and writes only on `--write`. The committed `_meta/` index and everything that
+exists to keep it fresh — the refresh script, the nightly workflow, the drift warning, the
+`devbook-derived-artifacts.md` rule, the `refresh` skill, the deny snippet — is
+`devbook-derived`'s, an L1 a repository enables only when it wants the index committed. A
+session runs `--check` and never regenerates.
 
 ## Why
 
@@ -19,12 +24,11 @@ they moved. A session runs `--check` and never regenerates.
 
 **Automation owns the refresh.** A session that could refresh will, in the same commit as its
 chapter edit, and two branches that each touched one chapter then rewrite the same JSON — a
-conflict resolvable only by running the generator again. So this repository keeps one refresh
-path and the on-demand half is absent. Prose decays across a long session, so three things
-enforce it: `.claude/settings.json` denies `Read(_meta/**)`, which blocks `Edit` and `Write`
-too; `AGENTS.md` states the rule for Copilot, which has no equivalent lever; and `AGENTS.md`
-names the schedule as the owner at the point where the check is run. The rendered section
-names this repository's real generator path and the schedule, not the materialized script.
+conflict resolvable only by running the generator again. So the on-demand half is a skill a
+person invokes on purpose, the schedule owns the rest, and three things enforce it because prose
+decays across a long session: `.claude/settings.json` denies `Read(_meta/**)`, which blocks
+`Edit` and `Write` too; `AGENTS.md` states the rule for Copilot, which has no equivalent lever;
+and the rendered section names the owner at the point where the check is run.
 
 **The hard gate runs the validator.** `validateDocument` is the only implementation of the
 per-block rules — status ladders, value shapes, unrecognized fields, a heading with no `meta`
@@ -42,15 +46,33 @@ that names a skill, while `check-assets` is repo-local and no skill runs it. The
 tracks the host's schema, which is the one thing it exists to catch; a red gate after a CLI
 release is read, not pinned around.
 
+**The committed index is optional, and the line is a flag.** Nothing in this repository read
+the `_meta/` files: the canvas calls `buildGraph` on open, the gate reads the chapter, and the
+one reader was a desktop application in another repository that could run the generator itself.
+Removing the writer altogether was tried and reversed the same day: the owner wants the index
+phased out, not now, and a checker without a generator beside it does not earn a plugin. Moving
+the whole tooling folder into `devbook-derived` was tried next and reversed the same day too —
+it left `devbook` with rules it could not check and a `check` procedure it did not own, and made
+a lower layer name a higher one's path in five places. So the split runs through one option on
+one CLI rather than through a folder: `--check` and `--print` are the convention's, `--write` is
+the derived plugin's, passed at `.devbook/_tools/devbook-meta/build.mjs`, the path devbook's
+install materializes — a higher layer naming the lower one's path, which is the ordinary
+direction. Phasing the committed index out is disabling one plugin, and a repository that never
+enables it never sees a derived file, a refresh script, or a nightly pull request, and still has
+the full check.
+
 ## Rejected
 
 ```meta
 ```
 
-- An on-demand refresh command beside the schedule, and a session regenerating after an edit.
+- A session regenerating after an edit; an on-demand refresh nobody has to ask for.
 - Keeping the graph's per-block lint loops beside the validator.
 - Running the checks from the schedule, or extending the catalog with a skill for one consumer.
 - Pinning the CLI in the workflow.
+- Computing the documents and never committing them — the reader that cannot run Node still
+  needs a file, and `--print` survives from the attempt.
+- The checker and the generator in `devbook-derived` together, with `devbook` naming its path.
 
 The nine Node suites under `plugins/*/tools/` are still run by nobody; adding them is a
 separate call.
@@ -62,6 +84,9 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-17 | The checker, fence writer, and three skills return to `devbook`; `build.mjs` writes only on `--write`; `devbook-derived` is the committed index alone, with the canvas and a `refresh` skill. |
+| 2026-09-17 | The whole `tools/devbook-meta/` folder and the canvas move to a new `devbook-derived` plugin — superseded the same day. |
+| 2026-09-17 | `devbook-meta` writes no file; `--print` emits the documents — superseded the same day, `--print` kept. |
 | 2026-09-09 | `repo-checks.yml` runs the three checks on every pull request and push to `main`; the validator is unpinned. |
 | 2026-09-09 | `buildGraph` runs `validateDocument` per file; the graph's own lint loops removed. |
 | 2026-09-07 | The `_meta/` refresh is the schedule's alone; a session runs `--check` and `.claude/settings.json` denies the folder. |

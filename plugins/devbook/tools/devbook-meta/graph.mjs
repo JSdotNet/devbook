@@ -23,28 +23,28 @@ import {
     parseAnnotations,
     resolveAnnotation,
     DEVBOOK_FOLDER_NAMES,
-    NESTED_ROOT,
+    DEVBOOK_ROOT,
 } from "./metadata.mjs";
 
-/** Every devbook folder this convention recognizes. A repository adopts any subset. */
-export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `.${name}`);
-
 /**
- * The same five in the nested layout, under one `.devbook/` parent with the
- * leading dot dropped. Both spellings are just repository paths — every scope,
- * output path, and reference below works off the path it is given, so nothing
- * downstream of discovery knows which layout it is looking at.
+ * Every devbook folder this convention recognizes, as the repository path it
+ * lives at: `.devbook/arc42`, `.devbook/domain`, and so on. A repository adopts
+ * any subset. A scope is one of these, or the repository rollup.
  */
-export const NESTED_DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map(
-    (name) => `${NESTED_ROOT}/${name}`
-);
+export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `${DEVBOOK_ROOT}/${name}`);
 
-export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
+export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // The repo-visible contract: one number covering the metadata schema a
 // repository authors and the derived artifacts a consumer reads. It moves only
 // when something repo-visible changes shape, which is why a plugin release
 // usually leaves it alone — and why the migration ledger keys off it.
 //
+// Version 10 removes `naming` from the `domain/` file types and with it the
+// optional `naming.md`: a term that is a chapter carries its `aliases` on that
+// chapter, and the rest are `term` chapters under `domain.md`'s
+// `## Ubiquitous Language` grouping. A repository still carrying the file
+// stops validating, so `migrations/010-terms-live-in-domain-md/` folds it in.
+// Versions 8 and 9 were shipped by pre-1.0.0 migrations that no longer exist.
 // Version 7 is additive over 6: the nested `.devbook/` layout is recognized
 // alongside the flat dot-folders, and `bounded-context` joins the `.domain`
 // chapter types so a context-map section can be addressed. Nothing that
@@ -59,7 +59,16 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 9;
+export const CONTRACT_VERSION = 10;
+
+// The oldest contract a reconcile still carries forward. A migration lives
+// for the major version it ships in: a major release raises this to the
+// contract the previous major last reached and drops every `migrations/`
+// folder at or below it. A stamp below the floor is refused in phase 1 of
+// the reconcile — upgrade through the previous major's last release first —
+// so a folder that is gone can never be a hole in a ledger. 9 is where 1.0.0
+// shipped, and nothing published sits below it.
+export const MINIMUM_CONTRACT_VERSION = 9;
 
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those
@@ -96,7 +105,7 @@ export function generatorPath(repoRoot) {
 
 // Metadata fields that hold `<path>` / `<path>#<slug>` references, and the edge
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
-// `feature-flag`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
+// `feature-flag`, `role`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
 const REFERENCE_FIELDS = {
     "depends-on": "depends-on",
     related: "related",
@@ -122,8 +131,9 @@ const ATTRIBUTE_FIELDS = [
 //
 // `tests` is here rather than in REFERENCE_FIELDS because a test identifier
 // names something in a test project, not a chapter, so it produces no edge — the
-// same reason `feature-flag`, `roadmap`, and `.ai`'s `stage` stay attributes.
-const LIST_ATTRIBUTE_FIELDS = ["feature-flag", "roadmap", "stage", "tests"];
+// same reason `feature-flag`, `role`, `roadmap`, and `.ai`'s `stage` stay
+// attributes — a `role` names something in the authorization configuration.
+const LIST_ATTRIBUTE_FIELDS = ["feature-flag", "role", "roadmap", "stage", "tests"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.
@@ -222,20 +232,19 @@ export async function buildGraph(repoRoot, folders = null) {
     const problems = [];
     // Every heading anchor in the corpus, including structural headings with no
     // `meta` block. Those are still legal reference targets — e.g. a .domain
-    // naming term pointing at a Value Object sub-chapter covered by its parent
+    // term pointing at a Value Object sub-chapter covered by its parent
     // aggregate's block — so they are materialized on demand.
     const headingIndex = new Map();
 
     const layout = folders ? null : await discoverLayout(repoRoot);
     const scanned = folders ?? layout.folders;
-    if (layout?.mixed) {
+    for (const stray of layout?.stray ?? []) {
         problems.push({
             severity: "error",
             message:
-                `Both layouts are present: ${layout.flat.join(", ")} beside ` +
-                `${layout.nested.join(", ")}. A repository picks one and never mixes them. ` +
-                `Both are indexed here so nothing is invisible, but addresses will not agree ` +
-                `until one is moved.`,
+                `${stray}/ sits at the repository root. Only the \`${DEVBOOK_ROOT}/\` layout is ` +
+                `supported: move it to ${DEVBOOK_ROOT}/${stray.slice(1)}/ and repoint every reference. ` +
+                `It is not indexed here.`,
         });
     }
 
@@ -527,7 +536,22 @@ export async function buildGraphDocument(
 }
 
 /** Every scope this generator knows about: the repo-wide rollup plus one per folder. */
-export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS, ...NESTED_DEVBOOK_FOLDERS];
+export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS];
+
+/**
+ * A scope as a caller may spell it — `tech`, `.tech`, `.devbook/tech`, or `.`
+ * — resolved to the one spelling the generator uses, or null when it names no
+ * scope. The short forms exist because a folder is called `.tech` in every
+ * rule and every conversation, and `--scope .tech` should keep meaning it.
+ */
+export function resolveScope(value) {
+    if (value == null || value === "") return null;
+    const normalized = String(value).replace(/\\/g, "/").replace(/\/+$/, "");
+    if (SCOPES.includes(normalized)) return normalized;
+    const name = normalized.startsWith(".") ? normalized.slice(1) : normalized;
+    const full = `${DEVBOOK_ROOT}/${name}`;
+    return SCOPES.includes(full) ? full : null;
+}
 
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
@@ -540,34 +564,24 @@ export async function discoverScopes(repoRoot) {
 }
 
 /**
- * Which devbook folders this repository actually has, and in which layout.
+ * Which devbook folders this repository actually has.
  *
- * `folders` holds real repository paths, so a caller never has to know whether
- * it is looking at `.tech` or `.devbook/tech`. Both are probed because a
- * repository picks one layout and never mixes them — and `mixed` is how the
- * caller learns that this one did, rather than the generator quietly indexing
- * half a corpus.
+ * `folders` holds the real repository paths under `.devbook/`. `stray` lists
+ * any of the five spelled as a root-level dot-folder — the layout this
+ * convention no longer supports (record 80). A stray folder is reported by the
+ * graph build and never indexed, so a repository that has not moved yet learns
+ * it from an error rather than from a quiet half-corpus.
  */
 export async function discoverLayout(repoRoot) {
-    const flat = [];
-    const nested = [];
+    const folders = [];
+    const stray = [];
     for (const name of DEVBOOK_FOLDER_NAMES) {
-        if (await isDirectory(path.join(repoRoot, `.${name}`))) flat.push(`.${name}`);
-        if (await isDirectory(path.join(repoRoot, NESTED_ROOT, name))) {
-            nested.push(`${NESTED_ROOT}/${name}`);
+        if (await isDirectory(path.join(repoRoot, DEVBOOK_ROOT, name))) {
+            folders.push(`${DEVBOOK_ROOT}/${name}`);
         }
+        if (await isDirectory(path.join(repoRoot, `.${name}`))) stray.push(`.${name}`);
     }
-    const mixed = flat.length > 0 && nested.length > 0;
-    return {
-        flat,
-        nested,
-        mixed,
-        // Both are indexed even when mixed, so nothing becomes invisible while
-        // the repository is being straightened out. `mixed` is what makes it an
-        // error rather than a silent half-corpus.
-        folders: [...flat, ...nested],
-        layout: mixed ? "mixed" : nested.length ? "nested" : flat.length ? "flat" : "none",
-    };
+    return { folders, stray };
 }
 
 async function isDirectory(absolutePath) {
@@ -578,7 +592,10 @@ async function isDirectory(absolutePath) {
     }
 }
 
-/** Repo-relative output path for a scope, per the derived-index convention. */
+/**
+ * Repo-relative output path for a scope, per the derived-index convention: a
+ * folder's beside its chapters, the rollup's under the parent itself.
+ */
 export function outputPathFor(scope) {
-    return scope === REPO_SCOPE ? "_meta/graph.json" : `${scope}/_meta/graph.json`;
+    return scope === REPO_SCOPE ? `${DEVBOOK_ROOT}/_meta/graph.json` : `${scope}/_meta/graph.json`;
 }

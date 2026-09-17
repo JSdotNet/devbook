@@ -1,7 +1,7 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-09-07
+date: 2026-09-17
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
@@ -9,8 +9,9 @@ Every plugin is self-contained under `plugins/<name>/` and either works alone or
 what it needs. There are three ways to couple — a declared dependency on a lower layer, a
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
-(`devbook`), the engine (`delivery`), one extension each for review, fan-out, and unattended
-work, three surfaces, and a guide that names every plugin and depends on none. The specialists
+(`devbook`), the engine (`delivery`), one extension each for review, the committed index,
+fan-out, and unattended work, three surfaces, and a guide that names every plugin and depends on
+none. An extension owns procedure, never schema or state. The specialists
 are published from another marketplace and are bound per repository, never depended on.
 
 ## Why
@@ -55,6 +56,12 @@ stop at the engine keys and invoke `devbook:install` for the stamp. It names a h
 plugin directories on purpose: where a plugin is installed is a fact about a host and nothing
 else, and no slot exists for it.
 
+**The committed index is an extension.** A repository that wants `_meta/` committed enables
+`devbook-derived` and runs its install; one that does not never sees a derived file. The
+review plugin has the same shape after its state moved into devbook's schema: four skills, no
+rule, no install, no stamp ([annotations](annotations.md), [checks and
+indexes](checks-and-indexes.md)).
+
 ## Rejected
 
 ```meta
@@ -73,6 +80,7 @@ else, and no slot exists for it.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |
 | 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. |
 | 2026-09-07 | `delivery-schedule` holds every unattended entry point and its triggers; a schedule is never a procedure. |
 | 2026-09-07 | Seven specialist plugins leave; every stage names a point, and no plugin names one published elsewhere. |

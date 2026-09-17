@@ -16,7 +16,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { parseAnnotations, resolveAnnotation, folderKindForPath } from "./metadata.mjs";
-import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, generatorPath } from "./graph.mjs";
+import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, generatorPath, DEVBOOK_ROOT } from "./graph.mjs";
 
 /** Recursively collect Markdown files under a folder, as repo-relative posix paths. */
 async function collectMarkdown(repoRoot, relFolder) {
@@ -145,5 +145,5 @@ export async function buildAnnotationsDocument(
 
 /** Repo-relative output path for a scope, per the derived-artifacts convention. */
 export function annotationsPathFor(scope) {
-    return scope === REPO_SCOPE ? "_meta/annotations.json" : `${scope}/_meta/annotations.json`;
+    return scope === REPO_SCOPE ? `${DEVBOOK_ROOT}/_meta/annotations.json` : `${scope}/_meta/annotations.json`;
 }

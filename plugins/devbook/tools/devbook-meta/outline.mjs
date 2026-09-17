@@ -39,7 +39,7 @@ import {
     fileNumberFromPath,
     indexRole,
 } from "./metadata.mjs";
-import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, generatorPath } from "./graph.mjs";
+import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, generatorPath, DEVBOOK_ROOT } from "./graph.mjs";
 
 /**
  * A document's `tests` entries as a list, whatever shape they were authored in.
@@ -64,26 +64,25 @@ function testList(meta) {
  * change one and change the other in the same edit.
  */
 const DIRECTORY_CONVENTION = {
-    ".domain": { root: "context-map.md", first: [], last: [] },
-    ".domain/*": {
+    "domain": { root: "context-map.md", first: [], last: [] },
+    "domain/*": {
         root: "domain.md",
         first: [
-            "stakeholders.md",
+            "actors.md",
             "skills.md",
             "features.md",
             "model.md",
             "flow.md",
             "dependencies.md",
-            "naming.md",
         ],
         last: [],
     },
-    ".tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },
+    "tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },
     // `.ai` needs no `first`/`last`: its stage files are numbered, so the
     // numbered branch orders the flow and leaves `concepts.md` filename-sorted
     // after it — map, then the flow in order, then the ideas underneath it.
-    ".ai": { root: "adoption-map.md", first: [], last: [] },
-    ".design": {
+    "ai": { root: "adoption-map.md", first: [], last: [] },
+    "design": {
         root: "README.md",
         first: [
             "design-principles.md",
@@ -97,10 +96,17 @@ const DIRECTORY_CONVENTION = {
     },
 };
 
-/** The convention for a directory, or `null` when it sorts by filename. */
+/**
+ * The convention for a directory, or `null` when it sorts by filename. Keyed
+ * by the folder kind and the depth below it, so `.devbook/domain/billing`
+ * reads as `domain/*`.
+ */
 function conventionFor(relDir) {
-    const [area, ...rest] = relDir.replace(/\\/g, "/").split("/");
-    const key = rest.length ? `${area}/${rest.map(() => "*").join("/")}` : area;
+    const normalized = relDir.replace(/\\/g, "/");
+    const kind = folderKindForPath(`${normalized}/x.md`);
+    if (!kind) return null;
+    const below = normalized.split("/").slice(2);
+    const key = below.length ? `${kind}/${below.map(() => "*").join("/")}` : kind;
     return DIRECTORY_CONVENTION[key] ?? null;
 }
 
@@ -353,5 +359,5 @@ export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders
 
 /** Repo-relative output path for a scope, per the derived-artifacts convention. */
 export function outlinePathFor(scope) {
-    return scope === REPO_SCOPE ? "_meta/index.json" : `${scope}/_meta/index.json`;
+    return scope === REPO_SCOPE ? `${DEVBOOK_ROOT}/_meta/index.json` : `${scope}/_meta/index.json`;
 }

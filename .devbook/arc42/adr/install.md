@@ -26,7 +26,8 @@ into a repository. A plugin rule is therefore a template — `name` and `descrip
 ([hosts](hosts.md)): `.agents/rules/<name>.md` verbatim, a pointer wrapper per host. The file is
 named for what it becomes, so a rule citing a sibling by bare filename resolves in the plugin
 and in every repository alike. Globs carry both layouts, because a glob matching nothing applies
-nothing and trimming would make the rule customized from the first reconcile.
+nothing and trimming would make the rule customized from the first reconcile — a rule that
+mattered while two layouts existed.
 
 **One section of `AGENTS.md`, and the root wrappers where absent.** The one thing a
 repository's instruction file should say about its devbook — which folders, where the rules
@@ -38,8 +39,8 @@ wrapper; the install now creates `CLAUDE.md` and `.github/copilot-instructions.m
 neither exists, stamped `managed: false` from the start, and never touches one that exists.
 
 **Tooling under `.devbook/_tools/`.** The generator is plain Node with no host in it; under
-`.github/tools/` a first install read as devbook adding GitHub tooling. `.devbook/` exists in
-both layouts and the underscore is what the naming rule reserves for machinery. `.github/`
+`.github/tools/` a first install read as devbook adding GitHub tooling. `.devbook/` is the one
+parent, and the underscore is what the naming rule reserves for machinery. `.github/`
 keeps only what GitHub reads: the workflows and the Copilot wrappers.
 
 **What a component writes decides whether it needs a ledger.** `devbook` rewrites chapters,
@@ -56,7 +57,7 @@ because the plugin name already carries the scope.
 install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
 `.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
 the checker nine times, since a shipped rule carries no `paths`. The stamp lands anyway —
-`devbook-check` classes no stamp at all as hard drift — with `materialized` holding the two
+`devbook:check` classes no stamp at all as hard drift — with `materialized` holding the two
 rendered sections and nothing else. Hashes are taken over LF-normalized text, because the
 working tree is CRLF and the index LF.
 

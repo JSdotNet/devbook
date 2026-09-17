@@ -3,39 +3,40 @@ name: devbook-domain
 description: Structure and authoring rules for the domain devbook folder, including root strategic DDD context mapping and per-bounded-context documentation.
 ---
 
-# Domain documentation (`.domain`)
+# Domain documentation (`domain/`)
 
-`.domain` is the durable, ubiquitous-language record of the domain model,
+`domain/` is the durable, ubiquitous-language record of the domain model,
 organized by bounded context. It is the authoritative source for "what the
-domain looks like" — complementary to `.arc42` (system architecture), `.tech`
-(technology stack), and `.design` (UX guidelines).
+domain looks like" — complementary to `arc42/` (system architecture), `tech/`
+(technology stack), and `design/` (UX guidelines).
 
 ## Context-loading policy
 
-- `.domain` is **not** baseline repository context. Load it only for domain
+- `domain/` is **not** baseline repository context. Load it only for domain
   modeling, bounded-context, or ubiquitous-language tasks, normally after
   routing through the repository's domain flow or a domain specialist
   agent.
-- When `.domain` is needed as task context, load only the relevant bounded
+- When `domain/` is needed as task context, load only the relevant bounded
   context's chapters instead of reading the whole folder by default.
-- Implementation work consults `.domain` when the change touches domain
+- Implementation work consults `domain/` when the change touches domain
   behavior, an aggregate boundary, or naming — not by default.
 
 ## Structure
 
-`.domain/` contains one root strategic artifact plus one folder per bounded
+`domain/` contains one root strategic artifact plus one folder per bounded
 context.
 
 Each bounded context gets its own subfolder, named in kebab-case after the
-context (e.g. `.domain/order-management/`). Use the same name consistently
-across `.domain`, ADRs, and code module names where practical.
+context (e.g. `.devbook/domain/order-management/`). Use the same name consistently
+across `domain/`, ADRs, and code module names where practical.
 
 ```
-.domain/
+.devbook/domain/
   context-map.md
   <bounded-context-name>/
     domain.md
-    stakeholders.md  # who operates this context, and who it acts toward
+    actors.md        # who works with this context: users, organisations,
+                     # and the technical actors that trigger it
     features.md      # what the context lets a user do, in business language
     skills.md        # the alternative to features.md, for a repository whose
                      # product is procedures rather than a running application
@@ -44,14 +45,12 @@ across `.domain`, ADRs, and code module names where practical.
     flow.<name>.md   # optional: one flow, split out of flow.md when it is
                      # large enough or invoked often enough to stand alone
     dependencies.md
-    naming.md        # optional: the terms may live in domain.md instead
 ```
 
 When starting a new bounded context, create the folder with `domain.md`,
-`stakeholders.md`, `model.md`, `dependencies.md`, and one of `features.md` or
+`actors.md`, `model.md`, `dependencies.md`, and one of `features.md` or
 `skills.md`, using the templates below. Add `flow.md` when the context has
-lifecycle or process flows, and `naming.md` when its vocabulary is large enough
-to want a file of its own.
+lifecycle or process flows.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -59,31 +58,42 @@ of repository, so a context holding both has split one answer across two files.
 Pick per context, not per repository, though in practice a repository lands on
 one of them throughout.
 
-**`stakeholders.md` says who; the rest of the context says what.** No other
-chapter states which role the someone in "the case worker files a request" is.
-This file is that record, and it carries two chapter types. An `actor` operates
-the system inside this context — it has an account, it needs a right, and it
-issues the actions the feature chapters describe. A `party` is a person or
-organization the context acts toward or models without operating it: a creditor
-answering a request, a bank receiving a file, a judge whose ruling unblocks a
-case. Actors first, then parties, with no grouping headings — `type` already
-says which is which.
+**`actors.md` says who; the rest of the context says what.** No other chapter
+states which role the someone in "the case worker files a request" is. This
+file is that record: one flat `##` chapter per actor, headed by its name alone,
+with `type` carrying which of three kinds it is. A `user` is a person with an
+account who operates the context — it needs a right, and it issues the actions
+the feature chapters describe. An `organisation` is a person or body the context
+acts toward or models without operating it: a creditor answering a request, a
+bank receiving a file, a judge whose ruling unblocks a case. A `technical` actor
+is a system or timer that triggers a use case from outside — a scheduler that
+closes the month, an inbound callback, the system account an audit trail records.
+Users first, then organisations, then technical actors, with no grouping headings
+— `type` already says which is which. Generalisation ("every Consultant is an
+Employee") is a sentence in the first beat, never a nested chapter.
 
-It is a stakeholder file and deliberately not a persona file. An `actor` is the
-EventStorming and Domain Storytelling actor, the role that issues a command:
-ubiquitous language, stable, and something an invariant can depend on. A persona
-is a UX archetype of goals and frustrations, is none of those things, and belongs
-in `.design` where a repository wants one. A context nobody operates directly —
-a library, or one reached only by another context — omits the file, and its
-absence is not a missing file.
+A `user` chapter carries `role`: the role, claim, or group name as the
+authorization layer spells it, a string or a list. It is what lets a role check
+found in code resolve to the actor that holds it instead of to prose. Omit it
+where it has no value; an `organisation` or `technical` chapter rarely has one.
 
-**`naming.md` is optional and its absence is not a missing file.** A context
-either gives its vocabulary a file or keeps the same `term` chapters at the end
-of `domain.md`; the chapter, its `type`, its `aliases`, and the `related` link
-to where the term is modelled are identical either way, and so is the address
-that resolves to it. Prefer the file where a context has enough terms that they
-would bury the model, and `domain.md` where a reader wants the vocabulary
-beside the thing it names.
+An actor is the EventStorming and Domain Storytelling actor — the one that issues
+a command — and deliberately not a persona. A persona is a UX archetype of goals
+and frustrations, is not ubiquitous language, and belongs in `design/` where a
+repository wants one. Nor is a `technical` actor the actor-model kind: a mailbox
+object, grain, or process is an implementation building block and belongs in
+`arc42/`. A context nobody works with directly — a library, or one reached only
+by another context — omits the file, and its absence is not a missing file.
+
+**The ubiquitous language is the model, so it lives on the model.** A term that
+is already a chapter — an aggregate, an entity, a value object, an enum, a
+domain service, a domain event, an actor — carries its surface names in that
+chapter's `aliases` field and earns no second chapter. Only a term with no
+chapter to sit on — a role word, a process word, a name a consumer uses for
+something this context never models as a thing — becomes a `term` chapter, under
+the `## Ubiquitous Language` grouping at the end of `domain.md`. There is no
+separate glossary file: a registry that names what the model already names is a
+second copy, and it goes stale on the side nobody reads.
 
 **`flow.<name>.md` splits one flow out of `flow.md`.** The suffix is the flow's
 own name — for a procedure the repository ships, its skill name, so
@@ -95,18 +105,17 @@ context's flows; keep `flow.md` for the flows that are still better read
 together, and drop it when every flow has been split out.
 
 Reading order comes from this convention, not from a metadata field and not from
-filenames. `context-map.md` is `.domain`'s root document and is read first,
+filenames. `context-map.md` is `domain/`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
-tree above — `stakeholders.md`, `skills.md` or `features.md`, `model.md`,
-`flow.md`, `dependencies.md`, `naming.md`, then any `flow.<name>.md` in
-filename order.
+tree above — `actors.md`, `skills.md` or `features.md`, `model.md`,
+`flow.md`, `dependencies.md`, then any `flow.<name>.md` in filename order.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
 
 - **context-map.md** — Strategic DDD view across bounded contexts at the
-  `.domain` root.
+  `domain/` root.
   - Documents the subdomain landscape/classification (core/supporting/generic
     as applicable).
   - Captures bounded-context relationships in a context map.
@@ -125,28 +134,33 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Value Objects and Enums **shared across multiple aggregates** within the
     context get their own separate chapter — do not duplicate them under each
     aggregate that uses them.
-- **stakeholders.md** — Who works with this bounded context: one chapter per
-  role or party, headed by its name alone, with `type` carrying which of the two
-  it is.
-  - **`type: actor`** — a human role that operates the system inside this
-    context. Four beats, in order, skipping any the context has no answer for:
-    who it is, in one sentence, naming the term the screens use where it differs
-    from the model term; what it does here, in business language, with `related`
+- **actors.md** — Who works with this bounded context: one flat chapter per
+  actor, headed by its name alone, with `type` carrying which of the three
+  kinds it is.
+  - **`type: user`** — a person with an account who operates the context.
+    Four beats, in order, skipping any the context has no answer for: who it
+    is, in one sentence, naming the term the screens use where it differs from
+    the model term; what it does here, in business language, with `related`
     pointing at the feature chapters those actions live in; what the model holds
     it to, named only where the model actually records the role — a required
     field, an audit trail, a recorded submitter; and which right it needs, and
-    where that right is configured.
-  - **`type: party`** — a person or organization the context acts toward or
+    where that right is configured. Its `role` field carries the name the
+    authorization layer checks for that right.
+  - **`type: organisation`** — a person or body the context acts toward or
     models without operating it. Three beats: who it is, what the context needs
     from it or does toward it, and how it appears in the model.
+  - **`type: technical`** — a system or timer that triggers a use case from
+    outside: a scheduler, an inbound callback, the system account. The same
+    three beats: what it is, what it triggers here, and how the model records
+    it. Its contract, where it has one, stays in `dependencies.md`.
   - A beat the repository cannot answer is left out and recorded as an
     `annotation` fence, never filled in with a plausible sentence. "Nobody has
     stated which right this needs" is information; an invented right is not.
-  - Another bounded context, a module, or a technical system is a dependency and
-    belongs in `dependencies.md`. Name a bank or a portal here only as the
-    organization the domain corresponds with, and leave its contract to
-    `dependencies.md`. A tenant is not a stakeholder either: it appears as the
-    administrator role that changes settings.
+  - Another bounded context or a module is a dependency and belongs in
+    `dependencies.md`, never here. Name a bank, a portal, or a scheduler here
+    only for what the context needs from it or what it triggers, and leave its
+    contract to `dependencies.md`. A tenant is not an actor either: it appears
+    as the administrator user that changes settings.
   - Rights are stated here, not argued. Why a right is split — separation of
     duties, four eyes — is a modeling decision and belongs in `domain.md`, beside
     the invariant it protects.
@@ -192,43 +206,36 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     integration prose.
   - For each relationship, document DDD pattern, integration mechanism,
     contract, and why/what the dependency relies on.
-  - A `stakeholders.md` chapter never restates one of these relationships:
-    another bounded context, a module, or a technical system is a dependency,
-    not a stakeholder. One file describes a relationship, so the two have no way
-    of contradicting each other.
-- **naming.md** — The context's ubiquitous-language naming registry: one
-  chapter per key term, headed by the canonical term itself. Surface synonyms
-  are recorded in the `aliases` metadata field; a `related` reference links the
-  term to the chapter where it is modeled. This gives every synonym (code class
-  name, id field, consumer-side copy) a single canonical concept.
+  - An `actors.md` chapter never restates one of these relationships: another
 
-  **Optional.** A context may keep the same `term` chapters at the end of
-  `domain.md` instead, under a `## Ubiquitous Language` grouping heading. The
-  chapters are identical either way — same `type: term`, same `aliases`, same
-  `related` link to where the term is modelled — and only the path in front of
-  the anchor changes. Nothing outside the context should have to know which
-  layout was picked: resolve a term by searching the context for a `term`
-  chapter, never by assuming a filename.
+    bounded context or a module is a dependency, not an actor, and a
+
+    `technical` actor is named there only for what it triggers. One file
+
+    describes a relationship, so the two have no way of contradicting each
+
+    other.
+
 
 ## Folder rules
 
-These rules describe the persisted shape of `.domain` assets only. Authoring
+These rules describe the persisted shape of `domain/` assets only. Authoring
 workflow, routing, and cross-document governance are handled by separate
 instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
-  `features.md` or `skills.md`, every Actor and Party chapter in
-  `stakeholders.md`, and every Term chapter — in `naming.md` or
-  under `domain.md`'s `## Ubiquitous Language` grouping — must carry a
+  `features.md` or `skills.md`, every User, Organisation, and Technical chapter in
+  `actors.md`, and every Term chapter under `domain.md`'s
+  `## Ubiquitous Language` grouping must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
-- Every file in `.domain` — `context-map.md` and, per bounded context,
-  `domain.md`, `stakeholders.md`, `features.md` or `skills.md`, `model.md`,
-  `flow.md` and each `flow.<name>.md` (when present), `dependencies.md`, and
-  `naming.md` (when present) — must also carry the file-level
+- Every file in `domain/` — `context-map.md` and, per bounded context,
+  `domain.md`, `actors.md`, `features.md` or `skills.md`, `model.md`,
+  `flow.md` and each `flow.<name>.md` (when present), and `dependencies.md` —
+  must also carry the file-level
   metadata block described in
   `devbook-chapter-metadata.md`, placed directly
   under the file's top-level `#` heading. This applies even to
@@ -255,8 +262,8 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `actor`, `party`, `term` |
-  | File | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` |
+  | File | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -266,23 +273,22 @@ instructions.
 
   Each file's `type` matches its filename: `domain.md` is `type: domain`,
   `features.md` is `type: features`, `skills.md` is `type: skills`, and so on,
-  with `context-map.md` at the `.domain` root carrying `type: context-map`. A
+  with `context-map.md` at the `domain/` root carrying `type: context-map`. A
   `flow.<name>.md` carries `type: flow`, because the suffix narrows the scope
   and not the kind.
-- Heading text in `.domain` carries the **name only** — `## Order`, not
+- Heading text in `domain/` carries the **name only** — `## Order`, not
   `## Aggregate: Order`. Anchors are therefore slugs of the bare name
   (`.domain/order-management/domain.md#order`). The two exceptions are the
   `## Shared Value Objects` and `## Shared Enums` chapters, whose headings name
   a grouping rather than a single thing, so the descriptive text *is* the name.
-  `## Ubiquitous Language`, where a context keeps its terms in `domain.md`, is a
-  third of the same kind.
+  `## Ubiquitous Language` is a third of the same kind.
   File titles are the bounded-context name alone (`# Order Management`), with
   the file's own `type` distinguishing the files of a context. A
   `flow.<name>.md` is the one exception, and it is still not a kind in the
   heading: the file title stays the context name and the flow's own name goes
   in its `##` heading, exactly as it did inside `flow.md`.
 
-  `context-map.md` is the one `.domain` file that is not about a single bounded
+  `context-map.md` is the one `domain/` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
   system or product the map covers — `# Order Platform` — with
   `type: context-map` carrying the kind, exactly as everywhere else. The
@@ -297,14 +303,14 @@ instructions.
   reasonable people prefer it. Pick one per repository and stay with it; do not
   churn an existing title to switch.
 
-  A `.domain` folder written the old way (kind prefixes in headings, no `type`,
+  A `domain/` folder written the old way (kind prefixes in headings, no `type`,
   `#### <Name>` sub-chapters under `### Entities`) is migrated with the steps in
   the devbook plugin README under "Migrating to schema version 2".
 - `features.md` and `skills.md` Feature/Sub-feature chapters may carry an
   additional `depends-on` field: a list of `<path>#<heading-slug>` references (see
   `devbook-chapter-metadata.md` for the reference
   format) to other features that must be delivered first, e.g.
-  `depends-on: [.domain/order-management/features.md#refunds]`.
+  `depends-on: [.devbook/domain/order-management/features.md#refunds]`.
   `domain.md` chapters (Aggregates, Domain Services, Domain Events, Shared
   Value Objects/Enums) do not use `depends-on` — they describe standing
   structure, and their relationships belong in `model.md`/`dependencies.md` or
@@ -329,6 +335,18 @@ instructions.
   Those answer different questions, so do not translate one vocabulary into the
   other, and do not infer a chapter's `status` from its flag's maturity or the
   reverse.
+- `actors.md` chapters may carry a `role` field: the role, claim, or group name
+  the authorization layer checks for this actor, as the code spells it — e.g.
+  `role: Consultant` or, where one actor holds several, `role: [Consultant,
+  TeamLead]`. Like `feature-flag`, entries are plain application identifiers,
+  not `<path>#<heading-slug>` references: the name lives in the repository's
+  authorization configuration, so the field produces no graph edge and the value
+  is never validated here. It is the fourth beat made addressable — a role check
+  found in code resolves to the `user` whose `role` matches. Omit it when the
+  actor has none, which is the usual case for `organisation` and `technical`;
+  no other chapter type carries it. `role` here is the RBAC role a right is
+  granted to, never the role a domain object plays in a relationship — that is
+  modelled in `domain.md`.
 - In `dependencies.md`, use explicit DDD relationship terminology for each
   cross-context row when applicable (for example: `ACL`,
   `Customer/Supplier`, `Partnership`, `OHS + Published Language`) and identify
@@ -374,19 +392,17 @@ instructions.
   just to document process-manager behavior; keep that semantics in the
   relevant Domain Service chapter unless a separate structure is later decided
   explicitly.
-- Term chapters carry an `aliases` field: a list of
-  plain-string surface names the term is also known by (code class/identifier
-  names, snake_case id fields, or a consumer context's local copy name).
-  Unlike `related`/`depends-on`, `aliases` entries are plain strings, not
-  `<path>#<heading-slug>` references — the link to the canonical modeling
-  chapter is carried by that term's `related` field instead. Omit `aliases`
-  when the term has none.
-
-  **`aliases` is not restricted to `type: term`.** A term that is already a
-  chapter — an aggregate, an entity, a value object, an enum, a domain service,
-  a domain event — carries its aliases on that chapter, rather than earning a
-  duplicate `term` chapter beside it. Any chapter may carry the field; the
-  file-level block may not, like every other folder-specific field.
+- Any chapter may carry an `aliases` field: a list of plain-string surface
+  names the thing is also known by — a code class or identifier name, a
+  snake_case id field, a consumer context's local copy name, a host's own word
+  for it. Unlike `related`/`depends-on`, `aliases` entries are plain strings,
+  not `<path>#<heading-slug>` references. Omit the field when there are none;
+  the file-level block may not carry it, like every other folder-specific
+  field. This is how a modelled concept is its own glossary entry: the aggregate
+  chapter `## Order` with `aliases: [OrderRoot, order_id]` is the term *Order*,
+  and every synonym resolves to that one chapter. A `term` chapter exists only
+  for a word that has no chapter to carry the field, and its `related` field
+  points at the chapters it is about.
 
 ## Templates
 
@@ -400,7 +416,7 @@ status: draft
 type: context-map
 \`\`\`
 
-> `.domain`'s root document. Prefer titling it after the system the map covers,
+> `domain/`'s root document. Prefer titling it after the system the map covers,
 > since the `type` above already carries the kind and the generator labels this
 > node `<System Name> (context-map)`; a plain `# Context Map` is also accepted.
 > Its structural `##` sections — the four below — carry no metadata blocks; the
@@ -576,8 +592,9 @@ status: draft
 type: ubiquitous-language
 \`\`\`
 
-> Present only where the context keeps its terms here rather than in
-> `domain.md`. A grouping heading, so its descriptive text *is* its name.
+> The terms this context owns that are not chapters above. A term that is a
+> chapter carries its aliases on that chapter instead. A grouping heading, so
+> its descriptive text *is* its name; omit the grouping when there are none.
 
 ### <Canonical Term>
 
@@ -585,7 +602,7 @@ type: ubiquitous-language
 status: draft
 type: term
 aliases: [<AliasA>, <AliasB>]
-related: [.domain/<context>/domain.md#<heading-slug>]
+related: [.devbook/domain/<context>/domain.md#<heading-slug>]
 \`\`\`
 
 Definition of the term and, where useful, when each alias appears.
@@ -603,32 +620,34 @@ sub-sections of that one chapter rather than addressable chapters, so they carry
 no metadata block. `build.mjs --check` warns on each of them, as it does on
 every structural heading: the validator cannot know which headings a folder means
 to be addressable, so the warning is expected here and never driven to zero.
-`## Rights` in `stakeholders.md` is the same case one level up — a structural
+`## Rights` in `actors.md` is the same case one level up — a structural
 section of the file rather than an addressable chapter — and warns the same way.
 
-### stakeholders.md
+### actors.md
 
 ```markdown
 # <Bounded Context Name>
 
 \`\`\`meta
 status: draft
-type: stakeholders
+type: actors
 \`\`\`
 
-> Who works with this bounded context: the roles that operate it, then the
-> parties it acts toward. Another bounded context, module, or technical system
-> is a dependency and belongs in `dependencies.md`, never here.
+> Who works with this bounded context: the users that operate it, the
+> organisations it acts toward, and the technical actors that trigger it.
+> Another bounded context or module is a dependency and belongs in
+> `dependencies.md`, never here.
 
-## <Role Name>
+## <User Name>
 
 \`\`\`meta
 status: draft
-type: actor
-related: [.domain/<context>/features.md#<heading-slug>]
+type: user
+role: <RoleNameAsTheAuthorizationLayerSpellsIt>
+related: [.devbook/domain/<context>/features.md#<heading-slug>]
 \`\`\`
 
-Who this role is, in one sentence, naming the term the screens use where it
+Who this user is, in one sentence, naming the term the screens use where it
 differs from the model term.
 
 What it does in this context, in business language, pointing at the feature
@@ -639,19 +658,30 @@ submitter where the model actually records the role.
 
 Which right it needs, and where that right is configured.
 
-## <Party Name>
+## <Organisation Name>
 
 \`\`\`meta
 status: draft
-type: party
+type: organisation
 \`\`\`
 
-Who this party is, what the context needs from it or does toward it, and how it
-appears in the model.
+Who this organisation is, what the context needs from it or does toward it,
+and how it appears in the model.
+
+## <Technical Actor Name>
+
+\`\`\`meta
+status: draft
+type: technical
+related: [.devbook/domain/<context>/dependencies.md#<heading-slug>]
+\`\`\`
+
+What this actor is, what it triggers in this context, and how the model records
+it. Its contract lives in `dependencies.md`.
 
 ## Rights
 
-| Action | <Role> | <Role> |
+| Action | <User> | <User> |
 |---|---|---|
 | <what can be done> | <the right it needs, or —> | <the right it needs, or —> |
 ```
@@ -723,7 +753,7 @@ type: skills
 \`\`\`meta
 status: draft
 type: feature
-related: [.domain/<context>/flow.<skill-name>.md]
+related: [.devbook/domain/<context>/flow.<skill-name>.md]
 \`\`\`
 
 What the skill does for whoever runs it, what it guarantees, and where it
@@ -818,7 +848,7 @@ One flow split out of `flow.md`, with the same `type` and the same rule that its
 \`\`\`meta
 status: draft
 type: flow
-related: [.domain/<context>/skills.md#<skill-name>]
+related: [.devbook/domain/<context>/skills.md#<skill-name>]
 \`\`\`
 
 > One flow: <what moves, and from where to where>. Structure is in
@@ -870,31 +900,3 @@ type: dependencies
   artifact if one exists for this relationship, instead of duplicating it.
 ```
 
-
-### naming.md
-
-```markdown
-# <Bounded Context Name>
-
-\`\`\`meta
-status: draft
-type: naming
-\`\`\`
-
-> Canonical ubiquitous-language terms for this bounded context and their
-> aliases. Each term links to where it is modeled (related); surface names it
-> is also known by are recorded in the aliases metadata field so any synonym
-> resolves back to one canonical concept.
-
-## <Canonical Term>
-
-\`\`\`meta
-status: draft
-type: term
-aliases: [<AliasA>, <AliasB>]
-related: [.domain/<context>/domain.md#<heading-slug>]
-\`\`\`
-
-Definition of the term and, where useful, when each alias appears (code
-identifier, id field used by other contexts, consumer-side copy name).
-```
