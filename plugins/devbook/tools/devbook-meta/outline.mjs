@@ -68,7 +68,7 @@ const DIRECTORY_CONVENTION = {
     ".domain/*": {
         root: "domain.md",
         first: [
-            "stakeholders.md",
+            "actors.md",
             "skills.md",
             "features.md",
             "model.md",

@@ -122,8 +122,9 @@ later reversed is the part a reader most needs.
 | [70. The Flow Context Lives in devbook](70-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
 | [71. The start Skill Holds the Runtime Facts](71-the-start-skill-holds-the-runtime-facts.md) | 2026-09-15 |
 | [72. The Overlay Has Three Layers, Keyed by a Committed Id](72-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
+| [75. Who Works With a Context Is an Actor](75-who-works-with-a-context-is-an-actor.md) | 2026-09-17 |
 
-Five records carry a supersession note and stay where they are.
+Six records carry a supersession note and stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
 warning it gave — [66](66-the-marketplace-is-named-jsdotnet-devbook.md) renames the
 marketplace on that warning's own terms.
@@ -135,5 +136,8 @@ flows moved twice and the bridge is gone.
 [8](8-comments-are-findings-until-the-fence-lands.md) and
 [37](37-a-plugins-rules-reach-a-host-through-the-install.md) are superseded in part: the first
 lost the premise it rested on and is now closed as well, its migration shipped;
-the second lost only where a plugin-internal contract lives. Each names what replaced it, in
+the second lost only where a plugin-internal contract lives.
+[55](55-a-bounded-context-says-who-works-with-it.md) lost the name it kept and the two values
+under it — [75](75-who-works-with-a-context-is-an-actor.md) renames the file to `actors.md` —
+and keeps the exclusion rule that was its load-bearing half. Each names what replaced it, in
 its own body, under its own number.
