@@ -1,4 +1,4 @@
-# 76. A Term Is a Chapter or an Alias
+# 77. A Term Is a Chapter or an Alias
 
 ```meta
 date: 2026-09-17

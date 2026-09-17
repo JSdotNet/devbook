@@ -11,7 +11,7 @@ knows. A term that is already a chapter carries its surface names in that chapte
 `migrations/010-terms-live-in-domain-md/` folds a `naming.md` a repository still carries
 into `domain.md` and rewrites every reference into it — `devbook:install` runs it. A
 repository whose contexts already keep their terms in `domain.md` records the id and
-nothing moves. The decision is `.devbook/arc42/adr/76-a-term-is-a-chapter-or-an-alias.md`.
+nothing moves. The decision is `.devbook/arc42/adr/77-a-term-is-a-chapter-or-an-alias.md`.
 
 ## 1.0.0: the first release
 

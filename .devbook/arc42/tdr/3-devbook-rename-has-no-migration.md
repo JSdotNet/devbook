@@ -50,7 +50,7 @@ this record sat open. The migration it proposes is `010-devbook-names` at contra
 the options table below has been renumbered to match. Nothing else about the debt moved.
 
 **2026-09-17. Spent again.** `010-terms-live-in-domain-md` took contract 10 for
-[record 76](../adr/76-a-term-is-a-chapter-or-an-alias.md). The proposal is `011-devbook-names`
+[record 77](../adr/77-a-term-is-a-chapter-or-an-alias.md). The proposal is `011-devbook-names`
 at contract 11; the table below says so.
 
 ## Affected components
