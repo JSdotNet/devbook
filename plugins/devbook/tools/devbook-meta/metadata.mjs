@@ -314,13 +314,23 @@ const FOLDER_EXTRA_FIELDS = {
     ai: ["depends-on", "stage"],
 };
 
+/**
+ * The stages of the DevOps loop, in loop order: the first four are the dev
+ * half, the last four the ops half, and `monitor` feeds `plan`. A `.ai` chapter
+ * says where it sits with `stage`, a list of these words. The vocabulary is
+ * fixed rather than the repository's own so that a tool draws one loop for
+ * every repository and a reader can compare two; a stage a flow does not use
+ * stays empty. Exported for the consumer that draws the loop.
+ */
+export const AI_STAGES = ["plan", "code", "build", "test", "release", "deploy", "operate", "monitor"];
+
 // The folder-specific fields that describe a chapter and never a document, per
 // devbook-chapter-metadata.md: "a file's overall relationships are expressed
 // through `related` only". A file has no dependencies, no version, no feature
-// flag, no aliases and no role — the chapters inside it do.
-//
-// `stage` is deliberately absent: a `.ai` file *does* have a stage, and its own
-// rule governs where it may say so.
+// flag, no aliases and no role — the chapters inside it do. `.ai`'s `stage` is
+// here for the same reason: a file groups chapters and places none of them on
+// the loop, so a file-level `stage` would place chapters by implication, which
+// is the one thing the field exists to make explicit.
 const CHAPTER_ONLY_EXTRA_FIELDS = [
     "depends-on",
     "aliases",
@@ -328,6 +338,7 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "role",
     "version",
     "alternatives",
+    "stage",
 ];
 
 // Which chapters inside a folder may carry one of that folder's extra fields.
@@ -980,7 +991,10 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
             if (!folderFields.includes(field) || meta[field] == null) continue;
             issues.push({
                 severity: "error",
-                message: `has \`${field}\` on the file-level block, where it describes a chapter that is not there — a document states its own relationships through \`related\` only. See devbook-chapter-metadata.md.`,
+                message:
+                    field === "stage"
+                        ? `has \`stage\` on the file-level block — a file groups chapters and places none of them on the loop; each chapter says its own stages. See devbook-ai.md.`
+                        : `has \`${field}\` on the file-level block, where it describes a chapter that is not there — a document states its own relationships through \`related\` only. See devbook-chapter-metadata.md.`,
             });
         }
         return issues;
@@ -1209,12 +1223,6 @@ export function validateDocument(relPath, markdown) {
         openQuestions.set(note.chapter.line, note.line);
     }
 
-    // Whether this document is one of `.ai`'s stage files, which is what makes
-    // a chapter's own `stage` field a restatement. Read from the file-level
-    // `type` rather than the filename: the numbering convention is the
-    // repository's, the declared role is the schema's.
-    const fileIsStage = kind === "ai" && resolveType(kind, fileMeta) === "stage";
-
     for (const chapter of chapters) {
         const label = `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line})`;
         if (!chapter.meta) {
@@ -1303,29 +1311,43 @@ export function validateDocument(relPath, markdown) {
             }
         }
 
-        // `.ai` chapters outside a stage file say which stage of the flow they
-        // apply at. Like `roadmap`, the entries are slugs naming something in
-        // the consuming repository — here its own stage files — so only the
-        // shape is checked, never the vocabulary.
-        //
-        // Inside a stage file the field is a restatement: the file already
-        // says the stage, and a chapter that writes it too gives the reader
-        // two places to look and the next rename two places to update. The fix
-        // is deletion, so the entries' shape is not worth a second message.
-        if (kind === "ai" && chapter.meta.stage != null) {
-            if (fileIsStage) {
-                issues.push({
-                    severity: "warning",
-                    message: `${label} has \`stage\` in a stage file, where the file already says the stage — omit the field. It belongs in \`concepts.md\` and on anything else that spans the flow.`,
-                });
-            } else {
-                for (const slug of toList(chapter.meta.stage)) {
-                    if (!ROADMAP_TAG_PATTERN.test(slug)) {
+        // A `.ai` chapter says where it sits on the DevOps loop with `stage`,
+        // and the file it is in says nothing about that — so the field is on
+        // every chapter, checked against the fixed vocabulary rather than the
+        // repository's own words. The one chapter that may omit it is a
+        // `concept` that applies throughout, drawn in the middle of the loop;
+        // any other chapter without it is off the picture, which is reported
+        // as a warning rather than an error so an existing folder keeps
+        // validating while its chapters are placed.
+        if (kind === "ai" && blockLevel === "chapter") {
+            if (chapter.meta.stage != null) {
+                for (const word of toList(chapter.meta.stage)) {
+                    if (!AI_STAGES.includes(word)) {
                         issues.push({
-                            severity: "warning",
-                            message: `${label} has \`stage\` entry "${slug}" — a stage is a lowercase kebab-case slug naming one of this repository's \`.ai\` stage files, not a path or free text.`,
+                            severity: "error",
+                            message: `${label} has \`stage\` entry "${word}", expected one of: ${AI_STAGES.join(", ")} — the stages are the DevOps loop's own, so every repository draws the same loop.`,
                         });
                     }
+                }
+            } else if (resolveType(kind, chapter.meta) !== "concept") {
+                issues.push({
+                    severity: "warning",
+                    message: `${label} has no \`stage\` — a usage says which stages of the loop it applies at, or it is off the picture. Only a \`concept\` applied throughout omits it.`,
+                });
+            }
+        }
+
+        // A `.ai` usage that rests on a registered technology names it in
+        // `depends-on`, which is the edge the loop picture draws the tool from.
+        // The same reference in `related` resolves, builds, and draws nothing —
+        // so it is reported here, where the author's intent is obvious.
+        if (kind === "ai" && blockLevel === "chapter" && chapter.meta.related != null) {
+            for (const ref of toList(chapter.meta.related)) {
+                if (typeof ref === "string" && ref.startsWith(`${DEVBOOK_PREFIX}tech/`)) {
+                    issues.push({
+                        severity: "warning",
+                        message: `${label} has \`related\` entry "${ref}" reaching into .tech — a usage names the technology it rests on in \`depends-on\`, which is what puts the tool on the loop picture; \`related\` draws nothing there.`,
+                    });
                 }
             }
         }

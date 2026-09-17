@@ -121,34 +121,26 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
-// --- .ai `stage` in a stage file ----------------------------------------
+// --- .ai `stage` is a chapter's, never a file's ---------------------------
 
-// The file already says the stage. A chapter that writes it too gives the
-// reader two places to look and the next rename two places to update.
+// A file groups chapters and places none of them on the loop: the chapter says
+// its own stages, and a file-level `stage` would place them by implication.
+// The vocabulary and the placement rules themselves are ai-loop.test.mjs's.
 {
     const issues = validateDocument(
         ".devbook/ai/03-build.md",
-        `# Build\n\n${fence("status: adopted\ntype: stage\n")}\n## TDD with an agent\n\n` +
+        `# Build\n\n${fence("status: adopted\ntype: stage\nstage: build\n")}\n## TDD with an agent\n\n` +
             `${fence("status: trial\ntype: practice\nstage: build\n")}\nProse.\n`
     );
 
     check(
-        Boolean(find(issues, "warning", "`stage` in a stage file")),
-        "`stage` inside a stage file is reported",
+        Boolean(find(issues, "error", "`stage` on the file-level block")),
+        "`stage` on a file-level block is an error",
         dump(issues)
     );
-}
-
-{
-    const issues = validateDocument(
-        ".devbook/ai/concepts.md",
-        `# Concepts\n\n${fence("status: adopted\ntype: concepts\n")}\n## Context engineering\n\n` +
-            `${fence("status: trial\ntype: concept\nstage: [specify, build]\n")}\nProse.\n`
-    );
-
     check(
-        issues.length === 0,
-        "`stage` in concepts.md, where it belongs, is silent",
+        !find(issues, "error", "## TDD with an agent") && !find(issues, "warning", "## TDD with an agent"),
+        "`stage` on the chapter, where it belongs, is silent",
         dump(issues)
     );
 }

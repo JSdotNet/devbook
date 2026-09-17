@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-09-17
+date: 2026-09-18
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -66,6 +66,34 @@ archetype and belongs in `design/`. Another context or a system is a dependency 
 `dependencies.md`, because one relationship described in two places is one description that
 goes wrong.
 
+**An `ai/` chapter is placed on the DevOps loop by its own `stage`, from a fixed vocabulary.**
+The folder was already organised by the flow, but the placement was the file: a chapter sat
+at whatever stage the file it was in was named after, the stage set was the repository's own,
+and a tool drawing the flow had to read filenames and a table in `adoption-map.md` to know
+what the stages were. That is linking by position, and it fails in both directions — a chapter
+that applies at two stages has to be split or filed arbitrarily, and two repositories with
+different stage sets draw two loops nobody can compare. So the link is metadata: every chapter
+carries `stage`, a list of one or more of the loop's own eight words — `plan`, `code`,
+`build`, `test`, `release`, `deploy`, `operate`, `monitor`, in that order, the first four the
+dev half — and the file it sits in groups chapters for reading and places none of them, which
+is why a file-level `stage` is an error. The vocabulary is fixed so that every repository
+draws the same loop and an unused stage renders empty rather than disappearing. A `concept`
+with no `stage` applies throughout and is drawn in the middle; any other chapter without one
+is off the picture and is reported as a warning, not an error, so an existing folder keeps
+validating while its chapters are placed. The field kept its name: `stage` already existed for
+exactly this on `concepts.md` chapters, and a rename would have cost a migration to buy a
+synonym. What did change is the value set — a `stage` authored under the old rule named one of
+the repository's own stage files, and such a slug is an error now — and no script can map a
+repository's slug to a loop word, so there is no migration to ship; the one `ai/` folder in
+existence is this repository's, rewritten in the same change. Two things went from optional to the rule at the
+same time, because the picture reads them: the tool under a usage is named in `depends-on`
+and never `related`, since `depends-on` is the edge the picture draws the tool from and a
+`related` entry into `tech/` resolves and draws nothing; and `date` on an `ai/` chapter is the
+day the current rating was set, moved with `status`. A stage's own shading is derived — the
+highest rung among the chapters at it — and authored nowhere. The tools a stage runs on that no
+AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a `stage` on a
+`tech/` chapter would cross the one-way boundary between the two folders from the wrong side.
+
 ## Rejected
 
 ```meta
@@ -75,6 +103,10 @@ goes wrong.
 - A separate `approved` boolean beside `status`; `status` required or optional everywhere.
 - `naming.md` kept as an optional file kind.
 - *Stakeholder* as the umbrella; a `personas.md`; a second classifier beside `type`.
+- Placing an `ai/` chapter by the file it sits in, with a `side` on each stage file and the
+  file's `status` as the stage's rating — the shape this record's first draft took the same
+  day; a repository-defined stage set; a `phase` field beside `stage`; a `stage` on `tech/`
+  chapters; a `since` beside `date`; a structured `adopted-by`.
 
 ## History
 
@@ -83,6 +115,7 @@ goes wrong.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
 | 2026-09-17 | `stakeholders.md` becomes `actors.md` with `user`, `organisation`, `technical` and a `role` field. |
 | 2026-09-17 | `naming.md` is no longer a file kind; a term is a chapter or an alias. Contract 10, migration 010. |
 | 2026-09-17 | One layout under `.devbook/`, dotless folder names, the rollup at `.devbook/_meta/`. |

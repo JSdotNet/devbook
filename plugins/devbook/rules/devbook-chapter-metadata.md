@@ -33,7 +33,7 @@ already treat as an addressable unit:
 - `.design/<name>.md` — the file's top-level chapter, and every `##` chapter
   inside it. `###` sub-headings are covered by their parent `##` chapter and
   carry a block only if they need independent status or cross-references.
-- `.ai/<nn>-<stage>.md` and `.ai/concepts.md` — each `## <Chapter Name>`
+- `.ai/<nn>-<part>.md` and `.ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
 - `domain/` `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`,
@@ -157,9 +157,9 @@ application feature keys, and `role` (same file) is the authorization role name 
 in `tech/`, `alternatives` (defined in
 `devbook-tech.md`) is likewise a
 plain-string list, and in `ai/`, `stage` (defined in
-`devbook-ai.md`) is a list of stage
-slugs. The universal `roadmap` and `tests` fields below behave the
-same way.
+`devbook-ai.md`) is a list of the DevOps
+loop's eight stage words. The universal `roadmap` and `tests` fields below
+behave the same way.
 
 ### Where the folders live
 
@@ -384,7 +384,7 @@ its directory. A chapter's position is already its position in the document.
 
 Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
 `feature-flag` on domain feature chapters, `role` on domain actor chapters, `version`/`alternatives` on tech
-chapters, `stage` on ai chapters) are
+chapters, `stage` on ai chapters and never on an ai file) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
 to every folder.
@@ -603,7 +603,7 @@ Per directory, `_meta/index.json` is generated like this:
    them in one directory is an error.
 
 2. **If anything left carries a number, the directory is a numbered set** and
-   sorts by that number ascending — arc42 chapters, TDRs, `ai/` stage
+   sorts by that number ascending — arc42 chapters, TDRs, `ai/` usage
    files. The number comes
    from the `number` field, or from a numbered filename when there is no field:
    `09-architecture-decisions.md`, `7-no-retry-budget.md`, and
