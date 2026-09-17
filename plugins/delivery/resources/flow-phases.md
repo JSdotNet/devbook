@@ -271,7 +271,7 @@ further verification joins this phase rather than becoming a phase of its own.
 - **What it checks against.** The specification the run built on — the `spec` stage's output,
   the approved version when a gate sat after `spec`, and the acceptance criteria Scope
   Discovery recorded — and the governed chapters the change set touches: the checked-in
-  devbook folders (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`, at the root or under
+  devbook folders (`arc42/`, `domain/`, `tech/`, `design/`, `ai/`, at the root or under
   `.devbook/`), resolved from the scope and the changed paths.
 - **Bound**, the provider takes the specification, the chapters, and the change set and
   returns one verdict per item with the evidence that settles it: `aligned`; `spec-ahead`,

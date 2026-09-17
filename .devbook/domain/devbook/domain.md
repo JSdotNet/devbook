@@ -50,9 +50,9 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `domain/`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `ai/`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Meta Block
 
@@ -99,7 +99,7 @@ chapter carrying an open question is not agreed whatever its `status` says.
 type: enum
 ```
 
-Where the content stands. Each folder defines its own ladder — `.domain` uses `draft`,
+Where the content stands. Each folder defines its own ladder — `domain/` uses `draft`,
 `proposed`, `active`, `deprecated` — and one shared rung, `approved`, sits on top of all of
 them. Three folders have a resting value written by omitting the field; two make the field
 mandatory because there the value is a rating, and unrated is not the same as the lowest rung.
@@ -111,8 +111,8 @@ type: enum
 ```
 
 What kind of thing the chapter is: the classification that is never written into the heading.
-Three folders define a value set, at chapter level and at file level separately; `.arc42` and
-`.design` deliberately define none, because their only kind distinction is already carried by
+Three folders define a value set, at chapter level and at file level separately; `arc42/` and
+`design/` deliberately define none, because their only kind distinction is already carried by
 heading level.
 
 ## Devbook Folder
@@ -290,8 +290,8 @@ related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/domain/devb
 
 Two scripts that read a repository's package manifests — .NET and frontend — and emit
 deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
-grounds a `.tech` chapter in, so a package-derived fact is reproducible and a hand-written
-one is visibly not. Materialized by the install only where `.tech` is adopted.
+grounds a `tech/` chapter in, so a package-derived fact is reproducible and a hand-written
+one is visibly not. Materialized by the install only where `tech/` is adopted.
 
 ## Spec Converter
 

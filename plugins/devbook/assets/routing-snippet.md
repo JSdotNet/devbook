@@ -28,21 +28,21 @@ Every edit to a devbook folder routes through the flow that covers that folder: 
 repo-native `flow-*` skill first, then the flow engine's `flow-spec`, and directly under
 the folder's instruction files when no engine is installed. Say which one answered.
 
-- Architecture, arc42, blueprint, ADR, and TDR workflows may load `.arc42/` as
+- Architecture, arc42, blueprint, ADR, and TDR workflows may load `arc42/` as
   working context, but should load only the chapter(s) relevant to the requested
-  scope. Every `.arc42/` change routes that way — a chapter, a decision record, and
+  scope. Every `arc42/` change routes that way — a chapter, a decision record, and
   a debt record alike.
-- Domain modeling workflows may load `.domain/` as working context, but should
+- Domain modeling workflows may load `domain/` as working context, but should
   load only the relevant bounded-context chapters.
-- Design and UX workflows may load `.design/`, and stack, dependency, or upgrade
-  workflows may load `.tech/` — in both cases only the relevant file(s).
+- Design and UX workflows may load `design/`, and stack, dependency, or upgrade
+  workflows may load `tech/` — in both cases only the relevant file(s).
 - Workflows about how the team works with AI — adopting a tool into the flow,
-  changing a practice, reviewing adoption — may load `.ai/`, but should load
-  `adoption-map.md` plus only the stage file(s) in scope. Agents do not read `.ai/`
+  changing a practice, reviewing adoption — may load `ai/`, but should load
+  `adoption-map.md` plus only the stage file(s) in scope. Agents do not read `ai/`
   to decide how to do their own current task: it records a way of working, it does
   not instruct one.
 - Non-architecture implementation, bug-fix, package-update, documentation, and UX
-  flows should not load `.arc42/` by default. Consult it only when the user
+  flows should not load `arc42/` by default. Consult it only when the user
   explicitly asks for architecture context or when implementation depends on a
   specific documented decision, view, constraint, or glossary term.
 ```
@@ -51,7 +51,7 @@ the folder's instruction files when no engine is installed. Say which one answer
 
 ```markdown
 Checked-in devbook folders are **task-scoped local fallbacks**, not default
-context. Load `.arc42/`, `.domain/`, `.tech/`, `.design/`, or `.ai/` only
+context. Load `arc42/`, `domain/`, `tech/`, `design/`, or `ai/` only
 when the selected flow or specialist agent needs that context, and
 then prefer only the relevant chapter(s) over whole-folder reads.
 ```

@@ -1,6 +1,6 @@
 # devbook
 
-Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.ai`
+Encapsulates the `arc42/` / `domain/` / `tech/` / `design/` / `ai/`
 devbook convention: durable, cross-linked Markdown chapters with
 machine-readable `meta` blocks, a checker that keeps references honest, a graph
 canvas, and a CI check. The checker writes nothing on its own; a repository
@@ -33,14 +33,14 @@ deleting it, and a reader loading a chapter for context skips every fence.
 
 | Folder | Holds |
 |--------|-------|
-| `.arc42/` | arc42 architecture chapters, ADRs, TDRs |
-| `.domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows |
-| `.tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
-| `.design/` | UX and visual design guidelines, tokens, design rules |
-| `.ai/` | How the team develops with AI: usage per flow stage, concepts, adoption status |
+| `arc42/` | arc42 architecture chapters, ADRs, TDRs |
+| `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows |
+| `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
+| `design/` | UX and visual design guidelines, tokens, design rules |
+| `ai/` | How the team develops with AI: usage per flow stage, concepts, adoption status |
 
-Adoption is partial by design — a repository may take only `.domain` and
-`.arc42`, and the tooling emits scopes for the folders that actually exist.
+Adoption is partial by design — a repository may take only `domain/` and
+`arc42/`, and the tooling emits scopes for the folders that actually exist.
 
 Those five live under one `.devbook/` parent with the leading dot dropped —
 `.devbook/arc42`, `.devbook/domain`, and so on — beside the stack config, the
@@ -61,7 +61,7 @@ marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
 protocol is in `assets/reconcile-protocol.md`.
 
 **Trigger keywords:** `devbook install`, `devbook sync`, `set up devbook`, `adopt the devbook
-folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
+folders`, `scaffold arc42/`, `scaffold domain/`, `set up tech/`,
 `upgrade devbook`, `run devbook migrations`
 
 ### Skill: `check`
@@ -78,13 +78,13 @@ owns every write.
 
 ### Skill: `tech-update`
 
-Refreshes a repository's `.tech/` technology graph from deterministic package
+Refreshes a repository's `tech/` technology graph from deterministic package
 inventories for .NET and frontend dependencies, then analyzes the repository for
 non-package technologies such as runtimes, services, platforms, protocols, and
-tooling before delegating graph authoring to the `.tech` write path. Runs the
+tooling before delegating graph authoring to the `tech/` write path. Runs the
 check, never the writer.
 
-**Trigger keywords:** `update technology graph`, `refresh .tech`,
+**Trigger keywords:** `update technology graph`, `refresh tech/`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
 ### Skill: `prose-check`
@@ -161,8 +161,8 @@ where the folder defines no `type`:
 | `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
 | `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
 | `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
-| `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `assets/spec-kinds/building-block.md` |
-| `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `assets/spec-kinds/design-component.md` |
+| `building-block` | `.arc42/05-building-block-view.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
+| `design-component` | `.design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence
@@ -195,13 +195,13 @@ committing them to a devbook folder. `verify-change` runs nothing: a feature is
 verified from code and tests.
 
 **Term chapters have no kind of their own.** They are written through the
-`.domain` write path, and populated incrementally by capture passes: whenever
+`domain/` write path, and populated incrementally by capture passes: whenever
 one resolves a counterpart by inference rather than by an existing alias, it
 proposes a term with the discovered code name as an `alias`, which turns a
 one-off inference into a durable pairing for the next pass. The context folder
 itself, including its term chapters, is created by the same path.
 
-`.tech` has no kind here — `tech-update` already covers that direction.
+`tech/` has no kind here — `tech-update` already covers that direction.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all three
 skills reference and none repeats: counterpart resolution, the evidence rules
@@ -212,7 +212,7 @@ rules, index regeneration, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
-signal when it does. It goes through a `term` chapter's `aliases`, then the `.arc42`
+signal when it does. It goes through a `term` chapter's `aliases`, then the `arc42/`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
@@ -234,7 +234,7 @@ flow knows these skills exist.
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.md` | `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-ai.md` | `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
@@ -335,7 +335,7 @@ node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 The inventory scripts emit deterministic JSON from repository manifests. Use them
-as the source of truth for package-derived `.tech` facts; use repository analysis
+as the source of truth for package-derived `tech/` facts; use repository analysis
 for technologies that do not appear in package manifests.
 
 ### Assets
@@ -417,31 +417,31 @@ Behaviour changes a consumer would notice, release by release, are in
 After running `devbook:install`, a repository that adopted everything has:
 
 ```
-.arc42/
-├── _meta/{graph.json,index.json,annotations.json}
-└── <chapter>.md
-.domain/
-├── _meta/{graph.json,index.json,annotations.json}
-└── <bounded-context>/<chapter>.md
-.tech/
-├── _meta/{graph.json,index.json,annotations.json}
-├── technology-graph.md
-└── <layer>.md
-.design/
-├── _meta/{graph.json,index.json,annotations.json}
-└── <guideline>.md
-.ai/
-├── _meta/{graph.json,index.json,annotations.json}
-├── adoption-map.md
-├── <nn>-<stage>.md
-└── concepts.md
-_meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
-AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .devbook/
 ├── config.json                      # the stack config, with devbook's stamp
+├── arc42/
+│   ├── _meta/{graph.json,index.json,annotations.json}   # devbook-derived's, where enabled
+│   └── <chapter>.md
+├── domain/
+│   ├── _meta/…
+│   └── <bounded-context>/<chapter>.md
+├── tech/
+│   ├── _meta/…
+│   ├── technology-graph.md
+│   └── <layer>.md
+├── design/
+│   ├── _meta/…
+│   └── <guideline>.md
+├── ai/
+│   ├── _meta/…
+│   ├── adoption-map.md
+│   ├── <nn>-<stage>.md
+│   └── concepts.md
+├── _meta/{graph.json,index.json,annotations.json}       # the rollup, devbook-derived's
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
     └── devbook-tech/                # deterministic package inventory scripts
+AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .github/
 └── workflows/devbook-meta.yml       # the CI check
 ```

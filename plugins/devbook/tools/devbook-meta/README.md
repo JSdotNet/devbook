@@ -1,8 +1,8 @@
 # Devbook metadata tooling
 
 Derives machine-readable indexes from the `meta` blocks embedded in the
-devbook folders under `.devbook/` — `.arc42`, `.domain`, `.tech`, `.design`,
-and `.ai`, at `.devbook/arc42/` and so on:
+devbook folders under `.devbook/` — `arc42/`, `domain/`, `tech/`, `design/`,
+and `ai/`, at `.devbook/arc42/` and so on:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
@@ -20,7 +20,7 @@ that changed nothing is visibly a no-op:
 
 ```powershell
 ./build/Update-DevbookIndex.ps1                 # every adopted scope
-./build/Update-DevbookIndex.ps1 -Scope .tech    # one scope only
+./build/Update-DevbookIndex.ps1 -Scope tech    # one scope only
 ./build/Update-DevbookIndex.ps1 -Check          # validate, write nothing
 ```
 
@@ -31,7 +31,7 @@ The generator underneath, for CI and for anywhere pwsh is not available:
 node .devbook/_tools/devbook-meta/build.mjs
 
 # One scope only
-node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+node .devbook/_tools/devbook-meta/build.mjs --scope tech
 
 # Validate references without writing (exit 1 on a broken reference)
 node .devbook/_tools/devbook-meta/build.mjs --check
@@ -42,10 +42,10 @@ node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 
 The repository root defaults to the working directory. Only devbook folders
 that actually exist under `.devbook/` produce a scope, so a repository that
-adopts just `.domain` and `.arc42` never grows `_meta/` folders for the rest.
-`--scope` takes `tech`, `.tech`, or `.devbook/tech` for the same scope. The
+adopts just `domain/` and `arc42/` never grows `_meta/` folders for the rest.
+`--scope` takes `tech`, `tech/`, or `.devbook/tech` for the same scope. The
 generator exits `2` when no devbook folder is present at all, and a root-level
-`.tech/` is reported as an error and never indexed — the only layout is
+`tech/` is reported as an error and never indexed — the only layout is
 `.devbook/`.
 
 ### When to run it
@@ -77,11 +77,11 @@ Three artifacts per adopted scope, each co-located with what it describes:
 | Path | Scope |
 |---|---|
 | `.devbook/_meta/graph.json`, `.devbook/_meta/index.json`, `.devbook/_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
-| `.devbook/arc42/_meta/*.json` | `.arc42` only |
-| `.devbook/domain/_meta/*.json` | `.domain` only |
-| `.devbook/tech/_meta/*.json` | `.tech` only |
-| `.devbook/design/_meta/*.json` | `.design` only |
-| `.devbook/ai/_meta/*.json` | `.ai` only |
+| `.devbook/arc42/_meta/*.json` | `arc42/` only |
+| `.devbook/domain/_meta/*.json` | `domain/` only |
+| `.devbook/tech/_meta/*.json` | `tech/` only |
+| `.devbook/design/_meta/*.json` | `design/` only |
+| `.devbook/ai/_meta/*.json` | `ai/` only |
 
 A scoped graph contains every node in its folder, plus any node **outside** it
 that an in-scope node references. Those boundary nodes are flagged
@@ -157,9 +157,9 @@ Two different questions, two different keys:
 
 The authored field is called `type` in Markdown but lands on the node as
 `kind`, because `type` was already the structural discriminator and renaming it
-would break every existing consumer. `.tech` nodes have always carried `kind`;
+would break every existing consumer. `tech/` nodes have always carried `kind`;
 the unification means every folder that defines a value set now populates it —
-`.domain`, `.tech`, and `.ai`. Nodes in `.arc42` and `.design`
+`domain/`, `tech/`, and `ai/`. Nodes in `arc42/` and `design/`
 carry no `kind`, because those folders deliberately define no value set.
 
 ### Node types
@@ -182,7 +182,7 @@ the canvas and the committed `graph.json` never disagree about it.
 
 ### File node labels
 
-Heading text carries the name only, so all six files of a `.domain` bounded
+Heading text carries the name only, so all six files of a `domain/` bounded
 context are titled with the bare context name. A file node's label is therefore
 composed as `<title> (<kind>)`, and the suffix is dropped when the title
 already slugifies to the kind:
@@ -210,8 +210,8 @@ fallback does not render as `Context Map (context-map)`.
 | `depends-on` | The `depends-on` metadata field. |
 | `related` | The `related` metadata field. |
 
-`aliases` (`.domain`), `alternatives` (`.tech`), `feature-flag` (`.domain`),
-`stage` (`.ai`), and `roadmap` and `tests` (every folder) are plain-string
+`aliases` (`domain/`), `alternatives` (`tech/`), `feature-flag` (`domain/`),
+`stage` (`ai/`), and `roadmap` and `tests` (every folder) are plain-string
 fields, not references, so they stay node attributes and produce no edges.
 `feature-flag`, `roadmap`, `stage`, and `tests` accept a scalar or a list but
 are always emitted as a list, so a consumer never has to branch on shape. `effort` is emitted as a number rather than the authored
@@ -276,7 +276,7 @@ each expects, without building a command.
 | A reference pointing outside the devbook folders | warning |
 | A `type` set in a folder that defines no value set | warning |
 | A literal `` `r`n `` / `\r\n` / `\n` escape sequence in body text | warning |
-| `.tech` still using the old `kind` field name | warning |
+| `tech/` still using the old `kind` field name | warning |
 | An `order` field, removed from the schema — reading order now comes from the folder convention | error |
 | An `index` value other than `root` or `exclude` | error |
 | Two documents in one directory declaring `index: root` | error |
@@ -290,9 +290,9 @@ each expects, without building a command.
 | A `tests` entry that is a `<path>#<slug>` chapter reference rather than a test identifier | error |
 | A `tests` entry naming a runner the tooling has no command for | warning |
 | A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `version`, `alternatives`) on the file-level block | error |
-| `.domain` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature` | error |
+| `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature` | error |
 | An `approved` chapter carrying an open `kind: question` annotation | error |
-| `.ai` `stage` on a block inside a stage file, where the file already says it | warning |
+| `ai/` `stage` on a block inside a stage file, where the file already says it | warning |
 | A directory missing the root document its folder convention names | warning |
 
 ### Literal escape sequences
@@ -371,7 +371,7 @@ thing is this".
 ### `status` and `statusDeclared`
 
 `status` is always the block's **effective** status, never a raw copy of the
-field. In `.domain`, `.arc42`, and `.design` the field is optional and an
+field. In `domain/`, `arc42/`, and `design/` the field is optional and an
 absent one means that folder's resting value, `active`, so a block that states
 nothing still lands in the right bucket of `nodesByStatus` and still badges as
 `active` in a viewer.
@@ -382,7 +382,7 @@ distinguish "settled, and the author said so by omission" from a stated value,
 and every already-declared entry stays byte-identical to what earlier schema
 versions emitted.
 
-`.tech` and `.ai` have no resting value, so an absent status there
+`tech/` and `ai/` have no resting value, so an absent status there
 resolves to `null` and `validateDocument` reports it as an error. A `null`
 status in these artifacts means the corpus is broken, not that the content is at
 rest — do not paper over it in a viewer.
@@ -508,7 +508,7 @@ force-directed view with folder colouring, status shading, search, filters, and
 click-to-inspect neighbourhoods. Open it scoped to one folder:
 
 ```text
-open the reference graph canvas with scope .tech
+open the reference graph canvas with scope tech/
 ```
 
 The canvas has a scope selector, rebuilds from disk on open (so it never shows

@@ -19,8 +19,8 @@ A derived artifact lives in an `_meta/` subfolder **of the thing it
 describes**:
 
 ```
-.devbook/tech/_meta/graph.json     # derived from .tech only
-.devbook/domain/_meta/graph.json   # derived from .domain only
+.devbook/tech/_meta/graph.json     # derived from tech/ only
+.devbook/domain/_meta/graph.json   # derived from domain/ only
 .devbook/_meta/graph.json          # rollup: spans multiple source folders
 ```
 
@@ -62,8 +62,8 @@ payload:
 {
   "schemaVersion": 1,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".tech",
-  "sources": [".tech"]
+  "scope": "tech/",
+  "sources": ["tech/"]
   // ...artifact-specific payload
 }
 ```
@@ -179,11 +179,11 @@ repository actually adopts, plus a repository-wide rollup:
 | `.devbook/_meta/graph.json` | repository-wide | reference graph | devbook's `.devbook/_tools/devbook-meta/build.mjs --write` |
 | `.devbook/_meta/index.json` | repository-wide | ordered reading outline | same |
 | `.devbook/_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
-| `.devbook/arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |
-| `.devbook/domain/_meta/*.json` | `.domain` | all three of the above, scoped | same |
-| `.devbook/tech/_meta/*.json` | `.tech` | all three of the above, scoped | same |
-| `.devbook/design/_meta/*.json` | `.design` | all three of the above, scoped | same |
-| `.devbook/ai/_meta/*.json` | `.ai` | all three of the above, scoped | same |
+| `.devbook/arc42/_meta/*.json` | `arc42/` | all three of the above, scoped | same |
+| `.devbook/domain/_meta/*.json` | `domain/` | all three of the above, scoped | same |
+| `.devbook/tech/_meta/*.json` | `tech/` | all three of the above, scoped | same |
+| `.devbook/design/_meta/*.json` | `design/` | all three of the above, scoped | same |
+| `.devbook/ai/_meta/*.json` | `ai/` | all three of the above, scoped | same |
 
 `annotations.json` is derived like the other two: the notes themselves are
 authored Markdown in the chapters, so deleting this file loses nothing. Write a

@@ -69,7 +69,7 @@ entry names a test, and the counterpart still has to be resolved by naming. See
    names, snake_case id fields, a consumer context's local copy name. Search the
    repository for each alias. This is the intended path: `aliases` exists to
    make every synonym resolve back to one canonical concept.
-2. **The `.arc42` building-block view.** When no `term` chapter has an entry, or the
+2. **The `arc42/` building-block view.** When no `term` chapter has an entry, or the
    kind is architectural rather than a domain term, read
    `.arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
    and hosting units). Those chapters name the modules, containers, and
@@ -220,8 +220,8 @@ So:
   chapter's *content*; a status change is a separate, deliberate decision that
   belongs to the folder's flow and the person running it.
 - Never move a chapter to `active` because the code exists. `active` means "this
-  is the current agreed model", and only a person agrees. In `.domain`,
-  `.arc42`, and `.design` that move is spelled by *deleting* the `status` line,
+  is the current agreed model", and only a person agrees. In `domain/`,
+  `arc42/`, and `design/` that move is spelled by *deleting* the `status` line,
   since `active` is those folders' resting value — so a capture pass must leave
   a `draft` or `proposed` line in place rather than tidying it away.
 - Never move a chapter to `deprecated` because the code was deleted. Code being
@@ -241,7 +241,7 @@ chapter at `draft` or `proposed` has not been agreed:
   turns an unreviewed sketch into shipped behaviour.
 - `deprecated` — do not build. Report it and stop.
 
-In `.design`, the ladder is only `draft`, `active`, `deprecated`; the `draft`
+In `design/`, the ladder is only `draft`, `active`, `deprecated`; the `draft`
 rule above applies unchanged and there is no `proposed`. The `approved` rung is
 shared by every folder and sits on top of each one's ladder.
 
@@ -266,7 +266,7 @@ the write to whatever flow covers the folder, resolved in this order:
 Name the rung that answered, once, in the report. Whichever rung it is owns template
 conformance, metadata blocks, and the consistency review; this skill owns the evidence.
 The dependency is one-way — no flow knows these skills exist, and none of them changes to
-accommodate this. `tech-update` has the same relationship with the `.tech` write.
+accommodate this. `tech-update` has the same relationship with the `tech/` write.
 
 ## Code-side writes: the change brief
 

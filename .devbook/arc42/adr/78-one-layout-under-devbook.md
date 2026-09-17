@@ -31,10 +31,16 @@ and this repository its own chapters. The parent carries the "hidden support dir
 once; the five subfolders drop their dots, and the rollup drops its claim on the repository
 root. A repository that adopts devbook gains one entry in its root listing, not six.
 
-**The names stay.** A folder is still called `.domain` in every rule, chapter, and
-conversation, because the name is the kind and the dot is what says "specification area".
-Only the path changed. So a scope may still be spelled `--scope .tech`: `resolveScope` maps
-`tech`, `.tech`, and `.devbook/tech` to the one scope the generator uses.
+**The names stay — amended the same day: the dots do not.** As first written, a folder was
+still called `.domain` in prose, on the argument that the dot said "specification area". The
+owner's correction is that the dot marks the one area a repository has, `.devbook/`, and the
+five folders under it carry none, in prose as on disk: `domain/` when the folder is meant,
+`.devbook/domain/…` when a path is, `domain` bare when the kind is a field value. Every plugin,
+live chapter, and root file was rewritten that way; the records before this one keep the
+spelling they were written in. The rule filenames (`devbook-domain.md`) and the kinds in
+`adopted`, `DEVBOOK_FOLDER_NAMES`, and `folderKindForPath` were already dotless.
+`resolveScope` still accepts `.tech` beside `tech` and `.devbook/tech`, so an old command
+line keeps working, and the documented spelling is `--scope tech`.
 
 **Version and migration.** The contract version stays at 9: no authored chapter changes shape,
 and a chapter's address was already its real path. A repository laid out flat is broken until

@@ -12,13 +12,13 @@ carries the kind.
 | File | `.design/component-libraries.md` |
 | Folder rule | `devbook-design.md`, with `devbook-chapter-metadata.md` |
 | Context to load | `component-libraries.md`, `color-scheme.md`, `typography-and-layout.md`, `interaction-guidelines.md`, and `accessibility.md`; the authoritative design source when the repository has one |
-| Write path | The `.design` flow, per **Where the spec-side write goes** in the protocol |
-| Index scope | `--scope .design` |
+| Write path | The `design/` flow, per **Where the spec-side write goes** in the protocol |
+| Index scope | `--scope design` |
 | Extra input | The channel or channels in scope — capture covers each, a brief covers one at a time — and whether an authoritative design source exists and is reachable |
 
 ## The authoritative source wins
 
-`.design` differs from the other folders in one decisive way: when the
+`design/` differs from the other folders in one decisive way: when the
 repository has an authoritative design source — a design-system MCP server, a
 published style guide, a design-tokens package — that source wins, and code does
 not override it. So capture here is narrower than for the other kinds. It
@@ -31,20 +31,20 @@ strength of code alone. If the source exists but cannot be reached, say so, keep
 the affected chapters at `draft`, and note the gap in the chapter — the folder
 rules require exactly that.
 
-`.design` folder rules that apply:
+`design/` folder rules that apply:
 
-- **No `type` field.** `.design` defines no value set.
+- **No `type` field.** `design/` defines no value set.
 - **`status` is `draft`, `active`, or `deprecated`**, plus the shared `approved`
   rung. There is no `proposed`; the gate's `draft` rule applies unchanged.
 - **Guideline level only.** No wireframe, user flow, prototype, or screenshot is
-  stored in `.design`.
+  stored in `design/`.
 - **No dependency changes.** `component-libraries.md` records a recommendation
   with rationale; it never adds or pins a package. A brief may state that a
   package is required and never installs it — dependency changes go through the
   repository package-update workflow, and the adopted result is recorded in
-  `.tech`.
+  `tech/`.
 
-If `.design/` does not exist, stop and run `devbook:install`.
+If `design/` does not exist, stop and run `devbook:install`.
 
 ## Mapping
 
@@ -92,7 +92,7 @@ every pointer-only interaction, and every value referencing a declared token.
 Write them out, with the token names. Where the guideline comes from the
 authoritative source, carry its rules through rather than reinterpreting them.
 
-Ubiquitous language: the component and token names the `.design` chapters
+Ubiquitous language: the component and token names the `design/` chapters
 declare, and the `domain.md` terms for any user-facing copy. Out of scope: other
 channels, dependency changes, visual redesign beyond what the guideline states,
 and wireframes or prototypes. Acceptance checks a test or a lint rule can
@@ -111,6 +111,6 @@ hand-rolled component no longer imported at the replacement sites.
   it, and do not drop the token and keyboard-equivalence invariants from a brief.
 - Do not repeat raw token values — reference the declared names.
 - Do not record a library as in use because its package is present.
-- Do not restate channel or stack facts that belong in `.arc42` or `.tech`.
+- Do not restate channel or stack facts that belong in `arc42/` or `tech/`.
 - Do not brief "adopt the library" without the replacement sites, more than one
   channel at a time, a visual redesign, or a component design.

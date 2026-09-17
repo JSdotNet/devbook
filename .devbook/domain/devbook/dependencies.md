@@ -16,7 +16,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
 | Plugin Authoring | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper the install writes | The host's own schemas | The host decides what loads; this context writes to the shape and has no say in it. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper the install writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
-| A consuming repository | Customer-Supplier, this context supplying | `devbook:install` materializes rules, wrappers, the `.tech` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
+| A consuming repository | Customer-Supplier, this context supplying | `devbook:install` materializes rules, wrappers, the `tech/` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
 
 ## Inbound dependents (known)
 
@@ -38,7 +38,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
   restating this context's rules — is the one to take.
 - **Nothing here names a flow.** This context ships the shape and the check; how a chapter
   change is carried is the engine's, and the two meet only in a repository that installed both.
-- The checker, the fence writer, the canvas, and the `.tech` inventory are this context's,
+- The checker, the fence writer, the canvas, and the `tech/` inventory are this context's,
   and so are `check`, `annotation-sweep`, and `tech-update`. The one thing it never does is
   write a derived index: `build.mjs --write` is `devbook-derived`'s to pass — see
   [record 79](../../arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md).

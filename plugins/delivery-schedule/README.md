@@ -57,7 +57,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `devbook-check` | Daily 03:00 | `schedule-devbook-check`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
-| `tech-update` | Wednesday 04:00 | `schedule-tech-update`, every `.tech` layer | `delivery-schedule`, `devbook` | A draft pull request |
+| `tech-update` | Wednesday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
 | `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `prose-check` | Saturday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
 

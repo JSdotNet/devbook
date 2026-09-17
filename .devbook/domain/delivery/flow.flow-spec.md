@@ -39,11 +39,11 @@ It closes through the documentation tier. Every tier opens with Update Base, pre
 runner and named by no skill.
 
 - **The folder and the kind are settled inside the flow, not before it.** Context Loading derives
-  which folder the change lands in and, for `.arc42/`, whether it is a chapter, a decision, a debt
+  which folder the change lands in and, for `arc42/`, whether it is a chapter, a decision, a debt
   record, or a proposal — which is a decision record in `proposed` status. There is no separate
   flow per folder to route to, and no ADR or TDR flow either.
-- **The folder picks the role, and the role picks the model.** `architecture` drafts `.arc42/` and
-  `.tech/`, `domain` drafts `.domain/`, `ux` drafts `.design/`, `docs` drafts `.ai/`. A repository
+- **The folder picks the role, and the role picks the model.** `architecture` drafts `arc42/` and
+  `tech/`, `domain` drafts `domain/`, `ux` drafts `design/`, `docs` drafts `ai/`. A repository
   binds a different agent per folder through its roles, and a person picks a different model per
   folder through the category each role resolves to.
 - **It carries none of the folder's rules.** What a chapter must look like is the repository's own

@@ -115,7 +115,7 @@ type: feature
 related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md"]
 ```
 
-Run `devbook:tech-update` over every `.tech` layer and land what moved as one draft pull
+Run `devbook:tech-update` over every `tech/` layer and land what moved as one draft pull
 request, never a merge — a rating is a person's decision. The weekly `tech-update` trigger's
 target.
 

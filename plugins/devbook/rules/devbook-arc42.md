@@ -3,33 +3,33 @@ name: devbook-arc42
 description: Structure and authoring rules for the arc42 architecture documentation folder.
 ---
 
-# Architecture documentation (`.arc42`)
+# Architecture documentation (`arc42/`)
 
-`.arc42` holds arc42-structured architecture documentation for the system:
+`arc42/` holds arc42-structured architecture documentation for the system:
 context, building blocks, runtime views, cross-cutting concerns, and
 architecture decisions, at the level of the whole system or a major
 deployable unit.
 
 ## Context-loading policy
 
-- `.arc42` is **not** baseline repository context. Load it only for architecture,
+- `arc42/` is **not** baseline repository context. Load it only for architecture,
   ADR, blueprint, TDR, or explicit arc42 tasks, normally after routing through the
   repository's architecture flow or an architecture specialist agent.
-- When `.arc42` is needed as task context, load only the relevant chapter(s) or
+- When `arc42/` is needed as task context, load only the relevant chapter(s) or
   sections instead of reading the whole folder by default.
-- For non-architecture implementation or documentation tasks, consult `.arc42`
+- For non-architecture implementation or documentation tasks, consult `arc42/`
   only when the user asks for architecture context or when the work depends on a
   specific documented constraint, decision, runtime view, deployment view, or
   glossary entry.
 
 ## Relationship to other devbook folders
 
-- `.domain` describes *what the domain is* (bounded contexts, aggregates,
-  ubiquitous language). `.arc42` describes *how the system is built and runs*
+- `domain/` describes *what the domain is* (bounded contexts, aggregates,
+  ubiquitous language). `arc42/` describes *how the system is built and runs*
   (containers, deployment, quality attributes, decisions).
-- `.design` describes *how the product looks and behaves for the user* (UX
+- `design/` describes *how the product looks and behaves for the user* (UX
   principles, design tokens, interaction and accessibility rules). Channel and
-  stack facts stay in `.arc42`; `.design` links to them.
+  stack facts stay in `arc42/`; `design/` links to them.
 - Architecture Decision Records referenced from arc42 sections should stay
   aligned with ADRs already tracked by the repository's authoritative guidance
   source; do not duplicate ADR content here — link to it instead.
@@ -44,7 +44,7 @@ Use the standard arc42 chapter set as individual files (create files only
 when a chapter has real content — do not scaffold empty placeholders):
 
 ```
-.arc42/
+.devbook/arc42/
   01-introduction-and-goals.md
   02-constraints.md
   03-context-and-scope.md
@@ -63,22 +63,22 @@ when a chapter has real content — do not scaffold empty placeholders):
 
 ## Folder rules
 
-These rules describe the persisted shape of `.arc42` assets only. Authoring
+These rules describe the persisted shape of `arc42/` assets only. Authoring
 workflow, routing, and cross-document governance are handled by separate
 instructions.
 
 - Keep the glossary aligned with the ubiquitous language defined per bounded
-  context in `.domain`.
+  context in `domain/`.
 - Prefer diagrams (Mermaid) over long prose for building-block and runtime
   views.
 - Each file's top-level chapter, and any independently trackable ## section
   inside it, must carry the metadata block described in
   `devbook-chapter-metadata.md` (status — optional here, see
   below — cross-folder tags, issue link) — required for the derived index and
-  graph tooling. There is no `depends-on` field in `.arc42` —
+  graph tooling. There is no `depends-on` field in `arc42/` —
   architecture chapters describe standing structure, not sequenced work;
   cross-references use `related` instead.
-- Because an `.arc42` file is always exactly one top-level chapter, that
+- Because an `arc42/` file is always exactly one top-level chapter, that
   chapter's metadata block also serves as the file's file-level metadata
   block described in `devbook-chapter-metadata.md`
   — do not add a second, duplicate block for the file.

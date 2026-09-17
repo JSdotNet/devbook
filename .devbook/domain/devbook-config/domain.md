@@ -173,10 +173,10 @@ the marketplace rather than a unit of work.
 
 ```meta
 type: domain-service
-aliases: [.ai drift]
+aliases: [ai/ drift]
 ```
 
-Reports where the `.ai` adoption record no longer matches what is installed, enabled, and wired,
+Reports where the `ai/` adoption record no longer matches what is installed, enabled, and wired,
 and hands every edit to the folder's own flow.
 
 Invocation semantics: query-oriented, and it writes nothing at all — deliberately. The derivable

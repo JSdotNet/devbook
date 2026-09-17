@@ -397,7 +397,7 @@ because no other plugin is allowed to name every plugin.
 | `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
 | `update` | The same four keys, moved forward, after each component reconciled itself |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
-| `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-spec` |
+| `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
 
 The four take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
@@ -410,7 +410,7 @@ layouts, and the engine's own `skills/` folder. A clone older than the source is
 latest" is usually wrong, so the report prints both and the commit behind each.
 
 `devbook-config:adoption` is the second reader, and it stops one step earlier than the report does. The
-derivable half of `.ai` — which plugins are installed and enabled, which `flow-*` and
+derivable half of `ai/` — which plugins are installed and enabled, which `flow-*` and
 `schedule-*` the copies on disk ship, what the config wires — goes stale on every upgrade and is
 exactly what the report already prints. The other half rates whether people work that way, which
 no file on disk records, so a `status`, an **Adopted by**, or an **Evidence** line is never

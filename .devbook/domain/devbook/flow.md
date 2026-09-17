@@ -47,7 +47,7 @@ flowchart TD
 
 ## A Chapter's Standing
 
-The `.domain` ladder, with the shared `approved` rung on top of it. `active` is the resting
+The `domain/` ladder, with the shared `approved` rung on top of it. `active` is the resting
 value and is written by omitting the field, which is why the diagram's busiest state is the one
 that says nothing.
 

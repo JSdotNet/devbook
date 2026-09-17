@@ -48,7 +48,7 @@ lens is a review that misses the finding.
    | Evidence | Does every claim that could be proven carry a `tests` entry, and does the named test still exist? |
    | Edges | Does every `related` and `depends-on` target resolve, and is each one a real relationship rather than a stale one? |
    | Vocabulary | Are the terms the ones `domain.md` defines, used the way it defines them? |
-   | Status | Does `status` match reality — a `draft` that shipped, a `deprecated` still in use, a `.tech` rating nobody has revisited? |
+   | Status | Does `status` match reality — a `draft` that shipped, a `deprecated` still in use, a `tech/` rating nobody has revisited? |
    | Scope | Does the chapter say one thing, or has a second subject grown inside it that wants its own chapter? |
    | Gaps | What does a reader need that the chapter does not say? |
 

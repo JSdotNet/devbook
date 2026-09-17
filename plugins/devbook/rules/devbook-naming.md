@@ -21,17 +21,19 @@ what a generator reads, what it writes, or the generator itself.
 
 Use the prefix when the asset is a template, a schema, a generated artifact,
 input consumed only by a generator or viewer, or the generator. Do not use it for documents meant
-to be read as content, even if tooling also parses them — the `.domain`,
-`.arc42`, `.tech`, `.design`, and `.ai` Markdown files are read by both
+to be read as content, even if tooling also parses them — the `domain/`,
+`arc42/`, `tech/`, `design/`, and `ai/` Markdown files are read by both
 humans and tooling and stay unprefixed.
 
-## Dot prefix marks specification areas
+## One dot, on the parent
 
-The devbook areas keep their dotted names — `.arc42`, `.domain`, `.tech`,
-`.design`, `.ai` — and the dot marks a specification area; the underscore marks
-tool-interpreted data within one. On disk the dot sits on the `.devbook/` parent
-alone and the five drop theirs — `.devbook/domain/`, never `.devbook/.domain/`;
-see `devbook-chapter-metadata.md`.
+The dot marks the one specification area a repository has, `.devbook/`; the underscore
+marks tool-interpreted data inside it. The five folders under the parent carry neither:
+`arc42/`, `domain/`, `tech/`, `design/`, `ai/` — `.devbook/domain/`, never
+`.devbook/.domain/`, and never a dotted name in prose either. Write a folder as
+`domain/` when it is the thing meant, `.devbook/domain/…` when a path is meant, and
+`domain` bare when it is the kind in a field or a stamp. See
+`devbook-chapter-metadata.md`.
 
 ## No redundant suffixes
 
