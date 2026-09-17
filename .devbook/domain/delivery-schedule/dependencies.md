@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
+related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 > What this context depends on and who depends on it. It is an L1 extension over the engine it
@@ -37,7 +37,7 @@ related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/ad
 - **The host-capability divergence is recorded, not hidden.** Nothing else in this marketplace
   names a host capability as its subject. The catalog itself stays host-neutral data and only the
   scheduler resolution knows a tool answered — see
-  [the decision](../../arc42/adr/26-the-unattended-lane-is-its-own-plugin.md).
+  [the decision](../../arc42/adr/plugin-boundaries.md).
 - **This context owns no flow, holds no gate, and adds no extension point.** That is what makes
   it an extension rather than a second engine: everything it runs, the engine already had.
 - **The line between committed and personal is the one to hold.** The selection and the cadence

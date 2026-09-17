@@ -29,7 +29,7 @@ as failing, never as installed.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Rewrite the committed indexes from the chapters on this branch and say which files moved. The

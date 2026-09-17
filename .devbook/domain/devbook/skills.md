@@ -78,7 +78,7 @@ it was taken: an edit is a person's, through the folder's flow.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#fence-writer", ".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md"]
+related: [".devbook/domain/devbook/domain.md#fence-writer", ".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
 ```
 
 Delete every resolved annotation fence in one chapter and nothing else — the last step of the
@@ -89,12 +89,15 @@ Chapter-scoped, so a person sees what is about to go before it does.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md"]
 ```
 
 Read an implementation and its unit tests and write the chapter that was missing, thin, or
 stale, for any of the five kinds. The kind is the chapter's `type`, or the file where the folder
 defines none, and what a kind needs is read from its own file rather than carried in the skill.
+The three converters are named after OpenSpec's verbs, so a reader who has met OpenSpec first
+needs no translation; a skill is a direction, because ten skills carried one procedure ten
+times and the kind-specific part was a mapping table each pair restated from its two ends.
 
 The aggregate is the unit and not its parts: a consistency boundary decided twice is a boundary
 decided differently. A domain service is the deliberate exception — defined by coordinating
@@ -115,7 +118,7 @@ Screenshots are report evidence and are never committed into a devbook folder.
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#spec-converter"]
 ```
 
 Turn an agreed but unbuilt chapter of any of the five kinds into a change brief — outcomes,
@@ -138,7 +141,7 @@ the change category is decided: new functionality, a change to existing behaviou
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict"]
 ```
 
 Report the drift verdict per chapter and write nothing — no chapter, no brief, no status. The

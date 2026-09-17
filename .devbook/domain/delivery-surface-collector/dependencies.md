@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
+related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 > What this context depends on and who depends on it. Like every surface here, it declares
@@ -30,7 +30,7 @@ related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook
 
 - **The absent render group is a declaration, not a gap.** A caller finds it unanswered and
   renders nowhere, rather than finding a stub that pretends to have shown someone something —
-  which is the reason [the decision](../../arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md)
+  which is the reason [the decision](../../arc42/adr/surfaces.md)
   forbids declaring a name you do not implement.
 - **No telemetry dependency, and therefore no telemetry.** Nothing here observes a session, so
   there is no hook, no host-specific half, and no numbers — which also means this context works

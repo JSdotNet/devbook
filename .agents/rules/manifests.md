@@ -17,7 +17,6 @@ fail with "Duplicate hooks file detected". Declare MCP servers under `mcpServers
 The two manifests agree on `name`, `version`, and `description`, and a new plugin also needs
 an entry in `.claude-plugin/marketplace.json` — `name`, `source` (`./plugins/<name>`),
 `description`, `version` — or Claude Code will not offer it. A version change touches all
-three, and a behaviour change a consumer would notice gets a line in the plugin's
-`UPGRADING.md`.
+three. No plugin carries an `UPGRADING.md`: git history is the upgrade note.
 
 `node tools/check-assets.mjs` fails on any disagreement.

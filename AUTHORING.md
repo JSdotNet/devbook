@@ -5,7 +5,7 @@ Pruning rules and size budgets that keep authored assets short enough to stay pr
 
 It arrived from the `spec-builder` plugin's `instructions/authoring/spec-conciseness.instructions.md`
 and stayed behind when that plugin
-[left the marketplace](.devbook/arc42/adr/24-the-specialists-leave-the-marketplace.md),
+[left the marketplace](.devbook/arc42/adr/plugin-boundaries.md),
 because it governs authoring *here*.
 
 ## Purpose
@@ -47,6 +47,17 @@ lines; frontmatter such as an agent `tools` list does not count.
 - Inline what every run needs; disclose behind a pointer what only some runs reach.
 - State the reason in the file when an asset genuinely must exceed its budget.
 - `node tools/check-assets.mjs --budgets` lists what is over. It reports, and never fails.
+
+Four kinds are long by nature, and the reason is stated here once rather than in each file:
+
+| Kind | Why it exceeds by nature |
+| --- | --- |
+| `flow-*`, `phase-*`, `fleet-*`, `schedule-*` skills | A staged procedure is read once per run and every stage is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
+| `assets/spec-kinds/<kind>.md` | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
+| A plugin rule (`devbook-*.md`) and a `resources/` contract | A schema or a contract is the single source everything else points at; it cannot itself be a pointer. |
+| The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
+
+Everything else over budget owes a trim or a reason line in the file.
 
 ## Positive Phrasing
 

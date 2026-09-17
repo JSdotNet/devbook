@@ -28,7 +28,7 @@ which is what the merge behind record 45 found: twenty-eight of seventy-three
 terms restated a chapter beside them. Record 45 made the file optional and
 stopped using it; this finishes the move, so that resolving a term never has
 to ask which of two layouts a context picked. The decision is
-`.devbook/arc42/adr/83-a-term-is-a-chapter-or-an-alias.md` in the marketplace.
+`.devbook/arc42/adr/chapter-schema.md` in the marketplace.
 
 ## What breaks
 

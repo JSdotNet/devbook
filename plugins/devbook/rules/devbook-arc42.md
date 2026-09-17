@@ -30,13 +30,10 @@ deployable unit.
 - `design/` describes *how the product looks and behaves for the user* (UX
   principles, design tokens, interaction and accessibility rules). Channel and
   stack facts stay in `arc42/`; `design/` links to them.
-- Architecture Decision Records referenced from arc42 sections should stay
-  aligned with ADRs already tracked by the repository's authoritative guidance
-  source; do not duplicate ADR content here — link to it instead.
-- Local ADRs and TDRs (decisions/debt specific to this system, not covered by
-  an org-level ADR) live under `.arc42/adr/` and `.arc42/tdr/` respectively,
-  and are linked from `09-architecture-decisions.md` /
-  `11-risks-and-technical-debt.md` rather than restated there.
+- Decision records and debt records live under `arc42/adr/` and `arc42/tdr/`
+  and are linked from `09-architecture-decisions.md` and
+  `11-risks-and-technical-debt.md`, never restated there. A decision an
+  organization already records elsewhere is linked, not copied.
 
 ## Structure
 
@@ -57,8 +54,8 @@ when a chapter has real content — do not scaffold empty placeholders):
   10-quality-requirements.md
   11-risks-and-technical-debt.md (links out to TDRs)
   12-glossary.md
-  adr/                           (Architecture Decision Records)
-  tdr/                           (Technical Debt Records)
+  adr/                           (decision records — one per technical concern)
+  tdr/                           (technical debt records — one per item)
 ```
 
 ## Folder rules
@@ -99,15 +96,90 @@ instructions.
   `<NN>-` prefix supplies it, so `10-quality-requirements.md` sorts after
   `09-architecture-decisions.md` rather than after `01-…`. Only add an explicit
   `number` field when a file's name cannot carry the number.
-- **ADRs and TDRs are numbered records with a date.** Number them in the
-  filename (`7-use-postgres.md`) or, where the filename is a plain slug, in a
+- **Debt records are numbered with a date.** Number them in the filename
+  (`7-no-retry-budget.md`) or, where the filename is a plain slug, in a
   `number` field — either way the number is what orders the folder, so an
-  unpadded 10 still follows 7. Give each one a `date` for the day the decision
-  was taken or the debt logged; it is content, not a modification timestamp.
+  unpadded 10 still follows 7. Give each one a `date` for the day the debt was
+  logged; it is content, not a modification timestamp. Decision records are not
+  numbered; the next section says why.
 - **Give `adr/` and `tdr/` an index document.** Neither folder has a root
   document by convention, so mark the one that introduces the set — usually
   `README.md` — with `index: root` and it sorts first. Without it the folder is
-  a bare numbered list.
+  a bare list.
+
+## Decision records (`adr/`)
+
+A decision record holds a **technical choice**: a storage engine, an API style,
+a messaging or integration protocol, a hosting or deployment model, a runtime or
+framework, how packages are managed and built. The test is what reversing it
+would cost. A choice that would take a migration of code, data, or
+infrastructure to reverse is a decision record; one a reader could reverse with
+a find-and-replace is not. Naming, folder layout, process rules, who owns what,
+and how a document is written are not architecture: the rule, chapter, or
+bounded context that states them carries the reason in a sentence, and no
+record is opened.
+
+**One record per concern, not per decision.** The file is the concern —
+`adr/storage.md`, `adr/api.md`, `adr/package-management.md` — a kebab-case slug
+with no number, and it always describes the standing choice. A new decision on
+a concern that already has a record changes that record: the choice is
+rewritten, the reasons and rejected alternatives are brought in line, and a row
+is added to its history. Open a new file only for a concern no record covers.
+Two concerns that are always decided together are one record; a record that
+keeps growing a second subject is two. A record for a concern the system no
+longer has is marked `status: deprecated` and says what happened; it is never
+deleted, because the history is the part a reader most needs.
+
+Each record, in this order:
+
+- The standing choice, in one or two sentences under the title, before any
+  section.
+- `## Why` — the reasons that carry it, as they stand today.
+- `## Rejected` — each alternative considered and the reason it lost. Someone
+  arriving to propose one of them should find it here.
+- `## History` — a table, newest first, one row per decision: the date, what
+  changed, and why in a clause. The bottom row is the concern's first choice.
+  The `date` field carries the newest row's date; it is content, not a
+  modification timestamp.
+
+A proposed change to a concern lives in that record under `status: proposed`,
+in a `## Proposed` section stating the candidate choice against the standing
+one. Decided, it folds into the choice and a history row and the section goes;
+declined, it becomes a history row saying so. A proposal never sits as a loose
+document beside the set.
+
+The `adr/` index lists every concern with its standing choice in one line, and
+`09-architecture-decisions.md` links to the index and restates nothing.
+
+```markdown
+# Storage
+
+\`\`\`meta
+date: 2026-09-17
+\`\`\`
+
+PostgreSQL 16 through EF Core, one database per bounded context.
+
+## Why
+
+\`\`\`meta
+\`\`\`
+
+## Rejected
+
+\`\`\`meta
+\`\`\`
+
+## History
+
+\`\`\`meta
+\`\`\`
+
+| Date | Change |
+| --- | --- |
+| 2026-09-17 | SQL Server to PostgreSQL: the licence no longer covered the features in use. |
+| 2026-03-01 | SQL Server, because the team knew it. |
+```
 
 ## Template
 

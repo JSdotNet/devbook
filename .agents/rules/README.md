@@ -15,7 +15,7 @@ file declares `name`, `description`, and a `paths` list; the Claude wrapper copi
 verbatim, and the Copilot wrapper's `applyTo` is that list joined with commas. Because
 `applyTo` is exactly `paths.join(",")`, drift is machine-detectable —
 `node tools/check-assets.mjs` fails on it. It stays a checker, not a generator: this
-repository has [no generated sync layer](../../.devbook/arc42/adr/4-no-generated-sync-layer.md)
+repository has [no generated sync layer](../../.devbook/arc42/adr/hosts.md)
 by decision.
 
 `.agents/rules/` is not a ratified standard. `AGENTS.md` is the standard for the *root* file
@@ -37,7 +37,7 @@ A plugin instruction file is authored in the same host-neutral shape all the sam
 here is wrapped per host in place, while a plugin's is materialized into the adopting
 repository by that plugin's install skill, which derives each host's spelling on the way in. See
 [plugin-rules.md](plugin-rules.md) and
-[the decision](../../.devbook/arc42/adr/37-a-plugins-rules-reach-a-host-through-the-install.md).
+[the decision](../../.devbook/arc42/adr/install.md).
 
 A shared file may point at a plugin instruction file rather than restate it, when that plugin
 file is already the one authored copy. The rule stays one hop from the wrapper either way;

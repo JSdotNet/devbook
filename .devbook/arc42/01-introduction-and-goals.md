@@ -9,7 +9,14 @@ This repository, `devbook`, packages the devbook convention and the delivery flo
 skills, instruction files, and hooks that do the work — as plugins served from one
 marketplace, `jsdotnet-devbook`. The repository is named for the convention that every plugin
 here reads from or writes into; the marketplace name is a separate key that follows the
-repository name by rule — [record 66](adr/66-the-marketplace-is-named-jsdotnet-devbook.md).
+repository name by rule — [the releases record](adr/releases.md).
+
+This folder holds chapters 1, 5, 9, and 11 and the two record folders, and no others: a
+chapter is written when it has content, not to complete the set. There is no runtime here, so
+the runtime, deployment, and quality-scenario chapters would describe hosts this repository does
+not own; constraints, context, and solution strategy are carried by the domain folder's context
+map and dependencies and by the goals below; cross-cutting concepts and the glossary are each
+context's `domain.md`. The numbering is kept so a later chapter lands in its place.
 
 ## Quality Goals
 

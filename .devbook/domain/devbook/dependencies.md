@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
 > What this context depends on and who depends on it. It is an L0 foundation: its
@@ -42,7 +42,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
   `check`, `annotation-sweep`, and `tech-update`. The canvas is not: it is `devbook-derived`'s
   and loads these modules by path. The one thing this context never does is write a derived
   index: `build.mjs --write` is `devbook-derived`'s to pass — see
-  [record 81](../../arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md).
+  [the checks and indexes record](../../arc42/adr/checks-and-indexes.md).
 - Every relationship above degrades rather than fails. A repository that has not run the
   install still has readable Markdown, and
   a consumer of the `ext` namespace that is not installed leaves keys that parse and mean

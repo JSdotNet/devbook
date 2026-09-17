@@ -230,7 +230,7 @@ alone.
 
 `date` rides along as the authored `YYYY-MM-DD` string. `number` is emitted as a
 number on **file** nodes only, resolved from the `number` field or the filename,
-so an ADR node knows it is ADR 7 without the consumer parsing paths. `index`
+so a TDR node knows it is TDR 7 without the consumer parsing paths. `index`
 steers outline generation only and never reaches a node.
 
 ### Running a node's linked tests

@@ -6,7 +6,7 @@ have I got, and how is this repository wired* from files on disk.
 
 It is named for the file it writes, not for a plugin it needs: the `dependencies` array is
 empty, `devbook` included. See
-[the decision](../../.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md).
+[the decision](../../.devbook/arc42/adr/plugin-boundaries.md).
 
 ## Installation
 
@@ -118,11 +118,11 @@ The report reads one host's plugin state — the config directory, its installed
 marketplace clones, and its settings layers. Two things follow, and both are deliberate.
 
 It is the only asset in this marketplace that still names a host's own paths, after
-[`claude-desktop` and `copilot-app` were deleted](../../.devbook/arc42/adr/17-no-host-profile-plugins.md)
+[`claude-desktop` and `copilot-app` were deleted](../../.devbook/arc42/adr/hosts.md)
 for doing exactly that. Where a plugin is installed and whether it is enabled is a fact about a
 host and about nothing else, so an asset answering it either names those files or answers
 nothing, and nothing in a flow reads what this returns. The
-[decision](../../.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md)
+[decision](../../.devbook/arc42/adr/plugin-boundaries.md)
 records the divergence rather than leaving it silent. A slot would be the clean fix and the
 engine's closed set has no member for *where this host keeps its plugins*.
 

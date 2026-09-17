@@ -43,7 +43,7 @@ repository, after `devbook:install` — there is nothing to derive until a folde
 devbook's `build.mjs` checks by default and writes only on `--write`. Nothing in devbook
 passes that flag; everything here does — the script, both workflows, and `refresh` — at `.devbook/_tools/devbook-meta/build.mjs`, the
 path devbook's install materializes. That one option is the whole boundary between the two
-plugins: `.devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md`.
+plugins: `.devbook/arc42/adr/checks-and-indexes.md`.
 
 ## Refresh
 

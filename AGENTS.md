@@ -41,7 +41,7 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
 the committed index is `devbook-derived`'s, per
-`.devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md`; this
+`.devbook/arc42/adr/checks-and-indexes.md`; this
 repository vendors both from the plugins rather than materializing them.
 
 ## Committing
@@ -73,8 +73,10 @@ plugins/<name>/
                                   executables a skill or a check runs from the plugin itself
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
   README.md                       what the plugin is. Every plugin has one
-  UPGRADING.md                    behaviour changes a consumer would notice, newest first
 ```
+
+No plugin carries an `UPGRADING.md` or a changelog. The marketplace has one consumer, git
+history is the upgrade note, and a migration is the only record a behaviour change leaves.
 
 A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`, `source`
 (`./plugins/<name>`), `description`, `version` — or Claude Code will not offer it.
@@ -92,7 +94,7 @@ are in `plugins/devbook/README.md` under *Migrations*. Neither is repeated here.
 Three cases decide whether one is owed:
 
 - An added field with a safe default — a chapter, stamp, or config that omits it still
-  validates and reads as before — needs no migration. Note it in `UPGRADING.md` and stop.
+  validates and reads as before — needs no migration and no note.
 - A renamed or removed field always needs one, in a chapter `meta` block, the stamp, or a
   config key alike: every repository holding the old spelling is broken until a script rewrites
   it, and a prose note asking each one to do so by hand is not a migration.
@@ -104,7 +106,7 @@ Three cases decide whether one is owed:
   script moves it. A file reconcile would replace on its own needs none.
 
 The reason this obligation starts at 1.0.0 and not before is
-`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`. A migration lives for the major
+`.devbook/arc42/adr/releases.md`. A migration lives for the major
 version it ships in: a major release raises the floor and drops the folders below it, per
 `plugins/devbook/README.md` under *Migrations*, so the folder never grows past one major.
 
@@ -136,7 +138,7 @@ behaviour.
   The budget is a disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
   branch, or state the reason in the file. Full rule: [AUTHORING.md](AUTHORING.md). Staged
   procedures, converters, schema and contract instruction files, and the `flow-runner` agent
-  are long by kind, recorded once in `.devbook/arc42/09-architecture-decisions.md` rather than
+  are long by kind, recorded once in [AUTHORING.md](AUTHORING.md) rather than
   in each file.
 - A rule that must survive a long session says so in the asset, and repeats itself at the point
   of use. Instructions decay as context fills.

@@ -162,7 +162,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     contract to `dependencies.md`. A tenant is not an actor either: it appears
     as the administrator user that changes settings.
   - Rights are stated here, not argued. Why a right is split — separation of
-    duties, four eyes — is a modeling decision and belongs in a decision record.
+    duties, four eyes — is a modeling decision and belongs in `domain.md`, beside
+    the invariant it protects.
     A context whose rights need a screen-to-right matrix closes the file with one
     `## Rights` section carrying that table.
 - **features.md** — The features and sub-features this bounded context

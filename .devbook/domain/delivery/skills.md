@@ -100,7 +100,7 @@ is the one guarantee that makes the other three depths usable at all.
 
 ```meta
 type: sub-feature
-related: [".devbook/arc42/adr/46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md"]
+related: [".devbook/arc42/adr/flow-engine.md"]
 ```
 
 The evidence rules are the engine's own contract, so they hold with no QA plugin, no `qa.run`
@@ -206,7 +206,7 @@ is the tracker binding's answer, not this skill's.
 
 ```meta
 type: feature
-related: [".devbook/arc42/adr/46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md"]
+related: [".devbook/arc42/adr/flow-engine.md"]
 ```
 
 Write the two procedures the engine names but cannot author — `start`, how this repository's

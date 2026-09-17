@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-05
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/25-devbook-payload-named-after-its-plugin.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -12,7 +12,8 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/2
 ```meta
 ```
 
-[Devbook Payload Named After Its Plugin](../adr/25-devbook-payload-named-after-its-plugin.md)
+The `knowledge-` to `devbook-` rename of 2026-09-05 — the
+[devbook folder](../../domain/plugin-authoring/domain.md#devbook-folder) term says why —
 renamed six materialized paths. Five of them are things `devbook-install` copies into a consuming
 repository and records in the stamp:
 
@@ -50,7 +51,7 @@ this record sat open. The migration it proposes is `010-devbook-names` at contra
 the options table below has been renumbered to match. Nothing else about the debt moved.
 
 **2026-09-17. Spent again.** `010-terms-live-in-domain-md` took contract 10 for
-[record 83](../adr/83-a-term-is-a-chapter-or-an-alias.md). The proposal is `011-devbook-names`
+[the chapter schema record](../adr/chapter-schema.md). The proposal is `011-devbook-names`
 at contract 11; the table below says so.
 
 ## Affected components
@@ -69,7 +70,7 @@ being rewritten.
 ```
 
 **A re-synced repository ends up with two spellings of the same tooling**, and nothing warns
-it will: neither the plugin README nor `UPGRADING.md` mentions the rename. Both workflows fire,
+it will: the plugin README does not mention the rename. Both workflows fire,
 both point at a generator, and the stale copy is the one nothing updates again.
 
 Nothing fails loudly. The new tooling works; the old tooling keeps working until the schema it

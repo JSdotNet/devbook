@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
+related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 What this context is responsible for: that a chapter can be addressed, that the reference
@@ -119,7 +119,7 @@ heading level.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/80-one-layout-under-devbook.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
@@ -147,7 +147,7 @@ type: value-object
 One `.devbook/` parent, five subfolders without their dots, the repository rollup in
 `.devbook/_meta/`, the tooling in `.devbook/_tools/`, and the stack config beside them. The
 layout is a constant rather than a detected value since
-[record 80](../../arc42/adr/80-one-layout-under-devbook.md); what is detected is which of
+[the chapter schema record](../../arc42/adr/chapter-schema.md); what is detected is which of
 the five exist.
 
 ### Folder Kind
@@ -165,7 +165,7 @@ set and adding a sixth is a contract change rather than a folder.
 ```meta
 type: aggregate
 aliases: [graph, graph.json]
-related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook/domain.md#index-generator"]
+related: [".devbook/arc42/adr/checks-and-indexes.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -213,7 +213,7 @@ rather than maintained.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#reconcile", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md", ".devbook/arc42/adr/39-every-install-skill-is-called-install.md"]
+related: [".devbook/domain/devbook/domain.md#reconcile", ".devbook/arc42/adr/install.md"]
 ```
 
 Brings a repository level with the installed release, in six phases — detect, resolve, plan,
@@ -235,7 +235,7 @@ wrappers each host reads, the CI workflow templates, and devbook's own marker-fe
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#reference-graph", ".devbook/domain/devbook-derived/domain.md#derived-index", ".devbook/arc42/adr/53-the-hard-gate-runs-the-schema-validator.md", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+related: [".devbook/domain/devbook/domain.md#reference-graph", ".devbook/domain/devbook-derived/domain.md#derived-index", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Walks the corpus once and projects it per scope, building the reference graph, the outline, and
@@ -255,7 +255,7 @@ request and the daily `devbook-check` schedule runs `check` through its own wrap
 ```meta
 type: domain-service
 aliases: [annotations.mjs]
-related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md"]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
 ```
 
 `annotations.mjs`: `list`, `add`, `reply`, `resolve`, `sweep`, as a CLI and as the same
@@ -281,7 +281,7 @@ one is visibly not. Materialized by the install only where `tech/` is adopted.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/domain/devbook/skills.md"]
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
@@ -388,7 +388,7 @@ that has not adopted the folder stops and says so.
 type: term
 date: 2026-09-08
 aliases: [install, upgrade, sync]
-related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md"]
+related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/arc42/adr/install.md"]
 ```
 
 Bringing a repository level with the installed release in one idempotent operation covering

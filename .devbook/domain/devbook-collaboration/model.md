@@ -70,7 +70,7 @@ classDiagram
   in a block another context owns, and the fields are that context's too: devbook defines
   `review`, `reviewer`, and `review-at` beside its approval triad and validates them, so this
   context contributes the procedure and none of the vocabulary
-  ([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
+  ([the annotations record](../../arc42/adr/annotations.md)).
 - **The line between the two is who writes, not who defines.** Every field is devbook's;
   this context writes the review triad through the pass and `status`, `approved-by`, and
   `approved-at` only through [Approval](domain.md#approval).
@@ -83,6 +83,6 @@ classDiagram
   neither owns its shape nor sweeps it. What the review contributes is the reading — an open
   `kind: question` is the one that blocks the approval decision.
 - **The seam that used to be open is closed.** Findings were flat `ext` keys until
-  2026-09-09; see [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md)
-  and [record 60](../../arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md) for why the
+  2026-09-09; see [the decision](../../arc42/adr/annotations.md)
+  and [the annotations record](../../arc42/adr/annotations.md) for why the
   sweep stayed with devbook.

@@ -23,7 +23,7 @@ where Personal Validation would be, with a handoff brief naming what a person ha
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/skills.md#check", ".devbook/domain/devbook-derived/skills.md#install", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+related: [".devbook/domain/devbook/skills.md#check", ".devbook/domain/devbook-derived/skills.md#install", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Run `devbook:check` over every adopted folder, fix what it reports in the chapters, refresh the
@@ -112,7 +112,7 @@ is the operative word: a run updates what its previous run left open rather than
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Run `devbook:tech-update` over every `tech/` layer and land what moved as one draft pull

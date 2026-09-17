@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
+related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 What this context is responsible for: that a procedure can run in a session nobody is watching

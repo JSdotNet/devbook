@@ -90,4 +90,4 @@ index, so a note written on the branch a minute ago is already in front of the
 person.
 
 The reason the state is devbook's and not this plugin's is
-`.devbook/arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md`.
+`.devbook/arc42/adr/annotations.md`.

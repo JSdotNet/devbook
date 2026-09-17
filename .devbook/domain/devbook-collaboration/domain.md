@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc42/adr/7-approved-is-a-status-rung.md"]
+related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 What this context is responsible for: that a chapter always says who owes the next move, and
@@ -17,7 +17,7 @@ in, and the [annotation](../devbook/domain.md#annotation) a finding is written a
 [Devbook](../devbook/domain.md)'s. This context owns no schema and no state of its own: the
 three review fields it writes are devbook's, defined beside the approval triad and held to
 their meaning by devbook's check, and a finding lives in devbook's own device
-([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
+([the annotations record](../../arc42/adr/annotations.md)).
 
 ## Chapter Review
 
@@ -55,7 +55,7 @@ is no review fields at all.
 ```meta
 type: entity
 aliases: [note, comment, objection]
-related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md"]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/annotations.md"]
 ```
 
 One unresolved objection, as one
@@ -70,11 +70,11 @@ approval decision, while a `comment`, `suggestion`, or `flag` is a remark about 
 stands. Among the remarks a `flag` is read first, and a note dated after the chapter's
 `approved-at` is read as raised since the approval — an objection the approval never saw, and a
 reason to lift it. Neither reading blocks; see
-[the decision](../../arc42/adr/63-an-open-flag-is-shown-at-the-gate-and-never-blocks-it.md).
+[the decision](../../arc42/adr/annotations.md).
 
 It was one flat `ext` key until 2026-09-09, which recorded no author, could not be replied to
 in place, and never said which passage it was about. See
-[the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).
+[the decision](../../arc42/adr/annotations.md).
 
 ### Reviewer
 
@@ -103,7 +103,7 @@ state that obliges no one.
 ```meta
 type: domain-service
 aliases: [sign-off, agreed]
-related: [".devbook/arc42/adr/7-approved-is-a-status-rung.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md"]
+related: [".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
 ```
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,
@@ -122,7 +122,7 @@ It lives in this context and not in the flow engine because it writes the rung i
 the engine reads that rung and never writes it. It reads the chapter, not the derived index:
 every fact the decision needs is in the one file it is already showing, and the index is
 refreshed on a schedule, so the note written on this branch an hour ago is the one it lacks.
-See [the decision](../../arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md).
+See [the decision](../../arc42/adr/annotations.md).
 
 ## Review Queue
 

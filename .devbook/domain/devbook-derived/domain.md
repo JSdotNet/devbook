@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/domain/devbook/domain.md#index-generator"]
+related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 What this context is responsible for: that a repository which keeps the derived `_meta/`
@@ -26,7 +26,7 @@ full check and no derived file.
 ```meta
 type: domain-service
 aliases: [Update-DevbookIndex, nightly refresh, drift warning]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook-derived/skills.md#install"]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/domain/devbook-derived/skills.md#install"]
 ```
 
 The ways a committed index gets rewritten, and the only ways: the `refresh` skill, when a
@@ -50,7 +50,7 @@ flow, or a chapter edit, is never one of them.
 ```meta
 type: domain-service
 aliases: [devbook-graph, reference graph canvas]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/36-devbooks-canvas-carries-no-surface-word.md"]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/surfaces.md", ".devbook/domain/plugin-authoring/domain.md#flow-skill"]
 ```
 
 Two Copilot canvases over devbook's own modules: the reference graph, rebuilt from disk on
@@ -62,7 +62,7 @@ It bundles no parser. It loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` fr
 `.devbook/_tools/devbook-meta/` — the path devbook's install materializes — at runtime, and
 from `plugins/devbook/tools/devbook-meta/` in the repository that vendors them; absent both,
 it names `devbook:install` and draws nothing. That runtime load is the "published shape to
-import" [record 5](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md) waited for,
+import" [the surfaces record](../../arc42/adr/surfaces.md) waited for,
 and what closes it.
 
 ## Ubiquitous Language
@@ -81,7 +81,7 @@ related: [".devbook/domain/devbook/domain.md#ubiquitous-language"]
 type: term
 date: 2026-09-08
 aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,

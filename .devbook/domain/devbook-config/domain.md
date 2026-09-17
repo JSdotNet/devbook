@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md"]
+related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 What this context is responsible for: that a repository's stack configuration exists before
@@ -84,7 +84,7 @@ dropping the entry would un-adopt it for everyone on the next commit.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery/domain.md#stack-config", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md"]
+related: [".devbook/domain/delivery/domain.md#stack-config", ".devbook/arc42/adr/configuration.md"]
 ```
 
 The four keys this context writes into `.devbook/config.json` — `bindings`, `extensions`,
@@ -110,7 +110,7 @@ also why `devbook:install` did not move here.
 
 ```meta
 type: value-object
-related: [".devbook/arc42/adr/72-the-overlay-has-three-layers-keyed-by-a-committed-id.md"]
+related: [".devbook/arc42/adr/configuration.md"]
 ```
 
 An overlay merged over the committed file, holding what is true of this machine only. Three
@@ -205,7 +205,7 @@ type: ubiquitous-language
 type: term
 date: 2026-09-08
 aliases: [bindings, extensions, policy, gates]
-related: [".devbook/domain/devbook-config/domain.md#engine-configuration", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md"]
+related: [".devbook/domain/devbook-config/domain.md#engine-configuration", ".devbook/arc42/adr/configuration.md"]
 ```
 
 One of the four top-level keys of `.devbook/config.json` that the engine owns and this context

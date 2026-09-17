@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/devbook/dependencies.md", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/devbook/dependencies.md", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 > What this context depends on and who depends on it. It is an L1 extension: exactly one

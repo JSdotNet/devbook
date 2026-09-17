@@ -19,7 +19,7 @@ concerned.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/adr/44-one-plugin-one-bounded-context.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
 Nine plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
@@ -84,7 +84,7 @@ than a failed load.
 ## Plugin Folder
 
 ```meta
-related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/37-a-plugins-rules-reach-a-host-through-the-install.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
 ```
 
 One folder per plugin, holding two manifests and the assets themselves:
@@ -105,7 +105,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `README.md`, and any sibling `*.md` at the plugin root | people, never a host |
 
 Documentation for a reader sits at the plugin root beside `README.md` — `delivery`'s
-`FLOW-DIAGRAMS.md`, `devbook`'s `UPGRADING.md`. `resources/` is not that shelf: what goes
+`FLOW-DIAGRAMS.md`. `resources/` is not that shelf: what goes
 there is reference an asset points at by path, so a file no skill or rule names has no
 way to be loaded and only costs every consumer bytes.
 
@@ -127,7 +127,7 @@ An `mcp/<server>/` folder holds a server's own tree — its entry point, its mod
 and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
 else in the plugin has to know the folder exists. `delivery-surface-dashboard` and
 `delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none — see
-[the decision](adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
+[the decision](adr/surfaces.md).
 
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
@@ -141,7 +141,7 @@ What coupling exists runs one way and at runtime: `devbook-graph` loads devbook'
 outline, and metadata modules from `.devbook/_tools/devbook-meta/`, the path devbook's install
 materializes, which is why the live view, the check, and the committed index cannot disagree.
 Nothing in the checker knows the canvas exists. That runtime load is what let the folder leave
-`devbook` — see [the decision](adr/5-devbook-still-ships-the-graph-canvas.md).
+`devbook` — see [the decision](adr/surfaces.md).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
 payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run
@@ -156,7 +156,7 @@ rules component — so the folder's whole purpose is delivery. The plugin's
 wrapper per host. `rules/<name>.md` carries name and description and no scope of its own;
 `rules/rules.json` keys each rule by that name and holds its `paths` and the adopted folder
 that pulls it in — see
-[the decision](adr/37-a-plugins-rules-reach-a-host-through-the-install.md).
+[the decision](adr/install.md).
 
 ```mermaid
 flowchart LR
@@ -175,8 +175,8 @@ upgrade refreshes all three copies because the stamp tracks each hash; a copy so
 reported and left alone rather than overwritten; and dropping a folder from `adopted` orphans its
 trio rather than deleting it.
 
-Shared text a skill or an agent reads by path is not that, and lives in `resources/` — see
-[Only a Delivered Rule Lives in `rules/`](adr/43-only-a-delivered-rule-lives-in-rules.md).
+Shared text a skill or an agent reads by path is not that, and lives in `resources/`: the
+`rules/` folder announces a delivery mechanism, and a contract does not use it.
 `delivery`, `delivery-schedule`, and `fleet` ship no `rules/` folder at all.
 
 The last row is the part no host reads. A plugin that installs something into a repository
@@ -188,7 +188,7 @@ carries it as inert payload — templates, generators, migration scripts — and
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md", ".devbook/domain/plugin-authoring/domain.md#stamp"]
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/domain/plugin-authoring/domain.md#stamp"]
 ```
 
 The other half of the building block view. Nothing above this line runs in a consuming
@@ -237,7 +237,7 @@ flowchart TB
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
 the four engine-owned keys and stops; each `components.<name>` stamp stays with the component
 that knows what it materialized, which is why
-[`devbook:install` did not move](adr/23-the-guide-names-every-plugin-and-depends-on-none.md)
+[`devbook:install` did not move](adr/plugin-boundaries.md)
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
@@ -254,13 +254,13 @@ because two branches each touching one chapter both rewrite the same JSON.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/adr/24-the-specialists-leave-the-marketplace.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 **No specialist plugin ships here.** Where a flow needs expertise it names a point, and a
 repository names the plugin that fills it: a role in `bindings["delivery.roles"]`, a service in
 `extensions`. The seven that used to live in this marketplace are
-[published from their own](adr/24-the-specialists-leave-the-marketplace.md).
+[published from their own](adr/plugin-boundaries.md).
 
 | Point | Kind | What a provider brings |
 | --- | --- | --- |
@@ -291,13 +291,13 @@ provider, which is why model selection resolves those two per stage rather than 
 
 Nothing here holds flow control either, and that stays true now that no specialist ships from
 this marketplace: sequencing, gates, session spawning, and delegation belong to whatever
-consults a point — see [the decision](adr/19-a-role-plugin-holds-no-flow-control.md).
+consults a point — see [the decision](adr/plugin-boundaries.md).
 
 ## Surface Plugins
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Three plugins are where a run becomes visible or recorded. None declares a dependency, none
@@ -327,12 +327,12 @@ group.
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/17-no-host-profile-plugins.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/hosts.md"]
 ```
 
 `delivery` declares a closed set of five names a shared asset reads instead of a host's own
 file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
-[deleted](adr/17-no-host-profile-plugins.md), and nowhere in the stack is a
+[deleted](adr/hosts.md), and nowhere in the stack is a
 host's own file, path, or capability named now.
 
 | Slot | Where an answer can come from | Unbound |
@@ -356,7 +356,7 @@ rather than silent.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 `fleet` is the only plugin here that keeps state **outside** every repository it acts on. A
@@ -384,7 +384,7 @@ is how a missing result file is told from a worker still running.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 `devbook-config` is the one plugin whose subject is the marketplace rather than a unit of work.
@@ -423,8 +423,8 @@ materialized — so `devbook:install` and `devbook:check` do not move here, and 
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
-[the slot decision](adr/17-no-host-profile-plugins.md) otherwise ended —
-recorded as a [deliberate divergence](adr/23-the-guide-names-every-plugin-and-depends-on-none.md)
+[the slot decision](adr/hosts.md) otherwise ended —
+recorded as a [deliberate divergence](adr/plugin-boundaries.md)
 rather than left silent. Where a plugin is installed and whether it is enabled is a fact about
 a host and about nothing else, so a report that answers it either names those files or answers
 nothing. It reads one host's, names every file it read and every one that was absent, and
@@ -434,7 +434,7 @@ leaves the other host's rows empty while the catalog half still answers.
 
 ```meta
 date: 2026-09-09
-related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/adr/configuration.md"]
 ```
 
 `.devbook/config.json` is the one file a consuming repository commits for the whole
@@ -454,24 +454,24 @@ Four components stamp themselves, and `delivery` is the fourth: `components.devb
 its workflows, and its rule, `components.delivery` from `delivery:install` for the `start` and
 `capture` copies it seeds, and `components.schedule` from `delivery-schedule:install`.
 `devbook-collaboration` materializes nothing and stamps nothing
-([record 77](adr/77-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
+([the annotations record](adr/annotations.md)). That puts `delivery` on both sides
 of the table at once — schema owner for the four engine keys, installer for one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
 `devbook-config` maps the four to their install skills by hand: a manifest cannot say which
 plugin is behind a stamp whose plugin this machine has not installed.
 
 It sits beside the devbook chapter folders and is read by every host, which is the whole reason
-it left `.github/` — see [the decision](adr/11-the-stack-config-lives-in-devbook.md).
+it left `.github/` — see [the decision](adr/configuration.md).
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
 It is the only engine file in the folder: the runtime facts a run needs live in the
 repository's own `start` skill, not in a second file here — see
-[decision 71](adr/71-the-start-skill-holds-the-runtime-facts.md).
+[the configuration record](adr/configuration.md).
 
 ## Schedule Plugin
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
@@ -503,7 +503,7 @@ The plugin depends on `delivery` and names `devbook`, which is the L1 extension 
 already has: the entry points call the engine's flows and phases, so the dependency is real,
 while a target in another plugin is named and skipped when the repository has not enabled it.
 It named a third until the specialists
-[left the marketplace](adr/24-the-specialists-leave-the-marketplace.md):
+[left the marketplace](adr/plugin-boundaries.md):
 what a target delegates to is a binding the consuming repository makes, not a plugin the
 schedule can require.
 

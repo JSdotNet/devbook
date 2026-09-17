@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-15
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/69-the-converters-are-three-skills-named-after-openspec.md", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/domain/devbook/domain.md#spec-converter"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/devbook/skills.md", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/domain/devbook/domain.md#spec-converter"]
 ```
 
 **Remediation state:** identified · **Severity:** low · **Owner:** the maintainer
@@ -12,7 +12,7 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/6
 ```meta
 ```
 
-[Record 69](../adr/69-the-converters-are-three-skills-named-after-openspec.md) names the three
+The [devbook skills](../../domain/devbook/skills.md) name the three
 converters after OpenSpec's verbs so a reader who has met OpenSpec first needs no translation.
 Two of the three earn that: `apply-change` implements an agreed spec there and here, and
 `verify-change` is report-only there and here. The third does not. OpenSpec's `sync-specs`
@@ -30,7 +30,7 @@ from code; a reader arriving from this plugin's own protocol, which has called t
 ```meta
 ```
 
-Taken on 2026-09-15, in the same change as record 69. The verb was kept on the argument that
+Taken on 2026-09-15, in the change that named the three converters. The verb was kept on the argument that
 "bring the specs level with what is true" describes both feeders and that a third OpenSpec name
 was worth more than an exact one. `capture-specs` — the protocol's own word — was the
 alternative on the table and was not taken, so this record holds it rather than losing it.
@@ -62,12 +62,12 @@ skill's own description says what it does in its first line.
 | Option | Trade-off |
 | --- | --- |
 | Keep `sync-specs` | Three OpenSpec names, one of them approximate. Costs a sentence in the README and this record |
-| Rename to `capture-specs` | The protocol's own word, and no false cognate. Costs a second rename of the same skill inside a week, an `UPGRADING.md` entry, and one OpenSpec name fewer — the direction OpenSpec does not have is then visibly the one it does not have |
+| Rename to `capture-specs` | The protocol's own word, and no false cognate. Costs a second rename of the same skill inside a week and one OpenSpec name fewer — the direction OpenSpec does not have is then visibly the one it does not have |
 | Rename to `capture` | Shortest and the protocol's word exactly, at the cost of the `-specs` / `-change` object pattern the other two names follow |
 
 Decide after the three names have been used in anger for a while. The trigger is a reader —
 or the maintainer — reaching for `sync-specs` and expecting a merge, or reaching for
 `capture` and finding nothing.
 
-**Trigger:** the first confusion between the two meanings, or the next `UPGRADING.md` entry
-for devbook that would carry a rename anyway.
+**Trigger:** the first confusion between the two meanings, or the next devbook change that
+would carry a rename anyway.

@@ -8,7 +8,7 @@ description: 'Rewrite the committed derived devbook indexes — .devbook/_meta/ 
 Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 Run devbook's checker with the one flag nothing in devbook passes, and report what moved.
-`.devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md` is the rule this skill is the
+`.devbook/arc42/adr/checks-and-indexes.md` is the rule this skill is the
 deliberate exception to: refresh is the scheduled job's, and a session does it only when a
 person asks for this branch to be current, because two branches that each regenerate beside
 a chapter edit rewrite the same JSON and conflict on merge.
@@ -18,7 +18,7 @@ a chapter edit rewrite the same JSON and conflict on merge.
 1. **Refuse the wrong moment.** Stop, and say why, when this run is inside a flow, when the
    working tree already holds an uncommitted chapter edit that is not this branch's own
    work, or when nobody asked for the index — a chapter edit that "also" refreshes is the
-   conflict record 29 exists to prevent.
+   conflict the checks-and-indexes decision record exists to prevent.
 
 2. **Refresh.** From the repository root:
 

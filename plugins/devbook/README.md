@@ -362,7 +362,7 @@ migrations/
 context's optional `naming.md` into `domain.md` now that the file kind is gone. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
-`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
+`.devbook/arc42/adr/releases.md`.
 Whether a change owes one — and the three cases that are easy to get wrong — is decided once,
 in `AGENTS.md` under *When a change ships a migration*.
 
@@ -377,7 +377,7 @@ Rules that keep a ledger trustworthy:
   previous major's last release first. The folder is bounded by one major's
   worth of breaking changes, and a dropped folder is never a hole, because the
   floor sits above it. The decision is
-  `.devbook/arc42/adr/84-a-migration-lives-for-one-major-version.md`.
+  `.devbook/arc42/adr/releases.md`.
 - A migration is idempotent by rule: the second run changes nothing.
 - `--check` is mandatory. CI calls it, and so does `devbook:check`; it is what
   makes a plan worth reading before anything is written.
@@ -409,11 +409,6 @@ reserved for the release that raises the floor.
 restarted with the version: a derived artifact stamped 9 before the reset still follows
 the contract a 1.0.0 generator writes. 10 removed the `naming` file type from `.domain`,
 and ships as `010-terms-live-in-domain-md`.
-
-## Upgrade notes
-
-Behaviour changes a consumer would notice, release by release, are in
-[UPGRADING.md](UPGRADING.md); 1.0.0 is its first entry.
 
 ## Folder structure
 

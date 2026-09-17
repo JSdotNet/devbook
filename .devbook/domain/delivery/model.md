@@ -104,7 +104,7 @@ classDiagram
   from a conversation is impossible.
 - **`Surface` is a dashed dependency and appears nowhere else.** The run publishes to whatever
   answers the lifecycle group and knows nothing about which implementation did — see
-  [the decision](../../arc42/adr/14-delivery-ships-no-surface.md).
+  [the decision](../../arc42/adr/surfaces.md).
 - **`StackConfig` here is four keys, not the file.** Every `components.<name>` stamp in the same
   file belongs to that component's install skill, which is why the class carries the four names
   and not a generic key bag.
