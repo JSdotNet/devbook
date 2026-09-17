@@ -5,6 +5,8 @@ description: "Push the current branch to its remote and stop there — no pull r
 
 # Push Branch
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Get the current branch and its commits onto the remote, and nothing more. This is the

@@ -92,6 +92,9 @@ type: term
 
 A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
 trigger — the sentence a host matches a request against — not a summary of its contents.
+Every skill opens its reply with `<plugin>@<version>`, read from the manifest beside it rather
+than recalled, so the answer names the release that gave it
+([75](../../arc42/adr/75-every-skill-opens-with-its-plugin-version.md)).
 
 ### Plugin Rule
 

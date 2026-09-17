@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Performance Review
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Run a structured performance scan across the codebase to surface the top 10 improvement

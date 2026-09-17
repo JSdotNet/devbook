@@ -10,6 +10,8 @@ description: >
 
 # Pull Requests Merge Ready
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Keep your own in-flight work moving, one pull request at a time. A pass finds the pull

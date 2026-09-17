@@ -5,6 +5,8 @@ description: 'Read every adopted devbook folder and report the prose that does n
 
 # prose check
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 `devbook-check` asks whether the Markdown satisfies the schema. This asks whether the prose

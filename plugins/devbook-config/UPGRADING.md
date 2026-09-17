@@ -2,6 +2,12 @@
 
 Behaviour changes a consumer would notice, newest first.
 
+## Unreleased: every skill opens with its plugin version
+
+Each `devbook-config` skill now opens its reply with `devbook-config@<version>`, the version read from the
+plugin manifest beside it (`.devbook/arc42/adr/75-every-skill-opens-with-its-plugin-version.md`).
+Nothing a repository holds changes, so there is nothing to reconcile.
+
 ## 1.0.0: the first release
 
 Nothing precedes it. Every version this plugin carried before 1.0.0 was published to no

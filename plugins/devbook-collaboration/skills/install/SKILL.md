@@ -5,6 +5,8 @@ description: 'Install this plugin''s chapter-collaboration rule into a repositor
 
 # collaboration install
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 One rule, installed the way `devbook` installs its own: the rule verbatim, and a wrapper
 per host beside it. Idempotent — first install, upgrade, and a rule change are the same run.
 

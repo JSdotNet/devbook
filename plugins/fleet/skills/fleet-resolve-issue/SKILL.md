@@ -13,6 +13,8 @@ description: >
 
 # Fleet: Resolve GitHub Issue
 
+Open the reply with `fleet@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Take one open GitHub issue from the backlog to a reviewed, tested change set without a user

@@ -5,6 +5,8 @@ description: 'Put this repository''s schedules from the catalog into the host''s
 
 # schedule install
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 One idempotent operation for first setup, a changed selection, a changed cadence, and a plugin
 upgrade. Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 
