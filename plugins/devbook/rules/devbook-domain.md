@@ -45,10 +45,13 @@ across `domain/`, ADRs, and code module names where practical.
                      # product is procedures rather than a running application
     model.md
     flow.md          # optional: when the context has lifecycle/process flows
-    flow.<name>.md   # optional: one flow, split out of flow.md when it is
-                     # large enough or invoked often enough to stand alone
     dependencies.md  # optional: the dependencies, once context.md is too
                      # small for them
+    domain.<name>.md    # optional: one chapter split out of the file it is
+    features.<name>.md  #   named after — an aggregate or domain service, a
+    skills.<name>.md    #   feature, a skill, one aggregate's structure, one
+    model.<name>.md     #   flow — when it is large enough or read often
+    flow.<name>.md      #   enough to stand alone. See "A split file" below.
 ```
 
 When starting a new bounded context, create the folder with `context.md`,
@@ -134,22 +137,35 @@ the `## Ubiquitous Language` grouping at the end of `domain.md`. There is no
 separate glossary file: a registry that names what the model already names is a
 second copy, and it goes stale on the side nobody reads.
 
-**`flow.<name>.md` splits one flow out of `flow.md`.** The suffix is the flow's
-own name — for a procedure the repository ships, its skill name, so
-`flow.flow-code.md` sits beside `flow.flow-spec.md`. It carries `type: flow`
-like the file it came from, because it is the same kind of document at a
-smaller scope. Split when a flow is large enough that `flow.md` stops being
-readable, or when readers arrive looking for one flow rather than for the
-context's flows; keep `flow.md` for the flows that are still better read
-together, and drop it when every flow has been split out.
+**A split file holds one chapter of the file it is named after.** `domain.md`,
+`features.md` or `skills.md`, `model.md`, and `flow.md` each split the same way:
+`<file>.<name>.md`, where the suffix is the kebab-case name of the one thing the
+file holds — `domain.order.md` is the `## Order` aggregate with everything it
+owns, `features.checkout.md` one feature with its sub-features, `model.order.md`
+one aggregate's structure, `flow.flow-code.md` one flow, named after the skill it
+belongs to. A split file carries the `type` of the file it came from, because it
+is the same kind of document at a smaller scope, and its chapter reads exactly as
+it did inside that file: same heading, same block, same sub-chapters. Split when
+the file stops being readable, or when readers arrive looking for one chapter
+rather than for the context; keep the base file for the chapters still better
+read together. `features.md`, `skills.md`, `model.md`, and `flow.md` may be
+dropped once every chapter is split out; `domain.md` never is, because it holds
+what belongs to no single aggregate — the `## Shared Value Objects`,
+`## Shared Enums`, and `## Ubiquitous Language` groupings — and `context.md`
+does not split at all, because it is the root document and what it holds is
+small by construction. A split chapter moves rather than copies: `## Order` lives at
+`domain.order.md#order` and nowhere else in the context. Wherever a rule or a
+skill names `domain.md`, `features.md`, `skills.md`, `model.md`, or `flow.md`,
+it means that file or any split file of it.
 
 Reading order comes from this convention, not from a metadata field and not from
 filenames. `context-map.md` is `domain/`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `context.md` is the root document and the rest read in the order listed in the
 tree above — `domain.md`, `actors.md`, `skills.md` or `features.md`,
-`model.md`, `flow.md`, `dependencies.md`, then any `flow.<name>.md` in
-filename order.
+`model.md`, `flow.md`, `dependencies.md` — with a split file read directly
+after the file it is named after, in filename order among its siblings, and in
+that file's place when the file itself is gone.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
@@ -257,13 +273,14 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   how work moves across the context over time. Moved out of `model.md` so
   `model.md` stays purely structural. Include only when the context actually
   has a flow. Its `##` sections do not carry metadata blocks.
-- **flow.<name>.md** — One flow, split out of `flow.md`. Same `type: flow`,
-  same rule that its `##` sections carry no metadata blocks, and the same
-  subject at a smaller scope. The suffix is the flow's own name; for a
-  procedure the repository ships, that is its skill name. Where the flow
-  belongs to a skill, the file and that skill's chapter in `skills.md` are two
-  halves of one subject — the chapter says what it does, the flow file draws
-  how it moves — and each carries a `related` reference to the other.
+- **<file>.<name>.md** — One chapter split out of `domain.md`, `features.md`,
+  `skills.md`, `model.md`, or `flow.md`, under the rules of that file: a
+  `domain.<name>.md` chapter and its sub-chapters carry their blocks, a
+  `model.<name>.md` or `flow.<name>.md` carries only the file-level one. Where
+  a `flow.<name>.md` belongs to a skill, the file and that skill's chapter in
+  `skills.md` are two halves of one subject — the chapter says what it does,
+  the flow file draws how it moves — and each carries a `related` reference to
+  the other.
 - **dependencies.md** — Outbound dependencies on other bounded contexts or
   modules, and known inbound dependents. The tables live under
   `## Dependencies` in `context.md` until they outgrow it; this file exists
@@ -302,11 +319,11 @@ instructions.
   issue link (`issue`) are included only when they have a value.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
   `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
-  `skills.md`, `model.md`, `flow.md` and each `flow.<name>.md` (when
-  present), and `dependencies.md` (when present) — must also carry the
-  file-level metadata block described in `devbook-chapter-metadata.md`, placed
-  directly under the file's top-level `#` heading. This applies even to
-  `context-map.md`, `model.md`, `flow.md`, `flow.<name>.md`, and
+  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present), and
+  each split file (when present) — must also carry the file-level metadata
+  block described in `devbook-chapter-metadata.md`, placed directly under the
+  file's top-level `#` heading. This applies even to `context-map.md`,
+  `model.md`, `flow.md`, their split files, and
   `dependencies.md`, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
@@ -343,8 +360,8 @@ instructions.
   Each file's `type` matches its filename: `context.md` is `type: context`,
   `domain.md` is `type: domain`, `features.md` is `type: features`, and so on,
   with `context-map.md` at the `domain/` root carrying `type: context-map`. A
-  `flow.<name>.md` carries `type: flow`, because the suffix narrows the scope
-  and not the kind.
+  split file carries the type of the file it is named after — `domain.order.md`
+  is `type: domain` — because the suffix narrows the scope and not the kind.
 - Heading text in `domain/` carries the **name only** — `## Order`, not
   `## Aggregate: Order`. Anchors are therefore slugs of the bare name
   (`.domain/order-management/domain.md#order`). The two exceptions are the
@@ -352,10 +369,9 @@ instructions.
   a grouping rather than a single thing, so the descriptive text *is* the name.
   `## Ubiquitous Language` is a third of the same kind.
   File titles are the bounded-context name alone (`# Order Management`), with
-  the file's own `type` distinguishing the files of a context. A
-  `flow.<name>.md` is the one exception, and it is still not a kind in the
-  heading: the file title stays the context name and the flow's own name goes
-  in its `##` heading, exactly as it did inside `flow.md`.
+  the file's own `type` distinguishing the files of a context. A split file is
+  no exception: its title stays the context name and the chapter's own name
+  goes in its `##` heading, exactly as it did inside the file it came from.
 
   `context-map.md` is the one `domain/` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
@@ -1005,10 +1021,14 @@ type: flow
 ```
 
 
-### flow.<name>.md
+### <file>.<name>.md
 
-One flow split out of `flow.md`, with the same `type` and the same rule that its
-`##` sections carry no metadata blocks.
+One chapter split out of its file, under that file's template: the file-level
+block carries the base file's `type`, and the chapter follows as it stood there.
+`domain.order.md` is the `## <AggregateName>` section of the `domain.md`
+template under a `type: domain` file block; `features.checkout.md` and
+`skills.<skill-name>.md` the same for one feature or skill; `model.order.md`
+the `model.md` template narrowed to one aggregate. A `flow.<name>.md`:
 
 ```markdown
 # <Bounded Context Name>

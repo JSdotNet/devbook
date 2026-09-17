@@ -16,7 +16,10 @@
 //   3. Otherwise the remaining prescribed files follow in the sequence that
 //      folder's own instructions file documents in its structure block, with
 //      anything else — an extra file, a bounded-context subdirectory, a
-//      repository-chosen `.tech` layer — filename-sorted in between.
+//      repository-chosen `.tech` layer — filename-sorted in between. A split
+//      file (`domain.order.md`, one chapter out of `domain.md`) reads directly
+//      after the file it is named after, in that file's place when the file
+//      itself is gone.
 //   4. A directory that is neither numbered nor covered by a convention sorts
 //      by filename.
 //
@@ -59,6 +62,9 @@ function testList(meta) {
  * Reading order per directory shape, keyed by devbook folder with each
  * subdirectory level written as `*`. `root` is the entry point; `first` and
  * `last` pin the prescribed siblings around whatever else the directory holds.
+ * `split` names the files a `<file>.<name>.md` may be split out of; such a
+ * file sorts directly after its base, or in the base's slot when the base is
+ * absent, never among the unprescribed rest.
  *
  * This mirrors the structure block in each folder's own instructions file —
  * change one and change the other in the same edit.
@@ -77,6 +83,7 @@ const DIRECTORY_CONVENTION = {
             "dependencies.md",
         ],
         last: [],
+        split: ["domain.md", "features.md", "skills.md", "model.md", "flow.md"],
     },
     "tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },
     // `.ai` needs no `first`/`last`: its stage files are numbered, so the
@@ -187,16 +194,35 @@ function orderedSequence(relDir, names, numbers, rootName, problems) {
     const convention = conventionFor(relDir);
     if (!convention) return [...lead, ...rest];
 
-    const pinnedFirst = convention.first.filter((name) => rest.includes(name));
-    const pinnedLast = convention.last.filter((name) => rest.includes(name));
-    const pinned = new Set([...pinnedFirst, ...pinnedLast]);
+    // A split file sorts with the file it is named after — after it, or in
+    // its slot when the base was dropped once every chapter moved out. `rest`
+    // is filename-sorted, so a base's split files keep that order among
+    // themselves.
+    const splitsOf = (base) =>
+        convention.split?.includes(base) ? rest.filter((name) => splitBase(name) === base) : [];
+    const slot = (name) => [...(rest.includes(name) ? [name] : []), ...splitsOf(name)];
+
+    const rootSplits = splitsOf(convention.root);
+    const pinnedFirst = convention.first.flatMap(slot);
+    const pinnedLast = convention.last.flatMap(slot);
+    const placed = new Set([...rootSplits, ...pinnedFirst, ...pinnedLast]);
 
     return [
         ...lead,
+        ...rootSplits,
         ...pinnedFirst,
-        ...rest.filter((name) => !pinned.has(name)),
+        ...rest.filter((name) => !placed.has(name)),
         ...pinnedLast,
     ];
+}
+
+/**
+ * The file a split file is named after: `domain.order.md` → `domain.md`, and
+ * `null` for a name without exactly one inner segment.
+ */
+function splitBase(name) {
+    const match = /^([^.]+)\.[^.]+\.md$/.exec(name);
+    return match ? `${match[1]}.md` : null;
 }
 
 /** Read one directory into ordered `file` and `directory` outline entries. */

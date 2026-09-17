@@ -8,7 +8,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | | |
 |---|---|
 | Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature` |
-| File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features |
+| File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `features.md`, `context.md` — the switches and the actors — and `domain.md`, the aggregates the capability exercises, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |

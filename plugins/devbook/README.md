@@ -158,10 +158,10 @@ where the folder defines no `type`:
 
 | Kind | Target | `type` value(s) | Kind file |
 |------|--------|-----------------|-----------|
-| `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
-| `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
-| `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
-| `setting` | `.domain/<context>/context.md` | `feature-flag`, `setting` — the two levels a capability is switched at | `assets/spec-kinds/setting.md` |
+| `aggregate` | `.domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
+| `domain-service` | `.domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
+| `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills, or a `features.<name>.md` / `skills.<name>.md` split from it | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
+| `setting` | `.domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.arc42/05-building-block-view.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
 
