@@ -13,7 +13,9 @@ loads, that a chapter parses.
 ```meta
 status: candidate
 type: practice
-related: [".devbook/tech/hosts.md#claude-code-plugin-api"]
+stage: [test]
+depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
+date: 2026-09-02
 ```
 
 `claude plugin eval` runs a suite against a plugin's skills.
