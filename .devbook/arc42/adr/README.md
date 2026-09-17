@@ -122,6 +122,8 @@ later reversed is the part a reader most needs.
 | [70. The Flow Context Lives in devbook](70-the-flow-context-lives-in-devbook.md) | 2026-09-15 |
 | [71. The start Skill Holds the Runtime Facts](71-the-start-skill-holds-the-runtime-facts.md) | 2026-09-15 |
 | [72. The Overlay Has Three Layers, Keyed by a Committed Id](72-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
+| [73. verify Is the Spec Check, and Build & Test Is validate](73-verify-is-the-spec-check-and-build-and-test-is-validate.md) | 2026-09-15 |
+| [74. Four Flows, Named for What Changes](74-four-flows-named-for-what-changes.md) | 2026-09-15 |
 | [75. Who Works With a Context Is an Actor](75-who-works-with-a-context-is-an-actor.md) | 2026-09-17 |
 
 Six records carry a supersession note and stay where they are.
