@@ -2,7 +2,7 @@
 
 Behaviour changes a consumer would notice, newest first.
 
-## Unreleased: `naming.md` is gone
+## 1.1.0: `naming.md` is gone
 
 `naming` is no longer a `.domain` file type and `naming.md` no longer a file the folder
 knows. A term that is already a chapter carries its surface names in that chapter's

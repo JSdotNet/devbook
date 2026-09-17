@@ -2,7 +2,7 @@
 
 Behaviour changes a consumer would notice, newest first.
 
-## Unreleased: the session-title words are configurable
+## 1.1.0: the session-title words are configurable
 
 `components.delivery-surface-dashboard.sessionNaming.labels` in `.devbook/config.json` maps a
 destination kind — `artifact`, `code`, `domain`, `arc42`, `tech`, `design`, `ai`, or `devbook`
