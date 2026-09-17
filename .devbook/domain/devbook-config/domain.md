@@ -1,22 +1,9 @@
 # Devbook Config
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
-
-What this context is responsible for: that a repository's stack configuration exists before
-anything installs itself, that it can be moved forward in one run, and that every answer it gives
-about the stack names the file it came from.
-
-Inside the boundary: the four engine-owned keys of the stack config, the read-only report behind
-every fact, the scope verdict that decides what an update touches, and the drift report against
-the adoption record.
-
-Outside it: every `components.<name>` stamp, which belongs to that component's own install skill;
-the schema of the four keys, which is [Delivery](../delivery/domain.md)'s; and writing a chapter,
-which is a flow's. This context names every plugin in the marketplace and declares none.
 
 ## Stack Report
 

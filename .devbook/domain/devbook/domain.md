@@ -1,22 +1,9 @@
 # Devbook
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/chapter-schema.md"]
 ```
-
-What this context is responsible for: that a chapter can be addressed, that the reference
-pointing at it still resolves, and that a repository can adopt the convention, upgrade it, and
-be told when the two have drifted apart.
-
-Inside the boundary: the `meta` block and its field set, the address a chapter is reached by,
-the annotation fence, the reconcile that materializes the convention into a repository, and the two directions between a chapter and the code that implements it.
-
-Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
-the procedure for changing a chapter belongs to [Delivery](../delivery/domain.md). Who reviews
-a chapter and who approved it belongs to
-[Devbook Collaboration](../devbook-collaboration/domain.md).
 
 ## Chapter
 

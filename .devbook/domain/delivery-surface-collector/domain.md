@@ -1,20 +1,9 @@
 # Delivery Surface Collector
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook/arc42/adr/surfaces.md"]
 ```
-
-What this context is responsible for: that a run nobody watched is still legible afterwards —
-which stages ran, how many times, what a person decided at each gate, what the evidence was, and
-whether the run was handed off or abandoned.
-
-Inside the boundary: the run store, the handoff round trip a resumed session depends on, and the
-Markdown report. It answers two of the three capability groups.
-
-Outside it: rendering, deliberately, and everything about what produced the run. It declares no
-dependency and names no engine.
 
 ## Run Record
 

@@ -1,25 +1,9 @@
 # Devbook Derived
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
-
-What this context is responsible for: that a repository which keeps the derived `_meta/`
-indexes in its tree has them current on the default branch and never regenerated in a
-session.
-
-Inside the boundary: the refresh paths — the `refresh` skill, the on-demand script, the
-nightly workflow, the drift warning — the canvas that draws the graph live, the rule that
-says where a derived artifact lives and what its envelope is, and the install that puts them
-in a repository.
-
-Outside it: the checker that computes what these files hold, and the fence writer — both
-[Devbook](../devbook/domain.md)'s. This context computes nothing: it asks devbook's
-`build.mjs` to write, with the one flag nothing in devbook passes, and its canvas loads
-devbook's modules at their materialized path. A repository that does not enable it has the
-full check and no derived file.
 
 ## Refresh
 

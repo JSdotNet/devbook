@@ -1,23 +1,9 @@
 # Delivery
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/adr/flow-engine.md"]
 ```
-
-What this context is responsible for: that one unit of work reaches a review-ready change
-inside one session, that a person decided it was ready, and that a repository can shape the run
-without being able to weaken it.
-
-Inside the boundary: the staged procedures, the closed set of extension points a repository
-binds providers to, the human gates it may add and never remove, the four engine-owned keys of
-the stack config, and the pull-request lane at the end.
-
-Outside it: deploy, which is where "delivery" stops here; expertise, which is a role a
-repository binds; visibility, which is a [surface](../delivery-surface-dashboard/domain.md)
-resolved at run time; and fan-out, which is [Fleet](../fleet/domain.md)'s and is the one thing
-a flow may never do.
 
 ## Run
 

@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/dev
 
 ```meta
 type: feature
-related: [".devbook/domain/devbook-derived/dependencies.md", ".devbook/domain/devbook/skills.md#install", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
+related: [".devbook/domain/devbook-derived/context.md#dependencies", ".devbook/domain/devbook/skills.md#install", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
 ```
 
 Materialize the on-demand refresh script, the nightly refresh and drift-warning workflows

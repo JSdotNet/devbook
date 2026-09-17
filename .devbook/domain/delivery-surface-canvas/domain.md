@@ -1,21 +1,9 @@
 # Delivery Surface Canvas
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#delivery-surface-canvas", ".devbook/arc42/adr/surfaces.md"]
 ```
-
-What this context is responsible for: that a diagram or a document written to a file can be
-looked at, live, beside the file — and that looking at it creates nothing anyone could mistake
-for a record.
-
-Inside the boundary: the two viewers, the navigation between views, and the transport that puts
-them on a canvas panel.
-
-Outside it: everything else. It tracks no runs, exports nothing, persists nothing, and knows
-nothing about what produced the content it is handed. It answers one capability group and is the
-one plugin here that ships a single host's manifest and takes no marketplace entry.
 
 ## View
 
