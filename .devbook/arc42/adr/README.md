@@ -36,6 +36,9 @@ first number still free — and [60](60-the-annotation-lifecycle-ends-in-devbook
 59 on its own branch and moved behind it. So the split's own boundary — 46 — is the last point
 at which the number and the position in chapter 9 agreed.
 
+On 2026-09-17 it happened again, five records deep: 75 to 79 were written on one branch while
+`main` landed its own 75 and 76, and the five took 77 to 81 on the merge.
+
 The rule below is about a number that has landed. A number claimed on an unmerged branch has
 not, and the branch that arrives second moves rather than displacing what is already indexed.
 

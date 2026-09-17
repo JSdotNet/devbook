@@ -5,6 +5,8 @@ description: 'Shared Validation phase for code-modifying flow-* flows. Runs afte
 
 # Phase: Validation
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Reusable **Validation** phase shared by every code-modifying `flow-*` flow. The
 `flow-runner` agent invokes this skill after Build & Test. Its depth is decided
 automatically from the kind of change so callers do not re-describe QA rules.

@@ -5,6 +5,8 @@ description: 'Create, govern, and scaffold a repository — from an empty GitHub
 
 # Flow: Project
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 One flow from nothing to a project that builds. A repository that already exists enters at
 the stage it has reached: every stage opens by checking what is there, and a stage whose
 outcome is present is recorded as such and skipped.

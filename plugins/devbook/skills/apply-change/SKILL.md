@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # apply-change
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`, then the folder rule that file names. Nothing in them is
 repeated here.

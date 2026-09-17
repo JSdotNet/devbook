@@ -5,6 +5,8 @@ description: 'Check a repository against devbook without writing to it, and repa
 
 # devbook check
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Check this repository against devbook and write nothing; then repair whatever

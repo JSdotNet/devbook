@@ -5,6 +5,8 @@ description: 'Fire one of this repository''s schedules now, outside its cadence,
 
 # schedule run
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 The scheduler and the identity rule are in `resources/schedule-catalog-contract.md`.
 
 ## Steps

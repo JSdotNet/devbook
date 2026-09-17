@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/domain/devbook/domain.md#index-generator"]
+related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 What this context is responsible for: that a repository which keeps the derived `_meta/`

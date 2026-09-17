@@ -1,8 +1,8 @@
-# 78. One Layout, Under .devbook/
+# 80. One Layout, Under .devbook/
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md", ".devbook/domain/devbook/domain.md#devbook-folder", ".devbook/domain/devbook/domain.md#index-generator"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/79-the-tooling-is-devbook-deriveds.md", ".devbook/domain/devbook/domain.md#devbook-folder", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 A devbook folder lives at `.devbook/<name>/` — `.devbook/arc42`, `.devbook/domain`,

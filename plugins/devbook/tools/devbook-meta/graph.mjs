@@ -552,7 +552,7 @@ export async function discoverScopes(repoRoot) {
  *
  * `folders` holds the real repository paths under `.devbook/`. `stray` lists
  * any of the five spelled as a root-level dot-folder — the layout this
- * convention no longer supports (record 78). A stray folder is reported by the
+ * convention no longer supports (record 80). A stray folder is reported by the
  * graph build and never indexed, so a repository that has not moved yet learns
  * it from an error rather than from a quiet half-corpus.
  */

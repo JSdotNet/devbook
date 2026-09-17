@@ -10,7 +10,7 @@
 //
 // Checking is this tool's own job and the default. Writing is opt-in, because
 // the committed artifacts are a layered plugin's product: its refresh script and
-// nightly workflow pass --write, and nothing in devbook ever does (record 79).
+// nightly workflow pass --write, and nothing in devbook ever does (record 81).
 // With --write it writes three artifacts per scope, per the derived-artifacts
 // convention:
 //

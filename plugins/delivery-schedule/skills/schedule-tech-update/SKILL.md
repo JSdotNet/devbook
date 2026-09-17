@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Tech Update
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Keep `tech/` level with what the repository actually depends on, on a cadence rather than

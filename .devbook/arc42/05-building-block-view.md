@@ -443,7 +443,7 @@ stack, and it holds two kinds of top-level key:
 | Key | Owned by | Holds |
 | --- | --- | --- |
 | `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
-| `components.<name>` | that component's own install skill | What the component materialized into the repository, and its migration ledger. |
+| `components.<name>` | that component's own install skill — or the person, for a component that ships none | What the component materialized into the repository, and its migration ledger; or, for one that materializes nothing, its selection. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
@@ -454,7 +454,7 @@ Four components stamp themselves, and `delivery` is the fourth: `components.devb
 its workflows, and its rule, `components.delivery` from `delivery:install` for the `start` and
 `capture` copies it seeds, and `components.schedule` from `delivery-schedule:install`.
 `devbook-collaboration` materializes nothing and stamps nothing
-([record 75](adr/75-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
+([record 77](adr/77-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
 of the table at once — schema owner for the four engine keys, installer for one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
 `devbook-config` maps the four to their install skills by hand: a manifest cannot say which

@@ -92,6 +92,9 @@ type: term
 
 A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
 trigger — the sentence a host matches a request against — not a summary of its contents.
+Every skill opens its reply with `<plugin>@<version>`, read from the manifest beside it rather
+than recalled, so the answer names the release that gave it
+([76](../../arc42/adr/76-every-skill-opens-with-its-plugin-version.md)).
 
 ### Plugin Rule
 
@@ -133,7 +136,7 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/78-one-layout-under-devbook.md"]
+related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/80-one-layout-under-devbook.md"]
 ```
 
 One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
@@ -398,7 +401,11 @@ top-level keys are the engine's — see
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes
 anything ships one `<component>-install` that writes its own entry and one `<component>-check`
-that reads it, and neither touches another component's.
+that reads it, and neither touches another component's. A component that materializes nothing
+and ships no install skill has its selection written by hand — `delivery-surface-dashboard`'s
+session-naming words are
+[the one case](../../arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md)
+— and the boundary holds unchanged: the entry is still that component's alone.
 
 ### Migration
 
@@ -480,4 +487,4 @@ render as they always did, and mean nothing to anyone. That is what makes the se
 reserve before anything needs it. It is reserved and unused: the first extension to store
 state through it, `devbook-collaboration`, moved that state into devbook's schema instead,
 because the fields mirrored ones devbook already owned
-([record 75](../../arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md)).
+([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).

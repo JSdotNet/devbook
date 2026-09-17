@@ -407,10 +407,11 @@ one did.
 - **When it is non-null and differs from the name you last set**, rename the session to it
   using whatever the host exposes for renaming the current session. Where the host exposes
   nothing, skip silently; it is a convenience, never a gate.
-- **When it is `null`, do nothing.** Nothing has been written yet, so the host's own title is
-  the better name.
-- **Do not compose the name yourself.** The prefix is computed from observed writes;
-  hand-assembling one puts a second, drifting grammar into the session list.
+- **When it is `null`, do nothing.** Nothing has been written yet, or the repository chose no
+  prefix for this kind of work; either way the host's own title is the better name.
+- **Do not compose the name yourself.** The prefix is computed from observed writes and the
+  words are the repository's configuration; hand-assembling one puts a second, drifting
+  grammar into the session list.
 
 ### Surfacing the surface
 

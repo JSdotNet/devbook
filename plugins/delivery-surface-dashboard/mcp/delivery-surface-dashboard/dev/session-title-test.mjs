@@ -2,11 +2,12 @@
 // and the cases that must NOT produce a rename.
 //
 // Runs against a temporary worktree with a `.devbook/domain/` folder, because boundary resolution for
-// code paths reads the declared bounded contexts off disk.
-import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
+// code paths reads the declared bounded contexts off disk. The naming cases at the end write a
+// `.devbook/config.json` into it too, because the labels are read from there.
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { recordDestination, computeSessionTitle } from "../session-title.mjs";
+import { recordDestination, computeSessionTitle, loadSessionNaming, normalizeSessionNaming } from "../session-title.mjs";
 
 const cwd = mkdtempSync(path.join(tmpdir(), "session-title-"));
 mkdirSync(path.join(cwd, ".devbook", "domain", "order-management"), { recursive: true });
@@ -20,10 +21,11 @@ function check(label, actual, expected) {
 }
 
 // Each case: a run title plus the tool calls to fold in, and the name they should produce.
-async function titleFor(title, calls) {
+// `naming` is what loadSessionNaming would have returned; omitted means nothing configured.
+async function titleFor(title, calls, naming) {
     const run = { title };
     for (const call of calls) await recordDestination(run, { cwd, ...call });
-    return computeSessionTitle(run);
+    return computeSessionTitle(run, naming);
 }
 
 const write = (file_path) => ({ toolName: "Write", input: { file_path } });
@@ -70,6 +72,44 @@ check(
     await titleFor("Refresh the runtime view and every sequence diagram it references", [write(".devbook/arc42/06-runtime-view.md")]),
     "arc42 — Refresh the runtime view and every sequence diagram…",
 );
+
+console.log("\n— configured labels —");
+const capitalized = { labels: { artifact: "Artifact", code: "Code", domain: "Domain" } };
+check("a kind is shown as its label", await titleFor("Report", [{ toolName: "Artifact", input: { action: "publish", file_path: "r.html" } }], capitalized), "Artifact — Report");
+check("the boundary follows the label", await titleFor("Invoice totals", [edit("src/Acme.Billing/Invoice.cs")], capitalized), "Code:billing — Invoice totals");
+check("an unlabelled kind keeps its id", await titleFor("Pin Aspire 9", [edit(".devbook/tech/backend.md")], capitalized), "tech — Pin Aspire 9");
+
+const grouped = { labels: { devbook: "devbook", code: null } };
+check("the devbook group covers every folder", await titleFor("Runtime view refresh", [write(".devbook/arc42/06-runtime-view.md")], grouped), "devbook — Runtime view refresh");
+check("a domain chapter still names its context under the group", await titleFor("Add Fulfilment aggregate", [write(".devbook/domain/order-management/domain.md")], grouped), "devbook:order-management — Add Fulfilment aggregate");
+check("folders sharing a label tally as one", await titleFor("Spec sweep", [write(".devbook/arc42/01-intro.md"), write(".devbook/domain/billing/domain.md"), edit("src/A.cs"), edit("src/B.cs")], grouped), "devbook:billing — Spec sweep");
+check("a folder's own key wins over the group", await titleFor("Dense table tokens", [edit(".devbook/design/color-scheme.md")], { labels: { devbook: "devbook", design: "ux" } }), "ux — Dense table tokens");
+check("a null label is no rename", await titleFor("Rounding fix", [edit("src/Shipping/Rate.cs")], grouped), null);
+check("a null kind still competes for dominance", await titleFor("Mostly code", [write(".devbook/domain/billing/domain.md"), edit("src/A.cs"), edit("src/B.cs")], grouped), null);
+check("a null artifact label is no rename either", await titleFor("Report", [{ toolName: "Artifact", input: { action: "publish", file_path: "r.html" } }], { labels: { artifact: null } }), null);
+
+console.log("\n— loading the config —");
+const configPath = path.join(cwd, ".devbook", "config.json");
+mkdirSync(path.dirname(configPath), { recursive: true });
+const withNaming = (sessionNaming) => JSON.stringify({ components: { "delivery-surface-dashboard": { sessionNaming } } });
+check("no config file means the defaults", JSON.stringify((await loadSessionNaming(path.join(cwd, "nowhere"))).labels), "{}");
+writeFileSync(configPath, JSON.stringify({ components: { devbook: { pluginVersion: "1.0.0" } } }));
+check("no entry means the defaults", JSON.stringify((await loadSessionNaming(cwd)).labels), "{}");
+writeFileSync(configPath, withNaming({ labels: { devbook: " devbook ", code: null, artifact: "Artifact" } }));
+check("labels are read and trimmed", JSON.stringify((await loadSessionNaming(cwd)).labels), JSON.stringify({ devbook: "devbook", code: null, artifact: "Artifact" }));
+writeFileSync(configPath, "{ not json");
+check("unreadable JSON means the defaults", JSON.stringify((await loadSessionNaming(cwd)).labels), "{}");
+
+console.log("\n— rejected shapes are reported, not applied —");
+const warnings = [];
+const write0 = process.stderr.write.bind(process.stderr);
+process.stderr.write = (chunk) => (warnings.push(String(chunk)), true);
+const normalized = normalizeSessionNaming({ labels: { codee: "Code", tech: "", design: 3, ai: "AI" }, separator: " | " });
+process.stderr.write = write0;
+check("only the valid keys survive", JSON.stringify(normalized.labels), JSON.stringify({ ai: "AI" }));
+check("each problem is named once", warnings.length, 4);
+check("an unknown prefix is named", warnings.some((w) => w.includes("labels.codee")), true);
+check("an unknown top-level key is named", warnings.some((w) => w.includes('unknown key "separator"')), true);
 
 rmSync(cwd, { recursive: true, force: true });
 console.log(`\n${failures ? `${failures} failing` : "all passing"}`);

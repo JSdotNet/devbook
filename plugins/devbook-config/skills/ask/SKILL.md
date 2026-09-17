@@ -5,6 +5,8 @@ description: 'Answer a question about this marketplace and the plugins in it —
 
 # devbook-config ask
 
+Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Answer one question about the stack from what is actually on disk. Every question has a

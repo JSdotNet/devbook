@@ -30,7 +30,7 @@ const REPO_ROOT = process.cwd();
 // second thing to keep true. They are loaded from where devbook's install
 // materializes them — or, in the repository that authors the checker and
 // vendors it under plugins/, from there — so the canvas and the check are one
-// parser (record 5, record 79). Absent both, the canvas says which install to
+// parser (record 5, record 81). Absent both, the canvas says which install to
 // run rather than drawing from nothing.
 const CHECKER_CANDIDATES = [
     path.join(REPO_ROOT, ".devbook", "_tools", "devbook-meta"),

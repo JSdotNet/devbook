@@ -25,6 +25,9 @@
 //                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
 //                 Through the Install"). Only a plugin whose install delivers rules has
 //                 the folder at all (see "Only a Delivered Rule Lives in rules/")
+//   skills        every plugins/*/skills/<name>/SKILL.md opens with the line that reports
+//                 its plugin name and version from the manifest beside it (see the
+//                 decision "Every Skill Opens With Its Plugin Version")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -336,6 +339,36 @@ for (const folder of await readdir(PLUGINS)) {
         const label = `plugins/${folder}/rules/rules.json: ${name}`;
         if (!onDisk.has(name)) error(`${label} has no ${name}.md behind it`);
         if (!Array.isArray(entry.paths) || entry.paths.length === 0) error(`${label} needs a non-empty paths array`);
+    }
+}
+
+// ── skills ──────────────────────────────────────────────────────────────────
+//
+// Every skill opens its reply with the plugin name and version, read from the Claude
+// manifest beside it rather than recalled, so a consumer can tell which release answered
+// (see the decision "Every Skill Opens With Its Plugin Version"). The line is authored in
+// each skill because a plugin is installed on its own and a rule in this repository never
+// reaches it; what is checked here is that the line is there, names the right plugin, and
+// points at a manifest that exists from the skill folder.
+
+const VERSION_LINE = (plugin) =>
+    "Open the reply with `" + plugin + "@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.";
+
+for (const folder of await readdir(PLUGINS)) {
+    const dir = path.join(PLUGINS, folder, "skills");
+    if (!(await exists(dir))) continue;
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const file = path.join(dir, entry.name, "SKILL.md");
+        if (!(await exists(file))) continue;
+        const where = `plugins/${folder}/skills/${entry.name}/SKILL.md`;
+        const { body } = frontmatter(await readFile(file, "utf8"));
+        if (!body.split(/\r?\n/).some((l) => l.trim() === VERSION_LINE(folder))) {
+            error(`${where}: missing the version line "${VERSION_LINE(folder)}"`);
+        }
+        if (!(await exists(path.resolve(path.dirname(file), "../../.claude-plugin/plugin.json")))) {
+            error(`${where}: ../../.claude-plugin/plugin.json does not resolve from the skill folder`);
+        }
     }
 }
 

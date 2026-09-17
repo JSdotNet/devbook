@@ -25,7 +25,7 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 // Hardcoding it is the same bargain the rest of this script already takes, recorded at
 // `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
 // `devbook-collaboration` is absent on purpose: it materializes nothing and stamps nothing
-// (`.devbook/arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md`), so a
+// (`.devbook/arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md`), so a
 // repository adopts it by enabling it and nothing here reconciles it.
 //
 // `contract: false` is not "has not got round to it". Only a component whose install rewrites
@@ -363,7 +363,7 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
-    // Every devbook folder lives under `.devbook/` (record 78). A root-level `.tech/` is the
+    // Every devbook folder lives under `.devbook/` (record 80). A root-level `.tech/` is the
     // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const stray = existsSync(join(repoRoot, `.${folder}`));

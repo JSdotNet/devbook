@@ -5,6 +5,8 @@ description: 'Hand a devbook chapter to a named reviewer and produce the brief t
 
 # chapter handoff
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Request a review of one chapter and write the request into the chapter, so the

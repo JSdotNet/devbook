@@ -5,6 +5,8 @@ description: 'Review one devbook chapter and record the verdict on the chapter i
 
 # chapter review
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Review one chapter and leave the verdict where the next reader will find it: in

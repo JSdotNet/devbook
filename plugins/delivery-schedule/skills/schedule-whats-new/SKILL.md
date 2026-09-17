@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: What's New
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Give a concise, de-duplicated "what shipped and what's in flight" report across one or more

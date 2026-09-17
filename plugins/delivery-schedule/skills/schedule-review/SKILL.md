@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Review
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Run a layered, automated review of the codebase. Each review layer adds a different

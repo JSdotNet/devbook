@@ -5,6 +5,8 @@ description: 'Run dependency and package update workflows — routine NuGet, npm
 
 # Flow: Update Packages
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 This flow derives its own scope: Stages 1 and 2 scan the dependency graph, classify what is
 available, and produce the prioritized update run — so a request as small as "update the
 packages" or "move us to the latest Aspire" is in scope. An approved maintenance directive or

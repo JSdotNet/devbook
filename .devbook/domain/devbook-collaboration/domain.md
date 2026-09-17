@@ -17,7 +17,7 @@ in, and the [annotation](../devbook/domain.md#annotation) a finding is written a
 [Devbook](../devbook/domain.md)'s. This context owns no schema and no state of its own: the
 three review fields it writes are devbook's, defined beside the approval triad and held to
 their meaning by devbook's check, and a finding lives in devbook's own device
-([record 75](../../arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md)).
+([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
 
 ## Chapter Review
 

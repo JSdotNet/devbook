@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/28-devbook-owns-one-section-of-agentsmd.md", ".devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/28-devbook-owns-one-section-of-agentsmd.md", ".devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md", ".devbook/arc42/adr/78-derived-artifacts-are-computed-never-committed.md"]
 ```
 
 The derived-artifacts convention says a repository owes contributors two refresh paths: an
@@ -49,6 +49,6 @@ three checks on every pull request. The rule above is untouched — that workflo
 and nothing else, so it never regenerates, never commits `_meta/`, and the refresh is still
 `devbook-check`'s alone.
 
-**Superseded on 2026-09-17 by [record 76](76-derived-artifacts-are-computed-never-committed.md).**
+**Superseded on 2026-09-17 by [record 78](78-derived-artifacts-are-computed-never-committed.md).**
 The generator writes no `_meta/` any more, so there is no refresh for automation to own: the
 deny rule, the `AGENTS.md` paragraph, and the schedule's refresh half are gone with the files.

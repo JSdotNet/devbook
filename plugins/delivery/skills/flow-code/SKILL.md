@@ -5,6 +5,8 @@ description: 'Run any change to a repository outside its devbook folders, end to
 
 # Flow: Code Change
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
 follows `resources/flow-model-selection.md`.
 

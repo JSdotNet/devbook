@@ -5,6 +5,8 @@ description: 'Shared Personal Validation review handoff for every flow-* flow. B
 
 # Phase: Personal Validation — The Review Handoff
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Reusable **Personal Validation** handoff shared by every `flow-*` flow. It answers one
 question for the person the run hands back to: *what do I open, and what am I looking for?*
 

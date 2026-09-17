@@ -5,6 +5,8 @@ description: 'Install or refresh the committed devbook index in a repository —
 
 # devbook-derived install
 
+Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Materialize the refresh paths the way `devbook` materializes its rules: copy what is stale,
 report what is customized, stamp what landed. Read `devbook`'s
 `assets/reconcile-protocol.md` first for **The stamp**'s two shared fields, the hash rules,

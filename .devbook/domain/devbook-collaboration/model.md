@@ -70,7 +70,7 @@ classDiagram
   in a block another context owns, and the fields are that context's too: devbook defines
   `review`, `reviewer`, and `review-at` beside its approval triad and validates them, so this
   context contributes the procedure and none of the vocabulary
-  ([record 75](../../arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md)).
+  ([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
 - **The line between the two is who writes, not who defines.** Every field is devbook's;
   this context writes the review triad through the pass and `status`, `approved-by`, and
   `approved-at` only through [Approval](domain.md#approval).

@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Devbook Check
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Keep a repository's devbook honest with nobody watching: broken references and schema

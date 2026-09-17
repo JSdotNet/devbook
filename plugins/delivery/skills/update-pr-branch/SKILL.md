@@ -5,6 +5,8 @@ description: "Bring a pull request branch up to date with its base branch and re
 
 # Update Pull Request Branch
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Integrate the latest base branch into a pull request branch, resolve every conflict with a

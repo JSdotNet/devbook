@@ -41,7 +41,7 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
 the committed index is `devbook-derived`'s, per
-`.devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md`; this
+`.devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md`; this
 repository vendors both from the plugins rather than materializing them.
 
 ## Committing

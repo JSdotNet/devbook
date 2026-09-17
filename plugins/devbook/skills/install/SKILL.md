@@ -5,6 +5,8 @@ description: 'Reconcile a repository with devbook — adopt the .devbook/arc42/.
 
 # devbook install
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Reconcile this repository with the installed devbook release. Read
 `assets/reconcile-protocol.md` first: it carries the stamp shape, the asset
 table, and what each phase below does. None of it is repeated here.

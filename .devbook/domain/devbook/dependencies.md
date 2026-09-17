@@ -42,7 +42,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
   `check`, `annotation-sweep`, and `tech-update`. The canvas is not: it is `devbook-derived`'s
   and loads these modules by path. The one thing this context never does is write a derived
   index: `build.mjs --write` is `devbook-derived`'s to pass — see
-  [record 79](../../arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md).
+  [record 81](../../arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md).
 - Every relationship above degrades rather than fails. A repository that has not run the
   install still has readable Markdown, and
   a consumer of the `ext` namespace that is not installed leaves keys that parse and mean

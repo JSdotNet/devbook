@@ -1,4 +1,4 @@
-# 75. Review State Is Three Fields in devbook's Schema
+# 77. Review State Is Three Fields in devbook's Schema
 
 ```meta
 date: 2026-09-17

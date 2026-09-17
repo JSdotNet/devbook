@@ -5,6 +5,8 @@ description: 'Rewrite the committed derived devbook indexes — .devbook/_meta/ 
 
 # devbook-derived refresh
 
+Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Run devbook's checker with the one flag nothing in devbook passes, and report what moved.
 `.devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md` is the rule this skill is the
 deliberate exception to: refresh is the scheduled job's, and a session does it only when a

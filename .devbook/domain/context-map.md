@@ -172,7 +172,7 @@ code that implements it. It ships the shape and the check, and never a flow.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
 The committed index and the canvas that draws it: for a repository that keeps the derived

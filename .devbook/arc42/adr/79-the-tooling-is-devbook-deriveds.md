@@ -1,8 +1,8 @@
-# 77. The Tooling Is devbook-derived's, and devbook Is the Convention Alone
+# 79. The Tooling Is devbook-derived's, and devbook Is the Convention Alone
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-derived/domain.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/context-map.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/78-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-derived/domain.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/context-map.md", ".devbook/arc42/adr/81-the-checker-is-devbooks-the-committed-index-is-derived.md"]
 ```
 
 Everything under `tools/devbook-meta/` — the schema validator, the reference graph, the
@@ -14,8 +14,8 @@ the schema stated in prose, the converters, `annotation-sweep`, `devbook-check`,
 that puts the rules and its `AGENTS.md` section into a repository. The committed `_meta/`
 indexes stay, for now.
 
-**This supersedes [record 76](76-derived-artifacts-are-computed-never-committed.md) the same
-day, and the reason is a choice, not a discovery.** Record 76 removed the writer because
+**This supersedes [record 78](78-derived-artifacts-are-computed-never-committed.md) the same
+day, and the reason is a choice, not a discovery.** Record 78 removed the writer because
 nothing in this repository read the files. The owner's answer was that the files are not
 always needed and will be phased out, but not now; and that a checker without a generator
 beside it does not earn a plugin of its own. So the writer is restored as it was, and the
@@ -69,7 +69,7 @@ put the tool and where it stays, so an installed repository would see only a dif
 entry own it. No migration ships, on [record 64](64-1-0-0-is-the-first-release.md)'s rule that
 the obligation starts at the first install, and `UPGRADING.md` carries no entry.
 
-Consequence: record 76 is superseded; the `--print` flag it added survives, because a viewer
+Consequence: record 78 is superseded; the `--print` flag it added survives, because a viewer
 that computes rather than reads is still the cheaper consumer. Debt record 5 is resolved by
 the split it proposed, taken one folder wider than it recommended. Record 5's canvas question
 is closed: the canvas is packaged with the modules it imports, in a plugin that is not L0, so
@@ -88,6 +88,6 @@ names no other plugin; the convention reaches its tool through the repository, t
 flow reaches a role. `devbook-collaboration` and the two schedule entries that targeted the
 moved skills follow them.
 
-**Superseded on 2026-09-17 by [record 79](79-the-checker-is-devbooks-the-committed-index-is-derived.md).**
+**Superseded on 2026-09-17 by [record 81](81-the-checker-is-devbooks-the-committed-index-is-derived.md).**
 The checker, the canvas, the fence writer, and the three skills return to devbook; `build.mjs`
 writes only on `--write`, and devbook-derived is the committed index alone.

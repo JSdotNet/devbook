@@ -6,7 +6,7 @@
 // that the hook's PostToolUse payload actually reaches the run file, and that the server reads
 // it back off the same run.
 import { spawn, execFileSync } from "node:child_process";
-import { rmSync, mkdirSync } from "node:fs";
+import { rmSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,7 +15,11 @@ const STATE = path.join(SERVER_DIR, ".session-title-test-state");
 const WORKTREE = path.join(STATE, "worktree");
 rmSync(STATE, { recursive: true, force: true });
 mkdirSync(path.join(WORKTREE, ".devbook", "domain", "order-management"), { recursive: true });
-const env = { ...process.env, DELIVERY_SURFACE_DASHBOARD_STATE_DIR: STATE };
+// The server finds the repository's config at the git toplevel of its project directory. A
+// bare folder inside this repository would resolve to *this* repository's config, so the test
+// worktree is made a repository of its own and named as the project directory.
+execFileSync("git", ["init", "-q", WORKTREE], { stdio: "ignore" });
+const env = { ...process.env, DELIVERY_SURFACE_DASHBOARD_STATE_DIR: STATE, CLAUDE_PROJECT_DIR: WORKTREE };
 
 const proc = spawn("node", [path.join(SERVER_DIR, "mcp-server.mjs")], { env, stdio: ["pipe", "pipe", "pipe"] });
 proc.stderr.on("data", (d) => process.stderr.write(`[server] ${d}`));
@@ -114,6 +118,16 @@ toolCall("Artifact", { file_path: "report.html" });
 const afterArtifact = await callTool("update_stage", { runId, stageName: "Summary", status: "done", output: "done" });
 check("a published artifact takes over", afterArtifact.sessionTitle, "artifact — Partial shipment rounding");
 
+// The repository configures the words, and the server reads them fresh on every stage — no
+// restart between writing the config and the rename that reflects it.
+mkdirSync(path.join(WORKTREE, ".devbook"), { recursive: true });
+writeFileSync(
+    path.join(WORKTREE, ".devbook", "config.json"),
+    JSON.stringify({ components: { "delivery-surface-dashboard": { sessionNaming: { labels: { artifact: "Artifact" } } } } }),
+);
+const afterConfig = await callTool("update_stage", { runId, stageName: "Summary", status: "done", output: "done" });
+check("a configured label is read without a restart", afterConfig.sessionTitle, "Artifact — Partial shipment rounding");
+
 // A resumed run must come back already named, or the new session would rename to null.
 await callTool("set_run_context", { runId, handoff: true, handoffNote: "paused" });
 execFileSync("node", [path.join(SERVER_DIR, "telemetry-hook.mjs")], {
@@ -127,7 +141,7 @@ const resumed = await callTool("start_run", {
     stages: [{ name: "Implement" }, { name: "Summary" }],
 });
 check("the run reattached", resumed.resumed, true);
-check("a resumed run is already named", resumed.sessionTitle, "artifact — Partial shipment rounding");
+check("a resumed run is already named", resumed.sessionTitle, "Artifact — Partial shipment rounding");
 
 proc.kill();
 rmSync(STATE, { recursive: true, force: true });

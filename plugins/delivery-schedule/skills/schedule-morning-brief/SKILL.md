@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Morning Brief
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Answer one question before the day starts: **what changed since yesterday, and what needs me?**
