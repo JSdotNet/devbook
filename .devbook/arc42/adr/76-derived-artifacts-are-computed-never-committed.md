@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook/domain.md", ".devbook/arc42/05-building-block-view.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook/domain.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md"]
 ```
 
 `devbook-meta` writes no file. `build.mjs --check` is the gate it always was, and
@@ -62,3 +62,7 @@ stands with one clause fewer: `--check` still never regenerates, because nothing
 are now the published surface rather than a private import, so lifting `devbook-graph` is a
 move plus a manifest again. Debt record 5 is resolved, and the "never in a session" rule it
 found broken in six places is no longer a rule because it no longer has a subject.
+
+**Superseded on 2026-09-17 by [record 77](77-the-tooling-is-devbook-deriveds.md).** The writer
+is restored and the committed indexes stay for now; the check and the generator move together
+into `devbook-derived`. `--print` survives. Record 29 stands again.
