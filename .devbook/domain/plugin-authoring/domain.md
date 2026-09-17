@@ -398,7 +398,11 @@ top-level keys are the engine's — see
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes
 anything ships one `<component>-install` that writes its own entry and one `<component>-check`
-that reads it, and neither touches another component's.
+that reads it, and neither touches another component's. A component that materializes nothing
+and ships no install skill has its selection written by hand — `delivery-surface-dashboard`'s
+session-naming words are
+[the one case](../../arc42/adr/75-session-naming-is-configured-in-the-dashboards-component-entry.md)
+— and the boundary holds unchanged: the entry is still that component's alone.
 
 ### Migration
 
