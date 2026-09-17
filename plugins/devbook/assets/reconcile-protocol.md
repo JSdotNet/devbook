@@ -65,7 +65,7 @@ whose install rewrites content the repository authored, which is devbook alone:
 | `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
-| `migrations` | Append-only ledger of `{ "id", "applied" }` entries, one per migration folder run, oldest first. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |
+| `migrations` | Append-only ledger of `{ "id", "applied" }` entries, one per migration folder run, oldest first. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. An entry outlives its folder: a major release drops the folders below the floor, and the ledger keeps recording that they ran. |
 
 `contractVersion`, `adopted`, and `migrations` are devbook's three; `pluginVersion`
 and `materialized` are everyone's. A component that only copies files it owns needs
@@ -164,6 +164,14 @@ it never goes inside the markers.
    state — which folders exist, what each materialized file hashes to. Disk wins
    on existence, the stamp wins on provenance. Never trust the stamp alone: a
    folder someone deleted is gone whatever the stamp says.
+
+   A stamped `contractVersion` below `MINIMUM_CONTRACT_VERSION` in
+   `tools/devbook-meta/graph.mjs` stops the reconcile here, before anything is
+   planned: the migrations that would carry it forward no longer ship. Say which
+   contract the repository is on, which the floor is, and that the way up is
+   through the last release of the previous major — install that version, run
+   `devbook:install`, then return. Never run the migrations that are present
+   over a gap: a ledger with a hole in it is a repository nobody can reason about.
 
 2. **Resolve.** Desired state is adopted folders × contract version × the asset
    table above. Ask the user only about genuinely new choices — which folders to

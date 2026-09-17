@@ -101,7 +101,9 @@ Three cases decide whether one is owed:
   script moves it. A file reconcile would replace on its own needs none.
 
 The reason this obligation starts at 1.0.0 and not before is
-`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`.
+`.devbook/arc42/adr/64-1-0-0-is-the-first-release.md`. A migration lives for the major
+version it ships in: a major release raises the floor and drops the folders below it, per
+`plugins/devbook/README.md` under *Migrations*, so the folder never grows past one major.
 
 ## Where the rest of the rules are
 

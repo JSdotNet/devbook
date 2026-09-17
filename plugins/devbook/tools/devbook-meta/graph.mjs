@@ -67,6 +67,15 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
 export const CONTRACT_VERSION = 10;
 
+// The oldest contract a reconcile still carries forward. A migration lives
+// for the major version it ships in: a major release raises this to the
+// contract the previous major last reached and drops every `migrations/`
+// folder at or below it. A stamp below the floor is refused in phase 1 of
+// the reconcile — upgrade through the previous major's last release first —
+// so a folder that is gone can never be a hole in a ledger. 9 is where 1.0.0
+// shipped, and nothing published sits below it.
+export const MINIMUM_CONTRACT_VERSION = 9;
+
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those
 // files follow *is* the contract, so keeping two counters would only let them

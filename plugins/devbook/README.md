@@ -374,6 +374,14 @@ Rules that keep a ledger trustworthy:
 
 - The id is immutable once released. Never rewrite a shipped migration — add a
   new one.
+- A migration lives for the major version it ships in. A major release raises
+  `MINIMUM_CONTRACT_VERSION` in `tools/devbook-meta/graph.mjs` to the contract
+  the previous major last reached and deletes every folder at or below it; a
+  reconcile refuses a stamp below the floor and says to upgrade through the
+  previous major's last release first. The folder is bounded by one major's
+  worth of breaking changes, and a dropped folder is never a hole, because the
+  floor sits above it. The decision is
+  `.devbook/arc42/adr/78-a-migration-lives-for-one-major-version.md`.
 - A migration is idempotent by rule: the second run changes nothing.
 - `--check` is mandatory. CI calls it, and so does `devbook-check`; it is what
   makes a plan worth reading before anything is written.
@@ -396,7 +404,10 @@ and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` a
 with. It moves only when something repo-visible changes shape, so most plugin
 releases leave it alone: plugin semver moves for prose and new skills,
 `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
-`tools/devbook-meta/graph.mjs`.
+`tools/devbook-meta/graph.mjs`, beside `MINIMUM_CONTRACT_VERSION`, the oldest
+contract a reconcile still carries forward. A contract bump that ships its
+migration is a minor release — the upgrade is automatic — and the major is
+reserved for the release that raises the floor.
 
 1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
