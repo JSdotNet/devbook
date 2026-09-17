@@ -5,6 +5,8 @@ description: 'Write this engine''s two seeded procedures into a repository — s
 
 # delivery install
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Two procedures the engine names but cannot write, installed the way `devbook` installs its
 rules: the procedure once, a wrapper per host beside it. Idempotent — first install, an
 upgrade, and a changed seed are the same run.

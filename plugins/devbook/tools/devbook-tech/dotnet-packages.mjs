@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Deterministic .NET package inventory for devbook-tech-update.
+// Deterministic .NET package inventory for devbook:tech-update.
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";

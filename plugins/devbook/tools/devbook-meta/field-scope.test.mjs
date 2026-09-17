@@ -25,7 +25,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 // structure, and its relationships belong in `model.md` or `related`.
 {
     const issues = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
             `${fence("type: aggregate\ndepends-on: [.domain/ordering/features.md#refunds]\nfeature-flag: orders\n")}\n` +
             `Prose.\n`
@@ -47,7 +47,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 // a scope check that fires on the legal case is worse than none.
 {
     const issues = validateDocument(
-        ".domain/ordering/features.md",
+        ".devbook/domain/ordering/features.md",
         `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
             `${fence("type: feature\ndepends-on: [.domain/ordering/features.md#orders]\nfeature-flag: refunds\n")}\n` +
             `Prose.\n\n### Partial refund\n\n` +
@@ -67,7 +67,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 // authorization rule where the domain rule says it must never be written.
 {
     const issues = validateDocument(
-        ".domain/ordering/actors.md",
+        ".devbook/domain/ordering/actors.md",
         `# Ordering\n\n${fence("type: actors\n")}\n## Consultant\n\n` +
             `${fence("type: user\nrole: [Consultant, TeamLead]\n")}\nProse.\n\n## Bank\n\n` +
             `${fence("type: organisation\n")}\nProse.\n\n## Month Close\n\n` +
@@ -82,7 +82,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 }
 {
     const issues = validateDocument(
-        ".domain/ordering/features.md",
+        ".devbook/domain/ordering/features.md",
         `# Ordering Features\n\n${fence("type: features\nrole: Consultant\n")}\n## Refunds\n\n` +
             `${fence("type: feature\nrole: Consultant\n")}\nProse.\n`
     );
@@ -104,7 +104,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 // `aliases` is legal on any chapter — only the file-level block is out.
 {
     const issues = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\naliases: [Orders]\n")}\n## Order\n\n` +
             `${fence("type: aggregate\naliases: [OrderRoot, order_id]\n")}\nProse.\n`
     );
@@ -127,7 +127,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 // reader two places to look and the next rename two places to update.
 {
     const issues = validateDocument(
-        ".ai/03-build.md",
+        ".devbook/ai/03-build.md",
         `# Build\n\n${fence("status: adopted\ntype: stage\n")}\n## TDD with an agent\n\n` +
             `${fence("status: trial\ntype: practice\nstage: build\n")}\nProse.\n`
     );
@@ -141,7 +141,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 
 {
     const issues = validateDocument(
-        ".ai/concepts.md",
+        ".devbook/ai/concepts.md",
         `# Concepts\n\n${fence("status: adopted\ntype: concepts\n")}\n## Context engineering\n\n` +
             `${fence("status: trial\ntype: concept\nstage: [specify, build]\n")}\nProse.\n`
     );
@@ -163,7 +163,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     const question = "kind: question\nauthor: jobsc\ndate: 2026-09-02\nbody: Does this still hold?\n";
 
     const issues = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\n${note(question)}\nProse.\n`
     );
     check(
@@ -173,7 +173,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 
     const resolved = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\n` +
             `${note("kind: question\nstatus: resolved\n" + question.split("\n").slice(1).join("\n"))}\nProse.\n`
     );
@@ -184,7 +184,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 
     const active = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\n")}\n${note(question)}\nProse.\n`
     );
     check(
@@ -196,7 +196,7 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     // Position is the anchor: the note under the sub-chapter is the
     // sub-chapter's, so the approved parent above it stays clean.
     const nested = validateDocument(
-        ".domain/ordering/domain.md",
+        ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\nProse.\n\n` +
             `### Line\n\n${fence("type: entity\n")}\n${note(question)}\nProse.\n`
     );

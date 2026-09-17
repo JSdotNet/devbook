@@ -5,6 +5,8 @@ description: "Diagnose and fix failing pull request checks — read the failing 
 
 # Fix Failing Pull Request Checks
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Take a pull request with red checks to green. The skill reads the actual failing job logs

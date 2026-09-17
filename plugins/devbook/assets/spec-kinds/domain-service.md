@@ -11,9 +11,9 @@ table; this file carries the kind.
 | Chapters | The service's `##` chapter, `type: domain-service`, plus every `## <EventName>` the service itself raises, `type: domain-event` |
 | File | `.domain/<context>/domain.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md`, the chapters of every aggregate the service coordinates, and `dependencies.md` when it reaches across a context boundary. Never the whole `.domain` folder |
-| Write path | The `.domain` flow, per **Where the spec-side write goes** in the protocol |
-| Index scope | `--scope .domain` |
+| Context to load | The target context's `domain.md`, the chapters of every aggregate the service coordinates, and `dependencies.md` when it reaches across a context boundary. Never the whole `domain/` folder |
+| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Index scope | `--scope domain` |
 
 ## The deliberate exception to the aggregate rule
 

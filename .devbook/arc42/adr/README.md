@@ -36,6 +36,9 @@ first number still free — and [60](60-the-annotation-lifecycle-ends-in-devbook
 59 on its own branch and moved behind it. So the split's own boundary — 46 — is the last point
 at which the number and the position in chapter 9 agreed.
 
+On 2026-09-17 it happened again, five records deep: 75 to 79 were written on one branch while
+`main` landed its own 75 and 76, and the five took 77 to 81 on the merge.
+
 The rule below is about a number that has landed. A number claimed on an unmerged branch has
 not, and the branch that arrives second moves rather than displacing what is already indexed.
 
@@ -124,9 +127,16 @@ later reversed is the part a reader most needs.
 | [72. The Overlay Has Three Layers, Keyed by a Committed Id](72-the-overlay-has-three-layers-keyed-by-a-committed-id.md) | 2026-09-15 |
 | [73. verify Is the Spec Check, and Build & Test Is validate](73-verify-is-the-spec-check-and-build-and-test-is-validate.md) | 2026-09-15 |
 | [74. Four Flows, Named for What Changes](74-four-flows-named-for-what-changes.md) | 2026-09-15 |
-| [75. Who Works With a Context Is an Actor](75-who-works-with-a-context-is-an-actor.md) | 2026-09-17 |
+| [75. Session Naming Is Configured in the Dashboard's Component Entry](75-session-naming-is-configured-in-the-dashboards-component-entry.md) | 2026-09-17 |
+| [76. Every Skill Opens With Its Plugin Version](76-every-skill-opens-with-its-plugin-version.md) | 2026-09-17 |
+| [77. Review State Is Three Fields in devbook's Schema](77-review-state-is-three-fields-in-devbooks-schema.md) | 2026-09-17 |
+| [78. Derived Artifacts Are Computed, Never Committed](78-derived-artifacts-are-computed-never-committed.md) | 2026-09-17 |
+| [79. The Tooling Is devbook-derived's, and devbook Is the Convention Alone](79-the-tooling-is-devbook-deriveds.md) | 2026-09-17 |
+| [80. One Layout, Under .devbook/](80-one-layout-under-devbook.md) | 2026-09-17 |
+| [81. The Checker Is devbook's; the Committed Index Is devbook-derived's](81-the-checker-is-devbooks-the-committed-index-is-derived.md) | 2026-09-17 |
+| [82. Who Works With a Context Is an Actor](82-who-works-with-a-context-is-an-actor.md) | 2026-09-17 |
 
-Six records carry a supersession note and stay where they are.
+The records that carry a supersession note stay where they are.
 [1](1-marketplace-named-jsdotnet.md) is superseded on the name it chose and kept on the
 warning it gave — [66](66-the-marketplace-is-named-jsdotnet-devbook.md) renames the
 marketplace on that warning's own terms.
@@ -140,6 +150,6 @@ flows moved twice and the bridge is gone.
 lost the premise it rested on and is now closed as well, its migration shipped;
 the second lost only where a plugin-internal contract lives.
 [55](55-a-bounded-context-says-who-works-with-it.md) lost the name it kept and the two values
-under it — [75](75-who-works-with-a-context-is-an-actor.md) renames the file to `actors.md` —
+under it — [82](82-who-works-with-a-context-is-an-actor.md) renames the file to `actors.md` —
 and keeps the exclusion rule that was its load-bearing half. Each names what replaced it, in
 its own body, under its own number.

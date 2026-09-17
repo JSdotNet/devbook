@@ -27,11 +27,11 @@ flowchart TD
     validate -->|clean| fanout["Invoke each adopted component's own install skill"]
     idOnly --> fanout
     fanout --> devbookInstall["devbook:install"]
-    fanout --> collabInstall["devbook-collaboration:install"]
+    fanout --> derivedInstall["devbook-derived:install"]
     fanout --> deliveryInstall["delivery:install"]
     fanout --> scheduleInstall["delivery-schedule:install"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
-    collabInstall --> stamps
+    derivedInstall --> stamps
     deliveryInstall --> stamps
     scheduleInstall --> stamps
     stamps --> done(["Configured, and every component stamped by its owner"])

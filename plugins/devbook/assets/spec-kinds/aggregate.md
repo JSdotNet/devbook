@@ -10,9 +10,9 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event` |
 | File | `.domain/<context>/domain.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md`, `.domain/context-map.md`, and `dependencies.md` for the published-language entries event consumers rely on. Never the whole `.domain` folder |
-| Write path | The `.domain` flow, per **Where the spec-side write goes** in the protocol |
-| Index scope | `--scope .domain` |
+| Context to load | The target context's `domain.md`, `.domain/context-map.md`, and `dependencies.md` for the published-language entries event consumers rely on. Never the whole `domain/` folder |
+| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Index scope | `--scope domain` |
 
 ## The aggregate is the unit, not its parts
 
@@ -30,9 +30,9 @@ groupings it draws from, and the events it raises.
 owns the events it raises itself. An event raised by a service rather than by
 this root is out of scope here — say which service raises it.
 
-If the repository has no `.domain/` folder, stop and run `devbook:install`. If
+If the repository has no `domain/` folder, stop and run `devbook:install`. If
 the bounded-context folder does not exist, stop — the context's files are created
-together by the `.domain` flow, and creating only `domain.md` leaves the folder
+together by the `domain/` flow, and creating only `domain.md` leaves the folder
 malformed.
 
 ## Mapping

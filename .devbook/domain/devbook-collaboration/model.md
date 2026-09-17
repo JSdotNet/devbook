@@ -55,7 +55,7 @@ classDiagram
 
     Chapter "1" --> "1" MetaBlock : carries
     Chapter "1" --> "many" Annotation : carries in its body
-    MetaBlock "1" --> "0..1" ChapterReview : holds under ext.devbook-collaboration
+    MetaBlock "1" --> "0..1" ChapterReview : holds as review, reviewer, review-at
     ChapterReview "1" ..> "many" Annotation : stands over the open ones
     ChapterReview --> Reviewer : names one
     ChapterReview --> ReviewState : is in
@@ -66,13 +66,14 @@ classDiagram
 
 ## Relationship notes
 
-- **The aggregate has no storage of its own.** `ChapterReview` is a projection of three keys in
-  a block another context owns, which is the whole design: it can ship a release without
-  devbook shipping one, because devbook carries `ext.*` through untouched and has no opinion on
-  what any of it means.
-- **The line between the two is the key prefix, and nothing else.** Everything under
-  `ext.devbook-collaboration.` is this context's; `status`, `approved-by`, and `approved-at`
-  are devbook's, written here only by [Approval](domain.md#approval).
+- **The aggregate has no storage of its own.** `ChapterReview` is a projection of three fields
+  in a block another context owns, and the fields are that context's too: devbook defines
+  `review`, `reviewer`, and `review-at` beside its approval triad and validates them, so this
+  context contributes the procedure and none of the vocabulary
+  ([record 77](../../arc42/adr/77-review-state-is-three-fields-in-devbooks-schema.md)).
+- **The line between the two is who writes, not who defines.** Every field is devbook's;
+  this context writes the review triad through the pass and `status`, `approved-by`, and
+  `approved-at` only through [Approval](domain.md#approval).
 - **`Approval` writes across the line and is therefore a service.** It is the one operation
   whose result is not a state of the aggregate — it deletes the aggregate and sets a field
   belonging to someone else, which is coordination rather than a transition.

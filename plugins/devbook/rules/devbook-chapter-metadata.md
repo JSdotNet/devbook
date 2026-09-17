@@ -1,11 +1,11 @@
 ---
 name: devbook-chapter-metadata
-description: Common per-chapter and per-file metadata convention for .domain, .arc42, .tech, .design, and .ai, so tooling can parse status, dependencies, and cross-references.
+description: Common per-chapter and per-file metadata convention for domain/, arc42/, tech/, design/, and ai/, so tooling can parse status, dependencies, and cross-references.
 ---
 
 # Chapter and file metadata
 
-`.domain`, `.arc42`, `.tech`, `.design`, and `.ai` are intended to be read by a
+`domain/`, `arc42/`, `tech/`, `design/`, and `ai/` are intended to be read by a
 visualization and indexing tooling, not just by humans. To make that
 possible, every **chapter** in these folders carries a small, parseable
 metadata block directly under its heading, in a fenced `meta` (YAML) code
@@ -36,8 +36,8 @@ already treat as an addressable unit:
 - `.ai/<nn>-<stage>.md` and `.ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
-- `.domain` `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`,
-  `.tech` `technology-graph.md`, and `.ai` `adoption-map.md` are
+- `domain/` `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`,
+  `tech/` `technology-graph.md`, and `ai/` `adoption-map.md` are
   strategic/structural artifacts; their `##` sections do **not** carry
   per-chapter metadata blocks.
 
@@ -57,16 +57,16 @@ Prose for this chapter starts here.
 ```
 
 `type` is the only universally required field, and only in the three folders
-that define a value set for it (`.domain`, `.tech`, `.ai`). `status` is
-required per folder: mandatory in `.tech` and `.ai`, optional in
-`.domain`, `.arc42`, and `.design`, where leaving it out means the content is
+that define a value set for it (`domain/`, `tech/`, `ai/`). `status` is
+required per folder: mandatory in `tech/` and `ai/`, optional in
+`domain/`, `arc42/`, and `design/`, where leaving it out means the content is
 at rest — see the `status` entry under **Fields**. Optional fields (`related`,
 `issue`, `effort`, `roadmap`, and folder-specific fields such as `depends-on`)
 are included only when they have a value; empty collections and null values are
 omitted rather than written out.
 
-**The `meta` fence stays even when the block ends up empty.** In `.arc42` and
-`.design` there is no `type` field, so a resting chapter with no
+**The `meta` fence stays even when the block ends up empty.** In `arc42/` and
+`design/` there is no `type` field, so a resting chapter with no
 relations has nothing left to write:
 
 ```markdown
@@ -108,12 +108,12 @@ correct, with `type: shared-value-objects`.
 
 ## File-level metadata block
 
-In addition to per-chapter blocks, every file in `.domain`, `.arc42`,
-`.tech`, `.design`, and `.ai` carries one file-level metadata block
+In addition to per-chapter blocks, every file in `domain/`, `arc42/`,
+`tech/`, `design/`, and `ai/` carries one file-level metadata block
 describing the document as a whole. This gives the tooling a
 status/relations rollup for the
 file itself, distinct from the status of any individual chapter inside it —
-useful for files such as `.domain` `context-map.md`, `model.md`, `flow.md`,
+useful for files such as `domain/` `context-map.md`, `model.md`, `flow.md`,
 and `dependencies.md`, whose `##` sections don't carry their own per-chapter
 blocks.
 
@@ -140,52 +140,43 @@ optional) and the same omit-when-empty rule. Folder-specific fields defined for 
 chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only.
 
-In `.arc42`, the file's top-level chapter heading (e.g. `# 01. Introduction
+In `arc42/`, the file's top-level chapter heading (e.g. `# 01. Introduction
 and Goals`) already carries a chapter metadata block as described above; for
 these files that same block also serves as the file-level block, since an
-`.arc42` file is always exactly one top-level chapter — no separate,
+`arc42/` file is always exactly one top-level chapter — no separate,
 duplicate block is added.
 
 Some folders define additional relation fields beyond `related` (e.g.
 `depends-on`) — see that folder's own instructions file for
 which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
-reference field: in `.domain`, `aliases` (defined in
+reference field: in `domain/`, `aliases` (defined in
 `devbook-domain.md`) is a list of
 plain-string surface names, `feature-flag` (same file) is a list of
 application feature keys, and `role` (same file) is the authorization role name an actor holds, none of them `<path>#<heading-slug>` references,
-in `.tech`, `alternatives` (defined in
+in `tech/`, `alternatives` (defined in
 `devbook-tech.md`) is likewise a
-plain-string list, and in `.ai`, `stage` (defined in
+plain-string list, and in `ai/`, `stage` (defined in
 `devbook-ai.md`) is a list of stage
 slugs. The universal `roadmap` and `tests` fields below behave the
 same way.
 
-### The two folder layouts
+### Where the folders live
 
-The five folders are laid out one of two ways, and a repository picks one and
-never mixes them:
-
-| Layout | Folders |
-| --- | --- |
-| Flat | `.arc42`, `.domain`, `.tech`, `.design`, `.ai` at the repository root |
-| Nested | `.devbook/arc42`, `.devbook/domain`, `.devbook/tech`, `.devbook/design`, `.devbook/ai` |
-
-The nested subfolders **drop the leading dot**. One dot on the parent already
-signals "hidden support directory" for everything inside it — the same reason
+The five folders live under one `.devbook/` parent: `.devbook/arc42`,
+`.devbook/domain`, `.devbook/tech`, `.devbook/design`, `.devbook/ai`. The
+subfolders **drop the leading dot**: one dot on the parent already signals
+"hidden support directory" for everything inside it — the same reason
 `.github/workflows` is not `.github/.workflows`. `.devbook/.domain` is not a
 devbook folder and resolves to nothing.
 
-Nothing else in this convention changes with the layout. An address is the
-chapter's real repository path, so a reference reads
-`.devbook/domain/order-management/features.md#feature-checkout` under one layout
-and `.domain/order-management/features.md#feature-checkout` under the other, and
-both resolve the same way. Derived `_meta/` folders are written beside the
-chapters they index either way.
-
-A repository with both is an error, not a preference: the generator indexes both
-so nothing becomes invisible, and reports that addresses will not agree until
-one is moved.
+A folder is called by its bare name — `domain/`; the dot belongs to the parent
+alone — its path is `.devbook/domain/`, and an address is the chapter's real
+repository path:
+`.devbook/domain/order-management/features.md#feature-checkout`. A root-level
+`.domain/` is not a layout: the generator reports one as an error naming the
+move and does not index it. Derived `_meta/` folders are written beside the
+chapters they index, and the repository-wide rollup under `.devbook/_meta/`.
 
 ### Chapter and file references
 
@@ -206,8 +197,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
 ### Fields
 
-- **status** (required in `.tech`, `.ai`; optional in `.domain`,
-  `.arc42`, `.design`) — lifecycle state of this chapter's or file's
+- **status** (required in `tech/`, `ai/`; optional in `domain/`,
+  `arc42/`, `design/`) — lifecycle state of this chapter's or file's
   content.
 
   The three editorial folders have a **resting value**, `active`, which is
@@ -218,8 +209,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | `status` | Absence means |
   |---|---|---|
-  | `.domain`, `.arc42`, `.design` | optional | `active` — settled content |
-  | `.tech`, `.ai` | **required** | nothing; the value is a *rating* on an adoption ladder, and an unrated technology is not the same as a `candidate` one |
+  | `domain/`, `arc42/`, `design/` | optional | `active` — settled content |
+  | `tech/`, `ai/` | **required** | nothing; the value is a *rating* on an adoption ladder, and an unrated technology is not the same as a `candidate` one |
 
   Spell the absence by leaving the field out, never as `status: null` — same
   discipline as `issue: null`, and the reason is the same.
@@ -245,6 +236,26 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   is an approval record left behind on a chapter no longer claiming the rung —
   either the approval is current and the status says so, or it has lapsed and
   the record comes out with it.
+- **review** (optional) — where this chapter's review pass stands, on the way to
+  that decision: `requested` (waiting on the reviewer), `changes-requested`
+  (waiting on the author; at least one open annotation says why), or `cleared`
+  (waiting on nobody; no open annotation remains, and the chapter is ready for
+  the approval decision). Omitted means no review is running. The three states
+  are checked against the notes in the chapter body: `changes-requested` over no
+  open fence, or `cleared` over one, is a verdict written without its findings.
+- **reviewer** (optional) — who owes the next move: one handle, name, or role.
+  Never a list.
+- **review-at** (optional) — the day the current review state was written, in
+  `YYYY-MM-DD` form.
+
+  The three are written together or not at all, mirroring the approval triad so
+  a chapter reads the same way on its way to a decision as it does past one.
+  None of it is chapter content: a reader loading a chapter for context skips
+  the review fields the same way it skips an annotation fence, and only review
+  work — a review skill, a queue, the approval gate — reads them. Approval
+  deletes all three in the same change that writes the rung: an approved
+  chapter carries the decision, not the road to it. A finding is never a field
+  here; it is one `annotation` fence beside the passage it is about.
 
   The allowed values are folder-specific; see the `status` section
   in `devbook-domain.md`,
@@ -267,22 +278,22 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `.domain` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
-  | `.tech` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
-  | `.ai` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
+  | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
-  `.arc42` and `.design` deliberately define **no** value set. Their only kind
+  `arc42/` and `design/` deliberately define **no** value set. Their only kind
   distinction — chapter vs section — is already carried by heading level, so a `type` field there would restate the document
   structure rather than add anything. Omit it in those folders, per the same
   omit-when-empty discipline that governs the optional fields; setting it is
   reported as a warning.
 
-  In `.tech` this field was previously spelled `kind`. The old name still parses
+  In `tech/` this field was previously spelled `kind`. The old name still parses
   so an existing repository is not broken by a generator sync, but it reports a
   warning — rename it to `type`.
 - **related** (optional) — list of `<path>#<heading-slug>` or `<path>`
   references this chapter or file points to for context, without a hard
-  dependency (e.g. a `.design` component linking to the domain feature it
+  dependency (e.g. a `design/` component linking to the domain feature it
   serves, or an arc42 section linking to a domain feature it realizes).
   This is the general-purpose cross-folder tag mechanism, available in every
   folder. Omit the field entirely when there are no references.
@@ -305,8 +316,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   contributes to, e.g. `roadmap: [sync-service, mobile-mvp]`. This lets a
   roadmap item gather its chapters by tag instead of having to reference every
   contributing chapter explicitly. Entries are **plain lowercase kebab-case
-  slugs, not `<path>#<heading-slug>` references** — like `.domain`'s `aliases`
-  and `.tech`'s `alternatives`, they stay node attributes and produce no graph
+  slugs, not `<path>#<heading-slug>` references** — like `domain/`'s `aliases`
+  and `tech/`'s `alternatives`, they stay node attributes and produce no graph
   edges. The tag vocabulary belongs to the consuming repository's roadmap, so
   it is not validated here beyond the slug shape. A chapter may contribute to
   several roadmap items. Available in every folder. Omit the field entirely
@@ -349,8 +360,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   their owner, `ext.<plugin>.<key>`, because the block grammar is flat:
 
   ```text
-  ext.devbook-collaboration.review: awaiting-domain
-  ext.devbook-collaboration.reviewer: @jsdotnet
+  ext.some-plugin.checked: 2026-09-17
   ```
 
   The generator carries every `ext.*` key through **untouched and unvalidated**
@@ -388,7 +398,7 @@ A chapter that is estimated and carried by a roadmap item therefore reads:
 status: ready
 effort: 8
 roadmap: [sync-service, mobile-mvp]
-related: [.domain/sync/features.md#offline-sync]
+related: [.devbook/domain/sync/features.md#offline-sync]
 \`\`\`
 ```
 
@@ -557,16 +567,16 @@ chapter.
 - Optional fields are included only when they carry a value. Empty list-valued
   fields (`related: []`, `depends-on: []`, `roadmap: []`) and null values
   (`issue: null`, `effort: null`) are omitted rather than written out. The same
-  rule reaches `status` in `.domain`, `.arc42`, and `.design`, where the resting
+  rule reaches `status` in `domain/`, `arc42/`, and `design/`, where the resting
   value `active` is what an absent field says: a settled chapter with no
   relations, no estimate, and no issue shows only `type` where the folder
-  defines one — and in `.arc42` and `.design`, which define none, an empty
+  defines one — and in `arc42/` and `design/`, which define none, an empty
   fence. Keep the fence; it is what makes the heading addressable.
 
 ## Where reading order comes from
 
 Files in a devbook folder have an intended reading order that alphabetical
-sorting does not capture — `.domain` reads `domain` → `features` → `model`
+sorting does not capture — `domain/` reads `domain` → `features` → `model`
 before `naming`, not the other way round, and ADR 10 comes after ADR 7 rather
 than after ADR 1.
 
@@ -581,19 +591,19 @@ Per directory, `_meta/index.json` is generated like this:
 
    | Directory | Root document by convention |
    |---|---|
-   | `.domain/` | `context-map.md` |
+   | `domain/` | `context-map.md` |
    | `.domain/<context>/` | `domain.md` |
-   | `.tech/` | `technology-graph.md` |
-   | `.design/` | `README.md` |
-   | `.ai/` | `adoption-map.md` |
-   | `.arc42/` | none — declare `index: root` if the directory has one |
+   | `tech/` | `technology-graph.md` |
+   | `design/` | `README.md` |
+   | `ai/` | `adoption-map.md` |
+   | `arc42/` | none — declare `index: root` if the directory has one |
 
    A directory the convention covers but whose root document is missing is
    reported as a warning. `index: root` overrides the convention, and two of
    them in one directory is an error.
 
 2. **If anything left carries a number, the directory is a numbered set** and
-   sorts by that number ascending — arc42 chapters, ADRs, TDRs, `.ai` stage
+   sorts by that number ascending — arc42 chapters, ADRs, TDRs, `ai/` stage
    files. The number comes
    from the `number` field, or from a numbered filename when there is no field:
    `09-architecture-decisions.md`, `7-use-postgres.md`, and
@@ -604,8 +614,8 @@ Per directory, `_meta/index.json` is generated like this:
 
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
-   `.domain`'s `actors` → `skills` → `features` → `model` → `flow` →
-   `dependencies` → `naming`, `.design`'s principles-then-tokens run, `.tech`'s `shared.md`
+   `domain/`'s `actors` → `skills` → `features` → `model` → `flow` →
+   `dependencies` → `naming`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
    first and `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by
@@ -632,20 +642,21 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 
 ## Derived metadata index
 
-These metadata blocks are compiled into derived indexes by
-`.devbook/_tools/devbook-meta/build.mjs` — one pair per devbook folder plus
-a repository-wide rollup, placed per
-`devbook-derived-artifacts.md`:
+These metadata blocks are checked by `.devbook/_tools/devbook-meta/build.mjs`,
+which builds the reference graph and the reading outline to do it. A layered
+plugin may ask the same tool to write them, with `--write`, as derived indexes —
+one set per devbook folder plus a repository-wide rollup, placed per that
+plugin's `devbook-derived-artifacts.md`:
 
 ```text
 _meta/graph.json          # reference graph, all adopted folders
 _meta/index.json          # reading outline, all adopted folders
-.arc42/_meta/graph.json   # .arc42 only
-.arc42/_meta/index.json
-.domain/_meta/…
-.tech/_meta/…
-.design/_meta/…
-.ai/_meta/…
+.devbook/arc42/_meta/graph.json   # arc42/ only
+.devbook/arc42/_meta/index.json
+.devbook/domain/_meta/…
+.devbook/tech/_meta/…
+.devbook/design/_meta/…
+.devbook/ai/_meta/…
 ```
 
 Only folders the repository actually has produce a scope.
@@ -658,6 +669,5 @@ node .devbook/_tools/devbook-meta/build.mjs
 
 These are derived output — never edit them by hand. CI
 (`.github/workflows/devbook-meta.yml`) fails when a reference does not
-resolve or when a committed index is stale. Open the **Reference graph**
-canvas (optionally scoped to one folder) to explore it visually. See
+resolve or when a committed index is stale. See
 the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`) for the output shape.

@@ -1,7 +1,8 @@
 # Devbook metadata tooling
 
-Derives machine-readable indexes from the `meta` blocks embedded in
-`.arc42/`, `.domain/`, `.tech/`, `.design/`, and `.ai/`:
+Derives machine-readable indexes from the `meta` blocks embedded in the
+devbook folders under `.devbook/` — `arc42/`, `domain/`, `tech/`, `design/`,
+and `ai/`, at `.devbook/arc42/` and so on:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
@@ -19,7 +20,7 @@ that changed nothing is visibly a no-op:
 
 ```powershell
 ./build/Update-DevbookIndex.ps1                 # every adopted scope
-./build/Update-DevbookIndex.ps1 -Scope .tech    # one scope only
+./build/Update-DevbookIndex.ps1 -Scope tech    # one scope only
 ./build/Update-DevbookIndex.ps1 -Check          # validate, write nothing
 ```
 
@@ -30,7 +31,7 @@ The generator underneath, for CI and for anywhere pwsh is not available:
 node .devbook/_tools/devbook-meta/build.mjs
 
 # One scope only
-node .devbook/_tools/devbook-meta/build.mjs --scope .tech
+node .devbook/_tools/devbook-meta/build.mjs --scope tech
 
 # Validate references without writing (exit 1 on a broken reference)
 node .devbook/_tools/devbook-meta/build.mjs --check
@@ -40,9 +41,12 @@ node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 The repository root defaults to the working directory. Only devbook folders
-that actually exist produce a scope, so a repository that adopts just `.domain`
-and `.arc42` never grows `_meta/` folders for the rest. The generator exits `2`
-when no devbook folder is present at all.
+that actually exist under `.devbook/` produce a scope, so a repository that
+adopts just `domain/` and `arc42/` never grows `_meta/` folders for the rest.
+`--scope` takes `tech`, `tech/`, or `.devbook/tech` for the same scope. The
+generator exits `2` when no devbook folder is present at all, and a root-level
+`tech/` is reported as an error and never indexed — the only layout is
+`.devbook/`.
 
 ### When to run it
 
@@ -72,12 +76,12 @@ Three artifacts per adopted scope, each co-located with what it describes:
 
 | Path | Scope |
 |---|---|
-| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
-| `.arc42/_meta/*.json` | `.arc42` only |
-| `.domain/_meta/*.json` | `.domain` only |
-| `.tech/_meta/*.json` | `.tech` only |
-| `.design/_meta/*.json` | `.design` only |
-| `.ai/_meta/*.json` | `.ai` only |
+| `.devbook/_meta/graph.json`, `.devbook/_meta/index.json`, `.devbook/_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
+| `.devbook/arc42/_meta/*.json` | `arc42/` only |
+| `.devbook/domain/_meta/*.json` | `domain/` only |
+| `.devbook/tech/_meta/*.json` | `tech/` only |
+| `.devbook/design/_meta/*.json` | `design/` only |
+| `.devbook/ai/_meta/*.json` | `ai/` only |
 
 A scoped graph contains every node in its folder, plus any node **outside** it
 that an in-scope node references. Those boundary nodes are flagged
@@ -89,8 +93,8 @@ followed, so a scoped graph stays about its own folder.
 
 | File | Role |
 |---|---|
-| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Shared with the `devbook-graph` canvas. |
-| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
+| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Loaded by `devbook-derived`'s canvas from the materialized path. |
+| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI and loaded by `devbook-derived`'s canvas from the materialized path, so the check, the written indexes, and the live view are one parser. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
@@ -110,28 +114,28 @@ mappable to D3, vis.js, or Sigma.
 {
   "schemaVersion": 5,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".tech",
-  "sources": [".tech"],
+  "scope": ".devbook/tech",
+  "sources": [".devbook/tech"],
   "stats": { "nodes": 57, "edges": 120, "nodesByFolder": { }, "nodesByKind": { }, "nodesByStatus": { } },
   "problems": [],
   "elements": {
     "nodes": [
       { "data": {
-          "id": ".tech/desktop.md#winui-3",
+          "id": ".devbook/tech/desktop.md#winui-3",
           "label": "WinUI 3",
           "type": "chapter",
           "kind": "framework",
           "folder": "tech",
-          "path": ".tech/desktop.md",
+          "path": ".devbook/tech/desktop.md",
           "status": "candidate",
-          "depends-on": [".tech/desktop.md#windows-app-sdk"]
+          "depends-on": [".devbook/tech/desktop.md#windows-app-sdk"]
       } }
     ],
     "edges": [
       { "data": {
-          "id": "depends-on:.tech/desktop.md#winui-3->.tech/desktop.md#windows-app-sdk",
-          "source": ".tech/desktop.md#winui-3",
-          "target": ".tech/desktop.md#windows-app-sdk",
+          "id": "depends-on:.devbook/tech/desktop.md#winui-3->.devbook/tech/desktop.md#windows-app-sdk",
+          "source": ".devbook/tech/desktop.md#winui-3",
+          "target": ".devbook/tech/desktop.md#windows-app-sdk",
           "type": "depends-on"
       } }
     ]
@@ -153,9 +157,9 @@ Two different questions, two different keys:
 
 The authored field is called `type` in Markdown but lands on the node as
 `kind`, because `type` was already the structural discriminator and renaming it
-would break every existing consumer. `.tech` nodes have always carried `kind`;
+would break every existing consumer. `tech/` nodes have always carried `kind`;
 the unification means every folder that defines a value set now populates it —
-`.domain`, `.tech`, and `.ai`. Nodes in `.arc42` and `.design`
+`domain/`, `tech/`, and `ai/`. Nodes in `arc42/` and `design/`
 carry no `kind`, because those folders deliberately define no value set.
 
 ### Node types
@@ -178,7 +182,7 @@ the canvas and the committed `graph.json` never disagree about it.
 
 ### File node labels
 
-Heading text carries the name only, so all six files of a `.domain` bounded
+Heading text carries the name only, so all six files of a `domain/` bounded
 context are titled with the bare context name. A file node's label is therefore
 composed as `<title> (<kind>)`, and the suffix is dropped when the title
 already slugifies to the kind:
@@ -206,8 +210,8 @@ fallback does not render as `Context Map (context-map)`.
 | `depends-on` | The `depends-on` metadata field. |
 | `related` | The `related` metadata field. |
 
-`aliases` (`.domain`), `alternatives` (`.tech`), `feature-flag` and `role` (`.domain`),
-`stage` (`.ai`), and `roadmap` and `tests` (every folder) are plain-string
+`aliases` (`domain/`), `alternatives` (`tech/`), `feature-flag` and `role` (`domain/`),
+`stage` (`ai/`), and `roadmap` and `tests` (every folder) are plain-string
 fields, not references, so they stay node attributes and produce no edges.
 `feature-flag`, `role`, `roadmap`, `stage`, and `tests` accept a scalar or a list but
 are always emitted as a list, so a consumer never has to branch on shape. `effort` is emitted as a number rather than the authored
@@ -272,7 +276,7 @@ each expects, without building a command.
 | A reference pointing outside the devbook folders | warning |
 | A `type` set in a folder that defines no value set | warning |
 | A literal `` `r`n `` / `\r\n` / `\n` escape sequence in body text | warning |
-| `.tech` still using the old `kind` field name | warning |
+| `tech/` still using the old `kind` field name | warning |
 | An `order` field, removed from the schema — reading order now comes from the folder convention | error |
 | An `index` value other than `root` or `exclude` | error |
 | Two documents in one directory declaring `index: root` | error |
@@ -286,9 +290,9 @@ each expects, without building a command.
 | A `tests` entry that is a `<path>#<slug>` chapter reference rather than a test identifier | error |
 | A `tests` entry naming a runner the tooling has no command for | warning |
 | A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) on the file-level block | error |
-| `.domain` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
+| `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
 | An `approved` chapter carrying an open `kind: question` annotation | error |
-| `.ai` `stage` on a block inside a stage file, where the file already says it | warning |
+| `ai/` `stage` on a block inside a stage file, where the file already says it | warning |
 | A directory missing the root document its folder convention names | warning |
 
 ### Literal escape sequences
@@ -316,21 +320,21 @@ sorting filenames.
 {
   "schemaVersion": 5,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".domain",
-  "sources": [".domain"],
+  "scope": ".devbook/domain",
+  "sources": [".devbook/domain"],
   "problems": [],
   "entries": [
-    { "type": "file", "name": "context-map.md", "path": ".domain/context-map.md",
+    { "type": "file", "name": "context-map.md", "path": ".devbook/domain/context-map.md",
       "title": "Shop", "kind": "context-map", "status": "draft",
       "summary": "How the shop's bounded contexts relate.", "root": true },
-    { "type": "directory", "name": "ordering", "path": ".domain/ordering",
+    { "type": "directory", "name": "ordering", "path": ".devbook/domain/ordering",
       "title": "Ordering",
       "children": [
-        { "type": "file", "name": "domain.md", "path": ".domain/ordering/domain.md",
+        { "type": "file", "name": "domain.md", "path": ".devbook/domain/ordering/domain.md",
           "title": "Ordering", "kind": "domain", "status": "draft",
           "summary": "Owns the lifecycle of a customer order.", "diagrams": 1,
           "root": true },
-        { "type": "file", "name": "features.md", "path": ".domain/ordering/features.md",
+        { "type": "file", "name": "features.md", "path": ".devbook/domain/ordering/features.md",
           "title": "Ordering", "kind": "features", "status": "draft" }
       ] }
   ]
@@ -342,13 +346,13 @@ A numbered area carries `number` on every entry it could resolve one for, and
 
 ```jsonc
 "entries": [
-  { "type": "file", "name": "README.md", "path": ".arc42/adr/README.md",
+  { "type": "file", "name": "README.md", "path": ".devbook/arc42/adr/README.md",
     "title": "Architecture Decisions", "status": "active", "statusDeclared": false, "root": true },
-  { "type": "file", "name": "2-record-decisions.md", "path": ".arc42/adr/2-record-decisions.md",
+  { "type": "file", "name": "2-record-decisions.md", "path": ".devbook/arc42/adr/2-record-decisions.md",
     "title": "Record Decisions", "status": "active", "statusDeclared": false, "number": 2, "date": "2025-11-02" },
-  { "type": "file", "name": "7-use-postgres.md", "path": ".arc42/adr/7-use-postgres.md",
+  { "type": "file", "name": "7-use-postgres.md", "path": ".devbook/arc42/adr/7-use-postgres.md",
     "title": "Use PostgreSQL", "status": "active", "statusDeclared": false, "number": 7, "date": "2026-03-04" },
-  { "type": "file", "name": "10-adopt-aspire.md", "path": ".arc42/adr/10-adopt-aspire.md",
+  { "type": "file", "name": "10-adopt-aspire.md", "path": ".devbook/arc42/adr/10-adopt-aspire.md",
     "title": "Adopt .NET Aspire", "status": "active", "statusDeclared": false, "number": 10, "date": "2026-07-19" }
 ]
 ```
@@ -367,7 +371,7 @@ thing is this".
 ### `status` and `statusDeclared`
 
 `status` is always the block's **effective** status, never a raw copy of the
-field. In `.domain`, `.arc42`, and `.design` the field is optional and an
+field. In `domain/`, `arc42/`, and `design/` the field is optional and an
 absent one means that folder's resting value, `active`, so a block that states
 nothing still lands in the right bucket of `nodesByStatus` and still badges as
 `active` in a viewer.
@@ -378,7 +382,7 @@ distinguish "settled, and the author said so by omission" from a stated value,
 and every already-declared entry stays byte-identical to what earlier schema
 versions emitted.
 
-`.tech` and `.ai` have no resting value, so an absent status there
+`tech/` and `ai/` have no resting value, so an absent status there
 resolves to `null` and `validateDocument` reports it as an error. A `null`
 status in these artifacts means the corpus is broken, not that the content is at
 rest — do not paper over it in a viewer.
@@ -454,18 +458,18 @@ node, the approval gate showing the objections raised since `approved-at`.
 {
   "schemaVersion": 6,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".arc42",
-  "sources": [".arc42"],
+  "scope": ".devbook/arc42",
+  "sources": [".devbook/arc42"],
   "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
   "problems": [],
   "threads": [
     {
-      "path": ".arc42/05-building-block-view.md",
+      "path": ".devbook/arc42/05-building-block-view.md",
       "folder": "arc42",
       // A thread has no id. It is addressed the way devbook addresses
       // everything — a path plus a heading slug — with `ordinal` standing in
       // for the id the schema deliberately does not assign.
-      "address": ".arc42/05-building-block-view.md#devbook-meta",
+      "address": ".devbook/arc42/05-building-block-view.md#devbook-meta",
       "chapter": "devbook-meta",
       "chapterTitle": "Devbook Meta",
       "ordinal": 1,
@@ -499,23 +503,9 @@ this index makes visible; `devbook:annotation-sweep` is what removes it.
 
 ## Viewing
 
-Open the **Reference graph** canvas in Copilot CLI for an Obsidian-style
-force-directed view with folder colouring, status shading, search, filters, and
-click-to-inspect neighbourhoods. Open it scoped to one folder:
-
-```text
-open the reference graph canvas with scope .tech
-```
-
-The canvas has a scope selector, rebuilds from disk on open (so it never shows
-a stale index), and exposes `refresh_graph` and `set_scope` actions. It also
-serves the live outline at `/api/outline?scope=<scope>` for tools that want the
-reading order without reading the committed `index.json`.
-
-Its node inspector lists a node's test links — level badge, selector, and the
-command that runs it. The canvas's `/api/graph` response carries one extra
-top-level key for that, `testCommands`, mapping each `tests` entry in the graph
-to its resolved argv. It is canvas-only and deliberately absent from the
-committed `graph.json`: a command depends on the tooling version, not on the
-Markdown, so baking it into a derived artifact would make that artifact stale
-for a reason the Markdown cannot explain.
+The **Reference graph** canvas is `devbook-derived`'s `devbook-graph` extension. It loads
+`graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at
+runtime, rebuilds from disk on open, and adds one canvas-only key to its `/api/graph`
+response, `testCommands`, mapping each `tests` entry to its resolved argv. That key is
+deliberately absent from the committed `graph.json`: a command depends on the tooling
+version, not on the Markdown.

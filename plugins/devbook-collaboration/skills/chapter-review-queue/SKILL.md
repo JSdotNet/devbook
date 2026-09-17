@@ -5,15 +5,17 @@ description: 'Sweep a repository''s devbook folders for everything a review pass
 
 # chapter review queue
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Answer one question across every adopted devbook folder: what is a person
 still owed. This is the only skill in this plugin that reads the folder rather
 than one chapter, because a queue is the one thing an address cannot give you.
 
-State keys are in `../../rules/chapter-collaboration.md`. A finding is an
-annotation fence, and the derived `_meta/annotations.json` already lists every
-one with its address and status — see `devbook-annotations.md`.
+The review fields are devbook's — `review`, `reviewer`, `review-at` in
+`devbook-chapter-metadata.md`. A finding is an annotation fence — see
+`devbook-annotations.md`.
 
 This file exceeds the 40-line body budget on purpose: the routing table in step
 3 is one row per state a chapter can be waiting in, and a row left out is a
@@ -27,11 +29,12 @@ chapter that never appears in the queue.
    repository has no stamp; do not ask.
 
 2. **Collect the `meta` blocks and the notes** in those folders. Prefer the
-   derived indexes under `_meta/`: `index.json` carries each node's `ext` keys
-   gathered under one `ext` key, and `annotations.json` carries every thread
-   with its address, status, and kind. That is what they are for. Read them,
-   never hand-edit them. When there is no `_meta/`, scan the chapters directly
-   and say in the report that the queue was built from a scan.
+   derived indexes under `_meta/`: `index.json` carries each node's `status`,
+   `review`, `reviewer`, `review-at`, `approved-by`, and `approved-at`, and
+   `annotations.json` carries every thread with its address, status, and kind.
+   That is what they are for. Read them, never hand-edit them. When there is
+   no `_meta/`, scan the chapters directly and say in the report that the
+   queue was built from a scan.
 
 3. **Sort every chapter into one row**, first match wins:
 
@@ -73,7 +76,7 @@ chapter that never appears in the queue.
 - Do not read chapter content into context while sweeping. Metadata answers the
   whole question, and loading the corpus is exactly what devbook's task-scoped
   loading rule forbids.
-- Do not report a chapter with no collaboration state, no approval, and no
-  notes. Silence is the normal case, not a queue entry.
+- Do not report a chapter with no review state, no approval, and no notes.
+  Silence is the normal case, not a queue entry.
 - Do not sweep from here. The queue reports resolved notes; deleting them is
   `devbook:annotation-sweep`, on the branch that answered them.

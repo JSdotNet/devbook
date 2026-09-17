@@ -5,14 +5,17 @@ description: 'Hand a devbook chapter to a named reviewer and produce the brief t
 
 # chapter handoff
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Request a review of one chapter and write the request into the chapter, so the
 ask outlives the session that made it. This is the author's half of the pass;
 `chapter-review` is the reviewer's.
 
-State keys and their meanings are in
-`../../rules/chapter-collaboration.md`. Read it first.
+The three review fields and their meanings are devbook's — `review`,
+`reviewer`, `review-at` in `devbook-chapter-metadata.md`. Read that entry
+first.
 
 This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
 four-row lookup, and a reviewer who is handed three of the four rows starts by
@@ -31,9 +34,9 @@ asking for the fourth.
 3. **Write the request** into the chapter's `meta` block:
 
    ```text
-   ext.devbook-collaboration.review: requested
-   ext.devbook-collaboration.reviewer: @jsdotnet
-   ext.devbook-collaboration.review-at: 2026-09-03
+   review: requested
+   reviewer: @jsdotnet
+   review-at: 2026-09-03
    ```
 
    Overwrite an existing request rather than adding a second — a chapter waits
@@ -65,4 +68,4 @@ asking for the fourth.
 - Do not write `status: approved` from this skill. Approval is
   `chapter-approve`'s, and only after a review clears.
 - Do not record the brief in the chapter. It is transient; the durable residue
-  of a hand-off is the three keys in step 3.
+  of a hand-off is the three fields in step 3.

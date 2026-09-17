@@ -27,7 +27,7 @@ related: [".devbook/domain/devbook-config/domain.md#report"]
 
 What is on disk, read and nothing else: the catalog in the working tree and in the host's clone,
 the host's installed-plugin state, three settings layers merged nearest-last, the stack config
-and every machine overlay layer, the devbook folders in both layouts, and the `skills/` folders of the
+and every machine overlay layer, the devbook folders under `.devbook/`, and the `skills/` folders of the
 engine and the schedule plugin.
 
 It is the aggregate because a fact here is only usable with its source attached. "Already latest"
@@ -173,10 +173,10 @@ the marketplace rather than a unit of work.
 
 ```meta
 type: domain-service
-aliases: [.ai drift]
+aliases: [ai/ drift]
 ```
 
-Reports where the `.ai` adoption record no longer matches what is installed, enabled, and wired,
+Reports where the `ai/` adoption record no longer matches what is installed, enabled, and wired,
 and hands every edit to the folder's own flow.
 
 Invocation semantics: query-oriented, and it writes nothing at all — deliberately. The derivable

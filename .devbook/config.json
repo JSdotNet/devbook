@@ -19,7 +19,7 @@
     }
   },
   "extensions": {
-    "session.start": ["devbook:devbook-check"],
+    "session.start": ["devbook:check"],
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
@@ -59,6 +59,10 @@
       },
       "migrations": []
     },
+    "derived": {
+      "pluginVersion": "1.1.0",
+      "materialized": {}
+    },
     "delivery": {
       "pluginVersion": "1.0.0",
       "materialized": {}
@@ -66,6 +70,11 @@
     "schedule": {
       "pluginVersion": "1.0.0",
       "enabled": ["devbook-check", "tech-update", "merge-review", "package-update"]
+    },
+    "delivery-surface-dashboard": {
+      "sessionNaming": {
+        "labels": { "devbook": "devbook", "code": null }
+      }
     }
   }
 }

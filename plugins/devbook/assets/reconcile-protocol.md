@@ -1,13 +1,13 @@
 # Reconcile protocol
 
-The shared detail behind `devbook:install` and `devbook-check`: the stamp devbook
+The shared detail behind `devbook:install` and `devbook:check`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
-Two other installs read one section of it. `delivery:install` and
-`devbook-collaboration:install` take **The stamp**'s two shared fields and its hash
-rules, and nothing else here describes them: the three fields beside those, the asset
-table, and the six phases are devbook's own. The reason is
+Other plugins' installs read one section of it: a payload-only component takes
+**The stamp**'s two shared fields and its hash rules, and nothing else here describes
+it: the three fields beside those, the asset table, and the six phases are devbook's
+own. The reason is
 `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
 
 ## One reconcile, four situations
@@ -46,7 +46,8 @@ whose install rewrites content the repository authored, which is devbook alone:
       "materialized": {
         ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
-        "build/Update-DevbookIndex.ps1": { "from": "1.0.0", "hash": "sha256:7e10…", "managed": false },
+        ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
         ".agents/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:b17e…", "managed": true },
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
@@ -71,10 +72,10 @@ whose install rewrites content the repository authored, which is devbook alone:
 and `materialized` are everyone's. A component that only copies files it owns needs
 no ledger: a copy hashing to a release that component shipped is stale and gets
 replaced, which *is* the migration, and a copy hashing to nothing shipped is the
-repository's and is never overwritten, ledger or not. So `delivery` and
-`devbook-collaboration` stamp two fields, `delivery-schedule` stamps `pluginVersion`
-beside the selection it made in the host's own scheduler, and none of the three ships
-a `migrations/` folder or runs the six phases below.
+repository's and is never overwritten, ledger or not. So a payload-only component
+stamps two fields — or `pluginVersion` alone beside whatever selection it recorded
+elsewhere — and neither ships a `migrations/` folder nor runs the six phases below. A
+plugin that materializes nothing stamps nothing.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the
@@ -85,10 +86,11 @@ file wrong the moment a second person opens the repository.
 | From the plugin | Into the repository | When |
 |---|---|---|
 | `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
-| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `.tech` adopted |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
-| `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
-| `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
+| `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
+| `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
 | `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
@@ -97,17 +99,11 @@ file wrong the moment a second person opens the repository.
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
-Both workflows are edited on the way in — the branch name corrected, the nightly
-`cron` and `REFRESH_BRANCH` chosen, and the two path filters of
-`devbook-meta.yml` rendered. Those filters carry `<prefix>`: replace it with `.`
-in the flat layout and `.devbook/` in the nested one — `build.mjs` prints which
-layout it found on every run — and drop the rows for folders `adopted` does not
-name. A `<prefix>` reaching `.github/` is a failed reconcile, not a cosmetic
-defect: the filter then matches nothing, so the check never fires and nothing
-reports its absence. Verify in phase 6 that none survived. This editing makes
-both files customized from the first reconcile onward, which is the
-intended outcome: their hash matches no shipped release, so reconcile reports
-them and leaves them alone.
+The workflow is edited on the way in — the branch name corrected and its path filters
+trimmed to the adopted folders — which makes it customized from the first reconcile
+onward, as intended: its hash matches no shipped release, so reconcile reports it and
+leaves it alone. The refresh script, the nightly and drift workflows, and the committed
+`_meta/` indexes themselves are a layered plugin's payload, never this table's.
 
 The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
 read natively by Copilot and not by Claude, so a repository owes each host a root file that
@@ -188,7 +184,7 @@ it never goes inside the markers.
    The `AGENTS.md` section follows the same rule, with the text between its
    markers standing in for the file.
 
-6. **Stamp and verify.** Rewrite devbook's entry, run `devbook-check`, and report
+6. **Stamp and verify.** Rewrite devbook's entry, run `devbook:check`, and report
    what moved. A reconcile that ends with a failing check is reported as failing —
    never as "installed".
 

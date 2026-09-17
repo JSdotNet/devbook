@@ -3,35 +3,35 @@ name: devbook-domain
 description: Structure and authoring rules for the domain devbook folder, including root strategic DDD context mapping and per-bounded-context documentation.
 ---
 
-# Domain documentation (`.domain`)
+# Domain documentation (`domain/`)
 
-`.domain` is the durable, ubiquitous-language record of the domain model,
+`domain/` is the durable, ubiquitous-language record of the domain model,
 organized by bounded context. It is the authoritative source for "what the
-domain looks like" — complementary to `.arc42` (system architecture), `.tech`
-(technology stack), and `.design` (UX guidelines).
+domain looks like" — complementary to `arc42/` (system architecture), `tech/`
+(technology stack), and `design/` (UX guidelines).
 
 ## Context-loading policy
 
-- `.domain` is **not** baseline repository context. Load it only for domain
+- `domain/` is **not** baseline repository context. Load it only for domain
   modeling, bounded-context, or ubiquitous-language tasks, normally after
   routing through the repository's domain flow or a domain specialist
   agent.
-- When `.domain` is needed as task context, load only the relevant bounded
+- When `domain/` is needed as task context, load only the relevant bounded
   context's chapters instead of reading the whole folder by default.
-- Implementation work consults `.domain` when the change touches domain
+- Implementation work consults `domain/` when the change touches domain
   behavior, an aggregate boundary, or naming — not by default.
 
 ## Structure
 
-`.domain/` contains one root strategic artifact plus one folder per bounded
+`domain/` contains one root strategic artifact plus one folder per bounded
 context.
 
 Each bounded context gets its own subfolder, named in kebab-case after the
-context (e.g. `.domain/order-management/`). Use the same name consistently
-across `.domain`, ADRs, and code module names where practical.
+context (e.g. `.devbook/domain/order-management/`). Use the same name consistently
+across `domain/`, ADRs, and code module names where practical.
 
 ```
-.domain/
+.devbook/domain/
   context-map.md
   <bounded-context-name>/
     domain.md
@@ -81,10 +81,10 @@ where it has no value; an `organisation` or `technical` chapter rarely has one.
 
 An actor is the EventStorming and Domain Storytelling actor — the one that issues
 a command — and deliberately not a persona. A persona is a UX archetype of goals
-and frustrations, is not ubiquitous language, and belongs in `.design` where a
+and frustrations, is not ubiquitous language, and belongs in `design/` where a
 repository wants one. Nor is a `technical` actor the actor-model kind: a mailbox
 object, grain, or process is an implementation building block and belongs in
-`.arc42`. A context nobody works with directly — a library, or one reached only
+`arc42/`. A context nobody works with directly — a library, or one reached only
 by another context — omits the file, and its absence is not a missing file.
 
 **`naming.md` is optional and its absence is not a missing file.** A context
@@ -105,7 +105,7 @@ context's flows; keep `flow.md` for the flows that are still better read
 together, and drop it when every flow has been split out.
 
 Reading order comes from this convention, not from a metadata field and not from
-filenames. `context-map.md` is `.domain`'s root document and is read first,
+filenames. `context-map.md` is `domain/`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
 tree above — `actors.md`, `skills.md` or `features.md`, `model.md`,
@@ -116,7 +116,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
 ## File responsibilities
 
 - **context-map.md** — Strategic DDD view across bounded contexts at the
-  `.domain` root.
+  `domain/` root.
   - Documents the subdomain landscape/classification (core/supporting/generic
     as applicable).
   - Captures bounded-context relationships in a context map.
@@ -227,7 +227,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
 
 ## Folder rules
 
-These rules describe the persisted shape of `.domain` assets only. Authoring
+These rules describe the persisted shape of `domain/` assets only. Authoring
 workflow, routing, and cross-document governance are handled by separate
 instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
@@ -240,7 +240,7 @@ instructions.
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
-- Every file in `.domain` — `context-map.md` and, per bounded context,
+- Every file in `domain/` — `context-map.md` and, per bounded context,
   `domain.md`, `actors.md`, `features.md` or `skills.md`, `model.md`,
   `flow.md` and each `flow.<name>.md` (when present), `dependencies.md`, and
   `naming.md` (when present) — must also carry the file-level
@@ -281,10 +281,10 @@ instructions.
 
   Each file's `type` matches its filename: `domain.md` is `type: domain`,
   `features.md` is `type: features`, `skills.md` is `type: skills`, and so on,
-  with `context-map.md` at the `.domain` root carrying `type: context-map`. A
+  with `context-map.md` at the `domain/` root carrying `type: context-map`. A
   `flow.<name>.md` carries `type: flow`, because the suffix narrows the scope
   and not the kind.
-- Heading text in `.domain` carries the **name only** — `## Order`, not
+- Heading text in `domain/` carries the **name only** — `## Order`, not
   `## Aggregate: Order`. Anchors are therefore slugs of the bare name
   (`.domain/order-management/domain.md#order`). The two exceptions are the
   `## Shared Value Objects` and `## Shared Enums` chapters, whose headings name
@@ -297,7 +297,7 @@ instructions.
   heading: the file title stays the context name and the flow's own name goes
   in its `##` heading, exactly as it did inside `flow.md`.
 
-  `context-map.md` is the one `.domain` file that is not about a single bounded
+  `context-map.md` is the one `domain/` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
   system or product the map covers — `# Order Platform` — with
   `type: context-map` carrying the kind, exactly as everywhere else. The
@@ -312,14 +312,14 @@ instructions.
   reasonable people prefer it. Pick one per repository and stay with it; do not
   churn an existing title to switch.
 
-  A `.domain` folder written the old way (kind prefixes in headings, no `type`,
+  A `domain/` folder written the old way (kind prefixes in headings, no `type`,
   `#### <Name>` sub-chapters under `### Entities`) is migrated with the steps in
   the devbook plugin README under "Migrating to schema version 2".
 - `features.md` and `skills.md` Feature/Sub-feature chapters may carry an
   additional `depends-on` field: a list of `<path>#<heading-slug>` references (see
   `devbook-chapter-metadata.md` for the reference
   format) to other features that must be delivered first, e.g.
-  `depends-on: [.domain/order-management/features.md#refunds]`.
+  `depends-on: [.devbook/domain/order-management/features.md#refunds]`.
   `domain.md` chapters (Aggregates, Domain Services, Domain Events, Shared
   Value Objects/Enums) do not use `depends-on` — they describe standing
   structure, and their relationships belong in `model.md`/`dependencies.md` or
@@ -427,7 +427,7 @@ status: draft
 type: context-map
 \`\`\`
 
-> `.domain`'s root document. Prefer titling it after the system the map covers,
+> `domain/`'s root document. Prefer titling it after the system the map covers,
 > since the `type` above already carries the kind and the generator labels this
 > node `<System Name> (context-map)`; a plain `# Context Map` is also accepted.
 > Its structural `##` sections — the four below — carry no metadata blocks; the
@@ -612,7 +612,7 @@ type: ubiquitous-language
 status: draft
 type: term
 aliases: [<AliasA>, <AliasB>]
-related: [.domain/<context>/domain.md#<heading-slug>]
+related: [.devbook/domain/<context>/domain.md#<heading-slug>]
 \`\`\`
 
 Definition of the term and, where useful, when each alias appears.
@@ -654,7 +654,7 @@ type: actors
 status: draft
 type: user
 role: <RoleNameAsTheAuthorizationLayerSpellsIt>
-related: [.domain/<context>/features.md#<heading-slug>]
+related: [.devbook/domain/<context>/features.md#<heading-slug>]
 \`\`\`
 
 Who this user is, in one sentence, naming the term the screens use where it
@@ -683,7 +683,7 @@ and how it appears in the model.
 \`\`\`meta
 status: draft
 type: technical
-related: [.domain/<context>/dependencies.md#<heading-slug>]
+related: [.devbook/domain/<context>/dependencies.md#<heading-slug>]
 \`\`\`
 
 What this actor is, what it triggers in this context, and how the model records
@@ -763,7 +763,7 @@ type: skills
 \`\`\`meta
 status: draft
 type: feature
-related: [.domain/<context>/flow.<skill-name>.md]
+related: [.devbook/domain/<context>/flow.<skill-name>.md]
 \`\`\`
 
 What the skill does for whoever runs it, what it guarantees, and where it
@@ -858,7 +858,7 @@ One flow split out of `flow.md`, with the same `type` and the same rule that its
 \`\`\`meta
 status: draft
 type: flow
-related: [.domain/<context>/skills.md#<skill-name>]
+related: [.devbook/domain/<context>/skills.md#<skill-name>]
 \`\`\`
 
 > One flow: <what moves, and from where to where>. Structure is in
@@ -932,7 +932,7 @@ type: naming
 status: draft
 type: term
 aliases: [<AliasA>, <AliasB>]
-related: [.domain/<context>/domain.md#<heading-slug>]
+related: [.devbook/domain/<context>/domain.md#<heading-slug>]
 \`\`\`
 
 Definition of the term and, where useful, when each alias appears (code

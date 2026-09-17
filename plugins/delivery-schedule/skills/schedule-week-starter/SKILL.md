@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Week Starter
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Fetch recent release notes, changelogs, and announcements for each configured topic,

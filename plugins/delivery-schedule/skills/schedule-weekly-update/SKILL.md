@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Weekly Update
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Keep a record of everything that changed in the repository, one update per week, written so
