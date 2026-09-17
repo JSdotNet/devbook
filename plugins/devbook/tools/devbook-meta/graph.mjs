@@ -90,7 +90,7 @@ export function generatorPath(repoRoot) {
 
 // Metadata fields that hold `<path>` / `<path>#<slug>` references, and the edge
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
-// `feature-flag`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
+// `feature-flag`, `role`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
 const REFERENCE_FIELDS = {
     "depends-on": "depends-on",
     related: "related",
@@ -116,8 +116,9 @@ const ATTRIBUTE_FIELDS = [
 //
 // `tests` is here rather than in REFERENCE_FIELDS because a test identifier
 // names something in a test project, not a chapter, so it produces no edge — the
-// same reason `feature-flag`, `roadmap`, and `.ai`'s `stage` stay attributes.
-const LIST_ATTRIBUTE_FIELDS = ["feature-flag", "roadmap", "stage", "tests"];
+// same reason `feature-flag`, `role`, `roadmap`, and `.ai`'s `stage` stay
+// attributes — a `role` names something in the authorization configuration.
+const LIST_ATTRIBUTE_FIELDS = ["feature-flag", "role", "roadmap", "stage", "tests"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.

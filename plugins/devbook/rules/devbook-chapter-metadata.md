@@ -25,7 +25,7 @@ already treat as an addressable unit:
   grouping where the context has no `naming.md` — each `Term` chapter.
 - `.domain/<context>/skills.md` — each Feature and Sub-feature, where the
   context describes skills rather than product features.
-- `.domain/<context>/stakeholders.md` — each Actor and each Party.
+- `.domain/<context>/actors.md` — each User, Organisation, and Technical actor.
 - `.arc42/<nn>-<name>.md` — the file's top-level chapter, and any ## section
   inside it that is independently trackable.
 - `.tech/<layer>.md` — each `## <Technology Name>` chapter (one graph node per
@@ -136,7 +136,7 @@ The file-level block uses the same fields as a chapter block (`status` required
 or optional by folder, exactly as above; `type` required where the folder
 defines a file-level value set; `related`, `issue`, `effort`, and `roadmap`
 optional) and the same omit-when-empty rule. Folder-specific fields defined for chapters
-(`depends-on`, `aliases`, `feature-flag`, `version`, `alternatives`) are
+(`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) are
 chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only.
 
@@ -152,8 +152,8 @@ which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
 reference field: in `domain/`, `aliases` (defined in
 `devbook-domain.md`) is a list of
-plain-string surface names and `feature-flag` (same file) is a list of
-application feature keys, neither of them `<path>#<heading-slug>` references,
+plain-string surface names, `feature-flag` (same file) is a list of
+application feature keys, and `role` (same file) is the authorization role name an actor holds, none of them `<path>#<heading-slug>` references,
 in `tech/`, `alternatives` (defined in
 `devbook-tech.md`) is likewise a
 plain-string list, and in `ai/`, `stage` (defined in
@@ -278,7 +278,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `actor`, `party`, `term` | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
@@ -383,7 +383,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 its directory. A chapter's position is already its position in the document.
 
 Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
-`feature-flag` on domain feature chapters, `version`/`alternatives` on tech
+`feature-flag` on domain feature chapters, `role` on domain actor chapters, `version`/`alternatives` on tech
 chapters, `stage` on ai chapters) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
@@ -614,7 +614,7 @@ Per directory, `_meta/index.json` is generated like this:
 
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
-   `domain/`'s `stakeholders` → `skills` → `features` → `model` → `flow` →
+   `domain/`'s `actors` → `skills` → `features` → `model` → `flow` →
    `dependencies` → `naming`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
    first and `tooling.md` last — with anything else filename-sorted in between.
 

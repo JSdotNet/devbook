@@ -61,6 +61,44 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
+// `role` is the authorization role an actor holds — the fourth beat of a
+// `user` chapter made addressable — so it belongs to the three actor kinds in
+// `actors.md` and to nothing else: a role on a feature would restate an
+// authorization rule where the domain rule says it must never be written.
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/actors.md",
+        `# Ordering\n\n${fence("type: actors\n")}\n## Consultant\n\n` +
+            `${fence("type: user\nrole: [Consultant, TeamLead]\n")}\nProse.\n\n## Bank\n\n` +
+            `${fence("type: organisation\n")}\nProse.\n\n## Month Close\n\n` +
+            `${fence("type: technical\nrole: System\n")}\nProse.\n`
+    );
+
+    check(
+        !find(issues, "error", "scopes the field to"),
+        "`role` on a user and a technical actor is silent",
+        dump(issues)
+    );
+}
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/features.md",
+        `# Ordering Features\n\n${fence("type: features\nrole: Consultant\n")}\n## Refunds\n\n` +
+            `${fence("type: feature\nrole: Consultant\n")}\nProse.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", "`role` on the file-level block")),
+        "`role` on the file-level block is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`role` on a chapter of type "feature"')),
+        "`role` on a feature is an error",
+        dump(issues)
+    );
+}
+
 // A term that is already an aggregate, service, event, or field carries its
 // aliases on that chapter rather than earning a duplicate `term` chapter, so
 // `aliases` is legal on any chapter — only the file-level block is out.
