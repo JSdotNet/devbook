@@ -1,6 +1,6 @@
 // graph-render.mjs — HTML shell for the devbook-graph canvas.
 //
-// An Obsidian-style force-directed view over _meta/graph.json.
+// An Obsidian-style force-directed view over the graph document graph.mjs builds.
 // Rendering uses CDN-hosted Cytoscape.js (core only, built-in `cose` layout)
 // so the extension itself stays dependency-free, matching render.mjs.
 

@@ -41,7 +41,6 @@ check("a retired folder is just code", await titleFor("Split checkout epic", [ed
 console.log("\n— nested layout —");
 check("nested folder classifies as its own kind", await titleFor("Runtime view refresh", [write(".devbook/arc42/06-runtime-view.md")]), "arc42 — Runtime view refresh");
 check("nested domain chapter still names its context", await titleFor("Add Fulfilment aggregate", [write(".devbook/domain/order-management/domain.md")]), "domain:order-management — Add Fulfilment aggregate");
-check("nested generated indexes do not count", await titleFor("Regenerate", [write(".devbook/domain/_meta/index.json")]), null);
 check("the parent folder alone is not a devbook write", await titleFor("Config", [edit(".devbook/config.json")]), "code — Config");
 
 console.log("\n— bounded context —");
@@ -59,7 +58,6 @@ check("explicit publish action counts", await titleFor("Report", [{ toolName: "A
 console.log("\n— no rename —");
 check("nothing written yet", await titleFor("Just talking", []), null);
 check("reading is not writing", await titleFor("Just reading", [{ toolName: "Read", input: { file_path: "src/A.cs" } }]), null);
-check("generated indexes do not count", await titleFor("Regenerate", [write(".domain/_meta/index.json")]), null);
 check("non-publish Artifact actions do not count", await titleFor("Check comments", [{ toolName: "Artifact", input: { action: "comments" } }]), null);
 check("bash writes are not tracked", await titleFor("Scripted", [{ toolName: "Bash", input: { command: "sed -i s/a/b/ src/A.cs" } }]), null);
 check("paths outside the worktree are ignored", await titleFor("Scratch", [write(path.join(tmpdir(), "scratch", "notes.md"))]), null);

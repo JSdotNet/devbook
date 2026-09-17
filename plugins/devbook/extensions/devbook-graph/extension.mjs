@@ -43,7 +43,7 @@ const graphInstances = new Map();
  * the inspector can show something a reader can copy and a future run
  * affordance has an argv to hand to a runner.
  *
- * Canvas-only, deliberately: the committed `graph.json` carries the authored
+ * Canvas-only, deliberately: the graph document carries the authored
  * identifier and nothing derived from it, because a command depends on the
  * tooling version rather than on the Markdown. Entries whose runner has no
  * mapping are simply absent from the map — the entry itself still shows.
@@ -132,8 +132,8 @@ function setDocument(entry, relPath) {
 /**
  * Local server for a devbook-graph canvas instance.
  *
- * The graph is rebuilt from the Markdown on disk rather than read from the
- * committed `_meta/` artifacts, so the view can never show a stale index. The
+ * The graph is built from the Markdown on disk — there is no committed
+ * artifact to read (record 76), so the view can never show a stale one. The
  * parsed corpus is cached per instance and projected per requested scope, so
  * switching scope in the UI costs no disk I/O.
  */

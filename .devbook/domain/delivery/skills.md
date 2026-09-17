@@ -62,7 +62,7 @@ bounded context or the context map; the technology graph; design principles, tok
 component guidance; the AI adoption record. One flow for the five folders, because the procedure
 is the same and only the role differs: the folder picks who drafts, and the repository's own
 instruction file for that folder says what a chapter must look like. It runs the repository's
-check and never regenerates the derived indexes, and it is the escalation target when any other
+check, and it is the escalation target when any other
 flow discovers it needs a decision.
 
 ## phase-build-test

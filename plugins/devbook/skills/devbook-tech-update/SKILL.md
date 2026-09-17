@@ -44,8 +44,8 @@ node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 Treat these JSON files as temporary evidence. Do not commit them unless the repository has
-explicitly adopted inventory evidence files; the durable record remains the `.tech/*.md`
-chapters and generated `_meta/*.json` indexes.
+explicitly adopted inventory evidence files; the durable record is the `.tech/*.md`
+chapters.
 
 ## Workflow
 
@@ -84,15 +84,14 @@ chapters and generated `_meta/*.json` indexes.
    `.tech` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
-6. **Regenerate and validate indexes.** Run:
+6. **Run the check.**
 
    ```bash
-   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
    node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check
    ```
 
-   If either command reports unresolved references, schema violations, or stale generated
-   indexes, fix the source Markdown or run `devbook-check`.
+   If it reports unresolved references or schema violations, fix the source Markdown or
+   run `devbook-check`.
 
 ## Output expectations
 
@@ -100,12 +99,10 @@ chapters and generated `_meta/*.json` indexes.
 - `.tech/` chapters updated through the `.tech` flow with valid metadata blocks.
 - Non-package technologies analyzed from repository evidence and recorded only when grounded.
 - Mermaid graph edges match `depends-on` metadata.
-- `.tech/_meta/graph.json` and `.tech/_meta/index.json` regenerated when the repository ships
-  `devbook-meta`.
+- The check passes at the `.tech` scope.
 
 ## Do not
 
-- Do not hand-edit `_meta/*.json` files.
 - Do not use one-off shell pipelines as package evidence when the inventory scripts exist.
 - Do not commit temporary `_inventory-*.json` files unless the repository explicitly documents
   them as durable evidence.

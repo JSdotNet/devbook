@@ -28,7 +28,8 @@ That is devbook's generator at the path `devbook-install` writes it to — a plu
 addressed by name from a plugin that claims not to know it exists.
 
 **Restated rules.** Each of the five requires the `meta` block, forbids writing the `approved`
-rung, and forbids regenerating `_meta/` in the run. Those are three of devbook's own rules,
+rung, and forbade regenerating `_meta/` in the run (moot since
+[record 76](../adr/76-derived-artifacts-are-computed-never-committed.md)). Those are three of devbook's own rules,
 restated in `delivery`. It is the fault
 [Flows Belong to Delivery](../adr/34-flows-belong-to-delivery.md) charged
 `devbook-flows` with — a Metadata Enforcement stage restating what devbook's instruction files

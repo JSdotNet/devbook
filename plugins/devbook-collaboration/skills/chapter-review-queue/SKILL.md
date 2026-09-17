@@ -12,8 +12,7 @@ still owed. This is the only skill in this plugin that reads the folder rather
 than one chapter, because a queue is the one thing an address cannot give you.
 
 State keys are in `../../rules/chapter-collaboration.md`. A finding is an
-annotation fence, and the derived `_meta/annotations.json` already lists every
-one with its address and status — see `devbook-annotations.md`.
+annotation fence — see `devbook-annotations.md`.
 
 This file exceeds the 40-line body budget on purpose: the routing table in step
 3 is one row per state a chapter can be waiting in, and a row left out is a
@@ -26,12 +25,12 @@ chapter that never appears in the queue.
    protocol. Fall back to the devbook folders present on disk when the
    repository has no stamp; do not ask.
 
-2. **Collect the `meta` blocks and the notes** in those folders. Prefer the
-   derived indexes under `_meta/`: `index.json` carries each node's `ext` keys
-   gathered under one `ext` key, and `annotations.json` carries every thread
-   with its address, status, and kind. That is what they are for. Read them,
-   never hand-edit them. When there is no `_meta/`, scan the chapters directly
-   and say in the report that the queue was built from a scan.
+2. **Collect the `meta` blocks and the notes** in those folders in one pass:
+   `node .devbook/_tools/devbook-meta/build.mjs --print` emits, per scope, the
+   graph with each node's `ext` keys gathered under one `ext` key and the
+   annotations document with every thread, its address, status, and kind. Read
+   the repository scope `.` from its output. Scan the chapters directly only
+   where the checker is not installed, and say so in the report.
 
 3. **Sort every chapter into one row**, first match wins:
 

@@ -1,115 +1,99 @@
 # Devbook metadata tooling
 
-Derives machine-readable indexes from the `meta` blocks embedded in
-`.arc42/`, `.domain/`, `.tech/`, `.design/`, and `.ai/`:
+Builds three documents from the `meta` blocks embedded in `.arc42/`,
+`.domain/`, `.tech/`, `.design/`, and `.ai/`, in memory, and writes none of
+them to disk:
 
-- **`graph.json`** — the reference graph between chapters and files.
-- **`index.json`** — the ordered reading outline of each area.
-- **`annotations.json`** — the open notes, from the `annotation` fences in the
+- **graph** — the reference graph between chapters and files.
+- **outline** — the ordered reading outline of each area.
+- **annotations** — the open notes, from the `annotation` fences in the
   chapters themselves.
 
-Markdown stays canonical; these indexes are **derived output** — never edit
-them by hand. Placement and naming follow
-the `devbook-derived-artifacts` instructions.
+Markdown is the only canonical form. A derived document is a function of the
+chapters and is computed where it is read: by `--check`, by the `devbook-graph`
+canvas, and by any viewer that imports these modules or reads `--print`. Nothing
+is committed, so nothing is ever stale and nothing conflicts on merge
+(`.devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md`).
 
 ## Usage
 
-Prefer the wrapper — it reports which index files actually moved, so a refresh
-that changed nothing is visibly a no-op:
-
-```powershell
-./build/Update-DevbookIndex.ps1                 # every adopted scope
-./build/Update-DevbookIndex.ps1 -Scope .tech    # one scope only
-./build/Update-DevbookIndex.ps1 -Check          # validate, write nothing
-```
-
-The generator underneath, for CI and for anywhere pwsh is not available:
-
 ```bash
-# Regenerate every adopted scope
-node .devbook/_tools/devbook-meta/build.mjs
-
-# One scope only
-node .devbook/_tools/devbook-meta/build.mjs --scope .tech
-
-# Validate references without writing (exit 1 on a broken reference)
+# Check every adopted scope: exit 1 on a broken reference or a schema violation
 node .devbook/_tools/devbook-meta/build.mjs --check
 
+# One scope only
+node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check
+
+# The documents as JSON on stdout, diagnostics on stderr
+node .devbook/_tools/devbook-meta/build.mjs --print
+node .devbook/_tools/devbook-meta/build.mjs --print --scope .tech
+
 # Point at a repository other than the working directory
-node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
+node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
 ```
 
-The repository root defaults to the working directory. Only devbook folders
-that actually exist produce a scope, so a repository that adopts just `.domain`
-and `.arc42` never grows `_meta/` folders for the rest. The generator exits `2`
-when no devbook folder is present at all.
+`--check` is the default and is accepted explicitly so every documented command
+line keeps working. The repository root defaults to the working directory. Only
+devbook folders that actually exist produce a scope, and the CLI exits `2` when
+no devbook folder is present at all.
 
-### When to run it
+`--print` emits one document:
 
-**Not on every edit.** Regenerating the indexes in the same pull request that
-edits a chapter is what makes them conflict on merge: two branches that each
-touch one chapter both rewrite the same JSON, and the only way to resolve it is
-to re-run the generator. So refresh is deliberate and happens in two places:
+```jsonc
+{
+  "layout": "nested",                     // or "flat"
+  "scopes": {
+    ".": { "graph": {…}, "outline": {…}, "annotations": {…} },
+    ".devbook/tech": { "graph": {…}, "outline": {…}, "annotations": {…} }
+  }
+}
+```
 
-| Path | What it is | When |
-|---|---|---|
-| `./build/Update-DevbookIndex.ps1` | on demand | You want the indexes current in your own branch — before a release, or because something reads them locally. |
-| `.github/workflows/devbook-meta-nightly.yml` | scheduled | Reconciles the default branch, opening one pull request when the output drifted and nothing when it did not. |
+A viewer that runs Node imports `graph.mjs`, `outline.mjs`, and
+`annotations-index.mjs` directly, as the canvas does; one that does not spawns
+`--print` and reads stdout. Either way it parses the Markdown at the moment it
+asks, which is cheaper than a file that is wrong until somebody regenerates it.
 
-`.github/workflows/devbook-meta.yml` **fails** on a broken reference or a
-`meta` block that violates the schema — those are errors in the authored
-Markdown and they do not fix themselves — and only **warns** when the committed
-indexes have drifted.
+### When to run the check
 
-That is safe because a consumer reading these indexes at runtime is required to
-compare each entry's source file against the index it came from and re-read the
-entries that are newer. See `devbook-derived-artifacts.md` for
-both halves of the contract.
+On every change to a chapter, and in CI on every pull request:
+`.github/workflows/devbook-meta.yml` **fails** on a broken reference or a `meta`
+block that violates the schema — those are errors in the authored Markdown and
+they do not fix themselves.
 
-## Outputs
+## Scopes
 
-Three artifacts per adopted scope, each co-located with what it describes:
-
-| Path | Scope |
-|---|---|
-| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
-| `.arc42/_meta/*.json` | `.arc42` only |
-| `.domain/_meta/*.json` | `.domain` only |
-| `.tech/_meta/*.json` | `.tech` only |
-| `.design/_meta/*.json` | `.design` only |
-| `.ai/_meta/*.json` | `.ai` only |
-
-A scoped graph contains every node in its folder, plus any node **outside** it
-that an in-scope node references. Those boundary nodes are flagged
-`outOfScope: true` so a viewer can draw them as stubs instead of pretending
-they belong to the scope. Inbound references from other folders are not
-followed, so a scoped graph stays about its own folder.
+One scope per adopted devbook folder, plus the repository-wide rollup `.`
+across all of them. A scoped graph contains every node in its folder, plus any
+node **outside** it that an in-scope node references. Those boundary nodes are
+flagged `outOfScope: true` so a viewer can draw them as stubs instead of
+pretending they belong to the scope. Inbound references from other folders are
+not followed, so a scoped graph stays about its own folder.
 
 ## Files
 
 | File | Role |
 |---|---|
 | `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Shared with the `devbook-graph` canvas. |
-| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
+| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the check and the live view can never disagree. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
-| `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
+| `annotations-index.mjs` | Derives the annotations document from the fences: the open-note index every cross-chapter reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
-| `build.mjs` | CLI wrapper: writes all three artifacts per scope, prints stats, exits non-zero on errors. |
+| `build.mjs` | CLI wrapper: builds all three documents per scope, prints stats, exits non-zero on errors, and emits the documents on `--print`. Writes no file. |
 | `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs`, `field-scope.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, the four write operations, and the field-scope sub-rules. |
 
 This folder is self-contained — copy it into a repository as
 `.devbook/_tools/devbook-meta/` and it runs with no other files installed.
 
-## Output shape: `graph.json`
+## Document shape: graph
 
-The required envelope from the derived-index convention, followed by
+An envelope — `schemaVersion`, `scope`, `sources`, `stats`, `problems` — followed by
 Cytoscape.js `elements` JSON — consumable directly by Cytoscape and trivially
 mappable to D3, vis.js, or Sigma.
 
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".tech",
   "sources": [".tech"],
   "stats": { "nodes": 57, "edges": 120, "nodesByFolder": { }, "nodesByKind": { }, "nodesByStatus": { } },
@@ -173,8 +157,7 @@ included only because an in-scope node references them.
 A node carrying `openNotes` has that many unresolved annotation fences — on a
 `chapter` node its own, on a `file` node the total across the document. The
 field is omitted rather than emitted as `0`, so a viewer badges only what has
-something waiting. It is counted from the same read that builds the graph, so
-the canvas and the committed `graph.json` never disagree about it.
+something waiting. It is counted from the same read that builds the graph.
 
 ### File node labels
 
@@ -306,7 +289,7 @@ documentation that discusses escape sequences does not trip it. `\t` is
 deliberately not matched: it breaks no structure and collides with unformatted
 Windows paths. `node escape-lint.test.mjs` covers the cases.
 
-## Output shape: `index.json`
+## Document shape: outline
 
 The same envelope, followed by `entries` — a nested, **ordered** tree of the
 area's readable content. A viewer walks `entries` top to bottom instead of
@@ -315,7 +298,6 @@ sorting filenames.
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".domain",
   "sources": [".domain"],
   "problems": [],
@@ -389,7 +371,7 @@ A `file` entry carries the document's **file-level** `tests` entries, always as 
 list. It is there for the same reason `summary` is: a list view wants to badge
 what covers each document — "2 tests", "no e2e" — without opening it.
 Chapter-level entries are not rolled up into it; those live on their chapter's
-node in `graph.json`, which is where a consumer goes for per-chapter detail.
+node in the graph document, which is where a consumer goes for per-chapter detail.
 
 ### `summary` and `diagrams`
 
@@ -415,7 +397,7 @@ inside a wider fence is content, not a diagram, and is not counted. Omitted when
 the document embeds none.
 
 Neither field is a reference, so neither produces a graph edge; they do not
-appear in `graph.json` at all.
+appear in the graph document at all.
 
 At the repository scope the top level is `type: "area"` — one entry per
 devbook folder, in canonical area order.
@@ -436,14 +418,14 @@ Ordering never comes from one document listing its siblings. Per directory:
    filename.
 
 A document declaring `index: exclude` is left out of the outline but stays a node
-in `graph.json` — it is still referenceable content, just not something a viewer
-lists. So an area's `index.json` file count can be lower than its
-`graph.json` file-node count. See the `devbook-chapter-metadata` instructions.
+in the graph — it is still referenceable content, just not something a viewer
+lists. So an area's outline file count can be lower than its graph file-node
+count. See the `devbook-chapter-metadata` instructions.
 
-`_`-prefixed folders (such as `_meta/` itself) are tooling, not content, and
-are excluded from the outline.
+`_`-prefixed folders are tooling, not content, and are excluded from the
+outline.
 
-## Output shape: `annotations.json`
+## Document shape: annotations
 
 Every annotation thread in the scope, in document order. A note is authored
 Markdown living in the chapter it is about; this is the derived half every
@@ -453,7 +435,6 @@ node, the approval gate showing the objections raised since `approved-at`.
 ```jsonc
 {
   "schemaVersion": 6,
-  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".arc42",
   "sources": [".arc42"],
   "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
@@ -507,15 +488,12 @@ click-to-inspect neighbourhoods. Open it scoped to one folder:
 open the reference graph canvas with scope .tech
 ```
 
-The canvas has a scope selector, rebuilds from disk on open (so it never shows
-a stale index), and exposes `refresh_graph` and `set_scope` actions. It also
-serves the live outline at `/api/outline?scope=<scope>` for tools that want the
-reading order without reading the committed `index.json`.
+The canvas has a scope selector, builds from disk on open, and exposes
+`refresh_graph` and `set_scope` actions. It also serves the live outline at
+`/api/outline?scope=<scope>` for tools that want the reading order.
 
 Its node inspector lists a node's test links — level badge, selector, and the
 command that runs it. The canvas's `/api/graph` response carries one extra
 top-level key for that, `testCommands`, mapping each `tests` entry in the graph
-to its resolved argv. It is canvas-only and deliberately absent from the
-committed `graph.json`: a command depends on the tooling version, not on the
-Markdown, so baking it into a derived artifact would make that artifact stale
-for a reason the Markdown cannot explain.
+to its resolved argv. It is canvas-only and deliberately absent from the graph
+document: a command depends on the tooling version, not on the Markdown.

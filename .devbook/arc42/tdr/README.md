@@ -42,7 +42,7 @@ content.
 | [2. fleet names the Claude CLI directly](2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified |
 | [3. The devbook asset rename ships no migration](3-devbook-rename-has-no-migration.md) | 2026-09-05 | Medium | identified |
 | [4. delivery depends on devbook](4-delivery-depends-on-devbook.md) | 2026-09-07 | Medium | identified |
-| [5. The derived index is not optional](5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | identified |
+| [5. The derived index is not optional](5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | resolved |
 | [6. sync-specs borrows a name OpenSpec uses for something else](6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) | 2026-09-15 | Low | identified |
 
 None carries a target date. This repository has one maintainer and no release commitment to

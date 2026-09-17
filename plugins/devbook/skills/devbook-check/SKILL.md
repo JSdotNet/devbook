@@ -1,6 +1,6 @@
 ---
 name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, and a stale AGENTS.md section. The check-only half of devbook:install. Use when: the devbook-meta check fails, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "validate devbook folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -74,8 +74,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Annotation `ext` is not a mapping | `ext` written as a scalar or a list | Write it as `ext.<namespace>`. L0 validates the shape and never reads inside it |
    | Unrecognized annotation field | A field outside the closed core set (warning) | Move it under `ext.<namespace>` — that is the seam an extension adds state through |
 
-   Fix the **source Markdown**, never the generated JSON. Anything under `_meta/`
-   is derived; see `devbook-derived-artifacts.md`.
+   Fix the **source Markdown**; the check writes nothing and there is no
+   generated file to fix instead.
 
 3. **Re-run the check** until it exits `0`.
 
@@ -101,34 +101,13 @@ compressing a lookup table costs a repair, not a sentence.
    | A materialized hash matches nothing ever shipped | customized | Report it and leave it. Often deliberate — both workflows are edited on install |
    | The `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
 
-   Fail on hard drift; report staleness and customization without failing. That
-   split is the same one the CI workflow already makes about `_meta/`, and for
-   the same reason: a stale generated file must not block an unrelated pull
-   request.
-
-6. **Refresh the derived indexes** if you want this branch current:
-
-   ```
-   ./build/Update-DevbookIndex.ps1
-   ```
-
-   Output is deterministic — no timestamps — so "nothing changed" means the
-   committed indexes were already current.
-
-   Committing the refresh is optional and usually not what you want. CI only
-   *warns* about drifted indexes, and the nightly job reconciles the default
-   branch in one pull request; regenerating them alongside an ordinary chapter
-   edit is what makes the generated JSON conflict on merge. Commit the refresh
-   when something is about to read the indexes from this branch — a release, a
-   local consumer — and otherwise leave it. See
-   `devbook-derived-artifacts.md`.
+   Fail on hard drift; report staleness and customization without failing: a
+   stale materialized file must not block an unrelated pull request.
 
 ## When CI fails but local is clean
 
-A CI failure is about the *authored Markdown*, not the indexes: the workflow
-fails only on an unresolved reference or a schema violation, which is
-step 1 above. Drifted `_meta/` files produce a `::warning::` and never fail the
-run, so "the indexes were not committed" is not the explanation.
+A CI failure is about the authored Markdown: the workflow fails only on an
+unresolved reference or a schema violation, which is step 1 above.
 
 If step 1 exits `0` locally but CI is red, compare against the merge result
 rather than your branch tip — a reference can break when two branches land
@@ -140,7 +119,6 @@ unstamped, and the next reconcile cannot tell it from a customized file.
 
 ## Do not
 
-- Do not hand-edit files under `_meta/` to make the check pass.
 - Do not delete a chapter to resolve a dangling reference — repoint the reference.
 - Do not weaken or remove the CI workflow to get a pull request green.
 - Do not apply a migration from here, and do not edit the stamp. Both belong to

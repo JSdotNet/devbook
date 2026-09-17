@@ -2,10 +2,16 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+
+**Resolved on 2026-09-17 by [record 76](../adr/76-derived-artifacts-are-computed-never-committed.md).**
+None of the four options below was taken: the writer was removed instead of split. `build.mjs`
+is `--check` and `--print`, nothing under `_meta/` exists, the nightly workflow, the refresh
+script, the derived-artifacts rule, and the six regenerating call sites are gone, and the one
+consumer builds the documents itself. The record below is kept as written.
 
 ## The debt
 

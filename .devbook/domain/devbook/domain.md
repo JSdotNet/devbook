@@ -11,8 +11,8 @@ pointing at it still resolves, and that a repository can adopt the convention, u
 be told when the two have drifted apart.
 
 Inside the boundary: the `meta` block and its field set, the address a chapter is reached by,
-the annotation fence, the derived indexes, the reconcile that materializes the convention into
-a repository, and the two directions between a chapter and the code that implements it.
+the annotation fence, the derived documents the check builds, the reconcile that materializes
+the convention into a repository, and the two directions between a chapter and the code that implements it.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [Delivery](../delivery/domain.md). Who reviews
@@ -124,9 +124,8 @@ related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
-subset, and the tooling emits scopes for the folders that actually exist. The folder owns its
-own derived `_meta/`, written beside its chapters, and the reading order of the files inside it
-comes from each folder's convention rather than from a stored field.
+subset, and the tooling builds one scope per folder that actually exists. The reading order of
+the files inside it comes from each folder's convention rather than from a stored field.
 
 ### Invariants
 
@@ -162,8 +161,8 @@ set and adding a sixth is a contract change rather than a folder.
 
 ```meta
 type: aggregate
-aliases: [graph, graph.json]
-related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+aliases: [graph]
+related: [".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -171,9 +170,9 @@ the corpus and owned by nobody who writes prose. It is the answer to *what point
 which no single chapter can hold, and it is the reason a reference is a first-class field
 rather than a Markdown link.
 
-The graph is derived, never authored. Its committed form under `_meta/` is a build output, and
-a session never regenerates or commits it — two branches that each touch one chapter both
-rewrite the same JSON, and the conflict is only resolvable by re-running the generator.
+The graph is derived, never authored, and never committed: it is built in memory wherever it
+is read — by the check, by the canvas, by a viewer — so it can neither go stale nor conflict
+on merge.
 
 ### Invariants
 
@@ -183,8 +182,8 @@ rewrite the same JSON, and the conflict is only resolvable by re-running the gen
 | An edge exists only where a reference field resolves; an unresolved one is an error, not a dangling edge | graph build | untested |
 | Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook/tools/devbook-meta/anchor-collision.test.mjs` |
 | `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
-| Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | emit | untested |
-| A session never writes `_meta/`; the scheduled refresh owns it | convention | open — nothing enforces it but the host's deny list and this rule |
+| Output is deterministic — no timestamps — so two builds over one commit agree byte for byte | document build | untested |
+| Nothing writes the graph to disk | `build.mjs` | untested — the CLI has no write path |
 
 ### Graph Node
 
@@ -233,12 +232,13 @@ wrappers each host reads, the CI workflow templates, and devbook's own marker-fe
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#derived-index"]
+related: [".devbook/domain/devbook/domain.md#derived-document"]
 ```
 
-Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
-the annotation index for the repository and for each adopted folder. It is the only writer of
-`_meta/`, and the only thing that decides whether a problem is an error or a warning: an
+Walks the corpus once and projects it per scope, building the reference graph, the outline, and
+the annotation index for the repository and for each adopted folder, in memory and on demand.
+It writes no file, and it is the only thing that decides whether a problem is an error or a
+warning: an
 unresolved reference fails, a heading with no block is reported and tolerated. Every
 per-block rule reaches the gate through the schema validator the graph build calls per file
 (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
@@ -335,22 +335,21 @@ type: ubiquitous-language
 > layer, stamp, migration, host — is defined once in [Plugin Authoring](../plugin-
 > authoring/domain.md#ubiquitous-language).
 
-### Derived Index
+### Derived Document
 
 ```meta
 type: term
 date: 2026-09-08
-aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+aliases: [derived index, generated index, build output]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md"]
 ```
 
-Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
-emitted deterministically so a clean `git diff` proves they are current.
+One of the three documents the generator builds from the chapters — the graph, the reading
+order, and the annotation index — deterministic, so two builds over one commit agree.
 
-A session never reads one as a source of fact and never regenerates one. Two branches that each
-touch one chapter both rewrite the same JSON, and the conflict is only resolvable by re-running
-the generator — so the refresh belongs to automation, and the check that runs in a session
-writes nothing.
+None is ever written to disk or committed. A reader that wants one builds it: the check and
+the canvas import the modules, a viewer that cannot reads `build.mjs --print`. There is
+nothing to refresh, nothing to go stale, and nothing for two branches to conflict on.
 
 ### Adoption
 

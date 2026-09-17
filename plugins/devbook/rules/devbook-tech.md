@@ -45,8 +45,6 @@ channel, by tier, or by service — and keep the set small.
   shared.md             # cross-layer technologies (formats, protocols, contracts)
   <layer>.md            # one file per layer, e.g. backend.md, web.md, desktop.md
   tooling.md            # development, AI, build, CI/CD, and governance tooling
-  _meta/graph.json      # derived: generated reference graph, never hand-edited
-  _meta/index.json      # derived: generated reading outline, never hand-edited
 ```
 
 Add a new layer file only when a technology genuinely does not belong to an
@@ -66,8 +64,6 @@ last — the order shown in the tree above. See
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
     carries a file-level block only (same rule as `.domain/context-map.md`).
   - It is `.tech`'s root document, so it is the first file read in the folder.
-- **`_meta/*.json`** — Derived, generated indexes for this folder.
-  Never hand-edited; see `devbook-derived-artifacts.md`
   and the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`).
 - **`<layer>.md`** — One `## <Technology Name>` chapter per technology used (or
   under consideration) in that layer. Each chapter is an addressable node in
@@ -164,8 +160,8 @@ Omit every optional field that has no value (no `related: []`, no
   `.arc42`/`.domain` — use `related` for those.
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
-  renamed, and regenerate the derived index in the same change:
-  `node .devbook/_tools/devbook-meta/build.mjs --scope .tech`.
+  renamed, and run the check in the same change:
+  `node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check`.
 - Ground stack claims in `.arc42` (especially
   `.arc42/04-solution-strategy.md#technology-choices` and
   `.arc42/09-architecture-decisions.md`) rather than inventing new choices here.

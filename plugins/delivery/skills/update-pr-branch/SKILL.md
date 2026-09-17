@@ -119,7 +119,7 @@ the user it will rewrite the branch, and never on a branch someone else is worki
       | Both sides edited unrelated lines in the same hunk | Keep both edits |
       | Base refactored an API the PR calls | Adapt the PR's calls to the new API |
       | Both sides changed the same logic differently | Combine the intents; ask the user if they are mutually exclusive |
-      | Generated or lock file (`package-lock.json`, `*.g.cs`, `_meta` indexes) | Take the base version, then regenerate |
+      | Generated or lock file (`package-lock.json`, `*.g.cs`) | Take the base version, then regenerate |
       | Version or changelog line | Take the base value and re-apply the PR's entry on top |
       | File deleted on one side, edited on the other | Ask the user — never decide silently |
 

@@ -2,21 +2,17 @@
 // fences in the Markdown.
 //
 // Markdown stays canonical, annotations included. This is the *derived* half:
-// the index a reader comes off so no reader needs the writer and no reader
+// the document a reader comes off so no reader needs the writer and no reader
 // parses Markdown twice. It serves the reads that span chapters — the
 // cross-repository inbox, the open-note count on a graph node, the review
 // queue — and none of them couples to `annotations.mjs`. The approval gate is
-// deliberately not among them: it shows one chapter and reads that chapter,
-// because a note written on the branch since the last refresh is exactly the
-// one this file lacks.
-//
-// Deleting it costs nothing: it is a deterministic function of the chapters,
-// so re-running the generator reproduces it byte for byte.
+// deliberately not among them: it shows one chapter and reads that chapter.
+// Built in memory where it is read, never written to disk (record 76).
 
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { parseAnnotations, resolveAnnotation, folderKindForPath } from "./metadata.mjs";
-import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, generatorPath } from "./graph.mjs";
+import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION } from "./graph.mjs";
 
 /** Recursively collect Markdown files under a folder, as repo-relative posix paths. */
 async function collectMarkdown(repoRoot, relFolder) {
@@ -30,9 +26,8 @@ async function collectMarkdown(repoRoot, relFolder) {
         }
         for (const entry of entries) {
             const child = `${current}/${entry.name}`;
-            // `_meta/` is generated tool input; a note never lives there.
             if (entry.isDirectory()) {
-                if (entry.name !== "_meta") await walk(child);
+                await walk(child);
             } else if (entry.isFile() && entry.name.endsWith(".md")) {
                 results.push(child);
             }
@@ -131,19 +126,12 @@ export async function buildAnnotationsDocument(
 
     return {
         schemaVersion: SCHEMA_VERSION,
-        generatedBy: generatorPath(repoRoot),
         scope,
         sources: roots,
-        // Deliberately no timestamp: the index is a deterministic function of
-        // the Markdown, so re-running it produces a byte-identical file and CI
-        // can diff it to detect a stale commit.
+        // Deliberately no timestamp: the document is a deterministic function
+        // of the Markdown, so two runs over one commit agree byte for byte.
         stats: summarize(threads),
         problems: [],
         threads,
     };
-}
-
-/** Repo-relative output path for a scope, per the derived-artifacts convention. */
-export function annotationsPathFor(scope) {
-    return scope === REPO_SCOPE ? "_meta/annotations.json" : `${scope}/_meta/annotations.json`;
 }

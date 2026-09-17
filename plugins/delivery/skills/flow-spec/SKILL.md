@@ -66,7 +66,7 @@ person picks a different model per folder through the personal override for that
 - Every touched chapter carries the `meta` block its instruction file requires.
 - Update every reference elsewhere when a heading or file was renamed or moved.
 - Run the check the repository's `AGENTS.md` devbook section names, and fix what it reports
-  here. Never regenerate `_meta/` in this run: the refresh is the repository's own path.
+  here.
 - Summarize the changed chapters for the user, naming every status change.
 
 **Agents:** the role from the table

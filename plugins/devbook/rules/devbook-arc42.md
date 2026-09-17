@@ -74,8 +74,8 @@ instructions.
 - Each file's top-level chapter, and any independently trackable ## section
   inside it, must carry the metadata block described in
   `devbook-chapter-metadata.md` (status — optional here, see
-  below — cross-folder tags, issue link) — required for the derived index and
-  graph tooling. There is no `depends-on` field in `.arc42` —
+  below — cross-folder tags, issue link) — required for the reference graph
+  and the check. There is no `depends-on` field in `.arc42` —
   architecture chapters describe standing structure, not sequenced work;
   cross-references use `related` instead.
 - Because an `.arc42` file is always exactly one top-level chapter, that

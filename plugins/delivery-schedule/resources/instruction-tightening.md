@@ -22,7 +22,7 @@ the *Standard* section below and nothing else.
 | Prompts and commands | `.github/prompts/*.md`, `.claude/commands/*.md` |
 | Contracts | `plugins/*/resources/*.md` carrying `name` and `description` |
 
-Out: `.devbook/**` and every `_meta/` folder (chapters are content; `devbook:prose-check`
+Out: `.devbook/**` (chapters are content; `devbook:prose-check`
 reads those), `README.md` and anything else read by people rather than loaded by a model, build
 output, and a file that only points at another.
 

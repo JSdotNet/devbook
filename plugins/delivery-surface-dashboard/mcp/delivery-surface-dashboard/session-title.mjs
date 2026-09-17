@@ -185,8 +185,6 @@ export async function recordDestination(run, { toolName, input, cwd }) {
 
     const raw = toSegments(input && input.file_path, cwd);
     if (!raw) return;
-    // Derived indexes are generated output; a run that regenerated them is not *about* them.
-    if (raw.includes("_meta")) return;
     const segments = unnest(raw);
 
     const prefix = prefixFor(segments);
