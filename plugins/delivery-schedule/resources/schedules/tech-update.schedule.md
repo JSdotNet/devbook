@@ -3,12 +3,12 @@ name: tech-update
 title: Technology graph refresh
 cadence: weekly
 cron: "0 4 * * 3"
-target: devbook:devbook-tech-update
-requires: [devbook]
+target: devbook-derived:tech-update
+requires: [devbook, devbook-derived]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
 ---
 
-Run `devbook-tech-update` over every `.tech` layer the repository has. If there is no `.tech`
+Run `devbook-derived:tech-update` over every `.tech` layer the repository has. If there is no `.tech`
 folder, say so and stop.
 
 The skill routes its edits through the `.tech` flow, which ends at a gate nobody here can pass.

@@ -39,9 +39,8 @@ result.
    ```
 
    It deletes every `status: resolved` fence and no open one. Never delete a
-   fence by hand or with an editor pass — this tool is the only writer. It is
-   `devbook-derived`'s; when `.devbook/_tools/devbook-meta/` is absent, stop,
-   name `devbook-derived:install`, and sweep nothing.
+   fence by hand or with an editor pass — this tool is the only writer. When
+   `.devbook/_tools/devbook-meta/` is absent, run `devbook-derived:install` first.
 
 4. **Report** what went and what is left, and say that a tracked file changed.
    Offer the commit; never push, and never commit into someone's branch

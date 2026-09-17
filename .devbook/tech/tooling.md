@@ -16,8 +16,8 @@ date: 2026-09-04
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-What a plugin's executable parts run on: the `devbook` generator with its six test suites, the
-`devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
+What a plugin's executable parts run on: `devbook-derived`'s generator with its test suites and
+its `devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
 checker and the tests behind it, `delivery-schedule`'s catalog checker, `devbook-config`'s
 read-only report script, the two MCP-backed surfaces' servers — the dashboard's with its HTTP
 viewer, telemetry hook, and `dev/` checks, the collector's headless — the two canvas extensions
@@ -68,7 +68,7 @@ index files actually moved, so a refresh that changed nothing is visibly a no-op
 narrows it to one folder, `-Check` validates without writing.
 
 It requires PowerShell 7, stated as `#Requires -Version 7.0` in the script itself. The
-generator README, `devbook-check`, both shipped workflows, and the pull-request check's own
+generator README, `devbook-derived:check`, both shipped workflows, and the pull-request check's own
 warning text all name it as the way to refresh a branch, with `node build.mjs` as the fallback
 for CI and for anywhere `pwsh` is not installed.
 

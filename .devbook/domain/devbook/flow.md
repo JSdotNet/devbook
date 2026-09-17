@@ -30,7 +30,7 @@ flowchart TD
     report --> stamp
     stamp --> done(["Level with the release"])
 
-    check(["devbook-check"]) -.->|"writes nothing, asks the same three questions"| detect
+    check(["devbook-derived:check"]) -.->|"writes nothing, asks the same three questions"| detect
     check --> repair["Repair references, blocks, stale indexes"]
     repair -.->|"hands every other write back"| start
 ```

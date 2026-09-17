@@ -19,7 +19,7 @@
     }
   },
   "extensions": {
-    "session.start": ["devbook:devbook-check"],
+    "session.start": ["devbook-derived:check"],
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",

@@ -98,6 +98,6 @@ lens is a review that misses the finding.
   stop, not a line item to implement.
 - Do not close a finding you did not settle, and do not sweep a resolved one
   here — the answer has to survive into the pull request that raised the
-  question. Sweeping is `devbook:annotation-sweep`, before the branch merges.
+  question. Sweeping is `devbook-derived:annotation-sweep`, before the branch merges.
 - Do not widen the review to the folder. One chapter and its neighbours; a
   folder-wide sweep is `chapter-review-queue`.

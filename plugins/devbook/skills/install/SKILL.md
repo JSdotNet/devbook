@@ -22,10 +22,8 @@ in adoption, and a migration are one operation — the stamp says which.
 3. **Plan.** Show the diff table and write nothing. Never skip this.
 4. **Migrate.** Ledger forward, oldest first, `--check` before and after each.
 5. **Materialize.** Overwrite stale, report customized, never both.
-6. **Stamp and verify.** Rewrite the entry, run `devbook-check`, report. The
-   check itself is `devbook-derived`'s, at `.devbook/_tools/devbook-meta/`; when
-   that folder is absent, report that no checker is installed, name
-   `devbook-derived:install`, and finish without it.
+6. **Stamp and verify.** Rewrite the entry, re-run phase 1 to confirm the plan
+   is now empty, run the check the repository's `AGENTS.md` names, if it names one, and report.
 
 ## Creating a folder
 
@@ -59,6 +57,6 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 - Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
   specialist agents are installed — with neither, they name nothing. Never apply any of
   it silently, and never put routing inside the `AGENTS.md` markers.
-- The checker, the generator, the workflows, and the refresh script are `devbook-derived`'s.
-  This install never materializes them and never writes inside that plugin's markers.
+- This install materializes the rules, the wrappers, the root wrappers, and its own
+  `AGENTS.md` section, and nothing else. It never writes inside another plugin's markers.
 - Report a reconcile that ends on a failing check as failing, never as installed.

@@ -1,6 +1,6 @@
 ---
-name: devbook-tech-update
-description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through scripts.'
+name: tech-update
+description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through this plugin''s inventory scripts.'
 ---
 
 # Devbook technology graph update
@@ -84,17 +84,16 @@ chapters and generated `_meta/*.json` indexes.
    `.tech` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
-6. **Regenerate and validate indexes.** Run:
+6. **Run the check.** Never regenerate here — the refresh is the scheduled job's, or
+   `build/Update-DevbookIndex.ps1` on demand:
 
    ```bash
-   node .devbook/_tools/devbook-meta/build.mjs --scope .tech
-   node .devbook/_tools/devbook-meta/build.mjs --scope .tech --check
+   node .devbook/_tools/devbook-meta/build.mjs --scope tech --check
    ```
 
-   If either command reports unresolved references, schema violations, or stale generated
-   indexes, fix the source Markdown or run `devbook-check`. The tool is `devbook-derived`'s;
-   when `.devbook/_tools/devbook-meta/` is absent, say so, name `devbook-derived:install`,
-   and skip this step.
+   If it reports unresolved references or schema violations, fix the source Markdown or
+   run `devbook-derived:check`. When `.devbook/_tools/devbook-meta/` is absent, run
+   `devbook-derived:install` first.
 
 ## Output expectations
 
@@ -102,8 +101,7 @@ chapters and generated `_meta/*.json` indexes.
 - `.tech/` chapters updated through the `.tech` flow with valid metadata blocks.
 - Non-package technologies analyzed from repository evidence and recorded only when grounded.
 - Mermaid graph edges match `depends-on` metadata.
-- `.tech/_meta/graph.json` and `.tech/_meta/index.json` regenerated when the repository ships
-  `devbook-meta`.
+- The check passes at the `tech` scope; the indexes are refreshed by the scheduled job, never here.
 
 ## Do not
 

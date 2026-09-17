@@ -53,7 +53,7 @@ flowchart TB
     SL -->|"delivery.surface.*@1"| DEL
     SC -->|"delivery.surface.render@1"| DEL
 
-    SCH -.->|"names devbook-check as a target"| DEV
+    SCH -.->|"names prose-check as a target"| DEV
     DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
@@ -421,7 +421,7 @@ derived from an install. Reporting drift is inside the plugin's subject; writing
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
 stays with that component's own install skill, which is the only thing that knows what it
-materialized — so `devbook:install` and `devbook-check` do not move here, and `devbook-config:setup`'s fifth
+materialized — so `devbook:install` and `devbook-derived:check` do not move here, and `devbook-config:setup`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -488,10 +488,10 @@ carries the unattended rules every prompt starts with.
 | `merge-review` | `delivery-schedule:schedule-merge-review` | weekdays |
 | `morning-brief` | `delivery-schedule:schedule-morning-brief` | weekdays |
 | `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
-| `devbook-check` | `devbook:devbook-check` | daily |
+| `devbook-check` | `devbook-derived:check` | daily |
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `instruction-review` | `delivery-schedule:schedule-instruction-review` | weekly |
-| `tech-update` | `devbook:devbook-tech-update` | weekly |
+| `tech-update` | `devbook-derived:tech-update` | weekly |
 | `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 | `prose-check` | `devbook:prose-check` | weekly |
 

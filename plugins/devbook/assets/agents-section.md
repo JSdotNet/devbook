@@ -8,9 +8,10 @@ matches the stamped hash. The rules — key, hash, customized, orphan — are in
 Render it from the stamp's `adopted` list, never from what happens to be on disk:
 
 - Keep one table row per adopted folder and delete the others.
-- Change nothing else. The `_meta/` rule, the refresh paths, and the check command are
-  `devbook-derived`'s and live in its own section, written after this one by its install. A wording change belongs in this template, so every adopting
-  repository gets it on its next reconcile.
+- Change nothing else. The `_meta/` rule, the refresh paths, and the check command
+  belong to the tooling plugin's own section, written after this one by its install.
+  A wording change belongs in this template, so every adopting repository gets it on
+  its next reconcile.
 
 When `AGENTS.md` is absent, create it holding only this section. When it exists without
 the markers, append the section at the end. `AGENTS.local.md` is never created — the

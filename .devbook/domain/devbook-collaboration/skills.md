@@ -8,7 +8,7 @@ related: [".devbook/domain/context-map.md#devbook-collaboration"]
 > Four skills, and nothing else in the plugin. They move one chapter through a review, and one
 > of the four writes nothing at all. There is no install: the state they write is devbook's
 > schema, so enabling the plugin is the whole adoption. Deleting the answered notes is
-> `devbook:annotation-sweep`, in the plugin that owns the fence.
+> `devbook-derived:annotation-sweep`, in the plugin that owns the fence writer.
 
 ## chapter-handoff
 

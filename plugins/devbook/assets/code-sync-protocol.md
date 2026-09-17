@@ -266,7 +266,7 @@ the write to whatever flow covers the folder, resolved in this order:
 Name the rung that answered, once, in the report. Whichever rung it is owns template
 conformance, metadata blocks, and the consistency review; this skill owns the evidence.
 The dependency is one-way — no flow knows these skills exist, and none of them changes to
-accommodate this. `devbook-tech-update` has the same relationship with the `.tech` write.
+accommodate this. A `.tech` refresh has the same relationship with the `.tech` write.
 
 ## Code-side writes: the change brief
 
@@ -357,29 +357,17 @@ category, resolved in this order:
 Name the rung that answered, once, in the report. The dependency stays one-way:
 no flow knows these skills exist, and a brief reaches a flow as ordinary input.
 
-## Index regeneration
+## The check
 
 Whenever a capture pass results in a chapter being added, renamed, or re-linked,
-the derived indexes need regenerating. The write itself happens inside the
-flow; regeneration is part of closing the pass:
+close the pass by running the check the repository's `AGENTS.md` names, if it names one — the
+repository's own gate, which this plugin does not ship. Fix what it reports in
+the source Markdown. Never regenerate a derived index in the pass, and never
+hand-edit one: refresh is the repository's own path, named in the same file.
+When the repository names no check, say so in the report and close the pass.
 
-```bash
-node .devbook/_tools/devbook-meta/build.mjs --scope <folder>
-node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
-```
-
-Scope is the folder that changed — `.domain`, `.arc42`, or `.design`. Run
-`build.mjs` with no `--scope` when the pass touched more than one folder. The tool is
-`devbook-derived`'s; when `.devbook/_tools/devbook-meta/` is absent, say so in the
-report, name `devbook-derived:install`, and close the pass without it.
-
-If `--check` reports unresolved references, a schema violation, or a
-stale committed index, fix the source Markdown; run `devbook-check`
-for anything that does not resolve from the message alone. Never hand-edit a
-file under `_meta/`.
-
-An apply pass changes no chapter file and therefore regenerates nothing, and
-neither does a verify pass.
+An apply pass changes no chapter file and therefore checks nothing, and neither
+does a verify pass.
 
 ## Report table
 

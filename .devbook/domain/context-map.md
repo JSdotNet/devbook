@@ -71,7 +71,6 @@ flowchart TB
     DB -->|"Customer/Supplier, declared"| DBD
     DB -->|"Customer/Supplier, declared"| DBC
     DBD -->|"Customer/Supplier, declared"| DBC
-    DBD -.->|"named by path, ADR 77"| DB
     DEL -->|"Customer/Supplier, declared"| FLT
     DEL -->|"Customer/Supplier, declared"| SCH
 
@@ -97,11 +96,11 @@ relationship that exists in the assets and in no manifest.
 | Devbook | Devbook Derived | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | Devbook Derived | Devbook Collaboration | Customer/Supplier | Yes, `devbook-derived >=1.1.0 <2.0.0` — every finding is written through its fence writer |
-| Devbook Derived | Devbook | **Reversed, by path** | No, deliberately — devbook names `.devbook/_tools/devbook-meta/` in five places and reports its absence; [record 77](../arc42/adr/77-the-tooling-is-devbook-deriveds.md) |
 | Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
-| Devbook | Delivery Schedule | Separate Ways | No — `devbook-check` and `devbook-tech-update` are named as targets and skipped when absent |
+| Devbook | Delivery Schedule | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
+| Devbook Derived | Delivery Schedule | Separate Ways | No — `check` and `tech-update` are named as targets and skipped when absent |
 | Devbook | Delivery | **Undeclared** | No, and it should be — see [debt record 4](../arc42/tdr/4-delivery-depends-on-devbook.md) |
 | every context | Devbook Config | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every context | Conformist | Not declarable; the host decides what loads |
@@ -179,8 +178,10 @@ related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/77-th
 
 The tool over the convention: the checker and the generator as one program, the fence
 writer, the graph canvas, the refresh paths, and the install that puts them in a
-repository. Everything it enforces is devbook's; everything under `_meta/` is its output.
-The one context the foundation reaches back into, by path and never by name.
+repository, with the three skills that run a tool — `check`, `annotation-sweep`,
+`tech-update`. Everything it enforces is devbook's; everything under `_meta/` is its output.
+Nothing below it names it: devbook's skills reach the check through the repository's
+`AGENTS.md`, which this context writes its own section of.
 
 ## Devbook Collaboration
 

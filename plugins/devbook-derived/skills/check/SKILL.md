@@ -1,6 +1,6 @@
 ---
-name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
+name: check
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. Runs devbook-derived''s checker and reads devbook''s ledger and stamp; the check-only counterpart of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-derived check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -8,10 +8,11 @@ description: 'Check a repository against devbook without writing to it, and repa
 ## Purpose
 
 Check this repository against devbook and write nothing; then repair whatever
-the check reports. It is `devbook:install`'s check-only half — the same three
-questions, asked without changing anything: does the authored Markdown satisfy
-the schema, is the migration ledger current, and does the stamp still describe
-what is on disk.
+the check reports. Three questions, asked without changing anything: does the
+authored Markdown satisfy the schema — this plugin's checker answers that — is
+devbook's migration ledger current, and does devbook's stamp still describe
+what is on disk. The last two read `devbook`'s `assets/reconcile-protocol.md`,
+which this plugin reads and never restates.
 
 This file exceeds the 40-line body budget on purpose. Most of it is the symptom
 table in step 2 — one row per thing the generator can report, with the fix — and
@@ -25,9 +26,8 @@ compressing a lookup table costs a repair, not a sentence.
    node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
-   The tool is `devbook-derived`'s. When `.devbook/_tools/devbook-meta/` is absent,
-   report that no checker is installed, name `devbook-derived:install`, and continue
-   from step 4 — the ledger and the stamp are devbook's own and need no tool.
+   When `.devbook/_tools/devbook-meta/` is absent, run `devbook-derived:install`
+   first; the ledger and the stamp in steps 4 and 5 need no tool.
 
    Exit codes:
 
@@ -91,7 +91,7 @@ compressing a lookup table costs a repair, not a sentence.
    Report which migrations are outstanding and stop.
 
 5. **Check the stamp.** Read devbook's entry in `.devbook/config.json`
-   per `assets/reconcile-protocol.md` and compare it with disk:
+   per devbook's `assets/reconcile-protocol.md` and compare it with disk:
 
    | Drift | Severity | Fix |
    |---|---|---|
@@ -140,8 +140,8 @@ rather than your branch tip — a reference can break when two branches land
 together even though each was clean on its own.
 
 If the generator itself is missing from the repository, install it by running
-`devbook:install` rather than copying files ad hoc — a copy made by hand lands
-unstamped, and the next reconcile cannot tell it from a customized file.
+`devbook-derived:install` rather than copying files ad hoc — a copy made by hand
+lands unstamped, and the next reconcile cannot tell it from a customized file.
 
 ## Do not
 

@@ -34,8 +34,8 @@ owes the next move:
 | `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no review state and no resolved note left on the chapter. Or, on an approval a person will not let stand over what was raised since it, the rung lifted and `review: changes-requested` |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting — including an approval objected to since it was signed |
 
-Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
-merges. It is devbook's, because the fence is.
+Sweeping the answered notes is `devbook-derived:annotation-sweep`, before the branch
+merges. It is the tooling plugin's, because the fence writer is.
 
 Approval is devbook's own field and keeps devbook's meaning. This plugin never
 writes it without a person choosing it in that session, and clears the review

@@ -20,6 +20,7 @@ yet — run `devbook:install` first.
 | From this plugin | Into the repository | When |
 |---|---|---|
 | `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |

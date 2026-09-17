@@ -76,3 +76,14 @@ is closed: the canvas is packaged with the modules it imports, in a plugin that 
 the claim that a surface is never packaged with what it renders is still unenforced here —
 now for a smaller and better reason, that the two are one tool. The Backlog app's reading of
 `_meta/` off disk is unchanged.
+
+**Amended 2026-09-17, the same day.** The five call sites are gone, and with them the layer
+inversion. `devbook-check`, `annotation-sweep`, and `devbook-tech-update` — the three devbook
+skills whose whole body was a tool call — moved to `devbook-derived` as `check`,
+`annotation-sweep`, and `tech-update`, and `tools/devbook-tech/` went with the last, so
+`devbook` ships no `tools/` at all. What stayed — `install`, the converters, `prose-check` —
+now says "run the check the repository's `AGENTS.md` names, if it names one", and
+`devbook-derived`'s own marker-fenced section of that file is what names it. A devbook skill
+names no other plugin; the convention reaches its tool through the repository, the way a
+flow reaches a role. `devbook-collaboration` and the two schedule entries that targeted the
+moved skills follow them.

@@ -1,13 +1,13 @@
 # Reconcile protocol
 
-The shared detail behind `devbook:install` and `devbook-check`: the stamp devbook
+The shared detail behind `devbook:install`, and behind the check-only skill a tooling plugin may run over the same stamp: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
-Two other installs read one section of it. `delivery:install` and
-`devbook-derived:install` take **The stamp**'s two shared fields and its hash rules, and
-nothing else here describes them: the three fields beside those, the asset
-table, and the six phases are devbook's own. The reason is
+Other plugins' installs read one section of it: a payload-only component takes
+**The stamp**'s two shared fields and its hash rules, and nothing else here describes
+it: the three fields beside those, the asset table, and the six phases are devbook's
+own. The reason is
 `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
 
 ## One reconcile, four situations
@@ -44,7 +44,6 @@ whose install rewrites content the repository authored, which is devbook alone:
       "contractVersion": 9,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
-        ".devbook/_tools/devbook-tech": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
         ".agents/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:b17e…", "managed": true },
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
@@ -69,11 +68,10 @@ whose install rewrites content the repository authored, which is devbook alone:
 and `materialized` are everyone's. A component that only copies files it owns needs
 no ledger: a copy hashing to a release that component shipped is stale and gets
 replaced, which *is* the migration, and a copy hashing to nothing shipped is the
-repository's and is never overwritten, ledger or not. So `delivery` and
-`devbook-derived` stamp two fields, `delivery-schedule` stamps `pluginVersion` beside the
-selection it made in the host's own scheduler, and none of the three ships a `migrations/`
-folder or runs the six phases below. `devbook-collaboration` materializes nothing and
-stamps nothing.
+repository's and is never overwritten, ledger or not. So a payload-only component
+stamps two fields — or `pluginVersion` alone beside whatever selection it recorded
+elsewhere — and neither ships a `migrations/` folder nor runs the six phases below. A
+plugin that materializes nothing stamps nothing.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the
@@ -83,7 +81,6 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
-| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `.tech` adopted |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
 | `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
@@ -92,11 +89,10 @@ file wrong the moment a second person opens the repository.
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
-The checker, the generator, both workflows, and the refresh script are not in this
-table: they are `devbook-derived`'s, materialized by its own install into the same
-`.devbook/_tools/` parent and stamped under `components.derived`. This install runs
-the check in phase 6 where that folder exists and reports its absence where it does
-not.
+No tool is in this table. devbook ships the convention and its rules; whatever checks,
+generates, or inventories is another plugin's payload, materialized by that plugin's own
+install into `.devbook/_tools/` and stamped under its own component. This install runs
+the check the repository's `AGENTS.md` names, if it names one, in phase 6.
 
 The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
 read natively by Copilot and not by Claude, so a repository owes each host a root file that
@@ -177,7 +173,7 @@ it never goes inside the markers.
    The `AGENTS.md` section follows the same rule, with the text between its
    markers standing in for the file.
 
-6. **Stamp and verify.** Rewrite devbook's entry, run `devbook-check`, and report
+6. **Stamp and verify.** Rewrite devbook's entry, run the check the repository's `AGENTS.md` names, if it names one, and report
    what moved. A reconcile that ends with a failing check is reported as failing —
    never as "installed".
 

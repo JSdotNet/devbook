@@ -6,8 +6,7 @@ related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/dev
 ```
 
 > What this context depends on and who depends on it. It is an L1 extension: exactly one
-> declared dependency, on the convention it enforces — and, alone among the extensions, one
-> the foundation reaches back into by path.
+> declared dependency, on the convention it enforces, and nothing below it names it.
 
 ## Outbound dependencies
 
@@ -23,18 +22,19 @@ related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/domain/dev
 
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
-| [Devbook](../devbook/dependencies.md) | **Conformist, reversed — recorded, not declared** | `devbook:install` phase 6, `devbook-check` step 1, `annotation-sweep`, the converters' closing step, and `devbook-tech-update` name `.devbook/_tools/devbook-meta/` and report its absence | The materialized path and the CLI (`--check`, `--scope`, `--print`; `annotations.mjs` verbs) | That the path is where the install puts it and the flags keep their meaning. A lower layer naming a higher one is the inversion [record 77](../../arc42/adr/77-the-tooling-is-devbook-deriveds.md) accepts. |
+| [Devbook](../devbook/dependencies.md) | Conformist, reversed — through `AGENTS.md`, never by name | `devbook:install`, the converters, and `prose-check` run "the check the repository's `AGENTS.md` names"; this context's own section of that file is what names it | The marker-fenced `AGENTS.md` section this context writes | That the section is present and names the check. Absent, devbook's skills report no check and continue. |
 | [Devbook Collaboration](../devbook-collaboration/dependencies.md) | Customer-Supplier, declared | Writes every finding through `annotations.mjs` | The fence writer's verbs | That the writer is the only one, so a fence it wrote is one devbook's rules recognise. |
-| [Delivery Schedule](../delivery-schedule/dependencies.md) | Separate Ways | The `devbook-check` catalog entry requires this plugin beside devbook | The skill name and the install's path | Nothing but the requirement: a target whose plugin is not enabled is reported and skipped. |
+| [Delivery Schedule](../delivery-schedule/dependencies.md) | Separate Ways | The `devbook-check` and `tech-update` catalog entries target `check` and `tech-update` here and require this plugin beside devbook | The skill names alone | Nothing but the names: a target whose plugin is not enabled is reported and skipped. |
 | [Devbook Config](../devbook-config/dependencies.md) | Conformist, read-only | Reads `components.derived` and invokes `devbook-derived:install` during a fan-out, after devbook's | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
 | The Backlog desktop app, outside this repository | Conformist | Reads `_meta/index.json` and `_meta/graph.json` off disk | The derived-artifacts envelope and `schemaVersion` | That the files are committed and current on the default branch — which is what the nightly refresh is for. |
 
 ## Notes
 
-- **The reversed row is the one to read twice.** Every other extension here is named by
-  nothing below it. This one is named by devbook in five places, by path and never by plugin
-  name, and each place says what it does when the path is absent. That is the whole cost of
-  keeping the check beside the generator, and it is paid deliberately.
+- **Nothing below names this context.** devbook's skills reach the check through the
+  repository's `AGENTS.md`, which this context's install writes its own section of; the
+  skills that run a tool directly — `check`, `annotation-sweep`, `tech-update` — live here.
+  The layer inversion [record 77](../../arc42/adr/77-the-tooling-is-devbook-deriveds.md)
+  first accepted is gone with them.
 - **A missing tool degrades; it never fails a load.** A repository with devbook and without
   this plugin gets its rules, its `AGENTS.md` section, and no gate — the same position it is
   in before any install runs.

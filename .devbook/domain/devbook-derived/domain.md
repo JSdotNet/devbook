@@ -35,7 +35,8 @@ per-block rule reaches the gate through the schema validator the graph build cal
 (`unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-check` schedule opens a pull request when the output moved.
+request and the daily `devbook-check` schedule, targeting this context's `check`, opens a pull
+request when the output moved.
 
 ## Canvas
 
@@ -64,9 +65,22 @@ related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60
 
 `annotations.mjs`: `list`, `add`, `reply`, `resolve`, `sweep`, as a CLI and as the same
 five functions in-process. It is the only writer of an annotation fence anywhere — devbook's
-`annotation-sweep` and every `devbook-collaboration` skill go through it — and its edits are
+this context's `annotation-sweep` and every `devbook-collaboration` skill go through it — and its edits are
 surgical, so a field a later version adds survives a write by one that does not know it.
 It never commits: adding a note dirties a tracked file, and that is the caller's to review.
+
+## Tech Inventory
+
+```meta
+type: domain-service
+aliases: [devbook-tech, package inventory]
+related: [".devbook/domain/devbook-derived/skills.md#tech-update", ".devbook/domain/devbook/domain.md#devbook-folder"]
+```
+
+Two scripts that read a repository's package manifests — .NET and frontend — and emit
+deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
+grounds a `.tech` chapter in, so a package-derived fact is reproducible and a hand-written
+one is visibly not. Materialized by the install only where `.tech` is adopted.
 
 ## Ubiquitous Language
 
