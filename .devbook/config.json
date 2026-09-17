@@ -43,7 +43,7 @@
   "components": {
     "devbook": {
       "pluginVersion": "1.0.0",
-      "contractVersion": 9,
+      "contractVersion": 10,
       "adopted": ["arc42", "domain", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
@@ -57,7 +57,7 @@
           "managed": true
         }
       },
-      "migrations": []
+      "migrations": [{ "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" }]
     },
     "derived": {
       "pluginVersion": "1.1.0",

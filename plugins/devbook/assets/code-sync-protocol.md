@@ -61,15 +61,15 @@ what asserts a chapter, not a shortcut through the ladder below — a `tests`
 entry names a test, and the counterpart still has to be resolved by naming. See
 "Linking test cases" in `devbook-chapter-metadata.md`.
 
-1. **Term aliases.** Look up the chapter's canonical term in the context —
-   `.domain/<context>/domain.md`, or `domain.md`'s `## Ubiquitous Language`
-   grouping where the context keeps its terms there — and read its `aliases`
-   field. Search for the `term` chapter, never for the filename. Those entries are
-   exactly the surface names the concept wears in code — class names, identifier
-   names, snake_case id fields, a consumer context's local copy name. Search the
-   repository for each alias. This is the intended path: `aliases` exists to
-   make every synonym resolve back to one canonical concept.
-2. **The `arc42/` building-block view.** When no `term` chapter has an entry, or the
+1. **Aliases.** Read the chapter's own `aliases` field — a modelled concept
+   carries its surface names on its own chapter — and, for a word that is not a
+   chapter, the `term` chapter under `domain.md`'s `## Ubiquitous Language`
+   grouping. Those entries are exactly the surface names the concept wears in
+   code — class names, identifier names, snake_case id fields, a consumer
+   context's local copy name. Search the repository for each alias. This is the
+   intended path: `aliases` exists to make every synonym resolve back to one
+   canonical concept.
+2. **The `arc42/` building-block view.** When no chapter has an entry, or the
    kind is architectural rather than a domain term, read
    `.arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
    and hosting units). Those chapters name the modules, containers, and
@@ -85,8 +85,8 @@ When resolution lands on more than one candidate, or on none, the verdict is
 `unresolved` (below). Do not pick the most plausible candidate silently, and do
 not widen the chapter to cover several candidates at once.
 
-When the counterpart resolves through rung 3 and the concept has no term
-term yet, propose adding one with the discovered code name as an `alias`. That
+When the counterpart resolves through rung 3 and the chapter has no `aliases`
+entry for it yet, propose adding the discovered code name as one. That
 turns a one-off inference into a durable pairing for the next pass. Propose it —
 the write itself still routes through the folder's flow.
 
@@ -322,8 +322,7 @@ The brief has five parts, and a change category.
    the chapter states them. This is the part an implementer cannot recover from
    the code, and the part most often lost.
 3. **Ubiquitous language** — the canonical terms this change must use, with the
-   `aliases` from the context's `term` chapters that map them onto existing code
-   names. Naming an
+   `aliases` from the chapters that map them onto existing code names. Naming an
    alias here is what stops a new implementation inventing a fourth synonym.
 4. **Out of scope** — what this change deliberately does not do, including
    adjacent chapters that look related and are not. Written explicitly, because

@@ -97,6 +97,7 @@ compressing a lookup table costs a repair, not a sentence.
    | Drift | Severity | Fix |
    |---|---|---|
    | A migration the plugin's `contractVersion` requires is missing from the ledger | hard | Step 4 already reported it; run `devbook:install` |
+   | The stamped `contractVersion` is below `MINIMUM_CONTRACT_VERSION` in `tools/devbook-meta/graph.mjs` | hard | The migrations it needs no longer ship; upgrade through the previous major's last release first |
    | A file the stamp says was materialized is gone | hard | Run `devbook:install` to put it back |
    | A folder exists on disk that `adopted` does not list, or the reverse | hard | Adoption changed without a reconcile; run `devbook:install` |
    | The `AGENTS.md` section is missing, or one of its markers is | hard | Run `devbook:install` to write it back |

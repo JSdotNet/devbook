@@ -49,6 +49,10 @@ answer it.
 this record sat open. The migration it proposes is `010-devbook-names` at contract 10, and
 the options table below has been renumbered to match. Nothing else about the debt moved.
 
+**2026-09-17. Spent again.** `010-terms-live-in-domain-md` took contract 10 for
+[record 83](../adr/83-a-term-is-a-chapter-or-an-alias.md). The proposal is `011-devbook-names`
+at contract 11; the table below says so.
+
 ## Affected components
 
 ```meta
@@ -78,7 +82,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `010-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 10 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `011-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 11 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 

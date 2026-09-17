@@ -15,7 +15,9 @@ Run the six phases in order, every time. A first install, an upgrade, a change
 in adoption, and a migration are one operation — the stamp says which.
 
 1. **Detect.** Stamp, installed version, disk state. Disk wins on existence,
-   the stamp wins on provenance.
+   the stamp wins on provenance. A stamped contract below the floor in
+   `tools/devbook-meta/graph.mjs` stops here: upgrade through the previous
+   major's last release first.
 2. **Resolve.** Ask only about genuinely new choices. Ask adoption as one
    question naming all five folders; `ai/`'s stage set is a follow-up, asked
    only when `ai/` was adopted. Adopt only folders the repository will actually

@@ -39,6 +39,12 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // when something repo-visible changes shape, which is why a plugin release
 // usually leaves it alone — and why the migration ledger keys off it.
 //
+// Version 10 removes `naming` from the `domain/` file types and with it the
+// optional `naming.md`: a term that is a chapter carries its `aliases` on that
+// chapter, and the rest are `term` chapters under `domain.md`'s
+// `## Ubiquitous Language` grouping. A repository still carrying the file
+// stops validating, so `migrations/010-terms-live-in-domain-md/` folds it in.
+// Versions 8 and 9 were shipped by pre-1.0.0 migrations that no longer exist.
 // Version 7 is additive over 6: the nested `.devbook/` layout is recognized
 // alongside the flat dot-folders, and `bounded-context` joins the `.domain`
 // chapter types so a context-map section can be addressed. Nothing that
@@ -53,7 +59,16 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 9;
+export const CONTRACT_VERSION = 10;
+
+// The oldest contract a reconcile still carries forward. A migration lives
+// for the major version it ships in: a major release raises this to the
+// contract the previous major last reached and drops every `migrations/`
+// folder at or below it. A stamp below the floor is refused in phase 1 of
+// the reconcile — upgrade through the previous major's last release first —
+// so a folder that is gone can never be a hole in a ledger. 9 is where 1.0.0
+// shipped, and nothing published sits below it.
+export const MINIMUM_CONTRACT_VERSION = 9;
 
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those
@@ -217,7 +232,7 @@ export async function buildGraph(repoRoot, folders = null) {
     const problems = [];
     // Every heading anchor in the corpus, including structural headings with no
     // `meta` block. Those are still legal reference targets — e.g. a .domain
-    // naming term pointing at a Value Object sub-chapter covered by its parent
+    // term pointing at a Value Object sub-chapter covered by its parent
     // aggregate's block — so they are materialized on demand.
     const headingIndex = new Map();
 
