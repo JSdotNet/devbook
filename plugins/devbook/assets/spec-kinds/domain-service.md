@@ -11,7 +11,7 @@ table; this file carries the kind.
 | Chapters | The service's `##` chapter, `type: domain-service`, plus every `## <EventName>` the service itself raises, `type: domain-event` |
 | File | `.domain/<context>/domain.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md`, the chapters of every aggregate the service coordinates, and `dependencies.md` when it reaches across a context boundary. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md`, the chapters of every aggregate the service coordinates, and the dependency tables (`context.md`'s `## Dependencies`, or `dependencies.md` once split out) when it reaches across a context boundary. Never the whole `domain/` folder |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope domain` |
 
@@ -48,7 +48,7 @@ gets no chapter. A type named `...Service` is not evidence either way.
 An event raised by the service is captured as its own `## <EventName>` chapter
 with `### Payload`, `### Consumers`, and `### Published language rules` as
 structural sub-sections carrying no `meta` blocks. An outward integration
-contract belongs in `dependencies.md` as a published language, not here.
+contract belongs in the dependency tables as a published language, not here.
 
 ## Capturing — `sync-specs`
 

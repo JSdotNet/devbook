@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-09-17
+date: 2026-09-18
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -10,9 +10,11 @@ A devbook is five folders of Markdown chapters under one parent — `.devbook/ar
 addressable heading carrying a fenced `meta` block. `status` is one field with one ladder per
 folder; `approved` is a rung on top of every ladder, with `approved-by` and `approved-at`
 beside it, and the three editorial folders rest at `active` by omitting the field. A bounded
-context describes its skills or its features, says who acts in `actors.md` — `user`,
-`organisation`, `technical` — and keeps its vocabulary in `domain.md`: a term is a chapter or
-an `aliases` entry on the chapter it names, and there is no `naming.md`. The rule files under
+context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
+capabilities are switched by, and its actors and dependencies until they outgrow the file —
+describes its skills or its features, says who acts with `user`, `organisation`, `technical`
+chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
+the chapter it names, and there is no `naming.md`. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
 ## Why
@@ -63,8 +65,24 @@ issues a command — a `user` with an account and a `role` the authorization lay
 `organisation` the context acts toward, a `technical` actor that triggers a use case from
 outside — so the scheduler and the inbound callback are named somewhere. A persona is a UX
 archetype and belongs in `design/`. Another context or a system is a dependency and stays in
-`dependencies.md`, because one relationship described in two places is one description that
-goes wrong.
+the dependency tables, because one relationship described in two places is one description
+that goes wrong.
+
+**A switch is a chapter, and the boundary is a file.** A feature could name its flag in a
+`feature-flag` field and nothing could describe the flag — no default, no owner, no
+retirement — because the field held a bare key and the catalog was assumed to live outside the
+repository. A setting a person chooses in the product had no place at all. Both are
+context-scoped, named in the ubiquitous language, and made addressable by a plain identifier,
+which is what `role` already is for an actor; so they are chapters, `feature-flag` decided at
+release from configuration and `setting` decided at runtime by whoever its `scope` names, each
+carrying `key` as the code spells it, and the feature's field becomes a reference that resolves,
+produces a `gated-by` edge, and is held to the target's type. The two levels are two types and
+one sync kind, `setting`, because the evidence is the same read-and-branch and only who holds
+the key differs. They sit in `context.md`, which also takes the boundary prose `domain.md`
+opened with — what the context is before what it models, read first — and the actor chapters
+and dependency tables while they are small: a kind lives in its own file or in `context.md`,
+never both, so a small context is three files in the outline instead of six, and a large one
+splits without changing what any chapter is. Contract 11, with migration `011-context-md`.
 
 ## Rejected
 
@@ -75,6 +93,10 @@ goes wrong.
 - A separate `approved` boolean beside `status`; `status` required or optional everywhere.
 - `naming.md` kept as an optional file kind.
 - *Stakeholder* as the umbrella; a `personas.md`; a second classifier beside `type`.
+- A `settings.md` beside the others, adding a file to every context's outline; a `boundary.md`
+  name; keeping `feature-flag` a bare key and validating it against nothing; one chapter type
+  with a `level` field, which would put the who-decides question on every flag; folding
+  `actors.md` and `dependencies.md` by migration, which is a reading and not a rewrite.
 
 ## History
 
@@ -83,6 +105,7 @@ goes wrong.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-18 | `context.md` is a context's root with `feature-flag` and `setting` chapters; `feature-flag` on a feature is a reference and `setting` joins it; actors and dependencies live there until they outgrow it. Contract 11, migration 011. |
 | 2026-09-17 | `stakeholders.md` becomes `actors.md` with `user`, `organisation`, `technical` and a `role` field. |
 | 2026-09-17 | `naming.md` is no longer a file kind; a term is a chapter or an alias. Contract 10, migration 010. |
 | 2026-09-17 | One layout under `.devbook/`, dotless folder names, the rollup at `.devbook/_meta/`. |

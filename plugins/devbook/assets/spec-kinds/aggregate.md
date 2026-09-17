@@ -10,7 +10,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event` |
 | File | `.domain/<context>/domain.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md`, `.domain/context-map.md`, and `dependencies.md` for the published-language entries event consumers rely on. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md`, `.domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope domain` |
 
@@ -106,7 +106,7 @@ model, not a prediction.
 A **domain event** is raised inside the model and describes something that
 happened in this context; an **integration event** is a translated contract
 published outward. The chapter documents the domain event; the outward contract
-belongs in `dependencies.md` as a published language. Do not describe what a
+belongs in the dependency tables as a published language. Do not describe what a
 handler does as part of the event's meaning.
 
 ## Capturing — `sync-specs`
@@ -172,7 +172,7 @@ Ubiquitous language: the root's term, every owned type's, every enum member's,
 each event's and its payload fields', and any aggregate referenced by id, each
 with its `aliases`. Out of scope: sibling aggregates, any domain service that
 coordinates this one, the `features.md` chapters that consume it, cross-context
-integration in `dependencies.md`, consumer-side behaviour beyond subscribing,
+integration in the dependency tables, consumer-side behaviour beyond subscribing,
 and every sub-chapter the gate left unsettled. Acceptance checks: one per
 invariant row and per outcome — invalid construction rejected, forbidden
 transition throws, equal components equal, owned entity reachable and savable
@@ -194,5 +194,5 @@ another aggregate reachable only by id.
   alongside the aggregate.
 - Do not brief a repository, store, or DAO for an owned entity.
 - Do not add `depends-on` to a `domain.md` chapter.
-- Do not extend the pass into `features.md`, `model.md`, `flow.md`, or
-  `dependencies.md`.
+- Do not extend the pass into `context.md`, `features.md`, `model.md`,
+  `flow.md`, or `dependencies.md`.

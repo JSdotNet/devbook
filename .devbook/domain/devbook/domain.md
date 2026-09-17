@@ -50,7 +50,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `domain/`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | `ai/`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
@@ -285,7 +285,7 @@ related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/de
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over five kinds: `sync-specs` reads an
+says which one a chapter needs, as three skills over six kinds: `sync-specs` reads an
 implementation and writes the chapter, `apply-change` reads an agreed chapter and turns it into
 a change brief for the flow that implements it, touching no source or test tree itself, and
 `verify-change` reports the drift verdict and writes nothing. The names are OpenSpec's verbs for

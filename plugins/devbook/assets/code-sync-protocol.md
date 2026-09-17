@@ -14,8 +14,9 @@ Throughout this file and the files that load it, **capture** is what `sync-specs
 does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
-Each skill covers five kinds — `aggregate`, `domain-service`, `feature`,
-`building-block`, `design-component` — and none of them restates this file. What
+Each skill covers six kinds — `aggregate`, `domain-service`, `feature`,
+`setting`, `building-block`, `design-component` — and none of them restates
+this file. What
 is specific to a kind lives once in `assets/spec-kinds/<kind>.md`: the chapters
 and the file it covers, the `type` values, the folder rule, the spec-to-code
 mapping, and what each direction does differently there.

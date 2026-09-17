@@ -136,8 +136,8 @@ The file-level block uses the same fields as a chapter block (`status` required
 or optional by folder, exactly as above; `type` required where the folder
 defines a file-level value set; `related`, `issue`, `effort`, and `roadmap`
 optional) and the same omit-when-empty rule. Folder-specific fields defined for chapters
-(`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) are
-chapter-scoped and are not used at file level — a file's
+(`depends-on`, `aliases`, `feature-flag`, `setting`, `role`, `key`, `default`,
+`scope`, `version`, `alternatives`) are chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only.
 
 In `arc42/`, the file's top-level chapter heading (e.g. `# 01. Introduction
@@ -152,8 +152,11 @@ which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
 reference field: in `domain/`, `aliases` (defined in
 `devbook-domain.md`) is a list of
-plain-string surface names, `feature-flag` (same file) is a list of
-application feature keys, and `role` (same file) is the authorization role name an actor holds, none of them `<path>#<heading-slug>` references,
+plain-string surface names, `role` (same file) is the authorization role name
+an actor holds, and `key`, `default`, and `scope` (same file) describe a
+feature flag or a setting as the code spells it, none of them
+`<path>#<heading-slug>` references — where `feature-flag` and `setting` on a
+feature chapter *are* references, to the switch chapters that carry `key` —
 in `tech/`, `alternatives` (defined in
 `devbook-tech.md`) is likewise a
 plain-string list, and in `ai/`, `stage` (defined in
@@ -383,8 +386,9 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 its directory. A chapter's position is already its position in the document.
 
 Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
-`feature-flag` on domain feature chapters, `role` on domain actor chapters, `version`/`alternatives` on tech
-chapters, `stage` on ai chapters) are
+`feature-flag` and `setting` on domain feature chapters, `key`/`default`/`scope`
+on domain switch chapters, `role` on domain actor chapters,
+`version`/`alternatives` on tech chapters, `stage` on ai chapters) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
 to every folder.
@@ -592,7 +596,7 @@ Per directory, `_meta/index.json` is generated like this:
    | Directory | Root document by convention |
    |---|---|
    | `domain/` | `context-map.md` |
-   | `.domain/<context>/` | `domain.md` |
+   | `.domain/<context>/` | `context.md` |
    | `tech/` | `technology-graph.md` |
    | `design/` | `README.md` |
    | `ai/` | `adoption-map.md` |
@@ -614,8 +618,8 @@ Per directory, `_meta/index.json` is generated like this:
 
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
-   `domain/`'s `actors` → `skills` → `features` → `model` → `flow` →
-   `dependencies` → `naming`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
+   `domain/`'s `domain` → `actors` → `skills` → `features` → `model` →
+   `flow` → `dependencies`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
    first and `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by
