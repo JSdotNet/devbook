@@ -5,6 +5,8 @@ description: 'Delete every resolved annotation fence in a devbook chapter and no
 
 # annotation sweep
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Close the loops a branch answered. `resolved` is a waypoint, not a resting

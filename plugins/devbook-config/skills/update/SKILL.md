@@ -5,6 +5,8 @@ description: 'Move a repository''s whole configured stack forward in one run —
 
 # devbook-config update
 
+Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 One skill for the whole stack. It is `devbook-config:setup`'s other half — setup writes the

@@ -5,6 +5,8 @@ description: 'Sweep a repository''s devbook folders for everything a review pass
 
 # chapter review queue
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Answer one question across every adopted devbook folder: what is a person

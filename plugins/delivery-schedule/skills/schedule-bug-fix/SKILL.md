@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Bug Fix
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Take the bug backlog down by exactly one. Fetch the open GitHub issues labelled `bug`, skip

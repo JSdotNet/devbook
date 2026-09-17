@@ -5,6 +5,8 @@ description: 'Run any change to a devbook folder — an .arc42 chapter, decision
 
 # Flow: Devbook Folder (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`)
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice follows
 `resources/flow-model-selection.md`. What a chapter must look like is the repository's rule,
 not this flow's: the instruction files that govern the target path and the check the

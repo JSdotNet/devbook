@@ -5,6 +5,8 @@ description: 'Run the approval decision on a devbook chapter — show the chapte
 
 # chapter approve
 
+Open the reply with `devbook-collaboration@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Turn a cleared review into devbook's recorded decision, or refuse to. This is

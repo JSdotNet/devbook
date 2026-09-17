@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Merge Review
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Keep every open pull request reviewed within a day of its last push, so a person deciding

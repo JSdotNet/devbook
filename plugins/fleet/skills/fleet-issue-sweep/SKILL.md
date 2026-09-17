@@ -12,6 +12,8 @@ description: >
 
 # Fleet: Issue Sweep
 
+Open the reply with `fleet@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Turn a backlog into parallel work, once per run.

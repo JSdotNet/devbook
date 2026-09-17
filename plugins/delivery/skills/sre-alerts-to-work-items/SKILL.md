@@ -9,6 +9,8 @@ description: >
 
 # SRE Alerts to Work Items
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Query Azure Monitor for active SRE alerts and create one work item per alert, enriched with

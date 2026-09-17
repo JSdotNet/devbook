@@ -5,6 +5,8 @@ description: 'Check whether a repository''s .ai adoption record still describes 
 
 # devbook-config adoption
 
+Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Say whether `.ai` still describes the stack this repository has, and hand what moved to the

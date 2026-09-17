@@ -5,6 +5,8 @@ description: 'Refresh a repository technology graph from deterministic package i
 
 # Devbook technology graph update
 
+Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Update a repository's `.tech/` technology graph from repeatable evidence. Package-derived

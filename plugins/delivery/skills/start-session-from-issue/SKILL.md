@@ -10,6 +10,8 @@ description: >
 
 # Start Session from a Work Item
 
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Turn one tracker work item into work in progress. Fetch the open items matching a filter, select

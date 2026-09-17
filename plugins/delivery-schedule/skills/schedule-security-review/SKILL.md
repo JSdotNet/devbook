@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Scheduled: Security Review
 
+Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
 ## Purpose
 
 Find what a feature review does not look for: a dependency with a published advisory, a
