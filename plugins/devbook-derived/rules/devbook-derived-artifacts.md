@@ -176,7 +176,7 @@ repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |
 |---|---|---|---|
-| `.devbook/_meta/graph.json` | repository-wide | reference graph | `.devbook/_tools/devbook-meta/build.mjs` |
+| `.devbook/_meta/graph.json` | repository-wide | reference graph | devbook's `.devbook/_tools/devbook-meta/build.mjs --write` |
 | `.devbook/_meta/index.json` | repository-wide | ordered reading outline | same |
 | `.devbook/_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
 | `.devbook/arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |

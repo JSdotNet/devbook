@@ -22,10 +22,10 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
 
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
-| [Devbook Derived](../devbook-derived/dependencies.md) | Customer-Supplier, declared | Parses every chapter against the schema this context states; reads `adopted` from the stamp | The `meta` block schema, chapter addressing, the stamp's `adopted` list | That the schema in prose and the validator agree — the check is the test of that, both ways. |
-| [Devbook Collaboration](../devbook-collaboration/dependencies.md) | Customer-Supplier, declared | Writes `review`, `reviewer`, `review-at` in a chapter's own block; annotation fences written through `devbook-derived`'s `annotations.mjs`; writes devbook's `approved` rung | The review triad, the annotation fence, and the `status` ladder | That the three review fields keep their meaning and the check holds them to it, that a fence keeps its schema and its open/resolved/gone lifecycle, and that `approved`, `approved-by`, and `approved-at` keep their meaning. |
+| [Devbook Derived](../devbook-derived/dependencies.md) | Customer-Supplier, declared | Passes `--write` to this context's checker at `.devbook/_tools/devbook-meta/build.mjs` from its refresh script and workflows | The checker's CLI: `--write`, `--scope`, `--check` | That the tool lands where this context's install puts it, and that `--write` keeps writing the derived-artifacts envelope. |
+| [Devbook Collaboration](../devbook-collaboration/dependencies.md) | Customer-Supplier, declared | Writes `review`, `reviewer`, `review-at` in a chapter's own block; annotation fences written through `annotations.mjs`; writes devbook's `approved` rung | The review triad, the annotation fence, and the `status` ladder | That the three review fields keep their meaning and the check holds them to it, that a fence keeps its schema and its open/resolved/gone lifecycle, and that `approved`, `approved-by`, and `approved-at` keep their meaning. |
 | [Delivery](../delivery/dependencies.md) | **Undeclared** — see [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md) | Five folder flows name the folders, restate three schema rules, and run this context's generator at the path the install writes it to | None declared, on either side | Folder names, the generator's payload path, and the contract version — none of which it pins. |
-| [Delivery Schedule](../delivery-schedule/dependencies.md) | Separate Ways | One catalog entry names `prose-check` as a target; two others require this plugin beside the tooling plugin whose skills they target | The skill name alone | Nothing but the name. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [Delivery Schedule](../delivery-schedule/dependencies.md) | Separate Ways | One catalog entry names `prose-check` as a target; two of its own `schedule-*` wrappers invoke `check` and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [Devbook Config](../devbook-config/dependencies.md) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, and this context's stamp in the stack config | The stack config schema and the folder layout | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
 
@@ -38,10 +38,10 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/34-flows
   restating this context's rules — is the one to take.
 - **Nothing here names a flow.** This context ships the shape and the check; how a chapter
   change is carried is the engine's, and the two meet only in a repository that installed both.
-- The checker, the generator, the fence writer, the canvas, and the `.tech` inventory are
-  `devbook-derived`'s, and so are the skills that run them. This context names none of it: a
-  skill here says "run the check the repository's `AGENTS.md` names" and stops when it names
-  none — see [record 77](../../arc42/adr/77-the-tooling-is-devbook-deriveds.md), as amended.
+- The checker, the fence writer, the canvas, and the `.tech` inventory are this context's,
+  and so are `check`, `annotation-sweep`, and `tech-update`. The one thing it never does is
+  write a derived index: `build.mjs --write` is `devbook-derived`'s to pass — see
+  [record 79](../../arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md).
 - Every relationship above degrades rather than fails. A host that cannot load the extension
   loses the canvas, a repository that has not run the install still has readable Markdown, and
   a consumer of the `ext` namespace that is not installed leaves keys that parse and mean

@@ -164,8 +164,8 @@ Omit every optional field that has no value (no `related: []`, no
   `.arc42`/`.domain` — use `related` for those.
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
-  renamed, and run the check the repository's `AGENTS.md` names in the same
-  change.
+  renamed, and run the check in the same change:
+  `node .devbook/_tools/devbook-meta/build.mjs --scope tech --check`.
 - Ground stack claims in `.arc42` (especially
   `.arc42/04-solution-strategy.md#technology-choices` and
   `.arc42/09-architecture-decisions.md`) rather than inventing new choices here.

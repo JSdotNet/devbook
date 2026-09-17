@@ -2,13 +2,9 @@ name: Devbook metadata
 
 # Enforces the devbook convention: every metadata reference must
 # resolve and every `meta` block must match the schema. Installed by the
-# `devbook-derived:install` skill.
-#
-# Staleness of the committed _meta indexes is reported but does not fail the
-# run — forcing every devbook pull request to carry a regenerated index is
-# what makes those files conflict on merge. Refresh is deliberate instead:
-# ./build/Update-DevbookIndex.ps1 on demand, devbook-meta-nightly.yml on a
-# schedule. See devbook-derived-artifacts.md.
+# `devbook:install` skill. It writes nothing; whether the committed _meta/
+# indexes are current is devbook-derived's question, asked by its own
+# devbook-meta-drift.yml beside this file where that plugin is installed.
 #
 # The two path filters below are rendered, not copied: delete the rows for
 # folders this repository has not adopted. Every devbook folder lives under
@@ -48,7 +44,7 @@ concurrency:
 
 jobs:
   check:
-    name: Validate metadata and derived indexes
+    name: Validate metadata
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -56,14 +52,3 @@ jobs:
 
       - name: Check references and metadata blocks
         run: node .devbook/_tools/devbook-meta/build.mjs --check
-
-      # Advisory only. A stale index is not a defect in this pull request; the
-      # nightly job reconciles it, and consumers re-read sources newer than the
-      # index they read. Broken references above are the hard failure.
-      - name: Report drift in the committed indexes
-        run: |
-          node .devbook/_tools/devbook-meta/build.mjs
-          if ! git diff --quiet -- '*_meta/*.json'; then
-            echo "::warning::Derived _meta indexes have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"
-            git --no-pager diff --stat -- '*_meta/*.json'
-          fi

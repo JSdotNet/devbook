@@ -38,21 +38,21 @@ top-level heading carries a block of its own describing the document as a whole.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs` |
+| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
-| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs` |
-| A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/status-optional.test.mjs` |
+| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | untested |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
-| Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/tests-field.test.mjs` |
+| Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
-| An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook-derived/tools/devbook-meta/annotations-write.test.mjs` |
-| A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
-| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
-| An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
-| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
+| An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
+| A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Meta Block
 
@@ -132,10 +132,10 @@ field.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| Every folder lives under `.devbook/` and drops its leading dot there — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
-| An address is the chapter's real repository path | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
-| A root-level dot-folder is reported as an error naming the move, and never indexed | layout detection | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
-| A folder's convention orders its files — root first, pinned first and last around the rest | outline build | `unit:node:plugins/devbook-derived/tools/devbook-meta/layout.test.mjs` |
+| Every folder lives under `.devbook/` and drops its leading dot there — `.devbook/.domain` resolves to nothing | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| An address is the chapter's real repository path | graph build | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| A root-level dot-folder is reported as an error naming the move, and never indexed | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| A folder's convention orders its files — root first, pinned first and last around the rest | outline build | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | Dropping a folder from `adopted` orphans its materialized files rather than deleting them | reconcile | untested |
 
 ### Folder Layout
@@ -165,7 +165,7 @@ set and adding a sixth is a contract change rather than a folder.
 ```meta
 type: aggregate
 aliases: [graph, graph.json]
-related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook-derived/domain.md#index-generator"]
+related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -173,10 +173,10 @@ the corpus and owned by nobody who writes prose. It is the answer to *what point
 which no single chapter can hold, and it is the reason a reference is a first-class field
 rather than a Markdown link.
 
-The graph is derived, never authored, and what a reference *is* — the fields, the address
-form, what resolving means — is this context's. Building it is
-[Devbook Derived](../devbook-derived/domain.md#index-generator)'s: its committed form under
-`_meta/` is that context's output, and a session never regenerates or commits it.
+The graph is derived, never authored: the [Index Generator](#index-generator) builds it
+from the chapters every time it checks. Its committed form under `_meta/` is
+[Devbook Derived](../devbook-derived/domain.md#refresh)'s to write, and a session never
+regenerates or commits it.
 
 ### Invariants
 
@@ -184,9 +184,9 @@ form, what resolving means — is this context's. Building it is
 |---|---|---|
 | One node per heading that carries a `meta` fence, and none per heading without one | graph build | untested |
 | An edge exists only where a reference field resolves; an unresolved one is an error, not a dangling edge | graph build | untested |
-| Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/anchor-collision.test.mjs` |
-| `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook-derived/tools/devbook-meta/tests-field.test.mjs` |
-| Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | `devbook-derived`'s emit | untested |
+| Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook/tools/devbook-meta/anchor-collision.test.mjs` |
+| `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
+| Output is deterministic — no timestamps — so a clean `git diff` proves a committed index is current | `build.mjs --write` | untested |
 
 ### Graph Node
 
@@ -230,6 +230,68 @@ It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component
 is the only thing in this context that touches a file outside a devbook folder: the rule
 wrappers each host reads, the CI workflow templates, and devbook's own marker-fenced section of
 `AGENTS.md`.
+
+## Index Generator
+
+```meta
+type: domain-service
+related: [".devbook/domain/devbook/domain.md#reference-graph", ".devbook/domain/devbook-derived/domain.md#derived-index", ".devbook/arc42/adr/53-the-hard-gate-runs-the-schema-validator.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md"]
+```
+
+Walks the corpus once and projects it per scope, building the reference graph, the outline, and
+the annotation index for the repository and for each adopted folder. It checks by default and
+writes only on `--write`, which nothing in this context passes — the committed `_meta/` is
+[Devbook Derived](../devbook-derived/domain.md#refresh)'s to ask for. It is the only thing that
+decides whether a problem is an error or a warning: an
+unresolved reference fails, a heading with no block is reported and tolerated. Every
+per-block rule reaches the gate through the schema validator the graph build calls per file
+(`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
+
+Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
+request and the daily `devbook-check` schedule runs `check` through its own wrapper.
+
+## Canvas
+
+```meta
+type: domain-service
+aliases: [devbook-graph, reference graph canvas]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/36-devbooks-canvas-carries-no-surface-word.md"]
+```
+
+Two Copilot canvases over the same modules the generator writes with: the reference graph,
+rebuilt from disk on open so it can never show a stale index, with a node inspector that
+lists a chapter's test links and the command that runs each; and one chapter beside its
+parsed block and a metadata lint. It reads the Markdown, never `_meta/`, and writes nothing.
+
+Packaged with the checker whose modules it imports, which is why
+[record 5](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md)'s question is still open.
+
+## Fence Writer
+
+```meta
+type: domain-service
+aliases: [annotations.mjs]
+related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md"]
+```
+
+`annotations.mjs`: `list`, `add`, `reply`, `resolve`, `sweep`, as a CLI and as the same
+five functions in-process. It is the only writer of an annotation fence anywhere — devbook's
+`annotation-sweep` and every `devbook-collaboration` skill go through it — and its edits are
+surgical, so a field a later version adds survives a write by one that does not know it.
+It never commits: adding a note dirties a tracked file, and that is the caller's to review.
+
+## Tech Inventory
+
+```meta
+type: domain-service
+aliases: [devbook-tech, package inventory]
+related: [".devbook/domain/devbook/skills.md#tech-update", ".devbook/domain/devbook/domain.md#devbook-folder"]
+```
+
+Two scripts that read a repository's package manifests — .NET and frontend — and emit
+deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
+grounds a `.tech` chapter in, so a package-derived fact is reproducible and a hand-written
+one is visibly not. Materialized by the install only where `.tech` is adopted.
 
 ## Spec Converter
 

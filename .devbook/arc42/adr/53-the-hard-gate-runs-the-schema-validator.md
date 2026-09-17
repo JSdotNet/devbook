@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-09
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook-derived/domain.md#index-generator", ".devbook/domain/devbook/domain.md#chapter"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook/domain.md#chapter"]
 ```
 
 `validateDocument` is the only implementation of the per-block metadata rules — the status
@@ -10,7 +10,7 @@ ladders, the value shapes, the unrecognized-field sweep, a heading carrying no `
 and nothing on the `build.mjs --check` path called it. Its only callers were the tests and the
 editor extension. The graph build collected reference and containment problems, so an
 out-of-ladder `status`, a chapter reference pasted into `feature-flag`, and a heading with no
-block all exited `0` and merged. [The Index Generator](../../domain/devbook-derived/domain.md#index-generator)
+block all exited `0` and merged. [The Index Generator](../../domain/devbook/domain.md#index-generator)
 already claimed to decide error from warning across the whole schema; it decided it across two
 fields.
 

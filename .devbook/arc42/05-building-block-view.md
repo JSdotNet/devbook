@@ -132,18 +132,16 @@ else in the plugin has to know the folder exists. `delivery-surface-dashboard` a
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
-resolves it at runtime, and a host without an extension mechanism never sees it. `devbook-derived`
-ships one, `devbook-graph`, which renders the reference graph the generator beside it writes to
-`_meta/graph.json`. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
+resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
+ships one, `devbook-graph`, which renders the reference graph its checker builds. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
 What coupling exists runs one way and only in source: `devbook-graph` imports the generator's
 graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
 the live view and the committed index cannot disagree. Nothing in the generator imports the
-canvas. Those three imports are why the two ship in one plugin —
-[record 77](adr/77-the-tooling-is-devbook-deriveds.md) closes
-[record 5](adr/5-devbook-still-ships-the-graph-canvas.md)'s question that way.
+canvas. Those three imports are also the reason lifting the folder into its own plugin is more
+than a move — see [the decision](adr/5-devbook-still-ships-the-graph-canvas.md).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
 payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run
@@ -214,7 +212,7 @@ flowchart TB
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
         wf[".github/workflows/ - the check, and the nightly refresh"]
-        tools[".devbook/_tools/ - devbook-derived's checker and generator, at the path flows name"]
+        tools[".devbook/_tools/ - devbook's checker, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
         cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
@@ -243,7 +241,7 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds `devbook-derived`'s generator at the path its install writes it to, and five
+`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and five
 of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
 knowledge of, and a repository that hand-authored its folders without installing devbook gets a
 check line pointing at a file that is not there.
@@ -421,7 +419,7 @@ derived from an install. Reporting drift is inside the plugin's subject; writing
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
 stays with that component's own install skill, which is the only thing that knows what it
-materialized — so `devbook:install` and `devbook-derived:check` do not move here, and `devbook-config:setup`'s fifth
+materialized — so `devbook:install` and `devbook:check` do not move here, and `devbook-config:setup`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -452,8 +450,8 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 ignoring it, so a typo is an error rather than a silently absent setting.
 
 Four components stamp themselves, and `delivery` is the fourth: `components.devbook` from
-`devbook:install`, `components.derived` from `devbook-derived:install` for the tool, the
-workflows, and the script, `components.delivery` from `delivery:install` for the `start` and
+`devbook:install`, `components.derived` from `devbook-derived:install` for the refresh script,
+its workflows, and its rule, `components.delivery` from `delivery:install` for the `start` and
 `capture` copies it seeds, and `components.schedule` from `delivery-schedule:install`.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([record 75](adr/75-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
@@ -477,7 +475,7 @@ related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
-into. Two halves in one folder: twelve `schedule-*` entry points that pick their own input and
+into. Two halves in one folder: fourteen `schedule-*` entry points that pick their own input and
 run a flow, a review, or a report, and ten files under `resources/schedules/`, each a cadence, a target
 skill, the plugins that target needs, and the task half of a prompt, plus one preamble that
 carries the unattended rules every prompt starts with.
@@ -488,10 +486,10 @@ carries the unattended rules every prompt starts with.
 | `merge-review` | `delivery-schedule:schedule-merge-review` | weekdays |
 | `morning-brief` | `delivery-schedule:schedule-morning-brief` | weekdays |
 | `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
-| `devbook-check` | `devbook-derived:check` | daily |
+| `devbook-check` | `delivery-schedule:schedule-devbook-check` | daily |
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `instruction-review` | `delivery-schedule:schedule-instruction-review` | weekly |
-| `tech-update` | `devbook-derived:tech-update` | weekly |
+| `tech-update` | `delivery-schedule:schedule-tech-update` | weekly |
 | `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 | `prose-check` | `devbook:prose-check` | weekly |
 

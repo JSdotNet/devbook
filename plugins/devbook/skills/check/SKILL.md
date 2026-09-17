@@ -1,6 +1,6 @@
 ---
 name: check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. Runs devbook-derived''s checker and reads devbook''s ledger and stamp; the check-only counterpart of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-derived check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -8,11 +8,10 @@ description: 'Check a repository against devbook without writing to it, and repa
 ## Purpose
 
 Check this repository against devbook and write nothing; then repair whatever
-the check reports. Three questions, asked without changing anything: does the
-authored Markdown satisfy the schema — this plugin's checker answers that — is
-devbook's migration ledger current, and does devbook's stamp still describe
-what is on disk. The last two read `devbook`'s `assets/reconcile-protocol.md`,
-which this plugin reads and never restates.
+the check reports. It is `devbook:install`'s check-only half — the same three
+questions, asked without changing anything: does the authored Markdown satisfy
+the schema, is the migration ledger current, and does the stamp still describe
+what is on disk.
 
 This file exceeds the 40-line body budget on purpose. Most of it is the symptom
 table in step 2 — one row per thing the generator can report, with the fix — and
@@ -26,8 +25,8 @@ compressing a lookup table costs a repair, not a sentence.
    node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
-   When `.devbook/_tools/devbook-meta/` is absent, run `devbook-derived:install`
-   first; the ledger and the stamp in steps 4 and 5 need no tool.
+   When `.devbook/_tools/devbook-meta/` is absent, run `devbook:install` first —
+   it materializes the checker.
 
    Exit codes:
 
@@ -78,8 +77,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Annotation `ext` is not a mapping | `ext` written as a scalar or a list | Write it as `ext.<namespace>`. L0 validates the shape and never reads inside it |
    | Unrecognized annotation field | A field outside the closed core set (warning) | Move it under `ext.<namespace>` — that is the seam an extension adds state through |
 
-   Fix the **source Markdown**, never the generated JSON. Anything under `_meta/`
-   is derived; see `devbook-derived-artifacts.md`.
+   Fix the **source Markdown**, never a generated file. Anything under `_meta/`
+   is a layered plugin's derived output, and this check never writes it.
 
 3. **Re-run the check** until it exits `0`.
 
@@ -91,7 +90,7 @@ compressing a lookup table costs a repair, not a sentence.
    Report which migrations are outstanding and stop.
 
 5. **Check the stamp.** Read devbook's entry in `.devbook/config.json`
-   per devbook's `assets/reconcile-protocol.md` and compare it with disk:
+   per `assets/reconcile-protocol.md` and compare it with disk:
 
    | Drift | Severity | Fix |
    |---|---|---|
@@ -110,23 +109,10 @@ compressing a lookup table costs a repair, not a sentence.
    the same reason: a stale generated file must not block an unrelated pull
    request.
 
-6. **Refresh the derived indexes** if you want this branch current, where
-   `devbook-derived` materialized the script:
-
-   ```
-   ./build/Update-DevbookIndex.ps1
-   ```
-
-   Output is deterministic — no timestamps — so "nothing changed" means the
-   committed indexes were already current.
-
-   Committing the refresh is optional and usually not what you want. CI only
-   *warns* about drifted indexes, and the nightly job reconciles the default
-   branch in one pull request; regenerating them alongside an ordinary chapter
-   edit is what makes the generated JSON conflict on merge. Commit the refresh
-   when something is about to read the indexes from this branch — a release, a
-   local consumer — and otherwise leave it. See
-   `devbook-derived-artifacts.md`.
+6. **Never refresh from here.** This skill writes nothing: the committed `_meta/`
+   indexes, where a repository keeps them, are refreshed by the paths its
+   `AGENTS.md` names and by their scheduled job, never in a session beside a
+   chapter edit — that is what makes the generated JSON conflict on merge.
 
 ## When CI fails but local is clean
 
@@ -139,9 +125,9 @@ If step 1 exits `0` locally but CI is red, compare against the merge result
 rather than your branch tip — a reference can break when two branches land
 together even though each was clean on its own.
 
-If the generator itself is missing from the repository, install it by running
-`devbook-derived:install` rather than copying files ad hoc — a copy made by hand
-lands unstamped, and the next reconcile cannot tell it from a customized file.
+If the checker itself is missing from the repository, install it by running
+`devbook:install` rather than copying files ad hoc — a copy made by hand lands
+unstamped, and the next reconcile cannot tell it from a customized file.
 
 ## Do not
 

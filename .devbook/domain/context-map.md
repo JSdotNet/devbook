@@ -24,7 +24,7 @@ and every context conforms to them rather than the other way round.
 |---|---|---|
 | How an asset is written, packaged, and installed | Supporting | [Plugin Authoring](#plugin-authoring) |
 | Durable, addressed documentation | Core | [Devbook](#devbook) |
-| Enforcing the convention and deriving from it | Supporting | [Devbook Derived](#devbook-derived) |
+| Keeping the derived index committed and current | Supporting | [Devbook Derived](#devbook-derived) |
 | Review and approval of a chapter | Supporting | [Devbook Collaboration](#devbook-collaboration) |
 | Which stack a repository runs, and what it has | Supporting | [Devbook Config](#devbook-config) |
 | Carrying one unit of work to a review-ready change | Core | [Delivery](#delivery) |
@@ -70,7 +70,6 @@ flowchart TB
 
     DB -->|"Customer/Supplier, declared"| DBD
     DB -->|"Customer/Supplier, declared"| DBC
-    DBD -->|"Customer/Supplier, declared"| DBC
     DEL -->|"Customer/Supplier, declared"| FLT
     DEL -->|"Customer/Supplier, declared"| SCH
 
@@ -95,12 +94,11 @@ relationship that exists in the assets and in no manifest.
 | Plugin Authoring | every context | Shared Kernel | No — it is the vocabulary, not a plugin |
 | Devbook | Devbook Derived | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
-| Devbook Derived | Devbook Collaboration | Customer/Supplier | Yes, `devbook-derived >=1.1.0 <2.0.0` — every finding is written through its fence writer |
 | Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | Devbook | Delivery Schedule | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
-| Devbook Derived | Delivery Schedule | Separate Ways | No — `check` and `tech-update` are named as targets and skipped when absent |
+| Devbook Derived | Delivery Schedule | Separate Ways | No — `schedule-devbook-check` refreshes where the script exists and skips where it does not |
 | Devbook | Delivery | **Undeclared** | No, and it should be — see [debt record 4](../arc42/tdr/4-delivery-depends-on-devbook.md) |
 | every context | Devbook Config | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every context | Conformist | Not declarable; the host decides what loads |
@@ -115,8 +113,9 @@ devbook is absent.
 
 | Published language | Owned by | Consumed by | Carried as |
 |---|---|---|---|
-| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter, and Devbook Derived, which implements it | `rules/devbook-chapter-metadata.md`, materialized into a repository |
-| The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | Devbook Derived | Devbook Collaboration's queue, the canvas, and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
+| The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter | `rules/devbook-chapter-metadata.md`, materialized into a repository |
+| The checker's CLI — `--check`, `--print`, `--write`, `--scope` | Devbook | Devbook Derived's refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
+| The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | Devbook Derived | Devbook Collaboration's queue and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
 | The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Delivery | The three surfaces | `resources/surface-contract.md`; tool names matched by pattern |
@@ -165,23 +164,21 @@ related: [".devbook/domain/devbook/domain.md", ".devbook/arc42/adr/6-flat-devboo
 ```
 
 Addressed Markdown chapters and the schema underneath them: the `meta` block, the status
-ladders, what a reference is, annotation fences, the reconcile that materializes the
-convention into a repository, and the converters between a chapter and the code that
-implements it. It ships the shape, and never a flow or a tool.
+ladders, the reference graph derived from them, annotation fences, the reconcile that
+materializes the convention into a repository, and the converters between a chapter and the
+code that implements it. It ships the shape and the check, and never a flow.
 
 ## Devbook Derived
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/domain/devbook-derived/domain.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
-The tool over the convention: the checker and the generator as one program, the fence
-writer, the graph canvas, the refresh paths, and the install that puts them in a
-repository, with the three skills that run a tool — `check`, `annotation-sweep`,
-`tech-update`. Everything it enforces is devbook's; everything under `_meta/` is its output.
-Nothing below it names it: devbook's skills reach the check through the repository's
-`AGENTS.md`, which this context writes its own section of.
+The committed index: for a repository that keeps the derived `_meta/` files in its tree, the
+refresh script, the nightly refresh, the drift warning, the rule that places them, and the
+install that puts those in. It computes nothing — every byte under `_meta/` is devbook's
+checker's output, asked for with `--write`, the one flag nothing in devbook passes.
 
 ## Devbook Collaboration
 

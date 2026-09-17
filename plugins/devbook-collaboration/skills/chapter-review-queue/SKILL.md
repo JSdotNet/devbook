@@ -62,7 +62,7 @@ chapter that never appears in the queue.
 
 5. **Stop.** Offer the next move — `chapter-review` for an awaiting-review row,
    `chapter-approve` for an awaiting-approval, stale, or objected-to row,
-   `devbook-derived:annotation-sweep` for a chapter with notes to sweep — and let the
+   `devbook:annotation-sweep` for a chapter with notes to sweep — and let the
    user pick one.
 
 ## Do not
@@ -77,4 +77,4 @@ chapter that never appears in the queue.
 - Do not report a chapter with no review state, no approval, and no notes.
   Silence is the normal case, not a queue entry.
 - Do not sweep from here. The queue reports resolved notes; deleting them is
-  `devbook-derived:annotation-sweep`, on the branch that answered them.
+  `devbook:annotation-sweep`, on the branch that answered them.

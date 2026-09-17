@@ -1,6 +1,6 @@
 # Reconcile protocol
 
-The shared detail behind `devbook:install`, and behind the check-only skill a tooling plugin may run over the same stamp: the stamp devbook
+The shared detail behind `devbook:install` and `devbook:check`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
@@ -44,6 +44,10 @@ whose install rewrites content the repository authored, which is devbook alone:
       "contractVersion": 9,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
+        ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
+        ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
         ".agents/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:b17e…", "managed": true },
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
@@ -81,6 +85,12 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
+| `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
+| `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
+| `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
+| `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
 | `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
@@ -89,10 +99,11 @@ file wrong the moment a second person opens the repository.
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
-No tool is in this table. devbook ships the convention and its rules; whatever checks,
-generates, or inventories is another plugin's payload, materialized by that plugin's own
-install into `.devbook/_tools/` and stamped under its own component. This install runs
-the check the repository's `AGENTS.md` names, if it names one, in phase 6.
+The workflow is edited on the way in — the branch name corrected and its path filters
+trimmed to the adopted folders — which makes it customized from the first reconcile
+onward, as intended: its hash matches no shipped release, so reconcile reports it and
+leaves it alone. The refresh script, the nightly and drift workflows, and the committed
+`_meta/` indexes themselves are a layered plugin's payload, never this table's.
 
 The two root wrappers are the one asset created and never reconciled. `AGENTS.md` is
 read natively by Copilot and not by Claude, so a repository owes each host a root file that
@@ -173,7 +184,7 @@ it never goes inside the markers.
    The `AGENTS.md` section follows the same rule, with the text between its
    markers standing in for the file.
 
-6. **Stamp and verify.** Rewrite devbook's entry, run the check the repository's `AGENTS.md` names, if it names one, and report
+6. **Stamp and verify.** Rewrite devbook's entry, run `devbook:check`, and report
    what moved. A reconcile that ends with a failing check is reported as failing —
    never as "installed".
 

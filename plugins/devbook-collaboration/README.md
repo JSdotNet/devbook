@@ -2,8 +2,8 @@
 
 Review, comment, and hand-off workflows over [devbook](../devbook) chapters.
 
-An extension over `devbook`, and over `devbook-derived` for the fence writer
-every finding goes through. It owns no schema and no state. What it remembers
+An L1 extension: it depends on `devbook` and nothing else, and it owns no
+schema and no state. What it remembers
 about a chapter is devbook's own review triad — `review`, `reviewer`,
 `review-at` in that chapter's `meta` block, validated by the check — and a
 finding is one of devbook's own `annotation` fences, beside the passage it is
@@ -18,9 +18,9 @@ write the three fields by hand and is held to the same rules.
 claude plugin marketplace add JSdotNet/devbook
 ```
 
-Then enable `devbook-collaboration` with `/plugin`. `devbook` and `devbook-derived`
-are declared dependencies, so the host installs and enables them alongside; run
-their installs in the repository. This plugin itself installs nothing.
+Then enable `devbook-collaboration` with `/plugin`. `devbook` is a declared
+dependency, so the host installs and enables it alongside. There is nothing to
+install into the repository.
 
 ## The pass
 
@@ -34,8 +34,8 @@ owes the next move:
 | `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no review state and no resolved note left on the chapter. Or, on an approval a person will not let stand over what was raised since it, the rung lifted and `review: changes-requested` |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting — including an approval objected to since it was signed |
 
-Sweeping the answered notes is `devbook-derived:annotation-sweep`, before the branch
-merges. It is the tooling plugin's, because the fence writer is.
+Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
+merges. It is devbook's, because the fence is.
 
 Approval is devbook's own field and keeps devbook's meaning. This plugin never
 writes it without a person choosing it in that session, and clears the review
@@ -84,8 +84,8 @@ refuses an approval standing over one. `kind: flag` is the one the approver
 reads first: the gate shows open notes flags-first and, on a chapter already
 approved, names every note dated after `approved-at` as raised since the
 approval — a reason to lift it, never a block. Every write goes through
-`devbook-derived`'s `.devbook/_tools/devbook-meta/annotations.mjs`; nothing here
-writes a fence itself, and the gate reads the chapter rather than the derived
+devbook's `.devbook/_tools/devbook-meta/annotations.mjs`; nothing here writes a
+fence itself, and the gate reads the chapter rather than the derived
 index, so a note written on the branch a minute ago is already in front of the
 person.
 

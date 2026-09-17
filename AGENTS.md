@@ -21,7 +21,7 @@ as a decision in `.devbook/arc42/adr/` with the reason. Never leave the two sile
 Before committing, run the checker and the generator over this repository's own devbook:
 
 ```bash
-node tools/check-assets.mjs && node plugins/devbook-derived/tools/devbook-meta/build.mjs --check
+node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
 ```
 
 The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
@@ -39,9 +39,10 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 `devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
-`plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker and generator are
-`devbook-derived`'s, per `.devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md`; this
-repository vendors them from that plugin rather than materializing them.
+`plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
+the committed index is `devbook-derived`'s, per
+`.devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md`; this
+repository vendors both from the plugins rather than materializing them.
 
 ## Committing
 
@@ -171,6 +172,13 @@ Every chapter carries a fenced `meta` block; write it in the same change as the 
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
+Run the check before committing; it writes nothing:
+
+    node plugins/devbook/tools/devbook-meta/build.mjs --check
+
+An annotation fence is written only through
+`plugins/devbook/tools/devbook-meta/annotations.mjs`.
+
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
 it as this file's last word. `config.local.json` overlays the committed stack config
@@ -189,13 +197,8 @@ any of them — gitignored is not private, and neither is your home directory.
 Managed by `devbook-derived:install`. Edit outside these markers.
 
 Files under any `_meta/` folder are generated tool input, written by
-`plugins/devbook-derived/tools/devbook-meta/build.mjs`. Never read one as a source of
+`plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
 fact and never hand-edit one. Never regenerate or commit them in a session — the
-scheduled job owns that refresh. Fix what the check reports in the source Markdown, and
-run it before committing:
-
-    node plugins/devbook-derived/tools/devbook-meta/build.mjs --check
-
-An annotation fence is written only through
-`plugins/devbook-derived/tools/devbook-meta/annotations.mjs`.
+scheduled job owns that refresh. Fix what devbook's check reports in the source
+Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->

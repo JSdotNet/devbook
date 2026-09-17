@@ -83,7 +83,7 @@ that removed it and the change that answered it.
 | gone | Swept. | Forever. The prose change is the record. |
 
 Sweeping is a step, not a hope: delete every resolved fence before the branch
-merges. The sweep is a tool's job, over the repository's fence writer
+merges. `devbook:annotation-sweep` is that step, over `annotations.mjs sweep`
 — chapter-scoped, so a person sees what is about to go. A permanent note is a
 smell: if an aside is worth keeping, it is prose, and it belongs in the chapter
 as prose.
@@ -121,8 +121,7 @@ question in it. Resolve and sweep the note, or take the approval off.
 
 ## Writing one
 
-Every write goes through the repository's fence writer — the `annotations.mjs` its
-`AGENTS.md` names, with `list`, `add`, `reply`, `resolve`. Nothing else writes a
-fence with a regular expression of its own; where no writer is installed, no fence
-is written. Adding a note changes a tracked file: say so, offer the
+Every write goes through `.devbook/_tools/devbook-meta/annotations.mjs` — `list`,
+`add`, `reply`, `resolve`. Nothing else writes a fence with a regular expression of
+its own. Adding a note changes a tracked file: say so, offer the
 commit, never push, and never auto-commit into someone's branch.

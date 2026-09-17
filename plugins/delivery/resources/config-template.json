@@ -17,7 +17,7 @@
     }
   },
   "extensions": {
-    "session.start": ["devbook-derived:check"],
+    "session.start": ["devbook:check"],
     "spec": null,
     "implement": null,
     "validate": null,

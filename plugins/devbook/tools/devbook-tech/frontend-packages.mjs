@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Deterministic frontend package inventory for devbook-derived:tech-update.
+// Deterministic frontend package inventory for devbook:tech-update.
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";

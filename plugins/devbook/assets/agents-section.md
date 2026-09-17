@@ -8,10 +8,13 @@ matches the stamped hash. The rules — key, hash, customized, orphan — are in
 Render it from the stamp's `adopted` list, never from what happens to be on disk:
 
 - Keep one table row per adopted folder and delete the others.
-- Change nothing else. The `_meta/` rule, the refresh paths, and the check command
-  belong to the tooling plugin's own section, written after this one by its install.
-  A wording change belongs in this template, so every adopting repository gets it on
-  its next reconcile.
+- Replace `<generator>` with the path `generatorPath` reports: the conventional
+  `.devbook/_tools/devbook-meta/build.mjs` in a repository this materialized into, and a
+  repo-relative path in one that vendors the checker itself. Never write the
+  conventional path into a repository where it does not resolve.
+- Change nothing else. The `_meta/` rule and the refresh paths belong to the layered
+  plugin's own section, written after this one by its install. A wording change belongs
+  in this template, so every adopting repository gets it on its next reconcile.
 
 When `AGENTS.md` is absent, create it holding only this section. When it exists without
 the markers, append the section at the end. `AGENTS.local.md` is never created — the
@@ -42,6 +45,12 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 Every chapter carries a fenced `meta` block; write it in the same change as the content,
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
+
+Run the check before committing; it writes nothing:
+
+    node <generator> --check
+
+An annotation fence is written only through `.devbook/_tools/devbook-meta/annotations.mjs`.
 
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat

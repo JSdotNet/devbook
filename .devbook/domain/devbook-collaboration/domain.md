@@ -41,11 +41,11 @@ is no review fields at all.
 | Rule | Enforced at | Evidence |
 |---|---|---|
 | Every remembered fact is one of `review`, `reviewer`, `review-at`, and this context writes no other field except devbook's `approved` rung | all mutations | untested |
-| A chapter in any review state names exactly one reviewer and one day — the three are written together or not at all | devbook's check | `unit:node:plugins/devbook-derived/tools/devbook-meta/review-state.test.mjs` |
-| A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | devbook's check | `unit:node:plugins/devbook-derived/tools/devbook-meta/review-state.test.mjs` |
+| A chapter in any review state names exactly one reviewer and one day — the three are written together or not at all | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
+| A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | A finding is written through devbook's `annotations.mjs` and never as a field here | `chapter-review()`, `chapter-approve()` | untested |
-| Approval clears all three review fields, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()`, devbook's check | `unit:node:plugins/devbook-derived/tools/devbook-meta/review-state.test.mjs` |
-| No chapter is approved over an open `kind: question` note | `chapter-approve()` | `unit:node:plugins/devbook-derived/tools/devbook-meta/field-scope.test.mjs` |
+| Approval clears all three review fields, and sweeps the chapter's resolved notes, in the same change that writes the rung | `chapter-approve()`, devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
+| No chapter is approved over an open `kind: question` note | `chapter-approve()` | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | The gate shows every open note on the chapter, from the chapter itself, before the decision is asked | `chapter-approve()` | untested |
 | No skill here writes `approved` without a person choosing it in that session | `chapter-approve()` | untested |
 | Review state is never read as chapter content | convention | open — devbook's rules state it beside the annotation rule; nothing checks a reader obeyed it |

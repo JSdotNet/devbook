@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Repository paths whose presence means this repository uses what the guidance describes.
-const MARKERS = ['.devbook/_tools/devbook-meta', '.devbook/_meta'];
+const MARKERS = ['.devbook/_meta', 'build/Update-DevbookIndex.ps1'];
 
 // A worktree's .git is a file, not a directory, so test for presence rather than for a
 // directory. CLAUDE_PROJECT_DIR is the host's own answer and is trusted first.

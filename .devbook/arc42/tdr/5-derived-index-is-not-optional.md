@@ -2,18 +2,19 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/62-the-chapter-gate-is-devbook-collaborations-and-reads-the-chapter.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
 ```
 
 **Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
 
-**Resolved on 2026-09-17 by [record 77](../adr/77-the-tooling-is-devbook-deriveds.md).** The
-first option below was taken one folder wider than it recommended: `devbook-derived` holds the
-whole of `tools/devbook-meta/` — check and writer — plus the script, both workflows, the rule,
-and the canvas, with its own install and `components.derived` stamp. A repository declines the
-artifact by not enabling the plugin, at the cost of the check. The third option (converter
-call sites `--check`-only) was not taken: the regenerate step stays, gated on the tool being
-installed. The record below is kept as written.
+**Resolved on 2026-09-17 by [record 79](../adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md),
+by the first option below exactly as written** — after [record 77](../adr/77-the-tooling-is-devbook-deriveds.md)
+had taken it a folder wider for one day. `devbook` keeps `tools/devbook-meta/`,
+`devbook-meta.yml`, and the `--check` gate; `devbook-derived` holds the script, the nightly
+and drift workflows, the rule, and its own install and stamp, and invokes `build.mjs --write`
+at the path devbook materializes it to. The third option was taken with it: every devbook
+call site is `--check`-only, and `build.mjs` writes nothing unless asked. The record below is
+kept as written.
 
 ## The debt
 

@@ -499,7 +499,7 @@ consumer never has to tell "no quote" from "an empty quote".
 A `resolved` thread is still listed. It lives for the rest of the branch so a
 reviewer sees the exchange in the pull request that raised it — the sweep is
 what removes it, not the generator. A note that never gets swept is the smell
-this index makes visible; `devbook-derived:annotation-sweep` is what removes it.
+this index makes visible; `devbook:annotation-sweep` is what removes it.
 
 ## Viewing
 

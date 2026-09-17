@@ -266,7 +266,7 @@ the write to whatever flow covers the folder, resolved in this order:
 Name the rung that answered, once, in the report. Whichever rung it is owns template
 conformance, metadata blocks, and the consistency review; this skill owns the evidence.
 The dependency is one-way — no flow knows these skills exist, and none of them changes to
-accommodate this. A `.tech` refresh has the same relationship with the `.tech` write.
+accommodate this. `tech-update` has the same relationship with the `.tech` write.
 
 ## Code-side writes: the change brief
 
@@ -360,11 +360,18 @@ no flow knows these skills exist, and a brief reaches a flow as ordinary input.
 ## The check
 
 Whenever a capture pass results in a chapter being added, renamed, or re-linked,
-close the pass by running the check the repository's `AGENTS.md` names, if it names one — the
-repository's own gate, which this plugin does not ship. Fix what it reports in
-the source Markdown. Never regenerate a derived index in the pass, and never
-hand-edit one: refresh is the repository's own path, named in the same file.
-When the repository names no check, say so in the report and close the pass.
+close the pass with the check, at the scope of the folder that changed:
+
+```bash
+node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
+```
+
+Run it with no `--scope` when the pass touched more than one folder. If it
+reports unresolved references or a schema violation, fix the source Markdown;
+run `devbook:check` for anything that does not resolve from the message alone.
+Never regenerate a committed `_meta/` index in the pass, and never hand-edit
+one: where a repository keeps them, their refresh is the layered plugin's own
+path, named in the repository's `AGENTS.md`.
 
 An apply pass changes no chapter file and therefore checks nothing, and neither
 does a verify pass.

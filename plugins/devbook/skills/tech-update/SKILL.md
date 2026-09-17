@@ -1,6 +1,6 @@
 ---
 name: tech-update
-description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through this plugin''s inventory scripts.'
+description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through scripts.'
 ---
 
 # Devbook technology graph update
@@ -92,8 +92,8 @@ chapters and generated `_meta/*.json` indexes.
    ```
 
    If it reports unresolved references or schema violations, fix the source Markdown or
-   run `devbook-derived:check`. When `.devbook/_tools/devbook-meta/` is absent, run
-   `devbook-derived:install` first.
+   run `devbook:check`. When `.devbook/_tools/devbook-meta/` is absent, run
+   `devbook:install` first.
 
 ## Output expectations
 

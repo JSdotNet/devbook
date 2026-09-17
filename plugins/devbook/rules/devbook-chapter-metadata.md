@@ -642,10 +642,11 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 
 ## Derived metadata index
 
-These metadata blocks are compiled into derived indexes by the repository's
-checker, `.devbook/_tools/devbook-meta/build.mjs`, where one is installed — one
-set per devbook folder plus a repository-wide rollup, placed per the
-`devbook-derived-artifacts.md` rule that ships with it:
+These metadata blocks are checked by `.devbook/_tools/devbook-meta/build.mjs`,
+which builds the reference graph and the reading outline to do it. A layered
+plugin may ask the same tool to write them, with `--write`, as derived indexes —
+one set per devbook folder plus a repository-wide rollup, placed per that
+plugin's `devbook-derived-artifacts.md`:
 
 ```text
 _meta/graph.json          # reference graph, all adopted folders

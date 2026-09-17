@@ -3,84 +3,44 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/domain/context-map.md#devbook-derived", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md", ".devbook/domain/devbook/domain.md#index-generator"]
 ```
 
-What this context is responsible for: that the convention [Devbook](../devbook/domain.md)
-states is enforced, and that what can be derived from the chapters is derived once, the same
-way, wherever it is read.
+What this context is responsible for: that a repository which keeps the derived `_meta/`
+indexes in its tree has them current on the default branch and never regenerated in a
+session.
 
-Inside the boundary: the checker and the generator — one program over one parsed corpus —
-the fence writer that is the only thing allowed to edit an annotation, the canvas that
-renders the graph from the same modules, the refresh paths, and the install that puts all
-of it into a repository.
+Inside the boundary: the refresh paths — the on-demand script, the nightly workflow, the
+drift warning — the rule that says where a derived artifact lives and what its envelope
+is, and the install that puts them in a repository.
 
-Outside it: what a chapter must contain, what a reference is, what a fence means — every
-rule it enforces is devbook's, stated in prose there and implemented here. This context
-adds no field to the schema and owns no folder; a repository that adopts devbook without it
-has readable, addressed Markdown and no gate.
+Outside it: the checker that computes what these files hold, the fence writer, the canvas —
+all [Devbook](../devbook/domain.md)'s. This context computes nothing: it asks devbook's
+`build.mjs` to write, with the one flag nothing in devbook passes, and a repository that
+does not enable it has the full check and no derived file.
 
-## Index Generator
+## Refresh
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-derived/domain.md#derived-index", ".devbook/domain/devbook/domain.md#reference-graph", ".devbook/arc42/adr/53-the-hard-gate-runs-the-schema-validator.md"]
+aliases: [Update-DevbookIndex, nightly refresh, drift warning]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/domain/devbook-derived/skills.md#install"]
 ```
 
-Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
-the annotation index for the repository and for each adopted folder. It is the only writer of
-`_meta/`, and the only thing that decides whether a problem is an error or a warning: an
-unresolved reference fails, a heading with no block is reported and tolerated. Every
-per-block rule reaches the gate through the schema validator the graph build calls per file
-(`unit:node:plugins/devbook-derived/tools/devbook-meta/schema-gate.test.mjs`).
+The three ways a committed index gets rewritten, and the only three: `build/Update-DevbookIndex.ps1`
+on demand, reporting which files moved; the nightly workflow on the default branch, opening
+one pull request when anything did; and the pull-request drift workflow, which warns and never
+fails. Each passes `--write` to devbook's checker at `.devbook/_tools/devbook-meta/build.mjs`.
+A session is not a fourth way.
 
-Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-check` schedule, targeting this context's `check`, opens a pull
-request when the output moved.
+### Invariants
 
-## Canvas
+| Rule | Enforced at | Evidence |
+|---|---|---|
+| Nothing writes a derived artifact but `build.mjs --write`, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| A drifted index warns a pull request and never fails it | `devbook-meta-drift.yml` | untested |
+| The nightly refresh opens one pull request when the output moved and nothing when it did not | `devbook-meta-nightly.yml` | untested |
 
-```meta
-type: domain-service
-aliases: [devbook-graph, reference graph canvas]
-related: [".devbook/domain/devbook-derived/domain.md#index-generator", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/36-devbooks-canvas-carries-no-surface-word.md"]
-```
-
-Two Copilot canvases over the same modules the generator writes with: the reference graph,
-rebuilt from disk on open so it can never show a stale index, with a node inspector that
-lists a chapter's test links and the command that runs each; and one chapter beside its
-parsed block and a metadata lint. It reads the Markdown, never `_meta/`, and writes nothing.
-
-Packaged with the generator rather than lifted into a surface plugin of its own, because the
-two are one tool over one parser — the closure of
-[record 5](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md)'s question.
-
-## Fence Writer
-
-```meta
-type: domain-service
-aliases: [annotations.mjs]
-related: [".devbook/domain/devbook/domain.md#annotation", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md"]
-```
-
-`annotations.mjs`: `list`, `add`, `reply`, `resolve`, `sweep`, as a CLI and as the same
-five functions in-process. It is the only writer of an annotation fence anywhere — devbook's
-this context's `annotation-sweep` and every `devbook-collaboration` skill go through it — and its edits are
-surgical, so a field a later version adds survives a write by one that does not know it.
-It never commits: adding a note dirties a tracked file, and that is the caller's to review.
-
-## Tech Inventory
-
-```meta
-type: domain-service
-aliases: [devbook-tech, package inventory]
-related: [".devbook/domain/devbook-derived/skills.md#tech-update", ".devbook/domain/devbook/domain.md#devbook-folder"]
-```
-
-Two scripts that read a repository's package manifests — .NET and frontend — and emit
-deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
-grounds a `.tech` chapter in, so a package-derived fact is reproducible and a hand-written
-one is visibly not. Materialized by the install only where `.tech` is adopted.
 
 ## Ubiquitous Language
 
@@ -89,7 +49,7 @@ type: ubiquitous-language
 related: [".devbook/domain/devbook/domain.md#ubiquitous-language"]
 ```
 
-> One term of its own. Everything else it speaks — chapter, address, reference, fence,
+> One term of its own. Everything else it speaks — chapter, reference graph, outline,
 > adoption, stamp — is devbook's or the kernel's, and is defined there.
 
 ### Derived Index
@@ -98,7 +58,7 @@ related: [".devbook/domain/devbook/domain.md#ubiquitous-language"]
 type: term
 date: 2026-09-08
 aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook-derived/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook-derived/domain.md#refresh", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
 Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,

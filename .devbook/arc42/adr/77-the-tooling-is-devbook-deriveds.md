@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-derived/domain.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/context-map.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/5-devbook-still-ships-the-graph-canvas.md", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md", ".devbook/arc42/adr/60-the-annotation-lifecycle-ends-in-devbook.md", ".devbook/arc42/adr/64-1-0-0-is-the-first-release.md", ".devbook/arc42/adr/68-the-generator-lives-under-devbook.md", ".devbook/arc42/adr/76-derived-artifacts-are-computed-never-committed.md", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/domain/devbook-derived/domain.md", ".devbook/domain/devbook/domain.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/context-map.md", ".devbook/arc42/adr/79-the-checker-is-devbooks-the-committed-index-is-derived.md"]
 ```
 
 Everything under `tools/devbook-meta/` — the schema validator, the reference graph, the
@@ -87,3 +87,7 @@ now says "run the check the repository's `AGENTS.md` names, if it names one", an
 names no other plugin; the convention reaches its tool through the repository, the way a
 flow reaches a role. `devbook-collaboration` and the two schedule entries that targeted the
 moved skills follow them.
+
+**Superseded on 2026-09-17 by [record 79](79-the-checker-is-devbooks-the-committed-index-is-derived.md).**
+The checker, the canvas, the fence writer, and the three skills return to devbook; `build.mjs`
+writes only on `--write`, and devbook-derived is the committed index alone.

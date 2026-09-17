@@ -61,7 +61,7 @@ depends-on: [".devbook/tech/hosts.md#copilot-plugin-api"]
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-`@github/copilot-sdk/extension`, imported by both canvas extensions — `devbook-derived`'s
+`@github/copilot-sdk/extension`, imported by both canvas extensions — `devbook`'s
 `devbook-graph` and `delivery-surface-canvas`'s own — for `joinSession` and `createCanvas`. It is the
 only third-party import anywhere in this repository, and it is not installed: the Copilot CLI
 resolves it when it opens the extension, which is why no `package.json` declares it and why

@@ -42,7 +42,7 @@ has one, and the repository root. The kind's file lists what else it needs.
 6. Route the write through the folder's flow, per **Where the spec-side write
    goes**; hand over the drafts, the evidence behind each claim, and the
    proposed terms. Name the rung that answered, once.
-7. Close the pass per the protocol's **The check** section.
+7. Run the check at the kind's scope, per the protocol.
 8. Close with the protocol's report table, one row per chapter in scope,
    `aligned` rows included.
 

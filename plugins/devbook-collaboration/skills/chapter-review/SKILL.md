@@ -14,8 +14,8 @@ an unanswered question survives the session that raised it.
 The three review fields and their states are devbook's — `review`, `reviewer`,
 `review-at` in `devbook-chapter-metadata.md`. A finding is an annotation fence,
 not a field — `devbook-annotations.md` has its schema and lifecycle, and
-`devbook-derived`'s `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing
-that writes one. Read
+devbook's `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing that
+writes one. Read
 both first.
 
 This file exceeds the 40-line body budget on purpose: the lens table in step 3
@@ -98,6 +98,6 @@ lens is a review that misses the finding.
   stop, not a line item to implement.
 - Do not close a finding you did not settle, and do not sweep a resolved one
   here — the answer has to survive into the pull request that raised the
-  question. Sweeping is `devbook-derived:annotation-sweep`, before the branch merges.
+  question. Sweeping is `devbook:annotation-sweep`, before the branch merges.
 - Do not widen the review to the folder. One chapter and its neighbours; a
   folder-wide sweep is `chapter-review-queue`.

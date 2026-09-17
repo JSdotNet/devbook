@@ -1,6 +1,6 @@
 ---
 name: install
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations", "devbook-install".'
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install or refresh the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations", "devbook-install".'
 ---
 
 # devbook install
@@ -22,8 +22,7 @@ in adoption, and a migration are one operation — the stamp says which.
 3. **Plan.** Show the diff table and write nothing. Never skip this.
 4. **Migrate.** Ledger forward, oldest first, `--check` before and after each.
 5. **Materialize.** Overwrite stale, report customized, never both.
-6. **Stamp and verify.** Rewrite the entry, re-run phase 1 to confirm the plan
-   is now empty, run the check the repository's `AGENTS.md` names, if it names one, and report.
+6. **Stamp and verify.** Rewrite the entry, run `devbook:check`, report.
 
 ## Creating a folder
 
@@ -57,6 +56,7 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 - Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
   specialist agents are installed — with neither, they name nothing. Never apply any of
   it silently, and never put routing inside the `AGENTS.md` markers.
-- This install materializes the rules, the wrappers, the root wrappers, and its own
-  `AGENTS.md` section, and nothing else. It never writes inside another plugin's markers.
+- The committed `_meta/` index, its refresh script, its nightly and drift workflows, and
+  the `Read(_meta/**)` deny rule are a layered plugin's, not this install's. It never
+  writes inside another plugin's markers.
 - Report a reconcile that ends on a failing check as failing, never as installed.

@@ -52,7 +52,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     }
   },
   "extensions": {
-    "session.start": [ "devbook-derived:check" ],
+    "session.start": [ "devbook:check" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
     "validate":        "your-coding-plugin:coding",

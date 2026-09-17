@@ -1,13 +1,18 @@
 #!/usr/bin/env node
-// build.mjs — CLI wrapper that writes the derived devbook metadata artifacts.
+// build.mjs — devbook's checker; a layered plugin's refresh runs it with --write.
 //
-//   node .devbook/_tools/devbook-meta/build.mjs           # every adopted scope
-//   node .devbook/_tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
-//   node .devbook/_tools/devbook-meta/build.mjs --print   # verify, and emit the documents as JSON on stdout
+//   node .devbook/_tools/devbook-meta/build.mjs           # check every adopted scope, write nothing
+//   node .devbook/_tools/devbook-meta/build.mjs --check   # the same, spelled out; CI runs this
+//   node .devbook/_tools/devbook-meta/build.mjs --print   # check, and emit the documents as JSON on stdout
+//   node .devbook/_tools/devbook-meta/build.mjs --write   # check, and write the derived _meta/ artifacts
 //   node .devbook/_tools/devbook-meta/build.mjs --scope tech     # .tech and .devbook/tech spell the same scope
 //   node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 //
-// Writes three artifacts per scope, per the derived-artifacts convention:
+// Checking is this tool's own job and the default. Writing is opt-in, because
+// the committed artifacts are a layered plugin's product: its refresh script and
+// nightly workflow pass --write, and nothing in devbook ever does (record 79).
+// With --write it writes three artifacts per scope, per the derived-artifacts
+// convention:
 //
 //   .devbook/_meta/graph.json          the reference graph (repository-wide rollup)
 //   .devbook/_meta/index.json          the ordered reading outline
@@ -45,7 +50,8 @@ import {
 
 const args = process.argv.slice(2);
 const printMode = args.includes("--print");
-const checkOnly = args.includes("--check") || printMode;
+const writeMode = args.includes("--write") && !printMode;
+const checkOnly = !writeMode;
 // Diagnostics go to stderr in print mode so stdout stays one parseable document.
 const log = printMode ? console.error : console.log;
 

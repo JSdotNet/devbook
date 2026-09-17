@@ -2,12 +2,10 @@
 
 Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.ai`
 devbook convention: durable, cross-linked Markdown chapters with
-machine-readable `meta` blocks. This plugin is the convention itself: the
-rules, the schema, the converters, and the install that puts them in a
-repository. The checker, the generator, the graph canvas, and the `.tech`
-inventory scripts are [`devbook-derived`](../devbook-derived)'s, and nothing
-here names them — a skill here says "run the check the repository's
-`AGENTS.md` names", and that plugin's section of the file is what names it.
+machine-readable `meta` blocks, a checker that keeps references honest, a graph
+canvas, and a CI check. The checker writes nothing on its own; a repository
+that wants the derived `_meta/` indexes committed enables
+[`devbook-derived`](../devbook-derived), which asks the same tool to write them.
 
 ## Installation
 
@@ -66,17 +64,52 @@ protocol is in `assets/reconcile-protocol.md`.
 folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
 `upgrade devbook`, `run devbook migrations`
 
+### Skill: `check`
+
+The check-only half of the same protocol: writes nothing, and asks the same
+three questions. Does the authored Markdown satisfy the schema, is the migration
+ledger current, does the stamp still describe what is on disk. Then repairs what
+it reports — broken references, missing or malformed `meta` blocks, fields the
+schema no longer defines — and hands the rest back to `devbook:install`, which
+owns every write.
+
+**Trigger keywords:** `devbook check`, `devbook-meta failed`,
+`broken reference`, `validate devbook folders`, `build.mjs --check`
+
+### Skill: `tech-update`
+
+Refreshes a repository's `.tech/` technology graph from deterministic package
+inventories for .NET and frontend dependencies, then analyzes the repository for
+non-package technologies such as runtimes, services, platforms, protocols, and
+tooling before delegating graph authoring to the `.tech` write path. Runs the
+check, never the writer.
+
+**Trigger keywords:** `update technology graph`, `refresh .tech`,
+`technology inventory`, `.NET packages`, `frontend packages`, `package graph`
+
 ### Skill: `prose-check`
 
 Reads every adopted folder and reports the prose that does not earn its lines
 — a name that no longer exists in the tree, a term defined a second time, a
 hedge in a statement of fact, a paragraph restating its heading — beside what
-the repository's check reports about structure. Report only: it writes nothing,
-and a finding becomes an edit when a person makes it through the folder's flow.
-ADRs and TDRs are records and stay out of the prose classes.
+`devbook:check` reports about structure. Report only: it writes nothing, and a
+finding becomes an edit when a person makes it through the folder's flow. ADRs
+and TDRs are records and stay out of the prose classes.
 
 **Trigger keywords:** `prose check`, `check the chapters' prose`,
 `what is stale in the devbook`, `tighten the chapters`
+
+### Skill: `annotation-sweep`
+
+Deletes every resolved annotation fence in one chapter and nothing else. It is
+the last step of the lifecycle in `rules/devbook-annotations.md`: `open` means
+somebody is waiting, `resolved` means answered and lives only the rest of the
+branch, and gone is the resting state — the prose change is the record and git
+holds the exchange. Chapter-scoped on purpose, so a person sees what is about to
+go before it does.
+
+**Trigger keywords:** `sweep the annotations`, `clear resolved notes`,
+`delete the answered comments`, `sweep before merging`
 
 ### No flows
 
@@ -168,7 +201,7 @@ proposes a term with the discovered code name as an `alias`, which turns a
 one-off inference into a durable pairing for the next pass. The context folder
 itself, including its term chapters, is created by the same path.
 
-`.tech` has no kind here — a `.tech` refresh is the tooling plugin's, from package inventories.
+`.tech` has no kind here — `tech-update` already covers that direction.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all three
 skills reference and none repeats: counterpart resolution, the evidence rules
@@ -256,26 +289,65 @@ remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. Reserved and currently
 unused. See `devbook-chapter-metadata.md`.
 
-### No tooling
+### Extension: `devbook-graph`
 
-The checker and generator, the fence writer, the graph canvas, the CI and nightly
-workflows, the refresh script, the `.tech` inventory scripts, and the skills that run
-them — `check`, `annotation-sweep`, `tech-update` — ship in
-[`devbook-derived`](../devbook-derived) and land under `.devbook/_tools/` through its
-own install. Nothing here names that plugin: `install`, the converters, and
-`prose-check` say "run the check the repository's `AGENTS.md` names", and stop there
-when it names none. The reason the convention and its tool are two plugins is
-`.devbook/arc42/adr/77-the-tooling-is-devbook-deriveds.md`.
+Two canvases. `devbook-graph` renders the reference graph — chapters as nodes,
+`related` / `depends-on` as edges — from the same graph modules the checker
+uses, rebuilt from disk on open, so the live view and the check never disagree.
+The node inspector lists a chapter's test links with the command that runs each
+one. `devbook-chapter` opens one chapter's Markdown beside its parsed `meta`
+block and a metadata lint.
+
+### Tooling: `devbook-meta`
+
+```bash
+node .devbook/_tools/devbook-meta/build.mjs --check          # every adopted scope; CI runs this
+node .devbook/_tools/devbook-meta/build.mjs --scope tech --check
+node .devbook/_tools/devbook-meta/build.mjs --print          # the documents as JSON on stdout
+node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
+```
+
+The checker builds the reference graph, the reading outline, and the open-note
+index in memory and reports what does not resolve. It writes nothing unless
+asked with `--write`, and nothing in this plugin asks: the committed `_meta/`
+indexes are [`devbook-derived`](../devbook-derived)'s, and its refresh paths are
+what pass the flag. `--print` emits the same three documents per scope for a
+viewer that cannot import `graph.mjs`, `outline.mjs`, and `annotations-index.mjs`
+in-process.
+
+```bash
+node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .devbook/arc42/05-building-block-view.md#devbook-meta
+node .devbook/_tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+```
+
+`annotations.mjs` is the only writer of an annotation fence — the CLI above and
+any in-process caller import the same functions, so nothing else edits a note
+with a regular expression of its own. Its edits are surgical, and it never
+commits. See `tools/devbook-meta/README.md` for the document shapes.
+
+### Tooling: `devbook-tech`
+
+```bash
+node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root .
+node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
+```
+
+The inventory scripts emit deterministic JSON from repository manifests. Use them
+as the source of truth for package-derived `.tech` facts; use repository analysis
+for technologies that do not appear in package manifests.
 
 ### Assets
 
 | File | Purpose |
 |------|---------|
-| `assets/reconcile-protocol.md` | The rules behind `devbook:install`, read by any check-only skill over the same stamp: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook:install` and `devbook:check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`, its path filters trimmed to the adopted folders: fails on broken references and schema violations |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
-| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, closing the pass, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
@@ -307,7 +379,7 @@ Rules that keep a ledger trustworthy:
 - The id is immutable once released. Never rewrite a shipped migration — add a
   new one.
 - A migration is idempotent by rule: the second run changes nothing.
-- `--check` is mandatory. CI calls it, and so does any check-only skill; it is what
+- `--check` is mandatory. CI calls it, and so does `devbook:check`; it is what
   makes a plan worth reading before anything is written.
 - `appliesTo` names adopted folders. A repository that never adopted one records
   *not-applicable*, and adopting it later re-evaluates the migration rather than
@@ -327,9 +399,8 @@ and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` a
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
 releases leave it alone: plugin semver moves for prose and new skills,
-`contractVersion` moves for the contract. The schema is stated here, in
-`devbook-chapter-metadata.md`; the constant that stamps it lives with the
-checker, and the two move together.
+`contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
+`tools/devbook-meta/graph.mjs`.
 
 1.0.0 ships at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
@@ -367,11 +438,16 @@ After running `devbook:install`, a repository that adopted everything has:
 _meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .devbook/
-└── config.json                      # the stack config, with devbook's stamp
+├── config.json                      # the stack config, with devbook's stamp
+└── _tools/
+    ├── devbook-meta/                # the checker, the fence writer, the graph modules
+    └── devbook-tech/                # deterministic package inventory scripts
+.github/
+└── workflows/devbook-meta.yml       # the CI check
 ```
 
-The tooling plugin adds `.devbook/_tools/`, `.devbook/_meta/` and one `_meta/` per
-folder, `build/`, two workflows, and its own `AGENTS.md` section beside these.
+`devbook-derived` adds `.devbook/_meta/` and one `_meta/` per folder, `build/`, the
+nightly and drift workflows, and its own `AGENTS.md` section beside these.
 
 ## Enforcement
 
@@ -385,11 +461,10 @@ Five layers, weakest to strongest:
    installed them.
 3. **`meta` block rules** make every chapter's relationships explicit and
    checkable.
-4. **The check** the repository's `AGENTS.md` names fails on unresolved references
-   and schema violations.
-5. **Its CI workflow** fails the pull request on broken references or a `meta`
-   block that violates the schema. The two strongest layers are the tooling
-   plugin's and exist only where it is installed.
+4. **`build.mjs --check`** fails on unresolved references and schema violations.
+5. **The CI workflow** fails the pull request on broken references or a `meta`
+   block that violates the schema. Whether a committed index has drifted is
+   `devbook-derived`'s question, asked by its own workflow and never a failure.
 
 ## License
 
