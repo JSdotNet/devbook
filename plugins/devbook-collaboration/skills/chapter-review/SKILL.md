@@ -11,9 +11,9 @@ Review one chapter and leave the verdict where the next reader will find it: in
 the chapter's own `meta` block. Findings are recorded, not merely reported, so
 an unanswered question survives the session that raised it.
 
-State keys and the three review states are in
-`../../rules/chapter-collaboration.md`. A finding is an annotation fence, not a
-key — devbook's `devbook-annotations.md` has its schema and lifecycle, and
+The three review fields and their states are devbook's — `review`, `reviewer`,
+`review-at` in `devbook-chapter-metadata.md`. A finding is an annotation fence,
+not a field — `devbook-annotations.md` has its schema and lifecycle, and
 `tools/devbook-meta/annotations.mjs` is the only thing that writes one. Read
 both first.
 

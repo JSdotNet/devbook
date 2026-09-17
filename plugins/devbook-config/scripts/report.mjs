@@ -19,37 +19,32 @@ import { fileURLToPath } from 'node:url';
 const DEFAULT_MARKETPLACE = 'jsdotnet';
 
 // Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
-// contract-versioned. The mapping is not derivable — `collaboration` is written by
-// `devbook-collaboration`, `schedule` by `delivery-schedule` — and it is needed in the
-// direction a manifest cannot answer: naming the plugin behind a stamp whose plugin is not
-// installed here. Hardcoding it is the same bargain the rest of this script already takes,
-// recorded at `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
+// contract-versioned. The mapping is not derivable — `schedule` is written by
+// `delivery-schedule` — and it is needed in the direction a manifest cannot answer: naming
+// the plugin behind a stamp whose plugin is not installed here. Hardcoding it is the same
+// bargain the rest of this script already takes, recorded at
+// `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
+// `devbook-collaboration` is absent on purpose: it materializes nothing and stamps nothing
+// (`.devbook/arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md`), so a
+// repository adopts it by enabling it and nothing here reconciles it.
 //
 // `contract: false` is not "has not got round to it". Only a component whose install rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
-// it owns whole has hash-matching as its whole migration mechanism. So three of these four will
+// it owns whole has hash-matching as its whole migration mechanism. So two of these three will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
 // `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
-    collaboration: {
-        plugin: 'devbook-collaboration',
-        install: 'devbook-collaboration:install',
-        contract: false,
-    },
     delivery: { plugin: 'delivery', install: 'delivery:install', contract: false },
     schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install', contract: false },
 };
 
-// The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
-// install refuses to run until `components.devbook` names an adopted folder, and
-// delivery-schedule checks its targets against the plugins this repository enables, so it
-// wants the settled state. `delivery` is the one free position — its install reads the engine
-// keys and no other component's stamp — and it sits before
-// schedule because schedule's targets call the procedures it seeds. Anything not named here
-// follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
+// The order the reconcile list is run in, and it is not cosmetic: delivery-schedule checks
+// its targets against the plugins this repository enables, so it wants the settled state.
+// `delivery` sits before schedule because schedule's targets call the procedures it seeds.
+// Anything not named here follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and
@@ -540,7 +535,7 @@ function render(model) {
         .filter((p) => p.scope === 'reconcile')
         .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
     if (reconcile.length) {
-        out.push('Run these **in this order** — collaboration needs devbook adopted first, and schedule reads the settled enable state — and let each write its own stamp:');
+        out.push('Run these **in this order** — schedule reads the settled enable state — and let each write its own stamp:');
         out.push('');
         for (const p of reconcile) {
             const drift = p.stampedVersion && p.stampedVersion !== p.installed

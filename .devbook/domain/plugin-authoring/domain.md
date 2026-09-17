@@ -477,4 +477,7 @@ namespace two plugins interpret is no longer opaque.
 
 An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
 render as they always did, and mean nothing to anyone. That is what makes the seam safe to
-reserve before anything needs it.
+reserve before anything needs it. It is reserved and unused: the first extension to store
+state through it, `devbook-collaboration`, moved that state into devbook's schema instead,
+because the fields mirrored ones devbook already owned
+([record 75](../../arc42/adr/75-review-state-is-three-fields-in-devbooks-schema.md)).

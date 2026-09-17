@@ -228,7 +228,7 @@ flow knows these skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
+| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, the approval and review triads, and the `tests` test-case link format |
 | `devbook-domain.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
 | `devbook-arc42.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
@@ -269,14 +269,25 @@ it. The templates and the reasons are in
 Until you run `devbook:install`, the rules still reach a session the way they always have:
 the session-start hook, and the skills that name one by path.
 
+### Review state
+
+`review`, `reviewer`, and `review-at` sit beside `approved-by` and `approved-at`
+and say who owes the next move on a chapter: `requested` the reviewer,
+`changes-requested` the author, `cleared` nobody. The check holds a verdict to
+the notes it stands on — `changes-requested` needs an open annotation,
+`cleared` forbids one — and refuses review state on an approved chapter. The
+vocabulary is devbook's; the skills that write it are
+[`devbook-collaboration`](../devbook-collaboration)'s, and a repository without
+that plugin can still write the three by hand and be held to the same rules.
+
 ### The `ext` namespace
 
-A plugin layered on top of devbook keeps its own per-chapter state under
+A plugin layered on top of devbook may keep its own per-chapter state under
 `ext.<plugin>.<key>`. The generator carries those keys through untouched and
 unvalidated, and emits them as one `ext` object per node — so an extension can
 remember something about a chapter without a devbook schema change, a contract
-bump, and a migration in every consuming repository. See
-`devbook-chapter-metadata.md`.
+bump, and a migration in every consuming repository. Reserved and currently
+unused. See `devbook-chapter-metadata.md`.
 
 ### Extension: `devbook-graph`
 

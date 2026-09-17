@@ -109,7 +109,8 @@ devbook is absent.
 | Published language | Owned by | Consumed by | Carried as |
 |---|---|---|---|
 | The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter, and every reader of the documents the check builds | `rules/devbook-chapter-metadata.md`, materialized into a repository |
-| The `ext.<plugin>.<key>` extension namespace | Devbook | Devbook Collaboration, and any later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
+| The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
+| The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Delivery | The three surfaces | `resources/surface-contract.md`; tool names matched by pattern |
 | The extension-point set and the gate contract | Delivery | Fleet, Delivery Schedule, and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
 | `.devbook/config.json` — four engine keys plus one stamp per component | Delivery owns the four keys; each component owns its own stamp | Devbook Config reads all of it; every install skill writes one key | `resources/config.schema.json` |
@@ -168,9 +169,9 @@ related: [".devbook/domain/devbook-collaboration/domain.md", ".devbook/arc42/adr
 ```
 
 Who owes the next move on a chapter: request a review, record findings and a verdict, and run
-the approval decision that writes devbook's own `approved` rung. Every fact it remembers lives
-in devbook's `ext` namespace, which is what lets it version independently of the schema it
-writes beside.
+the approval decision that writes devbook's own `approved` rung. Every fact it remembers is
+one of devbook's own review fields, so it owns procedure and no vocabulary — four skills,
+nothing installed, nothing stamped.
 
 ## Devbook Config
 

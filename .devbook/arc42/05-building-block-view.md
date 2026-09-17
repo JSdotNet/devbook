@@ -448,10 +448,11 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
-Four components stamp themselves, and `delivery` is the fourth: `components.devbook` from
-`devbook:install`, `components.collaboration` from `devbook-collaboration:install`,
-`components.delivery` from `delivery:install` for the `start` and `capture` copies it seeds,
-and `components.schedule` from `delivery-schedule:install`. That puts `delivery` on both sides
+Three components stamp themselves, and `delivery` is the third: `components.devbook` from
+`devbook:install`, `components.delivery` from `delivery:install` for the `start` and `capture`
+copies it seeds, and `components.schedule` from `delivery-schedule:install`.
+`devbook-collaboration` materializes nothing and stamps nothing
+([record 75](adr/75-review-state-is-three-fields-in-devbooks-schema.md)). That puts `delivery` on both sides
 of the table at once — schema owner for the four engine keys, installer for one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
 `devbook-config` maps the four to their install skills by hand: a manifest cannot say which

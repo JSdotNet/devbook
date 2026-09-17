@@ -4,9 +4,8 @@ The shared detail behind `devbook:install` and `devbook-check`: the stamp devboo
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
-Two other installs read one section of it. `delivery:install` and
-`devbook-collaboration:install` take **The stamp**'s two shared fields and its hash
-rules, and nothing else here describes them: the three fields beside those, the asset
+One other install reads one section of it. `delivery:install` takes **The
+stamp**'s two shared fields and its hash rules, and nothing else here describes it: the three fields beside those, the asset
 table, and the six phases are devbook's own. The reason is
 `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
 
@@ -70,10 +69,10 @@ whose install rewrites content the repository authored, which is devbook alone:
 and `materialized` are everyone's. A component that only copies files it owns needs
 no ledger: a copy hashing to a release that component shipped is stale and gets
 replaced, which *is* the migration, and a copy hashing to nothing shipped is the
-repository's and is never overwritten, ledger or not. So `delivery` and
-`devbook-collaboration` stamp two fields, `delivery-schedule` stamps `pluginVersion`
-beside the selection it made in the host's own scheduler, and none of the three ships
-a `migrations/` folder or runs the six phases below.
+repository's and is never overwritten, ledger or not. So `delivery` stamps two
+fields, `delivery-schedule` stamps `pluginVersion` beside the selection it made in
+the host's own scheduler, and neither ships a `migrations/` folder or runs the six
+phases below. `devbook-collaboration` materializes nothing and stamps nothing.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the

@@ -244,6 +244,26 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   is an approval record left behind on a chapter no longer claiming the rung —
   either the approval is current and the status says so, or it has lapsed and
   the record comes out with it.
+- **review** (optional) — where this chapter's review pass stands, on the way to
+  that decision: `requested` (waiting on the reviewer), `changes-requested`
+  (waiting on the author; at least one open annotation says why), or `cleared`
+  (waiting on nobody; no open annotation remains, and the chapter is ready for
+  the approval decision). Omitted means no review is running. The three states
+  are checked against the notes in the chapter body: `changes-requested` over no
+  open fence, or `cleared` over one, is a verdict written without its findings.
+- **reviewer** (optional) — who owes the next move: one handle, name, or role.
+  Never a list.
+- **review-at** (optional) — the day the current review state was written, in
+  `YYYY-MM-DD` form.
+
+  The three are written together or not at all, mirroring the approval triad so
+  a chapter reads the same way on its way to a decision as it does past one.
+  None of it is chapter content: a reader loading a chapter for context skips
+  the review fields the same way it skips an annotation fence, and only review
+  work — a review skill, a queue, the approval gate — reads them. Approval
+  deletes all three in the same change that writes the rung: an approved
+  chapter carries the decision, not the road to it. A finding is never a field
+  here; it is one `annotation` fence beside the passage it is about.
 
   The allowed values are folder-specific; see the `status` section
   in `devbook-domain.md`,
@@ -348,8 +368,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   their owner, `ext.<plugin>.<key>`, because the block grammar is flat:
 
   ```text
-  ext.devbook-collaboration.review: awaiting-domain
-  ext.devbook-collaboration.reviewer: @jsdotnet
+  ext.some-plugin.checked: 2026-09-17
   ```
 
   The generator carries every `ext.*` key through **untouched and unvalidated**

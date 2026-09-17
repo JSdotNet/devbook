@@ -11,8 +11,9 @@ Answer one question across every adopted devbook folder: what is a person
 still owed. This is the only skill in this plugin that reads the folder rather
 than one chapter, because a queue is the one thing an address cannot give you.
 
-State keys are in `../../rules/chapter-collaboration.md`. A finding is an
-annotation fence — see `devbook-annotations.md`.
+The review fields are devbook's — `review`, `reviewer`, `review-at` in
+`devbook-chapter-metadata.md`. A finding is an annotation fence — see
+`devbook-annotations.md`.
 
 This file exceeds the 40-line body budget on purpose: the routing table in step
 3 is one row per state a chapter can be waiting in, and a row left out is a
@@ -27,9 +28,10 @@ chapter that never appears in the queue.
 
 2. **Collect the `meta` blocks and the notes** in those folders in one pass:
    `node .devbook/_tools/devbook-meta/build.mjs --print` emits, per scope, the
-   graph with each node's `ext` keys gathered under one `ext` key and the
-   annotations document with every thread, its address, status, and kind. Read
-   the repository scope `.` from its output. Scan the chapters directly only
+   graph with each node's `status`, `review`, `reviewer`, `review-at`,
+   `approved-by`, and `approved-at`, and the annotations document with every
+   thread, its address, status, and kind. Read the repository scope `.` from
+   its output. Scan the chapters directly only
    where the checker is not installed, and say so in the report.
 
 3. **Sort every chapter into one row**, first match wins:
@@ -72,7 +74,7 @@ chapter that never appears in the queue.
 - Do not read chapter content into context while sweeping. Metadata answers the
   whole question, and loading the corpus is exactly what devbook's task-scoped
   loading rule forbids.
-- Do not report a chapter with no collaboration state, no approval, and no
-  notes. Silence is the normal case, not a queue entry.
+- Do not report a chapter with no review state, no approval, and no notes.
+  Silence is the normal case, not a queue entry.
 - Do not sweep from here. The queue reports resolved notes; deleting them is
   `devbook:annotation-sweep`, on the branch that answered them.
