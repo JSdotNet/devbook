@@ -13,7 +13,9 @@ several.
 ```meta
 status: trial
 type: skill
+stage: [plan, code, test]
 related: [".devbook/domain/plugin-authoring/domain.md#flow-skill"]
+date: 2026-09-02
 ```
 
 Task categories route to a `flow-<category>` skill that runs the category end to end.
@@ -45,7 +47,10 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 ```meta
 status: candidate
 type: skill
+stage: [plan, code]
+depends-on: [".devbook/tech/hosts.md#claude-code-cli"]
 related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
+date: 2026-09-03
 ```
 
 `fleet` sweeps a backlog and works it five issues at a time across sessions and worktrees,
@@ -67,7 +72,9 @@ instead of one session at a time.
 ```meta
 status: candidate
 type: skill
+stage: [operate, monitor]
 related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
+date: 2026-09-07
 ```
 
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud

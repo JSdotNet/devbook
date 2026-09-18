@@ -11,7 +11,7 @@
 //      `.tech/technology-graph.md`, `.design/README.md`, `.ai/adoption-map.md`).
 //   2. If anything left carries a **number** — from a `number` field or from a
 //      numbered filename — the directory is a numbered set (arc42 chapters,
-//      ADRs, TDRs, `.ai` stage files) and sorts by that number ascending, unnumbered entries
+//      ADRs, TDRs, `.ai` usage files) and sorts by that number ascending, unnumbered entries
 //      filename-sorted after them.
 //   3. Otherwise the remaining prescribed files follow in the sequence that
 //      folder's own instructions file documents in its structure block, with
@@ -86,7 +86,7 @@ const DIRECTORY_CONVENTION = {
         split: ["domain.md", "features.md", "skills.md", "model.md", "flow.md"],
     },
     "tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },
-    // `.ai` needs no `first`/`last`: its stage files are numbered, so the
+    // `.ai` needs no `first`/`last`: its usage files are numbered, so the
     // numbered branch orders the flow and leaves `concepts.md` filename-sorted
     // after it — map, then the flow in order, then the ideas underneath it.
     "ai": { root: "adoption-map.md", first: [], last: [] },

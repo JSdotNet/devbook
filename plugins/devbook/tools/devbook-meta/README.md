@@ -292,7 +292,10 @@ each expects, without building a command.
 | A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) on the file-level block | error |
 | `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
 | An `approved` chapter carrying an open `kind: question` annotation | error |
-| `ai/` `stage` on a block inside a stage file, where the file already says it | warning |
+| `ai/` `stage` entry outside the DevOps loop's eight — `plan`, `code`, `build`, `test`, `release`, `deploy`, `operate`, `monitor` | error |
+| `ai/` chapter with no `stage`, other than a `concept` applied throughout — a usage off the loop | warning |
+| `ai/` `stage` on a file-level block — a file groups chapters and places none of them | error |
+| `ai/` `related` entry reaching into `tech/` — the tool a usage rests on goes in `depends-on`, which is what the loop picture draws | warning |
 | A directory missing the root document its folder convention names | warning |
 
 ### Literal escape sequences

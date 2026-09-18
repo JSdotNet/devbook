@@ -13,7 +13,9 @@ change here starts in.
 ```meta
 status: adopted
 type: practice
-related: [".devbook/tech/hosts.md#claude-code-plugin-api"]
+stage: [code]
+depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
+date: 2026-09-02
 ```
 
 Assets are authored in the host that loads them, in a worktree per change.

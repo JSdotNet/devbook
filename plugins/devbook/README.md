@@ -37,7 +37,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
-| `ai/` | How the team develops with AI: usage per flow stage, concepts, adoption status |
+| `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
 
 Adoption is partial by design — a repository may take only `domain/` and
 `arc42/`, and the tooling emits scopes for the folders that actually exist.
@@ -235,7 +235,7 @@ flow knows these skills exist.
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.md` | `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `tech/` boundary |
+| `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the DevOps loop, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
@@ -439,7 +439,7 @@ After running `devbook:install`, a repository that adopted everything has:
 ├── ai/
 │   ├── _meta/…
 │   ├── adoption-map.md
-│   ├── <nn>-<stage>.md
+│   ├── <nn>-<part>.md
 │   └── concepts.md
 ├── _meta/{graph.json,index.json,annotations.json}       # the rollup, devbook-derived's
 └── _tools/

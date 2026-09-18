@@ -97,6 +97,34 @@ and dependency tables while they are small: a kind lives in its own file or in `
 never both, so a small context is three files in the outline instead of six, and a large one
 splits without changing what any chapter is. Contract 11, with migration `011-context-md`.
 
+**An `ai/` chapter is placed on the DevOps loop by its own `stage`, from a fixed vocabulary.**
+The folder was already organised by the flow, but the placement was the file: a chapter sat
+at whatever stage the file it was in was named after, the stage set was the repository's own,
+and a tool drawing the flow had to read filenames and a table in `adoption-map.md` to know
+what the stages were. That is linking by position, and it fails in both directions — a chapter
+that applies at two stages has to be split or filed arbitrarily, and two repositories with
+different stage sets draw two loops nobody can compare. So the link is metadata: every chapter
+carries `stage`, a list of one or more of the loop's own eight words — `plan`, `code`,
+`build`, `test`, `release`, `deploy`, `operate`, `monitor`, in that order, the first four the
+dev half — and the file it sits in groups chapters for reading and places none of them, which
+is why a file-level `stage` is an error. The vocabulary is fixed so that every repository
+draws the same loop and an unused stage renders empty rather than disappearing. A `concept`
+with no `stage` applies throughout and is drawn in the middle; any other chapter without one
+is off the picture and is reported as a warning, not an error, so an existing folder keeps
+validating while its chapters are placed. The field kept its name: `stage` already existed for
+exactly this on `concepts.md` chapters, and a rename would have cost a migration to buy a
+synonym. What did change is the value set — a `stage` authored under the old rule named one of
+the repository's own stage files, and such a slug is an error now — and no script can map a
+repository's slug to a loop word, so there is no migration to ship; the one `ai/` folder in
+existence is this repository's, rewritten in the same change. Two things went from optional to the rule at the
+same time, because the picture reads them: the tool under a usage is named in `depends-on`
+and never `related`, since `depends-on` is the edge the picture draws the tool from and a
+`related` entry into `tech/` resolves and draws nothing; and `date` on an `ai/` chapter is the
+day the current rating was set, moved with `status`. A stage's own shading is derived — the
+highest rung among the chapters at it — and authored nowhere. The tools a stage runs on that no
+AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a `stage` on a
+`tech/` chapter would cross the one-way boundary between the two folders from the wrong side.
+
 ## Rejected
 
 ```meta
@@ -106,6 +134,10 @@ splits without changing what any chapter is. Contract 11, with migration `011-co
 - A separate `approved` boolean beside `status`; `status` required or optional everywhere.
 - `naming.md` kept as an optional file kind.
 - *Stakeholder* as the umbrella; a `personas.md`; a second classifier beside `type`.
+- Placing an `ai/` chapter by the file it sits in, with a `side` on each stage file and the
+  file's `status` as the stage's rating — the shape this record's first draft took the same
+  day; a repository-defined stage set; a `phase` field beside `stage`; a `stage` on `tech/`
+  chapters; a `since` beside `date`; a structured `adopted-by`.
 - A `settings.md` beside the others, adding a file to every context's outline; a `boundary.md`
   name; keeping `feature-flag` a bare key and validating it against nothing; one chapter type
   with a `level` field, which would put the who-decides question on every flag; a
@@ -123,6 +155,7 @@ splits without changing what any chapter is. Contract 11, with migration `011-co
 
 | Date | Change |
 | --- | --- |
+| 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
 | 2026-09-18 | `context.md` is a context's root with `feature-flag` and `setting` chapters; `feature-flag` on a feature is a reference and `setting` joins it; actors and dependencies live there until they outgrow it. Contract 11, migration 011. |
 | 2026-09-18 | `domain`, `features`, `skills`, and `model` split by chapter as `flow` already did; a split file reads after its base. |
 | 2026-09-17 | `stakeholders.md` becomes `actors.md` with `user`, `organisation`, `technical` and a `role` field. |
