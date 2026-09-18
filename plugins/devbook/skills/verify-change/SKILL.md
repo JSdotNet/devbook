@@ -1,6 +1,6 @@
 ---
 name: verify-change
-description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same five kinds as sync-specs and apply-change: aggregate, domain-service, feature, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and unit tests only; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (sync-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
+description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same six kinds as sync-specs and apply-change: aggregate, domain-service, feature, setting, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and unit tests only; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (sync-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
 ---
 
 # verify-change

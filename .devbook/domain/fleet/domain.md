@@ -1,22 +1,9 @@
 # Fleet
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#fleet", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
-
-What this context is responsible for: that a backlog becomes parallel work without two workers
-picking up the same item, that every worker's outcome is legible afterwards including the ones
-that failed, and that nothing merges unread even though no person answered a gate.
-
-Inside the boundary: triage and its verdicts, the claim, the dispatch, the coordination files
-that outlive every session involved, and the brief written at the end.
-
-Outside it: what a worker actually does to an item, which is [Delivery](../delivery/domain.md)'s
-flow running inside that worker's own session; and the tracker the items come from, which is a
-binding. This context owns no flow and holds no gate — that is the whole reason it is not part
-of the engine.
 
 ## Sweep
 

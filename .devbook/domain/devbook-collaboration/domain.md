@@ -1,23 +1,9 @@
 # Devbook Collaboration
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc42/adr/chapter-schema.md"]
 ```
-
-What this context is responsible for: that a chapter always says who owes the next move, and
-that an approval on it was chosen by a person in the session that wrote it.
-
-Inside the boundary: the review request, the reviewer, the verdict, the approval decision, and
-the sweep that reports what is waiting on whom.
-
-Outside it: what a chapter says, what its folder's rules are, the schema the state is stored
-in, and the [annotation](../devbook/domain.md#annotation) a finding is written as — all
-[Devbook](../devbook/domain.md)'s. This context owns no schema and no state of its own: the
-three review fields it writes are devbook's, defined beside the approval triad and held to
-their meaning by devbook's check, and a finding lives in devbook's own device
-([the annotations record](../../arc42/adr/annotations.md)).
 
 ## Chapter Review
 

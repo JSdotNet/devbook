@@ -1,22 +1,9 @@
 # Delivery Schedule
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#delivery-schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
-
-What this context is responsible for: that a procedure can run in a session nobody is watching
-without ever passing a gate, without merging anything, and without carrying anything personal
-into the repository.
-
-Inside the boundary: the entry points that pick their own input, the catalog of triggers that
-fires them, the preamble every unattended prompt starts with, and the selection a repository
-records.
-
-Outside it: the flows the entry points call, which are [Delivery](../delivery/domain.md)'s; the
-scheduler itself, which is a host capability resolved from the live tool list and never named;
-and anything a target delegates to, which is a binding the consuming repository makes.
 
 ## Schedule
 

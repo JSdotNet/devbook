@@ -1,20 +1,9 @@
 # Delivery Surface Dashboard
 
 ```meta
-index: root
 type: domain
 related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/surfaces.md"]
 ```
-
-What this context is responsible for: that a run is visible while it happens, that what it shows
-was measured rather than claimed, and that uninstalling it costs a view and never a capability.
-
-Inside the boundary: the run store, the three pages, the telemetry the hooks capture, and the
-report exported at the end. It answers all three capability groups of the surface contract.
-
-Outside it: what produced the run. This context knows nothing about flows, gates, or extension
-points — it receives lifecycle calls, and whoever made them resolved its tool names by pattern
-from the live tool list. It declares no dependency and names no engine.
 
 ## Run Record
 

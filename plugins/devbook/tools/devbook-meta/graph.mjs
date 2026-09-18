@@ -39,6 +39,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // when something repo-visible changes shape, which is why a plugin release
 // usually leaves it alone — and why the migration ledger keys off it.
 //
+// Version 11 adds `context.md` to `domain/` as a bounded context's root
+// document, with `feature-flag` and `setting` chapters, and changes the shape
+// of a feature's `feature-flag` field from a bare application key to a
+// reference to one of those chapters — so it produces a `gated-by` edge now,
+// beside the new `setting` field and its `configured-by` edge. A repository whose contexts have no
+// `context.md`, or whose features still carry bare keys, stops validating, so
+// `migrations/011-context-md/` writes the file and rewrites the keys.
 // Version 10 removes `naming` from the `domain/` file types and with it the
 // optional `naming.md`: a term that is a chapter carries its `aliases` on that
 // chapter, and the rest are `term` chapters under `domain.md`'s
@@ -59,7 +66,7 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 10;
+export const CONTRACT_VERSION = 11;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -105,11 +112,21 @@ export function generatorPath(repoRoot) {
 
 // Metadata fields that hold `<path>` / `<path>#<slug>` references, and the edge
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
-// `feature-flag`, `role`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
+// `role`, `roadmap`, `stage`) are deliberately absent — they stay node attributes.
+//
+// A `feature-flag` gates the feature — `gated-by`; a `setting` gates or shapes
+// it, so the edge says `configured-by` and leaves which to the setting's own
+// values. The target's kind is held to the field below, since a reference that
+// resolves to the wrong kind of chapter parses like a right one.
 const REFERENCE_FIELDS = {
     "depends-on": "depends-on",
+    "feature-flag": "gated-by",
+    setting: "configured-by",
     related: "related",
 };
+
+// The chapter `kind` each switch field must resolve to.
+const SWITCH_TARGET_KIND = { "feature-flag": "feature-flag", setting: "setting" };
 
 // The authored `type` field is emitted under the node key `kind`, because
 // `type` on a node is already the structural discriminator
@@ -120,6 +137,9 @@ const ATTRIBUTE_FIELDS = [
     "issue",
     "aliases",
     "alternatives",
+    "key",
+    "default",
+    "scope",
     "date",
     "approved-by",
     "approved-at",
@@ -131,9 +151,9 @@ const ATTRIBUTE_FIELDS = [
 //
 // `tests` is here rather than in REFERENCE_FIELDS because a test identifier
 // names something in a test project, not a chapter, so it produces no edge — the
-// same reason `feature-flag`, `role`, `roadmap`, and `.ai`'s `stage` stay
-// attributes — a `role` names something in the authorization configuration.
-const LIST_ATTRIBUTE_FIELDS = ["feature-flag", "role", "roadmap", "stage", "tests"];
+// same reason `role`, `roadmap`, and `.ai`'s `stage` stay attributes — a `role`
+// names something in the authorization configuration.
+const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.
@@ -417,6 +437,15 @@ export async function buildGraph(repoRoot, folders = null) {
                             path: targetPath,
                         });
                     }
+                }
+                const expectedKind = SWITCH_TARGET_KIND[field];
+                const targetKind = nodes.get(ref)?.kind;
+                if (expectedKind && targetKind !== expectedKind) {
+                    problems.push({
+                        severity: "error",
+                        path: node.path,
+                        message: `${node.id} has \`${field}\` reference "${ref}" that resolves to a ${targetKind ? `\`${targetKind}\` chapter` : "heading or file"}, not a \`${expectedKind}\` chapter — point it at the switch's own chapter in the context's \`context.md\`.`,
+                    });
                 }
                 edges.push({
                     id: `${edgeType}:${node.id}->${ref}`,

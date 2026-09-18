@@ -20,14 +20,15 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 
 // --- .domain field scope ------------------------------------------------
 
-// `depends-on` and `feature-flag` are the delivery order and the flag of a
-// capability. A `domain.md` chapter has neither: it describes standing
-// structure, and its relationships belong in `model.md` or `related`.
+// `depends-on`, `feature-flag`, and `setting` are the delivery order and the
+// switches of a capability. A `domain.md` chapter has none of them: it
+// describes standing structure, and its relationships belong in `model.md` or
+// `related`.
 {
     const issues = validateDocument(
         ".devbook/domain/ordering/domain.md",
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
-            `${fence("type: aggregate\ndepends-on: [.domain/ordering/features.md#refunds]\nfeature-flag: orders\n")}\n` +
+            `${fence("type: aggregate\ndepends-on: [.domain/ordering/features.md#refunds]\nfeature-flag: .domain/ordering/context.md#orders\nsetting: .domain/ordering/context.md#orders-visible\n")}\n` +
             `Prose.\n`
     );
 
@@ -41,22 +42,103 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
         "`feature-flag` on an aggregate is an error",
         dump(issues)
     );
+    check(
+        Boolean(find(issues, "error", '`setting` on a chapter of type "aggregate"')),
+        "`setting` on an aggregate is an error",
+        dump(issues)
+    );
 }
 
-// The same two fields on the chapters that own them, which must stay silent —
+// The same three fields on the chapters that own them, which must stay silent —
 // a scope check that fires on the legal case is worse than none.
 {
     const issues = validateDocument(
         ".devbook/domain/ordering/features.md",
         `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
-            `${fence("type: feature\ndepends-on: [.domain/ordering/features.md#orders]\nfeature-flag: refunds\n")}\n` +
+            `${fence("type: feature\ndepends-on: [.domain/ordering/features.md#orders]\nfeature-flag: .domain/ordering/context.md#refunds\nsetting: .domain/ordering/context.md#refund-notices\n")}\n` +
             `Prose.\n\n### Partial refund\n\n` +
-            `${fence("type: sub-feature\nfeature-flag: [refunds, refunds-partial]\n")}\nProse.\n`
+            `${fence("type: sub-feature\nfeature-flag: [.domain/ordering/context.md#refunds, .domain/ordering/context.md#partial-refunds]\n")}\nProse.\n`
     );
 
     check(
         !find(issues, "error", "scopes the field to"),
-        "both fields on a feature and a sub-feature are silent",
+        "the three fields on a feature and a sub-feature are silent",
+        dump(issues)
+    );
+    check(
+        !find(issues, "error", "is not a `<path>#<slug>` reference"),
+        "a reference-shaped `feature-flag` and `setting` are silent",
+        dump(issues)
+    );
+}
+
+// A bare application key is the shape `feature-flag` had before contract 11.
+// It is reported by name, so a repository that skipped the migration is told
+// which one to run rather than shown a reference that "does not resolve".
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/features.md",
+        `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
+            `${fence("type: feature\nfeature-flag: refunds\n")}\n` +
+            `Prose.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", "run the `011-context-md` migration")),
+        "a bare key in `feature-flag` is an error naming the migration",
+        dump(issues)
+    );
+}
+
+// `key`, `default`, and `scope` describe the switch, so they sit on the
+// `feature-flag` and `setting` chapters in `context.md` and nowhere else; a
+// switch without a `key` has nothing for the code to resolve to; `scope` names
+// who changes a setting at runtime, which a release-time flag has no answer
+// for; and a flag's `default` is `on` or `off`.
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/context.md",
+        `# Ordering\n\n${fence("index: root\ntype: context\n")}\nBoundary.\n\n## Refunds\n\n` +
+            `${fence("type: feature-flag\nkey: refunds\ndefault: off\n")}\nProse.\n\n## Refund notices\n\n` +
+            `${fence("type: setting\nkey: notifications.refund\nscope: user\ndefault: on\n")}\nProse.\n\n## Express refunds\n\n` +
+            `${fence("type: feature-flag\nscope: user\ndefault: enabled\n")}\nProse.\n\n## Refund limit\n\n` +
+            `${fence("type: setting\nkey: refunds.limit\nscope: everyone\n")}\nProse.\n\n## Cashier\n\n` +
+            `${fence("type: user\nrole: Cashier\nkey: cashier\n")}\nProse.\n`
+    );
+
+    check(
+        !find(issues, "error", "## Refunds (") && !find(issues, "error", "## Refund notices ("),
+        "a well-formed flag and setting are silent",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", "`feature-flag` chapter without a single `key`")),
+        "a flag without `key` is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`scope` on a chapter of type "feature-flag"')),
+        "`scope` on a flag is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`default` "enabled" on a feature flag')),
+        "a flag `default` outside on/off is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`scope` "everyone"')),
+        "a setting `scope` outside user/tenant/system is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`key` on a chapter of type "user"')),
+        "`key` on an actor is an error",
+        dump(issues)
+    );
+    check(
+        !find(issues, "error", '`role` on a chapter of type "user"'),
+        "an actor chapter is legal in `context.md`",
         dump(issues)
     );
 }

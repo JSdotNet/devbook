@@ -10,9 +10,11 @@ A devbook is five folders of Markdown chapters under one parent — `.devbook/ar
 addressable heading carrying a fenced `meta` block. `status` is one field with one ladder per
 folder; `approved` is a rung on top of every ladder, with `approved-by` and `approved-at`
 beside it, and the three editorial folders rest at `active` by omitting the field. A bounded
-context describes its skills or its features, says who acts in `actors.md` — `user`,
-`organisation`, `technical` — and keeps its vocabulary in `domain.md`: a term is a chapter or
-an `aliases` entry on the chapter it names, and there is no `naming.md`. The rule files under
+context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
+capabilities are switched by, and its actors and dependencies until they outgrow the file —
+describes its skills or its features, says who acts with `user`, `organisation`, `technical`
+chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
+the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
 ## Why
@@ -53,8 +55,8 @@ to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
 it is named after, carries that file's `type`, and keeps the chapter's heading and block as
 they stood, so the address changes and nothing else does. The generator reads a split file
 directly after its base, or in the base's slot when every chapter has moved out; `domain.md`
-alone can never be dropped, because it is the context's root document and holds the shared
-groupings that belong to no single aggregate. Flows split first, on 2026-09-08; the other
+alone can never be dropped, because it holds the shared groupings that belong to no single
+aggregate, and `context.md` does not split, because it is the root and small by construction. Flows split first, on 2026-09-08; the other
 four followed once the same pressure showed up in `domain.md`. A split file is a new path with
 a safe default — an unsplit context reads exactly as before — so it ships no migration.
 
@@ -74,8 +76,26 @@ issues a command — a `user` with an account and a `role` the authorization lay
 `organisation` the context acts toward, a `technical` actor that triggers a use case from
 outside — so the scheduler and the inbound callback are named somewhere. A persona is a UX
 archetype and belongs in `design/`. Another context or a system is a dependency and stays in
-`dependencies.md`, because one relationship described in two places is one description that
-goes wrong.
+the dependency tables, because one relationship described in two places is one description
+that goes wrong.
+
+**A switch is a chapter, and the boundary is a file.** A feature could name its flag in a
+`feature-flag` field and nothing could describe the flag — no default, no owner, no
+retirement — because the field held a bare key and the catalog was assumed to live outside the
+repository. A setting a person chooses in the product had no place at all. Both are
+context-scoped, named in the ubiquitous language, and made addressable by a plain identifier,
+which is what `role` already is for an actor; so they are chapters, `feature-flag` decided at
+release from configuration and `setting` decided at runtime by whoever its `scope` names, each
+carrying `key` as the code spells it, and the feature's field becomes a reference that resolves,
+produces an edge — `gated-by` for a flag, `configured-by` for a setting — and is held to the
+target's type. A setting that enables a capability is not a third type beside one that tunes it:
+who decides is the distinction, on/off is a value, and the feature's `setting` reference is what
+records that the capability hangs on it. The two are two types and one sync kind, `setting`,
+because the evidence is the same read-and-branch and only who holds the key differs. They sit in `context.md`, which also takes the boundary prose `domain.md`
+opened with — what the context is before what it models, read first — and the actor chapters
+and dependency tables while they are small: a kind lives in its own file or in `context.md`,
+never both, so a small context is three files in the outline instead of six, and a large one
+splits without changing what any chapter is. Contract 11, with migration `011-context-md`.
 
 **An `ai/` chapter is placed on the DevOps loop by its own `stage`, from a fixed vocabulary.**
 The folder was already organised by the flow, but the placement was the file: a chapter sat
@@ -118,6 +138,12 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
   file's `status` as the stage's rating — the shape this record's first draft took the same
   day; a repository-defined stage set; a `phase` field beside `stage`; a `stage` on `tech/`
   chapters; a `since` beside `date`; a structured `adopted-by`.
+- A `settings.md` beside the others, adding a file to every context's outline; a `boundary.md`
+  name; keeping `feature-flag` a bare key and validating it against nothing; one chapter type
+  with a `level` field, which would put the who-decides question on every flag; a
+  `feature-setting` type for the setting that enables a capability, which would split settings
+  by the shape of their value; folding `actors.md` and `dependencies.md` by migration, which is
+  a reading and not a rewrite.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -130,6 +156,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 | Date | Change |
 | --- | --- |
 | 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
+| 2026-09-18 | `context.md` is a context's root with `feature-flag` and `setting` chapters; `feature-flag` on a feature is a reference and `setting` joins it; actors and dependencies live there until they outgrow it. Contract 11, migration 011. |
 | 2026-09-18 | `domain`, `features`, `skills`, and `model` split by chapter as `flow` already did; a split file reads after its base. |
 | 2026-09-17 | `stakeholders.md` becomes `actors.md` with `user`, `organisation`, `technical` and a `role` field. |
 | 2026-09-17 | `naming.md` is no longer a file kind; a term is a chapter or an alias. Contract 10, migration 010. |
