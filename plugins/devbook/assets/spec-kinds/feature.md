@@ -10,7 +10,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature` |
 | File | `.domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `features.md` and `domain.md` — the aggregates the capability exercises — and `actors.md` where the context has one; when applying, every chapter in `depends-on` and every `related` `domain.md` chapter too |
+| Context to load | The target context's `features.md`, `context.md` — the switches and the actors — and `domain.md`, the aggregates the capability exercises, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
@@ -24,14 +24,16 @@ delivers. A chapter that lists routes has captured the wrong thing; a capability
 that cannot be stated without naming a technical artifact is an implementation
 detail, not a feature.
 
-Feature chapters are the only `domain/` chapters that carry `depends-on` and
-`feature-flag`. `feature-flag` is an **identity** link only — this chapter and
-that flag are the same capability — and never a status mapping in either
-direction: a flag at full rollout does not make a chapter `active`, and a `draft`
-chapter says nothing about the flag. `depends-on` records delivery ordering
-between features, not code coupling: two features sharing an aggregate are not
-dependent; one that cannot ship until another exists is. Omit either field when
-it has no value.
+Feature chapters are the only `domain/` chapters that carry `depends-on`,
+`feature-flag`, and `setting`. `feature-flag` and `setting` are references to
+the switch chapters in the context's `context.md` — the `setting` kind covers
+those — and each is an **identity** link only: this chapter and that switch are
+the same capability, never a status mapping in either direction. A flag at full
+rollout does not make a chapter `active`, and a `draft` chapter says nothing
+about the flag. `depends-on` records delivery ordering between features, not
+code coupling: two features sharing an aggregate are not dependent; one that
+cannot ship until another exists is. Omit any of the three when it has no
+value.
 
 ## Mapping
 
@@ -43,10 +45,10 @@ it has no value.
 | Screenshots | One per distinguishable step, as report evidence behind the description and the breakdown | — |
 | Business value | Why it exists, as far as code, tests, and observed behaviour support it; otherwise an open question, never an invented rationale | — |
 | Sub-features | The parts a user would name separately, each a `###` with `type: sub-feature` | Each delivered, or explicitly deferred — check which already exist |
-| `feature-flag` | The flag key actually checked in code to gate the capability; several when several together deliver it | The named key existing and gating the capability — check the flag catalog and the checks in code |
+| `feature-flag`, `setting` | The switch chapter whose `key` is the one actually checked in code to gate the capability; several when several together deliver it — a key with no chapter is a `setting`-kind capture first | The switch existing at the level its chapter names and gating the capability — check `context.md` and the checks in code |
 | `depends-on` | A genuine ordering constraint between features, not a code reference | Every prerequisite delivered before this one starts — check the referenced chapters' own counterparts |
 | `related` | The `domain.md` aggregates, events, and services the capability exercises | Those chapters present and correct, with their counterparts |
-| Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of a `user` chapter in `actors.md`, never a line in `features.md`; the checked name is that chapter's `role` | The `user` whose `role` matches the check and whose chapter points at this feature, holding the right that chapter states — check `actors.md` and the repository's authorization configuration |
+| Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of a `user` chapter in `context.md` or `actors.md`, never a line in `features.md`; the checked name is that chapter's `role` | The `user` whose `role` matches the check and whose chapter points at this feature, holding the right that chapter states — check the actor chapters and the repository's authorization configuration |
 
 ## Capturing — `sync-specs`: run the application
 
@@ -94,7 +96,8 @@ check cannot supply are needed before one is written.
 Restate everything as what the product lets someone do, in the context's terms,
 preferring the observed flow over the code's structure where they suggest
 different breakdowns. Draft with `type: feature` or `type: sub-feature`, and set
-`feature-flag` and `depends-on` only from a real key and a real ordering.
+`feature-flag`, `setting`, and `depends-on` only from a real switch chapter
+and a real ordering — a key with no chapter is a `setting`-kind capture first.
 
 ## Applying — `apply-change`
 
@@ -107,7 +110,7 @@ substance, since the chapter is written in business language. The invariants
 come from the `related` `domain.md` chapters, not from the feature chapter:
 quote their `### Invariants` rows with each `Enforced at`, and report `open`
 rows as decisions the feature depends on. The actor comes from
-`actors.md` where the context has one — the brief carries the `role` and
+the actor chapters where the context has them — the brief carries the `role` and
 the right, so the build authorizes the capability rather than meeting the
 question afterwards; a right the chapter leaves open is reported like an `open`
 row, never guessed.
@@ -132,7 +135,7 @@ invariants from the `related` chapters hold.
   not brief a feature whose prerequisites are unbuilt without reporting the
   chain.
 - Do not invent a business rationale or invariants for a feature.
-- Do not write out an empty `feature-flag`, `depends-on`, or `related`.
+- Do not write out an empty `feature-flag`, `setting`, `depends-on`, or `related`.
 - Do not capture from code alone when the app can be started, and do not claim
   the flow was observed when it was not.
 - Do not run the feature against a shared, staging, or production environment;

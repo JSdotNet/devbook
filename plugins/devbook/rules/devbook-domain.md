@@ -34,15 +34,19 @@ across `domain/`, ADRs, and code module names where practical.
 .devbook/domain/
   context-map.md
   <bounded-context-name>/
+    context.md       # the boundary: what the context is responsible for, its
+                     # feature flags and settings, and — until they outgrow
+                     # it — its actors and its dependencies
     domain.md
-    actors.md        # who works with this context: users, organisations,
-                     # and the technical actors that trigger it
+    actors.md        # optional: the actors, once context.md is too small
+                     # for them
     features.md      # what the context lets a user do, in business language
     skills.md        # the alternative to features.md, for a repository whose
                      # product is procedures rather than a running application
     model.md
     flow.md          # optional: when the context has lifecycle/process flows
-    dependencies.md
+    dependencies.md  # optional: the dependencies, once context.md is too
+                     # small for them
     domain.<name>.md    # optional: one chapter split out of the file it is
     features.<name>.md  #   named after — an aggregate or domain service, a
     skills.<name>.md    #   feature, a skill, one aggregate's structure, one
@@ -50,10 +54,44 @@ across `domain/`, ADRs, and code module names where practical.
     flow.<name>.md      #   enough to stand alone. See "A split file" below.
 ```
 
-When starting a new bounded context, create the folder with `domain.md`,
-`actors.md`, `model.md`, `dependencies.md`, and one of `features.md` or
-`skills.md`, using the templates below. Add `flow.md` when the context has
-lifecycle or process flows.
+When starting a new bounded context, create the folder with `context.md`,
+`domain.md`, `model.md`, and one of `features.md` or `skills.md`, using the
+templates below. Add `flow.md` when the context has lifecycle or process
+flows, and split `actors.md` or `dependencies.md` out of `context.md` only
+when it has grown past what one file reads well with.
+
+**`context.md` is the boundary, and the context's root document.** It opens
+with what the context is responsible for — inside the boundary, outside it,
+and where the outside is answered — as prose under the file-level block, with
+no chapter of its own. After that come the chapters that describe the context
+as a whole rather than its model: the feature flags its capabilities are
+switched by, the settings a person chooses, its actors, and its dependencies. A reader
+arrives here first and leaves with the shape of the context before opening
+`domain.md`, which is the model and nothing else.
+
+**A kind lives in its own file or in `context.md`, never both.** Actor
+chapters (`user`, `organisation`, `technical`) sit in `context.md` until the
+context has enough of them that the boundary file stops being about the
+boundary; then all of them move to `actors.md`. The dependency tables sit
+under one structural `## Dependencies` section in `context.md`, and move whole
+to `dependencies.md` the same way. A chapter's type says what it is wherever
+it sits, so a move changes addresses and nothing else; a context with an actor
+in each place has split one answer across two files, exactly as one holding
+both `features.md` and `skills.md` has.
+
+**A flag is decided at release; a setting is decided by a person.** A
+`feature-flag` chapter is a switch decided at release, from configuration: the
+team turns it on for an environment, a ring, or everyone, and retires it once
+the capability is simply there. A `setting` chapter is a value a person
+chooses at runtime — a user for themselves, an administrator for a tenant, an
+operator for the system, which is what its `scope` records. Whether that value
+turns a capability on or shapes how it behaves is not a second kind: a setting
+that enables a feature is a setting whose values are `on` and `off`, and the
+feature chapter's `setting` reference is what says the capability hangs on it.
+Both carry `key`, the identifier as the code spells it, which is what lets a
+flag check or a configuration read found in code resolve to a chapter instead
+of to prose. A feature points at what gates or configures it through
+`feature-flag` or `setting`.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -61,9 +99,10 @@ of repository, so a context holding both has split one answer across two files.
 Pick per context, not per repository, though in practice a repository lands on
 one of them throughout.
 
-**`actors.md` says who; the rest of the context says what.** No other chapter
-states which role the someone in "the case worker files a request" is. This
-file is that record: one flat `##` chapter per actor, headed by its name alone,
+**The actor chapters say who; the rest of the context says what.** No other
+chapter states which role the someone in "the case worker files a request" is.
+They are that record — in `context.md`, or in `actors.md` once they have
+outgrown it: one flat `##` chapter per actor, headed by its name alone,
 with `type` carrying which of three kinds it is. A `user` is a person with an
 account who operates the context — it needs a right, and it issues the actions
 the feature chapters describe. An `organisation` is a person or body the context
@@ -110,10 +149,11 @@ it did inside that file: same heading, same block, same sub-chapters. Split when
 the file stops being readable, or when readers arrive looking for one chapter
 rather than for the context; keep the base file for the chapters still better
 read together. `features.md`, `skills.md`, `model.md`, and `flow.md` may be
-dropped once every chapter is split out; `domain.md` never is, because it is the
-context's root document and holds what belongs to no single aggregate — the
-`## Shared Value Objects`, `## Shared Enums`, and `## Ubiquitous Language`
-groupings. A split chapter moves rather than copies: `## Order` lives at
+dropped once every chapter is split out; `domain.md` never is, because it holds
+what belongs to no single aggregate — the `## Shared Value Objects`,
+`## Shared Enums`, and `## Ubiquitous Language` groupings — and `context.md`
+does not split at all, because it is the root document and what it holds is
+small by construction. A split chapter moves rather than copies: `## Order` lives at
 `domain.order.md#order` and nowhere else in the context. Wherever a rule or a
 skill names `domain.md`, `features.md`, `skills.md`, `model.md`, or `flow.md`,
 it means that file or any split file of it.
@@ -121,11 +161,11 @@ it means that file or any split file of it.
 Reading order comes from this convention, not from a metadata field and not from
 filenames. `context-map.md` is `domain/`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
-`domain.md` is the root document and the rest read in the order listed in the
-tree above — `actors.md`, `skills.md` or `features.md`, `model.md`,
-`flow.md`, `dependencies.md` — with a split file read directly after the file it
-is named after, in filename order among its siblings, and in that file's place
-when the file itself is gone.
+`context.md` is the root document and the rest read in the order listed in the
+tree above — `domain.md`, `actors.md`, `skills.md` or `features.md`,
+`model.md`, `flow.md`, `dependencies.md` — with a split file read directly
+after the file it is named after, in filename order among its siblings, and in
+that file's place when the file itself is gone.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
@@ -137,6 +177,30 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Captures bounded-context relationships in a context map.
   - Records published languages/contracts used across context boundaries.
   - States strategic rules that constrain cross-context collaboration.
+- **context.md** — The bounded context as a whole: its boundary, its
+  switches, and — until they outgrow it — its actors and dependencies. The
+  context's root document.
+  - Opens with the boundary: what the context is responsible for, what is
+    inside it, what is outside it and where that is answered instead. Prose
+    under the file-level block, no chapter of its own.
+  - **`type: feature-flag`** — a capability switch decided at release, from
+    configuration. Carries `key` (the flag key the code checks) and, where the
+    catalog states one, `default: on` or `off`. The prose says who owns the
+    rollout, what turning it on changes, and when the flag is retired.
+  - **`type: setting`** — a value a person chooses at runtime, whether it
+    turns a capability on or shapes how it behaves. Carries `key` (the setting
+    key the code reads), `scope` (`user`, `tenant`, or `system` — who may
+    change it), and `default`, the value the product ships with. The prose
+    says what each value does.
+  - Both are headed by their name in business language, never the key; the
+    key is the field. Their `related` points at the feature chapters they gate
+    or configure, and those chapters point back through `feature-flag` or
+    `setting`.
+  - The actor chapters, exactly as `actors.md` describes them, when the
+    context keeps them here.
+  - A structural `## Dependencies` section, last, holding the tables
+    `dependencies.md` describes, when the context keeps them here. It carries
+    no metadata block, like `flow.md`'s sections.
 - **domain.md** — One chapter per Aggregate, Domain Service, Domain Event, or
   Shared Value Objects / Shared Enums grouping in the context.
   - Aggregate chapters include sub-chapters for their owned Entities, Value
@@ -152,7 +216,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     aggregate that uses them.
 - **actors.md** — Who works with this bounded context: one flat chapter per
   actor, headed by its name alone, with `type` carrying which of the three
-  kinds it is.
+  kinds it is. The chapters live in `context.md` until they outgrow it; this
+  file exists only once they have moved, and then holds all of them.
   - **`type: user`** — a person with an account who operates the context.
     Four beats, in order, skipping any the context has no answer for: who it
     is, in one sentence, naming the term the screens use where it differs from
@@ -168,15 +233,15 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - **`type: technical`** — a system or timer that triggers a use case from
     outside: a scheduler, an inbound callback, the system account. The same
     three beats: what it is, what it triggers here, and how the model records
-    it. Its contract, where it has one, stays in `dependencies.md`.
+    it. Its contract, where it has one, stays in the dependency tables.
   - A beat the repository cannot answer is left out and recorded as an
     `annotation` fence, never filled in with a plausible sentence. "Nobody has
     stated which right this needs" is information; an invented right is not.
-  - Another bounded context or a module is a dependency and belongs in
-    `dependencies.md`, never here. Name a bank, a portal, or a scheduler here
+  - Another bounded context or a module is a dependency and belongs in the
+    dependency tables, never here. Name a bank, a portal, or a scheduler here
     only for what the context needs from it or what it triggers, and leave its
-    contract to `dependencies.md`. A tenant is not an actor either: it appears
-    as the administrator user that changes settings.
+    contract to the tables. A tenant is not an actor either: it appears as the
+    administrator user that changes settings.
   - Rights are stated here, not argued. Why a right is split — separation of
     duties, four eyes — is a modeling decision and belongs in `domain.md`, beside
     the invariant it protects.
@@ -217,13 +282,15 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   the flow file draws how it moves — and each carries a `related` reference to
   the other.
 - **dependencies.md** — Outbound dependencies on other bounded contexts or
-  modules, and known inbound dependents.
+  modules, and known inbound dependents. The tables live under
+  `## Dependencies` in `context.md` until they outgrow it; this file exists
+  only once they have moved.
   - Use explicit DDD relationship semantics (`ACL`, `Customer/Supplier`,
     `Partnership`, `OHS + Published Language`, etc.) instead of ad hoc
     integration prose.
   - For each relationship, document DDD pattern, integration mechanism,
     contract, and why/what the dependency relies on.
-  - An `actors.md` chapter never restates one of these relationships: another
+  - An actor chapter never restates one of these relationships: another
 
     bounded context or a module is a dependency, not an actor, and a
 
@@ -242,23 +309,25 @@ instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
-  `features.md` or `skills.md`, every User, Organisation, and Technical chapter in
-  `actors.md`, and every Term chapter under `domain.md`'s
+  `features.md` or `skills.md`, every Feature Flag and Setting chapter in
+  `context.md`, every User, Organisation, and Technical chapter in
+  `context.md` or `actors.md`, and every Term chapter under `domain.md`'s
   `## Ubiquitous Language` grouping must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
-  `domain.md`, `actors.md`, `features.md` or `skills.md`, `model.md`,
-  `flow.md`, `dependencies.md`, and each split file (when present) —
-  must also carry the file-level
-  metadata block described in
-  `devbook-chapter-metadata.md`, placed directly
-  under the file's top-level `#` heading. This applies even to
-  `context-map.md`, `model.md`, `flow.md`, their split files, and
+  `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
+  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present), and
+  each split file (when present) — must also carry the file-level metadata
+  block described in `devbook-chapter-metadata.md`, placed directly under the
+  file's top-level `#` heading. This applies even to `context-map.md`,
+  `model.md`, `flow.md`, their split files, and
   `dependencies.md`, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
+  `context.md` declares `index: root`, so that it sorts first even in a
+  context whose `domain.md` declared it before contract 11.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. This folder describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
@@ -279,8 +348,8 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `user`, `organisation`, `technical`, `term` |
-  | File | `context-map`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
+  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
+  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -288,8 +357,8 @@ instructions.
   relationship would make every consumer of the graph branch on the filename to
   learn nothing.
 
-  Each file's `type` matches its filename: `domain.md` is `type: domain`,
-  `features.md` is `type: features`, `skills.md` is `type: skills`, and so on,
+  Each file's `type` matches its filename: `context.md` is `type: context`,
+  `domain.md` is `type: domain`, `features.md` is `type: features`, and so on,
   with `context-map.md` at the `domain/` root carrying `type: context-map`. A
   split file carries the type of the file it is named after — `domain.order.md`
   is `type: domain` — because the suffix narrows the scope and not the kind.
@@ -329,32 +398,49 @@ instructions.
   `depends-on: [.devbook/domain/order-management/features.md#refunds]`.
   `domain.md` chapters (Aggregates, Domain Services, Domain Events, Shared
   Value Objects/Enums) do not use `depends-on` — they describe standing
-  structure, and their relationships belong in `model.md`/`dependencies.md` or
-  the `related` field instead.
-- `features.md` and `skills.md` Feature/Sub-feature chapters may carry an
-  additional `feature-flag` field: the key (or keys) of the application feature flag that
-  delivers this chapter in the running product, e.g. `feature-flag: inbox-pane`
-  or, when several flags together deliver one chapter,
-  `feature-flag: [inbox-pane, inbox-filters]`. One flag may equally appear on
-  several chapters. Unlike `related`/`depends-on`, entries are plain
-  application identifiers, not `<path>#<heading-slug>` references — the flag
-  lives in the application's own catalog, not in this repository, so the field
-  produces no graph edge and the key itself is never validated here. Omit the
-  field when the chapter has no flag. `domain.md` chapters and `term` chapters do
-  not use `feature-flag`: a flag delivers a capability, not a structural
-  element or a term.
+  structure, and their relationships belong in `model.md`, the dependency
+  tables, or the `related` field instead.
+- `features.md` and `skills.md` Feature/Sub-feature chapters may carry a
+  `feature-flag` field and a `setting` field: `<path>#<heading-slug>`
+  references to the `feature-flag` chapters that gate this capability and the
+  `setting` chapters that gate or configure it, in the context's `context.md`,
+  e.g.
+  `feature-flag: .devbook/domain/inbox/context.md#inbox-pane` or, when several
+  together deliver one chapter,
+  `feature-flag: [.devbook/domain/inbox/context.md#inbox-pane, .devbook/domain/inbox/context.md#inbox-filters]`.
+  One flag or setting may equally be pointed at by several chapters. A
+  `feature-flag` reference produces a `gated-by` edge, a `setting` reference a
+  `configured-by` edge, and each must resolve to a chapter of the matching
+  type — a `feature-flag` reference to an aggregate is an error. Omit either
+  field when the chapter has nothing to point at. `domain.md` chapters and
+  `term` chapters use neither: a flag or a setting belongs to a capability,
+  not to a structural element or a term.
 
-  This link is an **identity** link only — it says "this chapter and that flag
-  are the same capability". It is deliberately **not** a status mapping. The
-  `status` values above describe how settled the written model is; a feature
-  flag's own maturity describes whether the running behaviour can be relied on.
-  Those answer different questions, so do not translate one vocabulary into the
-  other, and do not infer a chapter's `status` from its flag's maturity or the
-  reverse.
-- `actors.md` chapters may carry a `role` field: the role, claim, or group name
+  Before contract 11 `feature-flag` held the bare application key, because the
+  flag's catalog lived outside the repository. The catalog is `context.md` now;
+  the key sits on the switch's own chapter, and a bare key in the field is an
+  error that names the `011-context-md` migration.
+
+  Either link is an **identity** link only — it says "this chapter and that
+  switch are the same capability". It is deliberately **not** a status mapping.
+  The `status` values above describe how settled the written model is; a
+  flag's rollout or a setting's default describes whether the running behaviour
+  can be relied on. Those answer different questions, so do not translate one
+  vocabulary into the other, and do not infer a chapter's `status` from its
+  switch or the reverse.
+- `context.md` Feature Flag and Setting chapters carry `key`: the identifier
+  as the code spells it, a single plain string — `key: checkout.express` — and
+  never a reference. It is what a flag check or a configuration read found in
+  code resolves to, so a switch chapter without one is an error. Both may
+  carry `default`: `on` or `off` for a flag, the shipped value for a setting.
+  A Setting chapter also carries `scope`, one of `user`, `tenant`, `system` —
+  who may change it at runtime. A flag has no `scope`: it is decided at
+  release, and writing one on it is an error. No other chapter carries any of
+  the three.
+- Actor chapters may carry a `role` field: the role, claim, or group name
   the authorization layer checks for this actor, as the code spells it — e.g.
   `role: Consultant` or, where one actor holds several, `role: [Consultant,
-  TeamLead]`. Like `feature-flag`, entries are plain application identifiers,
+  TeamLead]`. Like `key`, entries are plain application identifiers,
   not `<path>#<heading-slug>` references: the name lives in the repository's
   authorization configuration, so the field produces no graph edge and the value
   is never validated here. It is the fourth beat made addressable — a role check
@@ -363,7 +449,8 @@ instructions.
   no other chapter type carries it. `role` here is the RBAC role a right is
   granted to, never the role a domain object plays in a relationship — that is
   modelled in `domain.md`.
-- In `dependencies.md`, use explicit DDD relationship terminology for each
+- In the dependency tables — under `## Dependencies` in `context.md` or in
+  `dependencies.md` — use explicit DDD relationship terminology for each
   cross-context row when applicable (for example: `ACL`,
   `Customer/Supplier`, `Partnership`, `OHS + Published Language`) and identify
   the contract/published language entry used by consumers.
@@ -466,6 +553,82 @@ each one.>
 
 <Rules that constrain cross-context collaboration.>
 ```
+
+### context.md
+
+```markdown
+# <Bounded Context Name>
+
+\`\`\`meta
+status: draft
+index: root
+type: context
+\`\`\`
+
+What this context is responsible for, in one or two sentences.
+
+Inside the boundary: <the things this context owns and decides>.
+
+Outside it: <what it deliberately does not own, and which context answers it
+instead>.
+
+## <Switch Name>
+
+\`\`\`meta
+status: draft
+type: feature-flag
+key: <flag.key.as.the.code.checks.it>
+default: off
+related: [.devbook/domain/<context>/features.md#<heading-slug>]
+\`\`\`
+
+Decided at release, from configuration. Who owns the rollout, what turning it
+on changes, and when the flag is retired.
+
+## <Setting Name>
+
+\`\`\`meta
+status: draft
+type: setting
+key: <setting.key.as.the.code.reads.it>
+scope: user
+default: <the shipped value>
+related: [.devbook/domain/<context>/features.md#<heading-slug>]
+\`\`\`
+
+Chosen at runtime by whoever `scope` names. What each value does — whether it
+turns the capability on or shapes how it behaves.
+
+## <User Name>
+
+\`\`\`meta
+status: draft
+type: user
+role: <RoleNameAsTheAuthorizationLayerSpellsIt>
+related: [.devbook/domain/<context>/features.md#<heading-slug>]
+\`\`\`
+
+The actor chapters, exactly as in `actors.md` below, while the context keeps
+them here.
+
+## Dependencies
+
+### Outbound dependencies
+
+| Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
+|---|---|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <event, API call, registry lookup, id link, etc.> | <published language / contract chapter reference> | <reason this context needs it> |
+
+### Inbound dependents (known)
+
+| Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
+|---|---|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <how the consumer integrates> | <published language / contract chapter reference> | <what would break if changed> |
+```
+
+`## Dependencies` is the file's one structural section: it carries no
+metadata block, and it comes last. The tables are the ones `dependencies.md`
+describes, one heading level down.
 
 ### domain.md
 
@@ -636,10 +799,14 @@ sub-sections of that one chapter rather than addressable chapters, so they carry
 no metadata block. `build.mjs --check` warns on each of them, as it does on
 every structural heading: the validator cannot know which headings a folder means
 to be addressable, so the warning is expected here and never driven to zero.
-`## Rights` in `actors.md` is the same case one level up — a structural
-section of the file rather than an addressable chapter — and warns the same way.
+`## Rights` in `actors.md` and `## Dependencies` in `context.md` are the same
+case one level up — structural sections of the file rather than addressable
+chapters — and warn the same way.
 
 ### actors.md
+
+Only once the actor chapters have outgrown `context.md`; then every one of them
+moves here.
 
 ```markdown
 # <Bounded Context Name>
@@ -651,8 +818,8 @@ type: actors
 
 > Who works with this bounded context: the users that operate it, the
 > organisations it acts toward, and the technical actors that trigger it.
-> Another bounded context or module is a dependency and belongs in
-> `dependencies.md`, never here.
+> Another bounded context or module is a dependency and belongs in the
+> dependency tables, never here.
 
 ## <User Name>
 
@@ -689,11 +856,11 @@ and how it appears in the model.
 \`\`\`meta
 status: draft
 type: technical
-related: [.devbook/domain/<context>/dependencies.md#<heading-slug>]
+related: [.devbook/domain/<context>/context.md#dependencies]
 \`\`\`
 
 What this actor is, what it triggers in this context, and how the model records
-it. Its contract lives in `dependencies.md`.
+it. Its contract lives in the dependency tables.
 
 ## Rights
 
@@ -724,7 +891,8 @@ type: features
 \`\`\`meta
 status: draft
 type: feature
-feature-flag: <application-feature-key>
+feature-flag: [.devbook/domain/<context>/context.md#<switch-heading-slug>]
+setting: [.devbook/domain/<context>/context.md#<setting-heading-slug>]
 \`\`\`
 
 Short description of the capability and the business value it delivers.
@@ -886,6 +1054,9 @@ related: [.devbook/domain/<context>/skills.md#<skill-name>]
 ```
 
 ### dependencies.md
+
+Only once the dependency tables have outgrown `context.md`'s `## Dependencies`
+section; then the section moves here whole.
 
 ```markdown
 # <Bounded Context Name>

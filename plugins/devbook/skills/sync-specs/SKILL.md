@@ -1,6 +1,6 @@
 ---
 name: sync-specs
-description: 'Bring a devbook chapter level with the code that implements it: read the implementation and its unit tests and write or refresh the chapter, for any of five kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), the building block view in arc42/, or a component guideline in design/. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Routes the write through the folder''s flow and never edits source or tests. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without writing (verify-change).'
+description: 'Bring a devbook chapter level with the code that implements it: read the implementation and its unit tests and write or refresh the chapter, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Routes the write through the folder''s flow and never edits source or tests. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without writing (verify-change).'
 ---
 
 # sync-specs
@@ -14,7 +14,8 @@ repeated here.
 **Kind.** One kind and one target per run. The chapter's `type` decides it —
 `aggregate` (with its owned `entity`, `value-object`, `enum`, the shared
 groupings, and its `domain-event`s), `domain-service` (with the events it
-raises itself), `feature` and `sub-feature` — and the file decides it where the
+raises itself), `feature` and `sub-feature`, `feature-flag` and `setting` (one
+kind, `setting`, for both levels) — and the file decides it where the
 folder has no `type`: `.arc42/05-building-block-view.md` is `building-block`,
 `.design/component-libraries.md` is `design-component`. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape

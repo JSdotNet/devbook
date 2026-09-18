@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#annotation", ".devbook/domain/devbook-collaboration/domain.md", ".devbook/domain/devbook-collaboration/dependencies.md", ".devbook/domain/plugin-authoring/domain.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#annotation", ".devbook/domain/devbook-collaboration/domain.md", ".devbook/domain/devbook-collaboration/context.md#dependencies", ".devbook/domain/plugin-authoring/domain.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 A review note is a fenced `annotation` block in the chapter, beside the passage it comments

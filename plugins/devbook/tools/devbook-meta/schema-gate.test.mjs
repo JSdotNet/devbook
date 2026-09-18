@@ -43,19 +43,28 @@ try {
         "utf8"
     );
 
-    // A chapter reference pasted into `feature-flag`, which takes application
-    // flag keys and produces no edge — so the graph build alone never sees it.
-    // Written on a `feature` chapter, where the field is in scope, so the only
-    // thing wrong with it is the value.
+    // `feature-flag` resolving to an aggregate instead of a `feature-flag`
+    // chapter: the reference is well-formed and resolves, so only the graph
+    // build — which knows the target's kind — can see what is wrong with it.
+    // Beside it a `setting` reference that resolves correctly and must produce
+    // a `gated-by` edge. Written on a `feature` chapter, where both fields are
+    // in scope.
     await writeFile(
         path.join(repoRoot, ".devbook", "domain", "ordering", "features.md"),
         `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
-            `${fence("type: feature\nfeature-flag: [.domain/ordering/domain.md#order]\n")}\n` +
+            `${fence("type: feature\nfeature-flag: [.devbook/domain/ordering/domain.md#order]\nsetting: .devbook/domain/ordering/context.md#refund-notices\n")}\n` +
+            `Prose.\n`,
+        "utf8"
+    );
+    await writeFile(
+        path.join(repoRoot, ".devbook", "domain", "ordering", "context.md"),
+        `# Ordering\n\n${fence("index: root\ntype: context\n")}\nBoundary.\n\n## Refund notices\n\n` +
+            `${fence("type: setting\nkey: notifications.refund\nscope: user\n")}\n` +
             `Prose.\n`,
         "utf8"
     );
 
-    const { problems } = await buildGraph(repoRoot);
+    const { problems, edges } = await buildGraph(repoRoot);
 
     check(
         Boolean(find(problems, "error", 'has status "nonsense-rung"')),
@@ -64,9 +73,15 @@ try {
     );
 
     check(
-        Boolean(find(problems, "error", "`feature-flag` entry")),
-        "a chapter reference inside `feature-flag` is an error on the gate path",
+        Boolean(find(problems, "error", "resolves to a `aggregate` chapter, not a `feature-flag` chapter")),
+        "a `feature-flag` reference resolving to the wrong kind is an error on the gate path",
         JSON.stringify(problems, null, 2)
+    );
+
+    check(
+        edges.some((e) => e.type === "configured-by" && e.target === ".devbook/domain/ordering/context.md#refund-notices"),
+        "a `setting` reference produces a `configured-by` edge",
+        JSON.stringify(edges.filter((e) => e.type === "configured-by"), null, 2)
     );
 
     check(

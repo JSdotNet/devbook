@@ -118,9 +118,18 @@ const TYPE_BY_FOLDER = {
             "organisation",
             "technical",
             "term",
+            // `context.md`: a `feature-flag` is a switch decided at release,
+            // from configuration; a `setting` is a value a person chooses at
+            // runtime, whoever its `scope` names, whether it turns a capability
+            // on or shapes it. Both carry `key` — the identifier as the code
+            // spells it — and are what a feature chapter's `feature-flag` and
+            // `setting` references resolve to.
+            "feature-flag",
+            "setting",
         ],
         file: [
             "context-map",
+            "context",
             "domain",
             "actors",
             "features",
@@ -203,6 +212,14 @@ const COMMON_OPTIONAL_FIELDS = [
     ...APPROVAL_FIELDS,
     ...REVIEW_FIELDS,
 ];
+
+// A feature flag is a switch, so its `default` is one of two words. A setting's
+// `default` is whatever value the product ships with and is not enumerated.
+const FLAG_DEFAULTS = ["on", "off"];
+
+// Who may change a setting at runtime: the person it belongs to, an
+// administrator for the whole tenant, or an operator for the whole system.
+const SETTING_SCOPES = ["user", "tenant", "system"];
 
 // `roadmap` entries are lowercase kebab-case tag slugs, not chapter references.
 const ROADMAP_TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -307,7 +324,7 @@ const REMOVED_FIELDS = {
 };
 
 const FOLDER_EXTRA_FIELDS = {
-    domain: ["depends-on", "aliases", "feature-flag", "role"],
+    domain: ["depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope"],
     arc42: [],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
@@ -325,7 +342,11 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "depends-on",
     "aliases",
     "feature-flag",
+    "setting",
     "role",
+    "key",
+    "default",
+    "scope",
     "version",
     "alternatives",
 ];
@@ -345,16 +366,26 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
 // that has no chapter to carry them, so the field is legal on any chapter and
 // only the file-level prohibition above applies.
 const FIELD_TYPE_SCOPE = {
-    // `.domain`: delivery order and the feature flag both belong to a
-    // capability. `domain.md` chapters describe standing structure and relate
-    // through `model.md`, `dependencies.md`, and `related` instead.
+    // `.domain`: delivery order, the feature flag that gates a capability,
+    // and the setting that gates or configures it all belong to that
+    // capability. `domain.md` chapters describe standing structure and
+    // relate through `model.md`, the context's dependencies, and `related`
+    // instead.
     // `role` is the authorization role an actor holds: the fourth beat of a
     // `user` chapter made addressable. An `organisation` or `technical` actor
-    // rarely has one but may; nothing outside `actors.md` does.
+    // rarely has one but may; no other chapter does.
+    // `key` and `default` describe the switch itself, so they sit on the
+    // `feature-flag` and `setting` chapters a feature points at; `scope` says
+    // who may change a setting, and a flag has no such person — it is decided
+    // at release.
     domain: {
         "depends-on": ["feature", "sub-feature"],
         "feature-flag": ["feature", "sub-feature"],
+        setting: ["feature", "sub-feature"],
         role: ["user", "organisation", "technical"],
+        key: ["feature-flag", "setting"],
+        default: ["feature-flag", "setting"],
+        scope: ["setting"],
     },
     arc42: {},
     tech: {},
@@ -1273,17 +1304,50 @@ export function validateDocument(relPath, markdown) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
-        // A feature flag key names an application feature in the consuming
-        // repository, whose constants this tooling cannot see — so the key
-        // itself is deliberately never validated. What is checked is that it is
-        // a key at all: an entry carrying `#` or `/` is a chapter or file
-        // reference pasted into a field that produces no edge.
-        if (kind === "domain" && chapter.meta["feature-flag"] != null) {
-            for (const key of toList(chapter.meta["feature-flag"])) {
-                if (key.includes("#") || key.includes("/")) {
+        // `feature-flag` and `setting` on a feature point at the chapter that
+        // describes the switch, in the context's `context.md`. Until contract
+        // 10 `feature-flag` held the bare application key; a bare key is now
+        // the shape `011-context-md` rewrites, so it is reported by name.
+        // Whether the reference resolves, and to a chapter of the right type,
+        // is the graph build's to say.
+        if (kind === "domain") {
+            for (const field of ["feature-flag", "setting"]) {
+                for (const entry of toList(chapter.meta[field])) {
+                    if (!entry.includes("#")) {
+                        issues.push({
+                            severity: "error",
+                            message: `${label} has \`${field}\` entry "${entry}", which is not a \`<path>#<slug>\` reference — the field points at the \`${field}\` chapter in the context's \`context.md\` that carries the key. A bare key is the pre-011 shape; run the \`011-context-md\` migration.`,
+                        });
+                    }
+                }
+            }
+        }
+
+        // A switch chapter carries the identifier the code checks. Without
+        // `key` there is nothing for a flag check or a configuration read to
+        // resolve to, which is the one thing the chapter is for.
+        if (kind === "domain") {
+            const declared = resolveType(kind, chapter.meta);
+            if (declared === "feature-flag" || declared === "setting") {
+                const key = chapter.meta.key;
+                if (key == null || key === "" || Array.isArray(key)) {
                     issues.push({
                         severity: "error",
-                        message: `${label} has \`feature-flag\` entry "${key}" — feature flag keys are application identifiers, not \`<path>#<slug>\` chapter references.`,
+                        message: `${label} is a \`${declared}\` chapter without a single \`key\` — write the identifier as the code spells it.`,
+                    });
+                }
+                const fallback = chapter.meta.default;
+                if (declared === "feature-flag" && fallback != null && !FLAG_DEFAULTS.includes(fallback)) {
+                    issues.push({
+                        severity: "error",
+                        message: `${label} has \`default\` "${fallback}" on a feature flag, expected one of: ${FLAG_DEFAULTS.join(", ")}.`,
+                    });
+                }
+                const scope = chapter.meta.scope;
+                if (declared === "setting" && scope != null && !SETTING_SCOPES.includes(scope)) {
+                    issues.push({
+                        severity: "error",
+                        message: `${label} has \`scope\` "${scope}", expected one of: ${SETTING_SCOPES.join(", ")}.`,
                     });
                 }
             }

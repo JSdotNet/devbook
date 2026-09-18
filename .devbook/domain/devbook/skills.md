@@ -93,7 +93,7 @@ related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/d
 ```
 
 Read an implementation and its unit tests and write the chapter that was missing, thin, or
-stale, for any of the five kinds. The kind is the chapter's `type`, or the file where the folder
+stale, for any of the six kinds. The kind is the chapter's `type`, or the file where the folder
 defines none, and what a kind needs is read from its own file rather than carried in the skill.
 The three converters are named after OpenSpec's verbs, so a reader who has met OpenSpec first
 needs no translation; a skill is a direction, because ten skills carried one procedure ten
@@ -121,7 +121,7 @@ type: feature
 related: [".devbook/domain/devbook/domain.md#spec-converter"]
 ```
 
-Turn an agreed but unbuilt chapter of any of the five kinds into a change brief — outcomes,
+Turn an agreed but unbuilt chapter of any of the six kinds into a change brief — outcomes,
 invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, and
 hand it to the flow that implements a change of that category, resolved the way the spec-side
 write is: a repo-native flow first, then the engine's, and nowhere when no engine is installed,

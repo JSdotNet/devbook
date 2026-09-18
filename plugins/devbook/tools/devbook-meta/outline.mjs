@@ -72,8 +72,9 @@ function testList(meta) {
 const DIRECTORY_CONVENTION = {
     "domain": { root: "context-map.md", first: [], last: [] },
     "domain/*": {
-        root: "domain.md",
+        root: "context.md",
         first: [
+            "domain.md",
             "actors.md",
             "skills.md",
             "features.md",

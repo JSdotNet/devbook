@@ -153,7 +153,7 @@ is why it reads code — not to change it, but to establish what is already ther
 so the brief asks only for the delta, and an update brief lists where the
 current behaviour lives.
 
-Each skill covers five kinds, decided by the chapter's `type` — or by the file,
+Each skill covers six kinds, decided by the chapter's `type` — or by the file,
 where the folder defines no `type`:
 
 | Kind | Target | `type` value(s) | Kind file |
@@ -161,6 +161,7 @@ where the folder defines no `type`:
 | `aggregate` | `.domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
 | `domain-service` | `.domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
 | `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills, or a `features.<name>.md` / `skills.<name>.md` split from it | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
+| `setting` | `.domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.arc42/05-building-block-view.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
 
@@ -339,7 +340,7 @@ for technologies that do not appear in package manifests.
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
 | `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
-| `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
+| `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
 
@@ -358,8 +359,10 @@ migrations/
     └── migrate.mjs    idempotent; --check exits 1 while work remains
 ```
 
-1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which folds a
-context's optional `naming.md` into `domain.md` now that the file kind is gone. The
+1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which moves a
+context's `term` chapters into `domain.md` now that the glossary file kind is gone; the second
+is `011-context-md`, which gives every context its `context.md` and moves each feature's
+bare flag key onto a `feature-flag` chapter there. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -394,7 +397,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **10**, covering the metadata schema a repository authors
+One number, currently **11**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -407,8 +410,11 @@ reserved for the release that raises the floor.
 
 1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
-the contract a 1.0.0 generator writes. 10 removed the `naming` file type from `.domain`,
-and ships as `010-terms-live-in-domain-md`.
+the contract a 1.0.0 generator writes. 10 removed the glossary file type from `.domain`,
+and ships as `010-terms-live-in-domain-md`. 11 adds `context.md` as a bounded context's
+root — the boundary, its feature flags and settings, and its actors and dependencies until
+they outgrow it — and turns a feature's `feature-flag` from a bare key into a reference to
+the switch's chapter, beside the new `setting` field; it ships as `011-context-md`.
 
 ## Folder structure
 
