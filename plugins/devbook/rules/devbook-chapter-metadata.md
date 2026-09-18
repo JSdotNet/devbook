@@ -19,7 +19,9 @@ already treat as an addressable unit:
   and each Shared Value Objects / Shared Enums chapter, plus every Entity, Value
   Object, and Enum sub-chapter inside an Aggregate. Those sub-chapters each
   carry their own metadata block; they are not covered by their parent
-  Aggregate's block.
+  Aggregate's block. A chapter split into a `domain.<name>.md` — or into a
+  `features.<name>.md` or `skills.<name>.md` below — is the same chapter at a
+  different path, per `devbook-domain.md`.
 - `.domain/<context>/features.md` — each Feature and Sub-feature.
 - `.domain/<context>/domain.md`, under its `## Ubiquitous Language` grouping —
   each `Term` chapter.
@@ -36,8 +38,8 @@ already treat as an addressable unit:
 - `.ai/<nn>-<part>.md` and `.ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
-- `domain/` `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`,
-  `tech/` `technology-graph.md`, and `ai/` `adoption-map.md` are
+- `domain/` `context-map.md`, `model.md`, `flow.md`, their split files, and
+  `dependencies.md`, `tech/` `technology-graph.md`, and `ai/` `adoption-map.md` are
   strategic/structural artifacts; their `##` sections do **not** carry
   per-chapter metadata blocks.
 

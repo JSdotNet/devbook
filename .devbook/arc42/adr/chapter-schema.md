@@ -44,8 +44,19 @@ from `candidate`. An explicit `active` is reported as a warning, never rejected.
 
 **A context describes its skills.** When the product is procedures, `skills.md` takes the place
 of `features.md` — one or the other, both `type: feature`, because a skill is a feature and a
-second vocabulary would make every graph consumer branch on a filename. `flow.<name>.md` splits
-one flow out of `flow.md`.
+second vocabulary would make every graph consumer branch on a filename.
+
+**A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `model.md`, and
+`flow.md` each grow with the context, and a reader looking for one aggregate should not have
+to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
+`features.checkout.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
+it is named after, carries that file's `type`, and keeps the chapter's heading and block as
+they stood, so the address changes and nothing else does. The generator reads a split file
+directly after its base, or in the base's slot when every chapter has moved out; `domain.md`
+alone can never be dropped, because it is the context's root document and holds the shared
+groupings that belong to no single aggregate. Flows split first, on 2026-09-08; the other
+four followed once the same pressure showed up in `domain.md`. A split file is a new path with
+a safe default — an unsplit context reads exactly as before — so it ships no migration.
 
 **A term is a chapter or an alias.** Twenty-eight of seventy-three terms in a `naming.md` were
 restatements of a chapter in the same context: a glossary listing the names the aggregates
@@ -107,6 +118,9 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
   file's `status` as the stage's rating — the shape this record's first draft took the same
   day; a repository-defined stage set; a `phase` field beside `stage`; a `stage` on `tech/`
   chapters; a `since` beside `date`; a structured `adopted-by`.
+- A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
+  layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
+  same kind of document.
 
 ## History
 
@@ -116,6 +130,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 | Date | Change |
 | --- | --- |
 | 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
+| 2026-09-18 | `domain`, `features`, `skills`, and `model` split by chapter as `flow` already did; a split file reads after its base. |
 | 2026-09-17 | `stakeholders.md` becomes `actors.md` with `user`, `organisation`, `technical` and a `role` field. |
 | 2026-09-17 | `naming.md` is no longer a file kind; a term is a chapter or an alias. Contract 10, migration 010. |
 | 2026-09-17 | One layout under `.devbook/`, dotless folder names, the rollup at `.devbook/_meta/`. |
