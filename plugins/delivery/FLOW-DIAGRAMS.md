@@ -45,7 +45,7 @@ flowchart TD
 | Specification & Architecture Intake | the `architecture` role | servers bound to `spec` |
 | Tooling & Dependencies | the `implement` service | `microsoft-learn` |
 | Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
 | Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
@@ -82,7 +82,7 @@ flowchart TD
 | Implementation | the `implement` service | `microsoft-learn` |
 | Security Validation | the `implement` service | — |
 | New Feature Adoption *(framework upgrade)* | the `implement` service, the `architecture` role | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
 | Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(smoke checks for a framework upgrade; otherwise only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
@@ -150,7 +150,7 @@ flowchart TD
 | Refactor Planning *(refactor)* | the `architecture` role, the `implement` service | — |
 | Reproduction & Root Cause *(defect)* | the `implement` service, the `app.start` service | `aspire` |
 | Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
 | Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
