@@ -48,8 +48,9 @@ a `domain.md` still declaring `index: root` beside one is a second root. A
 one holding a reference to anything but a `feature-flag` chapter is an error on
 the gate path.
 
-A context that already has a `context.md` carrying `type: context` is
-untouched, and so is a feature whose `feature-flag` entries are all references.
+A context that already has a `context.md` is untouched — the script keys on the
+file's existence, not on its `type` — and so is a feature whose `feature-flag`
+entries are all references.
 
 ## Run it
 
@@ -64,8 +65,8 @@ Drop the flag to apply. Running it twice changes nothing. Both forms take
 
 ## What the script does, and does not
 
-For every `<context>/` under the domain folder without a `context.md`, it
-writes one: the context's title from `domain.md`, a file-level block with
+For every `<context>/` under the domain folder without a `context.md` whose
+`domain.md` carries a file-level `meta` block, it writes one: the context's title from `domain.md`, a file-level block with
 `index: root`, `type: context`, and the `status` `domain.md` declared, then
 the paragraphs `domain.md` had between its block and its first `##` chapter —
 the boundary prose — leaving any leading blockquote behind, since that
