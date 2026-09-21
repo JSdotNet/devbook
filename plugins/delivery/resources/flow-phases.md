@@ -183,7 +183,7 @@ it can approve, skip, or soften the gate below.
 ### The gate
 
 The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
-`validate` with purpose `handoff`. A repository may declare further gates **in front of** this
+Validation — the `qa.run` point — with purpose `handoff`. A repository may declare further gates **in front of** this
 one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that
 is the whole of what configuration may change here.
 
