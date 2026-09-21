@@ -125,9 +125,11 @@ is not named here; a repository on that host enables its plugins by its own mean
 ## Cadence
 
 Every `cron` is UTC; `delivery-schedule:install` shows the local equivalent when it confirms. Weekly
-schedules sit on different days so their pull requests do not all land on Monday. Match a
-cadence to how fast the output is read, not to how fast input arrives: a daily merge review is
-read daily; a daily package update produces a queue.
+schedules sit on different days so their pull requests do not all land on Monday, and the two
+that open a pull request queue of their own — `package-update`, `tech-update` — sit on the
+weekend so the queue waits for the week rather than competing with it. Match a cadence to how
+fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
+daily package update produces a queue.
 
 ## Never
 
