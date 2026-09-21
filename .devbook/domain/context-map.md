@@ -29,6 +29,7 @@ and every context conforms to them rather than the other way round.
 | How an asset is written, packaged, and installed | Supporting | [Plugin Authoring](#plugin-authoring) |
 | Durable, addressed documentation | Core | [Devbook](#devbook) |
 | Keeping the derived index committed and current | Supporting | [Devbook Derived](#devbook-derived) |
+| How a repository's application is started, shown, evidenced, and debugged | Supporting | [Devbook Procedures](#devbook-procedures) |
 | Review and approval of a chapter | Supporting | [Devbook Collaboration](#devbook-collaboration) |
 | Which stack a repository runs, and what it has | Supporting | [Devbook Config](#devbook-config) |
 | Carrying one unit of work to a review-ready change | Core | [Delivery](#delivery) |
@@ -50,6 +51,7 @@ flowchart TB
     subgraph devbookStack["devbook stack"]
         DB["Devbook"]
         DBD["Devbook Derived"]
+        DPR["Devbook Procedures"]
         DBC["Devbook Collaboration"]
     end
 
@@ -73,6 +75,8 @@ flowchart TB
     PA -.->|"Shared Kernel"| CFG
 
     DB -->|"Customer/Supplier, declared"| DBD
+    DB -->|"Customer/Supplier, declared"| DPR
+    DPR -.->|"Separate Ways, skill names only"| DEL
     DB -->|"Customer/Supplier, declared"| DBC
     DEL -->|"Customer/Supplier, declared"| FLT
     DEL -->|"Customer/Supplier, declared"| SCH
@@ -98,6 +102,8 @@ relationship that exists in the assets and in no manifest.
 | Plugin Authoring | every context | Shared Kernel | No — it is the vocabulary, not a plugin |
 | Devbook | Devbook Derived | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| Devbook | Devbook Procedures | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| Devbook Procedures | Delivery | Separate Ways | No — the engine names the skills `start` and `capture` and their path, never the plugin; absent, a flow does without |
 | Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
@@ -118,6 +124,7 @@ demote all fourteen of the engine's skills wherever devbook is absent.
 |---|---|---|---|
 | The `meta` block schema and chapter addressing | Devbook | Every context that writes a chapter | `rules/devbook-chapter-metadata.md`, materialized into a repository |
 | The checker's CLI — `--check`, `--print`, `--write`, `--scope` | Devbook | Devbook Derived's refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
+| The procedure goal — one sentence per `start`, `show`, `capture`, `debug` that holds whatever the body says | Devbook Procedures | Delivery's `app.start` point and Validation, and any session invoking the skill by name | The `goal` field of each seed, rendered into the managed wrapper per host |
 | The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | Devbook Derived | Devbook Collaboration's queue and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
 | The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
@@ -184,6 +191,19 @@ drift warning, the rule that places them, the `devbook-graph` canvas, and the in
 puts those in. It computes nothing — every byte under `_meta/` and every node the canvas
 draws is devbook's checker's output, reached by `--write` or by loading its modules from
 their materialized path.
+
+## Devbook Procedures
+
+```meta
+type: bounded-context
+related: [".devbook/domain/devbook-procedures/context.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
+```
+
+The four procedures every repository has and no plugin can write — `start`, `show`,
+`capture`, `debug` — each with a goal the plugin fixes and a body the repository owns. It
+seeds the body once under `.agents/skills/`, keeps the wrapper per host that carries the goal,
+and records which of the four a repository adopted. It names no engine: whoever needs a
+running application or evidence names the skill and finds it or does without.
 
 ## Devbook Collaboration
 

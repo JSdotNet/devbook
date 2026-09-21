@@ -76,9 +76,13 @@
         }
       }
     },
-    "delivery": {
+    "devbook-procedures": {
       "pluginVersion": "1.2.0",
+      "adopted": [],
       "materialized": {}
+    },
+    "delivery": {
+      "pluginVersion": "1.2.0"
     },
     "schedule": {
       "pluginVersion": "1.2.0",

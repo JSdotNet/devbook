@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-15
+date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -49,6 +49,14 @@ move it and only a ledger says whether the script ran. A payload-only component 
 owns whole, and hash-matching is then the whole migration mechanism. A change that must reach an
 already-edited copy has no mechanism by design; the seed is meant to be edited.
 
+**A procedure is the rule trio with the ownership reversed.** A rule body is the plugin's
+and is refreshed while it hashes to a release; a procedure body under `.agents/skills/` is
+the repository's from its first edit, and the only thing the plugin keeps refreshing is the
+wrapper, which now carries the procedure's goal above the pointer. Same three files, same
+hashes, same customized rule; what differs is which of the three the plugin expects to keep
+rewriting. A present file the component never stamped — a `start` an earlier engine seeded —
+is asked about once and kept as the repository's or replaced, never silently overwritten.
+
 **Install, not sync.** Sync names a two-way reconcile between peers; a plugin writes and the
 repository never writes back. Every install skill is `install`, addressed `plugin:install`,
 because the plugin name already carries the scope.
@@ -81,6 +89,7 @@ working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. |
 | 2026-09-15 | `tools/devbook-meta/` and `tools/devbook-tech/` materialize into `.devbook/_tools/`, not `.github/tools/`. |
 | 2026-09-15 | The install creates `CLAUDE.md` and `.github/copilot-instructions.md` where absent, `managed: false`. |
 | 2026-09-09 | This repository stamps itself — engine keys and three components — and materializes nothing. |
