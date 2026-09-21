@@ -383,7 +383,7 @@ scope, so a run's outcome is legible without reading the prose.
 
 | Chapter | Counterpart | Resolved via | Verdict | Evidence | Action |
 |---|---|---|---|---|---|
-| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-domain` |
+| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-spec` |
 | `.domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
 
 Column rules:
