@@ -41,11 +41,9 @@ whose install rewrites content the repository authored, which is devbook alone:
   "components": {
     "devbook": {
       "pluginVersion": "1.0.0",
-      "contractVersion": 10,
+      "contractVersion": 11,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
-        ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
-        ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         ".devbook/_tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "AGENTS.md#devbook": { "from": "1.0.0", "hash": "sha256:c0de…", "managed": true },
@@ -53,7 +51,10 @@ whose install rewrites content the repository authored, which is devbook alone:
         ".claude/rules/devbook-arc42.md": { "from": "1.0.0", "hash": "sha256:5a1d…", "managed": true },
         ".github/instructions/devbook-arc42.instructions.md": { "from": "1.0.0", "hash": "sha256:e3f0…", "managed": true }
       },
-      "migrations": [{ "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" }]
+      "migrations": [
+        { "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" },
+        { "id": "011-context-md", "applied": "2026-09-18" }
+      ]
     }
   }
 }
@@ -85,9 +86,6 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
-| `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
-| `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
-| `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
 | `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
