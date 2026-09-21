@@ -10,7 +10,7 @@ plus one that stays purely standalone:
 
 | Skill | Runs in | Owns |
 | --- | --- | --- |
-| `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Triage, conflict detection, dispatching workers, the closure approval, and its own final report |
+| `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Classification written back to the tracker, relevance and conflict verdicts, dispatching workers, the closure approval, and its own final report |
 | `fleet-resolve-issue` | One independent `claude --bg` session per worker, each in its own worktree | One issue: resolve, then PR or park |
 | `fleet-morning-brief` | Never invoked by the other two — a standalone skill a human runs to re-read a sweep later | The report *format* `fleet-issue-sweep` follows for its own brief |
 
@@ -55,6 +55,11 @@ to record the closure decisions.
   "createdAt": "2026-09-03T06:00:00+02:00",
   "worktreeRoot": "/work/store/.claude/worktrees",
   "maxParallel": 5,
+  "triaged": [
+    { "number": 42, "labels": ["bug", "area:auth", "high"], "milestone": null, "duplicateOf": null, "needsInfo": [], "written": true },
+    { "number": 58, "labels": ["feature"], "milestone": null, "duplicateOf": null, "needsInfo": ["Who is this for, and what should they see?"], "written": true },
+    { "number": 60, "labels": ["bug", "medium"], "milestone": null, "duplicateOf": 44, "needsInfo": [], "written": false, "proposedLabels": ["area:billing"] }
+  ],
   "pickedUp": [
     { "number": 42, "title": "...", "url": "...", "changeKind": "bug-fix", "dispatchedAt": "..." }
   ],
@@ -69,6 +74,12 @@ to record the closure decisions.
 }
 ```
 
+- `triaged[]` is one entry per issue the sweep classified this pass, whether the
+  classification was written to the tracker (`written: true`, and the issue now carries the
+  `triaged` label) or held back as a proposal below `labelConfidence` (`written: false`).
+  `proposedLabels` names labels the repository lacks; the brief reports them and nothing
+  creates them. An issue that already carried `triaged` when the sweep began has no entry —
+  it was judged for relevance and collision only.
 - `decision` on a closure proposal is `pending`, `approved`, `declined`, or `unanswered`.
   `unanswered` means the routine session ended before the user answered — the brief reports
   it as still open, never as declined.
@@ -78,7 +89,7 @@ to record the closure decisions.
   running (`"state": "working"`) from one that has already exited — `--all` matters, because a
   background session is pruned from the list soon after it exits.
 - `briefWrittenAt` is set by `fleet-issue-sweep` itself, in the same update that records
-  `closureDecidedAt`, once its own Phase 7 finishes writing `brief.md`. `null` means the wait
+  `closureDecidedAt`, once its own Phase 8 finishes writing `brief.md`. `null` means the wait
   is still in progress, or the session ended before reaching it — a hand-run
   `fleet-morning-brief` is how you find out which.
 
@@ -179,7 +190,7 @@ claude agents --json --all --cwd <repo root>
 
 Once the wait ends, `fleet-issue-sweep` writes `brief.md` and prints it in chat itself,
 following `fleet-morning-brief`'s own Phase 1 step 4 (refresh live PR/issue state), Phase 2
-(sections ①–⑤), and Phase 3 (deliver) against this sweep's directory — the same format, run by
+(sections ①–⑥), and Phase 3 (deliver) against this sweep's directory — the same format, run by
 the same session that already holds everything those steps need, not a second session invoking
 `fleet-morning-brief` as a skill.
 

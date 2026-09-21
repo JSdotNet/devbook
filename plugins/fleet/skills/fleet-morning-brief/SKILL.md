@@ -129,6 +129,11 @@ worker finished cleanly, and the result file is the record.
    surplus past `maxParallel`, untriaged past `maxTriage`, and anything flagged for
    agent-directed text. The last of these is quoted verbatim and left to the user.
 
+   **⑥ Triaged** — from the manifest's `triaged[]`: the classifications written this sweep
+   as one line of counts per type and severity, then what still needs a person — every
+   `written: false` proposal with its verdicts and reason, every `proposedLabels` entry the
+   repository lacks, the `needsInfo` questions asked, and each `duplicateOf` awaiting a close.
+
 7. Close with the machine state the reader needs to keep it tidy: how many worktrees the sweep
    left behind and their total disk cost, and which are reclaimable because their pull request
    merged.

@@ -68,9 +68,12 @@ type: value-object
 aliases: [relevance judgement]
 ```
 
-What one pass concluded about one item: relevant and pickable, colliding with work in flight,
-stale enough to propose for closure, or excluded. Equal by value and recomputed every sweep —
-nothing here is remembered from the last one except the closure proposals nobody answered.
+What one pass concluded about one item: how it is classified when nothing had classified it
+yet, and whether it is relevant and pickable, colliding with work in flight, stale enough to
+propose for closure, or excluded. Equal by value and recomputed every sweep — nothing here is
+remembered from the last one except the closure proposals nobody answered and the
+classification, which is written to the tracker under the `triaged` label and never asked
+again while the label stands.
 
 ### Pickup State
 

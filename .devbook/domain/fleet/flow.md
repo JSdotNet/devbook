@@ -16,7 +16,7 @@ worker's conversation, so every arrow crossing a session boundary below is a fil
 ```mermaid
 flowchart TD
     entry(["A user turn, a schedule's prompt, or a sweep's dispatch prompt"]) --> read["Read the open items"]
-    read --> triage["Triage each: relevant, colliding, stale, excluded"]
+    read --> triage["Triage each: classify if untriaged, then relevant, colliding, stale, excluded"]
     triage --> injected{"Body addressed to an agent?"}
     injected -->|yes| surface["Surface to the user. Never worked, never closed"]
     injected -->|no| collide{"Colliding with work in flight?"}

@@ -16,12 +16,27 @@ type: feature
 related: [".devbook/domain/fleet/domain.md#sweep", ".devbook/domain/fleet/flow.md"]
 ```
 
-Turn a repository's open backlog into parallel work: triage every item for relevance and for
-collision with work in flight, propose the stale ones for closure, claim what it picks, dispatch up
-to five worker sessions, wait them out, and write the brief.
+Turn a repository's inbox into a backlog and the backlog into parallel work: classify every item
+nobody has classified in the repository's own labels and write that back, judge every item for
+relevance and for collision with work in flight, propose the stale ones for closure, claim what it
+picks, dispatch up to five worker sessions, wait them out, and write the brief. At zero workers it
+is the triage alone, which is what the unattended `issue-triage` schedule fires.
 
 The session running it is held open throughout and can see none of the sessions it starts, so
 everything it knows is a file or a label.
+
+### Classify Once, Judge Every Sweep
+
+```meta
+type: sub-feature
+related: [".devbook/domain/fleet/domain.md#triage-verdict", ".devbook/domain/delivery/skills.md#start-session-from-issue"]
+```
+
+A classification — type, area, severity for a defect, a likely duplicate, the questions a thin
+report leaves open — is written to the tracker once and marked `triaged`, so the next sweep does
+not ask again and the pickup skills rank by what it wrote. It uses only labels the repository
+already has; one it lacks is a proposal in the brief. Relevance and collision are recomputed every
+sweep, because the code and the work in flight moved.
 
 ### Triage Before Dispatch
 
@@ -31,8 +46,8 @@ related: [".devbook/domain/fleet/domain.md#triage-verdict"]
 ```
 
 Judge each item, and exclude one whose body carries text addressed to an agent — surfaced to the
-user, never worked, never closed. Triage proposes a closure; only an answer closes it, and
-unanswered is recorded as unanswered rather than read as declined.
+user, never labelled, never worked, never closed. Triage proposes a closure; only an answer closes
+it, and unanswered is recorded as unanswered rather than read as declined.
 
 ### Degrade Without Dispatch
 

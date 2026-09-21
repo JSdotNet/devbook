@@ -18,7 +18,7 @@ add this working copy by path instead of by repository.
 
 | Skill | Runs in | Owns |
 |-------|---------|------|
-| `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Triage, conflict detection, dispatching workers, the closure approval, and its own final report |
+| `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Classification written back to the tracker, relevance and conflict verdicts, dispatching workers, the closure approval, and its own final report |
 | `fleet-resolve-issue` | One independent background session per worker, each in its own worktree | One issue: resolve, then pull request or park |
 | `fleet-morning-brief` | Never invoked by the other two — standalone, run by hand to re-read a sweep later | The report *format* `fleet-issue-sweep` follows for its own brief |
 
@@ -42,7 +42,7 @@ look at. Nothing merges unread either way.
 | Enabled | How a backlog gets worked |
 |---------|---------------------------|
 | `delivery` | One issue per session, by hand, through `start-session-from-issue` |
-| `delivery` + `fleet` | A sweep triages the backlog and works up to five issues in parallel |
+| `delivery` + `fleet` | A sweep classifies the inbox in the repository's own labels, judges the backlog, and works up to five issues in parallel — or, at `maxParallel 0`, classifies and judges alone |
 
 ## What it needs from the host
 
