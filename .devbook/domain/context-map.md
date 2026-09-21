@@ -109,6 +109,7 @@ relationship that exists in the assets and in no manifest.
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | Devbook | Delivery Schedule | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
 | Devbook Derived | Delivery Schedule | Separate Ways | No — `schedule-devbook-check` refreshes where the script exists and skips where it does not |
+| Fleet | Delivery Schedule | Separate Ways | No — `fleet-issue-sweep` is named as the `issue-triage` target, at zero workers, and skipped when absent |
 | Devbook | Delivery | **Undeclared** | No, and it should be — see [debt record 4](../arc42/tdr/4-delivery-depends-on-devbook.md) |
 | every context | Devbook Config | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every context | Conformist | Not declarable; the host decides what loads |

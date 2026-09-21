@@ -50,14 +50,17 @@ the repository will accept. It adds nothing but a pointer that replaces a duplic
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery/skills.md#issue-triage", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief", ".devbook/domain/delivery-schedule/skills.md#schedule-bug-fix"]
+related: [".devbook/domain/fleet/skills.md#fleet-issue-sweep", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief", ".devbook/domain/delivery-schedule/skills.md#schedule-bug-fix"]
 ```
 
-Run `delivery`'s `issue-triage` over every open item nobody has classified, writing only the
-high-confidence verdicts and publishing the rest — proposals, missing labels, flagged items,
-duplicates awaiting a close — as one schedule-report issue that the next run folds into rather
-than stacks beside. The weekday `issue-triage` trigger's target, timed before the morning brief
-and the bug fix, because both rank by the labels it writes.
+Run `fleet-issue-sweep` at zero workers — classify every open issue nobody has classified,
+judge relevance and collision, propose closures — writing only the high-confidence
+classifications, and publish the rest — proposals, missing labels, flagged issues, duplicates
+and closure proposals awaiting an answer — as one schedule-report issue that the next run folds
+into rather than stacks beside. The weekday `issue-triage` trigger's target, timed before the
+morning brief and the bug fix, because both rank by the labels it writes. Zero workers is what
+keeps it a triage: a scheduled sweep that dispatches is a separate decision, taken by
+scheduling the sweep itself.
 
 ## schedule-merge-review
 

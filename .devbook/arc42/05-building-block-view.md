@@ -58,6 +58,7 @@ flowchart TB
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
+    SCH -.->|"names fleet-issue-sweep as a target"| FLT
     DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
     DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
@@ -524,7 +525,7 @@ the live tool list, and creates or updates each entry matched by name — `<owne
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
 entry, a cron that could fire more than hourly, or a target that is a flow.
 
-The plugin depends on `delivery` and names `devbook`, which is the L1 extension shape `fleet`
+The plugin depends on `delivery` and names `devbook` and `fleet`, which is the L1 extension shape `fleet`
 already has: the entry points call the engine's flows and phases, so the dependency is real,
 while a target in another plugin is named and skipped when the repository has not enabled it.
 It named a third until the specialists

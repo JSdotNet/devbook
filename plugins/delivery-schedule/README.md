@@ -27,7 +27,7 @@ hand it one. Every one of them is also runnable by hand.
 |---|---|---|
 | `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
-| `schedule-issue-triage` | Runs `delivery`'s `issue-triage` over every unclassified open item, writing only the high-confidence verdicts | Labels and comments; a `schedule-report` issue for what a person must decide |
+| `schedule-issue-triage` | Runs `fleet-issue-sweep` at `maxParallel 0` — classify every unclassified open issue, judge relevance, propose closures — writing only the high-confidence classifications | Labels and comments; a `schedule-report` issue for what a person must decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
 | `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
@@ -53,7 +53,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 |---|---|---|---|---|
 | `package-update` | Monday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
-| `issue-triage` | Weekdays 04:30 | `schedule-issue-triage`, every untriaged open item, high confidence only | `delivery-schedule`, `delivery` | Labels and comments; a `schedule-report` issue for what a person must decide, replaced while unread |
+| `issue-triage` | Weekdays 04:30 | `schedule-issue-triage`, every open issue, zero workers, high confidence only | `delivery-schedule`, `fleet` | Labels and comments; a `schedule-report` issue for what a person must decide, replaced while unread |
 | `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `schedule-devbook-check`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
@@ -71,7 +71,7 @@ cadence under `components.schedule.overrides` rather than in the catalog.
 in a single pass, and the failures worth catching — a reference into a chapter another folder
 renamed — are exactly the ones a per-folder split would not see.
 
-`devbook` is named, not depended on: a schedule whose target plugin the repository has not
+`devbook` and `fleet` are named, not depended on: a schedule whose target plugin the repository has not
 enabled is reported and skipped, never scheduled.
 
 The two report schedules keep one open issue each. While the previous brief or update is
