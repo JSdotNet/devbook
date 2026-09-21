@@ -336,7 +336,7 @@ is the normal case and never a gap.
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
-| `model-override` | Where a user's personal model preferences live | Category defaults |
+| `model-override` | Where a user's personal model preferences live: `CLAUDE_FLOW_MODEL_SELECTION_PATH` when set, else `<config dir>/model-selection.md` beside the overlays | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
 | `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |

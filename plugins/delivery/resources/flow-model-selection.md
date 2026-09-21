@@ -123,8 +123,8 @@ stopping at the first match:
 1. **Current run instruction** — if the user explicitly gives a model-selection instruction
    for this run, use it for the categories it covers.
 2. **Personal global override** — if `CLAUDE_FLOW_MODEL_SELECTION_PATH` points to a readable
-   file, read that file; otherwise check the default user-global file path (see below). If
-   the file lists an entry for the stage's category, use that value.
+   file, read that file; otherwise `<config dir>/model-selection.md` (see below). If the
+   file lists an entry for the stage's category, use that value.
 3. **Category model** — otherwise use the alias named in the table above.
 4. **Session default** — if the stage's agent is not yet categorized, leave the model unset
    and flag it for follow-up (add the agent to the table above).
@@ -147,8 +147,12 @@ This is the **only** override tier. A user may define personal model preferences
 every repository, which keeps personal cost and speed preferences out of shared instructions
 and avoids accidental commits.
 
-Where that file lives is the `model-override` host slot — the engine names the slot and never
-hardcodes a path. See **Host Slots** in `surface-contract.md`.
+Where that file lives is the `model-override` host slot — see **Host Slots** in
+`surface-contract.md`. Unbound, it resolves to `CLAUDE_FLOW_MODEL_SELECTION_PATH` when that
+variable is set, else `model-selection.md` in the devbook config directory —
+`$XDG_CONFIG_HOME/devbook`, `%APPDATA%\devbook`, `~/.config/devbook` — beside the user's
+overlays and for the same reason: outside every clone, and host-neutral, so Copilot reads it
+as readily as Claude. `devbook-config:local` writes it from your answers.
 
 - The file holds a two-column `Category` / `Model` table, using the exact category names
   from the table above. The `Model` value is normally an alias (`opus`, `sonnet`, `haiku`,
