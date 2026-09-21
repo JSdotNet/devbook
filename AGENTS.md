@@ -180,8 +180,7 @@ Run the check before committing; it writes nothing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
 
-An annotation fence is written only through
-`plugins/devbook/tools/devbook-meta/annotations.mjs`.
+An annotation fence is written only through `plugins/devbook/tools/devbook-meta/annotations.mjs`.
 
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
@@ -200,9 +199,8 @@ any of them — gitignored is not private, and neither is your home directory.
 
 Managed by `devbook-derived:install`. Edit outside these markers.
 
-Files under any `_meta/` folder are generated tool input, written by
-`plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
-fact and never hand-edit one. Never regenerate or commit them in a session — the
-scheduled job owns that refresh. Fix what devbook's check reports in the source
+Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
+generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
+fact and never hand-edit one. Never regenerate or commit them in a session — the scheduled job owns that refresh. Fix what devbook's check reports in the source
 Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->
