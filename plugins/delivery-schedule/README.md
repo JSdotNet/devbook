@@ -97,9 +97,11 @@ the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 - **Merge, approve, close, or delete.** Every change lands as a pull request from
   `schedule/<name>/<date>`, every report as an issue labelled `schedule-report`, and a run
   updates what its previous run left open rather than opening a second.
-- **Carry anything personal into the repository.** The environment, the model, and the
-  scheduler ids live in the scheduler. The stamp records the selection and the cadence
-  overrides, and nothing that would be wrong for the next person who opens the file.
+- **Carry anything personal into the repository.** The scheduler ids live in the scheduler;
+  the environment and the model are asked once and, if you say so, remembered under
+  `ext.schedule` in your own stack-config overlay, outside every clone. The stamp records
+  the selection and the cadence overrides, and nothing that would be wrong for the next
+  person who opens the file.
 
 ## Why it is its own plugin
 
@@ -117,8 +119,9 @@ data; only the scheduler resolution knows which tool answers.
 ## Before the first schedule
 
 A cloud session loads this marketplace only if the repository's committed host settings enable
-it and the plugins a schedule requires. `delivery-schedule:install` checks that and refuses to schedule
-what would start without its skill. The first run is still the proof: fire one with
+it and the plugins a schedule requires. `delivery-schedule:install` owns those two keys: it offers
+to write what is missing, and refuses to schedule what would start without its skill when
+you decline. The first run is still the proof: fire one with
 `schedule-run` and read it with `schedule-status` before trusting the cadence.
 
 ## Checking the catalog

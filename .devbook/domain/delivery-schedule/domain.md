@@ -106,8 +106,10 @@ Which schedules this repository chose and any cadence it overrode, recorded unde
 `components.schedule` in the stack config and written by this context's install skill alone.
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts
-and are committed; the environment, the model, and the scheduler's own ids are personal and stay
-in the scheduler. Matching by name is what makes writing the ids down unnecessary.
+and are committed; the environment, the model, and the scheduler's own ids are personal. The
+ids stay in the scheduler — matching by name is what makes writing them down unnecessary —
+and the environment and the model may be remembered under `ext.schedule` in a machine's own
+stack-config overlay, where the engine merges them and this plugin alone reads them.
 
 ### Invariants
 
@@ -190,8 +192,9 @@ nobody watched reaches a person, so a run that publishes nothing has, from outsi
   report as a labelled issue; the run's authority ends at publishing.
 - **Update, do not accumulate.** A weekly report that opens a new issue every week is a backlog
   of its own within two months.
-- **Nothing personal travels.** The environment, the model, and the scheduler ids stay in the
-  scheduler; nothing published here would be wrong for the next person who opens the file.
+- **Nothing personal travels.** The scheduler ids stay in the scheduler, the environment and
+  the model there or in a machine's own overlay; nothing published here would be wrong for
+  the next person who opens the file.
 
 ## Ubiquitous Language
 
@@ -247,5 +250,6 @@ Whatever the live session exposes that turns a name, a cron expression, a reposi
 prompt into a scheduled session. It is resolved by capability and never named, and **absent is a
 normal outcome** — the operation reports it and changes nothing.
 
-The scheduler is also where everything personal lives: the environment, the model, and the entry
-ids. Matching by name is what makes writing any of that into the repository unnecessary.
+The scheduler is also where the entry ids live, and where the environment and the model go
+unless a machine remembers them under `ext.schedule` in its own overlay. Matching by name is
+what makes writing any of that into the repository unnecessary.

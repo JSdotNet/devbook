@@ -42,8 +42,9 @@ rejects every top-level name it does not own, and an overlay may not carry a sta
 is the extension namespace the chapter `meta` block already reserves, applied to the config:
 accepted in an overlay only, refused in the committed file, shape-checked as far as being an
 object of objects and otherwise opaque to the engine. The owning plugin reads it and asks only
-for what is absent. `devbook-config:local` is what writes an overlay; `setup` never does,
-because an overlay is true of the person running it and of nobody they set a repository up for.
+for what is absent, and may write its own namespace there and nothing else. `devbook-config:local`
+writes an overlay whole; `setup` never does, because an overlay is true of the person running
+it and of nobody they set a repository up for.
 
 **Three layers, keyed by a committed id.** A gitignored file is in no commit, so a fresh
 worktree ran at the team's defaults without saying so. A file outside the clone keyed on the

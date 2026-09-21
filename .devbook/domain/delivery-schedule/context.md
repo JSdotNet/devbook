@@ -56,5 +56,6 @@ taken on purpose.
 - **This context owns no flow, holds no gate, and adds no extension point.** That is what makes
   it an extension rather than a second engine: everything it runs, the engine already had.
 - **The line between committed and personal is the one to hold.** The selection and the cadence
-  overrides go in the repository; the environment, the model, and the scheduler ids stay in the
-  scheduler, so nothing in the file would be wrong for the next person who opens it.
+  overrides go in the repository; the scheduler ids stay in the scheduler, and the environment
+  and the model in the scheduler or a machine's own overlay under `ext.schedule`, so nothing in
+  the committed file would be wrong for the next person who opens it.

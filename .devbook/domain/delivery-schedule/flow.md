@@ -67,5 +67,6 @@ flowchart TD
   changed something and published nothing.
 - **The next run updates what this one left open.** A weekly report opening a new issue every
   week becomes its own backlog within two months.
-- **Nothing personal crosses into the repository.** The environment, the model, and the
-  scheduler ids stay in the scheduler; the stamp records only the selection and the overrides.
+- **Nothing personal crosses into the repository.** The scheduler ids stay in the scheduler,
+  the environment and the model there or under `ext.schedule` in a machine's own overlay; the
+  stamp records only the selection and the overrides.
