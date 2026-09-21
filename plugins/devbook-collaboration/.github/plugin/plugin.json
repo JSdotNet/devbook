@@ -17,7 +17,6 @@
     "documentation"
   ],
   "skills": "skills/",
-  "hooks": "hooks.json",
   "dependencies": [
     {
       "name": "devbook",
