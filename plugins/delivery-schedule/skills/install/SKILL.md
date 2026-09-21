@@ -26,9 +26,9 @@ upgrade. Everything it reads and writes is in `resources/schedule-catalog-contra
    is not the run that was scheduled.
 4. **Resolve the scheduler** from the live tool list, per the contract. None: print every
    finished prompt with its cron for the host's own page, then continue at step 7.
-5. **Read `ext.schedule`** — `environment` and `model` — from the overlays
-   `tools/stack-config/check.mjs` in the delivery plugin merges, and ask once for whichever is
-   absent. Both are personal: they go to the scheduler and never into the repository. Offer
+5. **Read `ext.schedule`** — `environment` and `model` — from `config.ext.schedule` in the
+   output of `node tools/stack-config/check.mjs --print`, run from the delivery plugin's root,
+   and ask once for whichever is absent. Both are personal: they go to the scheduler and never into the repository. Offer
    to remember an answer under `ext.schedule` in the user layer, `<config dir>/config.local.json`;
    write that key alone, leaving the rest of the file as it is.
 6. **Create or update.** For each selected schedule, build the prompt — preamble, blank line,

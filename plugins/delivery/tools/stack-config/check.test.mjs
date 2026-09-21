@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
@@ -9,6 +10,7 @@ import {
     checkStackConfig,
     mergeStackConfig,
     overlayPaths,
+    resolveStackConfig,
     userConfigDir,
 } from './check.mjs';
 
@@ -383,4 +385,57 @@ test('layers merge in order: the later wins per key, and every layer keeps its g
         merged.gates.map((g) => g.at),
         ['spec', 'implement'],
     );
+});
+
+// What --print hands a flow: the committed file with every present overlay merged over it,
+// resolved from disk, and nothing at all when a layer is refused.
+
+function scratch(committed, overlays = {}) {
+    const root = mkdtempSync(join(tmpdir(), 'stack-config-'));
+    const target = join(root, 'config.json');
+    if (committed) writeFileSync(target, JSON.stringify(committed));
+    const xdg = join(root, 'xdg');
+    const id = committed?.id;
+    for (const [scope, overlay] of Object.entries(overlays)) {
+        const dir = scope === 'user' ? join(xdg, 'devbook') : join(xdg, 'devbook', 'repos', id);
+        mkdirSync(dir, { recursive: true });
+        writeFileSync(join(dir, 'config.local.json'), JSON.stringify(overlay));
+    }
+    return { target, options: { env: { XDG_CONFIG_HOME: xdg }, platform: 'linux', home: root } };
+}
+
+test('resolve merges every present layer over the committed file and names each layer', () => {
+    const { target, options } = scratch(
+        { id: 'r', policy: { 'qa.depth': 'full', 'qa.ceiling': 'full' } },
+        { user: { policy: { 'qa.depth': 'targeted' }, ext: { schedule: { model: 'sonnet' } } }, repository: { policy: { 'qa.depth': 'startup-only' } } },
+    );
+    const { merged, layers, errors } = resolveStackConfig(target, schema, options);
+    assert.deepEqual(errors, []);
+    assert.deepEqual(layers.map((l) => [l.scope, l.present]), [['user', true], ['repository', true]]);
+    assert.equal(merged.policy['qa.depth'], 'startup-only');
+    assert.equal(merged.policy['qa.ceiling'], 'full');
+    assert.deepEqual(merged.ext, { schedule: { model: 'sonnet' } });
+});
+
+test('resolve with no overlay is the committed file, and an absent layer is still named', () => {
+    const { target, options } = scratch({ id: 'r', policy: { 'qa.depth': 'full' } });
+    const { merged, layers } = resolveStackConfig(target, schema, options);
+    assert.deepEqual(merged, { id: 'r', policy: { 'qa.depth': 'full' } });
+    assert.deepEqual(layers.map((l) => l.present), [false, false]);
+});
+
+test('resolve yields no merge when a layer is refused', () => {
+    const { target, options } = scratch({ id: 'r' }, { user: { policy: { 'qa.ceiling': 'skipped' } } });
+    const { merged, errors } = resolveStackConfig(target, schema, options);
+    assert.equal(merged, null);
+    assert.equal(errors.length, 1);
+    assert.match(errors[0].errors[0], /locked/);
+});
+
+test('resolve without a committed file is null config, not an error', () => {
+    const { target, options } = scratch(null, {});
+    const { merged, config, errors } = resolveStackConfig(target, schema, options);
+    assert.equal(config, null);
+    assert.equal(merged, null);
+    assert.deepEqual(errors, []);
 });

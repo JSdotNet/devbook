@@ -29,7 +29,7 @@ the model-selection file is *Personal Global Override File* in `resources/flow-m
 4. **Write the overlay.** Merge into the file that is there: set only the keys answered and
    remove nothing. Start an absent one from the delivery plugin's `resources/config.local-template.json`,
    keeping only the keys chosen. Validate with that plugin's `tools/stack-config/check.mjs`
-   against this repository's config, and fix until it exits `0`.
+   against this repository's config, and fix until it exits `0`; `--print` shows the merge.
 5. **Write the model-selection file** when a category was answered: the `Category` / `Model`
    table at the path the report names, listing only the categories chosen.
 6. **Create `AGENTS.local.md`** when asked, at the layer chosen in step 3, holding a heading

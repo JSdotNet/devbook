@@ -96,6 +96,14 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
+- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`
+  validates and then prints one JSON document — `{ target, layers, config }` — where
+  `config` is the committed file with every present overlay below merged over it, and
+  `layers` names each overlay path and whether it exists. That document is the effective
+  configuration a flow resolves from, on either host: the overlay paths, the merge rules, and
+  the refusals live in one script, and a session that reads the layers itself re-derives all
+  three in prose. Nothing is printed when a layer is refused, so a consumer never acts on a
+  merge the checker rejected.
 
 ### The overlays
 
@@ -157,8 +165,9 @@ machine's routine settings, and a personal value in a committed file is everybod
 `check.mjs` finds both layers on its own — from the environment and the committed `id` — and
 validates each three times over: what it may not say, whether it is well-typed alone, and
 whether the merge so far still validates, the third catching the pair that is only wrong
-together and naming the layer that broke it. `resources/config.local-template.json` is a
-starting point for either, and `devbook-config:local` writes one from your answers.
+together and naming the layer that broke it; `--print` then hands the merge to whoever asked.
+`resources/config.local-template.json` is a starting point for either, and
+`devbook-config:local` writes one from your answers.
 
 **Gitignored is not private, and neither is your home directory.** No secret, the same as
 the committed file, and no model the engine reads — flow model choice stays in the file the

@@ -18,7 +18,14 @@
 // untouched and read by the plugin that owns the namespace, never by the engine. A top-level
 // key that is none of these is a misspelling of one of them and is reported by name.
 //
-//   node check.mjs [path-to-config.json]
+//   node check.mjs [path-to-config.json]            validate; status lines on stdout
+//   node check.mjs [path-to-config.json] --print    validate, then print the merged config
+//
+// `--print` is how a flow reads the effective configuration: one JSON document on stdout —
+// `{ target, layers, config }`, the layers with their paths and presence, `config` the
+// committed file with every present overlay merged over it (`null` when there is no
+// committed file) — with the status lines moved to stderr. Nothing is printed when a layer
+// is invalid: a consumer never sees a merge the checker refused.
 //
 // Exit 0 when the files are valid or absent, 1 when they are not.
 
@@ -303,38 +310,29 @@ function report(label, errors) {
     for (const error of errors) console.error(`  ${error}`);
 }
 
-function main() {
-    const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
-    const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
-
-    let config;
-    let layers;
-    try {
-        config = readConfig(target);
-        layers = overlayPaths(typeof config?.id === 'string' ? config.id : null)
-            .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
-            .filter((layer) => layer.overlay !== null);
-    } catch (error) {
-        console.error(error.message);
-        return 1;
-    }
+/**
+ * Read the committed config and every overlay layer, validate each and the merge, and
+ * return what a caller needs to act on it. `errors` is non-empty when something failed;
+ * `merged` is then meaningless and callers print nothing from it.
+ */
+export function resolveStackConfig(target, schema, options) {
+    const config = readConfig(target);
+    const layers = overlayPaths(typeof config?.id === 'string' ? config.id : null, options)
+        .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
+        .map((layer) => ({ ...layer, present: layer.overlay !== null }));
+    const lines = [];
+    const errors = [];
 
     if (config === null) {
         // A user overlay applies to every repository, including one that keeps no stack
         // config; it adjusts a repository's wiring and cannot stand in for it.
-        console.log(`no stack config at ${target} — every point falls back to its default`);
-        return 0;
+        lines.push(`no stack config at ${target} — every point falls back to its default`);
+        return { config, layers, merged: null, lines, errors };
     }
 
-    let failed = false;
-
-    const errors = checkStackConfig(config, schema);
-    if (errors.length) {
-        report(target, errors);
-        failed = true;
-    } else {
-        console.log(`${target}: ok`);
-    }
+    const committedErrors = checkStackConfig(config, schema);
+    if (committedErrors.length) errors.push({ label: target, errors: committedErrors });
+    else lines.push(`${target}: ok`);
 
     // Each overlay is checked three times over: what it may not say, whether it is
     // well-typed on its own, and whether what it produces still validates. The third
@@ -342,24 +340,51 @@ function main() {
     // report names the layer that broke it. The merged result is an overlay's shape, not the
     // committed file's: it may carry `ext`.
     let merged = config;
-    for (const { scope, path, overlay } of layers) {
+    for (const { scope, path, overlay } of layers.filter((layer) => layer.present)) {
         const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema, { overlay: true })];
         if (localErrors.length) {
-            report(path, localErrors);
-            return 1;
+            errors.push({ label: path, errors: localErrors });
+            return { config, layers, merged: null, lines, errors };
         }
-        console.log(`${path}: ok (${scope} overlay)`);
+        lines.push(`${path}: ok (${scope} overlay)`);
 
         merged = mergeStackConfig(merged, overlay);
         const mergedErrors = checkStackConfig(merged, schema, { overlay: true });
         if (mergedErrors.length) {
-            report(`${target} + ${scope} overlay`, mergedErrors);
-            return 1;
+            errors.push({ label: `${target} + ${scope} overlay`, errors: mergedErrors });
+            return { config, layers, merged: null, lines, errors };
         }
     }
-    if (layers.length) console.log('merged: ok');
+    if (layers.some((layer) => layer.present)) lines.push('merged: ok');
 
-    return failed ? 1 : 0;
+    return { config, layers, merged: errors.length ? null : merged, lines, errors };
+}
+
+function main() {
+    const args = process.argv.slice(2);
+    const print = args.includes('--print');
+    const target = resolve(args.find((arg) => !arg.startsWith('--')) ?? join('.devbook', 'config.json'));
+    const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
+    // With --print, stdout is the document and everything else goes to stderr.
+    const status = print ? console.error : console.log;
+
+    let resolved;
+    try {
+        resolved = resolveStackConfig(target, schema);
+    } catch (error) {
+        console.error(error.message);
+        return 1;
+    }
+
+    for (const line of resolved.lines) status(line);
+    for (const { label, errors } of resolved.errors) report(label, errors);
+    if (resolved.errors.length) return 1;
+
+    if (print) {
+        const layers = resolved.layers.map(({ scope, path, present }) => ({ scope, path, present }));
+        console.log(JSON.stringify({ target, layers, config: resolved.merged }, null, 2));
+    }
+    return 0;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {

@@ -81,7 +81,8 @@ Copy `resources/config-template.json` and validate with
 never become a silently absent setting. The checker also merges the overlays a machine keeps
 over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
 (`%APPDATA%\devbook`, `~/.config/devbook`) for every repository and for this one's `id`,
-never a file inside the clone — per *The overlays* in
+never a file inside the clone — and `--print` emits the merged result as JSON, which is how a
+flow reads its effective configuration on either host, per *The overlays* in
 `resources/surface-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
 own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
