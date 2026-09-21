@@ -30,7 +30,7 @@ Reading the path is not a dependency on the `devbook` plugin: `delivery` reads i
 not a single folder was adopted. There is no fallback path, deliberately; the guide's report
 names the old file while it exists.
 
-**The overlay may only tighten.** A gitignored file may not weaken what a reviewer sees:
+**The overlay may only tighten.** A file no reviewer sees may not weaken what a reviewer sees:
 `gates` append, `policy.pr.required`, `policy.qa.ceiling`, `policy.gate.personalValidation`
 and `components` are refused, and the check validates the overlay alone and the merged result.
 Trusting the overlay because its author could edit the committed file fails on visibility, not
