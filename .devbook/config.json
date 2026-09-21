@@ -47,23 +47,19 @@
   "components": {
     "devbook": {
       "pluginVersion": "1.2.0",
-      "contractVersion": 11,
+      "contractVersion": 12,
       "adopted": ["arc42", "domain", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
           "from": "1.2.0",
-          "hash": "sha256:c8192fae8dd966b3fb03918ead55ab8784c650f7600d9a48182d9407fccba099",
-          "managed": true
-        },
-        ".gitignore#devbook": {
-          "from": "1.0.0",
-          "hash": "sha256:36b316a78cd232fc4f2a1d3248a2bc2449bbff9c9b5534b41f1aee9d8b2b2458",
+          "hash": "sha256:926485ff12996e9234a1557af44dd5bc4592e621812243398e9821a2995472a5",
           "managed": true
         }
       },
       "migrations": [
         { "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" },
-        { "id": "011-context-md", "applied": "2026-09-18" }
+        { "id": "011-context-md", "applied": "2026-09-18" },
+        { "id": "012-no-checkout-overlay", "applied": "2026-09-21" }
       ]
     },
     "derived": {

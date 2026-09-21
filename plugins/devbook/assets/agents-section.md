@@ -53,15 +53,15 @@ Run the check before committing; it writes nothing:
 
 An annotation fence is written only through `<generator-dir>/annotations.mjs`.
 
-Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
-holds instructions that apply on your machine only; read it when it exists and treat
-it as this file's last word. `config.local.json` overlays the committed stack config
-the same way. Each lives in one of three places, and a session reads every one it
-finds, nearest last: `.devbook/` in this checkout (gitignored, and absent in a fresh
-worktree), `repos/<id>/` under your devbook config directory for this repository —
-`<id>` is the `id` in `.devbook/config.json` — and that directory itself for every
-repository. The directory is `$XDG_CONFIG_HOME/devbook` when set, else
-`%APPDATA%\devbook` on Windows and `~/.config/devbook` elsewhere. Put no secret in
-any of them — gitignored is not private, and neither is your home directory.
+Two files are yours alone, absent by default, and never inside this repository.
+`AGENTS.local.md` holds instructions that apply on your machine only; read it when it
+exists and treat it as this file's last word. `config.local.json` overlays the
+committed stack config the same way. Each lives in one of two places under your
+devbook config directory, and a session reads both where it finds them, nearest
+last: the directory itself for every repository, and `repos/<id>/` under it for this
+one — `<id>` is the `id` in `.devbook/config.json`. The directory is
+`$XDG_CONFIG_HOME/devbook` when set, else `%APPDATA%\devbook` on Windows and
+`~/.config/devbook` elsewhere. Put no secret in either — your home directory is not
+private.
 <!-- devbook:end -->
 ```

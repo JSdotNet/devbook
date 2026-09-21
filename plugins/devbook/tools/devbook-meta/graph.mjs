@@ -66,7 +66,10 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 11;
+// Version 12 changes no chapter shape: it retires the checkout layer of the
+// stack-config overlay and the `.gitignore` block devbook materialized for it,
+// so the stamp's `materialized` no longer carries `.gitignore#devbook`.
+export const CONTRACT_VERSION = 12;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
