@@ -89,7 +89,7 @@ rename wave for a coupling nothing has broken yet. This record is what was writt
 
 `delivery`, in five skills and three tracker mentions. `devbook`, which cannot move a payload
 path or rename a folder without a coordinated `delivery` release it has no way to require.
-`delivery-schedule` and `fleet` inherit the coupling through `delivery`.
+`delivery-schedule` inherits the coupling through `delivery`.
 
 ## Impact
 

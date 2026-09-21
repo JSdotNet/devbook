@@ -49,23 +49,24 @@ status: candidate
 type: skill
 stage: [plan, code]
 depends-on: [".devbook/tech/hosts.md#claude-code-cli"]
-related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
-date: 2026-09-03
+related: [".devbook/domain/delivery-schedule/skills.md#schedule-issue-sweep", ".devbook/arc42/adr/plugin-boundaries.md"]
+date: 2026-09-21
 ```
 
-`fleet` sweeps a backlog and works it five issues at a time across sessions and worktrees,
-instead of one session at a time.
+The issue sweep classifies the inbox, closes what evidence shows already resolved, and works
+the top of the backlog one issue at a time into draft pull requests, with nobody watching. It
+replaced `fleet`, which did the working part five sessions at a time, on 2026-09-21.
 
 - **Used for** — nothing here yet. This repository's backlog is small enough that the one-issue
   lane has never been the constraint.
-- **Adopted by** — nobody. A sweep dispatches workers that open pull requests nobody asked for
-  if the triage is wrong, which is not a thing to try on the repository that ships it.
+- **Adopted by** — nobody. A sweep opens draft pull requests nobody asked for if the triage is
+  wrong, which is not a thing to try on the repository that ships it.
 - **Evidence** — none yet. `candidate` rather than `trial` because the honest first use is
-  somebody else's repository. The thing to watch when it is tried is the park rate: a sweep
-  that parks four of five issues is the design working, and reading that as a failure is how
-  the bar gets lowered.
-- **Limits** — Claude-only until the `session-spawn` slot lands; see
-  [the debt record](../arc42/tdr/2-fleet-names-the-cli-directly.md).
+  somebody else's repository. The thing to watch when it is tried is what the pull request
+  bodies say could not be proved: a sweep whose every draft names something to validate is the
+  design working, and reading that as a failure is how the bar gets lowered.
+- **Limits** — the resolution runs through the host's workflow tool, which is the same
+  host-capability divergence the schedule plugin already records.
 
 ## Scheduling
 

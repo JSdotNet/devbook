@@ -22,7 +22,7 @@ date: 2026-09-21
 related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Eleven plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
+Ten plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -37,7 +37,6 @@ flowchart TB
         DBD["devbook-derived 1.2.0"]
         DPR["devbook-procedures 1.2.0"]
         DBC["devbook-collaboration 1.2.0"]
-        FLT["fleet 1.2.0"]
         SCH["delivery-schedule 1.2.0"]
     end
 
@@ -50,7 +49,6 @@ flowchart TB
     DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
     DPR ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
-    FLT ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
     SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
 
     SD -->|"delivery.surface.*@1"| DEL
@@ -189,7 +187,7 @@ trio rather than deleting it.
 
 Shared text a skill or an agent reads by path is not that, and lives in `resources/`: the
 `rules/` folder announces a delivery mechanism, and a contract does not use it.
-`delivery`, `delivery-schedule`, and `fleet` ship no `rules/` folder at all.
+`delivery` and `delivery-schedule` ship no `rules/` folder at all.
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
@@ -374,34 +372,6 @@ every category takes its default.
 Unbound is now the resting state of the whole table, and the table is what keeps that visible
 rather than silent.
 
-## Fan-Out State
-
-```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-`fleet` is the only plugin here that keeps state **outside** every repository it acts on. A
-sweep spans sessions that cannot see each other's conversations, so the files are the whole
-coordination surface:
-
-```text
-~/.claude/issue-sweep/<sweepId>/
-  sweep.json              # the manifest: what was picked up, skipped, and proposed for closure
-  workers/<number>.json   # one result per worker, written on every outcome including failure
-  brief.md                # the report, written by the sweep once its workers finish
-```
-
-The root is overridable with `CLAUDE_ISSUE_SWEEP_DIR` and is resolved once to an absolute path,
-because a spawned worker does not inherit the dispatching session's working directory. It sits
-outside any repository so it survives worktree removal and never shows up in `git status`.
-
-Two other things carry sweep state, and neither is a file this repository owns: the
-`ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
-make a claim legible from GitHub alone, and the host's list of live background sessions, which
-is how a missing result file is told from a worker still running.
-`resources/fleet-issue-sweep-contract.md` owns both schemas.
-
 ## Config Plugin
 
 ```meta
@@ -524,9 +494,9 @@ the live tool list, and creates or updates each entry matched by name — `<owne
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
 entry, a cron that could fire more than hourly, or a target that is a flow.
 
-The plugin depends on `delivery` and names `devbook`, which is the L1 extension shape `fleet`
-already has: the entry points call the engine's flows and phases, so the dependency is real,
-while a target in another plugin is named and skipped when the repository has not enabled it.
+The plugin depends on `delivery` and names `devbook`, the L1 extension shape: the entry
+points call the engine's flows and phases, so the dependency is real, while a target in
+another plugin is named and skipped when the repository has not enabled it.
 It named a third until the specialists
 [left the marketplace](adr/plugin-boundaries.md):
 what a target delegates to is a binding the consuming repository makes, not a plugin the

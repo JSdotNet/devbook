@@ -5,7 +5,22 @@ date: 2026-09-03
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/tech/hosts.md#claude-code-cli"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+
+## Resolution
+
+```meta
+date: 2026-09-21
+```
+
+Resolved on 2026-09-21 by deleting `fleet`, not by adding the slot. The one use anyone had for
+fan-out — a backlog swept, closed, and worked with nobody watching — wanted one session and
+hours rather than five sessions and minutes, so the sweep became a `delivery-schedule` entry
+point that resolves its issues sequentially and never launches, tracks, or waits on another
+session. No asset names the Claude CLI any more. What remains is the `Workflow` tool the
+sweep's two scripts run under, inside the plugin whose host-capability divergence is already
+recorded, and the `session-spawn` slot is not needed until something wants fan-out again.
+The record below is kept as written.
 
 ## The debt
 

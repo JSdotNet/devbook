@@ -123,5 +123,4 @@ stateDiagram-v2
   question and hoping for a different answer.
 - **Parked is not declined and not approved.** An unattended run reaching a blocking gate stops
   with a brief naming what a person has to look at; it never waits and never self-approves, and
-  that boundary is where [Fleet](../fleet/flow.md) and
-  [Delivery Schedule](../delivery-schedule/flow.md) take over.
+  that boundary is where [Delivery Schedule](../delivery-schedule/flow.md) takes over.

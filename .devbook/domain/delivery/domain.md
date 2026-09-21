@@ -315,8 +315,8 @@ from the live tool list, and nothing answering is a normal outcome.
 ### Consumers
 
 - **The three surfaces**, each answering the lifecycle group or not answering at all.
-- **[Fleet](../fleet/domain.md)** and **[Delivery Schedule](../delivery-schedule/domain.md)**,
-  which publish the same event for work no attended flow started.
+- **[Delivery Schedule](../delivery-schedule/domain.md)**, which publishes the same event for
+  work no attended flow started.
 
 ### Published language rules
 
@@ -378,9 +378,9 @@ payload rather than in whether the event fired.
 ### Consumers
 
 - **The three surfaces**, for the report and for closing the run.
-- **[Fleet](../fleet/domain.md)**, whose worker result files are written on every outcome
-  including failure, because a sweep that cannot tell a crash from a slow worker cannot
-  aggregate anything.
+- **[Delivery Schedule](../delivery-schedule/domain.md)**'s issue sweep, whose brief reports
+  every resolution's outcome including failure, because a brief that cannot tell a crash from
+  a slow build reports nothing a person can act on.
 
 ### Published language rules
 
@@ -497,8 +497,8 @@ a revised change set is a new thing to look at. The **gate** is the decision, an
 per pass. Splitting them lets the presentation be a phase skill without any of it becoming
 configurable: a repository may declare gates in front of this one and may never remove it.
 
-It is the thing [Fleet](../fleet/domain.md#park) trades away and the thing an unattended run
-parks at. Wherever a run cannot reach it, something else has to guarantee that nothing merges
+It is the thing an unattended run parks at — or, in the issue sweep, moves onto a draft pull
+request. Wherever a run cannot reach it, something else has to guarantee that nothing merges
 unread.
 
 ### PR Lane

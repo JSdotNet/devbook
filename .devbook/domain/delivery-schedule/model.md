@@ -51,16 +51,12 @@ classDiagram
     class Flow {
         <<Delivery>>
     }
-    class FleetSkill {
-        <<Fleet>>
-    }
 
     Schedule "1" --> "1" Cadence : fires on
     Schedule "1" --> "1" Target : names
     Schedule "1" --> "1" Prompt : carries
     Prompt --> Preamble : opens with
     Target ..> EntryPoint : may name
-    Target ..> FleetSkill : may name
     Target ..> Flow : may never name
     EntryPoint --> Flow : calls
     ScheduleSelection "1" --> "many" Schedule : selects

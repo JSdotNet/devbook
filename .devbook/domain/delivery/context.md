@@ -16,8 +16,9 @@ the stack config, and the pull-request lane at the end.
 
 Outside it: deploy, which is where "delivery" stops here; expertise, which is a role a
 repository binds; visibility, which is a [surface](../delivery-surface-dashboard/domain.md)
-resolved at run time; and fan-out, which is [Fleet](../fleet/domain.md)'s and is the one thing
-a flow may never do.
+resolved at run time; and a backlog worked with nobody watching, which is
+[Delivery Schedule](../delivery-schedule/domain.md)'s issue sweep — one item at a time in a
+session no flow shares.
 
 ## Dependencies
 
@@ -42,7 +43,6 @@ whole truth.
 
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
-| [Fleet](../fleet/context.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its workers run this context's flows and phases inside their own sessions | Flow names, the phase contract, the reporting contract | That a flow ends at a gate — which is exactly what it trades away, deliberately, for a pull request nobody merges unread. |
 | [Delivery Schedule](../delivery-schedule/context.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call these flows and phases | Flow names, the phase contract, the parking rule at a gate | That an unattended run parks where Personal Validation would be, and that no schedule may target a flow. |
 | [Delivery Surface Dashboard](../delivery-surface-dashboard/context.md#dependencies) | Conformist to a Published Language | Implements `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | `resources/surface-contract.md` | The tool names and their shapes. It names no engine, and the engine names no surface. |
 | [Delivery Surface Canvas](../delivery-surface-canvas/context.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | That a caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |

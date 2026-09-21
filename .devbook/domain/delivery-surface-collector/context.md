@@ -36,7 +36,6 @@ nothing and nothing declares it.
 |---|---|---|---|---|
 | Whatever drives a run | Customer-Supplier, this context supplying | Tool names matched by pattern from the live tool list | The two groups it answers | That groups are resolved separately, so the missing render group is read as unanswered rather than as a broken surface. |
 | [Delivery Schedule](../delivery-schedule/context.md#dependencies) | Customer-Supplier, this context supplying | Lifecycle calls from an unattended cloud session | The same contract | That a run recorded with nobody watching is readable afterwards — which is the case this implementation exists for. |
-| [Fleet](../fleet/context.md#dependencies) | Customer-Supplier, this context supplying | Lifecycle calls from a worker session | The same contract | The same, per worker. Its own result files remain the source of truth for the sweep. |
 | [Devbook Config](../devbook-config/context.md#dependencies) | Conformist, read-only | Reports whether this plugin is installed, enabled, and at what version | The marketplace entry and the manifest | Nothing but the name and version. |
 
 ### Notes

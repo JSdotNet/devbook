@@ -146,7 +146,6 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | Prefix | Scope |
 | --- | --- |
 | `flow-` | One session, delegating to subagents. Never to another session. |
-| `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation, personal validation. Never invoked directly. |
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 
@@ -155,13 +154,12 @@ one scope needs none: `devbook-config` holds `setup`, `update`, `ask`, and `adop
 and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
-*orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
+*orchestration* — the word once covered fan-out and single-session staging at once, and the
+fan-out it described no longer ships. `delivery` holds four `flow-*` — one
 for the code and one for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/plugin-boundaries.md) —
-and three `phase-*`, `delivery-schedule` holds sixteen `schedule-*` beside a bare `install`, and
-`fleet` holds two `fleet-*` beside a bare `sweep-brief` — a read-and-report skill that fans
-nothing out, so the prefix that would claim it does would be wrong.
+and three `phase-*`, and `delivery-schedule` holds sixteen `schedule-*` beside a bare
+`install`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -172,30 +170,13 @@ implementation after that, so the three are read as one kind from the marketplac
 A surface interchangeable with nothing does not: the contract word marks membership, and
 `devbook-graph` beside `delivery-surface-canvas` would read as a second implementation of the
 render group, which it is not.
-`fleet` is its own stem, not a package inside `delivery`, because fan-out is a different
-subsystem.
 
-### Fleet Skill
-
-```meta
-type: term
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-A procedure that turns one queue into work across several sessions, each in its own worktree —
-`fleet-<what it sweeps>`. It is the exception a [flow](#flow-skill) is forbidden from being: a
-flow owns a run, a gate, and a user turn, none of which survives a session boundary, so
-fan-out is a different subsystem rather than a bigger flow.
-
-Three words carry the whole shape. A **sweep** triages a queue, claims what it picks, and
-dispatches. A **worker** is one spawned session resolving one item. A worker **parks** when its
-change cannot prove itself — committed, left in its worktree, with a brief naming what a human
-has to look at — and opens a pull request only when it can.
-
-A fleet skill owns no run and holds no gate. `fleet-resolve-issue` trades Personal Validation
-for a narrower guarantee, not for nothing: the pull request is the review surface, and a change
-that cannot demonstrate itself never reaches one.
+No skill in this marketplace spawns a session. Fan-out across sessions and worktrees was its
+own subsystem and prefix, `fleet-`, until 2026-09-21, when the one thing anyone wanted from it
+— a backlog swept, closed, and worked with nobody watching — turned out to want one session
+and hours rather than five sessions and minutes; it is the issue sweep in
+[Delivery Schedule](../delivery-schedule/skills.md#schedule-issue-sweep) now, and the reason is
+in [the plugin boundaries record](../../arc42/adr/plugin-boundaries.md).
 
 ### Schedule
 

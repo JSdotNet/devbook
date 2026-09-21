@@ -56,7 +56,7 @@ writing Markdown and not HTML.
 
 ```meta
 type: value-object
-related: [".devbook/domain/delivery-surface-dashboard/domain.md#handoff-marker", ".devbook/domain/fleet/domain.md#park"]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#handoff-marker", ".devbook/domain/delivery/domain.md#personal-validation"]
 ```
 
 The note a deliberately handed-off run leaves behind, and the difference between a run to

@@ -37,7 +37,7 @@ direction — a surface is not a layer, and nothing may declare one.
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
 | Whatever drives a run | Customer-Supplier, this context supplying | Tool names matched by pattern from the live tool list, never by one spelling | The three capability groups | That each group is resolved separately, and that this one answers all three. It names no caller and no caller names it. |
-| [Fleet](../fleet/context.md#dependencies), [Delivery Schedule](../delivery-schedule/context.md#dependencies) | Customer-Supplier, this context supplying | The same lifecycle calls, from unattended sessions | The same contract | The same. Both follow the engine's reporting contract and treat no surface bound as normal. |
+| [Delivery Schedule](../delivery-schedule/context.md#dependencies) | Customer-Supplier, this context supplying | The same lifecycle calls, from unattended sessions | The same contract | The same. It follows the engine's reporting contract and treats no surface bound as normal. |
 | [Devbook Config](../devbook-config/context.md#dependencies) | Conformist, read-only | Reports whether this plugin is installed, enabled, and at what version | The marketplace entry and the manifest | Nothing but the name and version. |
 
 ### Notes

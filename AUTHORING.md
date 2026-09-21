@@ -52,7 +52,7 @@ Four kinds are long by nature, and the reason is stated here once rather than in
 
 | Kind | Why it exceeds by nature |
 | --- | --- |
-| `flow-*`, `phase-*`, `fleet-*`, `schedule-*` skills | A staged procedure is read once per run and every stage is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
+| `flow-*`, `phase-*`, `schedule-*` skills | A staged procedure is read once per run and every stage is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `assets/spec-kinds/<kind>.md` | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
 | A plugin rule (`devbook-*.md`) and a `resources/` contract | A schema or a contract is the single source everything else points at; it cannot itself be a pointer. |
 | The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |

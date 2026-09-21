@@ -33,7 +33,6 @@ and every context conforms to them rather than the other way round.
 | Review and approval of a chapter | Supporting | [Devbook Collaboration](#devbook-collaboration) |
 | Which stack a repository runs, and what it has | Supporting | [Devbook Config](#devbook-config) |
 | Carrying one unit of work to a review-ready change | Core | [Delivery](#delivery) |
-| Turning a backlog into parallel work | Supporting | [Fleet](#fleet) |
 | Work that runs with nobody watching | Supporting | [Delivery Schedule](#delivery-schedule) |
 | Making a run visible or recorded | Generic | [Dashboard](#delivery-surface-dashboard), [Canvas](#delivery-surface-canvas), [Collector](#delivery-surface-collector) |
 
@@ -57,7 +56,6 @@ flowchart TB
 
     subgraph deliveryStack["delivery stack"]
         DEL["Delivery"]
-        FLT["Fleet"]
         SCH["Delivery Schedule"]
     end
 
@@ -104,7 +102,6 @@ relationship that exists in the assets and in no manifest.
 | Devbook | Devbook Collaboration | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | Devbook | Devbook Procedures | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | Devbook Procedures | Delivery | Separate Ways | No — the engine names the skills `start` and `capture` and their path, never the plugin; absent, a flow does without |
-| Delivery | Fleet | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | Delivery Schedule | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | Delivery | the three surfaces | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | Devbook | Delivery Schedule | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
@@ -130,10 +127,9 @@ devbook is absent.
 | The review triad — `review`, `reviewer`, `review-at` | Devbook | Devbook Collaboration, and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` extension namespace | Devbook | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Delivery | The three surfaces | `resources/surface-contract.md`; tool names matched by pattern |
-| The extension-point set and the gate contract | Delivery | Fleet, Delivery Schedule, and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
+| The extension-point set and the gate contract | Delivery | Delivery Schedule, and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
 | `.devbook/config.json` — four engine keys plus one stamp per component | Delivery owns the four keys; each component owns its own stamp | Devbook Config reads all of it; every install skill writes one key | `resources/config.schema.json` |
 | The schedule catalog entry | Delivery Schedule | Whatever scheduler the live session exposes | `resources/schedule-catalog-contract.md` |
-| The sweep manifest and the worker result files | Fleet | Its own workers, across sessions that cannot see each other | `resources/fleet-issue-sweep-contract.md` |
 | The plugin folder shape and the two manifests | Plugin Authoring | Every plugin; checked by `tools/check-assets.mjs` | [domain.md](plugin-authoring/domain.md) and the hosts' own schemas |
 
 ## Strategic rules
@@ -240,17 +236,6 @@ One unit of work, carried from a request to a review-ready change inside one ses
 staged flows, the closed set of extension points a repository binds providers to, the human
 gates it may add and never remove, and the pull-request lane at the end. Deploy is outside the
 boundary, and so is fan-out.
-
-## Fleet
-
-```meta
-type: bounded-context
-related: [".devbook/domain/fleet/domain.md", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-A backlog turned into parallel work across sessions and worktrees — the one thing a flow may
-never do. A sweep triages and dispatches, a worker resolves one item, and a change that cannot
-prove itself parks instead of passing a gate nobody is there to answer.
 
 ## Delivery Schedule
 

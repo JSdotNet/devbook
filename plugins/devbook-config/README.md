@@ -37,7 +37,7 @@ different questions — *what should this repository use?* against *is what it u
 and only the first is a conversation about intent. Merging them would put an interview in
 front of an operation people run to change nothing.
 
-The four carry no prefix. `flow-`, `fleet-`, `phase-`, and `schedule-` each mark a procedure's
+The four carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
 scope against its neighbours in the same plugin; here the plugin name is the scope, and
 `devbook-config:setup` says everything a prefix would have.
 

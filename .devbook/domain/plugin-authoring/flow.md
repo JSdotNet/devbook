@@ -110,4 +110,5 @@ flowchart TD
   `data.prepare`, `app.start`, `qa.run`, and `verify`: gate, then `deliver`. The tier a bridge plugin's
   flow declares is its own, because the engine may not name a skill in a layer above it.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
-  never self-approves, which is the boundary between a flow and a [fleet skill](domain.md#fleet-skill).
+  never self-approves, which is the boundary between a flow and a
+  [schedule entry point](../delivery-schedule/domain.md#entry-point).
