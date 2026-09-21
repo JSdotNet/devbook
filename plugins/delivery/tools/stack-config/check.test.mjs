@@ -284,6 +284,45 @@ test('an overlay is still schema-checked, so a typo in it is rejected by name', 
     assert.match(errors[0], /unknown key "qa.dpeth"/);
 });
 
+// `ext` — a plugin's machine-scope state, `ext.<plugin>.<key>`, the overlay-side
+// counterpart of `components`: refused in the committed file, opaque in an overlay.
+
+const checkOverlay = (config) => checkStackConfig(config, schema, { overlay: true });
+
+test('ext is refused in the committed config and pointed at the overlay', () => {
+    const errors = check({ ext: { schedule: { environment: 'cloud' } } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^ext: machine-scope/);
+});
+
+test('ext in an overlay is carried through opaque: the engine reads none of its keys', () => {
+    assert.deepEqual(checkOverlay({ ext: { schedule: { environment: 'cloud', model: 'sonnet' } } }), []);
+    assert.deepEqual(checkOverlay({ ext: {} }), []);
+    assert.deepEqual(checkLocalOverlay({ ext: { schedule: { model: 'opus' } } }), []);
+});
+
+test('ext is only shape-checked as far as it takes to be addressable', () => {
+    assert.match(checkOverlay({ ext: 'cloud' })[0], /^ext: expected an object keyed by plugin/);
+    assert.match(checkOverlay({ ext: { schedule: 'cloud' } })[0], /^ext\.schedule: expected an object/);
+});
+
+test('the shipped overlay template validates as an overlay and is refused as the committed file', () => {
+    const template = JSON.parse(
+        readFileSync(join(HERE, '..', '..', 'resources', 'config.local-template.json'), 'utf8'),
+    );
+    assert.deepEqual([...checkLocalOverlay(template), ...checkOverlay(template)], []);
+    assert.equal(check(template).length, 1);
+});
+
+test('ext survives the merge, later layers winning key by key', () => {
+    const merged = [
+        { ext: { schedule: { environment: 'cloud', model: 'sonnet' } } },
+        { ext: { schedule: { model: 'opus' } } },
+    ].reduce(mergeStackConfig, { policy: { 'qa.depth': 'full' } });
+    assert.deepEqual(merged.ext, { schedule: { environment: 'cloud', model: 'opus' } });
+    assert.deepEqual(checkOverlay(merged), []);
+});
+
 // Where the overlays are found — three layers, outermost first, resolved from the
 // committed id and the user's config directory rather than from the checkout alone.
 

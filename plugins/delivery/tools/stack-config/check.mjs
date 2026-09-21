@@ -14,9 +14,11 @@
 // independently invites checking a pair that never meet at run time.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
-// setting. That holds at the top level too: `components` is the one key the engine does not
-// own, each component validating its own entry there, so a top-level key that is neither
-// engine-owned nor `components` is a misspelling of one of them and is reported by name.
+// setting. That holds at the top level too: `components` is the one committed key the engine
+// does not own, each component validating its own entry there, and `ext` is its machine-scope
+// counterpart — `ext.<plugin>.<key>`, accepted in an overlay only, carried through the merge
+// untouched and read by the plugin that owns the namespace, never by the engine. A top-level
+// key that is none of these is a misspelling of one of them and is reported by name.
 //
 //   node check.mjs [path-to-config.json]
 //
@@ -141,7 +143,28 @@ function isAnnotation(key) {
     return key.startsWith('$');
 }
 
-export function checkStackConfig(config, schema) {
+/**
+ * `ext` is opaque to the engine: one object per owning plugin, each read by that plugin
+ * alone. The only shape checked is the one that makes it addressable — an object of
+ * objects — so a namespace nobody installed stays inert and a scalar at the top is caught.
+ */
+function checkExt(ext, errors) {
+    if (!isPlainObject(ext)) {
+        errors.push(`ext: expected an object keyed by plugin name, got ${typeOf(ext)}`);
+        return;
+    }
+    for (const [plugin, keys] of Object.entries(ext)) {
+        if (!isPlainObject(keys)) {
+            errors.push(`ext.${plugin}: expected an object of that plugin's keys, got ${typeOf(keys)}`);
+        }
+    }
+}
+
+/**
+ * Validate one layer. `overlay: true` is what an overlay gets and the committed file does
+ * not: `ext` is a machine's own state and has no place in a file a reviewer reads.
+ */
+export function checkStackConfig(config, schema, { overlay = false } = {}) {
     const errors = [];
     const owned = ownedKeys(schema);
 
@@ -149,14 +172,26 @@ export function checkStackConfig(config, schema) {
         if (key in config) validate(config[key], schema.properties[key], schema, key, errors);
     }
 
-    // Ownership, not a closed list: a component's entry lives under `components`, so anything
-    // else at this level is a misspelling. Matching on "not owned and not a component" keeps
-    // every component working without the engine knowing any of their names.
+    if ('ext' in config) {
+        if (overlay) checkExt(config.ext, errors);
+        else {
+            errors.push(
+                'ext: machine-scope, so it belongs in an overlay and never in the committed ' +
+                    'config. Move it to config.local.json at whichever layer is true of it.',
+            );
+        }
+    }
+
+    // Ownership, not a closed list: a component's entry lives under `components`, its
+    // machine-scope state under `ext`, so anything else at this level is a misspelling.
+    // Matching on "not owned and not one of the two" keeps every component working without
+    // the engine knowing any of their names.
     for (const key of Object.keys(config)) {
-        if (owned.includes(key) || key === 'components' || isAnnotation(key)) continue;
+        if (owned.includes(key) || key === 'components' || key === 'ext' || isAnnotation(key)) continue;
         errors.push(
-            `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, and a ` +
-                'component owns its own entry under `components`. Nothing reads this one.',
+            `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, a ` +
+                'component owns its own entry under `components` and its machine-scope state ' +
+                'under `ext` in an overlay. Nothing reads this one.',
         );
     }
 
@@ -320,10 +355,11 @@ function main() {
     // Each overlay is checked three times over: what it may not say, whether it is
     // well-typed on its own, and whether what it produces still validates. The third
     // catches the pair that is only wrong together, and runs after every layer so the
-    // report names the layer that broke it.
+    // report names the layer that broke it. The merged result is an overlay's shape, not the
+    // committed file's: it may carry `ext`.
     let merged = config;
     for (const { scope, path, overlay } of layers) {
-        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema)];
+        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema, { overlay: true })];
         if (localErrors.length) {
             report(path, localErrors);
             return 1;
@@ -331,7 +367,7 @@ function main() {
         console.log(`${path}: ok (${scope} overlay)`);
 
         merged = mergeStackConfig(merged, overlay);
-        const mergedErrors = checkStackConfig(merged, schema);
+        const mergedErrors = checkStackConfig(merged, schema, { overlay: true });
         if (mergedErrors.length) {
             report(`${target} + ${scope} overlay`, mergedErrors);
             return 1;

@@ -36,6 +36,15 @@ and `components` are refused, and the check validates the overlay alone and the 
 Trusting the overlay because its author could edit the committed file fails on visibility, not
 capability — the committed edit shows in review and the overlay never does.
 
+**`ext` is the overlay's `components`.** A plugin that must remember something about one
+machine — the environment and model a routine runs with — had no legal key: the engine
+rejects every top-level name it does not own, and an overlay may not carry a stamp. `ext.<plugin>.<key>`
+is the extension namespace the chapter `meta` block already reserves, applied to the config:
+accepted in an overlay only, refused in the committed file, shape-checked as far as being an
+object of objects and otherwise opaque to the engine. The owning plugin reads it and asks only
+for what is absent. `devbook-config:local` is what writes an overlay; `setup` never does,
+because an overlay is true of the person running it and of nobody they set a repository up for.
+
 **Three layers, keyed by a committed id.** A gitignored file is in no commit, so a fresh
 worktree ran at the team's defaults without saying so. A file outside the clone keyed on the
 checkout path splits worktrees exactly as the gitignored one does; a committed `id` survives a
@@ -76,6 +85,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. |
 | 2026-09-17 | Session-naming labels configured in the dashboard's hand-edited component entry; `null` means no prefix. |
 | 2026-09-15 | Overlay gains two layers under the devbook config directory, keyed by a committed `id`. |
 | 2026-09-15 | The flow context file and the `repo-flow-context` slot retired; the `start` skill holds the runtime facts, and nothing to start is `app.start: null`. |

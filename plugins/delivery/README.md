@@ -82,7 +82,8 @@ never become a silently absent setting. The checker also merges the overlays a m
 over the committed file — this checkout's gitignored `.devbook/config.local.json`, and the
 user's own under `$XDG_CONFIG_HOME/devbook` (`%APPDATA%\devbook`, `~/.config/devbook`) for
 every repository and for this one's `id` — per *The overlays* in
-`resources/surface-contract.md`. A point left out of `delivery.mcp` takes the engine
+`resources/surface-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
+own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
 `resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
 `devbook-config:setup` can copy them into a repository that declares no server yet.

@@ -145,15 +145,25 @@ QA it may reach stays true no matter what any overlay says. What an overlay chan
 and the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
 zeroed retry budget, an extra checkpoint of your own.
 
+One thing an overlay may say that the committed file may not: **`ext`**, the machine-scope
+counterpart of `components`. `ext.<plugin>.<key>` holds what a plugin needs to remember about
+your machine and nothing else — the environment and model a scheduled routine runs with, say
+— and is the *Extension Namespace* the devbook already reserves in a chapter's `meta` block,
+applied to the config. The engine checks only that it is an object of objects, merges it like
+any other object, and reads no key in it; the plugin that owns the namespace does, and asks
+only for what is absent there. Refused in the committed file: a reviewer has no use for one
+machine's routine settings, and a personal value in a committed file is everybody's.
+
 `check.mjs` finds every layer on its own — the user and repository layers from the environment
 and the committed `id`, the checkout layer beside the file it is given — and validates each
 three times over: what it may not say, whether it is well-typed alone, and whether the merge
 so far still validates, the third catching the pair that is only wrong together and naming the
 layer that broke it. `resources/config.local-template.json` is a starting point for any of
-the three.
+the three, and `devbook-config:local` writes one from your answers.
 
-**Gitignored is not private, and neither is your home directory.** No model and no secret,
-the same as the committed file: an overlay is read by every agent in your session and pasted
+**Gitignored is not private, and neither is your home directory.** No secret, the same as
+the committed file, and no model the engine reads — flow model choice stays in the file the
+`model-override` slot names: an overlay is read by every agent in your session and pasted
 into a bug report as readily as anything else.
 
 ## Extension Points

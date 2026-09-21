@@ -1,5 +1,5 @@
 {
-  "$comment": "Copy to one of three places, all yours and none committed: <config dir>/config.local.json for every repository you work in, <config dir>/repos/<id>/config.local.json for the repository whose committed config carries that `id` — both survive a fresh worktree — or .devbook/config.local.json for this checkout only, gitignored. <config dir> is $XDG_CONFIG_HOME/devbook when set, else %APPDATA%\\devbook on Windows and ~/.config/devbook elsewhere. They merge over .devbook/config.json in that order, the later winning: objects key by key with this file winning, arrays replaced whole, and `gates` appended so an overlay can add a checkpoint and has no way of spelling the removal of one. `null` here means deliberately unbound, never delete. Five things it may not say: `id` (it is what found this file), `components` (a stamp is repo-scope), `policy.pr.required`, `policy.qa.ceiling`, and `policy.gate.personalValidation` — those describe what this repository produces rather than how your machine runs it. Everything else in bindings, extensions, and policy is yours to adjust. Validate with tools/stack-config/check.mjs, which finds every layer on its own. Still no model and still no secret: gitignored is not private.",
+  "$comment": "Copy to one of three places, all yours and none committed: <config dir>/config.local.json for every repository you work in, <config dir>/repos/<id>/config.local.json for the repository whose committed config carries that `id` — both survive a fresh worktree — or .devbook/config.local.json for this checkout only, gitignored. <config dir> is $XDG_CONFIG_HOME/devbook when set, else %APPDATA%\\devbook on Windows and ~/.config/devbook elsewhere. They merge over .devbook/config.json in that order, the later winning: objects key by key with this file winning, arrays replaced whole, and `gates` appended so an overlay can add a checkpoint and has no way of spelling the removal of one. `null` here means deliberately unbound, never delete. Five things it may not say: `id` (it is what found this file), `components` (a stamp is repo-scope), `policy.pr.required`, `policy.qa.ceiling`, and `policy.gate.personalValidation` — those describe what this repository produces rather than how your machine runs it. Everything else in bindings, extensions, and policy is yours to adjust, and `ext.<plugin>.<key>` is where a plugin remembers what is true of your machine — refused in the committed file, read by that plugin alone. Validate with tools/stack-config/check.mjs, which finds every layer on its own. Still no secret, and no model the engine reads: gitignored is not private.",
   "bindings": {
     "delivery.roles": {
       "qa": null
@@ -20,5 +20,11 @@
       "prompt": "This one runs long on my machine. Go ahead?",
       "unattended": "block"
     }
-  ]
+  ],
+  "ext": {
+    "schedule": {
+      "environment": "cloud",
+      "model": "sonnet"
+    }
+  }
 }
