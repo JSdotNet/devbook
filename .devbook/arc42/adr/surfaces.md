@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
 ```
 
 A surface is a viewer for a run, resolved from the live tool list by matching the operation

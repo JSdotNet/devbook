@@ -16,7 +16,8 @@ repeated here.
 groupings, and its `domain-event`s), `domain-service` (with the events it
 raises itself), `feature` and `sub-feature`, `feature-flag` and `setting` (one
 kind, `setting`, for both levels) — and the file decides it where the
-folder has no `type`: `.devbook/arc42/05-building-block-view.md` is `building-block`,
+folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file under
+`.devbook/arc42/building-blocks/` are `building-block`,
 `.devbook/design/component-libraries.md` is `design-component`. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape
 and say so. Any other chapter is out of scope: say which flow owns it.

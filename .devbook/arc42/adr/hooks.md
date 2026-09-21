@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/plugin-authoring/domain.md#hook", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/hosts.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/08-crosscutting-concepts.md#hook", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/hosts.md"]
 ```
 
 A hook is the one component that speaks unasked, so every hook this marketplace ships checks

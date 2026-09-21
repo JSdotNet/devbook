@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-15
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/devbook/skills.md", ".devbook/domain/devbook/skills.md#sync-specs", ".devbook/domain/devbook/domain.md#spec-converter"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/building-blocks/devbook.md#sync-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
 ```
 
 **Remediation state:** identified · **Severity:** low · **Owner:** the maintainer
@@ -12,7 +12,7 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/devb
 ```meta
 ```
 
-The [devbook skills](../../domain/devbook/skills.md) name the three
+The [devbook skills](../building-blocks/devbook.md#interfaces) name the three
 converters after OpenSpec's verbs so a reader who has met OpenSpec first needs no translation.
 Two of the three earn that: `apply-change` implements an agreed spec there and here, and
 `verify-change` is report-only there and here. The third does not. OpenSpec's `sync-specs`

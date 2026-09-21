@@ -11,8 +11,10 @@ file here is hand-authored.
 
 The design these plugins implement is written down in this repository. Before writing, read
 the chapters the change touches: `.devbook/arc42/adr/` for why something is the way it is and
-`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/domain/` for the vocabulary
-and the boundary each plugin owns, and the plugin's own `rules/` for what a file must contain.
+`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/arc42/building-blocks/` for
+what each plugin owns, exposes, and depends on, `.devbook/arc42/08-crosscutting-concepts.md`
+for the vocabulary every plugin shares, and the plugin's own `rules/` for what a file must
+contain.
 
 When the repository and a chapter disagree, one of them is wrong and neither may stay that
 way: change the other in the same commit, or — when the divergence is deliberate — record it
@@ -167,7 +169,6 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 | Folder | Holds | Rules |
 | --- | --- | --- |
 | `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
-| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
 | `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.md` |
 | `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
 | `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
