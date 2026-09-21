@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-21
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#fleet-skill", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Every plugin is self-contained under `plugins/<name>/` and either works alone or declares

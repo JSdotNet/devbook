@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-21
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
 A plugin reaches a repository through its `install` skill and in no other way. The install

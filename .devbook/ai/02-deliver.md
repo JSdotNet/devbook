@@ -14,7 +14,7 @@ several.
 status: trial
 type: skill
 stage: [plan, code, test]
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill"]
 date: 2026-09-02
 ```
 
@@ -50,7 +50,7 @@ status: candidate
 type: skill
 stage: [plan, code]
 depends-on: [".devbook/tech/hosts.md#claude-code-cli"]
-related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#fleet-skill", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-09-03
 ```
 
@@ -74,7 +74,7 @@ instead of one session at a time.
 status: candidate
 type: skill
 stage: [operate, monitor]
-related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-09-07
 ```
 

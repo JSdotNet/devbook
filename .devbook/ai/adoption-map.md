@@ -7,7 +7,7 @@ type: adoption-map
 ```
 
 How this repository is itself built with AI. The assets it ships are the product and are
-described in `.devbook/arc42` and `.devbook/domain`; what follows is only how the work gets
+described in `.devbook/arc42`; what follows is only how the work gets
 done here. The practices live one chapter each in the usage files; this file is the map.
 
 ## Files

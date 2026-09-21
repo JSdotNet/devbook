@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-21
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/domain/plugin-authoring/domain.md#marketplace", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/adr/install.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
 Every plugin carries the same version — `1.3.0` — in both manifests and the marketplace

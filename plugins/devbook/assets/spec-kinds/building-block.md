@@ -8,8 +8,8 @@ carries the kind.
 
 | | |
 |---|---|
-| Chapters | The whole view, or one `##` section of it — a single container, or one level of decomposition |
-| File | `.devbook/arc42/05-building-block-view.md` |
+| Chapters | The whole view, or one `##` section of it — a single container, or one level of decomposition; or one block's own file, whole or one `##` section of it |
+| File | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` for a block the view keeps in its own file, per `devbook-arc42.md` |
 | Folder rule | `devbook-arc42.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.devbook/domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
 | Write path | The `arc42/` flow, per **Where the spec-side write goes** in the protocol |

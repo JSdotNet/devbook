@@ -48,11 +48,11 @@
     "devbook": {
       "pluginVersion": "1.2.0",
       "contractVersion": 12,
-      "adopted": ["arc42", "domain", "tech", "design", "ai"],
+      "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
           "from": "1.2.0",
-          "hash": "sha256:926485ff12996e9234a1557af44dd5bc4592e621812243398e9821a2995472a5",
+          "hash": "sha256:4656c36590ff8254812c71a95b0ec3d3e1c0bf3d78ffc807c2ed44f9a3cd0a83",
           "managed": true
         }
       },

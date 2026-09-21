@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/tech/hosts.md#claude-code-cli"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/tech/hosts.md#claude-code-cli"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer

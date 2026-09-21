@@ -22,7 +22,7 @@ whatever a plain Markdown viewer shows is what the host gets.
 ```meta
 status: adopted
 type: protocol
-related: [".devbook/domain/plugin-authoring/domain.md#mcp-server"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 ```
 
 How a plugin ships tools rather than prose. A plugin-provided server is namespaced by its
