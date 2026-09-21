@@ -499,8 +499,8 @@ related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
-into. Two halves in one folder: fourteen `schedule-*` entry points that pick their own input and
-run a flow, a review, or a report, and ten files under `resources/schedules/`, each a cadence, a target
+into. Two halves in one folder: fifteen `schedule-*` entry points that pick their own input and
+run a flow, a review, a triage, or a report, and eleven files under `resources/schedules/`, each a cadence, a target
 skill, the plugins that target needs, and the task half of a prompt, plus one preamble that
 carries the unattended rules every prompt starts with.
 
@@ -508,6 +508,7 @@ carries the unattended rules every prompt starts with.
 | --- | --- | --- |
 | `package-update` | `delivery-schedule:schedule-package-update` | weekly |
 | `merge-review` | `delivery-schedule:schedule-merge-review` | weekdays |
+| `issue-triage` | `delivery-schedule:schedule-issue-triage` | weekdays |
 | `morning-brief` | `delivery-schedule:schedule-morning-brief` | weekdays |
 | `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
 | `devbook-check` | `delivery-schedule:schedule-devbook-check` | daily |

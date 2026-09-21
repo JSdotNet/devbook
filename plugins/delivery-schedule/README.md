@@ -1,9 +1,9 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
-`schedule-*` entry points that pick their own input and run a flow, a review, or a report,
-ten trigger files that fire one on a cadence, and three skills that put those triggers in
-the host's scheduler and read them back.
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fifteen
+`schedule-*` entry points that pick their own input and run a flow, a review, a triage, or a
+report, eleven trigger files that fire one on a cadence, and three skills that put those
+triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
@@ -27,6 +27,7 @@ hand it one. Every one of them is also runnable by hand.
 |---|---|---|
 | `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
+| `schedule-issue-triage` | Runs `delivery`'s `issue-triage` over every unclassified open item, writing only the high-confidence verdicts | Labels and comments; a `schedule-report` issue for what a person must decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
 | `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
@@ -52,6 +53,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 |---|---|---|---|---|
 | `package-update` | Monday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
+| `issue-triage` | Weekdays 04:30 | `schedule-issue-triage`, every untriaged open item, high confidence only | `delivery-schedule`, `delivery` | Labels and comments; a `schedule-report` issue for what a person must decide, replaced while unread |
 | `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `schedule-devbook-check`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
@@ -75,7 +77,8 @@ enabled is reported and skipped, never scheduled.
 The two report schedules keep one open issue each. While the previous brief or update is
 still open nobody has read it, so the next run extends its window back to that issue's date
 and replaces the body: nothing between two runs is lost, and closing the issue is how it is
-acknowledged. The closed issues are the record.
+acknowledged. The closed issues are the record. `issue-triage`'s report keeps the same one
+open issue without a window: the rows a person has not decided fold into the next run's.
 
 ## The three catalog skills
 

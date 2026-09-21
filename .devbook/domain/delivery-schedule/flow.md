@@ -14,7 +14,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: ten trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: eleven trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| settings{"Would a cloud session load the marketplace?"}

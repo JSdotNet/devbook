@@ -80,7 +80,7 @@ date: 2026-09-07
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
 session with nobody watching, and lands what it produced as a pull request or a report issue.
 
-- **Used for** — nothing here yet. Ten schedules are defined; none is scheduled against this
+- **Used for** — nothing here yet. Eleven schedules are defined; none is scheduled against this
   repository.
 - **Adopted by** — nobody. The first repository to schedule one should be one where a draft
   pull request nobody asked for costs a glance, not a rebase.

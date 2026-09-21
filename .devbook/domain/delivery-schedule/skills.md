@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery-schedule"]
 ```
 
-> Seventeen skills in two halves: fourteen entry points that pick their own input, and three that put a
+> Eighteen skills in two halves: fifteen entry points that pick their own input, and three that put a
 > trigger in the scheduler and read it back. Every one of them is also runnable by hand, which is
 > how a cadence gets proved before it is trusted.
 
@@ -45,6 +45,19 @@ one commit per file and a ledger of every cut, because no check proves a rewritt
 and a reviewer must be able to drop one file without losing the rest. A file the previous run's
 rejected pull request touched is skipped: a rejection is an answer, and the run converges on what
 the repository will accept. It adds nothing but a pointer that replaces a duplicate.
+
+## schedule-issue-triage
+
+```meta
+type: feature
+related: [".devbook/domain/delivery/skills.md#issue-triage", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief", ".devbook/domain/delivery-schedule/skills.md#schedule-bug-fix"]
+```
+
+Run `delivery`'s `issue-triage` over every open item nobody has classified, writing only the
+high-confidence verdicts and publishing the rest — proposals, missing labels, flagged items,
+duplicates awaiting a close — as one schedule-report issue that the next run folds into rather
+than stacks beside. The weekday `issue-triage` trigger's target, timed before the morning brief
+and the bug fix, because both rank by the labels it writes.
 
 ## schedule-merge-review
 
