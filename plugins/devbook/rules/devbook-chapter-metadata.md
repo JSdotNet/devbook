@@ -655,7 +655,7 @@ one set per devbook folder plus a repository-wide rollup, placed per that
 plugin's `devbook-derived-artifacts.md`:
 
 ```text
-_meta/graph.json          # reference graph, all adopted folders
+.devbook/_meta/graph.json          # reference graph, all adopted folders
 _meta/index.json          # reading outline, all adopted folders
 .devbook/arc42/_meta/graph.json   # arc42/ only
 .devbook/arc42/_meta/index.json
