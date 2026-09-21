@@ -1,30 +1,37 @@
 #!/usr/bin/env node
 // Validates the delivery-owned keys of .devbook/config.json against
-// resources/config.schema.json, and merges the gitignored overlays over it — up to three,
-// applied in this order, each optional and absent by default:
+// resources/config.schema.json, and merges the user's overlays over it — up to two, applied
+// in this order, each optional and absent by default:
 //
 //   <config dir>/config.local.json               this user, every repository
 //   <config dir>/repos/<id>/config.local.json    this user, the repository `id` names
-//   .devbook/config.local.json                   this checkout
 //
 // where <config dir> is $XDG_CONFIG_HOME/devbook when that variable is set, else
-// %APPDATA%\devbook on Windows and ~/.config/devbook elsewhere. The first two survive a
-// fresh worktree, which is what they are for; the last is found beside the committed file,
-// never passed separately, because one config has one checkout overlay and naming them
-// independently invites checking a pair that never meet at run time.
+// %APPDATA%\devbook on Windows and ~/.config/devbook elsewhere. Both live outside every
+// clone, so a fresh worktree runs with the same settings as the last one and nothing personal
+// ever sits in the repository, gitignored or not.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
-// setting. That holds at the top level too: `components` is the one key the engine does not
-// own, each component validating its own entry there, so a top-level key that is neither
-// engine-owned nor `components` is a misspelling of one of them and is reported by name.
+// setting. That holds at the top level too: `components` is the one committed key the engine
+// does not own, each component validating its own entry there, and `ext` is its machine-scope
+// counterpart — `ext.<plugin>.<key>`, accepted in an overlay only, carried through the merge
+// untouched and read by the plugin that owns the namespace, never by the engine. A top-level
+// key that is none of these is a misspelling of one of them and is reported by name.
 //
-//   node check.mjs [path-to-config.json]
+//   node check.mjs [path-to-config.json]            validate; status lines on stdout
+//   node check.mjs [path-to-config.json] --print    validate, then print the merged config
+//
+// `--print` is how a flow reads the effective configuration: one JSON document on stdout —
+// `{ target, layers, config }`, the layers with their paths and presence, `config` the
+// committed file with every present overlay merged over it (`null` when there is no
+// committed file) — with the status lines moved to stderr. Nothing is printed when a layer
+// is invalid: a consumer never sees a merge the checker refused.
 //
 // Exit 0 when the files are valid or absent, 1 when they are not.
 
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { basename, dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -141,7 +148,28 @@ function isAnnotation(key) {
     return key.startsWith('$');
 }
 
-export function checkStackConfig(config, schema) {
+/**
+ * `ext` is opaque to the engine: one object per owning plugin, each read by that plugin
+ * alone. The only shape checked is the one that makes it addressable — an object of
+ * objects — so a namespace nobody installed stays inert and a scalar at the top is caught.
+ */
+function checkExt(ext, errors) {
+    if (!isPlainObject(ext)) {
+        errors.push(`ext: expected an object keyed by plugin name, got ${typeOf(ext)}`);
+        return;
+    }
+    for (const [plugin, keys] of Object.entries(ext)) {
+        if (!isPlainObject(keys)) {
+            errors.push(`ext.${plugin}: expected an object of that plugin's keys, got ${typeOf(keys)}`);
+        }
+    }
+}
+
+/**
+ * Validate one layer. `overlay: true` is what an overlay gets and the committed file does
+ * not: `ext` is a machine's own state and has no place in a file a reviewer reads.
+ */
+export function checkStackConfig(config, schema, { overlay = false } = {}) {
     const errors = [];
     const owned = ownedKeys(schema);
 
@@ -149,14 +177,26 @@ export function checkStackConfig(config, schema) {
         if (key in config) validate(config[key], schema.properties[key], schema, key, errors);
     }
 
-    // Ownership, not a closed list: a component's entry lives under `components`, so anything
-    // else at this level is a misspelling. Matching on "not owned and not a component" keeps
-    // every component working without the engine knowing any of their names.
+    if ('ext' in config) {
+        if (overlay) checkExt(config.ext, errors);
+        else {
+            errors.push(
+                'ext: machine-scope, so it belongs in an overlay and never in the committed ' +
+                    'config. Move it to config.local.json at whichever layer is true of it.',
+            );
+        }
+    }
+
+    // Ownership, not a closed list: a component's entry lives under `components`, its
+    // machine-scope state under `ext`, so anything else at this level is a misspelling.
+    // Matching on "not owned and not one of the two" keeps every component working without
+    // the engine knowing any of their names.
     for (const key of Object.keys(config)) {
-        if (owned.includes(key) || key === 'components' || isAnnotation(key)) continue;
+        if (owned.includes(key) || key === 'components' || key === 'ext' || isAnnotation(key)) continue;
         errors.push(
-            `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, and a ` +
-                'component owns its own entry under `components`. Nothing reads this one.',
+            `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, a ` +
+                'component owns its own entry under `components` and its machine-scope state ' +
+                'under `ext` in an overlay. Nothing reads this one.',
         );
     }
 
@@ -242,22 +282,16 @@ export function userConfigDir({ env = process.env, platform = process.platform, 
     return join(home, '.config', 'devbook');
 }
 
-/** `.devbook/config.json` -> `.devbook/config.local.json`. */
-function localSiblingOf(path) {
-    return join(dirname(path), basename(path).replace(/\.json$/, '.local.json'));
-}
-
 /**
- * Every overlay that applies to the config at `target`, outermost first — the order they
+ * Every overlay that applies to a config carrying `id`, outermost first — the order they
  * merge in, so the later a layer the more it wins. The repository layer exists only when
  * the committed file carries an `id`: a machine cannot key a folder on a name the
  * repository never chose.
  */
-export function overlayPaths(target, id, options) {
+export function overlayPaths(id, options) {
     const user = userConfigDir(options);
     const layers = [{ scope: 'user', path: join(user, 'config.local.json') }];
     if (id) layers.push({ scope: 'repository', path: join(user, 'repos', id, 'config.local.json') });
-    layers.push({ scope: 'checkout', path: localSiblingOf(target) });
     return layers;
 }
 
@@ -276,70 +310,81 @@ function report(label, errors) {
     for (const error of errors) console.error(`  ${error}`);
 }
 
-function main() {
-    const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
-    const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
+/**
+ * Read the committed config and every overlay layer, validate each and the merge, and
+ * return what a caller needs to act on it. `errors` is non-empty when something failed;
+ * `merged` is then meaningless and callers print nothing from it.
+ */
+export function resolveStackConfig(target, schema, options) {
+    const config = readConfig(target);
+    const layers = overlayPaths(typeof config?.id === 'string' ? config.id : null, options)
+        .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
+        .map((layer) => ({ ...layer, present: layer.overlay !== null }));
+    const lines = [];
+    const errors = [];
 
-    let config;
-    let layers;
+    if (config === null) {
+        // A user overlay applies to every repository, including one that keeps no stack
+        // config; it adjusts a repository's wiring and cannot stand in for it.
+        lines.push(`no stack config at ${target} — every point falls back to its default`);
+        return { config, layers, merged: null, lines, errors };
+    }
+
+    const committedErrors = checkStackConfig(config, schema);
+    if (committedErrors.length) errors.push({ label: target, errors: committedErrors });
+    else lines.push(`${target}: ok`);
+
+    // Each overlay is checked three times over: what it may not say, whether it is
+    // well-typed on its own, and whether what it produces still validates. The third
+    // catches the pair that is only wrong together, and runs after every layer so the
+    // report names the layer that broke it. The merged result is an overlay's shape, not the
+    // committed file's: it may carry `ext`.
+    let merged = config;
+    for (const { scope, path, overlay } of layers.filter((layer) => layer.present)) {
+        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema, { overlay: true })];
+        if (localErrors.length) {
+            errors.push({ label: path, errors: localErrors });
+            return { config, layers, merged: null, lines, errors };
+        }
+        lines.push(`${path}: ok (${scope} overlay)`);
+
+        merged = mergeStackConfig(merged, overlay);
+        const mergedErrors = checkStackConfig(merged, schema, { overlay: true });
+        if (mergedErrors.length) {
+            errors.push({ label: `${target} + ${scope} overlay`, errors: mergedErrors });
+            return { config, layers, merged: null, lines, errors };
+        }
+    }
+    if (layers.some((layer) => layer.present)) lines.push('merged: ok');
+
+    return { config, layers, merged: errors.length ? null : merged, lines, errors };
+}
+
+function main() {
+    const args = process.argv.slice(2);
+    const print = args.includes('--print');
+    const target = resolve(args.find((arg) => !arg.startsWith('--')) ?? join('.devbook', 'config.json'));
+    const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
+    // With --print, stdout is the document and everything else goes to stderr.
+    const status = print ? console.error : console.log;
+
+    let resolved;
     try {
-        config = readConfig(target);
-        layers = overlayPaths(target, typeof config?.id === 'string' ? config.id : null)
-            .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
-            .filter((layer) => layer.overlay !== null);
+        resolved = resolveStackConfig(target, schema);
     } catch (error) {
         console.error(error.message);
         return 1;
     }
 
-    if (config === null) {
-        // A user-scope overlay applies to every repository, including one that keeps no
-        // stack config; only the checkout's own overlay is an orphan without one.
-        const orphan = layers.find((layer) => layer.scope === 'checkout');
-        if (orphan) {
-            console.error(
-                `${orphan.path}: an overlay with nothing under it. Write ${target} first — the ` +
-                    "overlay adjusts a repository's wiring and cannot stand in for it.",
-            );
-            return 1;
-        }
-        console.log(`no stack config at ${target} — every point falls back to its default`);
-        return 0;
+    for (const line of resolved.lines) status(line);
+    for (const { label, errors } of resolved.errors) report(label, errors);
+    if (resolved.errors.length) return 1;
+
+    if (print) {
+        const layers = resolved.layers.map(({ scope, path, present }) => ({ scope, path, present }));
+        console.log(JSON.stringify({ target, layers, config: resolved.merged }, null, 2));
     }
-
-    let failed = false;
-
-    const errors = checkStackConfig(config, schema);
-    if (errors.length) {
-        report(target, errors);
-        failed = true;
-    } else {
-        console.log(`${target}: ok`);
-    }
-
-    // Each overlay is checked three times over: what it may not say, whether it is
-    // well-typed on its own, and whether what it produces still validates. The third
-    // catches the pair that is only wrong together, and runs after every layer so the
-    // report names the layer that broke it.
-    let merged = config;
-    for (const { scope, path, overlay } of layers) {
-        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema)];
-        if (localErrors.length) {
-            report(path, localErrors);
-            return 1;
-        }
-        console.log(`${path}: ok (${scope} overlay)`);
-
-        merged = mergeStackConfig(merged, overlay);
-        const mergedErrors = checkStackConfig(merged, schema);
-        if (mergedErrors.length) {
-            report(`${target} + ${scope} overlay`, mergedErrors);
-            return 1;
-        }
-    }
-    if (layers.length) console.log('merged: ok');
-
-    return failed ? 1 : 0;
+    return 0;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {

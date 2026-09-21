@@ -2,7 +2,7 @@
 name: tech-update
 title: Technology graph refresh
 cadence: weekly
-cron: "0 4 * * 3"
+cron: "0 4 * * 0"
 target: delivery-schedule:schedule-tech-update
 requires: [delivery-schedule, devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]

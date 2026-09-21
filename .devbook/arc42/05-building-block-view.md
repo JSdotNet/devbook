@@ -28,17 +28,17 @@ not a manifest field but what each `dependencies` array says, read as a sentence
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.2.0"]
-        DEL["delivery 1.2.0"]
-        CFG["devbook-config 1.2.0"]
+        DEV["devbook 1.3.0"]
+        DEL["delivery 1.3.0"]
+        CFG["devbook-config 1.3.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.2.0"]
-        DPR["devbook-procedures 1.2.0"]
-        DBC["devbook-collaboration 1.2.0"]
-        FLT["fleet 1.2.0"]
-        SCH["delivery-schedule 1.2.0"]
+        DBD["devbook-derived 1.3.0"]
+        DPR["devbook-procedures 1.3.0"]
+        DBC["devbook-collaboration 1.3.0"]
+        FLT["fleet 1.3.0"]
+        SCH["delivery-schedule 1.3.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
@@ -422,8 +422,9 @@ because no other plugin is allowed to name every plugin.
 | `update` | The same four keys, moved forward, after each component reconciled itself |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
+| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, the model-selection file, `AGENTS.local.md`. Never the committed config |
 
-The four take no prefix. It is named `devbook-config` for the file it writes,
+The five take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
 `devbook` included.
 
@@ -535,8 +536,10 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`delivery-schedule:install` only. The environment, the model, and the scheduler ids are personal and live
-in the scheduler; matching by name is what makes writing them down unnecessary.
+`delivery-schedule:install` only. The environment, the model, and the scheduler ids are personal: the
+ids live in the scheduler, and matching by name is what makes writing them down unnecessary;
+the environment and the model may be remembered under `ext.schedule` in a machine's own
+[overlay](adr/configuration.md), never in the committed file.
 
 ## Asset Kinds
 

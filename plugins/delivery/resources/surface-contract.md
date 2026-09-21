@@ -96,27 +96,35 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
+- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`
+  validates and then prints one JSON document — `{ target, layers, config }` — where
+  `config` is the committed file with every present overlay below merged over it, and
+  `layers` names each overlay path and whether it exists. That document is the effective
+  configuration a flow resolves from, on either host: the overlay paths, the merge rules, and
+  the refusals live in one script, and a session that reads the layers itself re-derives all
+  three in prose. Nothing is printed when a layer is refused, so a consumer never acts on a
+  merge the checker rejected.
 
 ### The overlays
 
 The answer to the one thing the committed file cannot express: a setting true of your machine
 and nobody else's. Without it the only way to run QA shallower than the team does is to edit
 the committed file and remember not to commit it, which is how a personal preference becomes
-everyone's next merge conflict. Three files, each optional and absent by default, merged over
+everyone's next merge conflict. Two files, each optional and absent by default, merged over
 the committed config in this order so the later wins:
 
 | Layer | Path | True of |
 | --- | --- | --- |
 | user | `<config dir>/config.local.json` | You, in every repository |
 | repository | `<config dir>/repos/<id>/config.local.json` | You, in the repository whose committed `id` this is |
-| checkout | `.devbook/config.local.json`, gitignored | This checkout only |
 
 `<config dir>` is `$XDG_CONFIG_HOME/devbook` when that variable is set, else `%APPDATA%\devbook`
-on Windows and `~/.config/devbook` elsewhere. The first two live outside every clone, which is
-why they exist: a fresh worktree carries no gitignored file, and a session in one would
-otherwise run at the team's defaults without saying so. The repository layer is keyed on `id`
-rather than on a path or a remote because an id survives a move, a re-clone, and a worktree,
-and is absent only when the repository never chose one — then that layer is skipped.
+on Windows and `~/.config/devbook` elsewhere. Both live outside every clone, and deliberately
+no layer lives inside one: a gitignored file is absent in a fresh worktree, so a session there
+would run at the team's defaults without saying so, and a repository has nothing to ignore
+when nothing personal is ever written into it. The repository layer is keyed on `id` rather
+than on a path or a remote because an id survives a move, a re-clone, and a worktree, and is
+absent only when the repository never chose one — then that layer is skipped.
 
 Every layer carries the same four keys, validated against the same schema, and merges the
 same way:
@@ -145,15 +153,25 @@ QA it may reach stays true no matter what any overlay says. What an overlay chan
 and the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
 zeroed retry budget, an extra checkpoint of your own.
 
-`check.mjs` finds every layer on its own — the user and repository layers from the environment
-and the committed `id`, the checkout layer beside the file it is given — and validates each
-three times over: what it may not say, whether it is well-typed alone, and whether the merge
-so far still validates, the third catching the pair that is only wrong together and naming the
-layer that broke it. `resources/config.local-template.json` is a starting point for any of
-the three.
+One thing an overlay may say that the committed file may not: **`ext`**, the machine-scope
+counterpart of `components`. `ext.<plugin>.<key>` holds what a plugin needs to remember about
+your machine and nothing else — the environment and model a scheduled routine runs with, say
+— and is the *Extension Namespace* the devbook already reserves in a chapter's `meta` block,
+applied to the config. The engine checks only that it is an object of objects, merges it like
+any other object, and reads no key in it; the plugin that owns the namespace does, and asks
+only for what is absent there. Refused in the committed file: a reviewer has no use for one
+machine's routine settings, and a personal value in a committed file is everybody's.
 
-**Gitignored is not private, and neither is your home directory.** No model and no secret,
-the same as the committed file: an overlay is read by every agent in your session and pasted
+`check.mjs` finds both layers on its own — from the environment and the committed `id` — and
+validates each three times over: what it may not say, whether it is well-typed alone, and
+whether the merge so far still validates, the third catching the pair that is only wrong
+together and naming the layer that broke it; `--print` then hands the merge to whoever asked.
+`resources/config.local-template.json` is a starting point for either, and
+`devbook-config:local` writes one from your answers.
+
+**Gitignored is not private, and neither is your home directory.** No secret, the same as
+the committed file, and no model the engine reads — flow model choice stays in the file the
+`model-override` slot names: an overlay is read by every agent in your session and pasted
 into a bug report as readily as anything else.
 
 ## Extension Points
@@ -326,7 +344,7 @@ is the normal case and never a gap.
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
-| `model-override` | Where a user's personal model preferences live | Category defaults |
+| `model-override` | Where a user's personal model preferences live: `CLAUDE_FLOW_MODEL_SELECTION_PATH` when set, else `<config dir>/model-selection.md` beside the overlays | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
 | `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |

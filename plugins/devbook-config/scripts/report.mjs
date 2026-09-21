@@ -374,9 +374,10 @@ function buildRepository(repoRoot) {
         return { folder, path: null, stray };
     });
 
-    // The three overlay layers the delivery checker merges, outermost first. The path rule is
-    // the checker's (plugins/delivery/tools/stack-config/check.mjs) and is restated here only
-    // because this script reports and never imports across plugins.
+    // The two overlay layers the delivery checker merges, outermost first, both reported
+    // whether or not they exist: an absent one is the fact `local` acts on. Neither is in
+    // the clone. The path rule is the checker's (plugins/delivery/tools/stack-config/check.mjs)
+    // and is restated here only because this script reports and never imports across plugins.
     const env = process.env;
     const userDir = env.XDG_CONFIG_HOME
         ? join(env.XDG_CONFIG_HOME, 'devbook')
@@ -387,15 +388,30 @@ function buildRepository(repoRoot) {
     const overlays = [
         { scope: 'user', path: join(userDir, 'config.local.json') },
         ...(id ? [{ scope: 'repository', path: join(userDir, 'repos', id, 'config.local.json') }] : []),
-        { scope: 'checkout', path: join(repoRoot, '.devbook', 'config.local.json') },
-    ]
-        .map((layer) => ({ ...layer, overlay: load(`${layer.scope} overlay`, layer.path) }))
-        .filter((layer) => layer.overlay)
-        .map(({ scope, path: overlayPath, overlay }) => ({
+    ].map(({ scope, path: overlayPath }) => {
+        const overlay = load(`${scope} overlay`, overlayPath);
+        return {
             scope,
             path: overlayPath,
-            keys: ENGINE_KEYS.filter((key) => key in overlay),
-        }));
+            present: Boolean(overlay),
+            keys: overlay ? ENGINE_KEYS.filter((key) => key in overlay) : [],
+            // `ext.<plugin>` namespaces, named and never read: the engine merges them and
+            // the owning plugin interprets them (surface-contract.md, The overlays).
+            ext: overlay && overlay.ext && typeof overlay.ext === 'object' ? Object.keys(overlay.ext) : [],
+        };
+    });
+
+    // The personal model-selection file the delivery `model-override` slot resolves to
+    // (plugins/delivery/resources/flow-model-selection.md): the variable when set, else
+    // the file beside the overlays. Reported so a run at category defaults is a choice.
+    const modelSelectionPath = env.CLAUDE_FLOW_MODEL_SELECTION_PATH
+        ? resolve(env.CLAUDE_FLOW_MODEL_SELECTION_PATH)
+        : join(userDir, 'model-selection.md');
+    const modelSelection = {
+        path: modelSelectionPath,
+        present: existsSync(modelSelectionPath),
+        source: env.CLAUDE_FLOW_MODEL_SELECTION_PATH ? 'CLAUDE_FLOW_MODEL_SELECTION_PATH' : 'default',
+    };
 
     return {
         path,
@@ -403,6 +419,7 @@ function buildRepository(repoRoot) {
         legacyFlowContextPath: legacyFlowContext,
         id,
         overlays,
+        modelSelection,
         present: Boolean(config),
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
@@ -581,16 +598,27 @@ function render(model) {
         out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`start\` skill at \`.agents/skills/start.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`extensions.app.start\` set to \`null\`. Move what it says and delete it.`);
         out.push('');
     }
-    for (const layer of repo.overlays) {
+    for (const layer of repo.overlays.filter((l) => l.present)) {
         const touches = layer.keys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key';
+        const ext = layer.ext.length ? `, and carries \`ext.${layer.ext.join('`, `ext.')}\` for the plugins of those names` : '';
         const scope = {
             user: 'true of this user in every repository',
             repository: `true of this user in the repository whose id is \`${repo.id}\``,
-            checkout: "true of this checkout and of nobody else's",
         }[layer.scope];
-        out.push(`\`${layer.path}\` is present (${layer.scope} overlay) and overlays ${touches}. It is never committed, so what it says is ${scope} - read the merged values, not the committed file alone.`);
+        out.push(`\`${layer.path}\` is present (${layer.scope} overlay) and overlays ${touches}${ext}. It lives outside every clone, so what it says is ${scope} - read the merged values, not the committed file alone.`);
         out.push('');
     }
+    if (!repo.overlays.some((l) => l.present)) {
+        const user = repo.overlays.find((l) => l.scope === 'user');
+        out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, role and MCP bindings - and the scheduler asks for its environment and model every time. Run \`devbook-config:local\` to say what is true of this machine.`);
+        out.push('');
+    }
+    if (repo.modelSelection.present) {
+        out.push(`\`${repo.modelSelection.path}\` is present (${repo.modelSelection.source === 'default' ? 'the default model-selection path' : 'named by `CLAUDE_FLOW_MODEL_SELECTION_PATH`'}), so a flow resolves each stage's model through it before the category default.`);
+    } else {
+        out.push(`No model-selection file at \`${repo.modelSelection.path}\`${repo.modelSelection.source === 'default' ? '' : ' (named by `CLAUDE_FLOW_MODEL_SELECTION_PATH`)'}: every flow stage runs at its category's default model. \`devbook-config:local\` writes one.`);
+    }
+    out.push('');
     if (repo.present && !repo.id) {
         out.push('`.devbook/config.json` carries no `id`, so no per-repository overlay is looked up for it. Add one - lowercase, digits, hyphens - to let a machine keep settings for this repository outside every clone of it.');
         out.push('');

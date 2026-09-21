@@ -362,7 +362,9 @@ migrations/
 1.0.0 shipped none. The first after it is `010-terms-live-in-domain-md`, which moves a
 context's `term` chapters into `domain.md` now that the glossary file kind is gone; the second
 is `011-context-md`, which gives every context its `context.md` and moves each feature's
-bare flag key onto a `feature-flag` chapter there. The
+bare flag key onto a `feature-flag` chapter there; the third is `012-no-checkout-overlay`,
+which removes the `.gitignore` block and moves a checkout-layer personal file out of the
+clone now that nothing personal lives in one. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -397,7 +399,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **11**, covering the metadata schema a repository authors
+One number, currently **12**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -414,7 +416,10 @@ the contract a 1.0.0 generator writes. 10 removed the glossary file type from `.
 and ships as `010-terms-live-in-domain-md`. 11 adds `context.md` as a bounded context's
 root — the boundary, its feature flags and settings, and its actors and dependencies until
 they outgrow it — and turns a feature's `feature-flag` from a bare key into a reference to
-the switch's chapter, beside the new `setting` field; it ships as `011-context-md`.
+the switch's chapter, beside the new `setting` field; it ships as `011-context-md`. 12
+retires the checkout layer of the stack-config overlay and the `.gitignore` block that
+existed for it — the stamp's `materialized` no longer carries `.gitignore#devbook` — and
+ships as `012-no-checkout-overlay`.
 
 ## Folder structure
 
