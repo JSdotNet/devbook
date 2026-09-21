@@ -89,7 +89,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
-| 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. |
+| 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. |
 | 2026-09-21 | The checkout layer retired: an overlay lives in the user's devbook config directory and never in a clone. `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. |
 | 2026-09-17 | Session-naming labels configured in the dashboard's hand-edited component entry; `null` means no prefix. |
 | 2026-09-15 | Overlay gains two layers under the devbook config directory, keyed by a committed `id`. |

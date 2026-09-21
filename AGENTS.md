@@ -183,16 +183,13 @@ Run the check before committing; it writes nothing:
 
 An annotation fence is written only through `plugins/devbook/tools/devbook-meta/annotations.mjs`.
 
-Two files are yours alone, absent by default, and never inside this repository.
-`AGENTS.local.md` holds instructions that apply on your machine only; read it when it
-exists and treat it as this file's last word. `config.local.json` overlays the
-committed stack config the same way. Each lives in one of two places under your
-devbook config directory, and a session reads both where it finds them, nearest
-last: the directory itself for every repository, and `repos/<id>/` under it for this
-one — `<id>` is the `id` in `.devbook/config.json`. The directory is
-`$XDG_CONFIG_HOME/devbook` when set, else `%APPDATA%\devbook` on Windows and
-`~/.config/devbook` elsewhere. Put no secret in either — your home directory is not
-private.
+Nothing personal lives in this repository. Your own settings live under your devbook
+config directory — `$XDG_CONFIG_HOME/devbook` when set, else `%APPDATA%\devbook` on
+Windows and `~/.config/devbook` elsewhere — for every repository, or under `repos/<id>/`
+there for this one, `<id>` being the `id` in `.devbook/config.json`. `AGENTS.local.md`
+in either place holds instructions for your machine only: read it when it exists and
+treat it as this file's last word. What else lives there, each plugin says for itself.
+Put no secret in it — your home directory is not private.
 <!-- devbook:end -->
 
 <!-- devbook-derived:begin -->

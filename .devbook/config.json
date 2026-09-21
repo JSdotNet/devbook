@@ -52,7 +52,7 @@
       "materialized": {
         "AGENTS.md#devbook": {
           "from": "1.2.0",
-          "hash": "sha256:4656c36590ff8254812c71a95b0ec3d3e1c0bf3d78ffc807c2ed44f9a3cd0a83",
+          "hash": "sha256:5bd23466da7bf3e74e1bbef1ff051e5cfcfda2e118272e1a0f3af6a643c413f0",
           "managed": true
         }
       },
