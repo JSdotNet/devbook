@@ -9,9 +9,9 @@ carries the kind.
 | | |
 |---|---|
 | Chapters | The whole view, or one `##` section of it — a single container, or one level of decomposition |
-| File | `.arc42/05-building-block-view.md` |
+| File | `.devbook/arc42/05-building-block-view.md` |
 | Folder rule | `devbook-arc42.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
+| Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.devbook/domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
 | Write path | The `arc42/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope arc42` |
 | Extra input | Level depth: default to level 1 (containers) and level 2 (the blocks inside them that carry real responsibility) |
@@ -51,8 +51,8 @@ alias, so keeping it current has value beyond the chapter itself.
 Prefer diagrams over prose; the folder rules say so. Record dependency
 **direction** from the references, not from the intended layering: a block that
 depends upward is exactly the finding this view exists to surface, and a diagram
-redrawn to look correct hides it. Link ADR and TDR content under `.arc42/adr/`
-and `.arc42/tdr/`; never copy it.
+redrawn to look correct hides it. Link ADR and TDR content under `.devbook/arc42/adr/`
+and `.devbook/arc42/tdr/`; never copy it.
 
 ## Capturing — `sync-specs`
 

@@ -91,7 +91,7 @@ function resolveRelPath(relPath) {
     const kind = folderKindForPath(normalized);
     if (!kind) {
         throw new Error(
-            `"${relPath}" is not under .domain/, .arc42/, .tech/, .design/, or .ai/ — this canvas only serves those folders.`
+            `"${relPath}" is not under .devbook/arc42/, domain/, tech/, design/, or ai/ — this canvas only serves those folders.`
         );
     }
     const absolute = path.resolve(REPO_ROOT, normalized);
@@ -221,7 +221,7 @@ const session = await joinSession({
             id: "devbook-graph",
             displayName: "Reference graph",
             description:
-                "Obsidian-style force-directed view of the reference graph derived from the `meta` blocks in .arc42/.domain/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
+                "Obsidian-style force-directed view of the reference graph derived from the `meta` blocks in .devbook/{arc42,domain,tech}. Open it scoped to one folder (e.g. tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
             inputSchema: {
                 type: "object",
                 properties: {
@@ -291,14 +291,14 @@ const session = await joinSession({
             id: "devbook-chapter",
             displayName: "Devbook chapter",
             description:
-                "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per devbook-chapter-metadata.md.",
+                "View .devbook/{arc42,domain,tech,design,ai} Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per devbook-chapter-metadata.md.",
             inputSchema: {
                 type: "object",
                 properties: {
                     path: {
                         type: "string",
                         description:
-                            "Repo-relative path to a Markdown file under .domain/, .arc42/, .tech/, .design/, or .ai/ to open immediately.",
+                            "Repo-relative path to a Markdown file under .devbook/arc42/, domain/, tech/, design/, or ai/ to open immediately.",
                     },
                 },
             },
@@ -306,7 +306,7 @@ const session = await joinSession({
                 {
                     name: "set_document",
                     description:
-                        "Switch the canvas to display a different Markdown file under .domain/, .arc42/, .tech/, .design/, or .ai/.",
+                        "Switch the canvas to display a different Markdown file under .devbook/arc42/, domain/, tech/, design/, or ai/.",
                     inputSchema: {
                         type: "object",
                         properties: {

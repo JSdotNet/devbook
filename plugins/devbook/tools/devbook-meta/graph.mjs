@@ -1,5 +1,5 @@
 // graph.mjs — derives the cross-folder reference graph from the `meta` blocks
-// embedded in .arc42/, .domain/, .tech/, .design/, and .ai/.
+// embedded in .devbook/arc42/, domain/, tech/, design/, and ai/.
 //
 // Markdown stays canonical; this produces the *derived* index. Output shape is
 // Cytoscape.js `elements` JSON, which most graph libraries consume natively or

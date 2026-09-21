@@ -189,11 +189,11 @@ already slugifies to the kind:
 
 | File | Title | `type` | Node label |
 |---|---|---|---|
-| `.domain/order-management/domain.md` | `Order Management` | `domain` | `Order Management (domain)` |
-| `.domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
-| `.domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
-| `.domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
-| `.arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
+| `.devbook/domain/order-management/domain.md` | `Order Management` | `domain` | `Order Management (domain)` |
+| `.devbook/domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
+| `.devbook/domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
+| `.devbook/domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
+| `.devbook/arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
 
 Node `id` is the path and was always unique; this only fixes the display label.
 

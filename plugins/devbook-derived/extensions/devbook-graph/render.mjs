@@ -41,7 +41,7 @@ export function renderPage() {
 </head>
 <body>
 <div id="layout">
-  <div id="path-bar">No document open. Call <code>set_document</code> with a path under .domain/, .arc42/, .tech/, .design/, or .ai/.</div>
+  <div id="path-bar">No document open. Call <code>set_document</code> with a path under .devbook/arc42/, domain/, tech/, design/, or ai/.</div>
   <div id="body">
     <div id="doc"><div id="empty">Waiting for a document…</div></div>
     <div id="panel"><h3>Metadata</h3><div id="meta-list"></div><h3>Lint</h3><div id="issue-list" class="issues"></div></div>
@@ -50,7 +50,7 @@ export function renderPage() {
 <script>
 mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
 
-// A block that omits \`status\` in .domain/.arc42/.design is at that folder's
+// A block that omits \`status\` in .devbook/{domain,arc42,design} is at that folder's
 // resting value, so the badge shows that value — dimmed, and titled to say the
 // file did not spell it out. Only a block with no status and no resting value to
 // fall back on is genuinely unknown, and that is a lint error, not a display
@@ -78,7 +78,7 @@ function escapeHtml(s) {
 async function loadDocument() {
   const res = await fetch("/api/document");
   if (res.status === 404) {
-    document.getElementById("path-bar").textContent = "No document open. Call set_document with a path under .domain/, .arc42/, .tech/, .design/, or .ai/.";
+    document.getElementById("path-bar").textContent = "No document open. Call set_document with a path under .devbook/arc42/, domain/, tech/, design/, or ai/.";
     document.getElementById("doc").innerHTML = '<div id="empty">Waiting for a document…</div>';
     document.getElementById("meta-list").innerHTML = "";
     document.getElementById("issue-list").innerHTML = "";

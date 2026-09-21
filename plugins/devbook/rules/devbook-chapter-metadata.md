@@ -15,27 +15,27 @@ top-level (`#`) heading describing the document as a whole.
 A "chapter" here means any heading that these folders' own instructions
 already treat as an addressable unit:
 
-- `.domain/<context>/domain.md` — each Aggregate, Domain Service, Domain Event,
+- `.devbook/domain/<context>/domain.md` — each Aggregate, Domain Service, Domain Event,
   and each Shared Value Objects / Shared Enums chapter, plus every Entity, Value
   Object, and Enum sub-chapter inside an Aggregate. Those sub-chapters each
   carry their own metadata block; they are not covered by their parent
   Aggregate's block. A chapter split into a `domain.<name>.md` — or into a
   `features.<name>.md` or `skills.<name>.md` below — is the same chapter at a
   different path, per `devbook-domain.md`.
-- `.domain/<context>/features.md` — each Feature and Sub-feature.
-- `.domain/<context>/domain.md`, under its `## Ubiquitous Language` grouping —
+- `.devbook/domain/<context>/features.md` — each Feature and Sub-feature.
+- `.devbook/domain/<context>/domain.md`, under its `## Ubiquitous Language` grouping —
   each `Term` chapter.
-- `.domain/<context>/skills.md` — each Feature and Sub-feature, where the
+- `.devbook/domain/<context>/skills.md` — each Feature and Sub-feature, where the
   context describes skills rather than product features.
-- `.domain/<context>/actors.md` — each User, Organisation, and Technical actor.
-- `.arc42/<nn>-<name>.md` — the file's top-level chapter, and any ## section
+- `.devbook/domain/<context>/actors.md` — each User, Organisation, and Technical actor.
+- `.devbook/arc42/<nn>-<name>.md` — the file's top-level chapter, and any ## section
   inside it that is independently trackable.
-- `.tech/<layer>.md` — each `## <Technology Name>` chapter (one graph node per
+- `.devbook/tech/<layer>.md` — each `## <Technology Name>` chapter (one graph node per
   chapter).
-- `.design/<name>.md` — the file's top-level chapter, and every `##` chapter
+- `.devbook/design/<name>.md` — the file's top-level chapter, and every `##` chapter
   inside it. `###` sub-headings are covered by their parent `##` chapter and
   carry a block only if they need independent status or cross-references.
-- `.ai/<nn>-<part>.md` and `.ai/concepts.md` — each `## <Chapter Name>`
+- `.devbook/ai/<nn>-<part>.md` and `.devbook/ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
 - `domain/` `context-map.md`, `model.md`, `flow.md`, their split files, and
@@ -102,7 +102,7 @@ churn the heading's anchor and every reference pointing at it. Keeping it in
 `type` means a reclassification is a one-line metadata edit.
 
 Anchors are therefore slugs of the bare name —
-`.domain/order-management/domain.md#order`, not `#aggregate-order`.
+`.devbook/domain/order-management/domain.md#order`, not `#aggregate-order`.
 
 Headings that name a **grouping** rather than a thing keep their descriptive
 text, because that text *is* the group's name: `## Shared Value Objects` is
@@ -188,13 +188,13 @@ chapters they index, and the repository-wide rollup under `.devbook/_meta/`.
 Chapters are not given a separate stored id. A chapter is addressed by its
 file path (relative to the repository root) plus a GitHub-style anchor slug
 of its heading text: `<path>#<heading-slug>`, e.g.
-`.domain/order-management/domain.md#order`. This is exactly what
+`.devbook/domain/order-management/domain.md#order`. This is exactly what
 renders as the heading's link target, so it stays correct automatically when
 read in any Markdown viewer and never needs to be kept in sync by hand.
 
 A file, addressed at the file-level metadata block, is referenced the same
 way but without a heading slug: `<path>`, e.g.
-`.domain/order-management/dependencies.md`. Use this bare-path form when a
+`.devbook/domain/order-management/dependencies.md`. Use this bare-path form when a
 `related` entry points at a file as a whole rather than one of its chapters.
 
 Use the `<path>#<heading-slug>` (chapter) or `<path>` (file) form as the
@@ -598,7 +598,7 @@ Per directory, `_meta/index.json` is generated like this:
    | Directory | Root document by convention |
    |---|---|
    | `domain/` | `context-map.md` |
-   | `.domain/<context>/` | `context.md` |
+   | `.devbook/domain/<context>/` | `context.md` |
    | `tech/` | `technology-graph.md` |
    | `design/` | `README.md` |
    | `ai/` | `adoption-map.md` |

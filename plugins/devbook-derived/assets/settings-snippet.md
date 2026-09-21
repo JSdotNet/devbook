@@ -19,7 +19,7 @@ Code recognises (`cat`, `head`, `tail`, `sed`):
 Notes on that rule:
 
 - Deny rules match a directory name at **any depth**, so the single entry covers
-  `.arc42/_meta/`, `.domain/_meta/`, and the repository-root `_meta/`. An
+  `.devbook/_meta/`, `.devbook/arc42/_meta/`, and every other adopted folder's `_meta/`. An
   *allow* rule would need `**/_meta/**` to do the same.
 - Write it against `Read`. Claude Code accepts a path rule on `Glob` or `Write`
   but never consults it, and warns at startup.

@@ -694,7 +694,7 @@ function render(model) {
     out.push(table(
         ['Folder', 'Present as'],
         repo.folders.map((f) => [
-            `\`.${f.folder}\``,
+            `\`${f.folder}/\``,
             (f.path ? `\`${f.path}\`` : 'absent') + (f.stray ? ` — a root-level \`.${f.folder}/\` also exists; only \`.devbook/\` is a layout, move it` : ''),
         ]),
     ));
