@@ -24,7 +24,7 @@ That is a hard constraint, not a preference. `flow-code` runs through the `flow-
 agent, which must own its session to hold the Personal Validation gate, write surface
 state, and ask the user a question — and this run cannot open a second session to give it
 one. See **Session Ownership** and **Sub-Agent Constraints** in
-`resources/flow-execution-model.md`. Because the scope is a single issue,
+`flow-execution-model.md` (`delivery` plugin). Because the scope is a single issue,
 this session *is* the owner session and `flow-code` behaves exactly as designed.
 
 To work more than one bug, run this skill again. Each run picks the next issue, because the
@@ -166,7 +166,7 @@ summary that the run went without the flow wrapper.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`.
+Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 
