@@ -102,21 +102,21 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 The answer to the one thing the committed file cannot express: a setting true of your machine
 and nobody else's. Without it the only way to run QA shallower than the team does is to edit
 the committed file and remember not to commit it, which is how a personal preference becomes
-everyone's next merge conflict. Three files, each optional and absent by default, merged over
+everyone's next merge conflict. Two files, each optional and absent by default, merged over
 the committed config in this order so the later wins:
 
 | Layer | Path | True of |
 | --- | --- | --- |
 | user | `<config dir>/config.local.json` | You, in every repository |
 | repository | `<config dir>/repos/<id>/config.local.json` | You, in the repository whose committed `id` this is |
-| checkout | `.devbook/config.local.json`, gitignored | This checkout only |
 
 `<config dir>` is `$XDG_CONFIG_HOME/devbook` when that variable is set, else `%APPDATA%\devbook`
-on Windows and `~/.config/devbook` elsewhere. The first two live outside every clone, which is
-why they exist: a fresh worktree carries no gitignored file, and a session in one would
-otherwise run at the team's defaults without saying so. The repository layer is keyed on `id`
-rather than on a path or a remote because an id survives a move, a re-clone, and a worktree,
-and is absent only when the repository never chose one — then that layer is skipped.
+on Windows and `~/.config/devbook` elsewhere. Both live outside every clone, and deliberately
+no layer lives inside one: a gitignored file is absent in a fresh worktree, so a session there
+would run at the team's defaults without saying so, and a repository has nothing to ignore
+when nothing personal is ever written into it. The repository layer is keyed on `id` rather
+than on a path or a remote because an id survives a move, a re-clone, and a worktree, and is
+absent only when the repository never chose one — then that layer is skipped.
 
 Every layer carries the same four keys, validated against the same schema, and merges the
 same way:
@@ -154,12 +154,11 @@ any other object, and reads no key in it; the plugin that owns the namespace doe
 only for what is absent there. Refused in the committed file: a reviewer has no use for one
 machine's routine settings, and a personal value in a committed file is everybody's.
 
-`check.mjs` finds every layer on its own — the user and repository layers from the environment
-and the committed `id`, the checkout layer beside the file it is given — and validates each
-three times over: what it may not say, whether it is well-typed alone, and whether the merge
-so far still validates, the third catching the pair that is only wrong together and naming the
-layer that broke it. `resources/config.local-template.json` is a starting point for any of
-the three, and `devbook-config:local` writes one from your answers.
+`check.mjs` finds both layers on its own — from the environment and the committed `id` — and
+validates each three times over: what it may not say, whether it is well-typed alone, and
+whether the merge so far still validates, the third catching the pair that is only wrong
+together and naming the layer that broke it. `resources/config.local-template.json` is a
+starting point for either, and `devbook-config:local` writes one from your answers.
 
 **Gitignored is not private, and neither is your home directory.** No secret, the same as
 the committed file, and no model the engine reads — flow model choice stays in the file the

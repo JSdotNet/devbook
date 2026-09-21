@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 // Validates the delivery-owned keys of .devbook/config.json against
-// resources/config.schema.json, and merges the gitignored overlays over it — up to three,
-// applied in this order, each optional and absent by default:
+// resources/config.schema.json, and merges the user's overlays over it — up to two, applied
+// in this order, each optional and absent by default:
 //
 //   <config dir>/config.local.json               this user, every repository
 //   <config dir>/repos/<id>/config.local.json    this user, the repository `id` names
-//   .devbook/config.local.json                   this checkout
 //
 // where <config dir> is $XDG_CONFIG_HOME/devbook when that variable is set, else
-// %APPDATA%\devbook on Windows and ~/.config/devbook elsewhere. The first two survive a
-// fresh worktree, which is what they are for; the last is found beside the committed file,
-// never passed separately, because one config has one checkout overlay and naming them
-// independently invites checking a pair that never meet at run time.
+// %APPDATA%\devbook on Windows and ~/.config/devbook elsewhere. Both live outside every
+// clone, so a fresh worktree runs with the same settings as the last one and nothing personal
+// ever sits in the repository, gitignored or not.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
 // setting. That holds at the top level too: `components` is the one committed key the engine
@@ -26,7 +24,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { basename, dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -277,22 +275,16 @@ export function userConfigDir({ env = process.env, platform = process.platform, 
     return join(home, '.config', 'devbook');
 }
 
-/** `.devbook/config.json` -> `.devbook/config.local.json`. */
-function localSiblingOf(path) {
-    return join(dirname(path), basename(path).replace(/\.json$/, '.local.json'));
-}
-
 /**
- * Every overlay that applies to the config at `target`, outermost first — the order they
+ * Every overlay that applies to a config carrying `id`, outermost first — the order they
  * merge in, so the later a layer the more it wins. The repository layer exists only when
  * the committed file carries an `id`: a machine cannot key a folder on a name the
  * repository never chose.
  */
-export function overlayPaths(target, id, options) {
+export function overlayPaths(id, options) {
     const user = userConfigDir(options);
     const layers = [{ scope: 'user', path: join(user, 'config.local.json') }];
     if (id) layers.push({ scope: 'repository', path: join(user, 'repos', id, 'config.local.json') });
-    layers.push({ scope: 'checkout', path: localSiblingOf(target) });
     return layers;
 }
 
@@ -319,7 +311,7 @@ function main() {
     let layers;
     try {
         config = readConfig(target);
-        layers = overlayPaths(target, typeof config?.id === 'string' ? config.id : null)
+        layers = overlayPaths(typeof config?.id === 'string' ? config.id : null)
             .map((layer) => ({ ...layer, overlay: readConfig(layer.path) }))
             .filter((layer) => layer.overlay !== null);
     } catch (error) {
@@ -328,16 +320,8 @@ function main() {
     }
 
     if (config === null) {
-        // A user-scope overlay applies to every repository, including one that keeps no
-        // stack config; only the checkout's own overlay is an orphan without one.
-        const orphan = layers.find((layer) => layer.scope === 'checkout');
-        if (orphan) {
-            console.error(
-                `${orphan.path}: an overlay with nothing under it. Write ${target} first — the ` +
-                    "overlay adjusts a repository's wiring and cannot stand in for it.",
-            );
-            return 1;
-        }
+        // A user overlay applies to every repository, including one that keeps no stack
+        // config; it adjusts a repository's wiring and cannot stand in for it.
         console.log(`no stack config at ${target} — every point falls back to its default`);
         return 0;
     }

@@ -79,9 +79,9 @@ All four live in `.devbook/config.json`:
 Copy `resources/config-template.json` and validate with
 `node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
 never become a silently absent setting. The checker also merges the overlays a machine keeps
-over the committed file — this checkout's gitignored `.devbook/config.local.json`, and the
-user's own under `$XDG_CONFIG_HOME/devbook` (`%APPDATA%\devbook`, `~/.config/devbook`) for
-every repository and for this one's `id` — per *The overlays* in
+over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
+(`%APPDATA%\devbook`, `~/.config/devbook`) for every repository and for this one's `id`,
+never a file inside the clone — per *The overlays* in
 `resources/surface-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
 own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and

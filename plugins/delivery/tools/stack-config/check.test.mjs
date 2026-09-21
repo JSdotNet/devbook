@@ -323,8 +323,8 @@ test('ext survives the merge, later layers winning key by key', () => {
     assert.deepEqual(checkOverlay(merged), []);
 });
 
-// Where the overlays are found — three layers, outermost first, resolved from the
-// committed id and the user's config directory rather than from the checkout alone.
+// Where the overlays are found — two layers, outermost first, both under the user's config
+// directory and neither in any clone: the repository one keyed on the committed id.
 
 const unixHome = { env: {}, platform: 'linux', home: '/home/me' };
 
@@ -343,28 +343,28 @@ test('without it, Windows uses APPDATA and everything else ~/.config', () => {
     assert.equal(userConfigDir(unixHome), join('/home/me', '.config', 'devbook'));
 });
 
-test('three layers, outermost first, when the config carries an id', () => {
-    const layers = overlayPaths('/repo/.devbook/config.json', 'my-repo', unixHome);
+test('two layers, outermost first, when the config carries an id', () => {
+    const layers = overlayPaths('my-repo', unixHome);
     assert.deepEqual(
         layers.map((l) => l.scope),
-        ['user', 'repository', 'checkout'],
+        ['user', 'repository'],
     );
     assert.equal(layers[0].path, join('/home/me/.config/devbook', 'config.local.json'));
     assert.equal(layers[1].path, join('/home/me/.config/devbook', 'repos', 'my-repo', 'config.local.json'));
-    assert.equal(layers[2].path, join('/repo/.devbook', 'config.local.json'));
 });
 
 test('no id, no repository layer — a machine cannot key on a name the repo never chose', () => {
-    const layers = overlayPaths('/repo/.devbook/config.json', null, unixHome);
+    const layers = overlayPaths(null, unixHome);
     assert.deepEqual(
         layers.map((l) => l.scope),
-        ['user', 'checkout'],
+        ['user'],
     );
 });
 
-test('the checkout layer is found beside the config, whatever the config is called', () => {
-    const [, , checkout] = overlayPaths('/x/stack.json', 'r', unixHome);
-    assert.equal(checkout.path, join('/x', 'stack.local.json'));
+test('no layer is ever inside the clone', () => {
+    for (const layer of overlayPaths('my-repo', unixHome)) {
+        assert.ok(layer.path.startsWith(join('/home/me/.config/devbook')), layer.path);
+    }
 });
 
 test('layers merge in order: the later wins per key, and every layer keeps its gates', () => {
@@ -377,10 +377,8 @@ test('layers merge in order: the later wins per key, and every layer keeps its g
         policy: { 'qa.depth': 'targeted' },
         gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
     };
-    const checkout = { policy: { 'qa.depth': 'startup-only' } };
-
-    const merged = [user, repo, checkout].reduce(mergeStackConfig, base);
-    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 });
+    const merged = [user, repo].reduce(mergeStackConfig, base);
+    assert.deepEqual(merged.policy, { 'qa.depth': 'targeted', 'verify.retryBudget': 0 });
     assert.deepEqual(
         merged.gates.map((g) => g.at),
         ['spec', 'implement'],
