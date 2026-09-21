@@ -109,7 +109,7 @@ and adds no extension point.
 
 It is the one plugin here whose subject is a host capability — scheduled cloud sessions — and
 that is a divergence from the rule that nothing in this marketplace names one, taken on purpose
-and recorded in `.devbook/arc42/09-architecture-decisions.md`. The catalog is host-neutral
+and recorded in `.devbook/arc42/adr/plugin-boundaries.md`. The catalog is host-neutral
 data; only the scheduler resolution knows which tool answers.
 
 ## Before the first schedule
