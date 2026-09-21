@@ -172,8 +172,8 @@ producing side effects and a report.
 | `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
 | `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-validation`. |
 | `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-validation`. |
-| `deliver` | service | After approval | Open the change for review and update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
-| `verify` | service | After `deliver` | The specification the run built on, the governed chapters the change set touches, and the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it and what each calls for. Report-only: it edits nothing and commits nothing. Unbound: the flow-runner reaches the verdicts itself. |
+| `deliver` | service | After approval | Open the change for review and, once `verify` has reported, update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
+| `verify` | service | After the pull request, before Work Item Update | The specification the run built on, the governed chapters the change set touches, and the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it and what each calls for. Report-only: it edits nothing and commits nothing. Unbound: the flow-runner reaches the verdicts itself. |
 | `flow.end` | chore | Always, last | Contribute to the run summary and capture what this run learned. |
 
 **Services decide; chores contribute.** A chore may fail, and its failure is fatal when it

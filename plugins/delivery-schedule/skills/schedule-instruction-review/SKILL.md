@@ -88,7 +88,7 @@ None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` nam
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`.
+Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
 With no surface bound, skip the calls, say so once, and continue — the pull request remains
 the source of truth.
 

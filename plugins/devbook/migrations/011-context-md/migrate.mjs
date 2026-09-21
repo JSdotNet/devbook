@@ -224,11 +224,16 @@ if (checkOnly) {
 
 for (const plan of plans) {
     if (plan.trimDomain) await writeText(plan.trimDomain.file, plan.trimDomain.text, plan.eol);
-    let contextText = plan.create ?? (await exists(plan.contextFile) ? (await readText(plan.contextFile)).text : "");
+    // A context.md that already exists keeps its own line ending; one created here takes domain.md's.
+    let contextEol = plan.eol;
+    let contextText = plan.create ?? "";
+    if (plan.create === null && (await exists(plan.contextFile))) {
+        ({ text: contextText, eol: contextEol } = await readText(plan.contextFile));
+    }
     for (const flag of plan.flags) {
         contextText = `${contextText.trimEnd()}\n\n## ${flag.key}\n\n\`\`\`meta\nstatus: draft\ntype: feature-flag\nkey: ${flag.key}\nrelated: ["${flag.feature}"]\n\`\`\`\n\nDecided at release, from configuration. Name the switch in business language, and say who owns the rollout, what turning it on changes, and when the flag is retired.\n`;
     }
-    if (plan.create || plan.flags.length) await writeText(plan.contextFile, contextText, plan.eol);
+    if (plan.create || plan.flags.length) await writeText(plan.contextFile, contextText, contextEol);
     for (const { file, text, eol } of plan.rewrites) await writeText(file, text, eol);
 }
 

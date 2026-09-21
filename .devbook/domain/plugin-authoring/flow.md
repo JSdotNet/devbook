@@ -37,7 +37,7 @@ flowchart LR
   other, which is what makes authoring in a host the practice recorded in
   [.devbook/ai/01-author.md](../../ai/01-author.md#claude-code-as-authoring-host).
 - The loop through `check` is the whole verification story today. Whether a skill *triggers* is
-  not on this path — see [.devbook/ai/03-validate.md](../../ai/03-validate.md#plugin-evaluation).
+  not on this path — see [.devbook/ai/03-verify.md](../../ai/03-verify.md#plugin-evaluation).
 
 ## Materializing a Component
 

@@ -7,7 +7,7 @@ description: The schedule catalog contract — the schedule file, the preamble e
 
 A schedule is a trigger, never a procedure. It names a schedulable skill — a `schedule-*`
 entry point, or another plugin's skill that picks its own input and reports, as the
-`devbook-check` and `tech-update` entries do — gives it a cadence, and hands a cloud session that starts with nothing but the repository a prompt
+`prose-check` entry does — gives it a cadence, and hands a cloud session that starts with nothing but the repository a prompt
 self-contained enough to run that skill unattended. This file is the contract the catalog,
 `delivery-schedule:install`, `schedule-status`, and `schedule-run` all read; it is over the instruction
 budget because it is a contract, and a contract stated by half is wrong.
@@ -80,7 +80,7 @@ sync time and live in the scheduler only.
 
 In Claude Code this capability is the `RemoteTrigger` tool, loaded on demand. Naming it here
 is the one host fact this plugin carries, recorded as a divergence in
-`.devbook/arc42/09-architecture-decisions.md` under *The Unattended Lane Is Its Own Plugin*.
+`.devbook/arc42/adr/plugin-boundaries.md`.
 
 ## The Stamp
 

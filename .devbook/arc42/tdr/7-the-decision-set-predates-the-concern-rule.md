@@ -78,6 +78,6 @@ begun until it can be finished, because a folder half in each shape is worse tha
 
 Resolved 2026-09-17, the same day, by the third option: eleven concern records under
 [`adr/`](../adr/README.md), each folding its records into a standing choice and a history row
-per decision, and thirteen records whose reason moved into the file that states the choice.
+per decision, and eleven records whose reason moved into the file that states the choice.
 The [index](../adr/README.md) says which number went where, so a citation written against the
 old set still resolves.

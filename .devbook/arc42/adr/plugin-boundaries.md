@@ -23,7 +23,7 @@ are published from another marketplace and are bound per repository, never depen
 user turn, none of which survives being split across sessions; shipping the session-spawning
 mechanism inside the engine would put it one skill reference away from every flow that must not
 use it. A separate plugin makes the reach impossible rather than discouraged. The same shape
-holds everything that runs with nobody watching: nine entry points and their triggers in one
+holds everything that runs with nobody watching: fourteen entry points and their triggers in one
 folder, one dependency, one enable, and a schedule is a trigger that names an entry point and
 never a procedure — a flow ends at a gate no unattended run can pass.
 

@@ -22,12 +22,12 @@ instead of by repository.
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
-Five of the flows are named after a devbook folder — `arc42/`, `domain/`, `tech/`,
-`design/`, `ai/` — and carry a chapter change the same way the others carry a code change.
-They own the procedure and none of the rules: what a chapter must look like comes from the
+One flow, `flow-spec`, carries a change to any of the five devbook folders — `arc42/`,
+`domain/`, `tech/`, `design/`, `ai/` — the same way the others carry a code change. It owns
+the procedure and none of the rules: what a chapter must look like comes from the
 instruction files the repository keeps for the folder and the check it ships, which the
-`devbook` plugin materializes and this plugin never names. A folder flow in a repository that
-has not adopted the folder stops and says so.
+`devbook` plugin materializes and this plugin never names. In a repository that has not
+adopted the folder it stops and says so.
 
 [FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws every flow: stage order, where the approval gate
 sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
@@ -102,7 +102,7 @@ engine names two skills by name and reads them by path, and writes neither:
 
 | Skill | Fills | Where it comes from |
 |---|---|---|
-| `start` | the `app.start` point, as `repo:start` — the command, the entry points, the readiness signals, the credential pointer | `.agents/skills/start.md`, the repository's own, with a wrapper per host |
+| `start` | the facts the `app.start` provider reads — the command, the entry points, the readiness signals, the credential pointer | `.agents/skills/start.md`, the repository's own, with a wrapper per host |
 | `capture` | evidence capture inside Validation — the layout, the naming, the tooling | `.agents/skills/capture.md`, the same shape |
 
 Whoever seeds them is the repository's business; the engine only expects a skill by that name
@@ -119,7 +119,7 @@ skill changes who runs capture, never whether it runs.
 
 - **Specialist plugins.** An architecture, QA, domain, UX, product, security, or docs
   specialist is bound as a role per repository, and a coding one as a service. Neither is
-  ever declared as a dependency — one missing specialist must not demote all 26 skills. The
+  ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, or Markdown chapters, whichever `delivery.tracker` names.

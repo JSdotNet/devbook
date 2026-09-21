@@ -1,7 +1,7 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
 // blocks defined in devbook-chapter-metadata.md.
 //
-// The schema used across .domain/.arc42/.tech/.design/.ai is intentionally small and
+// The schema used across .devbook/{arc42,domain,tech,design,ai} is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
 // tiny hand-written reader instead of pulling in a YAML dependency.
 
@@ -92,7 +92,7 @@ const TYPE_BY_FOLDER = {
         chapter: [
             // `context-map.md`'s own sections: one per bounded context. The
             // strategic view names contexts, so a chapter elsewhere can address
-            // one — `.domain/context-map.md#order-management` — the same way it
+            // one — `.devbook/domain/context-map.md#order-management` — the same way it
             // addresses an aggregate.
             "bounded-context",
             "aggregate",
@@ -1202,7 +1202,7 @@ export function validateDocument(relPath, markdown) {
     if (!kind) {
         issues.push({
             severity: "info",
-            message: `${relPath} is not under .domain/, .arc42/, .tech/, .design/, or .ai/ — no metadata rules apply.`,
+            message: `${relPath} is not under .devbook/arc42/, domain/, tech/, design/, or ai/ — no metadata rules apply.`,
         });
         return issues;
     }

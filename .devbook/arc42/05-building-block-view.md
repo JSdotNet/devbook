@@ -58,7 +58,7 @@ flowchart TB
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
-    DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
+    DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
     DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
@@ -263,10 +263,10 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and five
-of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
-knowledge of, and a repository that hand-authored its folders without installing devbook gets a
-check line pointing at a file that is not there.
+`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and
+`flow-spec` is named for devbook's folders and expects every chapter to carry the `meta` block
+devbook's schema defines — one skill wide since the 2026-09-15 fold, which also stopped it
+naming that path — so the engine leans on a plugin it declares no knowledge of.
 
 The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
 install skill: it is derived from the chapters and refreshed by the `devbook-check` schedule,

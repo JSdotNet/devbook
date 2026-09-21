@@ -72,7 +72,7 @@ entry names a test, and the counterpart still has to be resolved by naming. See
    canonical concept.
 2. **The `arc42/` building-block view.** When no chapter has an entry, or the
    kind is architectural rather than a domain term, read
-   `.arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
+   `.devbook/arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
    and hosting units). Those chapters name the modules, containers, and
    deployable units the code is organized into, which narrows the search to one
    project or folder even when the type name itself differs.
@@ -383,8 +383,8 @@ scope, so a run's outcome is legible without reading the prose.
 
 | Chapter | Counterpart | Resolved via | Verdict | Evidence | Action |
 |---|---|---|---|---|---|
-| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-domain` |
-| `.domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
+| `.devbook/domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-spec` |
+| `.devbook/domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
 
 Column rules:
 
