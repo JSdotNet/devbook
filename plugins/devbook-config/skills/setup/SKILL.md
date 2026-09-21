@@ -56,9 +56,8 @@ record work this skill did not do.
    setting. Fix and re-run until it exits `0`.
 
    Write no overlay here — not `.devbook/config.local.json`, and not the user-scope copies
-   under the devbook config directory. An overlay is machine-scope, so it is nobody's to
-   create on somebody else's behalf; mention that the three exist, and that
-   `resources/config.local-template.json` in the delivery plugin is where each starts.
+   under the devbook config directory. An overlay is true of the person running this and of
+   nobody they set a repository up for; step 7 offers `devbook-config:local`, which writes them.
 
 5. **Declare the default MCP servers.** Every point left absent in step 3 takes the engine
    default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
@@ -85,6 +84,11 @@ record work this skill did not do.
    installed and therefore not offered, and anything that ended failing. A setup that ends
    on a failing check is reported as failing, never as done.
 
+8. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
+   model-selection file exist for the person running this. When neither does, say that the
+   first flow here runs at the team's defaults and asks for the scheduler's environment and
+   model every time, and offer to run `local` now. Their machine, their answer.
+
 This skill is the empty case only. Everything about moving an already-configured repository
 forward — version drift, migrations, the fan-out across components — belongs to
 `devbook-config:update`, which runs the whole stack in one go.
@@ -95,7 +99,8 @@ forward — version drift, migrations, the fan-out across components — belongs
 - Do not set up, or ask about, a plugin the report shows as not installed. Report it; do not
   install it on the user's behalf.
 - Do not write an engine key into a repository that is not adopting `delivery`.
-- Do not write an overlay, at any of its three layers. It belongs to whoever runs here.
+- Do not write an overlay, at any of its three layers. `devbook-config:local` does, for the
+  person running it.
 - Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
   rename, or reshape a server somebody declared.
 - Do not invent a policy switch, an extension point, or a gate purpose. All three sets are

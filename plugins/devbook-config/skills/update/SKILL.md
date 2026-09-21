@@ -83,6 +83,10 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    enabled* section as the warning it is — enablement is personal to this checkout — and change
    neither file for it. An update that ends on a failing check is reported as failing.
 
+7. **Offer `devbook-config:local`** when the report says no user overlay or model-selection
+   file exists for the person running this: the stack runs at the team's defaults on this
+   machine until they say otherwise, and that is theirs to decide, once.
+
 ## Do not
 
 - Do not write, edit, or remove a `components.<name>` key, and do not apply a component's

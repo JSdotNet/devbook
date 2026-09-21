@@ -107,7 +107,10 @@ user's devbook config directory and survive a fresh worktree; the last does not.
 a gate and may never remove one — the same asymmetry the engine holds for configuration,
 applied one layer down, at every layer — and none may carry the `id` that found it.
 
-Every layer is absent by default, and none is private: nothing secret goes in any of them.
+Every layer is absent by default, and none is private: nothing secret goes in any of them. An
+overlay may carry `ext.<plugin>.<key>`, a plugin's own machine-scope state, which the engine
+merges and never reads; the committed file may not. `local` writes an overlay for the person
+running it; a plugin writes its own `ext` namespace there and nothing else.
 
 ## Setup
 

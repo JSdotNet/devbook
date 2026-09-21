@@ -5,8 +5,9 @@ type: skills
 related: [".devbook/domain/context-map.md#devbook-config"]
 ```
 
-> Four skills, two of which write nothing. All four are backed by one read-only report that names
-> the file behind every fact, and none of them writes a key another component owns.
+> Five skills, two of which write nothing and one of which writes nothing into the repository.
+> All five are backed by one read-only report that names the file behind every fact, and none
+> of them writes a key another component owns.
 
 ## setup
 
@@ -77,3 +78,21 @@ related: [".devbook/domain/devbook-config/domain.md#adoption-drift", ".devbook/d
 Report where the adoption record no longer matches what is installed, enabled, and wired, and hand
 every edit to the folder's own flow. It writes nothing, deliberately: the report can only see what
 is on disk, and whether people actually work a certain way is not on disk.
+
+## local
+
+```meta
+type: feature
+date: 2026-09-21
+related: [".devbook/domain/devbook-config/domain.md#machine-overlay", ".devbook/arc42/adr/configuration.md"]
+```
+
+Ask what is true of this machine and write it where the stack reads it: a machine overlay at the
+user layer by default, the repository layer when an answer is about one repository, the checkout's
+own only on request; the model-selection file the engine's `model-override` slot resolves to; and
+`AGENTS.local.md`. Every question is optional and the default is nothing.
+
+It exists because `setup` may not write an overlay — an overlay is true of the person running it,
+not of the repository they set up — and without it the first run on every machine took the team's
+defaults without saying so. `setup` and `update` close by offering it, and the report says when no
+user layer exists.
