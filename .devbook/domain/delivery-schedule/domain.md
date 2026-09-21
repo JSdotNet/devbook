@@ -26,7 +26,7 @@ and why a trigger can be created, disabled, and re-created without touching what
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A target is an entry point, a `fleet-*` skill, or a read-and-report skill — never a flow | `check.mjs` | untested |
+| A target is an entry point or a read-and-report skill — never a flow | `check.mjs` | untested |
 | A cron expression that could fire more than hourly is rejected | `check.mjs` | untested |
 | The `requires` list names the target's own plugin | `check.mjs` | untested |
 | Every prompt begins with the preamble, stated once and not restated per schedule | prompt assembly | untested |
@@ -79,7 +79,7 @@ aliases: [schedule skill, schedulable procedure]
 A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the top
 open bug, every pull request waiting on a reviewer, the outdated packages, the week's changes in
 the tracked repositories, the repository's own day or week, the instruction assets a model loads.
-Fifteen ship here.
+Fourteen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
@@ -91,8 +91,8 @@ needs a person, and a person is exactly what an unattended run does not have.
 | It selects its own input and requires no argument | authoring | untested |
 | It is runnable by hand as well as on a cadence | authoring | untested |
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
-| It never merges, approves, closes, or deletes | run | untested |
-| A change lands as a pull request from `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
+| It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
+| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ## Schedule Selection

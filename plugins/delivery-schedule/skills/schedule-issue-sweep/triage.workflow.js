@@ -2,7 +2,7 @@ export const meta = {
   name: 'issue-triage',
   description: 'Classify each open issue in the repository\'s own vocabulary, judge whether it is still relevant, and find which would collide with work already in flight',
   whenToUse:
-    'Invoked by the fleet-issue-sweep skill with the fetched issue list, the label vocabulary, and the open-work surface. Returns classifications, relevance verdicts, and conflict verdicts; it decides nothing and writes nothing.',
+    'Invoked by the schedule-issue-sweep skill with the fetched issue list, the label vocabulary, and the open-work surface. Returns classifications, relevance verdicts, and conflict verdicts; it decides nothing and writes nothing.',
   phases: [
     { title: 'Judge', detail: 'one read-only agent per issue: classify, then judge relevance' },
     { title: 'Conflict Scan', detail: 'cross-reference impacted paths against work in flight' },
@@ -21,12 +21,12 @@ export const meta = {
 //                 milestones: [...], templates: 'what a complete report of each type holds' }
 //   openWork:   { pullRequests: [{ number, title, branch, files: [...] }],
 //                 worktrees:    [{ path, branch }],
-//                 sessions:     [ 'name [ref]' ] }
+//                 sessions:     [ 'name [ref]' ] }   sessions is empty on a scheduled run
 //   maxTriage:  integer — hard cap on issues judged this pass (default 12)
 // }
 
 if (!args || !args.repo || !Array.isArray(args.issues)) {
-  throw new Error('triage.workflow.js requires args.repo and args.issues[]. Invoke it through the fleet-issue-sweep skill.')
+  throw new Error('triage.workflow.js requires args.repo and args.issues[]. Invoke it through the schedule-issue-sweep skill.')
 }
 
 const MAX_TRIAGE = Number.isInteger(args.maxTriage) ? args.maxTriage : 12

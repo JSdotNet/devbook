@@ -30,7 +30,6 @@ taken on purpose.
 |---|---|---|---|---|
 | [Delivery](../delivery/context.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [Devbook](../devbook/context.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and two of its own wrappers invoke `devbook:check` and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
-| [Fleet](../fleet/context.md#dependencies) | Separate Ways | A schedule may name a `fleet-*` skill as a target | The skill name alone | Same relationship. A `fleet-*` skill holds no gate, which is what makes it schedulable where a flow is not. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged, installed, and stamped like everything else here. |
@@ -45,7 +44,7 @@ taken on purpose.
 
 ### Notes
 
-- **Naming a target is deliberately weaker than depending on one.** Four of the eleven schedules
+- **Naming a target is deliberately weaker than depending on one.** Three of the eleven schedules
   target another plugin's skills, and the plugin declares one dependency. A target that is not
   enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
   the engine uses for a role.

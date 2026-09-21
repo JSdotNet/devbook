@@ -159,7 +159,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
 for the code and one for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/plugin-boundaries.md) —
-and three `phase-*`, `delivery-schedule` holds seventeen `schedule-*` beside a bare `install`, and
+and three `phase-*`, `delivery-schedule` holds sixteen `schedule-*` beside a bare `install`, and
 `fleet` holds two `fleet-*` beside a bare `sweep-brief` — a read-and-report skill that fans
 nothing out, so the prefix that would claim it does would be wrong.
 
@@ -222,7 +222,7 @@ The **scheduler** is whatever the live session exposes that turns a name, a cron
 repository, and a prompt into a scheduled session — resolved by capability, and absent as a
 normal outcome.
 
-A schedule names an entry point, a `fleet-*` skill, or a read-and-report skill, never a
+A schedule names an entry point or a read-and-report skill, never a
 [flow](#flow-skill): a flow ends at a gate, and an unattended run parks where a gate would be.
 
 ### Extension Point

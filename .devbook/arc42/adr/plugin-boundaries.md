@@ -27,6 +27,18 @@ holds everything that runs with nobody watching: nine entry points and their tri
 folder, one dependency, one enable, and a schedule is a trigger that names an entry point and
 never a procedure — a flow ends at a gate no unattended run can pass.
 
+**An unattended run closes an issue on evidence, and only then.** *Never close* was absolute
+until the issue sweep became a schedule entry point, and the sweep's first job is to find
+issues the code already resolved. Leaving every one of those as a proposal makes the brief a
+list the reader closes by hand each morning, which is the work the schedule exists to remove.
+So the preamble names one exception: an issue that `already-fixed`, `obsolete-code-gone`, or
+`duplicate` evidence — a commit on the base branch, a file that is gone, a sibling issue —
+shows resolved at high confidence, closed with that evidence in the comment. `superseded`,
+`not-reproducible`, and `wont-fix-by-design` stay proposals, because each is a judgement about
+what the repository wants rather than a fact about what it contains. And every pull request the
+sweep opens is a draft, proved or not: personal validation moves to the pull request, so
+nothing may present itself as ready for review before a person has looked.
+
 **A role plugin holds no flow control.** The ported specialists each arrived with a mandatory
 approve-handoff sequence, session-spawning tools, and a plan-and-checkpoint loop of their own.
 A gate a plugin owns cannot be governed — configuration may add a gate and never remove one,
@@ -100,6 +112,7 @@ the handover ships no migration.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | The issue sweep is a `delivery-schedule` entry point, sequential in one session; an unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request it opens is a draft. |
 | 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. |
 | 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |
 | 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. |

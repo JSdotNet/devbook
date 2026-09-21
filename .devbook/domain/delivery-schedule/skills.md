@@ -5,19 +5,9 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery-schedule"]
 ```
 
-> Eighteen skills in two halves: fifteen entry points that pick their own input, and three that put a
+> Seventeen skills in two halves: fourteen entry points that pick their own input, and three that put a
 > trigger in the scheduler and read it back. Every one of them is also runnable by hand, which is
 > how a cadence gets proved before it is trusted.
-
-## schedule-bug-fix
-
-```meta
-type: feature
-related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery/skills.md#flow-code"]
-```
-
-Pick the top open `bug` item and run the bug flow on it, unattended. It lands as a branch parked
-where Personal Validation would be, with a handoff brief naming what a person has to judge.
 
 ## schedule-devbook-check
 
@@ -46,21 +36,55 @@ and a reviewer must be able to drop one file without losing the rest. A file the
 rejected pull request touched is skipped: a rejection is an answer, and the run converges on what
 the repository will accept. It adds nothing but a pointer that replaces a duplicate.
 
-## schedule-issue-triage
+## schedule-issue-sweep
 
 ```meta
 type: feature
-related: [".devbook/domain/fleet/skills.md#fleet-issue-sweep", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief", ".devbook/domain/delivery-schedule/skills.md#schedule-bug-fix"]
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/delivery-schedule/skills.md#schedule-morning-brief", ".devbook/domain/delivery/skills.md#start-session-from-issue", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-Run `fleet-issue-sweep` at zero workers — classify every open issue nobody has classified,
-judge relevance and collision, propose closures — writing only the high-confidence
-classifications, and publish the rest — proposals, missing labels, flagged issues, duplicates
-and closure proposals awaiting an answer — as one schedule-report issue that the next run folds
-into rather than stacks beside. The weekday `issue-triage` trigger's target, timed before the
-morning brief and the bug fix, because both rank by the labels it writes. Zero workers is what
-keeps it a triage: a scheduled sweep that dispatches is a separate decision, taken by
-scheduling the sweep itself.
+Classify every open issue nobody has classified in the repository's own labels and write that
+back; close what high-confidence evidence shows already resolved, with the evidence in the
+comment; resolve up to N of the rest one at a time, each on its own branch, each a draft pull
+request whose body says what could not be proved; and publish one brief, needs-you first. The
+weekday `issue-sweep` trigger's target, timed before the morning brief because the brief ranks
+by the labels it writes.
+
+### Classify Once, Judge Every Sweep
+
+```meta
+type: sub-feature
+```
+
+A classification — type, area, severity for a defect, a likely duplicate, the questions a thin
+report leaves open — is written once and marked `triaged`, so the next sweep does not ask again
+and the pickup skills rank by what it wrote. It uses only labels the repository already has; one
+it lacks is a proposal in the brief. Relevance and collision with work in flight are recomputed
+every sweep, because the code moved.
+
+### Close on Evidence, Draft Everything Else
+
+```meta
+type: sub-feature
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point"]
+```
+
+The one closure an unattended run may take: an issue already fixed, obsolete, or a duplicate, at
+high confidence, with a commit, file, pull request, or sibling issue named in the closing
+comment. Every other stale verdict is a proposal with its command. Every pull request is a draft
+— the one that proved itself and the one that did not alike — because personal validation
+happens on the pull request and nothing is ready for review until a person says so.
+
+### One Session, One Issue at a Time
+
+```meta
+type: sub-feature
+```
+
+Resolution is sequential in the session the schedule gave it: a worktree cut and removed per
+issue, the resolution run through the host's workflow tool as sub-agents, never a second session.
+A scheduled run has hours and nobody to hand a parked worktree to, so it neither fans out nor
+parks — what did not reach a draft pull request is a comment on the issue and a row in the brief.
 
 ## schedule-merge-review
 
