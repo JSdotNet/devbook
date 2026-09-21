@@ -92,7 +92,6 @@ file wrong the moment a second person opens the repository.
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |
 | `assets/root-wrappers/copilot-instructions.md` | `.github/copilot-instructions.md` | absent |
-| the local-file list below | `.gitignore`, between `# devbook:begin` and `# devbook:end` | always |
 | `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
@@ -129,24 +128,12 @@ carrying `paths`, `.github/instructions/` carrying the same list comma-joined as
 and which adopted folder pulls each one in, is in `rules/rules.json`;
 `assets/rule-wrappers.md` carries the three templates and the reasons.
 
-The `.gitignore` block is the second rendered asset, keyed `.gitignore#devbook` and
-following the `AGENTS.md` rules exactly — markers, hash of the text between them,
-rewritten while managed, reported and left alone once customized. It names the two
-files a repository keeps out of version control on every contributor's behalf:
-
-```gitignore
-# devbook:begin
-# Machine-scope, never committed. See AGENTS.md.
-AGENTS.local.md
-.devbook/config.local.json
-# devbook:end
-```
-
-Neither file is ever created by a reconcile. Ignoring a file is a decision the repository
-makes once for everybody; writing an empty one is a decision only its owner can make, and
-an empty overlay is worse than an absent one — it reads as a setting somebody chose. Absent
-`.gitignore` is created holding only the block; present without the markers, the block is
-appended at the end.
+Nothing is written to `.gitignore`. Every personal file — `AGENTS.local.md`, the stack-config
+overlay — lives under the user's devbook config directory and never in a clone, so a
+repository has nothing to ignore on devbook's behalf. The block that once did, keyed
+`.gitignore#devbook`, is removed by migration `012-no-checkout-overlay`. No reconcile creates
+a personal file either: writing an empty one is a decision only its owner can make, and an
+empty overlay is worse than an absent one — it reads as a setting somebody chose.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

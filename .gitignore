@@ -1,8 +1,2 @@
 # Worktrees this repository's own sessions cut. Tooling state, not content.
 .claude/worktrees/
-
-# devbook:begin
-# Machine-scope, never committed. See AGENTS.md.
-AGENTS.local.md
-.devbook/config.local.json
-# devbook:end

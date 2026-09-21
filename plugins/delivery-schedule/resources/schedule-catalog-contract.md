@@ -76,8 +76,12 @@ the person deletes it in the host's own page. **None reachable is a normal outco
 two say the host holds the answer.
 
 Matching by name is what makes every operation idempotent, and it is why nothing personal is
-written down: scheduler ids, the environment the session runs in, and the model are asked at
-sync time and live in the scheduler only.
+written into the repository: scheduler ids live in the scheduler only, and the environment the
+session runs in and the model are asked at sync time. A machine may remember those two under
+`ext.schedule` in a stack-config overlay — `{ "ext": { "schedule": { "environment": "...",
+"model": "..." } } }` in `<config dir>/config.local.json`, per *The overlays* in the delivery
+plugin's `resources/surface-contract.md` — and `delivery-schedule:install` then asks only for
+what is absent there. The engine never reads the key; this plugin owns it.
 
 In Claude Code this capability is the `RemoteTrigger` tool, loaded on demand. Naming it here
 is one of two host facts this plugin carries — the other is the `Workflow` tool the issue
@@ -104,23 +108,30 @@ nothing else, and never another component's key:
 `enabled` is the selection; `overrides` carries a per-schedule `cron` where the catalog's
 cadence does not fit the repository. Both are facts about the repository. Deliberately absent:
 the environment, the model, scheduler ids, and who created them — personal, and wrong the
-moment a second person opens the file.
+moment a second person opens the file. The first two have an overlay to live in; the rest
+live in the scheduler.
 
 ## The Prerequisite
 
 A cloud session loads this marketplace only when the repository's committed host settings
-enable the marketplace and each plugin in `requires`. `delivery-schedule:install` reads those settings and
-refuses to schedule one whose target plugin is not enabled there: a session that starts
-without its skill improvises or stops, and neither is what was scheduled. The first run is the
-proof either way — read it with `schedule-status`. In Claude Code the settings file is
-`.claude/settings.json`, keys `extraKnownMarketplaces` and `enabledPlugins`.
+enable the marketplace and each plugin in `requires`. `delivery-schedule:install` owns those two
+keys and nothing else in that file: absent, it explains, asks, and writes the marketplace
+this plugin was installed from and the plugins the selected schedules require; present, it
+adds what is missing and removes nothing. Declined, it refuses to schedule what would start
+without its skill: a session that improvises or stops is not what was scheduled. The first
+run is the proof either way — read it with `schedule-status`. In Claude Code the settings
+file is `.claude/settings.json`, keys `extraKnownMarketplaces` — the marketplace name to its
+`source` — and `enabledPlugins` — `<plugin>@<marketplace>` to `true`. Copilot's equivalent
+is not named here; a repository on that host enables its plugins by its own means.
 
 ## Cadence
 
 Every `cron` is UTC; `delivery-schedule:install` shows the local equivalent when it confirms. Weekly
-schedules sit on different days so their pull requests do not all land on Monday. Match a
-cadence to how fast the output is read, not to how fast input arrives: a daily merge review is
-read daily; a daily package update produces a queue.
+schedules sit on different days so their pull requests do not all land on Monday, and the two
+that open a pull request queue of their own — `package-update`, `tech-update` — sit on the
+weekend so the queue waits for the week rather than competing with it. Match a cadence to how
+fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
+daily package update produces a queue.
 
 ## Never
 

@@ -7,9 +7,9 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-buil
 
 A repository's wiring is one committed file, `.devbook/config.json`: the engine's four keys —
 `bindings`, `extensions`, `policy`, `gates` — beside every component's `components.<name>`
-entry and a committed `id`. Unknown keys are rejected by name. A gitignored
-`config.local.json` overlays the engine keys at three layers — the checkout, the user's devbook
-config directory, and `repos/<id>/` under it — and may add a gate but never remove one. How
+entry and a committed `id`. Unknown keys are rejected by name. A `config.local.json`
+outside every clone overlays the engine keys at two layers — the user's devbook config
+directory, and `repos/<id>/` under it — and may add a gate but never remove one. How
 the application starts is not configuration: it is the repository's own `start` skill.
 
 ## Why
@@ -30,19 +30,32 @@ Reading the path is not a dependency on the `devbook` plugin: `delivery` reads i
 not a single folder was adopted. There is no fallback path, deliberately; the guide's report
 names the old file while it exists.
 
-**The overlay may only tighten.** A gitignored file may not weaken what a reviewer sees:
+**The overlay may only tighten.** A file no reviewer sees may not weaken what a reviewer sees:
 `gates` append, `policy.pr.required`, `policy.qa.ceiling`, `policy.gate.personalValidation`
 and `components` are refused, and the check validates the overlay alone and the merged result.
 Trusting the overlay because its author could edit the committed file fails on visibility, not
 capability — the committed edit shows in review and the overlay never does.
 
-**Three layers, keyed by a committed id.** A gitignored file is in no commit, so a fresh
-worktree ran at the team's defaults without saying so. A file outside the clone keyed on the
-checkout path splits worktrees exactly as the gitignored one does; a committed `id` survives a
-move, a re-clone, and a worktree alike, which is how OpenSpec's stores key a machine to a
-repository. The location is `$XDG_CONFIG_HOME/devbook` rather than `~/.claude/`, because the
-reader is `check.mjs` and Copilot runs it as readily as Claude. `id` configures nothing and is
-never renamed — a renamed id orphans every machine's `repos/<old>/`.
+**`ext` is the overlay's `components`.** A plugin that must remember something about one
+machine — the environment and model a routine runs with — had no legal key: the engine
+rejects every top-level name it does not own, and an overlay may not carry a stamp. `ext.<plugin>.<key>`
+is the extension namespace the chapter `meta` block already reserves, applied to the config:
+accepted in an overlay only, refused in the committed file, shape-checked as far as being an
+object of objects and otherwise opaque to the engine. The owning plugin reads it and asks only
+for what is absent, and may write its own namespace there and nothing else. `devbook-config:local`
+writes an overlay whole; `setup` never does, because an overlay is true of the person running
+it and of nobody they set a repository up for.
+
+**Two layers, keyed by a committed id, and none in the clone.** A gitignored file is in no
+commit, so a fresh worktree ran at the team's defaults without saying so. A file outside the
+clone keyed on the checkout path splits worktrees exactly as the gitignored one does; a
+committed `id` survives a move, a re-clone, and a worktree alike, which is how OpenSpec's stores
+key a machine to a repository. The location is `$XDG_CONFIG_HOME/devbook` rather than
+`~/.claude/`, because the reader is `check.mjs` and Copilot runs it as readily as Claude. `id`
+configures nothing and is never renamed — a renamed id orphans every machine's `repos/<old>/`.
+The gitignored checkout layer that started the overlay was retired once both user layers
+existed: everything personal has a home outside the repository, so the repository has nothing
+to ignore, and devbook's `.gitignore` block went with it.
 
 **Runtime facts live in the `start` skill, not a `runtime` key.** The flow context file had
 eight sections; three were answered by config and `.mcp.json`, one spelled `null` in Markdown,
@@ -76,6 +89,8 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. |
+| 2026-09-21 | The checkout layer retired: an overlay lives in the user's devbook config directory and never in a clone. `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. |
 | 2026-09-17 | Session-naming labels configured in the dashboard's hand-edited component entry; `null` means no prefix. |
 | 2026-09-15 | Overlay gains two layers under the devbook config directory, keyed by a committed `id`. |
 | 2026-09-15 | The flow context file and the `repo-flow-context` slot retired; the `start` skill holds the runtime facts, and nothing to start is `app.start: null`. |

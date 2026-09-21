@@ -65,8 +65,8 @@ because the plugin name already carries the scope.
 install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
 `.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
 the checker nine times, since a shipped rule carries no `paths`. The stamp lands anyway —
-`devbook:check` classes no stamp at all as hard drift — with `materialized` holding the two
-rendered sections and nothing else. Hashes are taken over LF-normalized text, because the
+`devbook:check` classes no stamp at all as hard drift — with `materialized` holding the one
+rendered section and nothing else. Hashes are taken over LF-normalized text, because the
 working tree is CRLF and the index LF.
 
 ## Rejected

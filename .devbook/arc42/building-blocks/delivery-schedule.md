@@ -216,8 +216,10 @@ disable the deselected, and record the selection under this component's stamp �
 [From Catalog to Scheduler](#from-catalog-to-scheduler).
 
 Refuse what would not run: a cloud session loads this marketplace only if the repository's
-committed host settings enable it and the plugins the target needs. A schedule that would start
-without its skill is refused rather than created.
+committed host settings enable it and the plugins the target needs. The install owns those two
+settings keys — it explains, asks, and writes what the selected schedules require, removing
+nothing — and a schedule that would still start without its skill, because the person declined,
+is refused rather than created.
 
 Match by name: entries are matched by `<owner>/<repo> · <title>`, so a second sync updates
 rather than duplicates — and no scheduler id has to be written into the repository, which is
@@ -408,8 +410,10 @@ Which schedules this repository chose and any cadence it overrode, recorded unde
 `components.schedule` in the stack config and written by this block's install skill alone.
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts
-and are committed; the environment, the model, and the scheduler's own ids are personal and stay
-in the scheduler. Matching by name is what makes writing the ids down unnecessary.
+and are committed; the environment, the model, and the scheduler's own ids are personal. The
+ids stay in the scheduler — matching by name is what makes writing them down unnecessary —
+and the environment and the model may be remembered under `ext.schedule` in a machine's own
+stack-config overlay, where the engine merges them and this block alone reads them.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -485,8 +489,9 @@ Published language rules:
   report as a labelled issue; the run's authority ends at publishing.
 - **Update, do not accumulate.** A weekly report that opens a new issue every week is a backlog
   of its own within two months.
-- **Nothing personal travels.** The environment, the model, and the scheduler ids stay in the
-  scheduler; nothing published here would be wrong for the next person who opens the file.
+- **Nothing personal travels.** The scheduler ids stay in the scheduler, the environment and
+  the model there or in a machine's own overlay; nothing published here would be wrong for
+  the next person who opens the file.
 
 ## Runtime
 
@@ -526,7 +531,8 @@ flowchart TD
   `<owner>/<repo> · <title>`, which is also why no scheduler id has to be written down — and an
   id would be personal, so it could not be committed anyway.
 - **Refusing beats creating something that cannot run.** A cloud session loads this marketplace
-  only if the repository's committed host settings enable it and the plugins the target needs.
+  only if the repository's committed host settings enable it and the plugins the target needs;
+  the install offers to write those two keys first and refuses only when declined.
 - **The first run is the proof, not the creation.** A cadence that has never fired is a guess
   about somebody else's environment.
 
@@ -562,8 +568,9 @@ flowchart TD
   changed something and published nothing.
 - **The next run updates what this one left open.** A weekly report opening a new issue every
   week becomes its own backlog within two months.
-- **Nothing personal crosses into the repository.** The environment, the model, and the
-  scheduler ids stay in the scheduler; the stamp records only the selection and the overrides.
+- **Nothing personal crosses into the repository.** The scheduler ids stay in the scheduler,
+  the environment and the model there or under `ext.schedule` in a machine's own overlay; the
+  stamp records only the selection and the overrides.
 
 ## Dependencies
 
@@ -586,7 +593,7 @@ capability — a divergence taken on purpose.
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
-| A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; everything personal about a schedule stays in the scheduler. |
+| A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; everything personal about a schedule stays in the scheduler or in a machine's own overlay. |
 
 ### Inbound
 
@@ -612,5 +619,6 @@ scheduler resolution knows a tool answered — see
 an extension rather than a second engine: everything it runs, the engine already had.
 
 **The line between committed and personal is the one to hold.** The selection and the cadence
-overrides go in the repository; the environment, the model, and the scheduler ids stay in the
-scheduler, so nothing in the file would be wrong for the next person who opens it.
+overrides go in the repository; the scheduler ids stay in the scheduler, and the environment
+and the model in the scheduler or a machine's own overlay under `ext.schedule`, so nothing in
+the committed file would be wrong for the next person who opens it.

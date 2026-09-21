@@ -17,7 +17,7 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `devbook-config` with `/plugin`. During development, add this working copy by path
 instead of by repository.
 
-## The four skills
+## The five skills
 
 | Skill | Does |
 | --- | --- |
@@ -25,6 +25,7 @@ instead of by repository.
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own install skill, and a re-validated config. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s surface contract. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
+| [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` — all under your devbook config directory. The one skill here that writes outside the repository, and the one that never writes the committed config. `setup` and `update` close by offering it. |
 
 `devbook-config:adoption` is the one that writes nothing at all, and deliberately: `ai/` rates whether
 people actually work a certain way, and the report can only see what is on disk. It says which
@@ -56,7 +57,7 @@ node scripts/report.mjs --root <repository>
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
-| The overlays — `config.local.json` in this checkout's `.devbook/`, and under the user's devbook config directory for every repository and for this repository's `id` | Which layers this machine applies over the committed config, and which engine keys each touches |
+| The overlays — `config.local.json` under the user's devbook config directory for every repository and for this repository's `id` — and `model-selection.md` beside them | Which layers this machine applies over the committed config, which engine keys and `ext.<plugin>` namespaces each touches, and which are absent — a machine with no user layer runs at the team's defaults, and the report says so and names `local` |
 | `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
 | The devbook folders under `.devbook/` | Which of the five this repository adopted, and any stray root-level copy that has to move |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
@@ -110,6 +111,7 @@ committed and shared.
 | `skills/update/SKILL.md` | Version drift, migrations, re-validation |
 | `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
+| `skills/local/SKILL.md` | The machine-scope settings: overlays, the model-selection file, `AGENTS.local.md` |
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
 
 ## Known gap

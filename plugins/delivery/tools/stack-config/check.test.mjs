@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
@@ -9,6 +10,7 @@ import {
     checkStackConfig,
     mergeStackConfig,
     overlayPaths,
+    resolveStackConfig,
     userConfigDir,
 } from './check.mjs';
 
@@ -198,7 +200,7 @@ test('no model key exists anywhere in the engine-owned config', () => {
     assert.equal(check({ bindings: { 'delivery.model': 'opus' } }).length, 1);
 });
 
-// The local overlay — .devbook/config.local.json, gitignored, one machine's own.
+// The overlay — config.local.json under the user's devbook config directory, one machine's own.
 
 test('the overlay wins key by key and leaves its siblings standing', () => {
     const merged = mergeStackConfig(
@@ -284,8 +286,47 @@ test('an overlay is still schema-checked, so a typo in it is rejected by name', 
     assert.match(errors[0], /unknown key "qa.dpeth"/);
 });
 
-// Where the overlays are found — three layers, outermost first, resolved from the
-// committed id and the user's config directory rather than from the checkout alone.
+// `ext` — a plugin's machine-scope state, `ext.<plugin>.<key>`, the overlay-side
+// counterpart of `components`: refused in the committed file, opaque in an overlay.
+
+const checkOverlay = (config) => checkStackConfig(config, schema, { overlay: true });
+
+test('ext is refused in the committed config and pointed at the overlay', () => {
+    const errors = check({ ext: { schedule: { environment: 'cloud' } } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^ext: machine-scope/);
+});
+
+test('ext in an overlay is carried through opaque: the engine reads none of its keys', () => {
+    assert.deepEqual(checkOverlay({ ext: { schedule: { environment: 'cloud', model: 'sonnet' } } }), []);
+    assert.deepEqual(checkOverlay({ ext: {} }), []);
+    assert.deepEqual(checkLocalOverlay({ ext: { schedule: { model: 'opus' } } }), []);
+});
+
+test('ext is only shape-checked as far as it takes to be addressable', () => {
+    assert.match(checkOverlay({ ext: 'cloud' })[0], /^ext: expected an object keyed by plugin/);
+    assert.match(checkOverlay({ ext: { schedule: 'cloud' } })[0], /^ext\.schedule: expected an object/);
+});
+
+test('the shipped overlay template validates as an overlay and is refused as the committed file', () => {
+    const template = JSON.parse(
+        readFileSync(join(HERE, '..', '..', 'resources', 'config.local-template.json'), 'utf8'),
+    );
+    assert.deepEqual([...checkLocalOverlay(template), ...checkOverlay(template)], []);
+    assert.equal(check(template).length, 1);
+});
+
+test('ext survives the merge, later layers winning key by key', () => {
+    const merged = [
+        { ext: { schedule: { environment: 'cloud', model: 'sonnet' } } },
+        { ext: { schedule: { model: 'opus' } } },
+    ].reduce(mergeStackConfig, { policy: { 'qa.depth': 'full' } });
+    assert.deepEqual(merged.ext, { schedule: { environment: 'cloud', model: 'opus' } });
+    assert.deepEqual(checkOverlay(merged), []);
+});
+
+// Where the overlays are found — two layers, outermost first, both under the user's config
+// directory and neither in any clone: the repository one keyed on the committed id.
 
 const unixHome = { env: {}, platform: 'linux', home: '/home/me' };
 
@@ -304,28 +345,28 @@ test('without it, Windows uses APPDATA and everything else ~/.config', () => {
     assert.equal(userConfigDir(unixHome), join('/home/me', '.config', 'devbook'));
 });
 
-test('three layers, outermost first, when the config carries an id', () => {
-    const layers = overlayPaths('/repo/.devbook/config.json', 'my-repo', unixHome);
+test('two layers, outermost first, when the config carries an id', () => {
+    const layers = overlayPaths('my-repo', unixHome);
     assert.deepEqual(
         layers.map((l) => l.scope),
-        ['user', 'repository', 'checkout'],
+        ['user', 'repository'],
     );
     assert.equal(layers[0].path, join('/home/me/.config/devbook', 'config.local.json'));
     assert.equal(layers[1].path, join('/home/me/.config/devbook', 'repos', 'my-repo', 'config.local.json'));
-    assert.equal(layers[2].path, join('/repo/.devbook', 'config.local.json'));
 });
 
 test('no id, no repository layer — a machine cannot key on a name the repo never chose', () => {
-    const layers = overlayPaths('/repo/.devbook/config.json', null, unixHome);
+    const layers = overlayPaths(null, unixHome);
     assert.deepEqual(
         layers.map((l) => l.scope),
-        ['user', 'checkout'],
+        ['user'],
     );
 });
 
-test('the checkout layer is found beside the config, whatever the config is called', () => {
-    const [, , checkout] = overlayPaths('/x/stack.json', 'r', unixHome);
-    assert.equal(checkout.path, join('/x', 'stack.local.json'));
+test('no layer is ever inside the clone', () => {
+    for (const layer of overlayPaths('my-repo', unixHome)) {
+        assert.ok(layer.path.startsWith(join('/home/me/.config/devbook')), layer.path);
+    }
 });
 
 test('layers merge in order: the later wins per key, and every layer keeps its gates', () => {
@@ -338,12 +379,63 @@ test('layers merge in order: the later wins per key, and every layer keeps its g
         policy: { 'qa.depth': 'targeted' },
         gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
     };
-    const checkout = { policy: { 'qa.depth': 'startup-only' } };
-
-    const merged = [user, repo, checkout].reduce(mergeStackConfig, base);
-    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 });
+    const merged = [user, repo].reduce(mergeStackConfig, base);
+    assert.deepEqual(merged.policy, { 'qa.depth': 'targeted', 'verify.retryBudget': 0 });
     assert.deepEqual(
         merged.gates.map((g) => g.at),
         ['spec', 'implement'],
     );
+});
+
+// What --print hands a flow: the committed file with every present overlay merged over it,
+// resolved from disk, and nothing at all when a layer is refused.
+
+function scratch(committed, overlays = {}) {
+    const root = mkdtempSync(join(tmpdir(), 'stack-config-'));
+    const target = join(root, 'config.json');
+    if (committed) writeFileSync(target, JSON.stringify(committed));
+    const xdg = join(root, 'xdg');
+    const id = committed?.id;
+    for (const [scope, overlay] of Object.entries(overlays)) {
+        const dir = scope === 'user' ? join(xdg, 'devbook') : join(xdg, 'devbook', 'repos', id);
+        mkdirSync(dir, { recursive: true });
+        writeFileSync(join(dir, 'config.local.json'), JSON.stringify(overlay));
+    }
+    return { target, options: { env: { XDG_CONFIG_HOME: xdg }, platform: 'linux', home: root } };
+}
+
+test('resolve merges every present layer over the committed file and names each layer', () => {
+    const { target, options } = scratch(
+        { id: 'r', policy: { 'qa.depth': 'full', 'qa.ceiling': 'full' } },
+        { user: { policy: { 'qa.depth': 'targeted' }, ext: { schedule: { model: 'sonnet' } } }, repository: { policy: { 'qa.depth': 'startup-only' } } },
+    );
+    const { merged, layers, errors } = resolveStackConfig(target, schema, options);
+    assert.deepEqual(errors, []);
+    assert.deepEqual(layers.map((l) => [l.scope, l.present]), [['user', true], ['repository', true]]);
+    assert.equal(merged.policy['qa.depth'], 'startup-only');
+    assert.equal(merged.policy['qa.ceiling'], 'full');
+    assert.deepEqual(merged.ext, { schedule: { model: 'sonnet' } });
+});
+
+test('resolve with no overlay is the committed file, and an absent layer is still named', () => {
+    const { target, options } = scratch({ id: 'r', policy: { 'qa.depth': 'full' } });
+    const { merged, layers } = resolveStackConfig(target, schema, options);
+    assert.deepEqual(merged, { id: 'r', policy: { 'qa.depth': 'full' } });
+    assert.deepEqual(layers.map((l) => l.present), [false, false]);
+});
+
+test('resolve yields no merge when a layer is refused', () => {
+    const { target, options } = scratch({ id: 'r' }, { user: { policy: { 'qa.ceiling': 'skipped' } } });
+    const { merged, errors } = resolveStackConfig(target, schema, options);
+    assert.equal(merged, null);
+    assert.equal(errors.length, 1);
+    assert.match(errors[0].errors[0], /locked/);
+});
+
+test('resolve without a committed file is null config, not an error', () => {
+    const { target, options } = scratch(null, {});
+    const { merged, config, errors } = resolveStackConfig(target, schema, options);
+    assert.equal(config, null);
+    assert.equal(merged, null);
+    assert.deepEqual(errors, []);
 });

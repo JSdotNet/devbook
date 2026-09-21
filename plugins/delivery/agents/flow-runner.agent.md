@@ -35,9 +35,13 @@ those contracts; it does not re-decide them per skill.
    stopping the run or letting the work proceed outside the flow. Escalate only for the
    decision classes listed under **Escalation** in `flow-execution-model.md`,
    then invoke the named successor flow after user approval.
-3. **Resolve the stack config once per run.** Before `start_run`, read
-   `.devbook/config.json` if present and resolve `bindings`, `extensions`, `policy`,
-   and `gates` per **The Stack Config** in `surface-contract.md`. Persist the
+3. **Resolve the stack config once per run.** Before `start_run`, run
+   `node tools/stack-config/check.mjs --print` from this plugin's root and take `config`
+   from its output: the committed `.devbook/config.json` with the user's overlays merged over
+   it, per **The Stack Config** in `surface-contract.md`. Never read a layer by hand — the
+   overlay paths and the merge live in that script, on either host. Resolve `bindings`,
+   `extensions`, `policy`, and `gates` from that document, and name in the run summary which
+   `layers` were present. Persist the
    resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
    gate list with `set_run_context`. A bound MCP server is resolved from the live tool list
    at the stage that uses it, per **MCP Server Strategy** in
