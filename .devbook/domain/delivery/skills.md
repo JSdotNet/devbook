@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The fourteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The fifteen skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-code
@@ -201,6 +201,20 @@ related: [".devbook/domain/plugin-authoring/domain.md#tracker"]
 Turn active Azure Monitor alerts into tracked work items, so an incident becomes something the
 rest of this context already knows how to carry. Azure is the alert source; where the item lands
 is the tracker binding's answer, not this skill's.
+
+## issue-triage
+
+```meta
+type: feature
+related: [".devbook/domain/plugin-authoring/domain.md#tracker", ".devbook/domain/delivery/skills.md#start-session-from-issue"]
+```
+
+Classify every open item nobody has triaged yet — type, area, severity for a defect, a likely
+duplicate, the questions a thin report leaves open — from the item's body and the target's own
+label set, and write it back through the tracker. It classifies and never decides: no close, no
+assignee, no claim, and no label the target does not already have. The severity it writes is
+what the pickup skills rank by, which is why it lives beside them rather than in the fan-out
+lane, whose triage asks a different question — relevance and collision, after this one.
 
 ## install
 
