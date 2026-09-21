@@ -1,7 +1,7 @@
 # Hosts
 
 ```meta
-date: 2026-09-09
+date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/tech/hosts.md#copilot-plugin-api", ".devbook/arc42/adr/install.md"]
 ```
 
@@ -66,7 +66,8 @@ opens nothing, at the cost of one click per run.
 Two divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
 because where a plugin is installed is a fact about a host and nothing else; and
 `delivery-schedule` names the scheduler tool, because an install that could not would schedule
-nothing ([plugin boundaries](plugin-boundaries.md)).
+nothing, and the workflow tool its issue sweep runs each resolution under, because a sweep that
+could not would resolve nothing ([plugin boundaries](plugin-boundaries.md)).
 
 ## History
 
@@ -75,6 +76,7 @@ nothing ([plugin boundaries](plugin-boundaries.md)).
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | `fleet` deleted: no asset names the Claude CLI. `delivery-schedule`'s issue sweep names the workflow tool, the lane's second recorded divergence. |
 | 2026-09-09 | The runner's three browser-pane ids removed: a host capability, not a shipped server. |
 | 2026-09-07 | Repository rules move to `.agents/rules/` with a wrapper per host; `CLAUDE.md` goes from 154 lines to an import. |
 | 2026-09-05 | The checker `tools/check-assets.mjs` returns what the dropped generator used to lint, without owning the files. |

@@ -2,7 +2,7 @@ export const meta = {
   name: 'resolve-issue',
   description: 'Resolve one claimed GitHub issue inside a dedicated worktree, up to a reviewed, tested change set',
   whenToUse:
-    'Invoked by the fleet-resolve-issue skill after it has selected, claimed, and provisioned a worktree for a single GitHub issue. Not a standalone entrypoint: it expects args.worktree to exist and args.issue to be claimed.',
+    'Invoked by the schedule-issue-sweep skill for each issue it resolves, after it has claimed the issue and provisioned a worktree. Not a standalone entrypoint: it expects args.worktree to exist and args.issue to be claimed.',
   phases: [
     { title: 'Scope Discovery', detail: 'read-only sweep for impacted paths and governing instructions' },
     { title: 'Implementation', detail: 'failing test first, then the change' },
@@ -28,7 +28,7 @@ export const meta = {
 if (!args || !args.worktree || !args.issue || !args.issue.number || !args.branch) {
   throw new Error(
     'resolve-issue.workflow.js requires args.worktree (absolute path), args.branch, and ' +
-      'args.issue.number. Invoke it through the fleet-resolve-issue skill, which claims ' +
+      'args.issue.number. Invoke it through the schedule-issue-sweep skill, which claims ' +
       'the issue and provisions the worktree first.',
   )
 }

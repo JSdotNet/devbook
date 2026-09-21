@@ -188,7 +188,7 @@ The record owns two entities besides the [Handoff Marker](#handoff-marker):
 ### Handoff Marker
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#handoff-marker", ".devbook/arc42/12-glossary.md#park"]
+related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#handoff-marker", ".devbook/arc42/12-glossary.md#park", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
 The note a deliberately handed-off run leaves behind, and the difference between a run to
@@ -308,7 +308,6 @@ Like every surface here, it declares nothing and nothing declares it.
 | --- | --- | --- | --- | --- |
 | Whatever drives a run | Customer-Supplier, this block supplying | Tool names matched by pattern from the live tool list | The two groups it answers | That groups are resolved separately, so the missing render group is read as unanswered rather than as a broken surface. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, this block supplying | Lifecycle calls from an unattended cloud session | The same contract | That a run recorded with nobody watching is readable afterwards — which is the case this implementation exists for. |
-| [fleet](fleet.md#dependencies) | Customer-Supplier, this block supplying | Lifecycle calls from a worker session | The same contract | The same, per worker. Its own result files remain the source of truth for the sweep. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether this plugin is installed, enabled, and at what version | The marketplace entry and the manifest | Nothing but the name and version. |
 
 The absent render group is a declaration, not a gap. A caller finds it unanswered and renders

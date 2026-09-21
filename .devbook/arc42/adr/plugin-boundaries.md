@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-21
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#fleet-skill", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Every plugin is self-contained under `plugins/<name>/` and either works alone or declares
@@ -10,7 +10,7 @@ what it needs. There are three ways to couple — a declared dependency on a low
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
-repository's procedures, fan-out, and unattended work, three surfaces, and a guide that names
+repository's procedures, and unattended work, three surfaces, and a guide that names
 every plugin and depends on none. An extension owns procedure, never schema or state. The specialists
 are published from another marketplace and are bound per repository, never depended on.
 
@@ -19,13 +19,28 @@ are published from another marketplace and are bound per repository, never depen
 ```meta
 ```
 
-**Fan-out and the unattended lane are separate plugins.** A flow owns a run, a gate, and a
-user turn, none of which survives being split across sessions; shipping the session-spawning
-mechanism inside the engine would put it one skill reference away from every flow that must not
-use it. A separate plugin makes the reach impossible rather than discouraged. The same shape
-holds everything that runs with nobody watching: fourteen entry points and their triggers in one
-folder, one dependency, one enable, and a schedule is a trigger that names an entry point and
-never a procedure — a flow ends at a gate no unattended run can pass.
+**The unattended lane is a separate plugin, and nothing spawns a session.** A flow owns a run,
+a gate, and a user turn, none of which survives being split across sessions; shipping a
+session-spawning mechanism inside the engine would put it one skill reference away from every
+flow that must not use it. Fan-out lived in its own plugin, `fleet`, for that reason — until
+the one use anyone had for it, a backlog swept and worked with nobody watching, turned out to
+want one session and hours rather than five sessions and minutes. The issue sweep is a schedule
+entry point now, sequential in the session the trigger gave it, and no skill in this
+marketplace launches, tracks, or waits on another session. Everything that runs with nobody
+watching is one folder, one dependency, one enable, and a schedule is a trigger that names an
+entry point and never a procedure — a flow ends at a gate no unattended run can pass.
+
+**An unattended run closes an issue on evidence, and only then.** *Never close* was absolute
+until the issue sweep became a schedule entry point, and the sweep's first job is to find
+issues the code already resolved. Leaving every one of those as a proposal makes the brief a
+list the reader closes by hand each morning, which is the work the schedule exists to remove.
+So the preamble names one exception: an issue that `already-fixed`, `obsolete-code-gone`, or
+`duplicate` evidence — a commit on the base branch, a file that is gone, a sibling issue —
+shows resolved at high confidence, closed with that evidence in the comment. `superseded`,
+`not-reproducible`, and `wont-fix-by-design` stay proposals, because each is a judgement about
+what the repository wants rather than a fact about what it contains. And every pull request the
+sweep opens is a draft, proved or not: personal validation moves to the pull request, so
+nothing may present itself as ready for review before a person has looked.
 
 **A role plugin holds no flow control.** The ported specialists each arrived with a mandatory
 approve-handoff sequence, session-spawning tools, and a plan-and-checkpoint loop of their own.
@@ -100,6 +115,7 @@ the handover ships no migration.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | `fleet` is deleted: the issue sweep is a `delivery-schedule` entry point, sequential in one session, and nothing in the marketplace spawns a session. An unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request the sweep opens is a draft. |
 | 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. |
 | 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |
 | 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. |

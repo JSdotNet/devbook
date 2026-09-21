@@ -2,7 +2,7 @@
 
 ```meta
 number: 6
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-derived.md", ".devbook/arc42/building-blocks/devbook-config.md", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/fleet.md"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-derived.md", ".devbook/arc42/building-blocks/devbook-config.md", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-schedule.md"]
 ```
 
 The scenarios that cross several blocks: a file becoming something a host loads, payload
@@ -88,7 +88,7 @@ stateDiagram-v2
 ## A Flow Run
 
 ```meta
-related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/08-crosscutting-concepts.md#fleet-skill", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md", ".devbook/arc42/building-blocks/delivery-surface-canvas.md", ".devbook/arc42/building-blocks/delivery-surface-collector.md", ".devbook/arc42/building-blocks/fleet.md", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md", ".devbook/arc42/building-blocks/delivery-surface-canvas.md", ".devbook/arc42/building-blocks/delivery-surface-collector.md", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
 What a [flow skill](08-crosscutting-concepts.md#flow-skill) does with the closed set of
@@ -134,4 +134,4 @@ flowchart TD
   it.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
   never self-approves, which is the boundary between a flow and a
-  [fleet skill](08-crosscutting-concepts.md#fleet-skill).
+  [schedule entry point](building-blocks/delivery-schedule.md#entry-point).

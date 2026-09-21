@@ -28,7 +28,7 @@ contracts, the catalog checker, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-bug-fix` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-check` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `install` | skill | A person, or `devbook-config:setup` and `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `install`, reading a repository's selection against it |
@@ -36,15 +36,6 @@ contracts, the catalog checker, one hook, and one stamp.
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
 | `components.schedule` | stamp in the stack config | Written by `install` alone, read by [devbook-config](devbook-config.md) |
-
-### schedule-bug-fix
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
-```
-
-Pick the top open `bug` item and run the bug flow on it, unattended. It lands as a branch parked
-where Personal Validation would be, with a handoff brief naming what a person has to judge.
 
 ### schedule-devbook-check
 
@@ -70,6 +61,52 @@ one commit per file and a ledger of every cut, because no check proves a rewritt
 and a reviewer must be able to drop one file without losing the rest. A file the previous run's
 rejected pull request touched is skipped: a rejection is an answer, and the run converges on what
 the repository will accept. It adds nothing but a pointer that replaces a duplicate.
+
+### schedule-issue-sweep
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#entry-point", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-morning-brief", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+Classify every open issue nobody has classified in the repository's own labels and write that
+back; close what high-confidence evidence shows already resolved, with the evidence in the
+comment; resolve up to N of the rest one at a time, each on its own branch, each a draft pull
+request whose body says what could not be proved; and publish one brief, needs-you first. The
+weekday `issue-sweep` trigger's target, timed before the morning brief because the brief ranks
+by the labels it writes.
+
+#### Classify Once, Judge Every Sweep
+
+```meta
+```
+
+A classification — type, area, severity for a defect, a likely duplicate, the questions a thin
+report leaves open — is written once and marked `triaged`, so the next sweep does not ask again
+and the pickup skills rank by what it wrote. It uses only labels the repository already has; one
+it lacks is a proposal in the brief. Relevance and collision with work in flight are recomputed
+every sweep, because the code moved.
+
+#### Close on Evidence, Draft Everything Else
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#entry-point"]
+```
+
+The one closure an unattended run may take: an issue already fixed, obsolete, or a duplicate, at
+high confidence, with a commit, file, pull request, or sibling issue named in the closing
+comment. Every other stale verdict is a proposal with its command. Every pull request is a draft
+— the one that proved itself and the one that did not alike — because personal validation
+happens on the pull request and nothing is ready for review until a person says so.
+
+#### One Session, One Issue at a Time
+
+```meta
+```
+
+Resolution is sequential in the session the schedule gave it: a worktree cut and removed per
+issue, the resolution run through the host's workflow tool as sub-agents, never a second session.
+A scheduled run has hours and nobody to hand a parked worktree to, so it neither fans out nor
+parks — what did not reach a draft pull request is a comment on the issue and a row in the brief.
 
 ### schedule-merge-review
 
@@ -261,16 +298,12 @@ classDiagram
     class Flow {
         <<Delivery>>
     }
-    class FleetSkill {
-        <<Fleet>>
-    }
 
     Schedule "1" --> "1" Cadence : fires on
     Schedule "1" --> "1" Target : names
     Schedule "1" --> "1" Prompt : carries
     Prompt --> Preamble : opens with
     Target ..> EntryPoint : may name
-    Target ..> FleetSkill : may name
     Target ..> Flow : may never name
     EntryPoint --> Flow : calls
     ScheduleSelection "1" --> "many" Schedule : selects
@@ -317,7 +350,7 @@ and why a trigger can be created, disabled, and re-created without touching what
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| A target is an entry point, a `fleet-*` skill, or a read-and-report skill — never a flow | `check.mjs` | untested |
+| A target is an entry point or a read-and-report skill — never a flow | `check.mjs` | untested |
 | A cron expression that could fire more than hourly is rejected | `check.mjs` | untested |
 | The `requires` list names the target's own plugin | `check.mjs` | untested |
 | Every prompt begins with the preamble, stated once and not restated per schedule | prompt assembly | untested |
@@ -349,9 +382,10 @@ The values it holds:
 
 Also called: schedule skill, schedulable procedure.
 
-A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the top
-open bug, every pull request waiting on a reviewer, the outdated packages, the week's changes in
-the tracked repositories, the repository's own day or week, the instruction assets a model loads.
+A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the
+unclassified issues and the top of the backlog, every pull request waiting on a reviewer, the
+outdated packages, the week's changes in the tracked repositories, the repository's own day or
+week, the instruction assets a model loads.
 Fourteen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
@@ -362,8 +396,8 @@ needs a person, and a person is exactly what an unattended run does not have.
 | It selects its own input and requires no argument | authoring | untested |
 | It is runnable by hand as well as on a cadence | authoring | untested |
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
-| It never merges, approves, closes, or deletes | run | untested |
-| A change lands as a pull request from `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
+| It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
+| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ### Schedule Selection
@@ -477,7 +511,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: ten trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: eleven trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| settings{"Would a cloud session load the marketplace?"}
@@ -556,7 +590,6 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and two of its own wrappers invoke `devbook:check` and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
-| [fleet](fleet.md#dependencies) | Separate Ways | A schedule may name a `fleet-*` skill as a target | The skill name alone | Same relationship. A `fleet-*` skill holds no gate, which is what makes it schedulable where a flow is not. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
@@ -572,7 +605,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the ten schedules
+**Naming a target is deliberately weaker than depending on one.** One of the eleven schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

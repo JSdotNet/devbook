@@ -159,7 +159,6 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | Prefix | Scope |
 | --- | --- |
 | `flow-` | One session, delegating to subagents. Never to another session. |
-| `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation, personal validation. Never invoked directly. |
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 
@@ -168,11 +167,11 @@ one scope needs none: `devbook-config` holds `setup`, `update`, `ask`, and `adop
 and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
-*orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — the
+*orchestration* — the word once covered fan-out and single-session staging at once, and the
+fan-out it described no longer ships. `delivery` holds four `flow-*` — the
 code, the five devbook folders, the dependencies, and the project, since
 [flows belong to delivery](adr/plugin-boundaries.md) — and three `phase-*`, `delivery-schedule`
-holds sixteen `schedule-*` beside a bare `install`, and `fleet` holds three `fleet-*`.
+holds sixteen `schedule-*` beside a bare `install`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -182,29 +181,14 @@ a contract other surfaces answer carries the contract word after the stem and th
 implementation after that, so the three are read as one kind from the marketplace list alone.
 A surface interchangeable with nothing does not: the contract word marks membership, and
 `devbook-graph` beside `delivery-surface-canvas` would read as a second implementation of the
-render group, which it is not. `fleet` is its own stem, not a package inside `delivery`,
-because fan-out is a different subsystem.
+render group, which it is not.
 
-## Fleet Skill
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-A procedure that turns one queue into work across several sessions, each in its own worktree —
-`fleet-<what it sweeps>`. It is the exception a [flow](#flow-skill) is forbidden from being: a
-flow owns a run, a gate, and a user turn, none of which survives a session boundary, so
-fan-out is a different subsystem rather than a bigger flow.
-
-Three words carry the whole shape. A **sweep** triages a queue, claims what it picks, and
-dispatches. A **worker** is one spawned session resolving one item. A worker **parks** when its
-change cannot prove itself — committed, left in its worktree, with a brief naming what a human
-has to look at — and opens a pull request only when it can.
-
-A fleet skill owns no run and holds no gate. `fleet-resolve-issue` trades Personal Validation
-for a narrower guarantee, not for nothing: the pull request is the review surface, and a change
-that cannot demonstrate itself never reaches one.
+No skill in this marketplace spawns a session. Fan-out across sessions and worktrees was its
+own subsystem and prefix, `fleet-`, until 2026-09-21, when the one thing anyone wanted from it
+— a backlog swept, closed, and worked with nobody watching — turned out to want one session
+and hours rather than five sessions and minutes; it is the issue sweep in
+[delivery-schedule](building-blocks/delivery-schedule.md#schedule-issue-sweep) now, and the
+reason is in [the plugin boundaries record](adr/plugin-boundaries.md).
 
 ## Schedule
 
@@ -231,7 +215,7 @@ The **scheduler** is whatever the live session exposes that turns a name, a cron
 repository, and a prompt into a scheduled session — resolved by capability, and absent as a
 normal outcome.
 
-A schedule names an entry point, a `fleet-*` skill, or a read-and-report skill, never a
+A schedule names an entry point or a read-and-report skill, never a
 [flow](#flow-skill): a flow ends at a gate, and an unattended run parks where a gate would be.
 
 ## Extension Point
@@ -560,10 +544,9 @@ What one block publishes and others conform to without either side declaring the
 | The review triad — `review`, `reviewer`, `review-at` | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md), and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` [extension namespace](#extension-namespace) | [devbook](building-blocks/devbook.md) | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | [delivery](building-blocks/delivery.md) | The three [surfaces](#surface) | `resources/surface-contract.md`; tool names matched by pattern |
-| The [extension-point](#extension-point) set and the [gate](#gate) contract | [delivery](building-blocks/delivery.md) | [fleet](building-blocks/fleet.md), [delivery-schedule](building-blocks/delivery-schedule.md), and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
+| The [extension-point](#extension-point) set and the [gate](#gate) contract | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md), and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
 | `.devbook/config.json` — four engine keys plus one [stamp](#stamp) per component | [delivery](building-blocks/delivery.md) owns the four keys; each component owns its own stamp | [devbook-config](building-blocks/devbook-config.md) reads all of it; every install skill writes one key | `resources/config.schema.json` |
 | The schedule catalog entry | [delivery-schedule](building-blocks/delivery-schedule.md) | Whatever scheduler the live session exposes | `resources/schedule-catalog-contract.md` |
-| The sweep manifest and the worker result files | [fleet](building-blocks/fleet.md) | Its own workers, across sessions that cannot see each other | `resources/fleet-issue-sweep-contract.md` |
 | The plugin folder shape and the two manifests | This chapter | Every plugin; checked by `tools/check-assets.mjs` | [Chapter 5](05-building-block-view.md#plugin-folder) and the hosts' own schemas |
 
 ## Strategic Rules
@@ -610,7 +593,6 @@ supporting.
 | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-procedures](building-blocks/devbook-procedures.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `start` and `capture` and their path, never the plugin; absent, a flow does without |
-| [delivery](building-blocks/delivery.md) | [fleet](building-blocks/fleet.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the three surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |

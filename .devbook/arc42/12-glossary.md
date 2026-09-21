@@ -66,16 +66,17 @@ choice.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/fleet.md", ".devbook/arc42/building-blocks/fleet.md#sweep", ".devbook/arc42/building-blocks/fleet.md#issue-claimed"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep"]
 ```
 
-Owned by [fleet](building-blocks/fleet.md).
+Owned by [delivery](building-blocks/delivery.md).
 
 Also called: pickup, in-progress.
 
-Taking an item for this sweep, recorded as a label on the tracker rather than in fleet's own
-files. The tracker is the transport because a claim has to be legible to a person who has never
-heard of the plugin — a claim only the coordination folder knows about is not a claim.
+Taking an item for this run, recorded as a label on the tracker before any code is touched —
+by the pickup skills and by the issue sweep alike. The tracker is the transport because a claim
+has to be legible to a person who has never heard of the plugin, and because it is what keeps
+a second run, or a second sweep, from picking the same item up.
 
 ## Derived Index
 
@@ -165,18 +166,19 @@ to reattach to one and refuse the other.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/fleet.md", ".devbook/arc42/building-blocks/fleet.md#worker-run", ".devbook/arc42/12-glossary.md#personal-validation"]
+related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#entry-point", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
-Owned by [fleet](building-blocks/fleet.md).
+Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 
-Also called: handoff, needs-validation.
+Also called: handoff.
 
-What a worker does when its change cannot prove itself: commit it, leave it in its worktree,
-label the item `needs-validation`, and write a brief naming exactly what a person has to look
-at. Parking is what an unattended run does wherever a gate would be. It is neither approval nor
-failure, and the distinction matters — a parked change is finished work waiting on a judgement,
-not broken work waiting on a fix.
+What an unattended run does wherever a gate would be: stop, and write a brief naming exactly
+what a person has to look at — what is done, what is not, the exact invocation to resume. It is
+neither approval nor failure, and the distinction matters — a parked change is finished work
+waiting on a judgement, not broken work waiting on a fix. The issue sweep is the one entry point
+that does not park: it moves the judgement onto a draft pull request instead, with what could
+not be proved written in the body.
 
 ## Personal Validation
 
@@ -198,8 +200,8 @@ a revised change set is a new thing to look at. The **gate** is the decision, an
 per pass. Splitting them lets the presentation be a phase skill without any of it becoming
 configurable: a repository may declare gates in front of this one and may never remove it.
 
-It is the thing fleet's [park](12-glossary.md#park) trades away and the thing an unattended run
-parks at. Wherever a run cannot reach it, something else has to guarantee that nothing merges
+It is the thing an unattended run [parks](12-glossary.md#park) at — or, in the issue sweep,
+moves onto a draft pull request. Wherever a run cannot reach it, something else has to guarantee that nothing merges
 unread.
 
 ## PR Lane

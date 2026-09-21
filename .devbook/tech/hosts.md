@@ -29,15 +29,12 @@ depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 related: [".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md"]
 ```
 
-The only platform here an asset *invokes* rather than is read by. `fleet` shells out to it to
-launch each worker as an independent background session (`claude --bg`) and to tell a worker
-still running from one that exited (`claude agents --json --all`), which is the mechanism the
-whole fan-out subsystem rests on.
-
-`trial`: nothing in this repository has run a sweep yet, and a background session pruned from
-the list seconds after it exits is the kind of behaviour only a real run tests. Its absence
-costs the dispatch, not the triage — see
-[the debt record](../arc42/tdr/2-fleet-names-the-cli-directly.md).
+No asset invokes it any more. Until 2026-09-21 `fleet` shelled out to it to launch each
+worker as an independent background session (`claude --bg`) and to tell a worker still
+running from one that exited (`claude agents --json --all`); the plugin is deleted and the
+sweep that replaced it runs in the session its trigger gave it — see
+[the debt record](../arc42/tdr/2-fleet-names-the-cli-directly.md), now resolved. It stays
+listed because it is what a person runs to start a session at all.
 
 ## Copilot Plugin API
 

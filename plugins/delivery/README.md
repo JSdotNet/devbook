@@ -33,10 +33,9 @@ adopted the folder it stops and says so.
 sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
 deliberately leave out, so they can stay execution rules.
 
-A flow never leaves its session. Fan-out across sessions and worktrees — triage a backlog,
-spawn workers, aggregate results — is a different subsystem and lives in the `fleet` plugin.
-Work that runs with nobody watching — the `schedule-*` entry points and the triggers that fire
-them — is another, and lives in `delivery-schedule`.
+A flow never leaves its session, and nothing in this marketplace spawns one. Work that runs
+with nobody watching — the `schedule-*` entry points and the triggers that fire them, the
+issue sweep among them — is a different subsystem and lives in `delivery-schedule`.
 
 ## How a repository shapes a flow
 

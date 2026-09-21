@@ -237,11 +237,11 @@ mechanism; background sub-agents remain reserved for concurrent monitoring.
   concurrent runs do not collide.
 
   This is a rule about **flows**, not a statement that sessions cannot be created.
-  They can: a one-time scheduled task becomes a fresh session, and the `fleet` plugin's
-  sweep skills use exactly that to spawn a worker per item. That mechanism belongs to
-  `fleet-*` skills, which own no run and hold no gate. It stays unavailable to `flow-*`
-  skills, because a spawned session starts with no memory of the run that spawned it — so a
-  flow handed across one would lose the context its later stages depend on.
+  They can: a scheduled trigger becomes a fresh session, which is how `delivery-schedule`
+  runs its entry points. No skill in this marketplace spawns one from inside a run, and the
+  mechanism stays unavailable to `flow-*` skills in particular, because a spawned session
+  starts with no memory of the run that spawned it — so a flow handed across one would lose
+  the context its later stages depend on.
 
 ### Session Handoff
 

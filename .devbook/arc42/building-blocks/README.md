@@ -29,7 +29,6 @@ files follow the eleven plugin folders under `plugins/`, name for name.
 | [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
-| [fleet](fleet.md) | L1 on delivery | A backlog turned into parallel work across sessions and worktrees |
 | [delivery-schedule](delivery-schedule.md) | L1 on delivery | Work that runs with nobody watching, and the catalog of triggers that fires it |
 | [delivery-surface-dashboard](delivery-surface-dashboard.md) | Surface | The live view of a run, measured by hooks rather than told |
 | [delivery-surface-canvas](delivery-surface-canvas.md) | Surface | Mermaid and Markdown rendered live beside the files they came from |

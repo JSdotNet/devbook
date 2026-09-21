@@ -1,9 +1,9 @@
 # delivery-schedule
 
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
-`schedule-*` entry points that pick their own input and run a flow, a review, or a report,
-ten trigger files that fire one on a cadence, and three skills that put those triggers in
-the host's scheduler and read them back.
+`schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
+report, eleven trigger files that fire one on a cadence, and three skills that put those
+triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
@@ -25,9 +25,9 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
-| `schedule-bug-fix` | Picks the top open `bug` issue and runs `flow-code` on it as a defect | A branch at Personal Validation |
 | `schedule-devbook-check` | Runs `devbook:check` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when the ledger or the stamp needs a person |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
+| `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
 | `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
@@ -54,6 +54,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 |---|---|---|---|---|
 | `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
+| `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a `schedule-report` brief, replaced while unread |
 | `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `schedule-devbook-check`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
@@ -77,7 +78,8 @@ enabled is reported and skipped, never scheduled.
 The two report schedules keep one open issue each. While the previous brief or update is
 still open nobody has read it, so the next run extends its window back to that issue's date
 and replaces the body: nothing between two runs is lost, and closing the issue is how it is
-acknowledged. The closed issues are the record.
+acknowledged. The closed issues are the record. `issue-sweep`'s brief keeps the same one
+open issue without a window: the rows a person has not decided fold into the next run's.
 
 ## The three catalog skills
 
@@ -94,9 +96,12 @@ the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 ## What a scheduled run never does
 
 - **Pass a gate.** It parks with a handoff brief where Personal Validation would be.
-- **Merge, approve, close, or delete.** Every change lands as a pull request from
+- **Merge, approve, or delete.** Every change lands as a pull request from a branch under
   `schedule/<name>/<date>`, every report as an issue labelled `schedule-report`, and a run
   updates what its previous run left open rather than opening a second.
+- **Close, with one exception.** An issue that high-confidence evidence — a commit, a file, a
+  pull request, a sibling issue — shows already resolved, closed by the issue sweep with that
+  evidence in the comment. Every other closure is a proposal in a brief, with the command.
 - **Carry anything personal into the repository.** The scheduler ids live in the scheduler;
   the environment and the model are asked once and, if you say so, remembered under
   `ext.schedule` in your own stack-config overlay, outside every clone. The stamp records

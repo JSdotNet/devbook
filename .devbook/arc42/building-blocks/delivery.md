@@ -14,7 +14,9 @@ stack config, and the pull-request lane at the end.
 
 Outside it: deploy, which is where "delivery" stops here; expertise, which is a role a
 repository binds; visibility, which is a [surface](delivery-surface-dashboard.md) resolved at
-run time; and fan-out, which is [fleet](fleet.md)'s and is the one thing a flow may never do.
+run time; and a backlog worked with nobody watching, which is
+[delivery-schedule](delivery-schedule.md)'s issue sweep — one item at a time in a session no
+flow shares.
 
 ## Interfaces
 
@@ -586,8 +588,8 @@ Payload:
 - `handoff` — present when this call is reattaching to a parked run rather than opening one
 
 Consumers: the three surfaces, each answering the lifecycle group or not answering at all; and
-[fleet](fleet.md) and [delivery-schedule](delivery-schedule.md), which publish the same event
-for work no attended flow started.
+[delivery-schedule](delivery-schedule.md), which publishes the same event for work no attended
+flow started.
 
 Published language rules:
 
@@ -642,9 +644,10 @@ Payload:
 - `summary` — what the run produced, in the run's own words
 - `report` — where the exported report was written, when a surface answered the export group
 
-Consumers: the three surfaces, for the report and for closing the run; and [fleet](fleet.md),
-whose worker result files are written on every outcome including failure, because a sweep
-that cannot tell a crash from a slow worker cannot aggregate anything.
+Consumers: the three surfaces, for the report and for closing the run; and
+[delivery-schedule](delivery-schedule.md)'s issue sweep, whose brief reports every resolution's
+outcome including failure, because a brief that cannot tell a crash from a slow build reports
+nothing a person can act on.
 
 Published language rules:
 
@@ -838,8 +841,8 @@ stateDiagram-v2
   question and hoping for a different answer.
 - **Parked is not declined and not approved.** An unattended run reaching a blocking gate
   stops with a brief naming what a person has to look at; it never waits and never
-  self-approves, and that boundary is where [fleet](fleet.md) and
-  [delivery-schedule](delivery-schedule.md) take over.
+  self-approves, and that boundary is where [delivery-schedule](delivery-schedule.md) takes
+  over.
 
 ### flow-code run
 
@@ -1120,7 +1123,6 @@ it never depends on — one row below says that is not the whole truth.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [fleet](fleet.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its workers run this block's flows and phases inside their own sessions | Flow names, the phase contract, the reporting contract | That a flow ends at a gate — which is exactly what it trades away, deliberately, for a pull request nobody merges unread. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call these flows and phases | Flow names, the phase contract, the parking rule at a gate | That an unattended run parks where Personal Validation would be, and that no schedule may target a flow. |
 | [delivery-surface-dashboard](delivery-surface-dashboard.md#dependencies) | Conformist to a Published Language | Implements `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | `resources/surface-contract.md` | The tool names and their shapes. It names no engine, and the engine names no surface. |
 | [delivery-surface-canvas](delivery-surface-canvas.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | That a caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |
