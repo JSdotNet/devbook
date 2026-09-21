@@ -39,10 +39,10 @@ where the constraint is negotiated rather than held:
   [the SDK entry](hosts.md#copilot-extension-sdk). Nothing else here imports anything it does
   not ship.
 
-Nothing runs it automatically here. This repository has no CI, so the suites, the checker, and
-the generator's `--check` are run by hand before a commit, and the workflow files under
-`plugins/devbook/assets/workflows/` are payload for a consuming repository rather than a
-pipeline of this one.
+`.github/workflows/repo-checks.yml` runs the asset checker, the generator's `--check`, and
+`claude plugin validate --strict` on every pull request; the Node suites are run by hand
+before a commit, and the workflow files under `plugins/devbook/assets/workflows/` are payload
+for a consuming repository rather than a pipeline of this one.
 
 The surface servers are where the constraint bites hardest and still holds: an HTTP server, a
 server-sent event stream, a Markdown renderer, and a Mermaid page are all reachable from
