@@ -54,10 +54,8 @@ anyway keeps it — reported, left alone, like any other customized file.
 ## Which skills, and when
 
 Both, always, once a repository binds anything that needs a runtime. `install` asks before
-writing either, and skips one whose target is meaningless here:
-
-- `extensions.app.start` of `null` — nothing to start — skip `start`.
-- `policy.qa.depth` of `skipped`, or `qa.ceiling` of `startup-only` — skip `capture`.
+writing either, and skips one whose target is meaningless here; the two conditions are
+stated once, in `skills/install/SKILL.md` under **Resolve what this repository needs**.
 
 Neither is a dependency. A repository with no `capture` skill still gets capture: the phase
 drives it directly per `resources/capture-contract.md`, which is the whole reason the

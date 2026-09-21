@@ -31,7 +31,8 @@ The pointer line is the whole body of both wrappers, never a second copy of the 
 
 1. **Resolve what this repository needs.** Skip `start` when `extensions.app.start` is
    `null` — somebody decided there is nothing to start; skip `capture` when
-   `policy.qa.depth` is `skipped`. Ask before writing either, and say which was skipped and
+   `policy.qa.depth` is `skipped` or `policy.qa.ceiling` is `startup-only`, since no
+   scenario runs. Ask before writing either, and say which was skipped and
    why.
 2. **Plan.** One table — `create`, `update`, `skip-customized` — and write nothing. Never
    skip this, not even when the plan is empty.
