@@ -33,6 +33,18 @@ const GROUPING_BLOCK = `${GROUPING}\n\n\`\`\`meta\ntype: ubiquitous-language\n\`
 // exactly as written — this migration moves references, not sentences.
 const REFERENCE = /([/("[])naming\.md(?=$|[#"')\],\s])/g;
 
+// Files are read as LF and written back with the line ending they had, so a
+// CRLF checkout is migrated without a whole-file diff or mixed endings.
+async function readText(relPath) {
+    const raw = await readFile(path.join(ROOT, relPath), "utf8");
+    const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+    return { text: raw.replace(/\r\n/g, "\n"), eol };
+}
+
+async function writeText(relPath, text, eol) {
+    await writeFile(path.join(ROOT, relPath), eol === "\n" ? text : text.replace(/\n/g, eol), "utf8");
+}
+
 async function exists(relPath) {
     try {
         await stat(path.join(ROOT, relPath));
@@ -120,10 +132,12 @@ for (const domainDir of folders.filter((f) => f.endsWith("domain"))) {
         const naming = path.posix.join(context, "naming.md");
         if (!(await exists(naming))) continue;
         // A term relating to a sibling term references the file it is leaving.
-        const text = (await readFile(path.join(ROOT, naming), "utf8")).replace(REFERENCE, "$1domain.md");
+        const { text: raw, eol } = await readText(naming);
+        const text = raw.replace(REFERENCE, "$1domain.md");
         const chapters = chaptersOf(text);
         folds.push({
             naming,
+            eol,
             domain: path.posix.join(context, "domain.md"),
             chapters,
             count: (chapters.match(/^### /gm) ?? []).length,
@@ -135,9 +149,9 @@ const leaving = new Set(folds.map((item) => item.naming));
 for (const folder of folders) {
     for (const file of await markdownFiles(folder)) {
         if (leaving.has(file)) continue;
-        const text = await readFile(path.join(ROOT, file), "utf8");
+        const { text, eol } = await readText(file);
         const count = (text.match(REFERENCE) ?? []).length;
-        if (count > 0) rewrites.push({ file, text: text.replace(REFERENCE, "$1domain.md"), count });
+        if (count > 0) rewrites.push({ file, text: text.replace(REFERENCE, "$1domain.md"), count, eol });
     }
 }
 
@@ -161,15 +175,16 @@ if (checkOnly) {
 
 // References first: a rewrite may target domain.md, and the fold below reads
 // the file fresh so the two never overwrite each other.
-for (const { file, text } of rewrites) {
-    await writeFile(path.join(ROOT, file), text, "utf8");
+for (const { file, text, eol } of rewrites) {
+    await writeText(file, text, eol);
 }
-for (const { naming, domain, chapters } of folds) {
+for (const { naming, domain, chapters, eol } of folds) {
     if (chapters) {
-        const domainText = (await exists(domain))
-            ? await readFile(path.join(ROOT, domain), "utf8")
-            : "";
-        await writeFile(path.join(ROOT, domain), fold(domainText, chapters), "utf8");
+        // domain.md keeps its own ending; a domain.md created here takes naming.md's.
+        const { text: domainText, eol: domainEol } = (await exists(domain))
+            ? await readText(domain)
+            : { text: "", eol };
+        await writeText(domain, fold(domainText, chapters), domainEol);
     }
     await unlink(path.join(ROOT, naming));
 }
