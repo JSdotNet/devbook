@@ -54,9 +54,9 @@ match it, but a file inside named `<something>.ai` would — check before adopti
   never from what is on disk. Then create `CLAUDE.md` and `.github/copilot-instructions.md`
   from `assets/root-wrappers/` where absent, so both hosts reach that file; one that exists
   is never touched, whatever it holds.
-- The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`
-  and `.devbook/config.local.json`. Ignore both; create neither. An empty overlay
-  reads as a setting somebody chose.
+- The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`,
+  `.devbook/config.local.json`, and the hosts' own per-machine files; the protocol holds
+  the text. Ignore them; create none. An empty overlay reads as a setting somebody chose.
 - Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
   specialist agents are installed — with neither, they name nothing. Never apply any of
   it silently, and never put routing inside the `AGENTS.md` markers.

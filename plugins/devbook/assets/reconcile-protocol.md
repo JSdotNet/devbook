@@ -131,18 +131,23 @@ and which adopted folder pulls each one in, is in `rules/rules.json`;
 
 The `.gitignore` block is the second rendered asset, keyed `.gitignore#devbook` and
 following the `AGENTS.md` rules exactly — markers, hash of the text between them,
-rewritten while managed, reported and left alone once customized. It names the two
-files a repository keeps out of version control on every contributor's behalf:
+rewritten while managed, reported and left alone once customized. It names the files a
+repository keeps out of version control on every contributor's behalf — devbook's two, and
+the hosts' own per-machine files, which a contributor without a global ignore would
+otherwise commit:
 
 ```gitignore
 # devbook:begin
 # Machine-scope, never committed. See AGENTS.md.
 AGENTS.local.md
 .devbook/config.local.json
+# The hosts' own per-machine files, for a contributor without a global ignore.
+.claude/settings.local.json
+CLAUDE.local.md
 # devbook:end
 ```
 
-Neither file is ever created by a reconcile. Ignoring a file is a decision the repository
+None of them is ever created by a reconcile. Ignoring a file is a decision the repository
 makes once for everybody; writing an empty one is a decision only its owner can make, and
 an empty overlay is worse than an absent one — it reads as a setting somebody chose. Absent
 `.gitignore` is created holding only the block; present without the markers, the block is

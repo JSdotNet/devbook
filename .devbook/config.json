@@ -57,7 +57,7 @@
         },
         ".gitignore#devbook": {
           "from": "1.0.0",
-          "hash": "sha256:36b316a78cd232fc4f2a1d3248a2bc2449bbff9c9b5534b41f1aee9d8b2b2458",
+          "hash": "sha256:01b2f2d70c3c09cbe32b5b38408699b8ee4be6e393b377098af8c7a21f756f85",
           "managed": true
         }
       },
