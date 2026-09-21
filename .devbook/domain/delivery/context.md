@@ -58,9 +58,9 @@ whole truth.
   prevent.
 - **The undeclared devbook row is the exception, and it is exceptional in the wrong direction.**
   The coupling is real in one flow; what is missing is the declaration. The debt record's first
-  remediation — resolve the repository's own check instead of naming devbook's path, drop the
-  three restated schema rules, and state in the README which flows need an adopted folder — is
-  the one to take.
+  remediation was taken by the 2026-09-15 fold — `flow-spec` runs the repository's own check,
+  restates no schema rule, and the README says it stops where the folder is not adopted — and
+  the folder names and the `meta` block it expects are what remain, still undeclared.
 - **Nothing here names a host.** Five slots absorb what would otherwise be host branches, and two
   of the five are answered by the live session rather than by configuration, so the hosts cannot
   re-diverge the moment one gains what the other has.
