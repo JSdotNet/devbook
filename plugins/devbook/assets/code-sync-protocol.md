@@ -72,8 +72,9 @@ entry names a test, and the counterpart still has to be resolved by naming. See
    canonical concept.
 2. **The `arc42/` building-block view.** When no chapter has an entry, or the
    kind is architectural rather than a domain term, read
-   `.arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
-   and hosting units). Those chapters name the modules, containers, and
+   `.arc42/05-building-block-view.md`, the block's own file under
+   `.arc42/building-blocks/` where the view keeps one (and
+   `07-deployment-view.md` for runtime and hosting units). Those chapters name the modules, containers, and
    deployable units the code is organized into, which narrows the search to one
    project or folder even when the type name itself differs.
 3. **Observed naming convention.** Only when both rungs above come up empty,
