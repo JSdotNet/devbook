@@ -56,7 +56,7 @@ node scripts/report.mjs --root <repository>
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
-| The overlays — `config.local.json` in this checkout's `.devbook/`, and under the user's devbook config directory for every repository and for this repository's `id` | Which layers this machine applies over the committed config, and which engine keys each touches |
+| The overlays — `config.local.json` in this checkout's `.devbook/`, and under the user's devbook config directory for every repository and for this repository's `id` — and `model-selection.md` beside them | Which layers this machine applies over the committed config, which engine keys and `ext.<plugin>` namespaces each touches, and which are absent — a machine with no user layer runs at the team's defaults, and the report says so and names `local` |
 | `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
 | The devbook folders under `.devbook/` | Which of the five this repository adopted, and any stray root-level copy that has to move |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
