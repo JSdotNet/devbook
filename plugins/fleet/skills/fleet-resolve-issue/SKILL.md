@@ -419,7 +419,7 @@ Contract** for the tool cadence.
   `skillId: "fleet-resolve-issue"` and these stages: Select and Claim One Issue, Provision
   the Worktree, Run the Resolution Workflow, Deliver, Write the Result and Summarise.
 - Call `set_run_context` with the `changeKind` as soon as Phase 3 determines it, and with the
-  `githubIssue` origin at `start_run`, so the run reports back to the issue.
+  `workItem` origin at `start_run`, so the run reports back to the issue.
 - Before each phase, `update_stage` with `status: "in_progress"`; after each,
   `update_stage` again with `status: "done"` (or `"blocked"`/`"skipped"`) and an `output`
   summary.

@@ -121,7 +121,7 @@ summary that the run went without the flow wrapper.
    Never start work on an issue that could not be claimed.
 
 9. Run `flow-code` in **this session**, defect kind, with the issue context below. Pass the GitHub origin as
-   `githubIssue` to `start_run`, so the run reports its captured result and QA report back to
+   `workItem` to `start_run`, so the run reports its captured result and QA report back to
    the issue.
 
    ```text
@@ -173,7 +173,7 @@ the source of truth.
 - `start_run` with `skillId: "schedule-bug-fix"` and these stages: Fetch Candidate Bug Issues, Filter Out
   Work Already In Flight, Select One Issue, Claim and Resolve, Summary.
 - The `flow-code` flow in Phase 4 opens its own run, with the selection run's
-  `githubIssue` metadata carried into its `start_run`. Reference that run id in this run's
+  `workItem` metadata carried into its `start_run`. Reference that run id in this run's
   Claim and Resolve stage output rather than duplicating its stages here.
 
 ## Output
