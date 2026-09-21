@@ -72,8 +72,8 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
    against the config; take its checkout root from the report's catalog line, or the plugin's
-   `installPath` from `--json`. It picks up every overlay on its own — the checkout's beside
-   the committed file, the user's from the devbook config directory and the committed `id`.
+   `installPath` from `--json`. It picks up both overlays on its own, from the devbook
+   config directory and the committed `id`.
    An upgrade can retire a key, and an unknown key is an error rather than a
    silently absent setting. Fix against `resources/surface-contract.md` in that same plugin.
 

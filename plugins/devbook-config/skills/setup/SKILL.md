@@ -55,9 +55,9 @@ record work this skill did not do.
    unknown key is an error, not a warning: a typo must never become a silently absent
    setting. Fix and re-run until it exits `0`.
 
-   Write no overlay here — not `.devbook/config.local.json`, and not the user-scope copies
-   under the devbook config directory. An overlay is true of the person running this and of
-   nobody they set a repository up for; step 7 offers `devbook-config:local`, which writes them.
+   Write no overlay here: an overlay lives under the user's devbook config directory, is
+   true of the person running this and of nobody they set a repository up for, and step 8
+   offers `devbook-config:local`, which writes it.
 
 5. **Declare the default MCP servers.** Every point left absent in step 3 takes the engine
    default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
@@ -99,7 +99,7 @@ forward — version drift, migrations, the fan-out across components — belongs
 - Do not set up, or ask about, a plugin the report shows as not installed. Report it; do not
   install it on the user's behalf.
 - Do not write an engine key into a repository that is not adopting `delivery`.
-- Do not write an overlay, at any of its three layers. `devbook-config:local` does, for the
+- Do not write an overlay, at either of its layers. `devbook-config:local` does, for the
   person running it.
 - Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
   rename, or reshape a server somebody declared.

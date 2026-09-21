@@ -88,9 +88,10 @@ related: [".devbook/domain/devbook-config/domain.md#machine-overlay", ".devbook/
 ```
 
 Ask what is true of this machine and write it where the stack reads it: a machine overlay at the
-user layer by default, the repository layer when an answer is about one repository, the checkout's
-own only on request; the model-selection file the engine's `model-override` slot resolves to; and
-`AGENTS.local.md`. Every question is optional and the default is nothing.
+user layer by default, the repository layer when an answer is about one repository; the
+model-selection file the engine's `model-override` slot resolves to; and `AGENTS.local.md` —
+all under the devbook config directory, none in the clone. Every question is optional and the
+default is nothing.
 
 It exists because `setup` may not write an overlay — an overlay is true of the person running it,
 not of the repository they set up — and without it the first run on every machine took the team's

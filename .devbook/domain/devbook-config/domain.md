@@ -100,10 +100,10 @@ type: value-object
 related: [".devbook/arc42/adr/configuration.md"]
 ```
 
-An overlay merged over the committed file, holding what is true of this machine only. Three
-layers, outermost first: the user's for every repository, the user's for the repository whose
-committed `id` names it, and the checkout's own gitignored file. The first two live under the
-user's devbook config directory and survive a fresh worktree; the last does not. Each may add
+An overlay merged over the committed file, holding what is true of this machine only. Two
+layers, outermost first: the user's for every repository, and the user's for the repository
+whose committed `id` names it. Both live under the user's devbook config directory and never
+in a clone, so a fresh worktree runs with the same settings as the last. Each may add
 a gate and may never remove one — the same asymmetry the engine holds for configuration,
 applied one layer down, at every layer — and none may carry the `id` that found it.
 

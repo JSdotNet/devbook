@@ -228,7 +228,7 @@ devbook folder present, which is the reason the file could move there at all.
 | Nobody writes another owner's key | all mutations | untested |
 | The four engine keys are written by `devbook-config`'s setup and update, and by nothing else | all mutations | untested |
 | `policy` is a closed set of switches | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| A machine-scope overlay may add a gate and never remove one, at each of its three layers | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
+| A machine-scope overlay may add a gate and never remove one, at each of its two layers | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | An overlay never carries the `id` that located it | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Model choice takes no repository-level binding | `check.mjs` | untested |
 

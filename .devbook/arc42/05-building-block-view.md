@@ -420,7 +420,7 @@ because no other plugin is allowed to name every plugin.
 | `update` | The same four keys, moved forward, after each component reconciled itself |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
-| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user, repository, or checkout layer, the model-selection file, `AGENTS.local.md`. Never the committed config |
+| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, the model-selection file, `AGENTS.local.md`. Never the committed config |
 
 The five take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,

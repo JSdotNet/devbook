@@ -374,10 +374,10 @@ function buildRepository(repoRoot) {
         return { folder, path: null, stray };
     });
 
-    // The three overlay layers the delivery checker merges, outermost first, every one
-    // reported whether or not it exists: an absent user layer is the fact `local` acts on.
-    // The path rule is the checker's (plugins/delivery/tools/stack-config/check.mjs) and is
-    // restated here only because this script reports and never imports across plugins.
+    // The two overlay layers the delivery checker merges, outermost first, both reported
+    // whether or not they exist: an absent one is the fact `local` acts on. Neither is in
+    // the clone. The path rule is the checker's (plugins/delivery/tools/stack-config/check.mjs)
+    // and is restated here only because this script reports and never imports across plugins.
     const env = process.env;
     const userDir = env.XDG_CONFIG_HOME
         ? join(env.XDG_CONFIG_HOME, 'devbook')
@@ -388,7 +388,6 @@ function buildRepository(repoRoot) {
     const overlays = [
         { scope: 'user', path: join(userDir, 'config.local.json') },
         ...(id ? [{ scope: 'repository', path: join(userDir, 'repos', id, 'config.local.json') }] : []),
-        { scope: 'checkout', path: join(repoRoot, '.devbook', 'config.local.json') },
     ].map(({ scope, path: overlayPath }) => {
         const overlay = load(`${scope} overlay`, overlayPath);
         return {
@@ -605,12 +604,11 @@ function render(model) {
         const scope = {
             user: 'true of this user in every repository',
             repository: `true of this user in the repository whose id is \`${repo.id}\``,
-            checkout: "true of this checkout and of nobody else's",
         }[layer.scope];
-        out.push(`\`${layer.path}\` is present (${layer.scope} overlay) and overlays ${touches}${ext}. It is never committed, so what it says is ${scope} - read the merged values, not the committed file alone.`);
+        out.push(`\`${layer.path}\` is present (${layer.scope} overlay) and overlays ${touches}${ext}. It lives outside every clone, so what it says is ${scope} - read the merged values, not the committed file alone.`);
         out.push('');
     }
-    if (!repo.overlays.some((l) => l.scope !== 'checkout' && l.present)) {
+    if (!repo.overlays.some((l) => l.present)) {
         const user = repo.overlays.find((l) => l.scope === 'user');
         out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, role and MCP bindings - and the scheduler asks for its environment and model every time. Run \`devbook-config:local\` to say what is true of this machine.`);
         out.push('');
