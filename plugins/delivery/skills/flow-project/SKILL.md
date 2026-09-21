@@ -52,8 +52,8 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 - Run `devbook-config:setup`. It decides which plugins the repository will use, writes the
   engine keys of `.devbook/config.json`, declares the default MCP servers in the
   repository's own MCP files, and hands each component its install — `devbook:install` for
-  the devbook folders, `delivery:install` for the `start` seed. A repository that already has
-  the config runs `devbook-config:update` instead.
+  the devbook folders, and whichever component seeds the repository's procedure skills for
+  `start`. A repository that already has the config runs `devbook-config:update` instead.
 - Fill the `start` skill's facts — the command, the entry points, the readiness signals, the
   credential pointer — so later flows know how to start and validate this project. A
   repository with nothing to run binds `extensions.app.start` to `null` instead.

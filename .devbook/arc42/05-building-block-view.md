@@ -18,25 +18,27 @@ concerned.
 ## Level 1: The Plugin Landscape
 
 ```meta
-date: 2026-09-08
+date: 2026-09-21
 related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Nine plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
+Eleven plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.0.0"]
-        DEL["delivery 1.0.0"]
-        CFG["devbook-config 1.0.0"]
+        DEV["devbook 1.2.0"]
+        DEL["delivery 1.2.0"]
+        CFG["devbook-config 1.2.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBC["devbook-collaboration 1.0.0"]
-        FLT["fleet 1.0.0"]
-        SCH["delivery-schedule 1.0.0"]
+        DBD["devbook-derived 1.2.0"]
+        DPR["devbook-procedures 1.2.0"]
+        DBC["devbook-collaboration 1.2.0"]
+        FLT["fleet 1.2.0"]
+        SCH["delivery-schedule 1.2.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
@@ -45,6 +47,8 @@ flowchart TB
         SC["delivery-surface-canvas<br/>render, one host, no marketplace entry"]
     end
 
+    DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
+    DPR ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     FLT ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
     SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
@@ -55,6 +59,7 @@ flowchart TB
 
     SCH -.->|"names prose-check as a target"| DEV
     DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
+    DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
 ```
@@ -76,6 +81,13 @@ The dashed `delivery → devbook` edge is the one to read twice. Three of the en
 flows work with devbook absent, so it is not an L1 extension; it is one stack rather than two, so
 it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
+
+The dashed `delivery → devbook-procedures` edge is a different kind: the engine names two
+skills, `start` and `capture`, and the path `.agents/skills/<name>.md` they live at, and
+never the plugin that seeds them. A repository may write both by hand and the engine is none
+the wiser; absent, a flow does without and says so. The seam is the skill name, which is why
+`devbook-procedures` can sit over `devbook` and the engine can stay capability-free — see
+[the plugin boundaries record](adr/plugin-boundaries.md).
 
 `devbook-config` sits in no layer for the opposite reason: it names every plugin here and
 declares none deliberately, so a plugin it cannot find is a row reading `not installed` rather
@@ -187,7 +199,7 @@ carries it as inert payload — templates, generators, migration scripts — and
 ## Level 2: What Lands in a Repository
 
 ```meta
-date: 2026-09-08
+date: 2026-09-21
 related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/domain/plugin-authoring/domain.md#stamp"]
 ```
 
@@ -209,6 +221,8 @@ flowchart TB
     subgraph repo["A consuming repository"]
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
+        sk[".agents/skills/ - the procedure bodies: start, show, capture, debug"]
+        sw[".claude/skills/ and .github/skills/ - one wrapper each, carrying the goal"]
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
         wf[".github/workflows/ - the check, and the nightly refresh"]
@@ -224,6 +238,8 @@ flowchart TB
     pm --> inst
     inst --> ar
     ar --> cw
+    inst --> sk
+    sk --> sw
     inst --> folders
     inst --> wf
     inst --> tools
@@ -233,6 +249,12 @@ flowchart TB
     setup -.->|"invokes, never reimplements"| inst
     folders --> meta
 ```
+
+The two trios are the same shape with the ownership reversed. A rule body is the plugin's — a
+host-neutral copy the install refreshes while it still hashes to a release — and its wrappers
+are ceremony. A procedure body is the repository's from the first edit onward, and its
+wrappers are where the plugin keeps the one thing it does own: the goal, refreshed on every
+upgrade, so `start` means the same across every repository while how it is done never does.
 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
 the four engine-owned keys and stops; each `components.<name>` stamp stays with the component
@@ -433,7 +455,7 @@ leaves the other host's rows empty while the catalog half still answers.
 ## Stack Config
 
 ```meta
-date: 2026-09-09
+date: 2026-09-21
 related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/adr/configuration.md"]
 ```
 
@@ -449,15 +471,17 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
-Four components stamp themselves, and `delivery` is the fourth: `components.devbook` from
-`devbook:install`, `components.derived` from `devbook-derived:install` for the refresh script,
-its workflows, and its rule, `components.delivery` from `delivery:install` for the `start` and
-`capture` copies it seeds, and `components.schedule` from `delivery-schedule:install`.
+Five components stamp themselves: `components.devbook` from `devbook:install`,
+`components.derived` from `devbook-derived:install` for the refresh script, its workflows, and
+its rule, `components.devbook-procedures` from `devbook-procedures:install` for the `start`,
+`show`, `capture`, and `debug` copies it seeds and the `adopted` list that selects them,
+`components.delivery` from `delivery:install` — `pluginVersion` alone, since the engine
+materializes nothing — and `components.schedule` from `delivery-schedule:install`.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([the annotations record](adr/annotations.md)). That puts `delivery` on both sides
-of the table at once — schema owner for the four engine keys, installer for one stamp — and the
+of the table at once — schema owner for the four engine keys, holder of one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
-`devbook-config` maps the four to their install skills by hand: a manifest cannot say which
+`devbook-config` maps the five to their install skills by hand: a manifest cannot say which
 plugin is behind a stamp whose plugin this machine has not installed.
 
 It sits beside the devbook chapter folders and is read by every host, which is the whole reason

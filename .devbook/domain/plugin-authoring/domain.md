@@ -439,7 +439,7 @@ plugins it may name. A lower layer never names a higher one.
 | Layer | Depends on | Example |
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-derived`, `devbook-collaboration` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
 | L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 

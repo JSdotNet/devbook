@@ -14,8 +14,8 @@ and no capture skill still gets every rule below. The engine says *what* is capt
 
 Resolved in order, first hit wins, named once in the stage output:
 
-1. **The repository's `capture` skill**, seeded by `delivery:install` to
-   `.agents/skills/capture.md` and edited freely from there. The normal case.
+1. **The repository's `capture` skill**, its own at `.agents/skills/capture.md`, reached by
+   name through the host's wrapper. The normal case.
 2. **The `qa.run` provider**, when one is bound and offers capture of its own.
 3. **The phase itself**, driving the browser server directly per this contract.
 

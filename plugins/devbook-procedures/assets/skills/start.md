@@ -1,18 +1,18 @@
 ---
 name: start
-description: "Start this repository's application the way this repository says to, then open it. Use when: starting or running the app locally, 'start the app', 'run it and open it', resuming work on a branch, or a flow needs a runtime at app.start."
+description: "Start this repository's application the way this repository says to, and leave it running. Use when: starting or running the app locally, 'start the app', 'run it', resuming work on a branch, or a flow needs a runtime at app.start."
+goal: "Leave this repository's application running and healthy, and report the command that started it, the health verdict, and its entry points. Never hand the person a command to run themselves."
 ---
 
 # Start the Application
 
-Start the app from what this file declares, not from a command guessed per session, then
-open it. **Edit this file** — it is yours: the facts are examples to replace, the procedure a
-starting point rather than a contract. The engine only expects a skill named `start` to exist
-and to leave a running application behind, and it names this file to whichever provider fills
-`app.start` and to Validation as the repository's declared runtime facts.
+Start the app from what this file declares, not from a command guessed per session. **Edit
+this file** — it is yours: the facts are examples to replace, the procedure a starting point.
+Whoever invokes `start` expects only what the wrapper's goal says: a running application and
+the three facts reported.
 
-A repository with nothing to start binds `extensions.app.start` to `null` in
-`.devbook/config.json` instead of keeping this file.
+A repository with nothing to start drops `start` from `components.devbook-procedures.adopted`
+in `.devbook/config.json` instead of keeping this file.
 
 ## Run
 
@@ -31,11 +31,10 @@ aspire start
    the declared one fails; report the failure.
 3. **Wait for the signals under Healthy.** Stop waiting on a fatal error, or after two
    minutes of silence. Do not report a partially-started app as healthy.
-4. **Open the front end** from the table under Open. Re-read the port every start — it
-   changes. Use the host's inline browser when it has one; otherwise give the plain URL.
+4. **Re-read the entry points** every start — a port changes.
 
-Report in a couple of lines: the command, the health verdict, the open URL. Leave the app
-running — a flow's later stages validate against it.
+Report in a couple of lines: the command, the health verdict, the entry points. Leave the app
+running — `show`, `debug`, and a flow's later stages work against it.
 
 ## Healthy
 
@@ -45,9 +44,9 @@ running — a flow's later stages validate against it.
 - `GET /health` on the API returns `200`.
 - Benign: one `Detected container runtime restart` warning on first start.
 
-## Open
+## Entry points
 
-<!-- The entry points a stage validates against. -->
+<!-- What `show` opens and a stage validates against. -->
 
 | Entry point | URL |
 | --- | --- |
@@ -63,17 +62,6 @@ running — a flow's later stages validate against it.
   `ORDERS_QA_PASSWORD` environment variable, provisioned from the team's secret store.
 - Never type a password, token, or key into a form yourself: open the page, name where the
   credential lives, and let the user sign in.
-
-## Go to
-
-<!-- Area — route — the source path it owns. Used to land on what the current branch changes.
-     Replace these rows; delete the section if the app has one entry point. -->
-
-| Area | Route | Owns |
-| --- | --- | --- |
-| _example_ | `/orders` | `src/Orders.Web/Pages/Orders/` |
-
-Match `git diff --name-only` against the `Owns` column and open the first area that hits.
 
 ## Never
 

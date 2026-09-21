@@ -55,6 +55,12 @@
       "version": "1.2.0"
     },
     {
+      "name": "devbook-procedures",
+      "source": "./plugins/devbook-procedures",
+      "description": "The four procedures every repository has and no plugin can write: start — how its application comes up; show — how the feature being built is put in front of a reviewer, running and with evidence; capture — how evidence is taken; debug — how a cause is found inside the running application, breakpoints included, without handing the debugger to a person. Each lands as one editable copy under .agents/skills/ with a managed wrapper per host that carries the fixed goal: the goal is the plugin's and refreshes on upgrade, the procedure is the repository's and is never overwritten once edited. One skill, install, keyed by components.devbook-procedures.adopted in .devbook/config.json. An L1 extension over devbook: it follows devbook's reconcile protocol and stamp, and names no engine.",
+      "version": "1.2.0"
+    },
+    {
       "name": "devbook-collaboration",
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records each finding as a devbook annotation fence beside the passage it is about, runs the approval decision that writes devbook's own approved rung, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. Four skills and nothing else, over devbook: the state it writes is devbook's own review triad — review, reviewer, review-at — validated by the check, so it owns no schema, materializes nothing into a repository, and stamps nothing.",
