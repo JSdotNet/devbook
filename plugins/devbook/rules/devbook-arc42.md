@@ -56,6 +56,7 @@ when a chapter has real content — do not scaffold empty placeholders):
   12-glossary.md
   adr/                           (decision records — one per technical concern)
   tdr/                           (technical debt records — one per item)
+  building-blocks/               (one whitebox per building block that outgrows chapter 5)
 ```
 
 ## Folder rules
@@ -102,10 +103,10 @@ instructions.
   unpadded 10 still follows 7. Give each one a `date` for the day the debt was
   logged; it is content, not a modification timestamp. Decision records are not
   numbered; the next section says why.
-- **Give `adr/` and `tdr/` an index document.** Neither folder has a root
-  document by convention, so mark the one that introduces the set — usually
-  `README.md` — with `index: root` and it sorts first. Without it the folder is
-  a bare list.
+- **Give `adr/`, `tdr/`, and `building-blocks/` an index document.** None of
+  the three has a root document by convention, so mark the one that introduces
+  the set — usually `README.md` — with `index: root` and it sorts first. Without
+  it the folder is a bare list.
 
 ## Decision records (`adr/`)
 
@@ -180,6 +181,40 @@ PostgreSQL 16 through EF Core, one database per bounded context.
 | 2026-09-17 | SQL Server to PostgreSQL: the licence no longer covered the features in use. |
 | 2026-03-01 | SQL Server, because the team knew it. |
 ```
+
+## Building block records (`building-blocks/`)
+
+Chapter 5 holds what the whole system shares: the level 1 landscape, the shapes
+every block has in common, and the diagram of the edges between them. A block
+whose whitebox — its responsibility, the interfaces it exposes, its internal
+structure, and its dependencies — is read on its own more often than beside the
+landscape gets a file of its own under `building-blocks/`, for the same reason
+a concern gets one under `adr/`: a reader opens the block they work in, and a
+sync pass narrows to one file. Chapter 5 then links to the folder's index and
+restates nothing about a block that has a file.
+
+One file per block, `building-blocks/<slug>.md`, the slug being the block's
+name as the code spells it — a plugin folder, a project, a service. Each file,
+in this order:
+
+- The block's responsibility, in prose under the title, before any section:
+  what it owns, what is inside it, what is outside it and where that is answered.
+- `## Interfaces` — how the block is reached: the skills, agents, commands,
+  routes, contracts, or public API it exposes, one `###` per interface where
+  each needs its own words.
+- `## Structure` — the parts inside it that carry a distinct responsibility,
+  with the invariants each one guarantees where the block has any, and a Mermaid
+  diagram where the parts relate.
+- `## Runtime` — optional: the flows that cross the block, as diagrams. A
+  runtime scenario that crosses several blocks belongs in
+  `06-runtime-view.md`, which links here.
+- `## Dependencies` — what the block depends on and what depends on it, in
+  their actual direction, one table each, with the mechanism and the contract.
+
+The rules of the folder apply unchanged: no `type`, no `depends-on`, `related`
+for every cross-reference, and the top-level block doubling as the file-level
+one. The folder's index (`README.md`, `index: root`) lists every block with
+its responsibility in one line.
 
 ## Template
 

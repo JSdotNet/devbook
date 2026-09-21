@@ -16,7 +16,7 @@ import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_MARKETPLACE = 'jsdotnet';
+const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 
 // Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
 // contract-versioned. The mapping is not derivable — `derived` is written by
@@ -366,7 +366,7 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
-    // Every devbook folder lives under `.devbook/` (record 80). A root-level `.tech/` is the
+    // Every devbook folder lives under `.devbook/` (the chapter-schema record). A root-level `.tech/` is the
     // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const stray = existsSync(join(repoRoot, `.${folder}`));
@@ -697,7 +697,7 @@ function render(model) {
     out.push(table(
         ['Folder', 'Present as'],
         repo.folders.map((f) => [
-            `\`.${f.folder}\``,
+            `\`${f.folder}/\``,
             (f.path ? `\`${f.path}\`` : 'absent') + (f.stray ? ` — a root-level \`.${f.folder}/\` also exists; only \`.devbook/\` is a layout, move it` : ''),
         ]),
     ));

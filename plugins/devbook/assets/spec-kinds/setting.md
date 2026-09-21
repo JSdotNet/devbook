@@ -9,7 +9,7 @@ carries the kind.
 | | |
 |---|---|
 | Chapters | A `##` chapter in `context.md`, `type: feature-flag` or `type: setting` |
-| File | `.domain/<context>/context.md` |
+| File | `.devbook/domain/<context>/context.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `context.md`, and the `features.md` or `skills.md` chapters that point at the switch through `feature-flag` or `setting`; when applying, the code those feature chapters resolve to |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |

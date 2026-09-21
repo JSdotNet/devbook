@@ -22,7 +22,7 @@ whatever a plain Markdown viewer shows is what the host gets.
 ```meta
 status: adopted
 type: protocol
-related: [".devbook/domain/plugin-authoring/domain.md#mcp-server"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 ```
 
 How a plugin ships tools rather than prose. A plugin-provided server is namespaced by its
@@ -30,8 +30,8 @@ plugin, so the same server has two possible tool prefixes depending on how it wa
 
 Two servers ship here, one per MCP-backed surface — the dashboard and the collector — each
 hand-written against the stdio transport: newline-delimited JSON-RPC 2.0 on stdin and stdout,
-no SDK and no dependency. The third surface, the canvas, reaches its host as two Copilot
-extensions and ships no server at all.
+no SDK and no dependency. The third surface, the canvas, reaches its host as one Copilot
+extension registering two canvases and ships no server at all.
 
 ## MCP Apps
 

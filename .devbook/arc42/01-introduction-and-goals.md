@@ -2,7 +2,7 @@
 
 ```meta
 number: 1
-related: [".devbook/domain/context-map.md#plugin-authoring"]
+related: [".devbook/arc42/08-crosscutting-concepts.md"]
 ```
 
 This repository, `devbook`, packages the devbook convention and the delivery flow — the agents,
@@ -11,12 +11,14 @@ marketplace, `jsdotnet-devbook`. The repository is named for the convention that
 here reads from or writes into; the marketplace name is a separate key that follows the
 repository name by rule — [the releases record](adr/releases.md).
 
-This folder holds chapters 1, 5, 9, and 11 and the two record folders, and no others: a
-chapter is written when it has content, not to complete the set. There is no runtime here, so
-the runtime, deployment, and quality-scenario chapters would describe hosts this repository does
-not own; constraints, context, and solution strategy are carried by the domain folder's context
-map and dependencies and by the goals below; cross-cutting concepts and the glossary are each
-context's `domain.md`. The numbering is kept so a later chapter lands in its place.
+This folder holds chapters 1, 3, 5, 6, 8, 9, 11, and 12 and three record folders, and no
+others: a chapter is written when it has content, not to complete the set. There is no runtime
+of this repository's own here, so the deployment and quality-scenario chapters would describe
+hosts it does not own; constraints and solution strategy are carried by the goals below and by
+[chapter 8](08-crosscutting-concepts.md). Each plugin is one building block with its own file
+under [`building-blocks/`](building-blocks/README.md), the language every block is written in
+is chapter 8, and the terms one block owns are the [glossary](12-glossary.md). The numbering
+is kept so a later chapter lands in its place.
 
 ## Quality Goals
 

@@ -105,7 +105,7 @@ const SCOPE_SCHEMA = {
         reason: { type: 'string' },
         routeTo: {
           type: 'string',
-          description: 'flow-arc42 | flow-create-service | flow-domain',
+          description: 'flow-spec | flow-code',
         },
       },
     },
@@ -237,7 +237,7 @@ if (scope.escalate && scope.escalate.needed) {
   return {
     outcome: 'escalated',
     stage: 'Scope Discovery',
-    routeTo: scope.escalate.routeTo || 'flow-arc42',
+    routeTo: scope.escalate.routeTo || 'flow-spec',
     reason: scope.escalate.reason,
     scope,
   }

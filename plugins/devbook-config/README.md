@@ -23,7 +23,7 @@ instead of by repository.
 | --- | --- |
 | [`setup`](skills/setup/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component installs itself. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own install skill, and a re-validated config. |
-| [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/domain.md`, the arc42 chapters, and `delivery`'s surface contract. |
+| [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s surface contract. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
 
 `devbook-config:adoption` is the one that writes nothing at all, and deliberately: `ai/` rates whether
@@ -94,7 +94,7 @@ committed and shared.
 - **Any plugin here.** It names all of them and declares none. A plugin it cannot find is
   reported as `not installed` — the same degrade-rather-than-fail shape `delivery` uses for a
   role or a service whose provider does not resolve. That is what keeps this outside the
-  [layer](../../.devbook/domain/plugin-authoring/domain.md#layer) order rather than under it.
+  [layer](../../.devbook/arc42/08-crosscutting-concepts.md#layer) order rather than under it.
 - **Writing anything a component owns.** `devbook-config:setup` and `devbook-config:update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
   install skill, which is the only thing that knows what it materialized. That is also why

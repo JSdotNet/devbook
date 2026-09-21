@@ -43,8 +43,8 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 | Question about | Start at |
 | --- | --- |
 | What a plugin is and what it ships | `plugins/<name>/README.md` |
-| Layers, and why a plugin may not name another | `.devbook/domain/plugin-authoring/domain.md#layer` |
-| Flow, phase, schedule — which is which | `.devbook/domain/plugin-authoring/domain.md#flow-skill` |
+| Layers, and why a plugin may not name another | `.devbook/arc42/08-crosscutting-concepts.md#layer` |
+| Flow, phase, schedule — which is which | `.devbook/arc42/08-crosscutting-concepts.md#flow-skill` |
 | Roles, surfaces, host slots, stamps, migrations | the matching section of that same chapter |
 | Which plugin category a plugin falls in | `.devbook/arc42/05-building-block-view.md` |
 | Why something is shaped the way it is | `.devbook/arc42/09-architecture-decisions.md` |

@@ -48,12 +48,13 @@ lines; frontmatter such as an agent `tools` list does not count.
 - State the reason in the file when an asset genuinely must exceed its budget.
 - `node tools/check-assets.mjs --budgets` lists what is over. It reports, and never fails.
 
-Four kinds are long by nature, and the reason is stated here once rather than in each file:
+Five kinds are long by nature, and the reason is stated here once rather than in each file:
 
 | Kind | Why it exceeds by nature |
 | --- | --- |
 | `flow-*`, `phase-*`, `schedule-*` skills | A staged procedure is read once per run and every stage is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `assets/spec-kinds/<kind>.md` | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
+| The converters `sync-specs`, `apply-change`, `verify-change` | Each is a staged procedure over every chapter kind, and a stage that stops — a status gate, a verdict that hands off — is safety-critical prose. |
 | A plugin rule (`devbook-*.md`) and a `resources/` contract | A schema or a contract is the single source everything else points at; it cannot itself be a pointer. |
 | The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
 

@@ -7,7 +7,7 @@ number: 5
 ## Marketplace Root
 
 ```meta
-related: [".devbook/domain/plugin-authoring/domain.md#marketplace"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#marketplace"]
 ```
 
 `.claude-plugin/marketplace.json` is the only file a host reads before installing anything: the
@@ -19,10 +19,10 @@ concerned.
 
 ```meta
 date: 2026-09-21
-related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Ten plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
+Ten plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -56,7 +56,7 @@ flowchart TB
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
-    DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
+    DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
     DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
@@ -64,10 +64,12 @@ flowchart TB
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is
 the manifest's own direction — `devbook-collaboration` declares `devbook`, so the arrow leaves
-`devbook-collaboration`. The [context map](../domain/context-map.md) draws the same seven
-relationships the other way round, upstream to downstream, because that is DDD's convention for
-model influence. Neither is wrong and they are not interchangeable: read this one for what a
-host enforces, and that one for who has to live with whose model.
+`devbook-collaboration`. The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks)
+in chapter 8 lists the same relationships the other way round, upstream to downstream, because
+that is DDD's convention for model influence. Neither is wrong and they are not
+interchangeable: read this one for what a host enforces, and that one for who has to live with
+whose model. What each plugin owns, exposes, and depends on is its own file under
+[`building-blocks/`](building-blocks/README.md); nothing below restates a block that has one.
 
 | Style | Means | Where a missing target lands |
 | --- | --- | --- |
@@ -94,7 +96,7 @@ than a failed load.
 ## Plugin Folder
 
 ```meta
-related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
 ```
 
 One folder per plugin, holding two manifests and the assets themselves:
@@ -128,7 +130,7 @@ other, so a plugin holding one host-only asset still ships both.
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
 is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
-naming each [layer](../domain/plugin-authoring/domain.md#layer) beneath, one entry for an
+naming each [layer](08-crosscutting-concepts.md#layer) beneath, one entry for an
 extension and two for a bridge. Copilot's manifest has no verified equivalent, so a dependency
 is declared once, on the Claude side, and stated in prose in the plugin's README for the other
 host.
@@ -139,7 +141,7 @@ else in the plugin has to know the folder exists. `delivery-surface-dashboard` a
 `delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none — see
 [the decision](adr/surfaces.md).
 
-An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
+An `extensions/<name>/` folder ships a [surface](08-crosscutting-concepts.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook-derived`
@@ -192,13 +194,13 @@ Shared text a skill or an agent reads by path is not that, and lives in `resourc
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
 `<component>-install` is what puts it there and records it in the
-[stamp](../domain/plugin-authoring/domain.md#stamp).
+[stamp](08-crosscutting-concepts.md#stamp).
 
 ## Level 2: What Lands in a Repository
 
 ```meta
 date: 2026-09-21
-related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/domain/plugin-authoring/domain.md#stamp"]
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/08-crosscutting-concepts.md#stamp"]
 ```
 
 The other half of the building block view. Nothing above this line runs in a consuming
@@ -261,10 +263,10 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and five
-of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
-knowledge of, and a repository that hand-authored its folders without installing devbook gets a
-check line pointing at a file that is not there.
+`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and
+`flow-spec` is named for devbook's folders and expects every chapter to carry the `meta` block
+devbook's schema defines — one skill wide since the 2026-09-15 fold, which also stopped it
+naming that path — so the engine leans on a plugin it declares no knowledge of.
 
 The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
 install skill: it is derived from the chapters and refreshed by the `devbook-check` schedule,
@@ -274,7 +276,7 @@ because two branches each touching one chapter both rewrite the same JSON.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 **No specialist plugin ships here.** Where a flow needs expertise it names a point, and a
@@ -317,7 +319,7 @@ consults a point — see [the decision](adr/plugin-boundaries.md).
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/surfaces.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Three plugins are where a run becomes visible or recorded. None declares a dependency, none
@@ -347,7 +349,7 @@ group.
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/hosts.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md"]
 ```
 
 `delivery` declares a closed set of five names a shared asset reads instead of a host's own
@@ -376,7 +378,7 @@ rather than silent.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 `devbook-config` is the one plugin whose subject is the marketplace rather than a unit of work.
@@ -426,7 +428,7 @@ leaves the other host's rows empty while the catalog half still answers.
 
 ```meta
 date: 2026-09-21
-related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/adr/configuration.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/adr/configuration.md"]
 ```
 
 `.devbook/config.json` is the one file a consuming repository commits for the whole
@@ -465,7 +467,7 @@ repository's own `start` skill, not in a second file here — see
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
@@ -510,7 +512,7 @@ in the scheduler; matching by name is what makes writing them down unnecessary.
 ## Asset Kinds
 
 ```meta
-related: [".devbook/domain/plugin-authoring/domain.md#agent"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#agent"]
 ```
 
 Agents, skills, instruction files, hooks, and MCP servers. Each kind has one file shape and one

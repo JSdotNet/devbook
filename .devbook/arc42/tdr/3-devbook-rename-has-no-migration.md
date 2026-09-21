@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-05
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -13,7 +13,7 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plug
 ```
 
 The `knowledge-` to `devbook-` rename of 2026-09-05 — the
-[devbook folder](../../domain/plugin-authoring/domain.md#devbook-folder) term says why —
+[devbook folder](../08-crosscutting-concepts.md#devbook-folder) term says why —
 renamed six materialized paths. Five of them are things `devbook-install` copies into a consuming
 repository and records in the stamp:
 
@@ -54,6 +54,9 @@ the options table below has been renumbered to match. Nothing else about the deb
 [the chapter schema record](../adr/chapter-schema.md). The proposal is `011-devbook-names`
 at contract 11; the table below says so.
 
+**2026-09-21. Spent a third time.** `011-context-md` took contract 11 the next day. The
+proposal is `012-devbook-names` at contract 12; the table below says so.
+
 ## Affected components
 
 ```meta
@@ -83,7 +86,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `011-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 11 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `012-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 12 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 

@@ -60,7 +60,7 @@ Nothing here restates it.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`.
+Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
 With no surface bound, skip the calls, say so once, and continue.
 
 - `start_run` with `skillId: "schedule-weekly-update"` and these stages: Gather, Write the

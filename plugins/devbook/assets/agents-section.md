@@ -11,7 +11,8 @@ Render it from the stamp's `adopted` list, never from what happens to be on disk
 - Replace `<generator>` with the path `generatorPath` reports: the conventional
   `.devbook/_tools/devbook-meta/build.mjs` in a repository this materialized into, and a
   repo-relative path in one that vendors the checker itself. Never write the
-  conventional path into a repository where it does not resolve.
+  conventional path into a repository where it does not resolve. `<generator-dir>` is
+  that path's folder.
 - Change nothing else. The `_meta/` rule and the refresh paths belong to the layered
   plugin's own section, written after this one by its install. A wording change belongs
   in this template, so every adopting repository gets it on its next reconcile.
@@ -50,7 +51,7 @@ Run the check before committing; it writes nothing:
 
     node <generator> --check
 
-An annotation fence is written only through `.devbook/_tools/devbook-meta/annotations.mjs`.
+An annotation fence is written only through `<generator-dir>/annotations.mjs`.
 
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat

@@ -157,7 +157,7 @@ those contracts; it does not re-decide them per skill.
 - **Configuration chooses among behaviour the engine implements.** A stack-config key never
   adds a stage. A repository that needs a different flow shape writes a repo-native `flow-*`
   skill, which takes precedence over the plugin-provided one for the categories it covers.
-- **No separate approval before internal transitions.** Continue through Build & Test and QA
+- **No separate approval before internal transitions.** Continue through Build & Test and
   Validation, then stop at Personal Validation before any pull request.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
   for a decision the run does not own. There is no fan-out over issues or PRs anywhere: the

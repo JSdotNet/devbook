@@ -25,7 +25,7 @@ Every record states its remediation state — `identified`, `planned`, `in-progr
 
 Those two vocabularies belong to different owners and only one of them governs this folder.
 The lifecycle above is the `arc42` plugin's model for a debt record. The `status` field is
-devbook's, and under `.arc42` it admits only `draft`, `proposed`, `active`, `deprecated`, and
+devbook's, and under `arc42/` it admits only `draft`, `proposed`, `active`, `deprecated`, and
 the shared `approved` rung — a record claiming `status: identified` would be rejected by the
 generator, which is the mistake `status: divergence` already made here once. So `status` stays
 at this folder's resting value, written by omitting it, and the debt's own lifecycle is
@@ -45,6 +45,7 @@ content.
 | [5. The derived index is not optional](5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | resolved |
 | [6. sync-specs borrows a name OpenSpec uses for something else](6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) | 2026-09-15 | Low | identified |
 | [7. The decision set predates the concern rule](7-the-decision-set-predates-the-concern-rule.md) | 2026-09-17 | Medium | resolved |
+| [8. The domain rule is not exercised here](8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Low | identified |
 
 None carries a target date. This repository has one maintainer and no release commitment to
 schedule against, so a date would be invented rather than agreed. Each record states the

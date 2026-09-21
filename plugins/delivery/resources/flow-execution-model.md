@@ -335,7 +335,7 @@ that would otherwise follow it in a session already this full.
   conversation memory of an approval.
 - **When Personal Validation rejects or requests changes**, set `approval: "rejected"` with
   the user's wording, return to the appropriate implementation/specification stage, mark that
-  stage `in_progress`, apply the requested changes, and then repeat Build & Test, QA
+  stage `in_progress`, apply the requested changes, and then repeat Build & Test,
   Validation, and Personal Validation. Before the repeated Personal Validation handoff, reset
   `approval: "pending"` so Create Pull Request remains locked until the user approves the
   revised change set.

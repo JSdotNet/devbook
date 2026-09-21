@@ -64,7 +64,7 @@ last — the order shown in the tree above. See
     edges = `depends-on`).
   - Explains the status ladder and how to read/extend the graph.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
-    carries a file-level block only (same rule as `.domain/context-map.md`).
+    carries a file-level block only (same rule as `.devbook/domain/context-map.md`).
   - It is `tech/`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
   Never hand-edited; see `devbook-derived-artifacts.md`
@@ -167,8 +167,8 @@ Omit every optional field that has no value (no `related: []`, no
   renamed, and run the check in the same change:
   `node .devbook/_tools/devbook-meta/build.mjs --scope tech --check`.
 - Ground stack claims in `arc42/` (especially
-  `.arc42/04-solution-strategy.md#technology-choices` and
-  `.arc42/09-architecture-decisions.md`) rather than inventing new choices here.
+  `.devbook/arc42/04-solution-strategy.md#technology-choices` and
+  `.devbook/arc42/09-architecture-decisions.md`) rather than inventing new choices here.
   If `tech/` and `arc42/` disagree, `arc42/` wins and `tech/` is corrected.
 - A change of technology *decision* belongs in an ADR first; `tech/` records the
   outcome and links to it.

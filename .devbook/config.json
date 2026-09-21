@@ -19,11 +19,15 @@
     }
   },
   "extensions": {
-    "session.start": ["devbook:check"],
+    "session.start": [
+      "devbook:check"
+    ],
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
-    "flow.end": ["devbook:install"]
+    "flow.end": [
+      "devbook:install"
+    ]
   },
   "policy": {
     "qa.depth": "skipped",
@@ -42,13 +46,13 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.0.0",
+      "pluginVersion": "1.2.0",
       "contractVersion": 11,
-      "adopted": ["arc42", "domain", "tech", "design", "ai"],
+      "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
-          "from": "1.0.0",
-          "hash": "sha256:f6e1be423f6b4d91afd67e1cec9b7b23dbf4e1d0c6ac462e6873330c4ddaade4",
+          "from": "1.2.0",
+          "hash": "sha256:8a7165b17ff0ccf8ad9c08743af1b42934e85980ae7ba1e8bd5447388077b67a",
           "managed": true
         },
         ".gitignore#devbook": {
@@ -63,8 +67,14 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.1.0",
-      "materialized": {}
+      "pluginVersion": "1.2.0",
+      "materialized": {
+        "AGENTS.md#devbook-derived": {
+          "from": "1.2.0",
+          "hash": "sha256:f80aad302f416ffcf441c14853a46ad2f8441cb55ebe31563856e3d52469cef3",
+          "managed": true
+        }
+      }
     },
     "devbook-procedures": {
       "pluginVersion": "1.2.0",
@@ -75,7 +85,7 @@
       "pluginVersion": "1.2.0"
     },
     "schedule": {
-      "pluginVersion": "1.0.0",
+      "pluginVersion": "1.2.0",
       "enabled": ["devbook-check", "tech-update", "merge-review", "package-update"]
     },
     "delivery-surface-dashboard": {

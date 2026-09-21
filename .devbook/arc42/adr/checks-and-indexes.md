@@ -2,11 +2,11 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Three checks gate this repository, and `.github/workflows/repo-checks.yml` runs all of them on
-every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, and rules; the
+every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, rules, and skills; the
 generator's `build.mjs --check` over `.devbook/`, which runs the schema validator on every
 file; and `claude plugin validate --strict`, deliberately unpinned. The checker — the
 validator, the graph, the outline, the fence writer, the `check`, `annotation-sweep`, and

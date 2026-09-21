@@ -25,6 +25,7 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
+| `schedule-devbook-check` | Runs `devbook:check` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when the ledger or the stamp needs a person |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
@@ -33,6 +34,7 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
 | `schedule-review` | TODOs, suggestions, and the code review checklist | A findings report, optionally issues |
 | `schedule-security-review` | Dependencies, secrets, CI hardening, code | One issue per new high finding |
+| `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-week-starter` | Digests what the tracked topics published this week | A digest |
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
@@ -114,7 +116,7 @@ and adds no extension point.
 
 It is the one plugin here whose subject is a host capability — scheduled cloud sessions — and
 that is a divergence from the rule that nothing in this marketplace names one, taken on purpose
-and recorded in `.devbook/arc42/09-architecture-decisions.md`. The catalog is host-neutral
+and recorded in `.devbook/arc42/adr/plugin-boundaries.md`. The catalog is host-neutral
 data; only the scheduler resolution knows which tool answers.
 
 ## Before the first schedule

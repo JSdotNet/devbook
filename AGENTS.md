@@ -11,8 +11,10 @@ file here is hand-authored.
 
 The design these plugins implement is written down in this repository. Before writing, read
 the chapters the change touches: `.devbook/arc42/adr/` for why something is the way it is and
-`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/domain/` for the vocabulary
-and the boundary each plugin owns, and the plugin's own `rules/` for what a file must contain.
+`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/arc42/building-blocks/` for
+what each plugin owns, exposes, and depends on, `.devbook/arc42/08-crosscutting-concepts.md`
+for the vocabulary every plugin shares, and the plugin's own `rules/` for what a file must
+contain.
 
 When the repository and a chapter disagree, one of them is wrong and neither may stay that
 way: change the other in the same commit, or — when the divergence is deliberate — record it
@@ -68,7 +70,7 @@ plugins/<name>/
   resources/<name>.md             shared text an asset reads by path — a contract, a template.
                                   A contract carries name and description; nothing else there does
   mcp/<server>/                   an MCP server, declared under mcpServers in the Claude manifest
-  extensions/<name>/              a Copilot extension, declared in the Copilot manifest
+  extensions/<name>/              a Copilot extension; the Copilot manifest carries no key for it
   assets/  tools/  scripts/       payload an install skill copies into a repository, and the
                                   executables a skill or a check runs from the plugin itself
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
@@ -167,7 +169,6 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 | Folder | Holds | Rules |
 | --- | --- | --- |
 | `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
-| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
 | `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.md` |
 | `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
 | `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
@@ -180,8 +181,7 @@ Run the check before committing; it writes nothing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
 
-An annotation fence is written only through
-`plugins/devbook/tools/devbook-meta/annotations.mjs`.
+An annotation fence is written only through `plugins/devbook/tools/devbook-meta/annotations.mjs`.
 
 Two files are yours alone, absent by default, and never committed. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat
@@ -200,9 +200,8 @@ any of them — gitignored is not private, and neither is your home directory.
 
 Managed by `devbook-derived:install`. Edit outside these markers.
 
-Files under any `_meta/` folder are generated tool input, written by
-`plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
-fact and never hand-edit one. Never regenerate or commit them in a session — the
-scheduled job owns that refresh. Fix what devbook's check reports in the source
+Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
+generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
+fact and never hand-edit one. Never regenerate or commit them in a session — the scheduled job owns that refresh. Fix what devbook's check reports in the source
 Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->

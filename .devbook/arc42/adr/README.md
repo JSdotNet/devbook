@@ -59,8 +59,10 @@ files; this table says which concern each one folded into, so an old number stil
 | Plugin Boundaries | 2, 19, 22, 23, 24, 26, 34 |
 | Releases | 1, 64, 65, 66, 84 |
 
-Thirteen were not technical choices and their reasons moved to the file that states the
+Eleven were not technical choices and their reasons moved to the file that states the
 choice: 20 to `AUTHORING.md`, 21 to [chapter 1](../01-introduction-and-goals.md), 25, 33, 35,
-and 36 to the plugin-authoring context's naming terms, 43 to `.agents/rules/plugin-rules.md`,
-44 to the [context map](../../domain/context-map.md), 59 to `AGENTS.md`, 69 to the devbook
-context's `skills.md`, and 76 to `.agents/rules/skills.md`.
+and 36 to the kernel concepts in [chapter 8](../08-crosscutting-concepts.md), 43 to
+`.agents/rules/plugin-rules.md`, 44 to chapter 8's
+[strategic rules](../08-crosscutting-concepts.md#strategic-rules), 59 to `AGENTS.md`, 69 to
+the [devbook block](../building-blocks/devbook.md#interfaces), and 76 to
+`.agents/rules/skills.md`.
