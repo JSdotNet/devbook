@@ -68,7 +68,7 @@ plugins/<name>/
   resources/<name>.md             shared text an asset reads by path — a contract, a template.
                                   A contract carries name and description; nothing else there does
   mcp/<server>/                   an MCP server, declared under mcpServers in the Claude manifest
-  extensions/<name>/              a Copilot extension, declared in the Copilot manifest
+  extensions/<name>/              a Copilot extension; the Copilot manifest carries no key for it
   assets/  tools/  scripts/       payload an install skill copies into a repository, and the
                                   executables a skill or a check runs from the plugin itself
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
