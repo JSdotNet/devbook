@@ -23,9 +23,10 @@ a scheduled run, never a session beside a chapter edit.
 
 - **`devbook:check`** — the check and the repairs it can prove. Stops at exit `2` when the
   repository has not adopted devbook.
-- **`devbook-derived`'s refresh**, where that plugin is installed: `./build/Update-DevbookIndex.ps1`,
-  or `node .devbook/_tools/devbook-meta/build.mjs --write`. Absent, there is no index to
-  refresh and this run fixes Markdown only.
+- **`devbook-derived`'s refresh**, where that plugin is installed: `node <generator> --write`,
+  `<generator>` being the checker path the repository's `AGENTS.md` devbook section names,
+  or `./build/Update-DevbookIndex.ps1` where that wrapper is materialized. Absent, there is
+  no index to refresh and this run fixes Markdown only.
 
 ## Workflow
 
