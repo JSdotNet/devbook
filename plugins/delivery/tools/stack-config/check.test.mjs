@@ -198,7 +198,7 @@ test('no model key exists anywhere in the engine-owned config', () => {
     assert.equal(check({ bindings: { 'delivery.model': 'opus' } }).length, 1);
 });
 
-// The local overlay — .devbook/config.local.json, gitignored, one machine's own.
+// The overlay — config.local.json under the user's devbook config directory, one machine's own.
 
 test('the overlay wins key by key and leaves its siblings standing', () => {
     const merged = mergeStackConfig(
