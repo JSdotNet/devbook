@@ -107,11 +107,10 @@ relationship that exists in the assets and in no manifest.
 | every context | Devbook Config | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every context | Conformist | Not declarable; the host decides what loads |
 
-The undeclared row is the one to read twice. `delivery`'s five folder flows name devbook's
-folders, restate three of its schema rules, and run its generator at the path devbook's install
-writes it to, while both manifests say nothing. It is recorded as debt rather than drawn as a
-dependency, because declaring it would demote all twenty-four of the engine's skills wherever
-devbook is absent.
+The undeclared row is the one to read twice. `delivery`'s `flow-spec` is named for devbook's
+folders and expects every chapter to carry devbook's `meta` block, while both manifests say
+nothing. It is recorded as debt rather than drawn as a dependency, because declaring it would
+demote all fourteen of the engine's skills wherever devbook is absent.
 
 ## Published languages
 

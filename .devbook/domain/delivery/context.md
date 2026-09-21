@@ -30,7 +30,7 @@ whole truth.
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
 | Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like everything else here, and the kernel is what "packaged" means. |
-| [Devbook](../devbook/context.md#dependencies) | **Undeclared** | Five folder flows name the folders, restate three schema rules, and run devbook's generator at the path devbook's install writes it to | None, on either side | Eleven of sixteen flows work with devbook absent, so it is not an L1 extension; declaring it would demote all twenty-four skills. Logged as [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md). |
+| [Devbook](../devbook/context.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fourteen skills. Logged as [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md). |
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
 | A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, or Markdown chapters | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
@@ -57,7 +57,7 @@ whole truth.
   demoted because one specialist is absent is the failure mode the whole indirection exists to
   prevent.
 - **The undeclared devbook row is the exception, and it is exceptional in the wrong direction.**
-  The coupling is real in five flows; what is missing is the declaration. The debt record's first
+  The coupling is real in one flow; what is missing is the declaration. The debt record's first
   remediation — resolve the repository's own check instead of naming devbook's path, drop the
   three restated schema rules, and state in the README which flows need an adopted folder — is
   the one to take.

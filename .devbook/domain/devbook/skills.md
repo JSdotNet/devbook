@@ -6,7 +6,7 @@ related: [".devbook/domain/context-map.md#devbook"]
 ```
 
 > Eight skills: five that own the convention in a repository, and three that cross the
-> boundary between a chapter and the code implementing it, each over five chapter kinds. None
+> boundary between a chapter and the code implementing it, each over six chapter kinds. None
 > of them is a flow — this context ships the shape and the check, and the procedure for
 > carrying a change belongs to the engine.
 

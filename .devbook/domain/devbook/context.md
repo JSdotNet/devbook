@@ -39,7 +39,7 @@ something outside the marketplace or a downstream consumer reaching in.
 |---|---|---|---|---|
 | [Devbook Derived](../devbook-derived/context.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this context's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this context's install puts it, and that the exports the canvas reads keep their names. |
 | [Devbook Collaboration](../devbook-collaboration/context.md#dependencies) | Customer-Supplier, declared | Writes `review`, `reviewer`, `review-at` in a chapter's own block; annotation fences written through `annotations.mjs`; writes devbook's `approved` rung | The review triad, the annotation fence, and the `status` ladder | That the three review fields keep their meaning and the check holds them to it, that a fence keeps its schema and its open/resolved/gone lifecycle, and that `approved`, `approved-by`, and `approved-at` keep their meaning. |
-| [Delivery](../delivery/context.md#dependencies) | **Undeclared** — see [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md) | Five folder flows name the folders, restate three schema rules, and run this context's generator at the path the install writes it to | None declared, on either side | Folder names, the generator's payload path, and the contract version — none of which it pins. |
+| [Delivery](../delivery/context.md#dependencies) | **Undeclared** — see [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this context's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
 | [Delivery Schedule](../delivery-schedule/context.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; two of its own `schedule-*` wrappers invoke `check` and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [Devbook Config](../devbook-config/context.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, and this context's stamp in the stack config | The stack config schema and the folder layout | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
@@ -47,7 +47,7 @@ something outside the marketplace or a downstream consumer reaching in.
 ### Notes
 
 - **The undeclared row is the one that matters.** `delivery` cannot be declared a dependent
-  without demoting all twenty-four of its skills wherever this context is absent, and cannot be
+  without demoting all fourteen of its skills wherever this context is absent, and cannot be
   left silent without the next payload-path rename landing the way `.backlog` did. The debt
   record holds the four remediation options; the first — name the coupling in prose and stop
   restating this context's rules — is the one to take.

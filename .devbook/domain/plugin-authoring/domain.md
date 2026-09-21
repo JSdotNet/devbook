@@ -156,10 +156,10 @@ and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
-for the code and one for the five devbook folders, since
+only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — the
+code, the five devbook folders, the dependencies, and the project, since
 [flows belong to delivery](../../arc42/adr/plugin-boundaries.md) —
-and three `phase-*`, `delivery-schedule` holds thirteen `schedule-*` beside a bare `install`, and
+and three `phase-*`, `delivery-schedule` holds sixteen `schedule-*` beside a bare `install`, and
 `fleet` holds three
 `fleet-*`.
 
@@ -296,7 +296,7 @@ which is why the contract matches operation names and never a transport. See
 [the decision](../../arc42/adr/surfaces.md).
 
 The fourth, `devbook-graph`, ships in `devbook-derived` and loads devbook's checker modules
-from their materialized path at runtime; it renders the reference graph `_meta/graph.json` produces, and opens a single chapter
+from their materialized path at runtime; it renders the reference graph rebuilt from the chapters on open, never from `_meta/`, and opens a single chapter
 beside its parsed `meta` block in a second canvas, `devbook-chapter`. It answers no operation
 group and substitutes for nothing, which is why it takes devbook's stem and the thing it
 draws rather than the surface word, per the [naming rule](#flow-skill).
