@@ -25,7 +25,7 @@ Every record states its remediation state — `identified`, `planned`, `in-progr
 
 Those two vocabularies belong to different owners and only one of them governs this folder.
 The lifecycle above is the `arc42` plugin's model for a debt record. The `status` field is
-devbook's, and under `.arc42` it admits only `draft`, `proposed`, `active`, `deprecated`, and
+devbook's, and under `arc42/` it admits only `draft`, `proposed`, `active`, `deprecated`, and
 the shared `approved` rung — a record claiming `status: identified` would be rejected by the
 generator, which is the mistake `status: divergence` already made here once. So `status` stays
 at this folder's resting value, written by omitting it, and the debt's own lifecycle is

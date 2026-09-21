@@ -22,21 +22,22 @@ date: 2026-09-08
 related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Nine plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
+Ten plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.0.0"]
-        DEL["delivery 1.0.0"]
-        CFG["devbook-config 1.0.0"]
+        DEV["devbook 1.2.0"]
+        DEL["delivery 1.2.0"]
+        CFG["devbook-config 1.2.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBC["devbook-collaboration 1.0.0"]
-        FLT["fleet 1.0.0"]
-        SCH["delivery-schedule 1.0.0"]
+        DBC["devbook-collaboration 1.2.0"]
+        DER["devbook-derived 1.2.0"]
+        FLT["fleet 1.2.0"]
+        SCH["delivery-schedule 1.2.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
@@ -46,6 +47,7 @@ flowchart TB
     end
 
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
+    DER ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
     FLT ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
     SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
 
@@ -54,7 +56,7 @@ flowchart TB
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
-    DEL -.->|"undeclared - five folder flows, TDR 4"| DEV
+    DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
 ```
@@ -241,10 +243,10 @@ that knows what it materialized, which is why
 into the config plugin and why setup's last step is to invoke it.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and five
-of `delivery`'s flows name that path — so the engine reaches into a payload it declares no
-knowledge of, and a repository that hand-authored its folders without installing devbook gets a
-check line pointing at a file that is not there.
+`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and
+`flow-spec` is named for devbook's folders and expects every chapter to carry the `meta` block
+devbook's schema defines — one skill wide since the 2026-09-15 fold, which also stopped it
+naming that path — so the engine leans on a plugin it declares no knowledge of.
 
 The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
 install skill: it is derived from the chapters and refreshed by the `devbook-check` schedule,

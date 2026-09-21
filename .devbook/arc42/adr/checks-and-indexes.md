@@ -6,7 +6,7 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/domain/devboo
 ```
 
 Three checks gate this repository, and `.github/workflows/repo-checks.yml` runs all of them on
-every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, and rules; the
+every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, rules, and skills; the
 generator's `build.mjs --check` over `.devbook/`, which runs the schema validator on every
 file; and `claude plugin validate --strict`, deliberately unpinned. The checker — the
 validator, the graph, the outline, the fence writer, the `check`, `annotation-sweep`, and

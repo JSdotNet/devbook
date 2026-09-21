@@ -17,10 +17,10 @@ related: [".devbook/arc42/tdr/README.md"]
 
 | Record | Logged | Severity | State | In one line |
 | --- | --- | --- | --- | --- |
-| [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress | AGENTS.md states three body budgets and `check-assets --budgets` reports against them; 8 of 79 budgeted assets meet them, and the kinds that are long by nature are exempted by decision rather than trimmed. |
+| [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress | AGENTS.md states three body budgets and `check-assets --budgets` reports against them; 15 of 71 budgeted assets meet them, and the kinds that are long by nature are exempted by decision rather than trimmed. |
 | [2. fleet names the Claude CLI directly](tdr/2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified | `fleet` names a host's CLI although no asset here may name one, so on any other host a sweep dispatches nothing — and its manifest does not say so. |
 | [3. The devbook asset rename ships no migration](tdr/3-devbook-rename-has-no-migration.md) | 2026-09-05 | Medium | identified | The `knowledge-*` -> `devbook-*` rename moved payload paths with no migration to carry them, so a re-synced repository grows a second spelling of the same tooling. |
-| [4. delivery depends on devbook](tdr/4-delivery-depends-on-devbook.md) | 2026-09-07 | Medium | identified | `delivery` declares no dependency, yet five of its flows are named after devbook folders, restate devbook's schema rules, and run devbook's installed generator by path — and one binding has already drifted unnoticed. |
+| [4. delivery depends on devbook](tdr/4-delivery-depends-on-devbook.md) | 2026-09-07 | Medium | in-progress | `delivery` declares no dependency, yet `flow-spec` is named after devbook's folders and expects devbook's `meta` block — one skill wide since the 2026-09-15 fold, and one binding had already drifted unnoticed before it. |
 | [5. The derived index is not optional](tdr/5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | resolved | devbook shipped the derived `_meta/` index as foundation although nothing here read it. Resolved on 2026-09-17 by [the checks and indexes record](adr/checks-and-indexes.md), its own first option: the check stays devbook's, and the committed index is `devbook-derived`'s, an L1 a repository enables or does not. |
 | [6. sync-specs borrows a name OpenSpec uses for something else](tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) | 2026-09-15 | Low | identified | OpenSpec's `sync-specs` merges spec deltas a proposal wrote and never reads source; devbook's reads source and writes the chapter, the direction OpenSpec has no skill for — `capture-specs`, the protocol's own word, is held here for later. |
 | [7. The decision set predates the concern rule](tdr/7-the-decision-set-predates-the-concern-rule.md) | 2026-09-17 | Medium | resolved | `devbook-arc42.md` now keeps one record per technical concern, updated in place; this repository's own `adr/` is seventy-six numbered per-decision files, a fifth of them about a name or a word, folded into eleven concern records the same day. |
@@ -36,8 +36,8 @@ each ends in options rather than a choice, which is the test for whether a recor
 
 No standing risk register. Risks that are real here are consequences of decisions and stay
 written where the decision is, because a risk restated away from its cause loses the reason it
-is acceptable — see the consequence paragraphs in
-[chapter 9](09-architecture-decisions.md), several of which are exactly that.
+is acceptable — see the consequence paragraphs in the
+[concern records](adr/README.md), several of which are exactly that.
 
 Open one when a risk exists that no decision produced. Nothing has needed it yet, and an empty
 register invites the scaffolding this convention asks authors not to write.
