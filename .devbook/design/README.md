@@ -40,7 +40,7 @@ incomplete.
 ## Canvas
 
 ```meta
-related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 The rendered view of something already true in the repository — a graph, a diagram, a document.

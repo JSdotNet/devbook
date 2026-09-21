@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-17
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/domain/devbook-config/domain.md#machine-overlay", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
 ```
 
 A repository's wiring is one committed file, `.devbook/config.json`: the engine's four keys —

@@ -28,7 +28,7 @@ services are points the engine declares and a repository fills, naming whichever
 provider that does not resolve costs capability, never a load. The seven specialists that used
 to live here are [published from their own marketplace](.devbook/arc42/adr/plugin-boundaries.md).
 
-The design lives in `.devbook/`: the vocabulary in `domain/`, the structure and every
+The design lives in `.devbook/`: the structure, one building block per plugin, and every
 recorded decision in `arc42/`, the technology graph in `tech/`, how the repository itself is
 built with AI in `ai/`. Start with
 [`.devbook/arc42/05-building-block-view.md`](.devbook/arc42/05-building-block-view.md).

@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/devbook/domain.md"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/building-blocks/devbook.md"]
 ```
 
 **Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
@@ -21,7 +21,7 @@ kept as written.
 ```meta
 ```
 
-[Layer](../../domain/plugin-authoring/domain.md#layer) says an optional capability is a plugin
+[Layer](../08-crosscutting-concepts.md#layer) says an optional capability is a plugin
 one layer up, and `devbook-collaboration` is the worked example: a `dependencies` array, its own
 `install`, its own `components.<name>` entry in the stamp, and a hard stop when `devbook` is
 absent. The derived `_meta/` index is optional in fact and mandatory in packaging. A repository

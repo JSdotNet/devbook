@@ -11,8 +11,10 @@ file here is hand-authored.
 
 The design these plugins implement is written down in this repository. Before writing, read
 the chapters the change touches: `.devbook/arc42/adr/` for why something is the way it is and
-`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/domain/` for the vocabulary
-and the boundary each plugin owns, and the plugin's own `rules/` for what a file must contain.
+`.devbook/arc42/tdr/` for what is knowingly left open, `.devbook/arc42/building-blocks/` for
+what each plugin owns, exposes, and depends on, `.devbook/arc42/08-crosscutting-concepts.md`
+for the vocabulary every plugin shares, and the plugin's own `rules/` for what a file must
+contain.
 
 When the repository and a chapter disagree, one of them is wrong and neither may stay that
 way: change the other in the same commit, or — when the divergence is deliberate — record it
