@@ -116,5 +116,5 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Reference
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
-Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
+Runtime facts: the repository's `start` skill at `.agents/skills/start.md`.
 Revalidation on a repeat pass: `skills/phase-validation/SKILL.md`.

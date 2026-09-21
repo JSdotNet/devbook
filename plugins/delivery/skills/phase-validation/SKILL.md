@@ -49,8 +49,8 @@ Location** below, which is why the QA sub-agent shares the worktree rather than 
 
 ## Repo Context
 
-The repository's runtime facts live in its `start` skill — `.agents/skills/start.md`, seeded
-by `delivery:install` and edited by the repository — and reach this phase two ways: the
+The repository's runtime facts live in its `start` skill — `.agents/skills/start.md`, the
+repository's own — and reach this phase two ways: the
 `app.start` service returns base URLs and a health verdict, and the flow-runner names the
 file when it exists. Use them as follows:
 
@@ -222,4 +222,4 @@ comes back, and what an unavailable capture does to this stage. It holds whether
 scenario that had visual evidence to give.
 
 Phase definition: `resources/flow-phases.md`.
-Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
+Runtime facts: the repository's `start` skill at `.agents/skills/start.md`.

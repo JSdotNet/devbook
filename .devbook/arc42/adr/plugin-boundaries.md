@@ -1,7 +1,7 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-09-17
+date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
@@ -9,9 +9,9 @@ Every plugin is self-contained under `plugins/<name>/` and either works alone or
 what it needs. There are three ways to couple — a declared dependency on a lower layer, a
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
-(`devbook`), the engine (`delivery`), one extension each for review, the committed index,
-fan-out, and unattended work, three surfaces, and a guide that names every plugin and depends on
-none. An extension owns procedure, never schema or state. The specialists
+(`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
+repository's procedures, fan-out, and unattended work, three surfaces, and a guide that names
+every plugin and depends on none. An extension owns procedure, never schema or state. The specialists
 are published from another marketplace and are bound per repository, never depended on.
 
 ## Why
@@ -62,6 +62,22 @@ review plugin has the same shape after its state moved into devbook's schema: fo
 rule, no install, no stamp ([annotations](annotations.md), [checks and
 indexes](checks-and-indexes.md)).
 
+**The repository's procedures are an extension over the convention, not a payload of the
+engine.** `start` and `capture` began as two seeds `delivery:install` wrote, because the
+engine was the first thing that needed them. But the engine never read them as a plugin's
+files: it named the skill and the path and expected a running application or evidence
+back, which is the one shape that lets a repository hand-write both. Once `show` and `debug`
+joined them — one composing the first two into a demo, one finding a cause with a breakpoint
+rather than a person — four repository-owned procedures no phase calls two of had no reason to
+ride in the engine, and a repository with no engine at all still wants all four. So they are
+`devbook-procedures`, an L1 over `devbook` because the reconcile protocol and the stamp are
+devbook's; the engine keeps its contract for what Validation expects back and names the skill
+alone. The seam the move added is the **goal**: one sentence per procedure the plugin owns and
+the wrapper carries, refreshed on every upgrade, while the body under `.agents/skills/` is the
+repository's from the first edit. `delivery:install` survives as the stamp's holder and
+releases its old claim on the two seeds — the protocol's adoption-changed case, which is why
+the handover ships no migration.
+
 ## Rejected
 
 ```meta
@@ -72,6 +88,10 @@ indexes](checks-and-indexes.md)).
   degrades one stage.
 - The guide as a skill inside `devbook`, or as an L1 extension over it.
 - A `devbook-flows` bridge holding the folder flows.
+- Keeping the seeds in `delivery` and adding `show` and `debug` there: two skills no phase
+  calls, in a plugin a repository without an engine never enables.
+- A migration for the seed handover: `delivery` is payload-only and the protocol gives such a
+  component hash-matching and orphaning as its whole mechanism.
 
 ## History
 
@@ -80,6 +100,7 @@ indexes](checks-and-indexes.md)).
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. |
 | 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |
 | 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. |
 | 2026-09-07 | `delivery-schedule` holds every unattended entry point and its triggers; a schedule is never a procedure. |
