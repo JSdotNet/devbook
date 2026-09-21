@@ -22,8 +22,8 @@ which is a flow's. This block names every plugin in the marketplace and declares
 ```meta
 ```
 
-Four skills, two of which write nothing, and the one script all four read through. None of them
-writes a key another component owns.
+Five skills, two of which write nothing and one of which writes nothing into the repository, and
+the one script all five read through. None of them writes a key another component owns.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -31,8 +31,10 @@ writes a key another component owns.
 | `update` | skill | A person moving the configured stack forward |
 | `ask` | skill | A person with a question about this marketplace |
 | `adoption` | skill | A person checking the `ai/` adoption record against what is installed |
-| `scripts/report.mjs` | script, the read-only report | The four skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
+| `local` | skill | A person saying what is true of their machine — after `setup` or `update` offers it, or when the report says no user overlay exists |
+| `scripts/report.mjs` | script, the read-only report | The five skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
 | The engine keys of `.devbook/config.json` | what it writes | `setup` and `update`, and nothing else in that file |
+| The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` |
 
 ### setup
 
@@ -89,6 +91,24 @@ hand every edit to the folder's own flow. It writes nothing, deliberately: the r
 see what is on disk, and whether people actually work a certain way is not on disk. The service
 is [Adoption Drift](#adoption-drift).
 
+### local
+
+```meta
+date: 2026-09-21
+related: [".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/configuration.md"]
+```
+
+Ask what is true of this machine and write it where the stack reads it: a
+[machine overlay](#engine-configuration) at the user layer by default, the repository layer when
+an answer is about one repository; the model-selection file the engine's `model-override` slot
+resolves to; and `AGENTS.local.md` — all under the user's devbook config directory, none in
+the clone. Every question is optional and the default is nothing.
+
+It exists because `setup` may not write an overlay — an overlay is true of the person running
+it, not of the repository they set up — and without it the first run on every machine took the
+team's defaults without saying so. `setup` and `update` close by offering it, and the report
+says when no user layer exists.
+
 ## Structure
 
 ```meta
@@ -136,8 +156,9 @@ classDiagram
         +gates
     }
     class MachineOverlay {
-        +scope: user | repository | checkout
+        +scope: user | repository
         +engineKeysTouched
+        +extNamespaces
     }
     class ComponentStamp {
         <<owned by each component>>
@@ -150,7 +171,7 @@ classDiagram
     StackReport "1" --> "many" FactSource : cites, present or absent
     PluginRow --> ScopeVerdict : resolves to
     PluginRow ..> ComponentStamp : reads
-    EngineConfiguration "1" --> "0..3" MachineOverlay : merged under, outermost first
+    EngineConfiguration "1" --> "0..2" MachineOverlay : merged under, outermost first
     EngineConfiguration ..> ComponentStamp : shares a file, never a key
     ScopeVerdict ..> InstallSkill : decides whether it runs
 ```
@@ -242,13 +263,16 @@ is also why `devbook:install` did not move here.
 The value it holds:
 
 - **Machine Overlay** — a value object. An overlay merged over the committed file, holding what
-  is true of this machine only. Three layers, outermost first: the user's for every repository,
-  the user's for the repository whose committed `id` names it, and the checkout's own gitignored
-  file. The first two live under the user's devbook config directory and survive a fresh
-  worktree; the last does not. Each may add a gate and may never remove one — the same asymmetry
-  the engine holds for configuration, applied one layer down, at every layer — and none may
-  carry the `id` that found it. Every layer is absent by default, and none is private: nothing
-  secret goes in any of them. The reasoning is [the configuration record](../adr/configuration.md).
+  is true of this machine only. Two layers, outermost first: the user's for every repository,
+  and the user's for the repository whose committed `id` names it. Both live under the user's
+  devbook config directory and never in a clone, so a fresh worktree runs with the same
+  settings as the last. Each may add a gate and may never remove one — the same asymmetry the
+  engine holds for configuration, applied one layer down, at every layer — and none may carry
+  the `id` that found it. Every layer is absent by default, and none is private: nothing secret
+  goes in either. An overlay may carry `ext.<plugin>.<key>`, a plugin's own machine-scope
+  state, which the engine merges and never reads; the committed file may not. `local` writes an
+  overlay for the person running it; a plugin writes its own `ext` namespace there and nothing
+  else. The reasoning is [the configuration record](../adr/configuration.md).
 
 ### Setup Service
 
