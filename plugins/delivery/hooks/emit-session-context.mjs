@@ -10,8 +10,7 @@
 // repository never adopted. The hook therefore stays silent unless the repository opted in:
 // either by naming this plugin in its own enabledPlugins, or by carrying the assets the
 // guidance is about. Copilot reads hooks.json at the plugin root, where a hook is type: prompt
-// and has no equivalent lever, so that copy of the text stays unconditional and hedges its
-// opening sentence where this one can simply know.
+// and has no equivalent lever, so that copy of the same text stays unconditional.
 //
 // Every plugin installs alone and may not import from a sibling, so this file is duplicated
 // per plugin. Only MARKERS differs between the copies.
