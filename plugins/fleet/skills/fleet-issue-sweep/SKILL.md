@@ -35,8 +35,8 @@ about this run is scheduled for later.
 and `schedule-bug-fix` rank on labels a sweep wrote.
 
 This is the fan-out lane. `fleet-resolve-issue` is what each worker runs. This skill writes
-its own brief in the same shape `fleet-morning-brief` documents — that skill stays around
-only so a past sweep can be re-read by hand.
+its own brief, in the shape **The Brief** in `resources/fleet-issue-sweep-contract.md`
+defines; `fleet-sweep-brief` writes the same one from the files when this session could not.
 
 ## The Sessions Involved
 
@@ -54,7 +54,7 @@ routine session (this skill)
   ├── closure approval  ← stays open for you
   ├── interim summary   ← printed now, before the long wait
   ├── waits for every worker to finish (or times out)
-  ├── writes the brief itself, in the shape fleet-morning-brief documents
+  ├── writes the brief itself, in the shape the state contract defines
   └── ends
 ```
 
@@ -112,10 +112,6 @@ open through the workers' full run and reports the outcome itself. There is no l
 
 - **`fleet-resolve-issue`** (this plugin) — what every dispatched worker runs. Required for a
   dispatching sweep; a `maxParallel: 0` run never needs it.
-- **`fleet-morning-brief`** (this plugin) — not invoked by this skill at all. Its Phase 1
-  step 4, Phase 2, and Phase 3 define the report format this skill's own Phase 8 follows
-  directly, and the skill itself remains available so a sweep can be re-read by hand later.
-  Absent, nothing about this skill's own run changes — only the standalone re-read is lost.
 
 ## Workflow
 
@@ -391,22 +387,22 @@ open through the workers' full run and reports the outcome itself. There is no l
     ```
 
     For any issue still missing a result file at a given check, cross-reference
-    `claude agents --json --all --cwd <repo root>` exactly as `fleet-morning-brief`'s
-    **Absence is data** section describes: `"state": "working"` there means still in progress —
+    `claude agents --json --all --cwd <repo root>` exactly as the contract's **The Brief →
+    Reading the sweep** describes: `"state": "working"` there means still in progress —
     keep waiting on it; absent from that list with no result file means it exited without
     writing — stop waiting on that one specifically and treat it as failed silently now, rather
     than spending the rest of `maxWaitMinutes` on a session that has already ended.
 
 23. Once every worker has either reported or been given up on — immediately, when nothing was
-    dispatched — write the brief following `fleet-morning-brief`'s own **Phase 1 step 4**
-    (refresh live PR/issue state), **Phase 2** (sections ①–⑥), and **Phase 3** (deliver) —
-    against this sweep's own directory. This session already holds everything those steps
-    need; it follows them itself rather than invoking `fleet-morning-brief` as a separate
-    skill.
+    dispatched — write the brief per **The Brief** in the state contract: refresh the live
+    pull request and issue state, the lead line, sections ① to ⑥, the machine state, and
+    deliver it to chat, `brief.md`, and the bound render surface. Set `briefWrittenAt`.
+    This session already holds everything the brief needs and writes it itself; it never
+    invokes `fleet-sweep-brief`.
 
 24. If `maxWaitMinutes` elapses with a worker still genuinely running — not failed, just slow —
     say so plainly in the brief's section ④ and name it, rather than reporting it as unknown.
-    Running `fleet-morning-brief` by hand later, once it finishes, produces the same report
+    Running `fleet-sweep-brief` by hand later, once it finishes, produces the same brief
     with that entry resolved.
 
 ## Surface Reporting
@@ -478,15 +474,15 @@ something has to stay open long enough to write it.
   resume on its own** — there is no scheduled task left to pick it back up. Whether the
   already-dispatched `claude --bg` workers keep running independently of the host process is
   not something this design can promise either way. If a sweep goes quiet and no brief appears,
-  run `fleet-morning-brief` by hand against its sweep directory once the host is back.
+  run `fleet-sweep-brief` by hand against its sweep directory once the host is back.
 - **Low-confidence staleness is reported, never proposed.** Age alone is never evidence — an
   old issue nobody has got to is relevant, and the triage prompt says so explicitly.
 
 ## Related Skills
 
 - `fleet-resolve-issue` — what each worker session runs: one issue, one worktree, PR or park.
-- `fleet-morning-brief` — defines the report format this skill's own Phase 8 follows; also
-  useful standalone, to re-read a past sweep by hand.
+- `fleet-sweep-brief` — the same brief from the files alone, for a sweep that died before
+  Phase 8, or to re-read one.
 - `start-session-from-issue` (`delivery` plugin) — the interactive single-issue pickup, routed
   to a `flow-*` skill and gated by Personal Validation; its `highest-priority` rule reads the
   severity a sweep writes.

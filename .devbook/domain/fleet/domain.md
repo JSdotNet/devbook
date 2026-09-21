@@ -109,16 +109,17 @@ request is the review surface, and a change that cannot demonstrate itself never
 
 ```meta
 type: domain-service
-aliases: [report, morning brief]
+aliases: [report, sweep brief]
 ```
 
 Reads a sweep back from its manifest and its worker result files and writes the report: what was
-picked up, what was skipped and why, what was proposed for closure, and how each worker
-finished.
+classified, what was picked up, what was skipped and why, what was proposed for closure, and how
+each worker finished. Its shape is the state contract's, and two writers follow it: the sweep
+itself at the end of its wait, and the standalone brief skill when the sweep could not.
 
 Invocation semantics: query-oriented, and runnable long after the sweep — it re-reads files
 rather than remembering anything, which is why a sweep from last week reports exactly as it did
-on the day. The sweep follows this same format for its own closing report.
+on the day.
 
 ## Issue Claimed
 

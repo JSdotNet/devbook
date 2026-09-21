@@ -20,7 +20,7 @@ add this working copy by path instead of by repository.
 |-------|---------|------|
 | `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Classification written back to the tracker, relevance and conflict verdicts, dispatching workers, the closure approval, and its own final report |
 | `fleet-resolve-issue` | One independent background session per worker, each in its own worktree | One issue: resolve, then pull request or park |
-| `fleet-morning-brief` | Never invoked by the other two — standalone, run by hand to re-read a sweep later | The report *format* `fleet-issue-sweep` follows for its own brief |
+| `fleet-sweep-brief` | Never invoked by the other two — standalone, run by hand when a sweep died before writing its brief, or to re-read one | The recovery path: the same brief, from the files alone. It reads what the other two wrote and spawns nothing |
 
 They coordinate through files on disk, `gh` labels, and the host's session list — never through
 conversation, because no two of these sessions can see each other's. The layout, both schemas,
@@ -73,6 +73,6 @@ in each skill:
   surfaced to the user and excluded from pickup — never worked, never closed.
 - **Triage proposes; only an answer closes.** Unanswered is recorded as `unanswered` and
   re-proposed next sweep, never read as declined.
-- **Never start one of these mid-task.** Only a user turn, a schedule's prompt, or a sweep's own
-  dispatch prompt may, because each spawns sessions and claims backlog items that outlive the
-  turn that asked.
+- **Never start a sweep or a worker mid-task.** Only a user turn, a schedule's prompt, or a
+  sweep's own dispatch prompt may, because each spawns sessions and claims backlog items that
+  outlive the turn that asked. `fleet-sweep-brief` does neither and may run any time.

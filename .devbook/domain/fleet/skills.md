@@ -5,9 +5,9 @@ type: skills
 related: [".devbook/domain/context-map.md#fleet"]
 ```
 
-> Three skills, and none of them may start mid-task. Only a user turn, a schedule's prompt, or a
-> sweep's own dispatch prompt may run one, because each spawns sessions and claims backlog items
-> that outlive the turn that asked.
+> Three skills. The sweep and the worker may not start mid-task — only a user turn, a schedule's
+> prompt, or a sweep's own dispatch prompt may run one, because each spawns sessions and claims
+> backlog items that outlive the turn that asked. The brief spawns nothing and may run any time.
 
 ## fleet-issue-sweep
 
@@ -84,15 +84,18 @@ Success, park, and failure all write the result file. A worker that says nothing
 indistinguishable from one still running, and the host's live-session list is a weaker signal than
 a file.
 
-## fleet-morning-brief
+## fleet-sweep-brief
 
 ```meta
 type: feature
 related: [".devbook/domain/fleet/domain.md#brief"]
 ```
 
-Re-read a past sweep from its manifest and worker result files and write the report: what was
-picked up, what was skipped and why, what was proposed for closure, and how each worker finished.
+Write the brief for a sweep that died before writing its own — the host closed during the wait,
+the session ended — or re-read a past one: from the manifest and the worker result files, what
+was classified, picked up, skipped and why, proposed for closure, and how each worker finished.
 
 It remembers nothing and re-reads everything, which is why a sweep from last week reports exactly
-as it did on the day. The sweep follows this same format for its own closing brief.
+as it did on the day. The shape is the state contract's, not this skill's: the sweep writes the
+same brief itself when it reaches the end of its wait, and neither invokes the other. It is a
+recovery path in the fan-out lane because it reads the lane's own files, not because it fans out.

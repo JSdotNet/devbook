@@ -53,7 +53,7 @@ and the **sweep directory**.
 When a sweep directory is given, this skill additionally writes
 `<sweep dir>/workers/<number>.json` as its last act, on **every** outcome — see the **Issue
 Sweep State Contract** (`resources/fleet-issue-sweep-contract.md`) for the
-schema. The morning brief reads those files; a worker that writes nothing is indistinguishable
+schema. The brief reads those files; a worker that writes nothing is indistinguishable
 from one that never ran, so write the file even when the news is bad.
 
 Run standalone, with no sweep directory, the skill behaves exactly as described below and
@@ -479,8 +479,8 @@ Contract** for the tool cadence.
 
 - `fleet-issue-sweep` (this plugin) — spawns this skill as a worker session, one per issue, up
   to five at a time.
-- `fleet-morning-brief` (this plugin) — reports what every worker did, from the result files
-  this skill writes.
+- `fleet-sweep-brief` (this plugin) — writes the brief from the result files this skill
+  writes, when the sweep could not write its own.
 - `start-session-from-issue` (`delivery` plugin) — the interactive counterpart: same
   single-issue pickup, routed to a `flow-*` skill in your session, stopping at Personal
   Validation.
