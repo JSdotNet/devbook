@@ -159,9 +159,9 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
 for the code and one for the five devbook folders, since
 [flows belong to delivery](../../arc42/adr/plugin-boundaries.md) —
-and three `phase-*`, `delivery-schedule` holds thirteen `schedule-*` beside a bare `install`, and
-`fleet` holds three
-`fleet-*`.
+and three `phase-*`, `delivery-schedule` holds seventeen `schedule-*` beside a bare `install`, and
+`fleet` holds two `fleet-*` beside a bare `sweep-brief` — a read-and-report skill that fans
+nothing out, so the prefix that would claim it does would be wrong.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

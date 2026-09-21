@@ -1,10 +1,10 @@
 ---
-name: fleet-sweep-brief
+name: sweep-brief
 description: 'Write the brief for an issue sweep that died before writing its own — the host closed during the wait, or the session ended — or re-read a past sweep: read the manifest and every worker result and produce the one-screen brief the state contract defines. Read-only; it never acts. Use when: a sweep went quiet and no brief.md appeared, or catching up on sweeps after time away. Not the daily repository brief — that is schedule-morning-brief in delivery-schedule.'
 disable-model-invocation: true
 ---
 
-# Fleet: Sweep Brief
+# Sweep Brief
 
 Open the reply with `fleet@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 

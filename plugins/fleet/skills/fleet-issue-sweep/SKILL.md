@@ -36,7 +36,7 @@ and `schedule-bug-fix` rank on labels a sweep wrote.
 
 This is the fan-out lane. `fleet-resolve-issue` is what each worker runs. This skill writes
 its own brief, in the shape **The Brief** in `resources/fleet-issue-sweep-contract.md`
-defines; `fleet-sweep-brief` writes the same one from the files when this session could not.
+defines; `sweep-brief` writes the same one from the files when this session could not.
 
 ## The Sessions Involved
 
@@ -398,11 +398,11 @@ open through the workers' full run and reports the outcome itself. There is no l
     pull request and issue state, the lead line, sections ① to ⑥, the machine state, and
     deliver it to chat, `brief.md`, and the bound render surface. Set `briefWrittenAt`.
     This session already holds everything the brief needs and writes it itself; it never
-    invokes `fleet-sweep-brief`.
+    invokes `sweep-brief`.
 
 24. If `maxWaitMinutes` elapses with a worker still genuinely running — not failed, just slow —
     say so plainly in the brief's section ④ and name it, rather than reporting it as unknown.
-    Running `fleet-sweep-brief` by hand later, once it finishes, produces the same brief
+    Running `sweep-brief` by hand later, once it finishes, produces the same brief
     with that entry resolved.
 
 ## Surface Reporting
@@ -474,14 +474,14 @@ something has to stay open long enough to write it.
   resume on its own** — there is no scheduled task left to pick it back up. Whether the
   already-dispatched `claude --bg` workers keep running independently of the host process is
   not something this design can promise either way. If a sweep goes quiet and no brief appears,
-  run `fleet-sweep-brief` by hand against its sweep directory once the host is back.
+  run `sweep-brief` by hand against its sweep directory once the host is back.
 - **Low-confidence staleness is reported, never proposed.** Age alone is never evidence — an
   old issue nobody has got to is relevant, and the triage prompt says so explicitly.
 
 ## Related Skills
 
 - `fleet-resolve-issue` — what each worker session runs: one issue, one worktree, PR or park.
-- `fleet-sweep-brief` — the same brief from the files alone, for a sweep that died before
+- `sweep-brief` — the same brief from the files alone, for a sweep that died before
   Phase 8, or to re-read one.
 - `start-session-from-issue` (`delivery` plugin) — the interactive single-issue pickup, routed
   to a `flow-*` skill and gated by Personal Validation; its `highest-priority` rule reads the

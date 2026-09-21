@@ -479,7 +479,7 @@ Contract** for the tool cadence.
 
 - `fleet-issue-sweep` (this plugin) — spawns this skill as a worker session, one per issue, up
   to five at a time.
-- `fleet-sweep-brief` (this plugin) — writes the brief from the result files this skill
+- `sweep-brief` (this plugin) — writes the brief from the result files this skill
   writes, when the sweep could not write its own.
 - `start-session-from-issue` (`delivery` plugin) — the interactive counterpart: same
   single-issue pickup, routed to a `flow-*` skill in your session, stopping at Personal

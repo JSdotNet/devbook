@@ -84,7 +84,7 @@ Success, park, and failure all write the result file. A worker that says nothing
 indistinguishable from one still running, and the host's live-session list is a weaker signal than
 a file.
 
-## fleet-sweep-brief
+## sweep-brief
 
 ```meta
 type: feature

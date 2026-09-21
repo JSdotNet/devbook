@@ -12,7 +12,7 @@ plus one that stays purely standalone — it reads what the other two wrote and 
 | --- | --- | --- |
 | `fleet-issue-sweep` | The routine session, held open through triage, dispatch, closure, the wait, and the brief | Classification written back to the tracker, relevance and conflict verdicts, dispatching workers, the closure approval, and its own final report |
 | `fleet-resolve-issue` | One independent `claude --bg` session per worker, each in its own worktree | One issue: resolve, then PR or park |
-| `fleet-sweep-brief` | Never invoked by the other two — a standalone skill a human runs when a sweep died before writing its brief, or to re-read one | The recovery path: the same brief, from the files alone |
+| `sweep-brief` | Never invoked by the other two — a standalone skill a human runs when a sweep died before writing its brief, or to re-read one | The recovery path: the same brief, from the files alone |
 
 There is no scheduled task anywhere in this contract. The routine session and its workers
 coordinate through **files on disk, `gh` labels, and `claude agents`**, never through
@@ -91,7 +91,7 @@ to record the closure decisions.
 - `briefWrittenAt` is set by `fleet-issue-sweep` itself, in the same update that records
   `closureDecidedAt`, once its own Phase 8 finishes writing `brief.md`. `null` means the wait
   is still in progress, or the session ended before reaching it — a hand-run
-  `fleet-sweep-brief` is how you find out which.
+  `sweep-brief` is how you find out which.
 
 ## `workers/<number>.json` — One Worker Result
 
@@ -162,7 +162,7 @@ seconds after dispatch now runs until every worker finishes or `maxWaitMinutes` 
 host application closes during that wait, the wait does not resume on its own — there is
 nothing left scheduled to pick it back up. Whether the already-dispatched `claude --bg` workers
 keep running independently of the host process is not something this design can promise either
-way; if a sweep goes quiet, run `fleet-sweep-brief` by hand against its sweep directory
+way; if a sweep goes quiet, run `sweep-brief` by hand against its sweep directory
 once the host is back.
 
 ## Waiting For Workers, Then Writing The Brief
@@ -186,11 +186,11 @@ claude agents --json --all --cwd <repo root>
 - **The wait ends** when every issue has a result file, when every remaining one has been
   independently marked failed silently, or when `maxWaitMinutes` elapses — whichever comes
   first. Anything still genuinely running at that point is reported as still in progress, not
-  as a failure; a later hand-run of `fleet-sweep-brief` will show it resolved.
+  as a failure; a later hand-run of `sweep-brief` will show it resolved.
 
 Once the wait ends, `fleet-issue-sweep` writes `brief.md` and prints it in chat itself, per
 **The Brief** below, from the same session that already holds everything the brief needs.
-`fleet-sweep-brief` writes the same brief from the files alone, for a sweep that died before
+`sweep-brief` writes the same brief from the files alone, for a sweep that died before
 reaching this step.
 
 ## The Brief
