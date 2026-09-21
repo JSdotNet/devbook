@@ -363,7 +363,7 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
-    // Every devbook folder lives under `.devbook/` (record 80). A root-level `.tech/` is the
+    // Every devbook folder lives under `.devbook/` (the chapter-schema record). A root-level `.tech/` is the
     // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const stray = existsSync(join(repoRoot, `.${folder}`));

@@ -30,7 +30,7 @@ const REPO_ROOT = process.cwd();
 // second thing to keep true. They are loaded from where devbook's install
 // materializes them — or, in the repository that authors the checker and
 // vendors it under plugins/, from there — so the canvas and the check are one
-// parser (record 5, record 81). Absent both, the canvas says which install to
+// parser (the checks-and-indexes record). Absent both, the canvas says which install to
 // run rather than drawing from nothing.
 const CHECKER_CANDIDATES = [
     path.join(REPO_ROOT, ".devbook", "_tools", "devbook-meta"),
@@ -291,7 +291,7 @@ const session = await joinSession({
             id: "devbook-chapter",
             displayName: "Devbook chapter",
             description:
-                "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per chapter-metadata.instructions.md.",
+                "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per devbook-chapter-metadata.md.",
             inputSchema: {
                 type: "object",
                 properties: {
