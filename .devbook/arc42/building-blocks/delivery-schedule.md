@@ -179,8 +179,10 @@ disable the deselected, and record the selection under this component's stamp �
 [From Catalog to Scheduler](#from-catalog-to-scheduler).
 
 Refuse what would not run: a cloud session loads this marketplace only if the repository's
-committed host settings enable it and the plugins the target needs. A schedule that would start
-without its skill is refused rather than created.
+committed host settings enable it and the plugins the target needs. The install owns those two
+settings keys — it explains, asks, and writes what the selected schedules require, removing
+nothing — and a schedule that would still start without its skill, because the person declined,
+is refused rather than created.
 
 Match by name: entries are matched by `<owner>/<repo> · <title>`, so a second sync updates
 rather than duplicates — and no scheduler id has to be written into the repository, which is
@@ -495,7 +497,8 @@ flowchart TD
   `<owner>/<repo> · <title>`, which is also why no scheduler id has to be written down — and an
   id would be personal, so it could not be committed anyway.
 - **Refusing beats creating something that cannot run.** A cloud session loads this marketplace
-  only if the repository's committed host settings enable it and the plugins the target needs.
+  only if the repository's committed host settings enable it and the plugins the target needs;
+  the install offers to write those two keys first and refuses only when declined.
 - **The first run is the proof, not the creation.** A cadence that has never fired is a guess
   about somebody else's environment.
 
