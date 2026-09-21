@@ -28,17 +28,17 @@ not a manifest field but what each `dependencies` array says, read as a sentence
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.2.0"]
-        DEL["delivery 1.2.0"]
-        CFG["devbook-config 1.2.0"]
+        DEV["devbook 1.3.0"]
+        DEL["delivery 1.3.0"]
+        CFG["devbook-config 1.3.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.2.0"]
-        DPR["devbook-procedures 1.2.0"]
-        DBC["devbook-collaboration 1.2.0"]
-        FLT["fleet 1.2.0"]
-        SCH["delivery-schedule 1.2.0"]
+        DBD["devbook-derived 1.3.0"]
+        DPR["devbook-procedures 1.3.0"]
+        DBC["devbook-collaboration 1.3.0"]
+        FLT["fleet 1.3.0"]
+        SCH["delivery-schedule 1.3.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]

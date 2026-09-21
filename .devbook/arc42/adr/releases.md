@@ -1,11 +1,11 @@
 # Releases
 
 ```meta
-date: 2026-09-18
+date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/domain/plugin-authoring/domain.md#marketplace", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.2.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.3.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -78,6 +78,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-21 | Every plugin is `1.3.0`; contract 12 ships in it with migration 012, which retires the overlay's checkout layer and devbook's `.gitignore` block. |
 | 2026-09-18 | Every plugin is `1.2.0`; contract 11 ships in it with migration 011 — the first release where a contract bump moved the version. |
 | 2026-09-17 | Every plugin is `1.1.0`; contract 10 ships in it with migration 010. |
 | 2026-09-17 | A migration lives for one major; the floor starts at 9 and a major raises it. |
