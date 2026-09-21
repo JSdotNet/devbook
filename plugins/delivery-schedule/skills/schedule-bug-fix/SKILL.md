@@ -24,7 +24,7 @@ That is a hard constraint, not a preference. `flow-code` runs through the `flow-
 agent, which must own its session to hold the Personal Validation gate, write surface
 state, and ask the user a question — and this run cannot open a second session to give it
 one. See **Session Ownership** and **Sub-Agent Constraints** in
-`resources/flow-execution-model.md`. Because the scope is a single issue,
+`flow-execution-model.md` (`delivery` plugin). Because the scope is a single issue,
 this session *is* the owner session and `flow-code` behaves exactly as designed.
 
 To work more than one bug, run this skill again. Each run picks the next issue, because the
@@ -121,7 +121,7 @@ summary that the run went without the flow wrapper.
    Never start work on an issue that could not be claimed.
 
 9. Run `flow-code` in **this session**, defect kind, with the issue context below. Pass the GitHub origin as
-   `githubIssue` to `start_run`, so the run reports its captured result and QA report back to
+   `workItem` to `start_run`, so the run reports its captured result and QA report back to
    the issue.
 
    ```text
@@ -166,14 +166,14 @@ summary that the run went without the flow wrapper.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`.
+Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 
 - `start_run` with `skillId: "schedule-bug-fix"` and these stages: Fetch Candidate Bug Issues, Filter Out
   Work Already In Flight, Select One Issue, Claim and Resolve, Summary.
 - The `flow-code` flow in Phase 4 opens its own run, with the selection run's
-  `githubIssue` metadata carried into its `start_run`. Reference that run id in this run's
+  `workItem` metadata carried into its `start_run`. Reference that run id in this run's
   Claim and Resolve stage output rather than duplicating its stages here.
 
 ## Output

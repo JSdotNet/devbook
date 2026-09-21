@@ -1,14 +1,14 @@
 ---
 name: capture
 description: "Capture screenshots and recordings as evidence for the feature being built — at every scenario checkpoint, at every failure, and for a demo of finished work. Use when: capturing QA evidence, screenshotting a flow, recording a multi-step scenario, or a phase asks for evidence."
+goal: "Return evidence a reviewer can open instead of taking your word for it: one file per checkpoint and per failure, every path under the git worktree root, and the form named honestly — a screenshot sequence is never called a video or a trace."
 ---
 
 # Capture Evidence
 
-Produce the evidence a reviewer looks at instead of taking your word for it. **Edit this
-file** — the layout and the tooling below are yours. What the engine expects back is in
-`resources/capture-contract.md` in the delivery plugin: one entry per checkpoint and per
-failure, every path under the git worktree root, and the form named honestly.
+**Edit this file** — the layout and the tooling below are yours. What comes back is fixed by
+the wrapper's goal: one entry per checkpoint and per failure, paths under the worktree root,
+the form named honestly.
 
 ## First: what can this server actually record?
 

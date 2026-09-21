@@ -113,7 +113,7 @@ approval and the merge stay with a person, which is what makes this safe to run 
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`.
+Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
 With no surface bound, skip the calls, say so once, and continue — the comments remain the
 source of truth.
 

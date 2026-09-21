@@ -10,7 +10,10 @@
 //   marketplace   every entry has a folder, every folder with a Claude manifest has an
 //                 entry, and name/version/description agree across the three files
 //   dependencies  a declared range contains the current version of the plugin it names,
-//                 so the combination the host resolves is reachable
+//                 so the combination the host resolves is reachable, and names this
+//                 marketplace, not a retired one; a Copilot manifest lists only paths
+//                 that exist, and lists skills/ when the folder is there; no plugin
+//                 carries an UPGRADING.md
 //   agents        name equals the filename, a description exists, a model pin is a value
 //                 Claude accepts, Skill is granted, and a role plugin's agent carries no
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
@@ -116,6 +119,19 @@ for (const [name, entry] of listed) {
         for (const field of ["name", "version", "description"]) {
             if (copilot[field] !== claude[field]) error(`${name}: ${field} differs between the Claude and Copilot manifests`);
         }
+        // Copilot loads only what the manifest names, and a named path must exist.
+        for (const key of ["skills", "hooks", "agents", "extensions"]) {
+            const value = copilot[key];
+            if (value === undefined) continue;
+            for (const rel of Array.isArray(value) ? value : [value]) {
+                if (typeof rel !== "string" || !(await exists(path.join(dir, rel)))) {
+                    error(`${name}: Copilot manifest lists ${key} ${JSON.stringify(rel)}, which does not exist`);
+                }
+            }
+        }
+        if ((await exists(path.join(dir, "skills"))) && copilot.skills === undefined) {
+            error(`${name}: ships skills/ but the Copilot manifest does not declare it, so Copilot sees none of them`);
+        }
     } else {
         error(`${name}: ships only the Claude manifest; every plugin here ships both`);
     }
@@ -154,6 +170,9 @@ const satisfies = (version, range) => range.trim().split(/\s+/).every((clause) =
 
 for (const [name, claude] of manifests) {
     for (const dep of claude.dependencies ?? []) {
+        if (dep.marketplace !== undefined && dep.marketplace !== marketplace.name) {
+            error(`${name}: declares ${dep.name}@${dep.marketplace}, but this marketplace is ${marketplace.name}; the host resolves the dependency against a marketplace it does not have`);
+        }
         const target = manifests.get(dep.name);
         if (!target) continue;
         if (!satisfies(target.version, dep.version)) {
@@ -163,6 +182,9 @@ for (const [name, claude] of manifests) {
 }
 
 for (const folder of folders) {
+    if (await exists(path.join(PLUGINS, folder, "UPGRADING.md"))) {
+        error(`plugins/${folder}/UPGRADING.md: no plugin carries one; git history is the upgrade note`);
+    }
     if (listed.has(folder)) continue;
     if (await exists(path.join(PLUGINS, folder, ".claude-plugin", "plugin.json"))) {
         error(`plugins/${folder} has a Claude manifest but no marketplace entry, so Claude Code will not offer it`);

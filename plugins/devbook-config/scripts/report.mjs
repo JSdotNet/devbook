@@ -16,7 +16,7 @@ import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_MARKETPLACE = 'jsdotnet';
+const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 
 // Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
 // contract-versioned. The mapping is not derivable — `derived` is written by
@@ -30,13 +30,14 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 //
 // `contract: false` is not "has not got round to it". Only a component whose install rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
-// it owns whole has hash-matching as its whole migration mechanism. So three of these four will
+// it owns whole has hash-matching as its whole migration mechanism. So four of these five will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
 // `.devbook/arc42/adr/install.md`.
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
     derived: { plugin: 'devbook-derived', install: 'devbook-derived:install', contract: false },
+    'devbook-procedures': { plugin: 'devbook-procedures', install: 'devbook-procedures:install', contract: false },
     delivery: { plugin: 'delivery', install: 'delivery:install', contract: false },
     schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install', contract: false },
 };
@@ -44,9 +45,11 @@ const COMPONENTS = {
 // The order the reconcile list is run in, and it is not cosmetic: devbook-derived's install
 // refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
 // checks its targets against the plugins this repository enables, so it wants the settled
-// state. `delivery` sits before schedule because schedule's targets call the procedures it
-// seeds. Anything not named here follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'delivery', 'delivery-schedule'];
+// state. `devbook-procedures` sits before `delivery` so that a `start` or `capture` an older
+// engine seeded is adopted or replaced before the engine's install releases its claim on it,
+// and both sit before schedule because schedule's targets call those procedures. Anything not
+// named here follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-procedures', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and
@@ -363,7 +366,7 @@ function buildRepository(repoRoot) {
     const legacyFlowContext = ['.devbook', '.claude']
         .map((dir) => join(repoRoot, dir, 'flow-context.md'))
         .find((candidate) => existsSync(candidate)) ?? null;
-    // Every devbook folder lives under `.devbook/` (record 80). A root-level `.tech/` is the
+    // Every devbook folder lives under `.devbook/` (the chapter-schema record). A root-level `.tech/` is the
     // layout that is no longer one: named as stray so the report says where it has to move.
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const stray = existsSync(join(repoRoot, `.${folder}`));
@@ -432,7 +435,7 @@ function describeStamp(stamp) {
         ? Object.keys(stamp.materialized).length
         : null;
     if (files !== null) parts.push(files === 1 ? '1 file' : `${files} files`);
-    if (Array.isArray(stamp?.adopted)) parts.push(`adopted \`${stamp.adopted.join('`, `')}\``);
+    if (Array.isArray(stamp?.adopted)) parts.push(stamp.adopted.length ? `adopted \`${stamp.adopted.join('`, `')}\`` : 'adopted none');
     if (Array.isArray(stamp?.enabled)) {
         parts.push(stamp.enabled.length
             ? `enabled \`${stamp.enabled.join('`, `')}\``
@@ -537,7 +540,7 @@ function render(model) {
         .filter((p) => p.scope === 'reconcile')
         .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
     if (reconcile.length) {
-        out.push('Run these **in this order** — derived needs devbook adopted first, and schedule reads the settled enable state — and let each write its own stamp:');
+        out.push('Run these **in this order** — derived needs devbook adopted first, procedures settle before the engine releases an older seed, and schedule reads the settled enable state — and let each write its own stamp:');
         out.push('');
         for (const p of reconcile) {
             const drift = p.stampedVersion && p.stampedVersion !== p.installed
@@ -694,7 +697,7 @@ function render(model) {
     out.push(table(
         ['Folder', 'Present as'],
         repo.folders.map((f) => [
-            `\`.${f.folder}\``,
+            `\`${f.folder}/\``,
             (f.path ? `\`${f.path}\`` : 'absent') + (f.stray ? ` — a root-level \`.${f.folder}/\` also exists; only \`.devbook/\` is a layout, move it` : ''),
         ]),
     ));

@@ -18,7 +18,7 @@
     moved, so a refresh that changed nothing is visibly a no-op.
 
 .PARAMETER Scope
-    Refresh one devbook folder only (for example `.tech` or `.ai`). Omit to refresh
+    Refresh one devbook folder only (for example `tech` or `ai`). Omit to refresh
     every adopted scope plus the repository-wide rollup.
 
 .PARAMETER Check
@@ -35,8 +35,8 @@
     Refresh every adopted scope and list the index files that changed.
 
 .EXAMPLE
-    ./build/Update-DevbookIndex.ps1 -Scope .domain
-    Refresh only the `.domain` indexes.
+    ./build/Update-DevbookIndex.ps1 -Scope domain
+    Refresh only the `domain` indexes.
 
 .EXAMPLE
     ./build/Update-DevbookIndex.ps1 -Check

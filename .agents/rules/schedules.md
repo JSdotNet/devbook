@@ -15,7 +15,7 @@ editing an entry — the contract is the copy, and this wrapper is not a summary
 
 A schedule is a trigger and never a procedure. The body names a schedulable skill and its
 inputs — a `schedule-*` entry point, or another plugin's skill that picks its own input and
-reports, as `devbook-check` and `tech-update` do; the steps belong to the skill it names, and the unattended rules belong to
+reports, as `prose-check` does; the steps belong to the skill it names, and the unattended rules belong to
 `resources/schedule-preamble.md`, which every prompt already carries. A body that restates
 either is the duplication the plugin exists to prevent — see
 [The Unattended Lane Is Its Own Plugin](../../.devbook/arc42/adr/plugin-boundaries.md).

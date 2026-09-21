@@ -183,7 +183,7 @@ it can approve, skip, or soften the gate below.
 ### The gate
 
 The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
-`validate` with purpose `handoff`. A repository may declare further gates **in front of** this
+Validation — the `qa.run` point — with purpose `handoff`. A repository may declare further gates **in front of** this
 one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that
 is the whole of what configuration may change here.
 
@@ -316,7 +316,7 @@ Markdown chapters in the folder a repository that plans work as Markdown names.
   result, the pull request link when one exists, the Personal Validation decision, the
   recorded QA report, and the spec verdict table.
 - **Include the QA report** for code-modifying flows: scenario pass/fail/flaky status,
-  monitoring findings, and captured evidence or report links when available. If QA
+  monitoring findings, and captured evidence or report links when available. If
   Validation was skipped or does not apply, state that explicitly rather than inventing a
   result. The same for the spec verdict: the table when Verification ran, the recorded
   reason when it was skipped.

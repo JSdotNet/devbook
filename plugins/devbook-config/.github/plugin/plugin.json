@@ -17,5 +17,6 @@
     "onboarding",
     "upgrade",
     "ask"
-  ]
+  ],
+  "skills": "skills/"
 }

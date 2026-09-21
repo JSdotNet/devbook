@@ -364,7 +364,7 @@ instructions.
   is `type: domain` — because the suffix narrows the scope and not the kind.
 - Heading text in `domain/` carries the **name only** — `## Order`, not
   `## Aggregate: Order`. Anchors are therefore slugs of the bare name
-  (`.domain/order-management/domain.md#order`). The two exceptions are the
+  (`.devbook/domain/order-management/domain.md#order`). The two exceptions are the
   `## Shared Value Objects` and `## Shared Enums` chapters, whose headings name
   a grouping rather than a single thing, so the descriptive text *is* the name.
   `## Ubiquitous Language` is a third of the same kind.
@@ -527,7 +527,7 @@ type: context-map
 >
 > A `##` section naming **one bounded context** is the exception, and it takes
 > `type: bounded-context`. Give a context its own section and block when another
-> chapter needs to address it — `.domain/context-map.md#order-management` — which
+> chapter needs to address it — `.devbook/domain/context-map.md#order-management` — which
 > is how a building block, a technology, or an arc42 chapter points at the
 > context it belongs to. A repository whose contexts are only listed in the
 > tables below needs no such sections.

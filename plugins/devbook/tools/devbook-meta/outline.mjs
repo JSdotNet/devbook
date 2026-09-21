@@ -7,8 +7,8 @@
 // Ordering rules, per directory:
 //   1. The directory's *root document* sorts first — the file declaring
 //      `index: root`, or failing that the entry point its folder convention
-//      names (`.domain/context-map.md`, a bounded context's `domain.md`,
-//      `.tech/technology-graph.md`, `.design/README.md`, `.ai/adoption-map.md`).
+//      names (`.devbook/domain/context-map.md`, a bounded context's `domain.md`,
+//      `.devbook/tech/technology-graph.md`, `.devbook/design/README.md`, `.devbook/ai/adoption-map.md`).
 //   2. If anything left carries a **number** — from a `number` field or from a
 //      numbered filename — the directory is a numbered set (arc42 chapters,
 //      ADRs, TDRs, `.ai` usage files) and sorts by that number ascending, unnumbered entries
@@ -122,7 +122,7 @@ function conventionFor(relDir) {
  * Which entry is this directory's root document.
  *
  * An authored `index: root` wins over the convention, so a folder the
- * convention says nothing about — `.arc42/adr/`, a repository's own
+ * convention says nothing about — `.devbook/arc42/adr/`, a repository's own
  * subdirectory — can still name its entry point. Two of them is an error:
  * a directory has one way in.
  */

@@ -101,8 +101,8 @@ nothing in the picture.
     two never disagree.
   - Explains the status ladder and how to read and extend the folder.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
-    carries a file-level block only — the same rule as `.domain/context-map.md`
-    and `.tech/technology-graph.md`.
+    carries a file-level block only — the same rule as `.devbook/domain/context-map.md`
+    and `.devbook/tech/technology-graph.md`.
 - **`<nn>-<part>.md`** — One `## <Chapter Name>` chapter per usage. Each chapter
   is an addressable node in the graph, carries a chapter metadata block, and
   says its stages with `stage`.

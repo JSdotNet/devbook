@@ -21,11 +21,12 @@ date: 2026-09-02
 Task categories route to a `flow-<category>` skill that runs the category end to end.
 
 - **Used for** — every category of change to a repository that has the engine enabled:
-  `delivery` ships four flows, one for the code and one for the five devbook folders so an edit to
-  `.devbook/` routes through `flow-spec` and everything else through `flow-code`. A run can report into a surface — `delivery-surface-dashboard` or
+  `delivery` ships four flows — the code, the five devbook folders, the dependencies, the
+  project — so an edit to `.devbook/` routes through `flow-spec` and a code change through `flow-code`. A run can report into a surface — `delivery-surface-dashboard` or
   `delivery-surface-collector` here, `delivery-surface-canvas` being a Copilot canvas this marketplace does not
-  offer — but resolves no host slots: no plugin binds one, and this repository declares no
-  `.devbook/config.json`, so each takes its unbound default. `repo-instructions`
+  offer — and resolves its points from this repository's `.devbook/config.json`: the GitHub tracker,
+  `devbook:check` at session start, `devbook:verify-change` at `verify`, an approval gate
+  before `deliver`, and every role and MCP point bound to `null` on purpose. `repo-instructions`
   resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file, and
   every category takes its default model. `stage-delegation` and `surface` still
   answer, being read from the live session rather than bound.
@@ -80,10 +81,11 @@ date: 2026-09-07
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
 session with nobody watching, and lands what it produced as a pull request or a report issue.
 
-- **Used for** — nothing here yet. Ten schedules are defined; none is scheduled against this
-  repository.
-- **Adopted by** — nobody. The first repository to schedule one should be one where a draft
-  pull request nobody asked for costs a glance, not a rebase.
+- **Used for** — four of the ten schedules are enabled against this repository, per the
+  stamp in `.devbook/config.json`: `devbook-check`, `tech-update`, `merge-review`, and
+  `package-update`.
+- **Adopted by** — this repository, where a draft pull request nobody asked for costs a
+  glance, not a rebase.
 - **Evidence** — none yet. `candidate` because the whole design rests on one unverified fact:
   that a cloud session loads the marketplace from the repository's committed settings. The
   first `schedule-run` answers it; until then a prompt cannot reach its skill and the session

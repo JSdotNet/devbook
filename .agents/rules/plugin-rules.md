@@ -12,7 +12,7 @@ paths:
 A plugin rule is a template an install writes into a repository, and `rules/` holds nothing
 else — shared text a skill or an agent reads by path is a contract and belongs in `resources/`,
 because the folder announces a delivery mechanism and a contract does not use it.
-Two plugins here deliver rules: `devbook` and `devbook-collaboration`. Adding a `rules/` folder
+Two plugins here deliver rules: `devbook` and `devbook-derived`. Adding a `rules/` folder
 to a third means writing the install that materializes it, in the same change.
 
 `rules/<name>.md` is the body plus `name` and `description`, and nothing else: no `paths`, and
@@ -20,7 +20,7 @@ never `applyTo`, which is one host's spelling on a file no host reads it from. T
 where the install skill reads them and where every rule's scope can be seen at once.
 
 ```json
-{ "rules": { "devbook-arc42": { "paths": [".arc42/**", ".devbook/arc42/**"], "install": "arc42" } } }
+{ "rules": { "devbook-arc42": { "paths": [".devbook/arc42/**"], "install": "arc42" } } }
 ```
 
 `install` is optional and belongs to the plugin that materializes rules; devbook reads it as the
@@ -38,8 +38,8 @@ session only through an explicit path reference from a skill or an agent. Add th
 the same change — an unreferenced contract silently does nothing in either host. Guidance for
 editing the plugin's own files is a repository rule instead, authored in `.agents/rules/`.
 
-Carry every layout the plugin supports: a glob that matches nothing applies nothing, and
-nothing reports it. Cross-reference a sibling by its bare filename — `devbook-naming.md` — and
+Spell the glob as the one layout has it, under `.devbook/`: a glob that matches nothing
+applies nothing, and nothing reports it. Cross-reference a sibling by its bare filename — `devbook-naming.md` — and
 it resolves both here and wherever the install writes them, because the folder shape is the same
 in both places. That is what the `rules/<name>.md` naming buys.
 

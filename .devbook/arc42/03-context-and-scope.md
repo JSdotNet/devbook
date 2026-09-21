@@ -8,7 +8,7 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscu
 This repository ships authoring assets rather than a running product, so a *user* here is a
 host that loads an asset and a repository that installs one. Both sit outside every building
 block, and every block conforms to them rather than the other way round. What is inside the
-boundary is the marketplace and its ten plugins, one block each under
+boundary is the marketplace and its eleven plugins, one block each under
 [`building-blocks/`](building-blocks/README.md); everything below is outside it.
 
 ## Business Context
@@ -21,7 +21,7 @@ related: [".devbook/arc42/01-introduction-and-goals.md#stakeholders"]
 flowchart LR
     M["The maintainer<br/>authors and releases"]
     subgraph sys["jsdotnet-devbook marketplace"]
-        P["ten plugins"]
+        P["eleven plugins"]
     end
     H1["Claude Code"]
     H2["GitHub Copilot"]

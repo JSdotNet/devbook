@@ -46,15 +46,15 @@ node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 Treat these JSON files as temporary evidence. Do not commit them unless the repository has
-explicitly adopted inventory evidence files; the durable record remains the `.tech/*.md`
+explicitly adopted inventory evidence files; the durable record remains the `.devbook/tech/*.md`
 chapters and generated `_meta/*.json` indexes.
 
 ## Workflow
 
 1. **Load governed context.** Read `devbook-tech.md`,
-   `devbook-chapter-metadata.md`, `.tech/technology-graph.md`, and only the
-   `tech/` layer files in scope. Load `.arc42/04-solution-strategy.md`,
-   `.arc42/07-deployment-view.md`, and `.arc42/09-architecture-decisions.md` only when they
+   `devbook-chapter-metadata.md`, `.devbook/tech/technology-graph.md`, and only the
+   `tech/` layer files in scope. Load `.devbook/arc42/04-solution-strategy.md`,
+   `.devbook/arc42/07-deployment-view.md`, and `.devbook/arc42/09-architecture-decisions.md` only when they
    exist and the refresh touches architecture decisions.
 
 2. **Run deterministic package scans.** Run the .NET and frontend inventory scripts above.
@@ -86,8 +86,8 @@ chapters and generated `_meta/*.json` indexes.
    `tech/` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
-6. **Run the check.** Never regenerate here — the refresh is the scheduled job's, or
-   `build/Update-DevbookIndex.ps1` on demand:
+6. **Run the check.** Never regenerate here — the refresh belongs to the plugin that owns the
+   committed indexes, on its schedule or on demand:
 
    ```bash
    node .devbook/_tools/devbook-meta/build.mjs --scope tech --check

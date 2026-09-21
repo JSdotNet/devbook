@@ -565,8 +565,8 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** Three of the ten schedules
-target another plugin's skills, and the plugin declares one dependency. A target that is not
+**Naming a target is deliberately weaker than depending on one.** One of the ten schedules
+targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.
 

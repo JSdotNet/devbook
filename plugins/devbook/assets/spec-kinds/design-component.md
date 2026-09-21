@@ -9,7 +9,7 @@ carries the kind.
 | | |
 |---|---|
 | Chapters | A component chapter in the component library, recording a recommendation per channel |
-| File | `.design/component-libraries.md` |
+| File | `.devbook/design/component-libraries.md` |
 | Folder rule | `devbook-design.md`, with `devbook-chapter-metadata.md` |
 | Context to load | `component-libraries.md`, `color-scheme.md`, `typography-and-layout.md`, `interaction-guidelines.md`, and `accessibility.md`; the authoritative design source when the repository has one |
 | Write path | The `design/` flow, per **Where the spec-side write goes** in the protocol |

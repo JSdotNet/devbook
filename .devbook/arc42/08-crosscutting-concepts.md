@@ -7,8 +7,8 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/05-buildin
 
 The language every plugin is written in — the shared kernel. **One plugin, one block:** a plugin
 is the unit a host installs, versions, and can refuse to load, so it is already the line a
-model cannot cross without somebody declaring it, and the ten files under
-[building-blocks/](building-blocks/README.md) follow the ten plugin folders name for name. This
+model cannot cross without somebody declaring it, and the eleven files under
+[building-blocks/](building-blocks/README.md) follow the eleven plugin folders name for name. This
 chapter is the one part of the picture that is not a plugin. It holds only what is true of
 every plugin, so a new plugin costs a block file as well as a marketplace entry, and the two
 land together.
@@ -169,10 +169,10 @@ and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
-only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — one
-for the code and one for the five devbook folders, since
+only as the English description of what `fleet-` does. `delivery` holds four `flow-*` — the
+code, the five devbook folders, the dependencies, and the project, since
 [flows belong to delivery](adr/plugin-boundaries.md) — and three `phase-*`, `delivery-schedule`
-holds thirteen `schedule-*` beside a bare `install`, and `fleet` holds three `fleet-*`.
+holds sixteen `schedule-*` beside a bare `install`, and `fleet` holds three `fleet-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -301,8 +301,8 @@ nothing else, so its two operations arrive as canvas actions rather than namespa
 which is why the contract matches operation names and never a transport.
 
 The fourth, `devbook-graph`, ships in `devbook-derived` and loads devbook's checker modules
-from their materialized path at runtime; it renders the reference graph `_meta/graph.json`
-produces, and opens a single chapter beside its parsed `meta` block in a second canvas,
+from their materialized path at runtime; it renders the reference graph rebuilt from the
+chapters on open, never from `_meta/`, and opens a single chapter beside its parsed `meta` block in a second canvas,
 `devbook-chapter`. It answers no operation group and substitutes for nothing, which is why it
 takes devbook's stem and the thing it draws rather than the surface word, per the
 [naming rule](#flow-skill). It is packaged in `devbook-derived`, which declares `devbook`, and
@@ -436,7 +436,7 @@ plugins it may name. A lower layer never names a higher one.
 | Layer | Depends on | Example |
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-derived`, `devbook-collaboration` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
 | L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
@@ -555,6 +555,7 @@ What one block publishes and others conform to without either side declaring the
 | --- | --- | --- | --- |
 | The `meta` block schema and chapter addressing | [devbook](building-blocks/devbook.md) | Every block that writes a chapter | `rules/devbook-chapter-metadata.md`, materialized into a repository |
 | The checker's CLI — `--check`, `--print`, `--write`, `--scope` | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md)'s refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
+| The procedure goal — one sentence per `start`, `show`, `capture`, `debug` that holds whatever the body says | [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md)'s `app.start` point and Validation, and any session invoking the skill by name | The `goal` field of each seed, rendered into the managed wrapper per host |
 | The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | [devbook-derived](building-blocks/devbook-derived.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md)'s queue and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
 | The review triad — `review`, `reviewer`, `review-at` | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md), and anyone writing review state by hand | Three optional fields in `rules/devbook-chapter-metadata.md`, validated together and against the chapter's open notes |
 | The `ext.<plugin>.<key>` [extension namespace](#extension-namespace) | [devbook](building-blocks/devbook.md) | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
@@ -607,6 +608,8 @@ supporting.
 | This chapter | every block | Shared Kernel | No — it is the vocabulary, not a plugin |
 | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| [devbook](building-blocks/devbook.md) | [devbook-procedures](building-blocks/devbook-procedures.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `start` and `capture` and their path, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [fleet](building-blocks/fleet.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the three surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
@@ -616,11 +619,10 @@ supporting.
 | every block | [devbook-config](building-blocks/devbook-config.md) | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every block | Conformist | Not declarable; the host decides what loads |
 
-The undeclared row is the one to read twice. `delivery`'s five folder flows name devbook's
-folders, restate three of its schema rules, and run its generator at the path devbook's install
-writes it to, while both manifests say nothing. It is recorded as debt rather than drawn as a
-dependency, because declaring it would demote all twenty-four of the engine's skills wherever
-devbook is absent.
+The undeclared row is the one to read twice. `delivery`'s `flow-spec` is named for devbook's
+folders and expects every chapter to carry devbook's `meta` block, while both manifests say
+nothing. It is recorded as debt rather than drawn as a dependency, because declaring it would
+demote all fourteen of the engine's skills wherever devbook is absent.
 
 ## Dependencies
 

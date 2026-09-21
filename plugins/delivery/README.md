@@ -22,12 +22,12 @@ instead of by repository.
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
-Five of the flows are named after a devbook folder — `arc42/`, `domain/`, `tech/`,
-`design/`, `ai/` — and carry a chapter change the same way the others carry a code change.
-They own the procedure and none of the rules: what a chapter must look like comes from the
+One flow, `flow-spec`, carries a change to any of the five devbook folders — `arc42/`,
+`domain/`, `tech/`, `design/`, `ai/` — the same way the others carry a code change. It owns
+the procedure and none of the rules: what a chapter must look like comes from the
 instruction files the repository keeps for the folder and the check it ships, which the
-`devbook` plugin materializes and this plugin never names. A folder flow in a repository that
-has not adopted the folder stops and says so.
+`devbook` plugin materializes and this plugin never names. In a repository that has not
+adopted the folder it stops and says so.
 
 [FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws every flow: stage order, where the approval gate
 sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
@@ -94,33 +94,32 @@ either drops the prose or buries paragraphs in strings. A repository that genuin
 different flow shape writes a repo-native `flow-*` skill, which takes precedence for the
 categories it covers.
 
-## The two procedures the engine cannot write
+## The two procedures the engine names and cannot write
 
 Configuration picks *which* provider runs. It cannot say how one product's application comes
-up, or where that product wants its screenshots — and those are prose, not switches.
+up, or where that product wants its screenshots — and those are prose, not switches. So the
+engine names two skills by name and reads them by path, and writes neither:
 
-So `delivery:install` seeds two skills into the repository and hands them over:
-
-| Seed | Fills | The repository owns |
+| Skill | Fills | Where it comes from |
 |---|---|---|
-| `start` | the `app.start` point, as `repo:start` | the facts — command, entry points, readiness signals, credential pointer — and the procedure: startup, sign-in, the branch-to-area map |
-| `capture` | evidence capture inside Validation | the layout, the naming, the tooling |
+| `start` | the facts the `app.start` provider reads — the command, the entry points, the readiness signals, the credential pointer | `.agents/skills/start.md`, the repository's own, with a wrapper per host |
+| `capture` | evidence capture inside Validation — the layout, the naming, the tooling | `.agents/skills/capture.md`, the same shape |
 
-Each lands as one editable copy under `.agents/skills/` with a pointer wrapper per host. Edit
-the copy and it is yours: its hash matches no release, so every later reconcile reports it and
-leaves it alone. `assets/skill-wrappers.md` has the shape.
+Whoever seeds them is the repository's business; the engine only expects a skill by that name
+to exist and to leave behind what its goal says — a running application, evidence paths.
+`delivery:install` materializes nothing and records the engine's version alone.
 
 Neither is a dependency, and this is the part worth being precise about: **the guardrail is
 the contract, not the skill.** `resources/capture-contract.md` says what is captured, when it
 is required, and that an unavailable capture blocks the stage rather than degrading it — and
 that holds with no capture skill, no `qa.run` provider, and no QA plugin installed. A missing
-seed changes who runs capture, never whether it runs.
+skill changes who runs capture, never whether it runs.
 
 ## What it never depends on
 
 - **Specialist plugins.** An architecture, QA, domain, UX, product, security, or docs
   specialist is bound as a role per repository, and a coding one as a service. Neither is
-  ever declared as a dependency — one missing specialist must not demote all 26 skills. The
+  ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, or Markdown chapters, whichever `delivery.tracker` names.
@@ -147,6 +146,4 @@ seed changes who runs capture, never whether it runs.
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
-| `assets/skills/` | The `start` and `capture` seeds `delivery:install` writes into a repository |
-| `assets/skill-wrappers.md` | How a seed lands: one editable copy, a pointer wrapper per host |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

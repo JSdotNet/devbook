@@ -1,8 +1,8 @@
 # Devbook metadata tooling
 
-Derives machine-readable indexes from the `meta` blocks embedded in the
-devbook folders under `.devbook/` — `arc42/`, `domain/`, `tech/`, `design/`,
-and `ai/`, at `.devbook/arc42/` and so on:
+Checks the `meta` blocks embedded in the devbook folders under `.devbook/` —
+`arc42/`, `domain/`, `tech/`, `design/`, and `ai/`, at `.devbook/arc42/` and so
+on — and, with `--write`, derives three machine-readable indexes from them:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
@@ -15,26 +15,17 @@ the `devbook-derived-artifacts` instructions.
 
 ## Usage
 
-Prefer the wrapper — it reports which index files actually moved, so a refresh
-that changed nothing is visibly a no-op:
-
-```powershell
-./build/Update-DevbookIndex.ps1                 # every adopted scope
-./build/Update-DevbookIndex.ps1 -Scope tech    # one scope only
-./build/Update-DevbookIndex.ps1 -Check          # validate, write nothing
-```
-
-The generator underneath, for CI and for anywhere pwsh is not available:
+The checker writes nothing unless asked:
 
 ```bash
-# Regenerate every adopted scope
-node .devbook/_tools/devbook-meta/build.mjs
+# Validate every reference and meta block, write nothing — the default; CI runs this
+node .devbook/_tools/devbook-meta/build.mjs --check
+
+# Refresh the derived indexes: the plugin that owns them runs this, never a session
+node .devbook/_tools/devbook-meta/build.mjs --write
 
 # One scope only
-node .devbook/_tools/devbook-meta/build.mjs --scope tech
-
-# Validate references without writing (exit 1 on a broken reference)
-node .devbook/_tools/devbook-meta/build.mjs --check
+node .devbook/_tools/devbook-meta/build.mjs --write --scope tech
 
 # Point at a repository other than the working directory
 node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
@@ -53,12 +44,10 @@ generator exits `2` when no devbook folder is present at all, and a root-level
 **Not on every edit.** Regenerating the indexes in the same pull request that
 edits a chapter is what makes them conflict on merge: two branches that each
 touch one chapter both rewrite the same JSON, and the only way to resolve it is
-to re-run the generator. So refresh is deliberate and happens in two places:
-
-| Path | What it is | When |
-|---|---|---|
-| `./build/Update-DevbookIndex.ps1` | on demand | You want the indexes current in your own branch — before a release, or because something reads them locally. |
-| `.github/workflows/devbook-meta-nightly.yml` | scheduled | Reconciles the default branch, opening one pull request when the output drifted and nothing when it did not. |
+to re-run the generator. So refresh is deliberate and belongs to the plugin that owns
+the committed indexes, which ships a `build/Update-DevbookIndex.ps1` wrapper for a
+refresh on demand and a scheduled workflow that reconciles the default branch, opening
+one pull request when the output drifted and nothing when it did not.
 
 `.github/workflows/devbook-meta.yml` **fails** on a broken reference or a
 `meta` block that violates the schema — those are errors in the authored
@@ -189,11 +178,11 @@ already slugifies to the kind:
 
 | File | Title | `type` | Node label |
 |---|---|---|---|
-| `.domain/order-management/domain.md` | `Order Management` | `domain` | `Order Management (domain)` |
-| `.domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
-| `.domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
-| `.domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
-| `.arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
+| `.devbook/domain/order-management/domain.md` | `Order Management` | `domain` | `Order Management (domain)` |
+| `.devbook/domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
+| `.devbook/domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
+| `.devbook/domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
+| `.devbook/arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
 
 Node `id` is the path and was always unique; this only fixes the display label.
 

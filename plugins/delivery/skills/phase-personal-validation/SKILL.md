@@ -37,7 +37,7 @@ A link to a process that is not listening is worse than no link.
   command to run themselves** — starting it is
   this phase's job, and stopping at a command list is a failed handback, not a shortcut.
 - **Confirm health before publishing anything**, against the repository's
-  `## Healthy Startup` signals: the resources that must reach running, the health endpoints,
+  `## Healthy` signals: the resources that must reach running, the health endpoints,
   the log lines that mean ready. Do not report its declared benign warnings as failures.
 - **On a repeat pass, refresh over restart** where the repository's startup mode supports it,
   per **Revalidation After Requested Changes** in `skills/phase-validation/SKILL.md`.
@@ -116,5 +116,5 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Reference
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
-Runtime facts: the repository's `start` skill, seeded from `assets/skills/start.md`.
+Runtime facts: the repository's `start` skill at `.agents/skills/start.md`.
 Revalidation on a repeat pass: `skills/phase-validation/SKILL.md`.

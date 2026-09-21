@@ -28,13 +28,14 @@ chapter that never appears in the queue.
    protocol. Fall back to the devbook folders present on disk when the
    repository has no stamp; do not ask.
 
-2. **Collect the `meta` blocks and the notes** in those folders. Prefer the
-   derived indexes under `_meta/`: `index.json` carries each node's `status`,
-   `review`, `reviewer`, `review-at`, `approved-by`, and `approved-at`, and
-   `annotations.json` carries every thread with its address, status, and kind.
-   That is what they are for. Read them, never hand-edit them. When there is
-   no `_meta/`, scan the chapters directly and say in the report that the
-   queue was built from a scan.
+2. **Collect the `meta` blocks and the notes** in those folders: scan every
+   Markdown file for its `meta` fences and its `annotation` fences and read
+   those fences only. The review triad, `status`, `approved-by`, and
+   `approved-at` live in the `meta` fence; a note's address, status, and kind
+   live in the `annotation` fence, and `annotations.mjs list --chapter <address>`
+   reads them for one chapter. Never build the queue from `_meta/`: it is
+   generated tool input, carries no review or approval field, and a session is
+   denied reading it.
 
 3. **Sort every chapter into one row**, first match wins:
 
@@ -73,9 +74,9 @@ chapter that never appears in the queue.
 - Do not fix a stale approval as part of the sweep. Lifting a rung is a decision
   about one chapter and belongs in `chapter-approve`, with the change that
   caused it in front of the person.
-- Do not read chapter content into context while sweeping. Metadata answers the
-  whole question, and loading the corpus is exactly what devbook's task-scoped
-  loading rule forbids.
+- Do not read chapter prose into context while sweeping. The two fence kinds
+  answer the whole question, and loading the corpus is exactly what devbook's
+  task-scoped loading rule forbids.
 - Do not report a chapter with no review state, no approval, and no notes.
   Silence is the normal case, not a queue entry.
 - Do not sweep from here. The queue reports resolved notes; deleting them is
