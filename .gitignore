@@ -5,7 +5,4 @@
 # Machine-scope, never committed. See AGENTS.md.
 AGENTS.local.md
 .devbook/config.local.json
-# The hosts' own per-machine files, for a contributor without a global ignore.
-.claude/settings.local.json
-CLAUDE.local.md
 # devbook:end
