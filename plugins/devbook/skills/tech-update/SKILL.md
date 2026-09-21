@@ -86,8 +86,8 @@ chapters and generated `_meta/*.json` indexes.
    `tech/` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
-6. **Run the check.** Never regenerate here — the refresh is the scheduled job's, or
-   `build/Update-DevbookIndex.ps1` on demand:
+6. **Run the check.** Never regenerate here — the refresh belongs to the plugin that owns the
+   committed indexes, on its schedule or on demand:
 
    ```bash
    node .devbook/_tools/devbook-meta/build.mjs --scope tech --check
