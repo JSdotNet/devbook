@@ -44,11 +44,11 @@
     "devbook": {
       "pluginVersion": "1.0.0",
       "contractVersion": 11,
-      "adopted": ["arc42", "domain", "tech", "design", "ai"],
+      "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
           "from": "1.0.0",
-          "hash": "sha256:f6e1be423f6b4d91afd67e1cec9b7b23dbf4e1d0c6ac462e6873330c4ddaade4",
+          "hash": "sha256:28415630f2071abd5ab4447a7d8b33bf629e18f4cbbb5c8ff3109f64947e8bf4",
           "managed": true
         },
         ".gitignore#devbook": {
