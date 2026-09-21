@@ -23,7 +23,7 @@
     {
       "name": "delivery",
       "version": ">=1.0.0 <2.0.0",
-      "marketplace": "jsdotnet"
+      "marketplace": "jsdotnet-devbook"
     }
   ]
 }

@@ -16,7 +16,7 @@ import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_MARKETPLACE = 'jsdotnet';
+const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 
 // Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
 // contract-versioned. The mapping is not derivable — `derived` is written by
