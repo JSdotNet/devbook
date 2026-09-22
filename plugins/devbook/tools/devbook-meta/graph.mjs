@@ -81,7 +81,18 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // Version 12 changes no chapter shape: it retires the checkout layer of the
 // stack-config overlay and the `.gitignore` block devbook materialized for it,
 // so the stamp's `materialized` no longer carries `.gitignore#devbook`.
-export const CONTRACT_VERSION = 13;
+// Version 14 gives a `.domain` bounded context `requirements.md` and
+// `invariants.md`, and with them four chapter types — `requirements` and
+// `invariants` for the per-feature and per-aggregate grouping chapters,
+// `requirement` and `invariant` for one rule — plus the two file types. A
+// `requirements`/`invariants` chapter's `related` is held to a
+// `feature`/`sub-feature` or `aggregate`/`domain-service` chapter, the way a
+// switch reference already is. Every part of it is an added value with a safe
+// default: nothing written under 13 stops validating, the aggregate's
+// `### Invariants` table is still a legal structural heading, and no state
+// exists for a script to move — so there is no `migrations/014-*`. Converting
+// a table into chapters is editorial work a repository does when it chooses to.
+export const CONTRACT_VERSION = 14;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -142,6 +153,23 @@ const REFERENCE_FIELDS = {
 
 // The chapter `kind` each switch field must resolve to.
 const SWITCH_TARGET_KIND = { "feature-flag": "feature-flag", setting: "setting" };
+
+// The prose chapter each behaviour chapter pairs with, by the behaviour
+// chapter's own kind. `requirements.md` and `invariants.md` hold what a feature
+// promises and what an aggregate enforces; the prose half holds why it exists,
+// who works with it, where the boundary runs. `related` is the only thing
+// joining the two, so a behaviour chapter that names none is a half nobody can
+// reach from the other side — reported as an error, like a switch reference
+// landing on the wrong kind.
+//
+// A domain service is in the `invariants` row because it enforces rules of its
+// own; what it *reacts* to is a requirement of whatever reacts, and lands in
+// the `requirements` row through that feature. The check asks for one entry of
+// the right kind and no more: a chapter may link onward to anything else.
+const RELATED_TARGET_KINDS = {
+    requirements: ["feature", "sub-feature"],
+    invariants: ["aggregate", "domain-service"],
+};
 
 // The authored `type` field is emitted under the node key `kind`, because
 // `type` on a node is already the structural discriminator
@@ -372,8 +400,10 @@ export async function buildGraph(repoRoot, folders = null) {
             // Only a collision with a chapter on either side is reported. A
             // chapter that cannot be addressed is the error; two structural
             // headings sharing an anchor is the ordinary shape of a chapter
-            // file (`### Invariants` under each aggregate), and those are
-            // materialized on demand, never referenced by accident.
+            // file (`#### Scenario: The order is already confirmed` under two
+            // rules in one `invariants.md`, `### Payload` under every event),
+            // and those are materialized on demand, never referenced by
+            // accident.
             if (headingIndex.has(id)) {
                 if (chapter.meta || nodes.has(id)) {
                     problems.push({
@@ -475,6 +505,26 @@ export async function buildGraph(repoRoot, folders = null) {
                     source: node.id,
                     target: ref,
                     type: edgeType,
+                });
+            }
+        }
+
+        // The behaviour half of a chapter has to name the prose half it
+        // belongs to. Only a `##` grouping chapter carries the pairing: the
+        // file-level block shares the same `type` word but covers every
+        // feature or aggregate in the context, so it has no one chapter to
+        // point at, and a `requirement`/`invariant` is paired through the
+        // grouping chapter that contains it.
+        const pairKinds = node.type === "chapter" ? RELATED_TARGET_KINDS[node.kind] : null;
+        if (pairKinds) {
+            const found = asList(node.related).map((ref) => nodes.get(ref)?.kind);
+            if (!found.some((kind) => pairKinds.includes(kind))) {
+                problems.push({
+                    severity: "error",
+                    path: node.path,
+                    message: `${node.id} is a \`${node.kind}\` chapter whose \`related\` names no ${pairKinds
+                        .map((kind) => `\`${kind}\``)
+                        .join(" or ")} chapter — the behaviour half of a chapter points at the prose half it belongs to, and nothing else pairs the two.`,
                 });
             }
         }

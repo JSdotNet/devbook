@@ -34,7 +34,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | Folder | Holds |
 |--------|-------|
 | `arc42/` | arc42 architecture chapters, ADRs, TDRs |
-| `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows |
+| `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows, and the requirements and invariants they guarantee |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
 | `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
@@ -158,9 +158,9 @@ where the folder defines no `type`:
 
 | Kind | Target | `type` value(s) | Kind file |
 |------|--------|-----------------|-----------|
-| `aggregate` | `.devbook/domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `assets/spec-kinds/aggregate.md` |
-| `domain-service` | `.devbook/domain/<context>/domain.md`, or a `domain.<name>.md` split from it | `domain-service`, plus `domain-event` for events the service itself raises | `assets/spec-kinds/domain-service.md` |
-| `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, or a `features.<name>.md` / `skills.<name>.md` split from it | `feature`, `sub-feature` | `assets/spec-kinds/feature.md` |
+| `aggregate` | `.devbook/domain/<context>/domain.md` and `invariants.md`, or the files split from them | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event`, plus `invariants` and `invariant` for the rules it enforces | `assets/spec-kinds/aggregate.md` |
+| `domain-service` | `.devbook/domain/<context>/domain.md` and `invariants.md`, or the files split from them | `domain-service`, plus `domain-event` for events the service itself raises and `invariants`/`invariant` for the rules it enforces | `assets/spec-kinds/domain-service.md` |
+| `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.devbook/design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
@@ -183,6 +183,17 @@ land independently.
 A **domain service** is the deliberate exception: it is defined by coordinating
 across boundaries rather than living in one, so folding it into a boundary's pass
 would be backwards. It is its own kind, and owns the events it raises itself.
+
+**Behaviour lives in `requirements.md` and `invariants.md`, one rule per
+chapter.** A `### Requirement:` is one SHALL sentence about what the product
+promises; an `### Invariant:` is one claim a type guarantees, with the
+`Enforced at:` line that says where. Both carry `#### Scenario:` cases, and both
+are captured and briefed with the prose chapter they belong to rather than as a
+kind of their own — the rules of an aggregate are that aggregate's pass. The
+heading shape is OpenSpec's, kept so a tool that reads OpenSpec reads these
+files; the two words are not, because a promise made outside the model and a
+guarantee made by a type are different claims held by different people. That
+also fixes the level of proof: a requirement is `e2e`, an invariant `unit`.
 
 **`sync-specs` runs the application for a feature.** `features.md` is the one
 chapter file written from the user's point of view, so that pass starts the app,
@@ -402,7 +413,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **13**, covering the metadata schema a repository authors
+One number, currently **14**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -430,7 +441,16 @@ fingerprint over a chapter's content, the `accepted` rung above `approved` with
 context's freedom to carry a page the convention does not name, whose
 file-level `type` is its own filename. It also confines both rungs and their
 six fields to `.domain`, which is breaking, so it ships as
-`013-decision-rungs-are-domains`.
+`013-decision-rungs-are-domains`. 14 gives a bounded context
+`requirements.md` and `invariants.md`, with the chapter types `requirements`,
+`requirement`, `invariants`, and `invariant` and the two matching file types;
+a `requirements`/`invariants` chapter's `related` is held to the
+`feature`/`sub-feature` or `aggregate`/`domain-service` chapter it belongs to.
+Every part of it is an added value with a safe default — the aggregate's
+`### Invariants` table is still a legal structural heading, and nothing written
+under 13 stops validating — so it ships no migration folder. Converting a table
+into chapters is editorial work a repository does when it chooses to, and no
+script can write the scenarios that make the move worth anything.
 
 ## Folder structure
 

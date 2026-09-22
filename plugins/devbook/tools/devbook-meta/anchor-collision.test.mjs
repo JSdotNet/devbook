@@ -9,8 +9,9 @@
 // otherwise a structural heading shadowing a chapter is never reported at all.
 //
 // Two *structural* headings sharing an anchor is not an error: it is the
-// ordinary shape of a chapter file, where every aggregate carries its own
-// `### Invariants`. Those are only ever materialized on demand, and the first
+// ordinary shape of a chapter file, where two rules in one `invariants.md`
+// carry a `#### Scenario:` of the same name and every event carries its own
+// `### Payload`. Those are only ever materialized on demand, and the first
 // is the one GitHub leaves unsuffixed, so resolving to it is correct.
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -108,17 +109,17 @@ check(
 
 const twoStructural = await graphOf(
     chapter("Order Management", "type: bounded-context\n") +
-        structural("Invariants") +
+        structural("Scenario: The order is already confirmed") +
         chapter("Order Fulfilment", "type: bounded-context\n") +
-        structural("Invariants!")
+        structural("Scenario: The order is already confirmed!")
 );
 check(
     twoStructural.problems.filter((p) => /Duplicate chapter anchor/.test(p.message)).length === 0,
-    "the per-aggregate `### Invariants` pattern is not an error",
+    "the repeated `#### Scenario:` pattern is not an error",
     JSON.stringify(twoStructural.problems.map((p) => p.message))
 );
 check(
-    twoStructural.nodes.filter((n) => n.id === `${REL}#invariants`).length === 0,
+    twoStructural.nodes.filter((n) => n.id === `${REL}#scenario-the-order-is-already-confirmed`).length === 0,
     "and neither structural heading becomes a node on its own"
 );
 

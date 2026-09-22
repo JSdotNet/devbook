@@ -175,6 +175,13 @@ Two rules on top of the ones there:
   evidence; linking it would make the chapter look covered by the one test that
   asserts nothing.
 
+A rule chapter sorts its own entries by the file it sits in: the `unit` tests
+land on the `### Invariant:` chapters in `invariants.md`, the `e2e` ones — or
+`integration`, for a policy no user triggers — on the `### Requirement:`
+chapters in `requirements.md`. A pass that puts them on the wrong half is
+reported as a coverage warning, which usually means the rule itself is filed on
+the wrong side.
+
 Entries go in with the drafted content, so they route through the folder's
 flow along with everything else — a capture pass does not edit a
 chapter file directly, and that includes this field.
@@ -320,9 +327,14 @@ The brief has five parts, and a change category.
 
 1. **Outcomes** — what is true for the user or the system once this is built, in
    the domain's own language. Observable statements, not implementation steps.
+   Where the chapter has a `requirements.md` half, they are its
+   `### Requirement:` chapters, quoted as they stand: each is already one SHALL
+   sentence about what the product promises, which is what an outcome is.
 2. **Invariants** — the rules that must hold at all times afterwards, stated as
-   the chapter states them. This is the part an implementer cannot recover from
-   the code, and the part most often lost.
+   the chapter states them. They come from the `### Invariant:` chapters in
+   `invariants.md`, each with its `Enforced at:` line, reached from the
+   aggregate or domain service the change touches. This is the part an
+   implementer cannot recover from the code, and the part most often lost.
 3. **Ubiquitous language** — the canonical terms this change must use, with the
    `aliases` from the chapters that map them onto existing code names. Naming an
    alias here is what stops a new implementation inventing a fourth synonym.
@@ -331,7 +343,10 @@ The brief has five parts, and a change category.
    an unstated boundary is the one that gets crossed.
 5. **Acceptance checks** — how to tell it is done, each one checkable against
    code or a test. Derived from the invariants and outcomes, phrased so a test
-   can assert it. Do not write the tests; state what they must establish.
+   can assert it. Where a rule carries `#### Scenario:` cases, those *are* the
+   acceptance checks — Given/When/Then is already one test's worth — so carry
+   them rather than paraphrasing them into something weaker. Do not write the
+   tests; state what they must establish.
 
 A brief that cannot state its invariants or its acceptance checks is not ready.
 That is an `unresolved` verdict on the chapter's own completeness — report the

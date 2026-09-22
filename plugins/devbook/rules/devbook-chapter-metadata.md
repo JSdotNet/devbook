@@ -340,7 +340,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, or an additional page's own filename |
+  | `domain/` | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `model`, `flow`, `dependencies`, or an additional page's own filename |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
@@ -514,6 +514,22 @@ routinely hosts all three — `dotnet` runs unit tests and API integration tests
 alike — and "is this covered end to end?" is the question a reader of the
 chapter actually has.
 
+**Two chapter types imply their level, and only two.** A `domain/` rule chapter
+sits in the file that says what kind of claim it makes, so the level its `tests`
+should reach is already decided:
+
+| Type | Level | Why |
+|---|---|---|
+| `requirement` | `e2e`, or `integration` for a policy no user triggers | It promises something to someone outside the model, so what proves it is the product driven the way that someone drives it. |
+| `invariant` | `unit` | It is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is asserting something else. |
+
+A chapter of either type whose `tests` reach no entry at the expected level is
+reported as a **coverage warning** — the link may be at the wrong level, or the
+rule may be in the wrong file. It is never an error: refusing the document would
+teach people to leave `tests` off and write the rule back into prose, which is
+what these files exist to replace. Every other type carries no expectation at
+all, and a chapter with no `tests` carries none either — see the Rules below.
+
 **runner** and **selector** — which tool runs it, and how that tool addresses
 it:
 
@@ -561,6 +577,12 @@ command to `TEST_RUNNERS` in `.devbook/_tools/devbook-meta/metadata.mjs`.
   test asserts nothing, and linking it makes a chapter look covered when it is
   not.
 
+The absence rule holds for the two typed levels too: a `requirement` with no
+`tests` is reported for the level by nothing, because it has claimed no
+coverage. What it *is* reported for is having no `#### Scenario:` — a rule with
+no case that exercises it is one nobody can tell has been broken — and that is a
+coverage warning on the same footing.
+
 A delivered feature, and a domain aggregate whose invariants are pinned,
 therefore read:
 
@@ -580,6 +602,18 @@ tests: [integration:dotnet:Ordering.Api.Tests.GuestCheckoutTests, e2e:playwright
 \`\`\`meta
 type: aggregate
 tests: unit:dotnet:Ordering.Domain.Tests.OrderTests
+\`\`\`
+```
+
+One of that aggregate's rules, in `invariants.md`, names the test for that one
+rule rather than the suite:
+
+```markdown
+### Invariant: An order cannot be confirmed twice
+
+\`\`\`meta
+type: invariant
+tests: unit:dotnet:Ordering.Domain.Tests.OrderTests.CannotConfirmAnAlreadyConfirmedOrder
 \`\`\`
 ```
 

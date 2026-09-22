@@ -15,7 +15,8 @@ keeping the approval record it stands on; and the three editorial folders rest a
 omitting the field. A bounded
 context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
 capabilities are switched by, and its actors and dependencies until they outgrow the file —
-describes its skills or its features, says who acts with `user`, `organisation`, `technical`
+describes its skills or its features, states what they guarantee in `requirements.md` and
+`invariants.md`, says who acts with `user`, `organisation`, `technical`
 chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
 the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
@@ -77,10 +78,31 @@ from `candidate`. An explicit `active` is reported as a warning, never rejected.
 of `features.md` — one or the other, both `type: feature`, because a skill is a feature and a
 second vocabulary would make every graph consumer branch on a filename.
 
-**A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `model.md`, and
+**Behaviour is chapters, not prose and not a table.** The rules an aggregate guaranteed lived
+in an `### Invariants` table with an `Evidence` column, and what a feature promised lived in
+its prose. Both cost the same thing: a rule could not carry a status, a test link, an
+annotation, or a scenario, because only a chapter can, and a table cell reading `untested` was
+standing in for the `tests` field the schema already had. One rule per chapter fixes all of it
+at once, and the two files are where those chapters go. The heading shape is OpenSpec's —
+`### Requirement:`, `#### Scenario:` — kept deliberately, so a tool that reads OpenSpec reads
+a devbook repository without being taught anything; it is the one place this convention
+accepts a kind prefix in a heading, and it is bought by an external format rather than by
+taste. The words are not OpenSpec's throughout: a *requirement* is a promise to someone
+outside the model and keeps that name, an *invariant* is what a type guarantees and takes
+DDD's, because the aggregate is what answers for it. That split is not decoration — it decides
+which file a rule sits in, and with it the level that proves the rule, which is why `e2e`
+against a requirement and `unit` against an invariant are checkable at all. Both checks warn
+rather than fail: an error would push people back to prose, where nothing reports anything,
+and that is the state this decision exists to leave. Contract 14 adds only values, so nothing
+written before it stops validating and no migration is owed; the table stays legal and
+converting one is editorial work, because no script can write the scenarios that make the move
+worth doing.
+
+**A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
+`invariants.md`, `model.md`, and
 `flow.md` each grow with the context, and a reader looking for one aggregate should not have
 to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
-`features.checkout.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
+`features.checkout.md`, `invariants.order.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
 it is named after, carries that file's `type`, and keeps the chapter's heading and block as
 they stood, so the address changes and nothing else does. The generator reads a split file
 directly after its base, or in the base's slot when every chapter has moved out; `domain.md`
@@ -184,6 +206,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | A bounded context states behaviour in `requirements.md` and `invariants.md`, one rule per chapter: `### Requirement:` in OpenSpec's heading shape with DDD's word kept for `### Invariant:`, `#### Scenario:` cases under each, `Enforced at:` on an invariant, and the aggregate's `### Invariants` table retired into them. A rule's `related` is held to the prose chapter it belongs to; its level of proof — `e2e` for a requirement, `unit` for an invariant — and a missing scenario are coverage warnings. Contract 14, additive, no migration. |
 | 2026-09-22 | `accepted` is a rung above `approved`, with `accepted-by`, `accepted-at`, and `accepted-hash`, standing on the approval record it keeps; `approved-hash` makes a lapsed approval a check result; both rungs and their six fields are `domain/`'s alone; a bounded context may carry a page the convention does not name, typed by its own filename. Contract 13, migration 013. |
 | 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
 | 2026-09-18 | `context.md` is a context's root with `feature-flag` and `setting` chapters; `feature-flag` on a feature is a reference and `setting` joins it; actors and dependencies live there until they outgrow it. Contract 11, migration 011. |

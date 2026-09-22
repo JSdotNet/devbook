@@ -7,10 +7,10 @@ rules, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
-| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event` |
-| File | `.devbook/domain/<context>/domain.md`, or the `domain.<name>.md` the chapter was split into |
+| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in `invariants.md`, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant` |
+| File | `.devbook/domain/<context>/domain.md` and `.devbook/domain/<context>/invariants.md`, or the `domain.<name>.md` / `invariants.<name>.md` the chapters were split into |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md` and `invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope domain` |
 
@@ -45,7 +45,7 @@ malformed.
 | Identity | The id type and how it is assigned: constructor argument, factory-generated, database-assigned | An id type and an assignment path |
 | Responsibility | What the root's public methods, taken together, let a caller do — not what any one method is called | Public methods that let a caller do what the chapter describes, and nothing beyond it |
 | Consistency boundary | Which types are loaded, mutated, and saved in one transaction: the repository's granularity, what the root's collections own, what it references by id only | One transactional unit: a repository whose granularity is this root, owned collections inline, other aggregates referenced by id |
-| Invariants, one `### Invariants` row each | Guard clauses in the constructor and every mutating method, the exceptions they throw, validation actually enforced, and passing tests asserting the rule | Enforcement at the row's `Enforced at` point — that constructor or that named transition — on the root itself, never in a caller |
+| Invariants, one `### Invariant:` chapter each in `invariants.md` | Guard clauses in the constructor and every mutating method, the exceptions they throw, validation actually enforced, and passing tests asserting the rule — each unit test that rejects a case is one `#### Scenario:` | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
 | Lifecycle | The creation path, the state transitions the mutating methods allow, and the terminal states | The creation path plus exactly the transitions the chapter allows — and no transition it does not |
 
 An id-only reference to another aggregate is the strongest single signal of
@@ -60,7 +60,7 @@ one prose most often loses.
 | Identity | The id type and its **scope**: globally unique, or unique only within this aggregate. A local-only id is a strong signal of an entity rather than a root | An id at the scope the sub-chapter states |
 | Role within the aggregate | Which of the root's methods create, mutate, or remove it | Creation through the root |
 | Lifecycle | Whether it can be removed independently, and whether removal cascades from the root | Removal with the cascade behaviour stated |
-| Invariants | Guard clauses on the entity's own constructor and mutating methods | The same enforcement rule as the root's rows |
+| Invariants | Guard clauses on the entity's own constructor and mutating methods | The same enforcement rule as the root's chapters. They sit under the root's `## <AggregateName>` chapter in `invariants.md` like every other rule of this boundary, with `Enforced at:` naming the entity's own constructor or method |
 | Relationships | Whether it back-references the root, references siblings, or is reachable only through the root's collection | Held by the root and saved in its transaction — **never given a repository of its own** |
 
 Reachability decides placement. A type reachable only through this root is an
@@ -127,11 +127,17 @@ tests are the direct evidence for those fields.
 An invariant is what the type guarantees no matter who calls it — enforced in
 the constructor or the mutating method itself, not in an application service
 upstream. Record caller-side rules as such or leave them out. Write one
-`### Invariants` row per rule: `Enforced at` from the guard clause's location,
-`Evidence` from the test selector that asserts it, or `untested` where none does.
-A rule visible only in a disabled test, a TODO, or a comment becomes an `open`
-row with the question in `Evidence`, never a fact. Never merge rows — a row is
-what a brief quotes and an acceptance check is derived from.
+`### Invariant:` chapter per rule under the root's `## <AggregateName>` chapter
+in `invariants.md`: the rule as one claim that is either true or false,
+`Enforced at:` from the guard clause's location, the `unit` selectors that
+assert it in `tests`, and one `#### Scenario:` per case those tests establish —
+the events already applied, the command issued, the events raised or the
+rejection. A rule nothing asserts still gets its chapter, with no `tests`: the
+field's absence is the honest record, and a rule nothing asserts is one
+refactor away from being gone. A rule visible only in a disabled test, a TODO,
+or a comment gets `open` on its `Enforced at:` line and the question in a
+`kind: question` annotation fence, never a fact. Never merge chapters — a
+chapter is what a brief quotes and an acceptance check is derived from.
 
 Settle every placement from that inventory: a type with a store of its own is a
 root and gets its own pass; identity and mutability decide entity against value
@@ -143,6 +149,12 @@ the aggregate's `##` — there are no `### Entities` / `### Value Objects` /
 `### Enums` grouping headings — and each carries its own `meta` block. An event's
 `### Payload`, `### Consumers`, and `### Published language rules` are structural
 sub-sections of one chapter and carry no `meta` blocks.
+
+The rules draft to the `invariants.md` template, in the same pass and the same
+routed write: one `## <AggregateName>` chapter whose `related` names the
+aggregate chapter, the aggregate chapter's `related` naming it back, and one
+`### Invariant:` chapter per rule. Each rule's `#### Scenario:` headings are
+structural and carry no `meta` blocks either.
 
 ## Applying — `apply-change`
 
@@ -157,11 +169,14 @@ the usual finding, makes the category `change to existing behaviour`, and the
 brief lists every place the primitive appears — replacing it is the bulk of the
 work.
 
-Carry each `### Invariants` row into the brief as its own invariant, quoting the
-`Rule` and carrying its `Enforced at`. A row whose `Evidence` is a passing test
-is already enforced: verify and drop it from the ask. A row at `untested` still
-gets its acceptance check — an unasserted rule is one refactor from gone. A row
-with `open` in `Enforced at` is not briefed; name it as needing a decision.
+Carry each `### Invariant:` chapter into the brief as its own invariant, quoting
+the rule and carrying its `Enforced at:`. A chapter whose `tests` name a passing
+test is already enforced: verify and drop it from the ask. One with no `tests`
+still gets its acceptance check — an unasserted rule is one refactor from gone.
+A chapter with `open` on its `Enforced at:` line is not briefed; name it as
+needing a decision. The scenarios come with the rule: each one is an acceptance
+check already phrased as something a single test can assert, which is what they
+are for.
 
 Raising an event is rarely the whole change: say which named consumers must be
 subscribed and which are out of scope. A missing payload field on an event
@@ -194,5 +209,9 @@ another aggregate reachable only by id.
   alongside the aggregate.
 - Do not brief a repository, store, or DAO for an owned entity.
 - Do not add `depends-on` to a `domain.md` chapter.
-- Do not extend the pass into `context.md`, `features.md`, `model.md`,
-  `flow.md`, or `dependencies.md`.
+- Do not extend the pass into `context.md`, `features.md`, `requirements.md`,
+  `model.md`, `flow.md`, or `dependencies.md`. `invariants.md` is the one
+  exception, because the rules are this boundary's and nothing else owns them.
+- Do not leave a rule in the aggregate chapter's prose, and do not write a new
+  `### Invariants` table. A rule stated in prose has no `Enforced at:`, no
+  scenarios, and no `tests` — which is the whole reason it moved.

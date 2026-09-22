@@ -7,10 +7,10 @@ rules, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
-| Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature` |
-| File | `.devbook/domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into |
+| Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature`; and in `requirements.md`, the matching `## <FeatureName>` chapter, `type: requirements`, with every `### Requirement:` under it, `type: requirement` |
+| File | `.devbook/domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into, plus `.devbook/domain/<context>/requirements.md` and its own split files |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `features.md`, `context.md` — the switches and the actors — and `domain.md`, the aggregates the capability exercises, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
+| Context to load | The target context's `features.md` and `requirements.md`, `context.md` — the switches and the actors — and `domain.md` with `invariants.md`, the aggregates the capability exercises and the rules they enforce, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
 | Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
 | Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
@@ -42,6 +42,7 @@ value.
 | Heading (the bare name) | The capability's name in business language, reconciled with `domain.md` — not the controller, component, or flag name | A capability a user can name, reachable in the product |
 | Capability description | The reachable paths — endpoints, screens, commands, jobs — **confirmed by running the application and using the feature** | The described behaviour reachable end to end — check which partial paths already deliver some of it |
 | Observed behaviour | What the running application does when exercised: the steps, the state changes, the wording the interface uses, where the flow ends | — |
+| Requirements, one `### Requirement:` chapter each in `requirements.md` | What the capability promises, one SHALL sentence per promise — from the observed flow, the acceptance and end-to-end tests, and the paths that are refused as much as the ones that work | Each promise kept, provable end to end. Its `#### Scenario:` cases come from the flow as walked and from the tests that drive it, and are the acceptance checks already phrased |
 | Screenshots | One per distinguishable step, as report evidence behind the description and the breakdown | — |
 | Business value | Why it exists, as far as code, tests, and observed behaviour support it; otherwise an open question, never an invented rationale | — |
 | Sub-features | The parts a user would name separately, each a `###` with `type: sub-feature` | Each delivered, or explicitly deferred — check which already exist |
@@ -99,6 +100,15 @@ different breakdowns. Draft with `type: feature` or `type: sub-feature`, and set
 `feature-flag`, `setting`, and `depends-on` only from a real switch chapter
 and a real ordering — a key with no chapter is a `setting`-kind capture first.
 
+The promises draft to `requirements.md` in the same pass and the same routed
+write: one `## <FeatureName>` chapter whose `related` names the feature chapter
+and is named back, and one `### Requirement:` chapter per promise, each with its
+scenarios. The walked flow is where they come from — a step that has to happen
+before the next one works is a promise, and so is every path the product
+refuses. Their `tests` are the `e2e` selectors that drive the flow, or
+`integration` for a promise no user triggers; the `unit` tests read on the way
+belong to the aggregates' invariants, not here.
+
 ## Applying — `apply-change`
 
 Check `depends-on` first. A feature whose prerequisites are themselves unbuilt
@@ -106,10 +116,14 @@ cannot be briefed as one change: report the chain and let the user decide the
 order.
 
 A feature brief is the one place in this family where the outcomes are the
-substance, since the chapter is written in business language. The invariants
+substance, since the chapter is written in business language. Its outcomes are
+the `### Requirement:` chapters in `requirements.md`, quoted as they stand — one
+SHALL sentence each — and their scenarios are the acceptance checks, already
+phrased so a single test can assert each one. The invariants
 come from the `related` `domain.md` chapters, not from the feature chapter:
-quote their `### Invariants` rows with each `Enforced at`, and report `open`
-rows as decisions the feature depends on. The actor comes from
+quote the `### Invariant:` chapters under those aggregates in `invariants.md`
+with each `Enforced at:`, and report a rule with `open` on that line as a
+decision the feature depends on. The actor comes from
 the actor chapters where the context has them — the brief carries the `role` and
 the right, so the build authorizes the capability rather than meeting the
 question afterwards; a right the chapter leaves open is reported like an `open`
@@ -134,7 +148,11 @@ invariants from the `related` chapters hold.
 - Do not set `depends-on` from a code reference or a shared aggregate, and do
   not brief a feature whose prerequisites are unbuilt without reporting the
   chain.
-- Do not invent a business rationale or invariants for a feature.
+- Do not invent a business rationale or requirements for a feature, and do not
+  write an aggregate's invariants into `requirements.md` — those belong to the
+  boundary that enforces them, and the feature reaches them through `related`.
+- Do not leave a promise in the feature chapter's prose. A promise stated there
+  has no scenarios and no `tests`, which is what `requirements.md` is for.
 - Do not write out an empty `feature-flag`, `setting`, `depends-on`, or `related`.
 - Do not capture from code alone when the app can be started, and do not claim
   the flow was observed when it was not.
