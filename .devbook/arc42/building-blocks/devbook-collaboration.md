@@ -178,6 +178,9 @@ classDiagram
   `review`, `reviewer`, and `review-at` beside its approval triad and validates them, so this
   block contributes the procedure and none of the vocabulary
   ([the annotations record](../adr/annotations.md)).
+- **The decision rungs are `domain/`'s, the review triad is every folder's.** So the pass runs
+  wherever a chapter lives, and the two gates run on model chapters only — a repository that
+  adopts no `domain/` gets the review and neither decision.
 - **The line between the two is who writes, not who defines.** Every field is devbook's; this
   block writes the review triad through the pass, `status`, `approved-by`, and
   `approved-at` only through [Approval](#approval), and the acceptance three only through

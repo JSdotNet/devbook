@@ -80,7 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
-| 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with no migration — every part of it is an added field or value with a safe default, so nothing written under 12 stops validating. A contract bump is a minor release, with its migration only when one is owed. |
+| 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with migration 013, which takes the decision rungs off every folder but `domain/`. A contract bump is a minor release, with its migration only when one is owed. |
 | 2026-09-21 | Every plugin is `1.3.0`; contract 12 ships in it with migration 012, which retires the overlay's checkout layer and devbook's `.gitignore` block. |
 | 2026-09-18 | Every plugin is `1.2.0`; contract 11 ships in it with migration 011 — the first release where a contract bump moved the version. |
 | 2026-09-17 | Every plugin is `1.1.0`; contract 10 ships in it with migration 010. |

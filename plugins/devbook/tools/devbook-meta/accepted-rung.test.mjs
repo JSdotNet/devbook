@@ -117,16 +117,40 @@ const HASH = chapterHash(chapter(accepted), CHAPTER_LINE);
 }
 
 {
-    // Every folder's ladder gained the rung, not just domain's.
+    // The two rungs are domain/'s alone. Elsewhere the value is off the ladder
+    // and the six record fields are not in the folder's vocabulary.
     const arc42 = "# Releases\n\n" + fence("status: accepted\n" + approval + acceptance) + "\nProse.\n";
     const issues = validateDocument(".devbook/arc42/adr/releases.md", arc42);
-    check(!issues.some((i) => i.message.includes("status")), "the rung is on arc42's ladder too", dump(issues));
+    check(Boolean(find(issues, "error", 'has status "accepted"')), "the accepted rung is off arc42's ladder", dump(issues));
+    check(
+        issues.some((i) => i.message.includes("unrecognized field `accepted-by`")),
+        "accepted-by is not an arc42 field",
+        dump(issues),
+    );
+}
+
+{
+    const arc42 = "# Releases\n\n" + fence("status: approved\n" + approval) + "\nProse.\n";
+    const issues = validateDocument(".devbook/arc42/adr/releases.md", arc42);
+    check(Boolean(find(issues, "error", 'has status "approved"')), "the approved rung is off arc42's ladder too", dump(issues));
 }
 
 {
     const tech = "# Node\n\n" + fence("status: accepted\ntype: runtime\n" + approval + acceptance) + "\nProse.\n";
     const issues = validateDocument(".devbook/tech/shared.md", tech);
-    check(!issues.some((i) => i.message.includes("status")), "the rung is on tech's ladder too", dump(issues));
+    check(Boolean(find(issues, "error", 'has status "accepted"')), "the accepted rung is off tech's ladder", dump(issues));
+}
+
+{
+    // And the acceptance lint does not fire a second time about a record the
+    // field scope has already reported as not belonging to the folder.
+    const design = "# Colour\n\n" + fence("status: active\n" + acceptance) + "\nProse.\n";
+    const issues = validateDocument(".devbook/design/color-scheme.md", design);
+    check(
+        !issues.some((i) => i.message.includes("without `status: accepted`")),
+        "no acceptance lint outside domain/ — the field scope already said it",
+        dump(issues),
+    );
 }
 
 console.log(`\n${failed ? `${failed} failed` : "all passed"}`);

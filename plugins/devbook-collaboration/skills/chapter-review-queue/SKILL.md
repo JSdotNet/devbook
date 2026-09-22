@@ -49,6 +49,7 @@ chapter that never appears in the queue.
    | Awaiting review | `review: requested` | `reviewer` |
    | Awaiting approval | `review: cleared` | Whoever approves |
    | Awaiting acceptance | `status: approved`, signed and unchanged | Whoever accepts the built work |
+   | Rung outside `domain/` | Either decision rung, or any of its six fields, on a chapter in another folder | Whoever wrote it — devbook's check reports it |
    | Unsigned approval | `status: approved` with no `approved-by` or `approved-at` | Whoever approved it |
    | Notes to sweep | Resolved notes still in the chapter | Whoever is about to merge the branch |
 

@@ -38,8 +38,11 @@ owes the next move:
 Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
 merges. It is devbook's, because the fence is.
 
-Approval is devbook's own field and keeps devbook's meaning. This plugin never
-writes it without a person choosing it in that session, and clears the review
+Approval is devbook's own field and keeps devbook's meaning. Both decision
+rungs live on `domain/`'s ladder and no other, so `chapter-approve` and
+`chapter-accept` run on model chapters; the review pass itself runs anywhere.
+This plugin never
+writes a rung without a person choosing it in that session, and clears the review
 triad in the same change: an approved chapter carries the decision, not the
 road to it. Acceptance is the same field one rung up, and the same rule:
 `approved` says the specification is right, `accepted` says what was built

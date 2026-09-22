@@ -83,13 +83,10 @@ instructions.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. Architecture documentation describes a
   standing decision/structure, not a task, so there is no `done`.
-- On top of that ladder sits the shared `approved` rung, defined once in
-  `devbook-chapter-metadata.md`: a person approved this chapter,
-  recorded with `approved-by` and `approved-at`. It is written explicitly, never
-  rested at, and comes off the moment the content changes.
-  Above it sits `accepted`: a person saw the built work against this chapter
-  and accepted it, recorded with `accepted-by` and `accepted-at` beside the
-  approval record it stands on. Both come off together.
+- **There is no `approved` or `accepted` rung here.** The two decision rungs
+  are `domain/`'s alone — see `devbook-domain.md`. An architecture chapter
+  records a standing structure, and the question those rungs answer is asked of
+  the model, not of it.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`). A standing structure

@@ -13,6 +13,9 @@ Record that a person saw the implemented work against this chapter and
 accepted it. This is the one place `status: accepted` is written, and it is
 never written without a person choosing it in this session.
 
+**`domain/` chapters only**, like the approval under it: both rungs are on that
+folder's ladder and no other, per `devbook-chapter-metadata.md`.
+
 `approved` says the specification is right; `accepted` says what was built
 satisfies it. The two are a stack: an accepted chapter keeps its approval
 record, and both come off together the moment the content changes. `status`,

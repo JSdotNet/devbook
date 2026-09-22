@@ -182,13 +182,8 @@ learns one adoption vocabulary and applies it in both folders:
 | `hold` | Kept, but no longer expanded; avoid new usage. |
 | `retired` | No longer used. Kept because knowing what we stopped doing, and why, is the most useful record in this folder. |
 
-On top of this ladder sits the shared `approved` rung, defined once in
-`devbook-chapter-metadata.md`: a person approved this chapter,
-recorded with `approved-by` and `approved-at`. It is written explicitly and
-comes off the moment the content changes. Above it sits `accepted`: a person
-saw the built work against this chapter and accepted it, recorded with
-`accepted-by` and `accepted-at` beside the approval record it stands on. Both
-come off together.
+There is no `approved` or `accepted` rung here. The two decision rungs are
+`domain/`'s alone — see `devbook-domain.md`.
 
 **`status` is required on every `ai/` block, with no resting value to omit** —
 for the same reason as `tech/`, whose ladder this is: the value is a rating, and

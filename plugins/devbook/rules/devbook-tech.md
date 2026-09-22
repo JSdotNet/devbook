@@ -118,14 +118,10 @@ Maturity of the technology **in this project**, on a tech-radar-style ladder:
 
 Early in a project most entries are legitimately `candidate`.
 
-On top of this ladder sits the shared `approved` rung, defined once in
-`devbook-chapter-metadata.md`: a person approved this chapter,
-recorded with `approved-by` and `approved-at`. It rates the chapter, not the
-technology — a chapter can be approved while what it describes is still
-`trial`, which is why the rung is stated rather than rested at. Above it sits
-`accepted`: a person saw the built work against this chapter and accepted it,
-recorded with `accepted-by` and `accepted-at` beside the approval record it
-stands on. Both come off together.
+There is no `approved` or `accepted` rung here. The two decision rungs are
+`domain/`'s alone — see `devbook-domain.md`. This folder's value is a rating of
+a technology, and stacking a decision about a chapter on top of it would put two
+unrelated statements in one field.
 
 **`status` is required on every `tech/` block, with no resting value to omit** —
 unlike `domain/`, `arc42/`, and `design/`, where an absent status means settled

@@ -42,15 +42,20 @@ const APPROVED_STATUS = "approved";
 // commit; which pull request delivered it is the tracker's business.
 const ACCEPTED_STATUS = "accepted";
 
+// The two decision rungs sit on `domain/`'s ladder and on no other. What they
+// record is that a person agreed the model, and then that what was built
+// satisfies it — a question the domain folder is the only one currently asked.
+// The other four ladders rate content or a technology, and a rung on them was
+// surface nothing used.
 const STATUS_BY_FOLDER = {
     domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
-    arc42: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
-    tech: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS, ACCEPTED_STATUS],
-    design: ["draft", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
+    arc42: ["draft", "proposed", "active", "deprecated"],
+    tech: ["candidate", "trial", "adopted", "hold", "retired"],
+    design: ["draft", "active", "deprecated"],
     // `.ai` deliberately reuses `.tech`'s ladder: a reader learns one
     // adoption vocabulary. What is on the ladder differs — `.tech` rates a
     // technology, `.ai` rates a way of working with one.
-    ai: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS, ACCEPTED_STATUS],
+    ai: ["candidate", "trial", "adopted", "hold", "retired"],
 };
 
 // Who approved, and on what day. The gate writes both; they exist so the
@@ -79,6 +84,16 @@ const CONTENT_HASH_FIELD = "approved-hash";
 // written — an acceptance is of the approved content.
 const ACCEPTANCE_FIELDS = ["accepted-by", "accepted-at"];
 const ACCEPTED_HASH_FIELD = "accepted-hash";
+
+// The rungs' six record fields, scoped to `domain/` with them. Kept as one
+// list so the folder that has the rungs and the folder that has the fields can
+// never drift apart.
+const DECISION_FIELDS = [
+    ...APPROVAL_FIELDS,
+    CONTENT_HASH_FIELD,
+    ...ACCEPTANCE_FIELDS,
+    ACCEPTED_HASH_FIELD,
+];
 
 // `sha256:` names the algorithm so a later one can be told apart, and eight
 // hex characters is the whole digest a reader ever compares: this detects an
@@ -249,10 +264,6 @@ const COMMON_OPTIONAL_FIELDS = [
     "roadmap",
     "date",
     "tests",
-    ...APPROVAL_FIELDS,
-    CONTENT_HASH_FIELD,
-    ...ACCEPTANCE_FIELDS,
-    ACCEPTED_HASH_FIELD,
     ...REVIEW_FIELDS,
 ];
 
@@ -367,7 +378,10 @@ const REMOVED_FIELDS = {
 };
 
 const FOLDER_EXTRA_FIELDS = {
-    domain: ["depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope"],
+    domain: [
+        "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
+        ...DECISION_FIELDS,
+    ],
     arc42: [],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
@@ -1656,11 +1670,17 @@ export function validateDocument(relPath, markdown) {
         // the record is checked. The content is only fingerprinted when the
         // chapter claims one — most do not, and hashing every block to learn
         // that would be work for nothing.
-        const claimsHash =
-            chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
-        const contentHash = claimsHash ? chapterHash(markdown, chapter.line) : null;
-        for (const issue of approvalIssues(chapter.meta, contentHash)) {
-            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        // Only `domain/` has the rungs, so only there is there a record to
+        // lint. Elsewhere the six fields are not in the folder's vocabulary at
+        // all and `fieldScopeIssues` reports them once, as unknown fields —
+        // running this too would report one mistake twice.
+        if (kind === "domain") {
+            const claimsHash =
+                chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
+            const contentHash = claimsHash ? chapterHash(markdown, chapter.line) : null;
+            for (const issue of approvalIssues(chapter.meta, contentHash)) {
+                issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+            }
         }
 
         // The review workflow writes into the chapter too, and its state is

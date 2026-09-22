@@ -296,6 +296,8 @@ top-level heading carries a block of its own describing the document as a whole.
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs` |
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
@@ -308,9 +310,10 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
 
 Two enums are the chapter's own. **Chapter Status** is where the content stands: each folder
-defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and two
-shared rungs sit on top of all of them: `approved`, the chapter is right, and `accepted` above
-it, the built work satisfies it. The second stands on the first and keeps its record. Three folders have a resting value written
+defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
+`domain/`'s alone sit two decision rungs: `approved`, the chapter is right, and `accepted`
+above it, the built work satisfies it. The second stands on the first and keeps its record.
+The other four folders have neither: what those rungs decide is asked of the model. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
 unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value
@@ -329,8 +332,9 @@ is what turns a heading into a node, so deleting it as noise silently drops the 
 the graph and out of every reference pointing at it.
 
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `approved-by`, `approved-at`, `approved-hash`, `accepted-by`,
-`accepted-at`, `accepted-hash`, `number`, and `index` are devbook's,
+`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
+— `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
+`accepted-hash` — scoped to `domain/` beside the rungs that write them;
 each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
 it. Empty collections and nulls are omitted rather than written out, so absence has exactly
 one spelling.

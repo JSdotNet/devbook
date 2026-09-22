@@ -13,6 +13,10 @@ Turn a cleared review into devbook's recorded decision, or refuse to. This is
 the one place `status: approved` is written, and it is never written without a
 person choosing it in this session.
 
+**`domain/` chapters only.** The rung is on that folder's ladder and no other,
+per `devbook-chapter-metadata.md`. Asked to approve a chapter
+elsewhere, say so and stop — writing it there fails devbook's check.
+
 `status`, `approved-by`, and `approved-at` are devbook's fields, and so are
 the `review`, `reviewer`, and `review-at` this skill clears — see
 `devbook-chapter-metadata.md`. So is the annotation fence a finding is written
