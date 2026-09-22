@@ -108,9 +108,10 @@ Also called: aligned, code-ahead, spec-ahead, conflict, unresolved.
 
 Where a chapter and its implementation stand relative to each other, in five values. `aligned`
 reports and stops, `code-ahead` and `spec-ahead` say which side moves, and `conflict` and
-`unresolved` both stop and ask — never guess. The verdict is what makes the two converter
-directions one subject rather than two; it is established before anything is written, from
-source and tests alone.
+`unresolved` both stop and ask — never guess. A verdict reached against a chapter nobody has
+agreed to yet is flagged `unagreed`, which is a qualifier on one of the five and not a sixth.
+The verdict is what makes the two converter directions one subject rather than two; it is
+established before anything leaves the run, from source and tests alone.
 
 ## Engine Key
 
