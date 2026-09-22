@@ -1,7 +1,7 @@
 # Surfaces
 
 ```meta
-date: 2026-09-17
+date: 2026-09-22
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
 ```
 
@@ -11,8 +11,12 @@ with no surface bound produces its file artifacts and continues. `delivery` ship
 plugins implement the contract and none depends on the engine or on each other:
 `delivery-surface-dashboard` answers every group, `delivery-surface-collector` lifecycle and
 export, `delivery-surface-canvas` render, as Copilot canvas actions with no server. Each
-exposes exactly the contract's tool names. `devbook`'s graph canvas is not a surface; it
-ships in `devbook-derived` and loads the checker's modules from their materialized path.
+exposes exactly the contract's tool names. A fourth implementation is neither a plugin nor
+published here: the Backlog desktop application answers lifecycle from an MCP server inside
+its own process — export later, render never — and it is first in the binding priority, so an
+open window is the surface and a closed one falls through to the dashboard. `devbook`'s graph
+canvas is not a surface; it ships in `devbook-derived` and loads the checker's modules from
+their materialized path.
 
 ## Why
 
@@ -53,6 +57,17 @@ the contract something to resolve, not a second resolution rule. A fourth lifecy
 unreachable until someone adds its two spellings, and that line is part of the new surface's
 release. It closes when a host allows a prefix match in `tools`.
 
+**The fourth lifecycle surface is an application, not a plugin.** Backlog's own decision to
+host an MCP server inside the running desktop app — local ADR 0012 in `JSdotNet/Backlog`,
+accepted ahead of the code so this plan's items have a decision to build against — makes the
+app an implementation of the lifecycle group. The contract made room for it and shipped
+nothing: a column, a priority order that puts it first, and a third surfacing shape for a run
+that is visible in a window rather than at a URL. It is also the tracker, the only provider
+that is both, which is why no surface bound and the tracker not answering have one cause
+here — the app is closed. The allowlist above is still owed: `flow-runner`'s `tools` does not
+name `mcp__backlog`, so the engine documents a surface it cannot yet reach, and that line
+ships with the wiring rather than with this record.
+
 **`devbook-graph` is not a surface, and it left `devbook`.** It answers no operation group
 and substitutes for nothing, so its name carries no surface word. It imported `graph.mjs`,
 `outline.mjs`, and `metadata.mjs` by relative path — deliberately, so the rendered graph and
@@ -78,6 +93,7 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. |
 | 2026-09-17 | `devbook-graph` moves to `devbook-derived`, loading devbook's modules from the materialized path. |
 | 2026-09-09 | The runner's allowlist names the two shipped servers' four ids, the one sanctioned exception to matching by operation name. |
 | 2026-09-05 | `delivery-surface-canvas` drops its MCP half; the render group has one implementation per host. |

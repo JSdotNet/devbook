@@ -123,11 +123,13 @@ skill changes who runs capture, never whether it runs.
   ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
-- **A tracker.** GitHub, Jira, or Markdown chapters, whichever `delivery.tracker` names.
-  Unbound, a flow runs to its file artifacts and opens nothing.
+- **A tracker.** GitHub, Jira, Markdown chapters, or Backlog entries, whichever
+  `delivery.tracker` names. Unbound, a flow runs to its file artifacts and opens nothing.
 - **A surface.** A dashboard, a canvas, and a headless collector are three implementations of
-  one capability, resolved by pattern from the live tool list. **No surface bound is a normal
-  outcome:** produce the file artifacts, say so once, never block a stage.
+  one capability, resolved by pattern from the live tool list; an implementation need not be a
+  plugin from this marketplace, and the Backlog desktop application is the one that is not.
+  **No surface bound is a normal outcome:** produce the file artifacts, say so once, never
+  block a stage.
 - **A host.** A shared skill names a *slot* — `repo-instructions`, `model-override`,
   `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
   or which takes its documented unbound default. A slot is bound, never branched.
