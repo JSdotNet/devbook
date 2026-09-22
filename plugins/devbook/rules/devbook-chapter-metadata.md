@@ -39,9 +39,9 @@ already treat as an addressable unit:
   chapter (one graph node per chapter).
 
 - `domain/` `context-map.md`, `model.md`, `flow.md`, their split files,
-  `dependencies.md`, and `import.md`, `tech/` `technology-graph.md`, and `ai/`
-  `adoption-map.md` are strategic/structural artifacts; their `##` sections do
-  **not** carry per-chapter metadata blocks.
+  `dependencies.md`, and any additional page a context carries, `tech/`
+  `technology-graph.md`, and `ai/` `adoption-map.md` are strategic/structural
+  artifacts; their `##` sections do **not** carry per-chapter metadata blocks.
 
 ## Chapter metadata block format
 
@@ -221,8 +221,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   discipline as `issue: null`, and the reason is the same.
 
 
-  On top of every folder's own ladder sits one shared rung, `approved`: a person
-  has read this chapter and approved it. It is the decision the approval gate
+  On top of **`domain/`**'s ladder — and no other folder's — sit two decision
+  rungs. The first is `approved`: a person has read this chapter and approved it. It is the decision the approval gate
   makes before a chapter becomes work, recorded in the chapter so it travels
   with the content and lands in the git history like any other change — not in
   flow configuration, and not in someone's memory.
@@ -230,14 +230,20 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   `approved` is never a resting value and is never omitted to mean itself. A
   chapter states it while the approval stands and drops back to its ordinary
   rung the moment the content changes: an approval is of what was read, not of
-  the heading. The rung is one word in every folder because what is approved is
-  the chapter; the ladder underneath says what kind of thing the chapter is.
+  the heading.
+
+  The other four folders have no decision rung. `arc42/` and `design/` record a
+  standing structure, `tech/` and `ai/` rate a technology or a way of working
+  with one, and the question these rungs answer — did a person agree this, and
+  does what was built satisfy it — is asked of the model. The six record fields
+  below are `domain/`'s with the rungs: written anywhere else they are not in
+  that folder's vocabulary, and are reported as unrecognized.
 
   A repository that wants that lapse **checked** rather than remembered writes
   `approved-hash` beside the other two.
 
-  One rung sits above it, `accepted`: a person has seen the implemented work
-  against this chapter and accepted it. The two are a **stack, not a choice** —
+  The second rung sits above it, `accepted`: a person has seen the implemented
+  work against this chapter and accepted it. The two are a **stack, not a choice** —
   `approved` says the specification is right, `accepted` says what was built
   satisfies it, and they are usually stated by different people on different
   days. So an accepted chapter carries both records: `approved-by` and
@@ -251,11 +257,12 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   one change the moment the content changes, and the chapter returns to its
   folder's ordinary rung: a build was accepted against the text that was
   approved, so neither statement outlives it.
-- **approved-by** (optional) — who approved this chapter: a person, a handle, or
-  a team. One value, not a list.
-- **approved-at** (optional) — the day they approved it, in `YYYY-MM-DD` form.
-- **approved-hash** (optional) — a fingerprint of the content that was
-  approved: `sha256:` followed by eight lowercase hex characters. Written by
+- **approved-by** (`domain/` only, optional) — who approved this chapter: a
+  person, a handle, or a team. One value, not a list.
+- **approved-at** (`domain/` only, optional) — the day they approved it, in
+  `YYYY-MM-DD` form.
+- **approved-hash** (`domain/` only, optional) — a fingerprint of the content
+  that was approved: `sha256:` followed by eight lowercase hex characters. Written by
   the approval gate in the same change as the rung, and never by hand.
 
   What is fingerprinted is the block a reader would say they read — its heading
@@ -279,11 +286,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   claiming the rung — either the approval is current and the status says so, or
   it has lapsed and the record comes out with it. Under `status: accepted` the
   approval record is not orphaned: the acceptance stands on it.
-- **accepted-by** (optional) — who accepted the built work against this
-  chapter. One value, not a list.
-- **accepted-at** (optional) — the day they accepted it, in `YYYY-MM-DD` form,
-  on or after `approved-at`.
-- **accepted-hash** (optional) — the fingerprint of the content accepted,
+- **accepted-by** (`domain/` only, optional) — who accepted the built work
+  against this chapter. One value, not a list.
+- **accepted-at** (`domain/` only, optional) — the day they accepted it, in
+  `YYYY-MM-DD` form, on or after `approved-at`.
+- **accepted-hash** (`domain/` only, optional) — the fingerprint of the content accepted,
   computed exactly as `approved-hash` is. Where both are written they are one
   value, because an acceptance is of the approved content; two that disagree
   say the chapter moved between the two decisions, and are reported.
@@ -333,7 +340,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `import` |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, or an additional page's own filename |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 

@@ -177,7 +177,6 @@ const TYPE_BY_FOLDER = {
             "model",
             "flow",
             "dependencies",
-            "import",
         ],
     },
     tech: {
@@ -730,7 +729,7 @@ export function documentDigest(markdown) {
  * prefix its own subject. Shared by the document lint and by graph
  * construction, so the canvas, the CLI, and CI all report the same thing.
  */
-export function typeIssues(folder, blockLevel, meta) {
+export function typeIssues(folder, blockLevel, meta, fileBase = null) {
     const issues = [];
     if (!meta) return issues;
 
@@ -743,10 +742,25 @@ export function typeIssues(folder, blockLevel, meta) {
                 message: `is missing required \`type\`. Expected one of: ${allowed.join(", ")}.`,
             });
         } else if (!allowed.includes(declared)) {
-            issues.push({
-                severity: "error",
-                message: `has type "${declared}", expected one of: ${allowed.join(", ")}.`,
-            });
+            // A bounded context may carry a file the convention does not name —
+            // whatever that context has to record and no other file holds. The
+            // listed values are the files with documented responsibilities, not
+            // the only files permitted, so an unlisted one is accepted on the
+            // rule every listed one already follows: a file's `type` is its
+            // filename. That still catches the typo, which is what the closed
+            // list was actually buying.
+            if (folder === "domain" && blockLevel === "file" && fileBase && declared === fileBase) {
+                // An additional page, named for itself. Nothing to report.
+            } else {
+                issues.push({
+                    severity: "error",
+                    message: `has type "${declared}", expected one of: ${allowed.join(", ")}${
+                        folder === "domain" && blockLevel === "file"
+                            ? `, or "${fileBase}" to match this file's own name`
+                            : ""
+                    }.`,
+                });
+            }
         }
     } else if (declared !== null) {
         issues.push({
@@ -1394,6 +1408,12 @@ export function removedFieldIssues(meta) {
  */
 export function validateDocument(relPath, markdown) {
     const kind = folderKindForPath(relPath);
+    // The filename's own name, before any split suffix: `context.md` is
+    // `context`, and `domain.order.md` is `domain`, because a split file is
+    // the kind of the file it is named after.
+    const fileBase = (String(relPath).replace(/\\/g, "/").split("/").pop() ?? "")
+        .replace(/\.md$/i, "")
+        .split(".")[0];
     const issues = [];
     if (!kind) {
         issues.push({
@@ -1499,7 +1519,7 @@ export function validateDocument(relPath, markdown) {
         // vocabulary its folder defines. Folders that define no vocabulary
         // (`.arc42`, `.design`) omit the field entirely.
         const blockLevel = chapter.level === 1 ? "file" : "chapter";
-        for (const issue of typeIssues(kind, blockLevel, chapter.meta)) {
+        for (const issue of typeIssues(kind, blockLevel, chapter.meta, fileBase)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 

@@ -202,10 +202,7 @@ proposes a term with the discovered code name as an `alias`, which turns a
 one-off inference into a durable pairing for the next pass. The context folder
 itself, including its term chapters, is created by the same path.
 
-`tech/` has no kind here — `tech-update` already covers that direction. Nor
-does `import.md`: a go-live takeover is a transition the team runs once, not a
-capability with code to stay level with, so there is nothing for a capture or
-a drift verdict to compare it against.
+`tech/` has no kind here — `tech-update` already covers that direction.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all three
 skills reference and none repeats: counterpart resolution, the evidence rules
@@ -367,7 +364,10 @@ context's `term` chapters into `domain.md` now that the glossary file kind is go
 is `011-context-md`, which gives every context its `context.md` and moves each feature's
 bare flag key onto a `feature-flag` chapter there; the third is `012-no-checkout-overlay`,
 which removes the `.gitignore` block and moves a checkout-layer personal file out of the
-clone now that nothing personal lives in one. The
+clone now that nothing personal lives in one; the fourth is
+`013-decision-rungs-are-domains`, which takes the `approved` and `accepted` rungs and
+their six record fields off every folder but `domain/`, and names the `tech/` and `ai/`
+chapters whose original rating no script can restore. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -426,8 +426,11 @@ retires the checkout layer of the stack-config overlay and the `.gitignore` bloc
 existed for it — the stamp's `materialized` no longer carries `.gitignore#devbook` — and
 ships as `012-no-checkout-overlay`. 13 adds the optional `approved-hash`
 fingerprint over a chapter's content, the `accepted` rung above `approved` with
-`accepted-by`, `accepted-at`, and `accepted-hash`, and `import` as a `.domain`
-file type; all three are additive, so it ships no migration.
+`accepted-by`, `accepted-at`, and `accepted-hash`, and a `.domain` bounded
+context's freedom to carry a page the convention does not name, whose
+file-level `type` is its own filename. It also confines both rungs and their
+six fields to `.domain`, which is breaking, so it ships as
+`013-decision-rungs-are-domains`.
 
 ## Folder structure
 
