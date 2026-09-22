@@ -262,6 +262,11 @@ prompt hook cannot do. On a host without command hooks the run is still tracked 
 panels simply have nothing to show, which is why this costs a column and not a capability
 group.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every number is measured from a tool event; nothing asks the agent to count | the hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
+| On a host without command hooks the run is still tracked in full, and only the panels are empty | hook registration | untested |
+
 ### Handoff Marker
 
 ```meta
@@ -272,6 +277,11 @@ The note a deliberately handed-off run leaves behind. It is what distinguishes a
 from an abandoned one — both look idle by every other signal, and only one should be reattached
 to. Separating them is what a later `start_run` needs in order to reattach to one and refuse
 the other.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A parked run carries a marker; an abandoned one does not, though both look idle by every other signal | `update_stage()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
+| `start_run` reattaches to a run that carries one and refuses one that does not | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 
 ### Viewer
 
@@ -311,6 +321,12 @@ Command-invoked, at the end of a run or long after it. It is a service rather th
 [Run Record](#run-record) because it produces an artifact outside the record and reads across
 every part of it at once.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The report is written from what was recorded, read across every part of the record at once | `export_report()` | untested |
+| Markdown, or self-contained HTML with the evidence inlined | `export_report()` | untested |
+| Command-invoked, at the end of a run or long after it | `export_report()` | untested |
+
 ### Telemetry Capture
 
 ```meta
@@ -323,6 +339,12 @@ the record, and warns when the session's context gauge crosses a threshold.
 Event-triggered, by the host, outside any run's control flow. It is the one thing in this
 marketplace that measures a session rather than being told about it — which is also why it is
 the one place this block is host-specific, structurally rather than by omission.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Event-triggered by the host, outside any run's control flow | hook registration | untested |
+| It folds tool calls, sub-agent use, and token usage into the record | the hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
+| It warns when the session's context gauge crosses a threshold | the hook | untested |
 
 ## Runtime
 
