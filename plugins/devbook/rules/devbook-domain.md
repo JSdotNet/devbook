@@ -91,7 +91,11 @@ feature chapter's `setting` reference is what says the capability hangs on it.
 Both carry `key`, the identifier as the code spells it, which is what lets a
 flag check or a configuration read found in code resolve to a chapter instead
 of to prose. A feature points at what gates or configures it through
-`feature-flag` or `setting`.
+`feature-flag` or `setting`. A deployment or environment value — a retry
+budget, a timeout, a maximum an operator sets per environment — is a `setting`
+with `scope: system`: a person chooses it, it is not decided at release, and it
+is never retired the way a flag is. A `feature-flag` is only ever a capability
+switch.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -191,7 +195,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     turns a capability on or shapes how it behaves. Carries `key` (the setting
     key the code reads), `scope` (`user`, `tenant`, or `system` — who may
     change it), and `default`, the value the product ships with. The prose
-    says what each value does.
+    says what each value does. A deployment or environment value an operator
+    sets per environment is this type, at `scope: system`.
   - Both are headed by their name in business language, never the key; the
     key is the field. Their `related` points at the feature chapters they gate
     or configure, and those chapters point back through `feature-flag` or
@@ -244,7 +249,12 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     administrator user that changes settings.
   - Rights are stated here, not argued. Why a right is split — separation of
     duties, four eyes — is a modeling decision and belongs in `domain.md`, beside
-    the invariant it protects.
+    the invariant it protects. A modeling decision that was contested, is
+    expensive to reverse, or would otherwise be re-litigated is an
+    `arc42/adr/` record instead — one per concern, with its history — and the
+    chapter's `related` points at it. There is no `decisions.md` here: a
+    decision log beside the model is a second copy of the *why*, and it goes
+    stale on the side nobody reads.
     A context whose rights need a screen-to-right matrix closes the file with one
     `## Rights` section carrying that table.
 - **features.md** — The features and sub-features this bounded context

@@ -5,8 +5,8 @@ index: root
 related: [".devbook/arc42/09-architecture-decisions.md"]
 ```
 
-A technical choice this repository made and can defend — one that would take a migration of
-code, data, or an installed machine to reverse. One record per concern, named for the concern,
+A choice this repository made and can defend — one whose reversal would cost a migration of
+code, data, or an installed machine. One record per concern, named for the concern,
 always describing the standing choice, with a `## History` table carrying every decision that
 shaped it. A naming, layout, or process choice is not a record: the rule or chapter that states
 it carries the reason.

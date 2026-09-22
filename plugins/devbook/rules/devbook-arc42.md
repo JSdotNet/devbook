@@ -110,15 +110,16 @@ instructions.
 
 ## Decision records (`adr/`)
 
-A decision record holds a **technical choice**: a storage engine, an API style,
-a messaging or integration protocol, a hosting or deployment model, a runtime or
-framework, how packages are managed and built. The test is what reversing it
-would cost. A choice that would take a migration of code, data, or
-infrastructure to reverse is a decision record; one a reader could reverse with
-a find-and-replace is not. Naming, folder layout, process rules, who owns what,
-and how a document is written are not architecture: the rule, chapter, or
-bounded context that states them carries the reason in a sentence, and no
-record is opened.
+A decision record holds a choice whose reversal would cost a **migration** — of
+code, of data, or of the model's language: a storage engine, an API style, a
+messaging or integration protocol, a hosting or deployment model, a runtime or
+framework, how packages are managed and built, and equally an aggregate
+boundary, a snapshot-versus-reference choice, a consistency boundary, or a
+contested term the model now depends on. The test is what reversing it would
+cost. A choice a reader could reverse with a find-and-replace is not a record.
+Naming, folder layout, process rules, who owns what, and how a document is
+written are not architecture: the rule, chapter, or bounded context that states
+them carries the reason in a sentence, and no record is opened.
 
 **One record per concern, not per decision.** The file is the concern —
 `adr/storage.md`, `adr/api.md`, `adr/package-management.md` — a kebab-case slug
