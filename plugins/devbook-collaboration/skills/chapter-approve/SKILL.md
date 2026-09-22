@@ -111,6 +111,11 @@ what changed since the approval. The same lift is the revise outcome on an appro
 chosen not to let stand over notes raised since it. Do not re-approve it here —
 that is a new decision, and it starts at step 1.
 
+An acceptance stands on the approval, so lifting one lifts the other: where the
+chapter also carries `status: accepted`, say so before lifting, and delete
+`accepted-by`, `accepted-at`, and `accepted-hash` in the same change. Accepting
+again is `chapter-accept`, over the re-approved content.
+
 ## Do not
 
 - Do not approve on your own judgment, however clear the chapter is.

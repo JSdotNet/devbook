@@ -365,6 +365,9 @@ instructions.
   `devbook-chapter-metadata.md`: a person approved this chapter,
   recorded with `approved-by` and `approved-at`. It is written explicitly, never
   rested at, and comes off the moment the content changes.
+  Above it sits `accepted`: a person saw the built work against this chapter
+  and accepted it, recorded with `accepted-by` and `accepted-at` beside the
+  approval record it stands on. Both come off together.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`); drop the line when

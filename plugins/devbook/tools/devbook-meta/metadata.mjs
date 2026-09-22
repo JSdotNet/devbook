@@ -34,15 +34,23 @@ export const DEVBOOK_PREFIX = `${DEVBOOK_ROOT}/`;
 
 const APPROVED_STATUS = "approved";
 
+// One rung above `approved`, and the two are a stack rather than a choice:
+// `approved` says the specification is right, `accepted` says what was built
+// satisfies it. They are usually stated by different people on different days,
+// which is why the acceptance never replaces the approval record — a chapter
+// at `accepted` carries both. Acceptance is of the chapter's content, not of a
+// commit; which pull request delivered it is the tracker's business.
+const ACCEPTED_STATUS = "accepted";
+
 const STATUS_BY_FOLDER = {
-    domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
-    arc42: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
-    tech: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
-    design: ["draft", "active", "deprecated", APPROVED_STATUS],
+    domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
+    arc42: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
+    tech: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS, ACCEPTED_STATUS],
+    design: ["draft", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
     // `.ai` deliberately reuses `.tech`'s ladder: a reader learns one
     // adoption vocabulary. What is on the ladder differs — `.tech` rates a
     // technology, `.ai` rates a way of working with one.
-    ai: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
+    ai: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS, ACCEPTED_STATUS],
 };
 
 // Who approved, and on what day. The gate writes both; they exist so the
@@ -62,6 +70,15 @@ const APPROVAL_FIELDS = ["approved-by", "approved-at"];
 // current whatever either actually is. A fingerprint of the chapter needs no
 // git and is exact.
 const CONTENT_HASH_FIELD = "approved-hash";
+
+// Who accepted the built work against this chapter, and on what day — the
+// approval triad's shape, one rung up, for the same reason: the statement
+// travels with the content instead of living in a tracker this repository
+// cannot read. `accepted-hash` is the same fingerprint as `approved-hash`,
+// computed by the same function, and the two are equal whenever both are
+// written — an acceptance is of the approved content.
+const ACCEPTANCE_FIELDS = ["accepted-by", "accepted-at"];
+const ACCEPTED_HASH_FIELD = "accepted-hash";
 
 // `sha256:` names the algorithm so a later one can be told apart, and eight
 // hex characters is the whole digest a reader ever compares: this detects an
@@ -235,6 +252,8 @@ const COMMON_OPTIONAL_FIELDS = [
     "tests",
     ...APPROVAL_FIELDS,
     CONTENT_HASH_FIELD,
+    ...ACCEPTANCE_FIELDS,
+    ACCEPTED_HASH_FIELD,
     ...REVIEW_FIELDS,
 ];
 
@@ -1084,7 +1103,11 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
 export function approvalIssues(meta, contentHash = null) {
     if (!meta) return [];
     const issues = [];
-    const approved = meta.status === APPROVED_STATUS;
+    // `accepted` stands on the approval and keeps its record, so the approval
+    // fields are at home under either rung. This is the one place the orphan
+    // rule widens.
+    const accepted = meta.status === ACCEPTED_STATUS;
+    const approved = meta.status === APPROVED_STATUS || accepted;
 
     for (const field of APPROVAL_FIELDS) {
         const raw = meta[field];
@@ -1144,7 +1167,127 @@ export function approvalIssues(meta, contentHash = null) {
             if (meta[field] == null) {
                 issues.push({
                     severity: "warning",
-                    message: `states \`status: ${APPROVED_STATUS}\` without \`${field}\`. An approval nobody signed and dated is not a record of a decision.`,
+                    message: `states \`status: ${meta.status}\` without \`${field}\`. An approval nobody signed and dated is not a record of a decision.`,
+                });
+            }
+        }
+    }
+
+    for (const issue of acceptanceIssues(meta, contentHash)) issues.push(issue);
+
+    return issues;
+}
+
+/**
+ * Lint the acceptance record: the `accepted` rung and its three fields.
+ *
+ * The rung says a person saw the built work against this chapter and accepted
+ * it — a different statement from `approved`, which says the chapter itself is
+ * right, and usually made by a different person on a different day. So the two
+ * stack: an accepted chapter carries both records, and a content change drops
+ * both, because a build was accepted against the text that was approved.
+ *
+ * Called from `approvalIssues`, since every rule here is about how the two
+ * records sit together and splitting them across two callers would let a
+ * repository get one without the other.
+ */
+function acceptanceIssues(meta, contentHash = null) {
+    const issues = [];
+    const accepted = meta.status === ACCEPTED_STATUS;
+
+    for (const field of ACCEPTANCE_FIELDS) {
+        const raw = meta[field];
+        if (raw == null) continue;
+        if (Array.isArray(raw) || String(raw).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${field}\` set to an empty or list value — it records one acceptor and one day.`,
+            });
+            continue;
+        }
+        if (!accepted) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${field}\` without \`status: ${ACCEPTED_STATUS}\`. Either the acceptance is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        }
+    }
+
+    if (meta["accepted-at"] != null && !DATE_PATTERN.test(String(meta["accepted-at"]))) {
+        issues.push({
+            severity: "error",
+            message: `has \`accepted-at\` "${meta["accepted-at"]}" — an acceptance date is a single calendar day in \`YYYY-MM-DD\` form.`,
+        });
+    }
+
+    if (accepted) {
+        for (const field of ACCEPTANCE_FIELDS) {
+            if (meta[field] == null) {
+                issues.push({
+                    severity: "warning",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` without \`${field}\`. An acceptance nobody signed and dated is not a record of a decision.`,
+                });
+            }
+        }
+
+        // The rung it stands on. Without the approval record there is nothing
+        // saying the chapter the build was accepted against was ever agreed.
+        for (const field of APPROVAL_FIELDS) {
+            if (meta[field] == null) {
+                issues.push({
+                    severity: "error",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` without \`${field}\` — an acceptance stands on an approval. Record who approved the chapter and when, or write \`status: ${APPROVED_STATUS}\` first.`,
+                });
+            }
+        }
+    }
+
+    // A build cannot be accepted against a chapter before that chapter was
+    // approved, so the two dates are ordered whenever both are readable.
+    const approvedAt = meta["approved-at"];
+    const acceptedAt = meta["accepted-at"];
+    if (
+        approvedAt != null && acceptedAt != null &&
+        DATE_PATTERN.test(String(approvedAt)) && DATE_PATTERN.test(String(acceptedAt)) &&
+        String(acceptedAt) < String(approvedAt)
+    ) {
+        issues.push({
+            severity: "error",
+            message: `has \`accepted-at\` ${acceptedAt} before \`approved-at\` ${approvedAt} — the build was accepted against a chapter that had not been approved yet. One of the two dates is wrong.`,
+        });
+    }
+
+    const recorded = meta[ACCEPTED_HASH_FIELD];
+    if (recorded != null) {
+        if (Array.isArray(recorded) || String(recorded).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${ACCEPTED_HASH_FIELD}\` set to an empty or list value — it records one fingerprint of the content accepted.`,
+            });
+        } else if (!CONTENT_HASH_PATTERN.test(String(recorded).trim())) {
+            issues.push({
+                severity: "error",
+                message: `has \`${ACCEPTED_HASH_FIELD}\` "${recorded}" — a content fingerprint is \`sha256:\` followed by eight lowercase hex characters, written by the acceptance gate and never by hand.`,
+            });
+        } else if (!accepted) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${ACCEPTED_HASH_FIELD}\` without \`status: ${ACCEPTED_STATUS}\`. Either the acceptance is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        } else {
+            const approvedHash = meta[CONTENT_HASH_FIELD];
+            if (
+                approvedHash != null && CONTENT_HASH_PATTERN.test(String(approvedHash).trim()) &&
+                String(approvedHash).trim() !== String(recorded).trim()
+            ) {
+                issues.push({
+                    severity: "error",
+                    message: `records \`${CONTENT_HASH_FIELD}\` ${approvedHash} and \`${ACCEPTED_HASH_FIELD}\` ${recorded} — an acceptance is of the approved content, so the two are one value. The chapter changed between the two decisions.`,
+                });
+            } else if (contentHash != null && String(recorded).trim() !== contentHash) {
+                issues.push({
+                    severity: "error",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` over content that has changed since \`accepted-at\` — \`${ACCEPTED_HASH_FIELD}\` records ${recorded}, the content now fingerprints as ${contentHash}. Accept the chapter again, or take the rung off.`,
                 });
             }
         }
@@ -1202,10 +1345,10 @@ export function reviewIssues(meta, openNotes = 0) {
         });
     }
 
-    if (meta.status === APPROVED_STATUS) {
+    if (meta.status === APPROVED_STATUS || meta.status === ACCEPTED_STATUS) {
         issues.push({
             severity: "error",
-            message: `states \`status: ${APPROVED_STATUS}\` while carrying review state — approval clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
+            message: `states \`status: ${meta.status}\` while carrying review state — the decision clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
         });
     }
 
@@ -1493,8 +1636,9 @@ export function validateDocument(relPath, markdown) {
         // the record is checked. The content is only fingerprinted when the
         // chapter claims one — most do not, and hashing every block to learn
         // that would be work for nothing.
-        const recordedHash = chapter.meta[CONTENT_HASH_FIELD];
-        const contentHash = recordedHash == null ? null : chapterHash(markdown, chapter.line);
+        const claimsHash =
+            chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
+        const contentHash = claimsHash ? chapterHash(markdown, chapter.line) : null;
         for (const issue of approvalIssues(chapter.meta, contentHash)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
@@ -1511,10 +1655,13 @@ export function validateDocument(relPath, markdown) {
         // here — an open question on any other rung is the state the fence
         // exists for, and a gate that warned on every one would be teaching
         // people to ignore it.
-        if (chapter.meta.status === APPROVED_STATUS && openQuestions.has(chapter.line)) {
+        if (
+            (chapter.meta.status === APPROVED_STATUS || chapter.meta.status === ACCEPTED_STATUS) &&
+            openQuestions.has(chapter.line)
+        ) {
             issues.push({
                 severity: "error",
-                message: `${label} states \`status: ${APPROVED_STATUS}\` while carrying an open \`kind: question\` annotation (line ${openQuestions.get(chapter.line)}) — an open question means the chapter is not agreed. Resolve and sweep the note, or take the approval off.`,
+                message: `${label} states \`status: ${chapter.meta.status}\` while carrying an open \`kind: question\` annotation (line ${openQuestions.get(chapter.line)}) — an open question means the chapter is not agreed. Resolve and sweep the note, or take the rung off.`,
             });
         }
 

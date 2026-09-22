@@ -149,6 +149,11 @@ const ATTRIBUTE_FIELDS = [
     // Carried so a consumer can tell "approved, and the content has not moved"
     // from a bare "approved" without re-reading the Markdown or asking git.
     "approved-hash",
+    // The rung above it: who accepted the built work against this chapter, and
+    // when. The approval record stays beside it — the two are a stack.
+    "accepted-by",
+    "accepted-at",
+    "accepted-hash",
 ];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,

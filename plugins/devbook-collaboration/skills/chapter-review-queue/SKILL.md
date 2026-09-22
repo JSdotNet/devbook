@@ -41,17 +41,20 @@ chapter that never appears in the queue.
 
    | Row | Condition | Owed by |
    |---|---|---|
-   | Approved over a question | `status: approved` with an open `kind: question` note | Whoever approved it |
+   | Approved over a question | `status: approved` or `accepted` with an open `kind: question` note | Whoever approved it |
+   | Acceptance lapsed | `status: accepted` and the chapter's content changed after `accepted-at` | Whoever accepted it |
    | Stale approval | `status: approved` and the chapter's content changed after `approved-at` | Whoever approved it |
    | Objected to since approval | `status: approved` with an open note dated after `approved-at` | Whoever approved it |
    | Changes requested | `review: changes-requested` | The author |
    | Awaiting review | `review: requested` | `reviewer` |
    | Awaiting approval | `review: cleared` | Whoever approves |
+   | Awaiting acceptance | `status: approved`, signed and unchanged | Whoever accepts the built work |
    | Unsigned approval | `status: approved` with no `approved-by` or `approved-at` | Whoever approved it |
    | Notes to sweep | Resolved notes still in the chapter | Whoever is about to merge the branch |
 
-   For the stale row, prefer the chapter's own fingerprint: where it carries
-   `approved-hash`, compare it with `chapter-hash.mjs <path#slug>` — different
+   For the two lapse rows, prefer the chapter's own fingerprint: where it
+   carries `approved-hash` or `accepted-hash`, compare it with
+   `chapter-hash.mjs <path#slug>` — different
    is stale, exactly, with no git and no caveat. Only where it carries none,
    fall back to comparing `approved-at` with the last commit that touched the
    chapter's own lines — `git log -1 --format=%ad --date=short -L` over its

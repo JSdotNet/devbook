@@ -235,6 +235,22 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   A repository that wants that lapse **checked** rather than remembered writes
   `approved-hash` beside the other two.
+
+  One rung sits above it, `accepted`: a person has seen the implemented work
+  against this chapter and accepted it. The two are a **stack, not a choice** —
+  `approved` says the specification is right, `accepted` says what was built
+  satisfies it, and they are usually stated by different people on different
+  days. So an accepted chapter carries both records: `approved-by` and
+  `approved-at` stay, with `accepted-by` and `accepted-at` beside them and
+  `accepted-at` on or after `approved-at`. An acceptance written over no
+  approval is reported; there would be nothing saying the chapter the build was
+  accepted against was ever agreed.
+
+  What is accepted is the chapter's content, never a commit — which pull
+  request delivered it belongs to the tracker. Both records drop together in
+  one change the moment the content changes, and the chapter returns to its
+  folder's ordinary rung: a build was accepted against the text that was
+  approved, so neither statement outlives it.
 - **approved-by** (optional) — who approved this chapter: a person, a handle, or
   a team. One value, not a list.
 - **approved-at** (optional) — the day they approved it, in `YYYY-MM-DD` form.
@@ -261,7 +277,20 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   same change that drops the rung. An approval nobody signed and dated is
   reported, as is an approval record left behind on a chapter no longer
   claiming the rung — either the approval is current and the status says so, or
-  it has lapsed and the record comes out with it.
+  it has lapsed and the record comes out with it. Under `status: accepted` the
+  approval record is not orphaned: the acceptance stands on it.
+- **accepted-by** (optional) — who accepted the built work against this
+  chapter. One value, not a list.
+- **accepted-at** (optional) — the day they accepted it, in `YYYY-MM-DD` form,
+  on or after `approved-at`.
+- **accepted-hash** (optional) — the fingerprint of the content accepted,
+  computed exactly as `approved-hash` is. Where both are written they are one
+  value, because an acceptance is of the approved content; two that disagree
+  say the chapter moved between the two decisions, and are reported.
+
+  The three behave field for field like the approval three: written together,
+  deleted together, reported when one is left behind, and off the moment the
+  content changes.
 - **review** (optional) — where this chapter's review pass stands, on the way to
   that decision: `requested` (waiting on the reviewer), `changes-requested`
   (waiting on the author; at least one open annotation says why), or `cleared`
