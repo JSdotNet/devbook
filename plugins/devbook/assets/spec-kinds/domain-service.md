@@ -1,6 +1,6 @@
 # Kind: domain-service
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 domain service, policy, or process manager that `assets/code-sync-protocol.md`
 does not already say. The protocol carries the resolution ladder, the evidence
 rules, the five verdicts, the status rules, the brief contract, and the report
@@ -61,7 +61,7 @@ with `### Payload`, `### Consumers`, and `### Published language rules` as
 structural sub-sections carrying no `meta` blocks. An outward integration
 contract belongs in the dependency tables as a published language, not here.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Read the service type in full, its registration in the dependency container,
 every call site, and the aggregates it touches. Then mine the tests: one that

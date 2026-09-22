@@ -1,6 +1,6 @@
 # Kind: building-block
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about the
+What `capture-specs`, `apply-change`, and `verify-change` need to know about the
 building block view that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -55,7 +55,7 @@ depends upward is exactly the finding this view exists to surface, and a diagram
 redrawn to look correct hides it. Link ADR and TDR content under `.devbook/arc42/adr/`
 and `.devbook/arc42/tdr/`; never copy it.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Read the solution and project files, the project and package references, the
 container registrations, the public API surfaces, and any AppHost or compose

@@ -1,6 +1,6 @@
 ---
 name: verify-change
-description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same six kinds as sync-specs and apply-change: aggregate, domain-service, feature, setting, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and unit tests only; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (sync-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
+description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same six kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and unit tests only; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
 ---
 
 # verify-change
@@ -10,7 +10,7 @@ Open the reply with `devbook@<version>`, `version` read from `../../.claude-plug
 Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`. Nothing in them is repeated here.
 
-**Kind.** Decided as `sync-specs` decides it: the chapter's `type`, or the
+**Kind.** Decided as `capture-specs` decides it: the chapter's `type`, or the
 file where the folder has none. One kind per run; a scope may hold several
 chapters of it — an aggregate with everything it owns, a bounded context's
 features, the whole building block view.
@@ -26,12 +26,12 @@ the bounded context where the kind has one, and the repository root.
 3. Read the implementation and its unit tests, as the kind's file directs.
    Only code that executes and tests that pass are evidence. Do not start the
    application: a `feature` is verified from code and tests here, and the run
-   belongs to `sync-specs`.
+   belongs to `capture-specs`.
 4. Reach exactly one verdict per chapter, with the evidence that settles it,
    specific enough to re-check.
 5. Close with the protocol's report table, `aligned` rows included, and stop.
    The `Action` column names what the verdict calls for and nothing is done:
-   `code-ahead` calls for `sync-specs`, `spec-ahead` for `apply-change`,
+   `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.
 
 ## Do not

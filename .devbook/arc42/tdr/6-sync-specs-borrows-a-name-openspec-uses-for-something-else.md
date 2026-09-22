@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-15
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/building-blocks/devbook.md#sync-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
 ```
 
 **Remediation state:** identified · **Severity:** low · **Owner:** the maintainer

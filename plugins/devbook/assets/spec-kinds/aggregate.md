@@ -1,6 +1,6 @@
 # Kind: aggregate
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about an
+What `capture-specs`, `apply-change`, and `verify-change` need to know about an
 aggregate that `assets/code-sync-protocol.md` does not already say. The protocol
 carries the resolution ladder, the evidence rules, the five verdicts, the status
 rules, the brief contract, and the report table; this file carries the kind.
@@ -109,7 +109,7 @@ published outward. The chapter documents the domain event; the outward contract
 belongs in the dependency tables as a published language. Do not describe what a
 handler does as part of the event's meaning.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Read the root type in full, then every type it owns, then its repository or
 persistence mapping, then the sites that raise its events and the handlers

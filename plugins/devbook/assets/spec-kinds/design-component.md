@@ -1,6 +1,6 @@
 # Kind: design-component
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 component guideline that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -78,7 +78,7 @@ with no keyboard equivalent is a **rule violation**, not a design variant — th
 folder rules are unconditional — so report it against the code and never write
 it into the chapter as accepted practice.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Read the front-end manifests, then the import sites, then the component usage,
 then the styling — looking for hard-coded values where a token is declared and

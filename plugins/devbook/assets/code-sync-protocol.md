@@ -3,14 +3,14 @@
 Shared rules for the three skills that connect a repository's devbook folders
 to its running code:
 
-- **`sync-specs`** — something already exists in the application, the matching
+- **`capture-specs`** — something already exists in the application, the matching
   chapter is missing, thin, or stale, so read the implementation and write the
   chapter.
 - **`apply-change`** — a chapter is agreed but not built, so turn it into a
   change brief and hand it to the flow that implements it.
 - **`verify-change`** — report where the two stand, and write nothing.
 
-Throughout this file and the files that load it, **capture** is what `sync-specs`
+Throughout this file and the files that load it, **capture** is what `capture-specs`
 does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
@@ -32,7 +32,7 @@ silent everywhere else.
 
 ## The two directions
 
-| | `sync-specs` | `apply-change` | `verify-change` |
+| | `capture-specs` | `apply-change` | `verify-change` |
 |---|---|---|---|
 | Starting point | Implementation exists | Chapter exists and is agreed | Both exist |
 | Missing thing | The chapter | The implementation | The knowledge of which side moved |
@@ -40,7 +40,7 @@ silent everywhere else.
 | Writes | The chapter, through the folder's flow | A change brief, handed to the code-side flow | The report table, and nothing else |
 | Never | Changes source or test code | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
 
-A single request often needs both directions, in sequence: `sync-specs` what is
+A single request often needs both directions, in sequence: `capture-specs` what is
 built, then `apply-change` what the corrected chapter now says is missing. Run
 them as two passes with the chapter settled in between — never interleave them,
 or the chapter becomes both the question and the answer. `verify-change` is the
@@ -200,7 +200,7 @@ chapter in scope. For `verify-change` the verdict is the whole result, and the
 | Verdict | Meaning | What to do |
 |---|---|---|
 | `aligned` | The chapter and the code say the same thing. | Report it and stop. No write in either direction. Say what was compared, so the pass is not repeated. |
-| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Apply: stop — there is nothing to build; hand the scope to `sync-specs`. |
+| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Apply: stop — there is nothing to build; hand the scope to `capture-specs`. |
 | `spec-ahead` | The chapter carries agreed content the code does not implement. | Apply: emit the change brief and hand it to the code-side flow. Capture: stop — the chapter is not stale, it is unbuilt; hand the scope to `apply-change`. |
 | `conflict` | The chapter and the code make **incompatible** claims: a different invariant, a contradictory state transition, an event with a different meaning, a term used for two different concepts. | **Always stop and ask.** Never resolve a conflict by writing. |
 | `unresolved` | The counterpart could not be paired, or the evidence is too thin to tell which side is ahead. | Stop. Report the resolution attempts, the candidates found, and what evidence would settle it. |

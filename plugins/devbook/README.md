@@ -119,15 +119,17 @@ does; how a change is carried — stages, roles, the approval gate, a pull reque
 delivery engine's, which ships one flow per folder and reads these rules from the repository.
 With `devbook` alone, a folder edit follows the folder's instruction file directly.
 
-### Skills: `sync-specs`, `apply-change`, `verify-change`
+### Skills: `capture-specs`, `apply-change`, `verify-change`
 
-Three skills between a devbook chapter and the code that implements it, named
-after the verbs [OpenSpec](https://openspec.dev/docs/skills) uses for the same
-moves — `apply-change` and `verify-change` exactly, `sync-specs` approximately,
-since OpenSpec has no skill that reads code to update a spec (debt record 6 in
-this repository's `.devbook/arc42/tdr/`). The chapter is the **spec**.
+Three skills between a devbook chapter and the code that implements it. Two are
+named after the verbs [OpenSpec](https://openspec.dev/docs/skills) uses for the
+same moves — `apply-change` and `verify-change` mean there what they mean here.
+The third is not: OpenSpec's `sync-specs` merges the spec deltas a proposal
+already wrote, and this direction — reading source to write the chapter — is one
+OpenSpec has no skill for, so it carries the protocol's own word instead. The
+chapter is the **spec**.
 
-- **`sync-specs`** — something exists in the application and the chapter is
+- **`capture-specs`** — something exists in the application and the chapter is
   missing, thin, or stale, so read the implementation and write the chapter.
   Source and tests are the only evidence; comments, TODOs, and disabled tests
   are not. The write routes per **Where the spec-side write goes** in
@@ -195,7 +197,7 @@ files; the two words are not, because a promise made outside the model and a
 guarantee made by a type are different claims held by different people. That
 also fixes the level of proof: a requirement is `e2e`, an invariant `unit`.
 
-**`sync-specs` runs the application for a feature.** `features.md` is the one
+**`capture-specs` runs the application for a feature.** `features.md` is the one
 chapter file written from the user's point of view, so that pass starts the app,
 walks the feature, and captures a screenshot per step — reading a controller
 tells you a route exists, while using the feature tells you what the product
@@ -228,7 +230,7 @@ signal when it does. It goes through the chapter's `aliases`, then the `arc42/`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
-The dependency on the flows is one-way. `sync-specs` names its folder's write
+The dependency on the flows is one-way. `capture-specs` names its folder's write
 path and `apply-change` its category's, and both hand over grounded input; no
 flow knows these skills exist.
 
@@ -350,7 +352,7 @@ for technologies that do not appear in package manifests.
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
-| `assets/code-sync-protocol.md` | Shared rules for `sync-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration

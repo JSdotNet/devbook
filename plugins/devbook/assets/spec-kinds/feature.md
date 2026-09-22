@@ -1,6 +1,6 @@
 # Kind: feature
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature that `assets/code-sync-protocol.md` does not already say. The protocol
 carries the resolution ladder, the evidence rules, the five verdicts, the status
 rules, the brief contract, and the report table; this file carries the kind.
@@ -51,7 +51,7 @@ value.
 | `related` | The `domain.md` aggregates, events, and services the capability exercises | Those chapters present and correct, with their counterparts |
 | Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of a `user` chapter in `context.md` or `actors.md`, never a line in `features.md`; the checked name is that chapter's `role` | The `user` whose `role` matches the check and whose chapter points at this feature, holding the right that chapter states — check the actor chapters and the repository's authorization configuration |
 
-## Capturing — `sync-specs`: run the application
+## Capturing — `capture-specs`: run the application
 
 This is the one chapter written from the **user's** point of view, and the one
 kind whose subject you can go and look at. Reading a controller tells you a

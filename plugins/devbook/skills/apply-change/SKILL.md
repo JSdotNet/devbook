@@ -1,6 +1,6 @@
 ---
 name: apply-change
-description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way sync-specs hands a chapter to the folder flow. Covers six kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, the building block view in arc42/, a component guideline in design/. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (sync-specs), or checking drift without changing anything (verify-change).'
+description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way capture-specs hands a chapter to the folder flow. Covers six kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, the building block view in arc42/, a component guideline in design/. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs), or checking drift without changing anything (verify-change).'
 disable-model-invocation: true
 ---
 
@@ -12,10 +12,10 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`, then the folder rule that file names. Nothing in them is
 repeated here.
 
-**Kind.** One kind and one chapter per run, decided as `sync-specs` decides it:
+**Kind.** One kind and one chapter per run, decided as `capture-specs` decides it:
 the chapter's `type`, or the file where the folder has none. An aggregate is
 briefed whole, with everything it owns and the events it raises. A chapter that
-does not exist is a modelling task for the folder's flow, or a `sync-specs`
+does not exist is a modelling task for the folder's flow, or a `capture-specs`
 pass if the thing is already in code.
 
 **Inputs.** The chapter as `<path>#<heading-slug>` or by heading, the bounded
@@ -39,7 +39,7 @@ context where the kind has one, and the repository root.
    as a bare primitive as well as under its own type.
 5. Reach a verdict per chapter. `spec-ahead` is the case this skill exists for.
    `aligned`: stop and say so. `code-ahead`: stop and hand the scope to
-   `sync-specs` — stale, not unbuilt. `conflict`: stop and ask; a conflict never
+   `capture-specs` — stale, not unbuilt. `conflict`: stop and ask; a conflict never
    becomes a `defect` brief on this skill's own authority.
 6. Assemble the brief per the protocol, with the kind's file supplying the
    language, the out-of-scope list, and the shape of the acceptance checks.

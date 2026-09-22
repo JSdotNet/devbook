@@ -1,6 +1,6 @@
 # Kind: setting
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature flag or a setting that `assets/code-sync-protocol.md` does not already
 say. The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -63,7 +63,7 @@ produces: a switch nobody can name in business language is either a capability
 `features.md` does not list or a leftover the code should lose. Report it
 rather than inventing a chapter around it.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Start from the reads. Find every flag check and configuration read in the
 context's code, resolve each to its key and its fallback, and follow each
