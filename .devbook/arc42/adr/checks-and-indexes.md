@@ -84,6 +84,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | `verify-change` takes a folder or a bounded context as scope, one kind per run and one table; the other two converters stay at one target, because only the report-only one can widen without deciding more. |
 | 2026-09-17 | The checker, fence writer, and three skills return to `devbook`; `build.mjs` writes only on `--write`; `devbook-derived` is the committed index alone, with the canvas and a `refresh` skill. |
 | 2026-09-17 | The whole `tools/devbook-meta/` folder and the canvas move to a new `devbook-derived` plugin — superseded the same day. |
 | 2026-09-17 | `devbook-meta` writes no file; `--print` emits the documents — superseded the same day, `--print` kept. |

@@ -147,7 +147,9 @@ chapter is the **spec**.
   It never edits a source or test tree itself.
 - **`verify-change`** — report which side moved, per chapter, and write
   nothing: the drift verdict is the whole result, and its `Action` column names
-  which of the other two the verdict calls for.
+  which of the other two the verdict calls for. Its scope is the wide one —
+  a chapter, a file, a bounded context, or a whole devbook folder, one kind per
+  run and one table for all of it.
 
 **`apply-change` covers both from scratch and update.** The change category
 is that axis, and counterpart resolution picks between them before the brief is

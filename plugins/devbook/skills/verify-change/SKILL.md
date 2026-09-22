@@ -11,17 +11,27 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`. Nothing in them is repeated here.
 
 **Kind.** Decided as `capture-specs` decides it: the chapter's `type`, or the
-file where the folder has none. One kind per run; a scope may hold several
-chapters of it — an aggregate with everything it owns, a bounded context's
-features, the whole building block view.
+file where the folder has none. One kind per run, however wide the scope: a run
+that would cross kinds is two runs.
 
-**Inputs.** The chapter or chapters as `<path>#<heading-slug>` or by heading,
-the bounded context where the kind has one, and the repository root.
+**Scope.** Wider than the other two, because reading is cheap and a verdict is
+worth having in bulk. Any of: one chapter as `<path>#<heading-slug>` or by
+heading, one file, a bounded context, or a whole devbook folder. A scope wider
+than one chapter means every chapter of the run's kind inside it — a folder
+given with no kind named takes the kind that folder's chapters carry, and says
+which it took. Everything in scope lands in **one** table, `aligned` rows
+included: the run's value is the shape of the whole, and a table per chapter
+hides it.
+
+**Inputs.** The scope, the bounded context where the kind has one, and the
+repository root.
 
 ## Steps
 
 1. Load the protocol and the kind's file. Read only the chapters in scope and
-   what the kind's file says comes with them.
+   what the kind's file says comes with them. Name the scope and the kind in
+   the opening line, so a wide run says what it covered before it says what it
+   found.
 2. Resolve each counterpart by the protocol's ladder; record the rung.
 3. Read the implementation and its unit tests, as the kind's file directs.
    Only code that executes and tests that pass are evidence. Do not start the
@@ -29,7 +39,8 @@ the bounded context where the kind has one, and the repository root.
    belongs to `capture-specs`.
 4. Reach exactly one verdict per chapter, with the evidence that settles it,
    specific enough to re-check.
-5. Close with the protocol's report table, `aligned` rows included, and stop.
+5. Close with the protocol's report table — one table for the run, whatever
+   its scope, `aligned` rows included — and stop.
    The `Action` column names what the verdict calls for and nothing is done:
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.

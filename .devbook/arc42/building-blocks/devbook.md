@@ -180,6 +180,12 @@ report's action column names which of the other two a verdict calls for. It is t
 of the others take before they write, offered on its own for the question "is this chapter
 still true".
 
+Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
+still one kind per run and still one table for all of it. Reading is cheap when nothing is
+written, and the question a person actually asks before a review — has this folder drifted —
+is not answerable one chapter at a time. A table per chapter would hide the shape of the
+whole, which is the only thing a folder-wide run adds.
+
 ## Structure
 
 ```meta
@@ -528,7 +534,8 @@ direction it names is one OpenSpec does not have —
 [debt record 6](../tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) holds
 why the borrowed spelling was dropped.
 
-Invocation semantics: command-invoked, one skill and one kind per run. The kind is the
+Invocation semantics: command-invoked, one skill and one kind per run — one target for the
+two that produce something, and a folder or a bounded context for the one that does not. The kind is the
 chapter's `type`, or the file where the folder defines none, and everything a kind needs lives
 once in its own file rather than in a skill per kind and direction. The aggregate is the unit
 rather than its parts, because a consistency boundary decided twice is a boundary decided
