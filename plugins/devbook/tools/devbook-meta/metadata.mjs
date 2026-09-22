@@ -1671,8 +1671,8 @@ export function validateDocument(relPath, markdown) {
         // chapter claims one — most do not, and hashing every block to learn
         // that would be work for nothing.
         // Only `domain/` has the rungs, so only there is there a record to
-        // lint. Elsewhere the six fields are not in the folder's vocabulary at
-        // all and `fieldScopeIssues` reports them once, as unknown fields —
+        // lint. Elsewhere the six fields are not in that folder's vocabulary at
+        // all, and the unrecognized-field check below reports each one once —
         // running this too would report one mistake twice.
         if (kind === "domain") {
             const claimsHash =

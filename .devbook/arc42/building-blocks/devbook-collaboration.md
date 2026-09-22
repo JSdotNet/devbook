@@ -83,6 +83,25 @@ It runs only where a person chose it in that session — never from a schedule, 
 consequence of a cleared review, and never on the strength of a conversation a later session
 cannot read.
 
+### chapter-accept
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook-collaboration.md#acceptance", ".devbook/arc42/building-blocks/devbook-collaboration.md#chapter-accepted"]
+```
+
+Record that a person saw the implemented work against this chapter and accepted it, in the
+rung above `approved`, with a signature, a date, and the content fingerprint the acceptance
+was of. The approval record stays: the two statements are different, and both are wanted.
+
+What it shows is the built work, never a summary of it — the repository's own `show` procedure
+where `devbook-procedures` is installed, otherwise the chapter's linked `tests` run. It refuses
+on an open `kind: question`, on a chapter that was never approved, and on an approval whose
+fingerprint no longer matches the chapter: an acceptance stands on a current approval, and
+there is nothing to accept against without one.
+
+Like the approval under it, it runs only where a person chose it in that session — never from
+a green suite, a merged pull request, or a schedule.
+
 ### chapter-review-queue
 
 ```meta
@@ -217,7 +236,7 @@ is no review fields at all.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Every remembered fact is one of `review`, `reviewer`, `review-at`, and this block writes no other field except devbook's `approved` rung | all mutations | untested |
+| Every remembered fact is one of `review`, `reviewer`, `review-at`, and this block writes no other field except devbook's two decision rungs and their six record fields | all mutations | untested |
 | A chapter in any review state names exactly one reviewer and one day — the three are written together or not at all | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | A `changes-requested` verdict stands over at least one open annotation fence, and `cleared` over none | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | A finding is written through devbook's `annotations.mjs` and never as a field here | `chapter-review()`, `chapter-approve()` | untested |
@@ -299,6 +318,21 @@ chapter in the repository rather than an operation on one, which is why it is a 
 not a method: no single [Review Position](#review-position) can answer *who is blocked right
 now*.
 
+### Acceptance
+
+```meta
+related: [".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#approval"]
+```
+
+Also called: validated, signed off on the build.
+
+The decision that writes devbook's `accepted` rung, with `accepted-by`, `accepted-at`, and
+`accepted-hash`, on top of the approval record it stands on and never in place of it.
+
+A service for the same reason [Approval](#approval) is: its result is not a state of the
+aggregate but a field belonging to another block, and it reads evidence — a running
+application, a test run — that lives outside this one entirely.
+
 ### Chapter Approved
 
 ```meta
@@ -312,9 +346,11 @@ in flow configuration or in somebody's memory.
 
 Payload:
 
-- `status` — the shared `approved` rung, on top of whatever ladder the folder defines
+- `status` — the `approved` rung, on top of `domain/`'s ladder and no other folder's
 - `approved-by` — one person, handle, or team; never a list
 - `approved-at` — the day they approved it, `YYYY-MM-DD`
+- `approved-hash` — optional; the fingerprint of the content approved, which is what makes a
+  later lapse a check result rather than something a reader has to establish from git
 
 Consumers:
 
@@ -335,6 +371,43 @@ Published language rules:
   comes out with it.
 - **An approval is of what was read, not of the heading.** Nothing may re-assert it from a
   previous approval, a cleared review, or a version comparison.
+
+### Chapter Accepted
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#chapter", ".devbook/arc42/building-blocks/devbook-collaboration.md#acceptance"]
+```
+
+Published when a person accepts the built work against a chapter. The rung above
+[Chapter Approved](#chapter-approved), and the one statement the loop between a specification
+and its implementation otherwise loses: `approved` says the chapter is right, `accepted` says
+the product satisfies it.
+
+Payload:
+
+- `status` — the `accepted` rung, on `domain/`'s ladder and no other folder's
+- `accepted-by` — one person, handle, or team; never a list
+- `accepted-at` — the day they accepted it, `YYYY-MM-DD`, on or after `approved-at`
+- `accepted-hash` — optional; the fingerprint of the content accepted
+
+Consumers:
+
+- **[devbook](devbook.md)** — the rung is its field, and its check reports an acceptance that
+  is unsigned, undated, dated before its approval, or standing over no approval at all.
+- **[delivery](delivery.md)** — a flow may record the decision at its personal-validation
+  gate, and never writes the rung itself.
+- **Any reader of the chapter** — including a team accepting in a different tool, for whom
+  the chapter is the only place both sides read.
+
+Published language rules:
+
+- **It stands on an approval and never replaces one.** An accepted chapter carries both
+  records, because the two statements are different and are usually made by different people
+  on different days.
+- **Both records come off together.** A content change drops the acceptance with the
+  approval: a build was accepted against the text that was approved.
+- **What is accepted is the chapter's content, never a commit.** Which pull request delivered
+  it belongs to the tracker, not to a field here.
 
 ## Runtime
 
@@ -439,7 +512,7 @@ into.
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | `review`, `reviewer`, `review-at` in a chapter's own `meta` block | The review triad in `devbook-chapter-metadata.md`: three optional fields, validated together and against the chapter's open notes | It has no store and no vocabulary of its own. The state it remembers about a chapter is three of devbook's fields in that chapter — [the annotations record](../adr/annotations.md). |
 | [devbook](devbook.md#annotation) | Conformist, for the whole device | Writes findings through `.devbook/_tools/devbook-meta/annotations.mjs` | The [annotation](devbook.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this block's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [the annotations record](../adr/annotations.md). |
-| [devbook](devbook.md#chapter) | Conformist, for one field | Writes `status: approved`, `approved-by`, `approved-at` directly | The shared `approved` rung and its two record fields | Approval is devbook's field and keeps devbook's meaning. This block runs the decision; it does not own the vocabulary. |
+| [devbook](devbook.md#chapter) | Conformist, for one field | Writes `status: approved` or `accepted` and the six record fields directly, on `domain/` chapters only | The two decision rungs, on `domain/`'s ladder alone, and their six record fields | Both rungs are devbook's fields and keep devbook's meaning. This block runs the decisions; it does not own the vocabulary, and a repository with no `domain/` folder gets the review pass and neither decision. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and two manifests | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like every other plugin here, and — alone among them — materializes nothing and stamps nothing. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests and skills | Each host's own schemas | Enabling the plugin is the whole adoption; the rules its skills follow are devbook's, and reach a host through devbook's install. |
 

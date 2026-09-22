@@ -71,16 +71,26 @@ function rewrite(text, folder) {
     const out = [];
     const found = { rung: 0, fields: 0, ratingNeeded: 0 };
 
-    let inMeta = false;
+    // Fence tracking, not just a `meta` flag: a chapter that *shows* a `meta`
+    // block inside a ```markdown sample would otherwise have lines stripped
+    // out of the sample. Only a fence opened at the top level is a real one.
+    let openFence = null;
     for (const line of lines) {
         const trimmed = line.trim();
-        if (!inMeta) {
-            if (/^```meta\s*$/.test(trimmed)) inMeta = true;
+        const fence = /^(`{3,}|~{3,})\s*([^\s`~]*)\s*$/.exec(trimmed);
+
+        if (fence && openFence === null) {
+            openFence = { marker: fence[1], label: fence[2].toLowerCase() };
             out.push(line);
             continue;
         }
-        if (trimmed === "```") {
-            inMeta = false;
+        if (fence && openFence && fence[1][0] === openFence.marker[0] &&
+            fence[1].length >= openFence.marker.length && fence[2] === "") {
+            openFence = null;
+            out.push(line);
+            continue;
+        }
+        if (!openFence || openFence.label !== "meta") {
             out.push(line);
             continue;
         }
@@ -127,12 +137,20 @@ for (const folder of FOLDERS) {
 
         const rel = path.relative(ROOT, file).split(path.sep).join("/");
         remaining++;
+
+        // A rung this migration cannot remove is not something it took off, so
+        // it is not counted here — otherwise a second run reports removing a
+        // rung it left in place both times.
+        const removedRungs = found.rung - found.ratingNeeded;
         const what = [
-            found.rung ? `${found.rung} decision rung${found.rung === 1 ? "" : "s"}` : null,
+            removedRungs ? `${removedRungs} decision rung${removedRungs === 1 ? "" : "s"}` : null,
             found.fields ? `${found.fields} record field${found.fields === 1 ? "" : "s"}` : null,
         ].filter(Boolean).join(" and ");
 
-        if (checkOnly) {
+        if (!what) {
+            // Nothing removable left: only the rung a person has to replace.
+            report(`${rel}: nothing to take off`);
+        } else if (checkOnly) {
             report(`${rel}: would take off ${what}`);
         } else {
             await writeFile(file, text, "utf8");

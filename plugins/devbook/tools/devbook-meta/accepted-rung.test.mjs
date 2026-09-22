@@ -50,6 +50,24 @@ const HASH = chapterHash(chapter(accepted), CHAPTER_LINE);
     check(Boolean(find(issues, "warning", "without `accepted-by`")), "accepted without an acceptor warns, as approved without an approver does", dump(issues));
 }
 
+// The rung below, checked here too, so the claim that this file covers "carries
+// both, and neither outlives it" is true of the approval as well as the
+// acceptance.
+{
+    const issues = validateDocument(PATH, chapter("status: approved\napproved-at: 2026-09-20\n"));
+    check(Boolean(find(issues, "warning", "without `approved-by`")), "approved without an approver warns", dump(issues));
+}
+
+{
+    const issues = validateDocument(PATH, chapter("status: approved\napproved-by: Job\n"));
+    check(Boolean(find(issues, "warning", "without `approved-at`")), "approved without a day warns", dump(issues));
+}
+
+{
+    const issues = validateDocument(PATH, chapter(`status: active\n${approval}`));
+    check(Boolean(find(issues, "warning", "carries `approved-by`")), "an approval record outliving its rung warns", dump(issues));
+}
+
 {
     const issues = validateDocument(PATH, chapter(`status: active\n${acceptance}`));
     check(Boolean(find(issues, "warning", "without `status: accepted`")), "an orphaned acceptance record warns", dump(issues));

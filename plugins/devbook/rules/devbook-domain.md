@@ -1115,5 +1115,3 @@ type: dependencies
 - Link to the relevant `domain-interaction-diagram` / `context-mapping`
   artifact if one exists for this relationship, instead of duplicating it.
 ```
-
-

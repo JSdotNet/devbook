@@ -208,9 +208,13 @@ are always emitted as a list, so a consumer never has to branch on shape. `effor
 string, so a viewer can total or threshold it directly; a value that is not a
 non-negative integer is left off the node and reported as a lint error instead.
 
-`approved-by` and `approved-at` ride along as authored strings on any node whose
-`status` is the shared `approved` rung. The generator reports an approval with no
-signature and a signature with no approval, but never invents either.
+The six decision fields — `approved-by`, `approved-at`, `approved-hash`,
+`accepted-by`, `accepted-at`, `accepted-hash` — ride along as authored strings on
+any node that carries them. They belong to `domain/`'s two rungs, so a node in
+another folder should have none; the generator copies what is authored and the
+check reports it in the same run, but never invents a value. It reports a
+decision with no signature, a signature with no decision, and a fingerprint that
+no longer matches the chapter's content.
 
 Everything a block writes under `ext.<plugin>.<key>` is gathered into one `ext`
 object on the node, keys and values verbatim. The generator validates none of it
