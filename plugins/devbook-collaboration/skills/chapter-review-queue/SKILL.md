@@ -50,10 +50,13 @@ chapter that never appears in the queue.
    | Unsigned approval | `status: approved` with no `approved-by` or `approved-at` | Whoever approved it |
    | Notes to sweep | Resolved notes still in the chapter | Whoever is about to merge the branch |
 
-   For the stale row, compare `approved-at` with the last commit that touched
-   the chapter's own lines — `git log -1 --format=%ad --date=short -L` over its
+   For the stale row, prefer the chapter's own fingerprint: where it carries
+   `approved-hash`, compare it with `chapter-hash.mjs <path#slug>` — different
+   is stale, exactly, with no git and no caveat. Only where it carries none,
+   fall back to comparing `approved-at` with the last commit that touched the
+   chapter's own lines — `git log -1 --format=%ad --date=short -L` over its
    heading range, or the file's last commit when the range is unclear. Say
-   which of the two you used; a file-level answer over-reports a chapter in a
+   which of the three you used; a file-level answer over-reports a chapter in a
    busy file, and reporting it as exact would be wrong.
 
 4. **Report the queue** grouped by who owes the next move, each row carrying the

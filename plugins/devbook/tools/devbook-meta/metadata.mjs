@@ -1,6 +1,10 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
 // blocks defined in devbook-chapter-metadata.md.
 //
+// Dependency-free ESM against node built-ins, like everything else executable
+// here: `node:crypto` is what fingerprints an approved chapter's content.
+import { createHash } from "node:crypto";
+//
 // The schema used across .devbook/{arc42,domain,tech,design,ai} is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
 // tiny hand-written reader instead of pulling in a YAML dependency.
@@ -45,6 +49,25 @@ const STATUS_BY_FOLDER = {
 // decision travels with the content and lands in the git history, rather than
 // living in flow configuration or in someone's memory.
 const APPROVAL_FIELDS = ["approved-by", "approved-at"];
+
+// What was approved, as a fingerprint of the content itself. Deliberately
+// *not* in APPROVAL_FIELDS: those two are written together and are missing
+// together, while this one is optional everywhere. A repository that omits it
+// keeps the rule "the rung comes off when the content changes" as something a
+// person remembers; a repository that writes it has the checker say so.
+//
+// The rung already claimed the content had not changed since `approved-at`,
+// and nothing could establish it: git answers per file, not per chapter, so a
+// chapter in a busy file reads as stale and a chapter in a quiet one reads as
+// current whatever either actually is. A fingerprint of the chapter needs no
+// git and is exact.
+const CONTENT_HASH_FIELD = "approved-hash";
+
+// `sha256:` names the algorithm so a later one can be told apart, and eight
+// hex characters is the whole digest a reader ever compares: this detects an
+// edit, it does not defend against one, and nobody is forging a chapter past
+// their own approval gate.
+const CONTENT_HASH_PATTERN = /^sha256:[0-9a-f]{8}$/;
 
 // Where a chapter's review stands, who owes the next move, and since when. The
 // triad mirrors the approval triad on purpose — a chapter reads the same way on
@@ -211,6 +234,7 @@ const COMMON_OPTIONAL_FIELDS = [
     "date",
     "tests",
     ...APPROVAL_FIELDS,
+    CONTENT_HASH_FIELD,
     ...REVIEW_FIELDS,
 ];
 
@@ -1057,7 +1081,7 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
  * in the chapter is that the decision is auditable — a rung with nobody's name
  * on it, or a name with no rung, is the one shape that defeats that.
  */
-export function approvalIssues(meta) {
+export function approvalIssues(meta, contentHash = null) {
     if (!meta) return [];
     const issues = [];
     const approved = meta.status === APPROVED_STATUS;
@@ -1085,6 +1109,34 @@ export function approvalIssues(meta) {
             severity: "error",
             message: `has \`approved-at\` "${meta["approved-at"]}" — an approval date is a single calendar day in \`YYYY-MM-DD\` form.`,
         });
+    }
+
+    // The fingerprint is optional, so its absence says nothing. Present, it is
+    // checked: a value that does not match the content is the one case the
+    // rung alone could never report, which is the reason the field exists.
+    const recorded = meta[CONTENT_HASH_FIELD];
+    if (recorded != null) {
+        if (Array.isArray(recorded) || String(recorded).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${CONTENT_HASH_FIELD}\` set to an empty or list value — it records one fingerprint of the content approved.`,
+            });
+        } else if (!CONTENT_HASH_PATTERN.test(String(recorded).trim())) {
+            issues.push({
+                severity: "error",
+                message: `has \`${CONTENT_HASH_FIELD}\` "${recorded}" — a content fingerprint is \`sha256:\` followed by eight lowercase hex characters, written by the approval gate and never by hand.`,
+            });
+        } else if (!approved) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${CONTENT_HASH_FIELD}\` without \`status: ${APPROVED_STATUS}\`. Either the approval is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        } else if (contentHash != null && String(recorded).trim() !== contentHash) {
+            issues.push({
+                severity: "error",
+                message: `states \`status: ${APPROVED_STATUS}\` over content that has changed since \`approved-at\` — \`${CONTENT_HASH_FIELD}\` records ${recorded}, the content now fingerprints as ${contentHash}. Re-approve the chapter, or take the rung off.`,
+            });
+        }
     }
 
     if (approved) {
@@ -1438,8 +1490,12 @@ export function validateDocument(relPath, markdown) {
         }
 
         // The approval gate writes into the chapter, so the chapter is where
-        // the record is checked.
-        for (const issue of approvalIssues(chapter.meta)) {
+        // the record is checked. The content is only fingerprinted when the
+        // chapter claims one — most do not, and hashing every block to learn
+        // that would be work for nothing.
+        const recordedHash = chapter.meta[CONTENT_HASH_FIELD];
+        const contentHash = recordedHash == null ? null : chapterHash(markdown, chapter.line);
+        for (const issue of approvalIssues(chapter.meta, contentHash)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
@@ -1686,6 +1742,79 @@ function parseAnnotationList(lines, start, end, indent) {
 }
 
 const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
+
+/**
+ * The fingerprint of one block's content, for `approved-hash` and
+ * `accepted-hash`.
+ *
+ * What is hashed is the block a reader would say they read: its heading text
+ * and everything under it, down to the next heading at the same or a higher
+ * level. So a `#` file block covers the whole file, a `##` chapter covers its
+ * `###` subsections, and approving a nested chapter and its parent leaves two
+ * records that both lapse when the nested one is edited. Boundaries come from
+ * `parseDocument`, so they are the same boundaries every other check uses.
+ *
+ * Three things are excluded, each for its own reason. The `meta` blocks go
+ * because the hash lives in one, and a value cannot be part of what it
+ * fingerprints. The `annotation` fences go because a note written after the
+ * approval is not a change to the content — an open question standing over an
+ * approved chapter is already its own error, and lapsing the rung for a
+ * resolved note would report the sweep as an edit. Whitespace goes because a
+ * reflowed paragraph reads identically, and a rung that came off every time
+ * someone rewrapped a line would be taken off for good.
+ *
+ * Heading *text* is in, the `#` markers are not: renaming a chapter changes
+ * what it claims and should lapse the approval, while promoting one changes
+ * its address and not a word of what was read.
+ *
+ * `line` is the block's 1-based heading line, as `parseDocument` reports it.
+ */
+export function chapterHash(markdown, line = 1) {
+    const lines = markdown.split(/\r?\n/);
+    const { chapters } = parseDocument(markdown);
+
+    const index = chapters.findIndex((entry) => entry.line === line);
+    const start = index === -1 ? Math.max(0, line - 1) : chapters[index].line - 1;
+    const level = index === -1 ? 1 : chapters[index].level;
+
+    let end = lines.length;
+    if (index !== -1) {
+        const next = chapters.slice(index + 1).find((entry) => entry.level <= level);
+        if (next) end = next.line - 1;
+    }
+
+    const kept = [];
+    const heading = /^#{1,6}\s+(.*)$/.exec(lines[start] ?? "");
+    if (heading) kept.push(heading[1]);
+
+    for (let i = start + 1; i < end; i++) {
+        const fence = FENCE_PATTERN.exec(lines[i]);
+        if (fence) {
+            const marker = fence[2];
+            const label = fence[3].toLowerCase();
+            const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
+            let k = i + 1;
+            while (k < lines.length && !closer.test(lines[k])) k++;
+            if (label === "meta" || label === "annotation") {
+                i = k;
+                continue;
+            }
+            // Any other fence is content: a diagram or a code sample is part
+            // of what was approved, so it is kept whole, closer included.
+            for (let j = i; j <= k && j < end; j++) kept.push(lines[j]);
+            i = k;
+            continue;
+        }
+        kept.push(lines[i]);
+    }
+
+    const normalised = kept
+        .map((entry) => entry.replace(/\s+/g, " ").trim())
+        .filter((entry) => entry !== "")
+        .join("\n");
+
+    return `sha256:${createHash("sha256").update(normalised, "utf8").digest("hex").slice(0, 8)}`;
+}
 
 /**
  * Every annotation fence in a document, in reading order.

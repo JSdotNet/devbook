@@ -146,6 +146,9 @@ const ATTRIBUTE_FIELDS = [
     "date",
     "approved-by",
     "approved-at",
+    // Carried so a consumer can tell "approved, and the content has not moved"
+    // from a bare "approved" without re-reading the Markdown or asking git.
+    "approved-hash",
 ];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,

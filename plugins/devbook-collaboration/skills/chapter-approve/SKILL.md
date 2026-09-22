@@ -51,6 +51,13 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    question means the chapter is not agreed, whatever `status` says. The rest
    are what the person weighs. State them and let them choose.
 
+   **Unchanged** in the last row is established, not assumed: where the chapter
+   carries `approved-hash`, compare it with `chapter-hash.mjs <path#slug>` —
+   equal is unchanged, different is a lapsed approval and step 4 is a new
+   decision. Where it carries none, say that you are reading the file's history
+   rather than the chapter's content, and that a chapter in a busy file reads
+   as changed when it is not.
+
 3. **Ask for the decision** and wait for it. Three outcomes, and no default:
 
    | Outcome | Do |
@@ -77,10 +84,14 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    status: approved
    approved-by: @jsdotnet
    approved-at: 2026-09-03
+   approved-hash: sha256:2e153b20
    ```
 
    `approved-by` is the person who just chose it, never the reviewer by default
-   and never you. In the same change, delete `review`, `reviewer`, and
+   and never you. Write `approved-hash` where the repository's other approved
+   chapters carry one, taking the value from
+   `chapter-hash.mjs <path#slug>` and never computing it yourself; omit it
+   where they do not. In the same change, delete `review`, `reviewer`, and
    `review-at` from the chapter and sweep its resolved notes —
    `annotations.mjs sweep --chapter <path#slug>`. The decision is now the
    record, and both the review state and an answered note are stale by
@@ -95,8 +106,8 @@ which the authoring rules exempt from terseness: a fragment here is what turns
 An approval is of what was read. When the chapter's content changed after
 `approved-at`, the rung is no longer true and devbook's own rule is that it
 comes out. Drop `status` back to the chapter's ordinary rung, delete
-`approved-by` and `approved-at` in the same change, and say what changed since
-the approval. The same lift is the revise outcome on an approval a person has
+`approved-by`, `approved-at`, and `approved-hash` in the same change, and say
+what changed since the approval. The same lift is the revise outcome on an approval a person has
 chosen not to let stand over notes raised since it. Do not re-approve it here —
 that is a new decision, and it starts at step 1.
 

@@ -232,15 +232,36 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   rung the moment the content changes: an approval is of what was read, not of
   the heading. The rung is one word in every folder because what is approved is
   the chapter; the ladder underneath says what kind of thing the chapter is.
+
+  A repository that wants that lapse **checked** rather than remembered writes
+  `approved-hash` beside the other two.
 - **approved-by** (optional) — who approved this chapter: a person, a handle, or
   a team. One value, not a list.
 - **approved-at** (optional) — the day they approved it, in `YYYY-MM-DD` form.
+- **approved-hash** (optional) — a fingerprint of the content that was
+  approved: `sha256:` followed by eight lowercase hex characters. Written by
+  the approval gate in the same change as the rung, and never by hand.
 
-  Write both whenever `status: approved` is written, and delete both in the same
-  change that drops the rung. An approval nobody signed and dated is reported, as
-  is an approval record left behind on a chapter no longer claiming the rung —
-  either the approval is current and the status says so, or it has lapsed and
-  the record comes out with it.
+  What is fingerprinted is the block a reader would say they read — its heading
+  text and everything under it, down to the next heading at the same or a
+  higher level, so a `#` file block covers the whole file and a `##` chapter
+  covers its `###` subsections. The `meta` blocks are excluded, because the
+  value lives in one; the `annotation` fences are excluded, because a note
+  written after the approval is not a change to the content; and whitespace is
+  normalised, because a reflowed paragraph reads identically.
+
+  Present and not matching, the chapter is reported as an approval standing
+  over content that has changed — the one thing the rung claimed and nothing
+  could establish, since git answers per file and not per chapter. Absent,
+  nothing is reported: the field is optional, and a repository that omits it is
+  exactly where it was before.
+
+  Write `approved-by` and `approved-at` whenever `status: approved` is written,
+  add `approved-hash` when the repository uses it, and delete all three in the
+  same change that drops the rung. An approval nobody signed and dated is
+  reported, as is an approval record left behind on a chapter no longer
+  claiming the rung — either the approval is current and the status says so, or
+  it has lapsed and the record comes out with it.
 - **review** (optional) — where this chapter's review pass stands, on the way to
   that decision: `requested` (waiting on the reviewer), `changes-requested`
   (waiting on the author; at least one open annotation says why), or `cleared`
