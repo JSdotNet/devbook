@@ -9,7 +9,10 @@ A devbook is five folders of Markdown chapters under one parent — `.devbook/ar
 `.devbook/domain`, `.devbook/tech`, `.devbook/design`, `.devbook/ai` — and nowhere else, each
 addressable heading carrying a fenced `meta` block. `status` is one field with one ladder per
 folder; `approved` is a rung on top of every ladder, with `approved-by` and `approved-at`
-beside it, and the three editorial folders rest at `active` by omitting the field. A bounded
+beside it and an optional `approved-hash` fingerprinting what was approved; `accepted` is a
+rung above it, carrying the same three for the build that satisfies the chapter and keeping
+the approval record it stands on; and the three editorial folders rest at `active` by
+omitting the field. A bounded
 context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
 capabilities are switched by, and its actors and dependencies until they outgrow the file —
 describes its skills or its features, says who acts with `user`, `organisation`, `technical`
@@ -37,6 +40,23 @@ dot, in prose as on disk, and the rollup moves from the repository root to `.dev
 `status` would let a chapter claim `draft` and approved at once, which is the ambiguity the gate
 exists to remove. The rung is one constant appended to each ladder, so reversing it is a
 migration and not a rewrite; every consuming repository's schema assumes this shape.
+
+**`accepted` is a second rung, not a second field on the first.** It answers a different
+question — the specification is right, versus what was built satisfies it — usually asked of a
+different person on a different day, so folding it into `approved` would lose which of the two
+a chapter has. Stacking it keeps one lifecycle state per chapter, the property the rung was
+chosen for: an accepted chapter keeps its approval record and both come off together, because
+a build was accepted against the text that was approved. Which pull request delivered it stays
+in the tracker; the chapter records that a person decided, not how the work arrived.
+
+**The lapse is computed, not remembered.** The rung already claimed the content had not
+changed since `approved-at`, and nothing could establish it: git answers per file, so a chapter
+in a busy file reads as stale and one in a quiet file reads as current, which the review queue
+had to say out loud every time it reported. `approved-hash` fingerprints the block a reader
+would say they read, excluding the `meta` blocks because the value lives in one and the
+`annotation` fences because a note is not a content change. It stays optional: a repository
+that omits it is exactly where it was, and one that writes it gets the check instead of the
+habit.
 
 **Three folders rest at `active`.** In `domain/`, `arc42/`, and `design/` the value records
 how settled the writing is, and nearly every chapter sits at `active` permanently; written out,
@@ -155,6 +175,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | `accepted` is a rung above `approved`, with `accepted-by`, `accepted-at`, and `accepted-hash`, standing on the approval record it keeps; `approved-hash` makes a lapsed approval a check result; `import` joins the `domain/` file types. Contract 13, no migration — every part is additive. |
 | 2026-09-18 | An `ai/` chapter is placed on the DevOps loop by its own `stage`, from the fixed eight; a file places nothing; the tool edge is `depends-on` only; `date` is the rating day. |
 | 2026-09-18 | `context.md` is a context's root with `feature-flag` and `setting` chapters; `feature-flag` on a feature is a reference and `setting` joins it; actors and dependencies live there until they outgrow it. Contract 11, migration 011. |
 | 2026-09-18 | `domain`, `features`, `skills`, and `model` split by chapter as `flow` already did; a split file reads after its base. |

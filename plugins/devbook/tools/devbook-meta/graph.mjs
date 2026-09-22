@@ -66,10 +66,17 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
+// Version 13 is additive over 12, and is the first bump that ships no
+// migration at all: every part of it is a field or a value with a safe
+// default, so a chapter written under 12 still validates and reads the same.
+// It adds the optional `approved-hash` fingerprint, the `accepted` rung with
+// `accepted-by`/`accepted-at`/`accepted-hash` above `approved`, and `import`
+// as a `.domain` file type. The number still moves, because a chapter author
+// may now write fields 12 did not define.
 // Version 12 changes no chapter shape: it retires the checkout layer of the
 // stack-config overlay and the `.gitignore` block devbook materialized for it,
 // so the stamp's `materialized` no longer carries `.gitignore#devbook`.
-export const CONTRACT_VERSION = 12;
+export const CONTRACT_VERSION = 13;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

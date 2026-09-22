@@ -9,8 +9,10 @@ Every plugin carries the same version — `1.3.0` — in both manifests and the 
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
-commit, and `AGENTS.md` states which changes owe one. A contract bump with its migration is a
-minor release; a migration lives until the next major, which raises the floor
+commit, and `AGENTS.md` states which changes owe one. A contract bump is a minor release, with its migration
+when one is owed — a bump whose every part is an added field or value with a
+safe default owes none, because nothing written under the previous contract
+stops validating. A migration lives until the next major, which raises the floor
 `MINIMUM_CONTRACT_VERSION` and deletes the folders at or below it. The floor is 9. Three
 names are keys a consumer installs under: the marketplace is `jsdotnet-devbook` under the rule `jsdotnet-<repository>`, the
 repository is `JSdotNet/devbook`, and the marketplace name is never renamed after the first

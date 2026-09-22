@@ -24,8 +24,8 @@ devbook's check, and a finding lives in devbook's own device
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
-Four skills, and nothing else in the plugin. They move one chapter through a review, and one
-of the four writes nothing at all. There is no install: the state they write is devbook's
+Five skills, and nothing else in the plugin. They move one chapter through a review to the
+two decisions past it, and one of the five writes nothing at all. There is no install: the state they write is devbook's
 schema, so enabling the plugin is the whole adoption. Deleting the answered notes is
 `devbook:annotation-sweep`, in the plugin that owns the fence.
 
@@ -34,6 +34,7 @@ schema, so enabling the plugin is the whole adoption. Deleting the answered note
 | `chapter-handoff` | skill | A person, on one chapter |
 | `chapter-review` | skill | The named reviewer, on one chapter |
 | `chapter-approve` | skill | A person who chose it in that session — never a schedule, never a cleared review |
+| `chapter-accept` | skill | A person who chose it in that session, over evidence — never a green suite, never a merged pull request |
 | `chapter-review-queue` | skill | A person, or a schedule: it writes nothing |
 
 ### chapter-handoff
@@ -119,6 +120,10 @@ classDiagram
         +status
         +approvedBy
         +approvedAt
+        +approvedHash
+        +acceptedBy
+        +acceptedAt
+        +acceptedHash
         +ext
     }
     class ChapterReview {
@@ -146,6 +151,10 @@ classDiagram
         <<domain service>>
         +approve()
     }
+    class Acceptance {
+        <<domain service>>
+        +accept()
+    }
     class ReviewQueue {
         <<domain service>>
         +sweep()
@@ -159,6 +168,8 @@ classDiagram
     ChapterReview --> ReviewState : is in
     Approval --> ChapterReview : clears
     Approval --> MetaBlock : writes status, approved-by, approved-at
+    Acceptance --> MetaBlock : writes status, accepted-by, accepted-at
+    Acceptance --> Approval : stands on
     ReviewQueue --> ChapterReview : reads many, writes none
 ```
 
@@ -168,8 +179,10 @@ classDiagram
   block contributes the procedure and none of the vocabulary
   ([the annotations record](../adr/annotations.md)).
 - **The line between the two is who writes, not who defines.** Every field is devbook's; this
-  block writes the review triad through the pass and `status`, `approved-by`, and
-  `approved-at` only through [Approval](#approval).
+  block writes the review triad through the pass, `status`, `approved-by`, and
+  `approved-at` only through [Approval](#approval), and the acceptance three only through
+  `Acceptance`, which is a service for the same reason and stands on the record Approval
+  left.
 - **`Approval` writes across the line and is therefore a service.** It is the one operation
   whose result is not a state of the aggregate — it deletes the aggregate and sets a field
   belonging to someone else, which is coordination rather than a transition.
@@ -334,7 +347,7 @@ How a chapter moves through a review, and how it leaves.
 related: [".devbook/arc42/12-glossary.md#review-pass"]
 ```
 
-Four skills and three states, and every state names who owes the next move. The resting shape
+Five skills and three states, and every state names who owes the next move. The resting shape
 is no keys and no open notes — this block's state exists in order to be cleared.
 
 ```mermaid
