@@ -347,6 +347,14 @@ each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoev
 it. Empty collections and nulls are omitted rather than written out, so absence has exactly
 one spelling.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A heading without a `meta` block is not a node, so deleting one drops the chapter out of the graph and out of every reference to it | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| Flat keys, no nesting, and equal by value | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| The field set is closed except for `ext.<plugin>.<key>` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| The six decision fields are scoped to `domain/` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| Empty collections and nulls are omitted, so absence has exactly one spelling | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+
 ### Annotation
 
 ```meta
@@ -369,6 +377,14 @@ the wrong note.
 An annotation is an open loop rather than a record: resolving one means deleting it. It is
 never chapter content, so a reader loading a chapter as task context skips every fence, and a
 chapter carrying an open question is not agreed whatever its `status` says.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A note's index is scoped to its own heading, so a parent's index never reaches a subchapter's note | `annotations.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/annotations.test.mjs` |
+| Every operation that reads or writes a note counts the same way | `annotations.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/annotations.test.mjs` |
+| Resolving a note deletes it: an annotation is an open loop, never a record | `annotations.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
+| A fence is never chapter content, so a reader loading a chapter as task context skips every one | convention | untested |
+| A chapter carrying an open question is not agreed whatever its `status` says | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Devbook Folder
 
@@ -455,6 +471,12 @@ it is the only thing in this block that touches a file outside a devbook folder:
 wrappers each host reads, the CI workflow templates, and devbook's own marker-fenced section
 of `AGENTS.md`.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| First install, a plugin upgrade, a change in adopted folders, and an outstanding migration are one idempotent operation | `install()` | untested |
+| The check-only half writes nothing and hands every write back — one writer is what makes re-running safe | `install()` | untested |
+| It is the only part of this block that touches a file outside a devbook folder | `install()` | untested |
+
 ### Index Generator
 
 ```meta
@@ -473,6 +495,12 @@ validator the graph build calls per file
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
 request and the daily `devbook-check` schedule runs `check` through its own wrapper.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It checks by default and writes only on `--write`, which nothing in this block passes | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| An unresolved reference fails; a heading with no block is reported and tolerated | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+
 ### Fence Writer
 
 ```meta
@@ -487,6 +515,12 @@ functions in-process. It is the only writer of an annotation fence anywhere — 
 surgical, so a field a later version adds survives a write by one that does not know it. It
 never commits: adding a note dirties a tracked file, and that is the caller's to review.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It is the only writer of an annotation fence anywhere | `annotations.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
+| Edits are surgical, so a field a later version adds survives a write by one that does not know it | `annotations.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
+| It never commits; the dirtied file is the caller's to review | `annotations.mjs` | untested |
+
 ### Tech Inventory
 
 ```meta
@@ -499,6 +533,11 @@ Two scripts that read a repository's package manifests — .NET and frontend —
 deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
 grounds a `tech/` chapter in, so a package-derived fact is reproducible and a hand-written one
 is visibly not. Materialized by the install only where `tech/` is adopted.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
+| Materialized only where `tech/` is adopted | `install()` | untested |
 
 ### Spec Converter
 
@@ -525,6 +564,15 @@ Counterpart resolution uses **no metadata field** linking a chapter to a code pa
 a block rots on the first refactor and gives no signal when it does. It resolves through
 `domain.md` aliases, then the building-block view, then the observed naming convention, and
 reports `unresolved` rather than guessing.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| One skill and one kind per run | the three skills | untested |
+| The kind is the chapter's `type`, or the file where the folder defines none | the three skills | untested |
+| `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
+| The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
+| No metadata field links a chapter to a code path | counterpart resolution | untested |
+| Resolution walks `domain.md` aliases, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
 
 ### Shared Value Objects
 
