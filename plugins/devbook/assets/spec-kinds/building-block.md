@@ -24,9 +24,10 @@ carries the kind.
   sequenced work. Cross-references use `related`.
 - **The top-level chapter's `meta` block doubles as the file-level block.** An
   `arc42/` file is exactly one top-level chapter — never add a second block.
-- The status ladder is `draft`, `proposed`, `active`, `deprecated`, plus the
-  shared `approved` rung. A structural change is expensive to reverse, so the
-  gate's confirmation below `active` matters here.
+- The status ladder is `draft`, `proposed`, `active`, `deprecated`. There is no
+  `approved` or `accepted` rung in `arc42/` — the two decision rungs are
+  `domain/`'s. A structural change is expensive to reverse, so the gate's
+  confirmation below `active` matters here.
 
 If `arc42/` does not exist, stop and run `devbook:install`. Create the file
 only when the chapter will have real content — the folder rules forbid

@@ -34,8 +34,9 @@ rules require exactly that.
 `design/` folder rules that apply:
 
 - **No `type` field.** `design/` defines no value set.
-- **`status` is `draft`, `active`, or `deprecated`**, plus the shared `approved`
-  rung. There is no `proposed`; the gate's `draft` rule applies unchanged.
+- **`status` is `draft`, `active`, or `deprecated`.** There is no `proposed`,
+  and no `approved` or `accepted` rung — the two decision rungs are `domain/`'s.
+  The gate's `draft` rule applies unchanged.
 - **Guideline level only.** No wireframe, user flow, prototype, or screenshot is
   stored in `design/`.
 - **No dependency changes.** `component-libraries.md` records a recommendation

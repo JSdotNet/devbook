@@ -66,10 +66,22 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
+// Version 13 adds three things and takes one away. It adds the optional
+// `approved-hash` fingerprint, the `accepted` rung with
+// `accepted-by`/`accepted-at`/`accepted-hash` above `approved`, and a
+// `.domain` bounded context's freedom to carry a page the convention does not
+// name, whose file-level `type` is its own filename. It removes both decision
+// rungs, and their six record fields, from every folder but `.domain`: the
+// question they answer is asked of the model, and a rung on a chapter that
+// rates a technology put two unrelated statements in one field. That removal
+// is breaking — a chapter outside `.domain` holding `status: approved` stops
+// validating — so `migrations/013-decision-rungs-are-domains/` takes the
+// record off, and says which `.tech`/`.ai` chapters need a rating no script
+// can recover.
 // Version 12 changes no chapter shape: it retires the checkout layer of the
 // stack-config overlay and the `.gitignore` block devbook materialized for it,
 // so the stamp's `materialized` no longer carries `.gitignore#devbook`.
-export const CONTRACT_VERSION = 12;
+export const CONTRACT_VERSION = 13;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -146,6 +158,14 @@ const ATTRIBUTE_FIELDS = [
     "date",
     "approved-by",
     "approved-at",
+    // Carried so a consumer can tell "approved, and the content has not moved"
+    // from a bare "approved" without re-reading the Markdown or asking git.
+    "approved-hash",
+    // The rung above it: who accepted the built work against this chapter, and
+    // when. The approval record stays beside it — the two are a stack.
+    "accepted-by",
+    "accepted-at",
+    "accepted-hash",
 ];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,

@@ -73,7 +73,7 @@ else, and no slot exists for it.
 
 **The committed index is an extension.** A repository that wants `_meta/` committed enables
 `devbook-derived` and runs its install; one that does not never sees a derived file. The
-review plugin has the same shape after its state moved into devbook's schema: four skills, no
+review plugin has the same shape after its state moved into devbook's schema: five skills, no
 rule, no install, no stamp ([annotations](annotations.md), [checks and
 indexes](checks-and-indexes.md)).
 

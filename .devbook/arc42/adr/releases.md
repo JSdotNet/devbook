@@ -5,12 +5,14 @@ date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.3.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.4.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
-commit, and `AGENTS.md` states which changes owe one. A contract bump with its migration is a
-minor release; a migration lives until the next major, which raises the floor
+commit, and `AGENTS.md` states which changes owe one. A contract bump is a minor release, with its migration
+when one is owed — a bump whose every part is an added field or value with a
+safe default owes none, because nothing written under the previous contract
+stops validating. A migration lives until the next major, which raises the floor
 `MINIMUM_CONTRACT_VERSION` and deletes the folders at or below it. The floor is 9. Three
 names are keys a consumer installs under: the marketplace is `jsdotnet-devbook` under the rule `jsdotnet-<repository>`, the
 repository is `JSdotNet/devbook`, and the marketplace name is never renamed after the first
@@ -78,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with migration 013, which takes the decision rungs off every folder but `domain/`. A contract bump is a minor release, with its migration only when one is owed. |
 | 2026-09-21 | Every plugin is `1.3.0`; contract 12 ships in it with migration 012, which retires the overlay's checkout layer and devbook's `.gitignore` block. |
 | 2026-09-18 | Every plugin is `1.2.0`; contract 11 ships in it with migration 011 — the first release where a contract bump moved the version. |
 | 2026-09-17 | Every plugin is `1.1.0`; contract 10 ships in it with migration 010. |

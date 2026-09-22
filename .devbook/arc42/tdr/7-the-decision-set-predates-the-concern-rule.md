@@ -12,8 +12,8 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/R
 ```meta
 ```
 
-`plugins/devbook/rules/devbook-arc42.md` now says a decision record holds a technical choice —
-one that would take a migration of code, data, or infrastructure to reverse — and that there is
+`plugins/devbook/rules/devbook-arc42.md` now says a decision record holds a choice whose
+reversal would cost a migration — of code, of data, or of the model's language — and that there is
 one record per concern, updated in place, with a history table carrying the individual
 decisions. This repository's own [`adr/`](../adr/README.md) is the shape the rule replaced:
 seventy-six numbered files, one per decision, a fifth of them about a name, a word, or a line a

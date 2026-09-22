@@ -83,10 +83,10 @@ instructions.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. Architecture documentation describes a
   standing decision/structure, not a task, so there is no `done`.
-- On top of that ladder sits the shared `approved` rung, defined once in
-  `devbook-chapter-metadata.md`: a person approved this chapter,
-  recorded with `approved-by` and `approved-at`. It is written explicitly, never
-  rested at, and comes off the moment the content changes.
+- **There is no `approved` or `accepted` rung here.** The two decision rungs
+  are `domain/`'s alone — see `devbook-domain.md`. An architecture chapter
+  records a standing structure, and the question those rungs answer is asked of
+  the model, not of it.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`). A standing structure
@@ -110,15 +110,16 @@ instructions.
 
 ## Decision records (`adr/`)
 
-A decision record holds a **technical choice**: a storage engine, an API style,
-a messaging or integration protocol, a hosting or deployment model, a runtime or
-framework, how packages are managed and built. The test is what reversing it
-would cost. A choice that would take a migration of code, data, or
-infrastructure to reverse is a decision record; one a reader could reverse with
-a find-and-replace is not. Naming, folder layout, process rules, who owns what,
-and how a document is written are not architecture: the rule, chapter, or
-bounded context that states them carries the reason in a sentence, and no
-record is opened.
+A decision record holds a choice whose reversal would cost a **migration** — of
+code, of data, or of the model's language: a storage engine, an API style, a
+messaging or integration protocol, a hosting or deployment model, a runtime or
+framework, how packages are managed and built, and equally an aggregate
+boundary, a snapshot-versus-reference choice, a consistency boundary, or a
+contested term the model now depends on. The test is what reversing it would
+cost. A choice a reader could reverse with a find-and-replace is not a record.
+Naming, folder layout, process rules, who owns what, and how a document is
+written are not architecture: the rule, chapter, or bounded context that states
+them carries the reason in a sentence, and no record is opened.
 
 **One record per concern, not per decision.** The file is the concern —
 `adr/storage.md`, `adr/api.md`, `adr/package-management.md` — a kebab-case slug

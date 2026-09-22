@@ -57,6 +57,13 @@ at contract 11; the table below says so.
 **2026-09-21. Spent a third time.** `011-context-md` took contract 11 the next day. The
 proposal is `012-devbook-names` at contract 12; the table below says so.
 
+**2026-09-22. Spent a fourth and fifth time.** `012-no-checkout-overlay` took contract 12,
+and `013-decision-rungs-are-domains` took 13 for
+[the chapter schema record](../adr/chapter-schema.md). The proposal is `014-devbook-names`
+at contract 14; the table below says so. Four slots in five days is the debt itself: a rename
+that waits for a free contract number never gets one, because every real schema change takes
+the next.
+
 ## Affected components
 
 ```meta
@@ -86,7 +93,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `012-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 12 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `014-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 14 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 

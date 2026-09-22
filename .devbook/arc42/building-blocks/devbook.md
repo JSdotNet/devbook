@@ -293,7 +293,11 @@ top-level heading carries a block of its own describing the document as a whole.
 | Every file carries a file-level block under its top-level heading | parse | untested |
 | `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
-| `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | untested |
+| `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
@@ -306,8 +310,10 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
 
 Two enums are the chapter's own. **Chapter Status** is where the content stands: each folder
-defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and one
-shared rung, `approved`, sits on top of all of them. Three folders have a resting value written
+defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
+`domain/`'s alone sit two decision rungs: `approved`, the chapter is right, and `accepted`
+above it, the built work satisfies it. The second stands on the first and keeps its record.
+The other four folders have neither: what those rungs decide is asked of the model. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
 unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value
@@ -326,7 +332,9 @@ is what turns a heading into a node, so deleting it as noise silently drops the 
 the graph and out of every reference pointing at it.
 
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `approved-by`, `approved-at`, `number`, and `index` are devbook's,
+`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
+— `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
+`accepted-hash` — scoped to `domain/` beside the rungs that write them;
 each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
 it. Empty collections and nulls are omitted rather than written out, so absence has exactly
 one spelling.
@@ -601,7 +609,7 @@ flowchart TD
 related: [".devbook/arc42/building-blocks/devbook.md#chapter", ".devbook/arc42/building-blocks/devbook-collaboration.md#the-review-pass"]
 ```
 
-The `domain/` ladder, with the shared `approved` rung on top of it. `active` is the resting
+The `domain/` ladder, with the two decision rungs — `approved`, then `accepted` — on top of it. `active` is the resting
 value and is written by omitting the field, which is why the diagram's busiest state is the
 one that says nothing.
 
@@ -622,7 +630,9 @@ stateDiagram-v2
   one state never ends up with two spellings.
 - **`approved` is of what was read, not of the heading.** It drops the moment the content
   changes, and `approved-by` and `approved-at` are written and deleted in the same change as
-  the rung.
+  the rung. `accepted` above it drops with it, because a build was accepted against the text
+  that was approved. Where the optional `approved-hash` is written, "the content changed" is
+  a check result rather than something a reader has to establish from git.
 - **An open question is orthogonal to all of this.** A chapter carrying an open
   `kind: question` fence is not agreed whatever its status says, which is why a reader in
   review mode reads the fences and a reader loading task context skips them. The other kinds

@@ -244,10 +244,10 @@ chapter at `draft` or `proposed` has not been agreed:
 - `deprecated` — do not build. Report it and stop.
 
 In `design/`, the ladder is only `draft`, `active`, `deprecated`; the `draft`
-rule above applies unchanged and there is no `proposed`. The `approved` rung is
-shared by every folder and sits on top of each one's ladder.
+rule above applies unchanged and there is no `proposed`. The two decision rungs,
+`approved` and `accepted` above it, sit on `domain/`'s ladder and on no other.
 
-**No skill here writes the `approved` rung.** Capture never sets it: finding
+**No skill here writes either decision rung.** Capture never sets it: finding
 code is not a person approving a chapter, and the same rule that forbids
 promoting to `active` forbids this more strongly. Apply never sets it either —
 it reads the rung and stops or proceeds. Only the approval gate, and the person

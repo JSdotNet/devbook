@@ -7,9 +7,9 @@ schema and no state. What it remembers
 about a chapter is devbook's own review triad — `review`, `reviewer`,
 `review-at` in that chapter's `meta` block, validated by the check — and a
 finding is one of devbook's own `annotation` fences, beside the passage it is
-about. It ships four skills and
+about. It ships five skills and
 nothing else: no rule, no install, no hook, and no entry in the stamp. Enable
-it and the four skills are there; a repository that never enables it can still
+it and the five skills are there; a repository that never enables it can still
 write the three fields by hand and is held to the same rules.
 
 ## Installation
@@ -24,7 +24,7 @@ install into the repository.
 
 ## The pass
 
-One chapter moves through four skills, and the state it carries always says who
+One chapter moves through five skills, and the state it carries always says who
 owes the next move:
 
 | Skill | Who runs it | Leaves behind |
@@ -32,15 +32,21 @@ owes the next move:
 | `chapter-handoff` | The author | `review: requested` and the reviewer's name, plus a brief to send |
 | `chapter-review` | The reviewer | One annotation fence per finding, and `review: changes-requested`, or `review: cleared` with none open |
 | `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no review state and no resolved note left on the chapter. Or, on an approval a person will not let stand over what was raised since it, the rung lifted and `review: changes-requested` |
-| `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting — including an approval objected to since it was signed |
+| `chapter-accept` | Whoever accepts the built work | devbook's `status: accepted` with `accepted-by`, `accepted-at`, and `accepted-hash`, beside the approval record it stands on. Or, where the build does not satisfy the chapter, one annotation fence per gap and the rung left at `approved` |
+| `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting — including an approval objected to since it was signed, and work awaiting acceptance |
 
 Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
 merges. It is devbook's, because the fence is.
 
-Approval is devbook's own field and keeps devbook's meaning. This plugin never
-writes it without a person choosing it in that session, and clears the review
+Approval is devbook's own field and keeps devbook's meaning. Both decision
+rungs live on `domain/`'s ladder and no other, so `chapter-approve` and
+`chapter-accept` run on model chapters; the review pass itself runs anywhere.
+This plugin never
+writes a rung without a person choosing it in that session, and clears the review
 triad in the same change: an approved chapter carries the decision, not the
-road to it.
+road to it. Acceptance is the same field one rung up, and the same rule:
+`approved` says the specification is right, `accepted` says what was built
+satisfies it, and neither is ever written from a summary or from silence.
 
 ## The state
 

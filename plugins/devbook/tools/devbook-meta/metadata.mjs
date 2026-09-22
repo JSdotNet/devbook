@@ -1,6 +1,10 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
 // blocks defined in devbook-chapter-metadata.md.
 //
+// Dependency-free ESM against node built-ins, like everything else executable
+// here: `node:crypto` is what fingerprints an approved chapter's content.
+import { createHash } from "node:crypto";
+//
 // The schema used across .devbook/{arc42,domain,tech,design,ai} is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
 // tiny hand-written reader instead of pulling in a YAML dependency.
@@ -30,21 +34,72 @@ export const DEVBOOK_PREFIX = `${DEVBOOK_ROOT}/`;
 
 const APPROVED_STATUS = "approved";
 
+// One rung above `approved`, and the two are a stack rather than a choice:
+// `approved` says the specification is right, `accepted` says what was built
+// satisfies it. They are usually stated by different people on different days,
+// which is why the acceptance never replaces the approval record — a chapter
+// at `accepted` carries both. Acceptance is of the chapter's content, not of a
+// commit; which pull request delivered it is the tracker's business.
+const ACCEPTED_STATUS = "accepted";
+
+// The two decision rungs sit on `domain/`'s ladder and on no other. What they
+// record is that a person agreed the model, and then that what was built
+// satisfies it — a question the domain folder is the only one currently asked.
+// The other four ladders rate content or a technology, and a rung on them was
+// surface nothing used.
 const STATUS_BY_FOLDER = {
-    domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
-    arc42: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
-    tech: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
-    design: ["draft", "active", "deprecated", APPROVED_STATUS],
+    domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
+    arc42: ["draft", "proposed", "active", "deprecated"],
+    tech: ["candidate", "trial", "adopted", "hold", "retired"],
+    design: ["draft", "active", "deprecated"],
     // `.ai` deliberately reuses `.tech`'s ladder: a reader learns one
     // adoption vocabulary. What is on the ladder differs — `.tech` rates a
     // technology, `.ai` rates a way of working with one.
-    ai: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
+    ai: ["candidate", "trial", "adopted", "hold", "retired"],
 };
 
 // Who approved, and on what day. The gate writes both; they exist so the
 // decision travels with the content and lands in the git history, rather than
 // living in flow configuration or in someone's memory.
 const APPROVAL_FIELDS = ["approved-by", "approved-at"];
+
+// What was approved, as a fingerprint of the content itself. Deliberately
+// *not* in APPROVAL_FIELDS: those two are written together and are missing
+// together, while this one is optional everywhere. A repository that omits it
+// keeps the rule "the rung comes off when the content changes" as something a
+// person remembers; a repository that writes it has the checker say so.
+//
+// The rung already claimed the content had not changed since `approved-at`,
+// and nothing could establish it: git answers per file, not per chapter, so a
+// chapter in a busy file reads as stale and a chapter in a quiet one reads as
+// current whatever either actually is. A fingerprint of the chapter needs no
+// git and is exact.
+const CONTENT_HASH_FIELD = "approved-hash";
+
+// Who accepted the built work against this chapter, and on what day — the
+// approval triad's shape, one rung up, for the same reason: the statement
+// travels with the content instead of living in a tracker this repository
+// cannot read. `accepted-hash` is the same fingerprint as `approved-hash`,
+// computed by the same function, and the two are equal whenever both are
+// written — an acceptance is of the approved content.
+const ACCEPTANCE_FIELDS = ["accepted-by", "accepted-at"];
+const ACCEPTED_HASH_FIELD = "accepted-hash";
+
+// The rungs' six record fields, scoped to `domain/` with them. Kept as one
+// list so the folder that has the rungs and the folder that has the fields can
+// never drift apart.
+const DECISION_FIELDS = [
+    ...APPROVAL_FIELDS,
+    CONTENT_HASH_FIELD,
+    ...ACCEPTANCE_FIELDS,
+    ACCEPTED_HASH_FIELD,
+];
+
+// `sha256:` names the algorithm so a later one can be told apart, and eight
+// hex characters is the whole digest a reader ever compares: this detects an
+// edit, it does not defend against one, and nobody is forging a chapter past
+// their own approval gate.
+const CONTENT_HASH_PATTERN = /^sha256:[0-9a-f]{8}$/;
 
 // Where a chapter's review stands, who owes the next move, and since when. The
 // triad mirrors the approval triad on purpose — a chapter reads the same way on
@@ -209,7 +264,6 @@ const COMMON_OPTIONAL_FIELDS = [
     "roadmap",
     "date",
     "tests",
-    ...APPROVAL_FIELDS,
     ...REVIEW_FIELDS,
 ];
 
@@ -324,7 +378,10 @@ const REMOVED_FIELDS = {
 };
 
 const FOLDER_EXTRA_FIELDS = {
-    domain: ["depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope"],
+    domain: [
+        "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
+        ...DECISION_FIELDS,
+    ],
     arc42: [],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
@@ -686,7 +743,7 @@ export function documentDigest(markdown) {
  * prefix its own subject. Shared by the document lint and by graph
  * construction, so the canvas, the CLI, and CI all report the same thing.
  */
-export function typeIssues(folder, blockLevel, meta) {
+export function typeIssues(folder, blockLevel, meta, fileBase = null) {
     const issues = [];
     if (!meta) return issues;
 
@@ -699,10 +756,25 @@ export function typeIssues(folder, blockLevel, meta) {
                 message: `is missing required \`type\`. Expected one of: ${allowed.join(", ")}.`,
             });
         } else if (!allowed.includes(declared)) {
-            issues.push({
-                severity: "error",
-                message: `has type "${declared}", expected one of: ${allowed.join(", ")}.`,
-            });
+            // A bounded context may carry a file the convention does not name —
+            // whatever that context has to record and no other file holds. The
+            // listed values are the files with documented responsibilities, not
+            // the only files permitted, so an unlisted one is accepted on the
+            // rule every listed one already follows: a file's `type` is its
+            // filename. That still catches the typo, which is what the closed
+            // list was actually buying.
+            if (folder === "domain" && blockLevel === "file" && fileBase && declared === fileBase) {
+                // An additional page, named for itself. Nothing to report.
+            } else {
+                issues.push({
+                    severity: "error",
+                    message: `has type "${declared}", expected one of: ${allowed.join(", ")}${
+                        folder === "domain" && blockLevel === "file"
+                            ? `, or "${fileBase}" to match this file's own name`
+                            : ""
+                    }.`,
+                });
+            }
         }
     } else if (declared !== null) {
         issues.push({
@@ -1056,10 +1128,14 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
  * in the chapter is that the decision is auditable — a rung with nobody's name
  * on it, or a name with no rung, is the one shape that defeats that.
  */
-export function approvalIssues(meta) {
+export function approvalIssues(meta, contentHash = null) {
     if (!meta) return [];
     const issues = [];
-    const approved = meta.status === APPROVED_STATUS;
+    // `accepted` stands on the approval and keeps its record, so the approval
+    // fields are at home under either rung. This is the one place the orphan
+    // rule widens.
+    const accepted = meta.status === ACCEPTED_STATUS;
+    const approved = meta.status === APPROVED_STATUS || accepted;
 
     for (const field of APPROVAL_FIELDS) {
         const raw = meta[field];
@@ -1086,12 +1162,160 @@ export function approvalIssues(meta) {
         });
     }
 
+    // The fingerprint is optional, so its absence says nothing. Present, it is
+    // checked: a value that does not match the content is the one case the
+    // rung alone could never report, which is the reason the field exists.
+    const recorded = meta[CONTENT_HASH_FIELD];
+    if (recorded != null) {
+        if (Array.isArray(recorded) || String(recorded).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${CONTENT_HASH_FIELD}\` set to an empty or list value — it records one fingerprint of the content approved.`,
+            });
+        } else if (!CONTENT_HASH_PATTERN.test(String(recorded).trim())) {
+            issues.push({
+                severity: "error",
+                message: `has \`${CONTENT_HASH_FIELD}\` "${recorded}" — a content fingerprint is \`sha256:\` followed by eight lowercase hex characters, written by the approval gate and never by hand.`,
+            });
+        } else if (!approved) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${CONTENT_HASH_FIELD}\` without \`status: ${APPROVED_STATUS}\`. Either the approval is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        } else if (contentHash != null && String(recorded).trim() !== contentHash) {
+            issues.push({
+                severity: "error",
+                message: `states \`status: ${APPROVED_STATUS}\` over content that has changed since \`approved-at\` — \`${CONTENT_HASH_FIELD}\` records ${recorded}, the content now fingerprints as ${contentHash}. Re-approve the chapter, or take the rung off.`,
+            });
+        }
+    }
+
     if (approved) {
         for (const field of APPROVAL_FIELDS) {
             if (meta[field] == null) {
                 issues.push({
                     severity: "warning",
-                    message: `states \`status: ${APPROVED_STATUS}\` without \`${field}\`. An approval nobody signed and dated is not a record of a decision.`,
+                    message: `states \`status: ${meta.status}\` without \`${field}\`. An approval nobody signed and dated is not a record of a decision.`,
+                });
+            }
+        }
+    }
+
+    for (const issue of acceptanceIssues(meta, contentHash)) issues.push(issue);
+
+    return issues;
+}
+
+/**
+ * Lint the acceptance record: the `accepted` rung and its three fields.
+ *
+ * The rung says a person saw the built work against this chapter and accepted
+ * it — a different statement from `approved`, which says the chapter itself is
+ * right, and usually made by a different person on a different day. So the two
+ * stack: an accepted chapter carries both records, and a content change drops
+ * both, because a build was accepted against the text that was approved.
+ *
+ * Called from `approvalIssues`, since every rule here is about how the two
+ * records sit together and splitting them across two callers would let a
+ * repository get one without the other.
+ */
+function acceptanceIssues(meta, contentHash = null) {
+    const issues = [];
+    const accepted = meta.status === ACCEPTED_STATUS;
+
+    for (const field of ACCEPTANCE_FIELDS) {
+        const raw = meta[field];
+        if (raw == null) continue;
+        if (Array.isArray(raw) || String(raw).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${field}\` set to an empty or list value — it records one acceptor and one day.`,
+            });
+            continue;
+        }
+        if (!accepted) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${field}\` without \`status: ${ACCEPTED_STATUS}\`. Either the acceptance is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        }
+    }
+
+    if (meta["accepted-at"] != null && !DATE_PATTERN.test(String(meta["accepted-at"]))) {
+        issues.push({
+            severity: "error",
+            message: `has \`accepted-at\` "${meta["accepted-at"]}" — an acceptance date is a single calendar day in \`YYYY-MM-DD\` form.`,
+        });
+    }
+
+    if (accepted) {
+        for (const field of ACCEPTANCE_FIELDS) {
+            if (meta[field] == null) {
+                issues.push({
+                    severity: "warning",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` without \`${field}\`. An acceptance nobody signed and dated is not a record of a decision.`,
+                });
+            }
+        }
+
+        // The rung it stands on. Without the approval record there is nothing
+        // saying the chapter the build was accepted against was ever agreed.
+        for (const field of APPROVAL_FIELDS) {
+            if (meta[field] == null) {
+                issues.push({
+                    severity: "error",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` without \`${field}\` — an acceptance stands on an approval. Record who approved the chapter and when, or write \`status: ${APPROVED_STATUS}\` first.`,
+                });
+            }
+        }
+    }
+
+    // A build cannot be accepted against a chapter before that chapter was
+    // approved, so the two dates are ordered whenever both are readable.
+    const approvedAt = meta["approved-at"];
+    const acceptedAt = meta["accepted-at"];
+    if (
+        approvedAt != null && acceptedAt != null &&
+        DATE_PATTERN.test(String(approvedAt)) && DATE_PATTERN.test(String(acceptedAt)) &&
+        String(acceptedAt) < String(approvedAt)
+    ) {
+        issues.push({
+            severity: "error",
+            message: `has \`accepted-at\` ${acceptedAt} before \`approved-at\` ${approvedAt} — the build was accepted against a chapter that had not been approved yet. One of the two dates is wrong.`,
+        });
+    }
+
+    const recorded = meta[ACCEPTED_HASH_FIELD];
+    if (recorded != null) {
+        if (Array.isArray(recorded) || String(recorded).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${ACCEPTED_HASH_FIELD}\` set to an empty or list value — it records one fingerprint of the content accepted.`,
+            });
+        } else if (!CONTENT_HASH_PATTERN.test(String(recorded).trim())) {
+            issues.push({
+                severity: "error",
+                message: `has \`${ACCEPTED_HASH_FIELD}\` "${recorded}" — a content fingerprint is \`sha256:\` followed by eight lowercase hex characters, written by the acceptance gate and never by hand.`,
+            });
+        } else if (!accepted) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${ACCEPTED_HASH_FIELD}\` without \`status: ${ACCEPTED_STATUS}\`. Either the acceptance is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        } else {
+            const approvedHash = meta[CONTENT_HASH_FIELD];
+            if (
+                approvedHash != null && CONTENT_HASH_PATTERN.test(String(approvedHash).trim()) &&
+                String(approvedHash).trim() !== String(recorded).trim()
+            ) {
+                issues.push({
+                    severity: "error",
+                    message: `records \`${CONTENT_HASH_FIELD}\` ${approvedHash} and \`${ACCEPTED_HASH_FIELD}\` ${recorded} — an acceptance is of the approved content, so the two are one value. The chapter changed between the two decisions.`,
+                });
+            } else if (contentHash != null && String(recorded).trim() !== contentHash) {
+                issues.push({
+                    severity: "error",
+                    message: `states \`status: ${ACCEPTED_STATUS}\` over content that has changed since \`accepted-at\` — \`${ACCEPTED_HASH_FIELD}\` records ${recorded}, the content now fingerprints as ${contentHash}. Accept the chapter again, or take the rung off.`,
                 });
             }
         }
@@ -1149,10 +1373,10 @@ export function reviewIssues(meta, openNotes = 0) {
         });
     }
 
-    if (meta.status === APPROVED_STATUS) {
+    if (meta.status === APPROVED_STATUS || meta.status === ACCEPTED_STATUS) {
         issues.push({
             severity: "error",
-            message: `states \`status: ${APPROVED_STATUS}\` while carrying review state — approval clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
+            message: `states \`status: ${meta.status}\` while carrying review state — the decision clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
         });
     }
 
@@ -1198,6 +1422,12 @@ export function removedFieldIssues(meta) {
  */
 export function validateDocument(relPath, markdown) {
     const kind = folderKindForPath(relPath);
+    // The filename's own name, before any split suffix: `context.md` is
+    // `context`, and `domain.order.md` is `domain`, because a split file is
+    // the kind of the file it is named after.
+    const fileBase = (String(relPath).replace(/\\/g, "/").split("/").pop() ?? "")
+        .replace(/\.md$/i, "")
+        .split(".")[0];
     const issues = [];
     if (!kind) {
         issues.push({
@@ -1303,7 +1533,7 @@ export function validateDocument(relPath, markdown) {
         // vocabulary its folder defines. Folders that define no vocabulary
         // (`.arc42`, `.design`) omit the field entirely.
         const blockLevel = chapter.level === 1 ? "file" : "chapter";
-        for (const issue of typeIssues(kind, blockLevel, chapter.meta)) {
+        for (const issue of typeIssues(kind, blockLevel, chapter.meta, fileBase)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
@@ -1437,9 +1667,20 @@ export function validateDocument(relPath, markdown) {
         }
 
         // The approval gate writes into the chapter, so the chapter is where
-        // the record is checked.
-        for (const issue of approvalIssues(chapter.meta)) {
-            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        // the record is checked. The content is only fingerprinted when the
+        // chapter claims one — most do not, and hashing every block to learn
+        // that would be work for nothing.
+        // Only `domain/` has the rungs, so only there is there a record to
+        // lint. Elsewhere the six fields are not in that folder's vocabulary at
+        // all, and the unrecognized-field check below reports each one once —
+        // running this too would report one mistake twice.
+        if (kind === "domain") {
+            const claimsHash =
+                chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
+            const contentHash = claimsHash ? chapterHash(markdown, chapter.line) : null;
+            for (const issue of approvalIssues(chapter.meta, contentHash)) {
+                issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+            }
         }
 
         // The review workflow writes into the chapter too, and its state is
@@ -1454,10 +1695,13 @@ export function validateDocument(relPath, markdown) {
         // here — an open question on any other rung is the state the fence
         // exists for, and a gate that warned on every one would be teaching
         // people to ignore it.
-        if (chapter.meta.status === APPROVED_STATUS && openQuestions.has(chapter.line)) {
+        if (
+            (chapter.meta.status === APPROVED_STATUS || chapter.meta.status === ACCEPTED_STATUS) &&
+            openQuestions.has(chapter.line)
+        ) {
             issues.push({
                 severity: "error",
-                message: `${label} states \`status: ${APPROVED_STATUS}\` while carrying an open \`kind: question\` annotation (line ${openQuestions.get(chapter.line)}) — an open question means the chapter is not agreed. Resolve and sweep the note, or take the approval off.`,
+                message: `${label} states \`status: ${chapter.meta.status}\` while carrying an open \`kind: question\` annotation (line ${openQuestions.get(chapter.line)}) — an open question means the chapter is not agreed. Resolve and sweep the note, or take the rung off.`,
             });
         }
 
@@ -1685,6 +1929,79 @@ function parseAnnotationList(lines, start, end, indent) {
 }
 
 const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
+
+/**
+ * The fingerprint of one block's content, for `approved-hash` and
+ * `accepted-hash`.
+ *
+ * What is hashed is the block a reader would say they read: its heading text
+ * and everything under it, down to the next heading at the same or a higher
+ * level. So a `#` file block covers the whole file, a `##` chapter covers its
+ * `###` subsections, and approving a nested chapter and its parent leaves two
+ * records that both lapse when the nested one is edited. Boundaries come from
+ * `parseDocument`, so they are the same boundaries every other check uses.
+ *
+ * Three things are excluded, each for its own reason. The `meta` blocks go
+ * because the hash lives in one, and a value cannot be part of what it
+ * fingerprints. The `annotation` fences go because a note written after the
+ * approval is not a change to the content — an open question standing over an
+ * approved chapter is already its own error, and lapsing the rung for a
+ * resolved note would report the sweep as an edit. Whitespace goes because a
+ * reflowed paragraph reads identically, and a rung that came off every time
+ * someone rewrapped a line would be taken off for good.
+ *
+ * Heading *text* is in, the `#` markers are not: renaming a chapter changes
+ * what it claims and should lapse the approval, while promoting one changes
+ * its address and not a word of what was read.
+ *
+ * `line` is the block's 1-based heading line, as `parseDocument` reports it.
+ */
+export function chapterHash(markdown, line = 1) {
+    const lines = markdown.split(/\r?\n/);
+    const { chapters } = parseDocument(markdown);
+
+    const index = chapters.findIndex((entry) => entry.line === line);
+    const start = index === -1 ? Math.max(0, line - 1) : chapters[index].line - 1;
+    const level = index === -1 ? 1 : chapters[index].level;
+
+    let end = lines.length;
+    if (index !== -1) {
+        const next = chapters.slice(index + 1).find((entry) => entry.level <= level);
+        if (next) end = next.line - 1;
+    }
+
+    const kept = [];
+    const heading = /^#{1,6}\s+(.*)$/.exec(lines[start] ?? "");
+    if (heading) kept.push(heading[1]);
+
+    for (let i = start + 1; i < end; i++) {
+        const fence = FENCE_PATTERN.exec(lines[i]);
+        if (fence) {
+            const marker = fence[2];
+            const label = fence[3].toLowerCase();
+            const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
+            let k = i + 1;
+            while (k < lines.length && !closer.test(lines[k])) k++;
+            if (label === "meta" || label === "annotation") {
+                i = k;
+                continue;
+            }
+            // Any other fence is content: a diagram or a code sample is part
+            // of what was approved, so it is kept whole, closer included.
+            for (let j = i; j <= k && j < end; j++) kept.push(lines[j]);
+            i = k;
+            continue;
+        }
+        kept.push(lines[i]);
+    }
+
+    const normalised = kept
+        .map((entry) => entry.replace(/\s+/g, " ").trim())
+        .filter((entry) => entry !== "")
+        .join("\n");
+
+    return `sha256:${createHash("sha256").update(normalised, "utf8").digest("hex").slice(0, 8)}`;
+}
 
 /**
  * Every annotation fence in a document, in reading order.

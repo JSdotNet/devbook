@@ -39,8 +39,9 @@ a field, not a second procedure.
 - **`default` is `on` or `off` on a flag** and the shipped value on a setting.
   `scope` is `user`, `tenant`, or `system` on a setting and absent on a flag.
 - **`status` is `draft`, `proposed`, `active` (by omission), or `deprecated`**,
-  plus the shared `approved` rung. A retired flag is `deprecated` until the
-  chapter is removed with its last reference.
+  plus `domain/`'s two decision rungs, `approved` and `accepted` above it. A
+  retired flag is `deprecated` until the chapter is removed with its last
+  reference.
 - **Identity, never status.** The switch's rollout or value says nothing about
   the chapter's `status`, and the reverse.
 

@@ -13,7 +13,7 @@ is `devbook-collaboration:chapter-approve`, in the review plugin and not the eng
 reads the chapter rather than the derived index. Only an open `kind: question` blocks; a
 `flag` is shown first and never blocks. Where a review stands — `review`, `reviewer`,
 `review-at` — is three fields in devbook's own schema, validated by the check, and the review
-plugin ships its four skills and nothing else: no rule, no install, no hook, no stamp.
+plugin ships its five skills and nothing else: no rule, no install, no hook, no stamp.
 
 ## Why
 

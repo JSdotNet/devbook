@@ -364,7 +364,10 @@ context's `term` chapters into `domain.md` now that the glossary file kind is go
 is `011-context-md`, which gives every context its `context.md` and moves each feature's
 bare flag key onto a `feature-flag` chapter there; the third is `012-no-checkout-overlay`,
 which removes the `.gitignore` block and moves a checkout-layer personal file out of the
-clone now that nothing personal lives in one. The
+clone now that nothing personal lives in one; the fourth is
+`013-decision-rungs-are-domains`, which takes the `approved` and `accepted` rungs and
+their six record fields off every folder but `domain/`, and names the `tech/` and `ai/`
+chapters whose original rating no script can restore. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -399,16 +402,18 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **12**, covering the metadata schema a repository authors
+One number, currently **13**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
 releases leave it alone: plugin semver moves for prose and new skills,
 `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
 `tools/devbook-meta/graph.mjs`, beside `MINIMUM_CONTRACT_VERSION`, the oldest
-contract a reconcile still carries forward. A contract bump that ships its
-migration is a minor release — the upgrade is automatic — and the major is
-reserved for the release that raises the floor.
+contract a reconcile still carries forward. A contract bump is a minor release, with its
+migration when one is owed — the upgrade is then automatic — and the major is
+reserved for the release that raises the floor. A bump whose every part is an
+added field or value with a safe default owes none: nothing written under the
+previous contract stops validating, so there is no state for a script to move.
 
 1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
@@ -419,7 +424,13 @@ they outgrow it — and turns a feature's `feature-flag` from a bare key into a 
 the switch's chapter, beside the new `setting` field; it ships as `011-context-md`. 12
 retires the checkout layer of the stack-config overlay and the `.gitignore` block that
 existed for it — the stamp's `materialized` no longer carries `.gitignore#devbook` — and
-ships as `012-no-checkout-overlay`.
+ships as `012-no-checkout-overlay`. 13 adds the optional `approved-hash`
+fingerprint over a chapter's content, the `accepted` rung above `approved` with
+`accepted-by`, `accepted-at`, and `accepted-hash`, and a `.domain` bounded
+context's freedom to carry a page the convention does not name, whose
+file-level `type` is its own filename. It also confines both rungs and their
+six fields to `.domain`, which is breaking, so it ships as
+`013-decision-rungs-are-domains`.
 
 ## Folder structure
 

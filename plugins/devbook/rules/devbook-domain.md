@@ -60,6 +60,14 @@ templates below. Add `flow.md` when the context has lifecycle or process
 flows, and split `actors.md` or `dependencies.md` out of `context.md` only
 when it has grown past what one file reads well with.
 
+**The listed files are the ones with documented responsibilities, not the only
+files permitted.** A context may add a page for something it has to record
+that no listed file holds — a go-live takeover of a predecessor system's data,
+a regulatory annex, whatever that domain turns out to need. It is a file like
+any other: a kebab-case name, a file-level `meta` block whose `type` is the
+filename, and `##` sections that carry no blocks of their own. It reads after
+the listed files, and nothing here has to be changed to allow it.
+
 **`context.md` is the boundary, and the context's root document.** It opens
 with what the context is responsible for — inside the boundary, outside it,
 and where the outside is answered — as prose under the file-level block, with
@@ -91,7 +99,11 @@ feature chapter's `setting` reference is what says the capability hangs on it.
 Both carry `key`, the identifier as the code spells it, which is what lets a
 flag check or a configuration read found in code resolve to a chapter instead
 of to prose. A feature points at what gates or configures it through
-`feature-flag` or `setting`.
+`feature-flag` or `setting`. A deployment or environment value — a retry
+budget, a timeout, a maximum an operator sets per environment — is a `setting`
+with `scope: system`: a person chooses it, it is not decided at release, and it
+is never retired the way a flag is. A `feature-flag` is only ever a capability
+switch.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
@@ -191,7 +203,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     turns a capability on or shapes how it behaves. Carries `key` (the setting
     key the code reads), `scope` (`user`, `tenant`, or `system` — who may
     change it), and `default`, the value the product ships with. The prose
-    says what each value does.
+    says what each value does. A deployment or environment value an operator
+    sets per environment is this type, at `scope: system`.
   - Both are headed by their name in business language, never the key; the
     key is the field. Their `related` points at the feature chapters they gate
     or configure, and those chapters point back through `feature-flag` or
@@ -244,7 +257,12 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     administrator user that changes settings.
   - Rights are stated here, not argued. Why a right is split — separation of
     duties, four eyes — is a modeling decision and belongs in `domain.md`, beside
-    the invariant it protects.
+    the invariant it protects. A modeling decision that was contested, is
+    expensive to reverse, or would otherwise be re-litigated is an
+    `arc42/adr/` record instead — one per concern, with its history — and the
+    chapter's `related` points at it. There is no `decisions.md` here: a
+    decision log beside the model is a second copy of the *why*, and it goes
+    stale on the side nobody reads.
     A context whose rights need a screen-to-right matrix closes the file with one
     `## Rights` section carrying that table.
 - **features.md** — The features and sub-features this bounded context
@@ -319,12 +337,13 @@ instructions.
   issue link (`issue`) are included only when they have a value.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
   `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
-  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present), and
-  each split file (when present) — must also carry the file-level metadata
+  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present),
+  each split file (when present), and any additional page the context carries
+  — must also carry the file-level metadata
   block described in `devbook-chapter-metadata.md`, placed directly under the
   file's top-level `#` heading. This applies even to `context-map.md`,
-  `model.md`, `flow.md`, their split files, and
-  `dependencies.md`, whose `##` sections do not carry their own per-chapter
+  `model.md`, `flow.md`, their split files, `dependencies.md`, and any
+  additional page, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
   context whose `domain.md` declared it before contract 11.
@@ -332,10 +351,16 @@ instructions.
   `deprecated` in this folder. This folder describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
   means "this is the current model", `deprecated` means superseded.
-- On top of that ladder sits the shared `approved` rung, defined once in
-  `devbook-chapter-metadata.md`: a person approved this chapter,
-  recorded with `approved-by` and `approved-at`. It is written explicitly, never
-  rested at, and comes off the moment the content changes.
+- On top of that ladder sit the two decision rungs, defined once in
+  `devbook-chapter-metadata.md` and belonging to **this folder only**:
+  `approved`, a person agreed this chapter, recorded with `approved-by` and
+  `approved-at`; and `accepted` above it, a person saw the built work against
+  this chapter and accepted it, recorded with `accepted-by` and `accepted-at`
+  beside the approval record it stands on. Each may carry a content
+  fingerprint — `approved-hash`, `accepted-hash` — which is what makes a lapse
+  a check result rather than something a reader has to establish. Both are
+  written explicitly, never rested at, and both come off together the moment
+  the content changes.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`); drop the line when
@@ -349,7 +374,7 @@ instructions.
   | Level | Values |
   |---|---|
   | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
-  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
+  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` — or, for an additional page, its own filename |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -1090,4 +1115,3 @@ type: dependencies
 - Link to the relevant `domain-interaction-diagram` / `context-mapping`
   artifact if one exists for this relationship, instead of duplicating it.
 ```
-
