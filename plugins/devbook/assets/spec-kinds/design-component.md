@@ -58,6 +58,18 @@ If `design/` does not exist, stop and run `devbook:install`.
 | Known gaps | Components hand-rolled that the library also offers, and components the product needs that the library lacks | Each gap handled as the chapter says: an accepted hand-rolled component, or an accepted deviation |
 | Keyboard equivalence | Whether pointer-only interactions built on these components have keyboard equivalents | Every pointer-only interaction operable without a pointer — check `interaction-guidelines.md` against the interaction code |
 | Accessibility posture | The affordances the components are used with, against the thresholds in `accessibility.md` | Those thresholds met — check contrast, focus handling, and labelling |
+| Testable rules, one `### Requirement:` chapter each | The token, keyboard, and accessibility rules the guideline states as thresholds, and the tests that assert them | Each rule kept, with its `#### Scenario:` cases as the acceptance checks |
+
+**The testable rules take the same `### Requirement:` shape as a bounded
+context's**, under this component's own chapter in `.devbook/design/` — one
+SHALL sentence, `#### Scenario:` cases beneath it, `tests` naming what asserts
+it. What differs is the block: `design/` defines no `type` value set, so these
+chapters carry the empty `meta` fence every `design/` chapter carries and take
+no `type: requirement`. The fence is still what makes the heading addressable,
+so it is never dropped. The coverage warnings that hold a `domain/` requirement
+to `e2e` do not fire here, because they key on a `type` this folder does not
+have; the level a design rule is proved at follows what asserts it — a contrast
+threshold is a unit assertion, a keyboard path an `e2e` one.
 
 Hard-coded values where a token is declared are the most useful finding this
 kind produces, and directly observable: a hex literal, a raw pixel size, a font
@@ -90,7 +102,9 @@ its tokens instead. So the brief lists the replacement sites — "adopt the
 library" without them is not actionable. The token and accessibility rules are
 the **invariants**, and the part most easily dropped: keyboard equivalence for
 every pointer-only interaction, and every value referencing a declared token.
-Write them out, with the token names. Where the guideline comes from the
+Where the chapter states them as `### Requirement:` chapters, quote each one as
+it stands and carry its scenarios as the acceptance checks; where it does not,
+write them out with the token names. Where the guideline comes from the
 authoritative source, carry its rules through rather than reinterpreting them.
 
 Ubiquitous language: the component and token names the `design/` chapters
