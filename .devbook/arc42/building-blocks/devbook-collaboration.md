@@ -278,6 +278,13 @@ It was one flat `ext` key until 2026-09-09, which recorded no author, could not 
 in place, and never said which passage it was about. See
 [the decision](../adr/annotations.md).
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Among the remarks a `flag` is read first | the reading | untested |
+| A note dated after the chapter's `approved-at` is read as raised since the approval | the reading | untested |
+| Neither reading blocks a decision; only an open `kind: question` does | `chapter-approve()` | untested |
+| This block reads and writes a finding and owns neither its shape nor its lifecycle | `annotations.mjs` | untested |
+
 ### Approval
 
 ```meta
@@ -304,6 +311,12 @@ every fact the decision needs is in the one file it is already showing, and the 
 refreshed on a schedule, so the note written on this branch an hour ago is the one it lacks.
 See [the decision](../adr/annotations.md).
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Command-invoked and never anything else — not from a schedule, and not as a consequence of a cleared review | `chapter-approve()` | untested |
+| It reads the chapter, never the derived index | `chapter-approve()` | untested |
+| The rung it writes is devbook's field, which the flow engine reads and never writes | `chapter-approve()` | untested |
+
 ### Review Queue
 
 ```meta
@@ -317,6 +330,11 @@ Invocation semantics: query-oriented, and it writes nothing at all. It is a read
 chapter in the repository rather than an operation on one, which is why it is a service and
 not a method: no single [Review Position](#review-position) can answer *who is blocked right
 now*.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It writes nothing at all | `chapter-review-queue()` | untested |
+| It reports what is awaiting whom, and which approvals have gone stale under content that moved | `chapter-review-queue()` | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs` |
 
 ### Acceptance
 
@@ -332,6 +350,15 @@ The decision that writes devbook's `accepted` rung, with `accepted-by`, `accepte
 A service for the same reason [Approval](#approval) is: its result is not a state of the
 aggregate but a field belonging to another block, and it reads evidence — a running
 application, a test run — that lives outside this one entirely.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The acceptance stands on an approval record and never replaces one | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| `accepted-at` falls on or after `approved-at` | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| An unsigned, undated, or orphaned acceptance record is reported | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| Both records come off together when the content moves under them | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| The rung is on `domain/`'s ladder and no other folder's | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| It reads evidence that lives outside this block — a running application, a test run | `chapter-accept()` | untested |
 
 ### Chapter Approved
 
