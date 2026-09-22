@@ -133,6 +133,14 @@ the one capture that **runs the application**. Reading a controller tells you a 
 using the feature tells you what the product lets someone do, in what order, with what
 wording. Screenshots are report evidence and are never committed into a devbook folder.
 
+Behaviour is captured into `requirements.md` and `invariants.md` rather than into the prose it
+belongs beside, one rule per chapter with the scenarios that prove it. Neither is a kind of
+its own: a feature's promises are that feature's pass and an aggregate's rules are that
+aggregate's, because a rule captured apart from the thing it constrains is a rule decided
+twice. The split follows who is held to it — a promise made outside the model is a
+requirement, what a type guarantees is an invariant — and that is also what fixes the level
+each is proved at.
+
 ### apply-change
 
 ```meta
@@ -543,7 +551,8 @@ carrying no `meta` block claims its anchor the same way, so the rule is about he
 about chapters. The graph reports the collision where a chapter is on either side of it,
 because a chapter that cannot be addressed is a chapter that has left the graph. Two
 structural headings sharing an anchor is not reported: it is the ordinary shape of a chapter
-file, where every aggregate carries its own `### Invariants`, and such a heading is only ever
+file, where two rules in one `invariants.md` carry a `#### Scenario:` of the same name and
+every event carries its own `### Payload`, and such a heading is only ever
 materialized when something cites it.
 
 **Test Reference** — also called tests entry, test link. `<level>:<runner>:<selector>`, where
