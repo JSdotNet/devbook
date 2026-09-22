@@ -38,7 +38,9 @@ repository root.
    application: a `feature` is verified from code and tests here, and the run
    belongs to `capture-specs`.
 4. Reach exactly one verdict per chapter, with the evidence that settles it,
-   specific enough to re-check.
+   specific enough to re-check. Mark it `unagreed` where the chapter's `status`
+   says so, per the protocol's status table: a verdict against a draft is a
+   verdict about a sketch.
 5. Close with the protocol's report table — one table for the run, whatever
    its scope, `aligned` rows included — and stop.
    The `Action` column names what the verdict calls for and nothing is done:

@@ -721,6 +721,11 @@ flowchart LR
 - **A term chapter has no pair of its own.** Each capture pass that resolves a counterpart by
   inference proposes the discovered code name as an alias in its plan, which turns a one-off
   inference into a pairing the next pass can use once someone accepts it.
+- **The target's status decides what each direction may do.** A spec that is ahead of the
+  code stays ahead until a person says otherwise: capture never plans over a `draft` and
+  reports what the code has beside what the draft says instead, verify flags such a verdict
+  `unagreed` — a flag, not a sixth verdict — and apply stops to confirm. Against a
+  `deprecated` chapter capture does not run, verify reports, and apply refuses.
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule
   nobody agreed.

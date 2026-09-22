@@ -59,7 +59,7 @@ has one, and the repository root. The kind's file lists what else it needs.
 - Do not put a `status` line in the plan, for a new chapter or an existing one.
   Code is evidence, not agreement, and a status is a decision a person makes.
 - Do not plan over a chapter someone is still deciding about. Where the target
-  is a `draft`, report what the code has beside what the draft says and propose
-  no replacement for it.
+  is a `draft`, report what the code has beside what the draft says, per the
+  protocol's status table; where it is `deprecated`, report and stop.
 - Do not write an `annotation` fence: an open question belongs in review.
 - Do not treat a comment, a TODO, a docstring, or a disabled test as evidence.

@@ -217,7 +217,28 @@ concept nobody can pair to code is itself worth knowing about.
 ## Status rules
 
 `status` records how settled the written chapter is. It is not a report on the
-code, and the two directions each have a way of getting this wrong.
+code, and each of the three directions has a way of getting this wrong.
+
+The rule underneath every row below: **a spec that is ahead of the code stays
+ahead until a person says otherwise.** Nothing read from code may overwrite a
+chapter someone is still deciding about, and nothing gets built out of one.
+
+| Target's `status` | `capture-specs` | `verify-change` | `apply-change` |
+|---|---|---|---|
+| `active` — the agreed model, nothing pending against it | May plan. The plan is an ordinary delta against an agreed chapter | Verdicts against the chapter as it stands | Proceeds. This is the model, and building it is the point; the status adds no gate of its own |
+| `draft` or `proposed` — someone is still deciding | **Never plans over it.** Reports what the code has beside what the draft says, and proposes a replacement for neither | Verdicts as usual, and marks the verdict `unagreed` | **Stops and confirms** before emitting a brief |
+| `deprecated` — retired | **Never.** Reports the finding and stops | Report only | **Refuses.** Nothing is built from a retired chapter |
+
+`unagreed` is a flag on a verdict, not a sixth verdict: the five below are still
+the whole set, and the flag says only that the verdict was measured against
+something nobody has agreed to yet. A `code-ahead` against a `draft` is a
+statement about a sketch, and reading it as a statement about the model is the
+mistake the flag exists to prevent.
+
+`approved` and `accepted`, `domain/`'s two decision rungs, read as `active` in
+every column — they are `active` with a signature. The rows are about the
+chapter the run is aimed at; a change folder open against a chapter is not a
+status and has no row here.
 
 **Capture writes no status at all.** Finding an implementation is not agreement
 that the implementation is the intended model, and a capture pass produces a
