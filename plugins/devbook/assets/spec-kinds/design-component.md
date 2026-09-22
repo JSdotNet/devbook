@@ -12,7 +12,7 @@ carries the kind.
 | File | `.devbook/design/component-libraries.md` |
 | Folder rule | `devbook-design.md`, with `devbook-chapter-metadata.md` |
 | Context to load | `component-libraries.md`, `color-scheme.md`, `typography-and-layout.md`, `interaction-guidelines.md`, and `accessibility.md`; the authoritative design source when the repository has one |
-| Write path | The `design/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `design/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope design` |
 | Extra input | The channel or channels in scope — capture covers each, a brief covers one at a time — and whether an authoritative design source exists and is reachable |
 
@@ -89,7 +89,7 @@ label assertions establish the accessibility posture; the components rendered
 in tests confirm real adoption as distinct from an installed package.
 
 Compare the code against the authoritative source where there is one, and record
-divergence as `conflict`. Draft with `status` and no `type`. Write the known
+divergence as `conflict`. Draft with no `type` and no `status`. Write the known
 gaps as the chapter's own section, with a comparison table where more than one
 library is in play, prescriptive and testable — token names and thresholds, not
 prose.

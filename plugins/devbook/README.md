@@ -130,9 +130,12 @@ OpenSpec has no skill for, so it carries the protocol's own word instead. The
 chapter is the **spec**.
 
 - **`capture-specs`** — something exists in the application and the chapter is
-  missing, thin, or stale, so read the implementation and write the chapter.
+  missing, thin, or stale, so read the implementation and plan the chapter.
   Source and tests are the only evidence; comments, TODOs, and disabled tests
-  are not. The write routes per **Where the spec-side write goes** in
+  are not. It writes nothing: the result is a **capture plan**, delivered to the
+  person as a Markdown artifact — the drafts, as a delta against the target file
+  marked `ADDED` / `MODIFIED` / `REMOVED` by heading, and the report table. What
+  happens to it is theirs, per **The capture plan** in
   `assets/code-sync-protocol.md`.
 - **`apply-change`** — a chapter is agreed but unbuilt, so turn it into a
   change brief (outcomes, invariants, ubiquitous language, out of scope,
@@ -222,7 +225,7 @@ skills reference and none repeats: counterpart resolution, the evidence rules
 (including why unit tests are first-class evidence for capture rather than a
 cross-check), a five-way drift verdict (`aligned`, `code-ahead`, `spec-ahead`,
 `conflict`, `unresolved`, where `conflict` always stops and asks), the status
-rules, index regeneration, and a shared report table.
+rules, the shape of the capture plan, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
@@ -230,9 +233,10 @@ signal when it does. It goes through the chapter's `aliases`, then the `arc42/`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
-The dependency on the flows is one-way. `capture-specs` names its folder's write
-path and `apply-change` its category's, and both hand over grounded input; no
-flow knows these skills exist.
+The dependency on the flows is one-way, and `capture-specs` has none at all: it
+hands its plan to a person, and a person opens the folder's flow. `apply-change`
+names its category's flow and hands over grounded input. No flow knows these
+skills exist.
 
 **Trigger keywords:** `document what we built`, `capture from code`,
 `.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
@@ -352,7 +356,7 @@ for technologies that do not appear in package manifests.
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
-| `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the capture plan, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration

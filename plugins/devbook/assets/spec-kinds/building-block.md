@@ -12,7 +12,7 @@ carries the kind.
 | File | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` for a block the view keeps in its own file, per `devbook-arc42.md` |
 | Folder rule | `devbook-arc42.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The view as it stands and `03-context-and-scope.md` for the system boundary; `.devbook/domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
-| Write path | The `arc42/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `arc42/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope arc42` |
 | Extra input | Level depth: default to level 1 (containers) and level 2 (the blocks inside them that carry real responsibility) |
 
@@ -68,7 +68,7 @@ name the interfaces a block genuinely exposes.
 Settle level 1 from what runs independently and level 2 from what other blocks
 depend on as a unit — a project nothing depends on separately is not a level 2
 block, whatever its name — and stop decomposing where the blocks stop having
-distinct responsibilities. Draft with `status` and no `type`. Draw the diagram
+distinct responsibilities. Draft with no `type` and no `status`. Draw the diagram
 from the edges that exist, in their direction, and note where an edge
 contradicts the intended layering.
 

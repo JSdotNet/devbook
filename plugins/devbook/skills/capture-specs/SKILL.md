@@ -1,6 +1,6 @@
 ---
 name: capture-specs
-description: 'Bring a devbook chapter level with the code that implements it: read the implementation and its unit tests and write or refresh the chapter, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Routes the write through the folder''s flow and never edits source or tests. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without writing (verify-change).'
+description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Delivers a capture plan as a Markdown artifact and writes nothing — no chapter, no source, no test. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
 ---
 
 # capture-specs
@@ -32,28 +32,34 @@ has one, and the repository root. The kind's file lists what else it needs.
    chapters the kind's file names — never a folder whole.
 2. Resolve the counterpart by the protocol's ladder; record the rung. No single
    match is `unresolved`: stop and report.
-3. Read the implementation, breadth first, then the unit tests as a step of
-   their own. The kind's file says what to read and what the tests establish.
-   Only code that executes and tests that pass are evidence.
+3. Read the implementation, breadth first, then its tests as a step of their
+   own: the unit tests for what a type guarantees, the e2e tests — and, for a
+   feature, the running product — for what it promises. The kind's file says
+   what to read and what the tests establish. Only code that executes and tests
+   that pass are evidence.
 4. Reach a verdict per chapter. `code-ahead` is the case this skill exists for.
    `aligned`: report and stop. `spec-ahead`: stop and hand the scope to
    `apply-change`. `conflict` or `unresolved`: stop and ask.
-5. Draft the chapters to the folder rule's template, as the kind's file says.
-   New chapters start at `status: draft`; an existing `status` is left exactly
-   as it is. Put the tests that assert each chapter in `tests`. Where a
-   counterpart resolved by inference, propose a term with the code name as an
-   `alias`.
-6. Route the write through the folder's flow, per **Where the spec-side write
-   goes**; hand over the drafts, the evidence behind each claim, and the
-   proposed terms. Name the rung that answered, once.
-7. Run the check at the kind's scope, per the protocol.
-8. Close with the protocol's report table, one row per chapter in scope,
-   `aligned` rows included.
+5. Draft the content to the folder rule's template, as the kind's file says:
+   the invariants with the `Enforced at:` line and the requirements as SHALL
+   sentences, each with its `#### Scenario:` cases and the evidence behind it.
+   Put the tests that assert each one in `tests`. Where a counterpart resolved
+   by inference, propose a term with the code name as an `alias`.
+6. Assemble the capture plan — the drafts as a delta against the target file,
+   `ADDED` / `MODIFIED` / `REMOVED` by heading, per **The capture plan** in the
+   protocol — and close it with the protocol's report table, one row per
+   chapter in scope, `aligned` rows included.
+7. Deliver the plan to the person as a Markdown artifact, and stop there.
 
 ## Do not
 
-- Do not write a devbook file directly, and never edit a source or test tree.
+- Do not write a devbook file, and never edit a source or test tree. The plan
+  is the result; carrying it into a chapter is a person's move, through the
+  folder's flow.
+- Do not put a `status` line in the plan, for a new chapter or an existing one.
+  Code is evidence, not agreement, and a status is a decision a person makes.
+- Do not plan over a chapter someone is still deciding about. Where the target
+  is a `draft`, report what the code has beside what the draft says and propose
+  no replacement for it.
 - Do not write an `annotation` fence: an open question belongs in review.
-- Do not drop or promote a `status` because the code exists — code is not
-  agreement, and only the approval gate writes `approved`.
 - Do not treat a comment, a TODO, a docstring, or a disabled test as evidence.

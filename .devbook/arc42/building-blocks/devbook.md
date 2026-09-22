@@ -115,8 +115,13 @@ Chapter-scoped, so a person sees what is about to go before it does.
 related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/building-blocks/devbook.md#catching-up-with-the-code"]
 ```
 
-Read an implementation and its unit tests and write the chapter that was missing, thin, or
-stale, for any of the six kinds. The kind is the chapter's `type`, or the file where the
+Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
+for any of the six kinds. It writes nothing. Its result is a capture plan handed to the
+person: the drafts to the folder's template, arranged as a delta against the target file —
+`ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind it,
+and the report table. Code is evidence, not agreement, so the pass that found the code does
+not also decide what the chapter says; a person carries the plan into the folder, or does
+not. The kind is the chapter's `type`, or the file where the
 folder defines none, and what a kind needs is read from its own file rather than carried in
 the skill. A skill is a direction, because ten skills carried one procedure ten times and the
 kind-specific part was a mapping table each pair restated from its two ends.
@@ -140,7 +145,7 @@ the one capture that **runs the application**. Reading a controller tells you a 
 using the feature tells you what the product lets someone do, in what order, with what
 wording. Screenshots are report evidence and are never committed into a devbook folder.
 
-Behaviour is captured into `requirements.md` and `invariants.md` rather than into the prose it
+Behaviour is planned into `requirements.md` and `invariants.md` rather than into the prose it
 belongs beside, one rule per chapter with the scenarios that prove it. Neither is a kind of
 its own: a feature's promises are that feature's pass and an aggregate's rules are that
 aggregate's, because a rule captured apart from the thing it constrains is a rule decided
@@ -515,7 +520,7 @@ related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/buildin
 
 The two directions between a chapter and the code that implements it, plus the check that
 says which one a chapter needs, as three skills over six kinds: `capture-specs` reads an
-implementation and writes the chapter, `apply-change` reads an agreed chapter and turns it
+implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
 into a change brief for the flow that implements it, touching no source or test tree itself,
 and `verify-change` reports the drift verdict and writes nothing. Two of the names are
 OpenSpec's verbs for the same moves; the third is the protocol's own word, because the
@@ -673,7 +678,7 @@ flowchart LR
     subgraph capture["capture-specs"]
         code["Implementation and its unit tests"] --> resolveA["Resolve counterpart"]
         resolveA --> verdictA{"Drift verdict"}
-        verdictA -->|"code-ahead"| write["Write the chapter through the folder's write path"]
+        verdictA -->|"code-ahead"| write["Deliver the capture plan to the person"]
         verdictA -->|"aligned"| noop["Report and stop"]
         verdictA -->|"conflict"| ask["Stop and ask"]
         verdictA -->|"unresolved"| ask
@@ -693,6 +698,10 @@ flowchart LR
     end
 ```
 
+- **Neither direction writes the thing it is about.** A capture pass delivers a plan and a
+  person carries it in; an apply pass delivers a brief and a flow builds it. Both name a
+  delta against something that already exists, which is what keeps either from re-specifying
+  work that is done.
 - **`apply-change` reads code without changing it.** Establishing what is already there is
   what lets the brief ask only for the delta, and it is why the update case can name where the
   current behaviour lives.
@@ -703,8 +712,8 @@ flowchart LR
   knows these skills exist; a brief reaches one as ordinary input, so the dependency still
   runs one way.
 - **A term chapter has no pair of its own.** Each capture pass that resolves a counterpart by
-  inference proposes the discovered code name as an alias, which turns a one-off inference
-  into a pairing the next pass can use.
+  inference proposes the discovered code name as an alias in its plan, which turns a one-off
+  inference into a pairing the next pass can use once someone accepts it.
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule
   nobody agreed.

@@ -11,7 +11,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | File | `.devbook/domain/<context>/domain.md` and `.devbook/domain/<context>/invariants.md`, or the `domain.<name>.md` / `invariants.<name>.md` the chapters were split into |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `domain.md` and `invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
-| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 
 ## The aggregate is the unit, not its parts
@@ -151,7 +151,7 @@ the aggregate's `##` — there are no `### Entities` / `### Value Objects` /
 sub-sections of one chapter and carry no `meta` blocks.
 
 The rules draft to the `invariants.md` template, in the same pass and the same
-routed write: one `## <AggregateName>` chapter whose `related` names the
+plan: one `## <AggregateName>` chapter whose `related` names the
 aggregate chapter, the aggregate chapter's `related` naming it back, and one
 `### Invariant:` chapter per rule. Each rule's `#### Scenario:` headings are
 structural and carry no `meta` blocks either.
