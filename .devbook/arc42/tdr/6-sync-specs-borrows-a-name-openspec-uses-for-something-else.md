@@ -5,7 +5,7 @@ date: 2026-09-15
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
 ```
 
-**Remediation state:** identified · **Severity:** low · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** low · **Owner:** the maintainer
 
 ## The debt
 
@@ -71,3 +71,17 @@ or the maintainer — reaching for `sync-specs` and expecting a merge, or reachi
 
 **Trigger:** the first confusion between the two meanings, or the next devbook change that
 would carry a rename anyway.
+
+## Resolution
+
+```meta
+```
+
+Resolved 2026-09-22 by the second option, on the trigger this record named: the next devbook
+change that would carry a rename anyway. The skill is `capture-specs`, the protocol's own
+word for the direction, and the two names that survive mean in OpenSpec exactly what they
+mean here — `apply-change` implements an agreed spec, `verify-change` reports and writes
+nothing. The direction OpenSpec has no skill for is now visibly the one it does not have.
+
+This record keeps its filename and its title. They are the record of the borrowed spelling,
+and a reader arriving at `sync-specs` from OpenSpec is exactly who this file is for.
