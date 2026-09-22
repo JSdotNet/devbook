@@ -198,6 +198,12 @@ rather than a transport.** The two operations arrive as canvas actions rather th
 tools, and the surface contract is still satisfied — a surface is not required to be an MCP
 server.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It registers exactly the two canvases, and pushes view changes to the open page | canvas registration | untested |
+| Viewer pages are served on a loopback origin at an ephemeral port | server start | untested |
+| The transport starts when a canvas opens, never before | extension start | untested |
+
 ## Runtime
 
 ```meta
