@@ -23,7 +23,7 @@
               "type": "object",
               "required": ["provider"],
               "properties": {
-                "provider": { "enum": ["github", "jira", "markdown"] },
+                "provider": { "enum": ["github", "jira", "markdown", "backlog"] },
                 "project": { "type": "string" },
                 "repository": { "type": "string" }
               },

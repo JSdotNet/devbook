@@ -324,7 +324,10 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/
 
 Three plugins are where a run becomes visible or recorded. None declares a dependency, none
 names the engine, and each is resolved at run time from the live tool list — so which one
-answers is decided by what is installed, and none answering is a normal outcome.
+answers is decided by what is installed, and none answering is a normal outcome. An
+implementation need not be a plugin: the Backlog desktop application answers the lifecycle
+group from a server inside its own process and is first in the binding priority, which is why
+this table lists the plugins rather than every implementation.
 
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |

@@ -587,9 +587,9 @@ Payload:
 - `worktree` — the path the run is keyed by, so a resumed session finds it again
 - `handoff` — present when this call is reattaching to a parked run rather than opening one
 
-Consumers: the three surfaces, each answering the lifecycle group or not answering at all; and
-[delivery-schedule](delivery-schedule.md), which publishes the same event for work no attended
-flow started.
+Consumers: every surface implementation, each answering the lifecycle group or not answering
+at all; and [delivery-schedule](delivery-schedule.md), which publishes the same event for work
+no attended flow started.
 
 Published language rules:
 
@@ -615,8 +615,9 @@ Payload:
 - `qaScenarios` — scenarios with their status and evidence paths, where a QA stage ran
 - `decision` — the gate outcome, where a gate was attached to this point
 
-Consumers: the three surfaces. The dashboard renders it live, the collector keeps it for the
-report and for a resumed session, the canvas ignores it — it answers the render group only.
+Consumers: every surface implementation. The dashboard renders it live, the collector keeps it
+for the report and for a resumed session, Backlog shows it in the window the work item is
+already in, the canvas ignores it — it answers the render group only.
 
 Published language rules:
 
@@ -644,7 +645,7 @@ Payload:
 - `summary` — what the run produced, in the run's own words
 - `report` — where the exported report was written, when a surface answered the export group
 
-Consumers: the three surfaces, for the report and for closing the run; and
+Consumers: every surface implementation, for the report and for closing the run; and
 [delivery-schedule](delivery-schedule.md)'s issue sweep, whose brief reports every resolution's
 outcome including failure, because a brief that cannot tell a crash from a slow build reports
 nothing a person can act on.
@@ -1110,7 +1111,7 @@ it never depends on — one row below says that is not the whole truth.
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here, and the kernel is what "packaged" means. |
 | [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fourteen skills. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
-| A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, or Markdown chapters | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
+| A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, Markdown chapters, or Backlog entries | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
 | A surface | Resolved at run time, never declared | Tool names matched by pattern from the live tool list | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. Host divergence is absorbed through a slot rather than a branch. |

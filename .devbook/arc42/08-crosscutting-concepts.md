@@ -264,9 +264,10 @@ date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 ```
 
-Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, and a headless
-collector are three implementations of one capability, split by operation group — lifecycle,
-render, export — because they do not implement the same half of it.
+Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, a headless
+collector, and the Backlog desktop application are four implementations of one capability,
+split by operation group — lifecycle, render, export — because they do not implement the same
+half of it.
 
 A surface is never a dependency in either direction: the thing being rendered knows no surface
 exists, and the surface knows nothing about what produced its input. Whichever tool opens it
@@ -275,7 +276,9 @@ the run produces its file artifacts, says so once, and continues — it costs a 
 capability.
 
 Three ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
-render only, and `delivery-surface-collector` lifecycle and export only. Each declares exactly
+render only, and `delivery-surface-collector` lifecycle and export only. Backlog is not a
+plugin and ships from outside this marketplace; it answers lifecycle, is first in the binding
+priority, and its absence means its window is closed. Each declares exactly
 the tool names its groups name and nothing more, which is what makes one substitutable for
 another — the table is in [chapter 5](05-building-block-view.md#surface-plugins), the reason in
 [the decision](adr/surfaces.md).
@@ -284,8 +287,8 @@ A surface is not required to be an MCP server. `delivery-surface-canvas` is a Co
 nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
 which is why the contract matches operation names and never a transport.
 
-The fourth, `devbook-graph`, ships in `devbook-derived` and loads devbook's checker modules
-from their materialized path at runtime; it renders the reference graph rebuilt from the
+`devbook-graph` ships in `devbook-derived` and loads devbook's checker modules from their
+materialized path at runtime; it renders the reference graph rebuilt from the
 chapters on open, never from `_meta/`, and opens a single chapter beside its parsed `meta` block in a second canvas,
 `devbook-chapter`. It answers no operation group and substitutes for nothing, which is why it
 takes devbook's stem and the thing it draws rather than the surface word, per the
@@ -344,9 +347,9 @@ validation, so it binds as the `implement` and `validate` services instead.
 date: 2026-09-03
 ```
 
-The work-item system a repository tracks work in — GitHub issues, Jira tickets, or Markdown
-chapters — bound per repository behind one set of operations. It is a binding and not a
-dependency for the same reason a role is: no repository should end up with Jira installed
+The work-item system a repository tracks work in — GitHub issues, Jira tickets, Markdown
+chapters, or Backlog entries — bound per repository behind one set of operations. It is a
+binding and not a dependency for the same reason a role is: no repository should end up with Jira installed
 because it enabled the flows.
 
 ## Stamp

@@ -312,12 +312,20 @@ dependencies: one missing specialist must not demote every skill that names it.
   files, not a failure.
 - **Tracker.** `bindings["delivery.tracker"]` names the work-item system: `github` resolves
   items to issues, `jira` to tickets in a named project, `markdown` to chapters in a folder
-  the repository names, for one that plans work as Markdown. Operations: `find_item`, `read_item`,
-  `create_item`, `comment`, `transition`, `link_change`. Unbound, a flow runs to its file
-  artifacts and opens, comments on, and transitions nothing.
+  the repository names, for one that plans work as Markdown, and `backlog` to entries in the
+  Backlog desktop application. Operations: `find_item`, `read_item`, `create_item`, `comment`,
+  `transition`, `link_change`. Unbound, a flow runs to its file artifacts and opens, comments
+  on, and transitions nothing.
   Every operation resolves the same way, reported once when it first does: the bound tracker's
   own tooling first — an installed tracker plugin skill or MCP integration — then the host's
-  CLI for that tracker. A skill names the operation and never the provider's command.
+  CLI for that tracker. A skill names the operation and never the provider's command. A bound
+  tracker whose tooling does not answer is reported once and the run continues as if unbound —
+  the rule the `delivery.mcp` bullet below states for a server, applied to the tracker.
+  `backlog` resolves through its MCP integration and has no CLI behind it: the six operations
+  are the `backlog` server's tools of the same name, `transition` rewrites the entry's status
+  token so the entry's own lifecycle refuses an illegal move rather than the engine deciding
+  one, and every scoped call carries `repository` in `owner/name` form, read off the git
+  remote. Nothing listening means the application is closed, which is the unbound path above.
 - **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
   the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
   A stage resolves the servers of the point it serves from the live tool list, by pattern,
@@ -361,11 +369,14 @@ run time from the live tool list, is **never a dependency**, and no-ops when abs
 capability is split by operation group, because the known implementations do not implement
 the same half of it.
 
-| Capability | Operations | dashboard | collector | canvas |
-| --- | --- | --- | --- | --- |
-| `delivery.surface.lifecycle@1` | `open_dashboard`, `start_run`, `record_prompt`, `set_run_context`, `update_stage`, `finish_run`, `list_runs`, `get_run` | yes | yes | no |
-| `delivery.surface.render@1` | `render_diagram`, `render_markdown` | yes | no | yes |
-| `delivery.surface.export@1` | `export_report` | yes | yes | no |
+| Capability | Operations | backlog | dashboard | collector | canvas |
+| --- | --- | --- | --- | --- | --- |
+| `delivery.surface.lifecycle@1` | `open_dashboard`, `start_run`, `record_prompt`, `set_run_context`, `update_stage`, `finish_run`, `list_runs`, `get_run` | yes | yes | yes | no |
+| `delivery.surface.render@1` | `render_diagram`, `render_markdown` | no | yes | no | yes |
+| `delivery.surface.export@1` | `export_report` | later | yes | yes | no |
+
+`later` is a group an implementation is committed to and does not answer yet. Resolve it as
+absent until its operation names are in the live tool list: a promised group is not a bound one.
 
 - **Resolve by pattern, never by literal tool name.** A plugin-provided MCP server is
   namespaced with the plugin that provides it, so the same server surfaces as
@@ -378,7 +389,10 @@ the same half of it.
   action through whatever the host exposes for that. Match the operation names, not the
   transport.
 - **Bind each capability independently, in a fixed priority order,** and record which
-  implementation answered in the run summary: dashboard before collector before canvas.
+  implementation answered in the run summary: backlog before dashboard before collector before
+  canvas. `backlog` is first because it is where the work item already lives — an open Backlog
+  window is the surface. A closed one answers nothing, so the run falls through to the
+  dashboard, whose run files Backlog reads once it is open again.
 - **No surface bound is a normal outcome.** Produce the file artifacts, say once that no
   surface is attached, and never block a stage. A rendered view is never the source of truth.
 - **Surface plugins declare nothing.** No dependency, no awareness of the engine — they
@@ -438,6 +452,9 @@ A run the user cannot see is a run they cannot steer.
 1. **Inline panel.** Where the host renders the surface inline on its own, nothing further is
    needed — do not also open a browser tab.
 2. **Plain link.** Otherwise, give the user the URL to open themselves.
+3. **Host application.** Where the surface is an application the user runs, `open_dashboard`
+   returns no URL — the run is visible in the host app's own window. Say so once and open
+   nothing.
 
 **The runner never opens a browser pane.** A pane is one host's own capability, and an
 exact-match `tools` allowlist can only reach it under that host's own tool name, so
