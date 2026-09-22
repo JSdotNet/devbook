@@ -1,6 +1,6 @@
 {
   "name": "devbook",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "The devbook convention: arc42/, domain/, tech/, design/, and ai/ folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung and the review triad beside it, runnable test-case links, a reserved ext namespace, and annotation fences that keep a review note in the chapter beside the passage it is about. Ships the checker — build.mjs, which validates every meta block and reference and writes nothing unless a layered plugin asks it to — the fence writer, the tech/ inventory scripts, three converters between chapters and code (sync-specs, apply-change, verify-change, each over six chapter kinds), check, annotation-sweep, tech-update, a versioned contract with runnable migrations, and the install that puts the rules, the tools, and its AGENTS.md section into a repository. Ships the shape and the check, never a flow: the delivery engine carries a chapter change, and devbook-derived keeps the committed _meta/ index fresh.",
   "author": {
     "name": "Job Schepers"

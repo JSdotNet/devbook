@@ -5,7 +5,7 @@ date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.3.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.4.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with no migration — every part of it is an added field or value with a safe default, so nothing written under 12 stops validating. A contract bump is a minor release, with its migration only when one is owed. |
 | 2026-09-21 | Every plugin is `1.3.0`; contract 12 ships in it with migration 012, which retires the overlay's checkout layer and devbook's `.gitignore` block. |
 | 2026-09-18 | Every plugin is `1.2.0`; contract 11 ships in it with migration 011 — the first release where a contract bump moved the version. |
 | 2026-09-17 | Every plugin is `1.1.0`; contract 10 ships in it with migration 010. |
