@@ -446,6 +446,12 @@ It is a service rather than behaviour on [Schedule](#schedule) because it is the
 host capability is touched at all — everything else here is host-neutral data, and keeping the
 resolution in one place is what makes that true.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The scheduler is resolved from what the live session exposes, never from a hardcoded tool name | scheduler resolution | untested |
+| No scheduler is a normal outcome: the operation reports it and stops without failing anything | scheduler resolution | untested |
+| A host capability is touched here and nowhere else in the block | scheduler resolution | untested |
+
 ### Catalog Check
 
 ```meta
