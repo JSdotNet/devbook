@@ -289,6 +289,11 @@ which tracker, which providers, which gates. That is why it stays separate from
 what it uses current?*, and merging them would put an interview in front of an operation people
 run to change nothing.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It writes the four engine keys and invokes each component's own install skill, reimplementing none | `setup` | untested |
+| Command-invoked, and a conversation about intent — which is why it stays apart from `update` | `setup` | untested |
+
 ### Update Service
 
 ```meta
@@ -301,6 +306,12 @@ skill is its entry.
 Invocation semantics: command-invoked, and it changes nothing about intent. It fans out over the
 [scope verdict](#stack-report) — running what it can, reporting what this machine has not
 installed or this checkout has not enabled, and never dropping a stamp for either reason.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It changes nothing about intent | `update` | untested |
+| It fans out over the scope verdict, reporting what this machine has not installed or this checkout has not enabled | `update` | untested |
+| A stamp is never dropped because a component is uninstalled or disabled | `update` | untested |
 
 ### Ask Service
 
@@ -320,6 +331,11 @@ domain chapters, the arc42 chapters, and the engine's surface contract.
 It is the only asset allowed to name every plugin, because it is the only one whose subject is
 the marketplace rather than a unit of work.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Query-oriented: it writes nothing | `ask` | untested |
+| It is the only asset that names every plugin | convention | untested |
+
 ### Adoption Drift
 
 ```meta
@@ -336,6 +352,12 @@ the other half rates whether people actually work that way, which no file on dis
 status, an adoption line, or a piece of evidence is never derived from an install.
 
 Reporting drift is inside this block's subject. Writing the chapter is not.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Query-oriented: it writes nothing at all | `adoption` | untested |
+| A status, an adoption line, or a piece of evidence is never derived from an install | `adoption` | untested |
+| Every edit it implies is handed to the folder's own flow | `adoption` | untested |
 
 ## Runtime
 
