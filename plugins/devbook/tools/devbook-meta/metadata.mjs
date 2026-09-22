@@ -137,6 +137,7 @@ const TYPE_BY_FOLDER = {
             "model",
             "flow",
             "dependencies",
+            "import",
         ],
     },
     tech: {

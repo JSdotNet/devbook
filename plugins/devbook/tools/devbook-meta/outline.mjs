@@ -81,6 +81,10 @@ const DIRECTORY_CONVENTION = {
             "model.md",
             "flow.md",
             "dependencies.md",
+            // The takeover of a predecessor system's data reads last: it is a
+            // one-off transition, and it only makes sense once the model it
+            // lands in has been read.
+            "import.md",
         ],
         last: [],
         split: ["domain.md", "features.md", "skills.md", "model.md", "flow.md"],

@@ -38,10 +38,10 @@ already treat as an addressable unit:
 - `.devbook/ai/<nn>-<part>.md` and `.devbook/ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
-- `domain/` `context-map.md`, `model.md`, `flow.md`, their split files, and
-  `dependencies.md`, `tech/` `technology-graph.md`, and `ai/` `adoption-map.md` are
-  strategic/structural artifacts; their `##` sections do **not** carry
-  per-chapter metadata blocks.
+- `domain/` `context-map.md`, `model.md`, `flow.md`, their split files,
+  `dependencies.md`, and `import.md`, `tech/` `technology-graph.md`, and `ai/`
+  `adoption-map.md` are strategic/structural artifacts; their `##` sections do
+  **not** carry per-chapter metadata blocks.
 
 ## Chapter metadata block format
 
@@ -283,7 +283,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `import` |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 

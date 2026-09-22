@@ -202,7 +202,10 @@ proposes a term with the discovered code name as an `alias`, which turns a
 one-off inference into a durable pairing for the next pass. The context folder
 itself, including its term chapters, is created by the same path.
 
-`tech/` has no kind here — `tech-update` already covers that direction.
+`tech/` has no kind here — `tech-update` already covers that direction. Nor
+does `import.md`: a go-live takeover is a transition the team runs once, not a
+capability with code to stay level with, so there is nothing for a capture or
+a drift verdict to compare it against.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all three
 skills reference and none repeats: counterpart resolution, the evidence rules

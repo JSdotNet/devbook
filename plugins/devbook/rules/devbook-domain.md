@@ -47,6 +47,8 @@ across `domain/`, ADRs, and code module names where practical.
     flow.md          # optional: when the context has lifecycle/process flows
     dependencies.md  # optional: the dependencies, once context.md is too
                      # small for them
+    import.md        # optional: taking over a predecessor system's data at
+                     # go-live — the route, the requirements, the open choices
     domain.<name>.md    # optional: one chapter split out of the file it is
     features.<name>.md  #   named after — an aggregate or domain service, a
     skills.<name>.md    #   feature, a skill, one aggregate's structure, one
@@ -291,6 +293,22 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   `skills.md` are two halves of one subject — the chapter says what it does,
   the flow file draws how it moves — and each carries a `related` reference to
   the other.
+- **import.md** — Optional. Taking over a predecessor system's data at
+  go-live: the starting points, what the model already carries for the
+  takeover, the route the data travels, the requirements it must meet, and the
+  choices still open. One file per bounded context, read last.
+  - It is not a feature and not a flow. A feature is a capability a user keeps
+    using; a flow is a lifecycle the model moves through. A takeover happens
+    once, and what it needs — a cut-off date, a reconciliation rule, a
+    predecessor's field that maps to nothing — belongs to no aggregate,
+    feature, or flow, which is why neither file can hold it.
+  - What the model carries *for* the takeover stays on the domain elements
+    that carry it: an `imported` origin on an aggregate is modelled in
+    `domain.md`, and this file points at it.
+  - A modelling decision the takeover forces — a contested term, a boundary
+    that moved to accommodate it — is an `arc42/adr/` record like any other.
+  - Its `##` sections carry no per-chapter blocks; the file-level block is the
+    file's metadata.
 - **dependencies.md** — Outbound dependencies on other bounded contexts or
   modules, and known inbound dependents. The tables live under
   `## Dependencies` in `context.md` until they outgrow it; this file exists
@@ -329,12 +347,13 @@ instructions.
   issue link (`issue`) are included only when they have a value.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
   `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
-  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present), and
+  `skills.md`, `model.md`, `flow.md`, `dependencies.md` (when present),
+  `import.md` (when present), and
   each split file (when present) — must also carry the file-level metadata
   block described in `devbook-chapter-metadata.md`, placed directly under the
   file's top-level `#` heading. This applies even to `context-map.md`,
-  `model.md`, `flow.md`, their split files, and
-  `dependencies.md`, whose `##` sections do not carry their own per-chapter
+  `model.md`, `flow.md`, their split files, `dependencies.md`, and
+  `import.md`, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
   context whose `domain.md` declared it before contract 11.
@@ -359,7 +378,7 @@ instructions.
   | Level | Values |
   |---|---|
   | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
-  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies` |
+  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `model`, `flow`, `dependencies`, `import` |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -1101,3 +1120,53 @@ type: dependencies
   artifact if one exists for this relationship, instead of duplicating it.
 ```
 
+
+### import.md
+
+Only for a context that takes over a predecessor system's data at go-live.
+Read last in the context, after `dependencies.md`.
+
+```markdown
+# <Bounded Context Name>
+
+\`\`\`meta
+status: draft
+type: import
+\`\`\`
+
+> Taking over <predecessor system>'s data at go-live: where it comes from,
+> what this context's model carries for it, how it travels, and what is still
+> open. One-off transition, not a feature and not a flow.
+
+## Starting points
+
+| Source | Owner | Form | Volume | Cut-off |
+|---|---|---|---|---|
+| <system / export / spreadsheet> | <who produces it> | <file, API, database> | <rows, accounts> | <the date after which the source stops changing> |
+
+## What the model carries
+
+- <Aggregate or value object> — <the field, origin marker, or legacy
+  identifier this context keeps because of the takeover>. Modelled in
+  `domain.md`; named here, not redefined.
+
+## The route
+
+<How the data gets from the source to this context: the order the aggregates
+land in, what is derived rather than copied, what is deliberately left
+behind.>
+
+## Requirements
+
+- <What must hold for the takeover to be accepted — a reconciliation that
+  balances, a rejection budget, a reversibility window.>
+
+## Open choices
+
+| Question | Options | Who decides | By when |
+|---|---|---|---|
+| <what is still undecided> | <the options on the table> | <role> | <date> |
+
+A choice here that would be expensive to reverse once data has landed is an
+`arc42/adr/` record, and this table points at it rather than deciding twice.
+```
