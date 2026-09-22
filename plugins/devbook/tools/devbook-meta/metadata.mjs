@@ -161,6 +161,19 @@ const TYPE_BY_FOLDER = {
             "domain-event",
             "feature",
             "sub-feature",
+            // `requirements.md` and `invariants.md`: behaviour, one rule per
+            // chapter, out of the prose the rest of the context is written in.
+            // The plural is the per-feature or per-aggregate grouping chapter,
+            // whose `related` names the prose chapter it belongs to; the
+            // singular is one rule. A `requirement` promises something to
+            // someone outside the model and keeps OpenSpec's word along with
+            // its `### Requirement:` / `#### Scenario:` heading shape; an
+            // `invariant` is what a type guarantees no matter who calls it and
+            // takes DDD's, because the aggregate is what answers for it.
+            "requirements",
+            "requirement",
+            "invariants",
+            "invariant",
             // `actors.md`: who works with this context. An actor is the
             // EventStorming and Domain Storytelling actor — the one that issues
             // a command — and never a persona, which is a UX archetype and
@@ -189,6 +202,11 @@ const TYPE_BY_FOLDER = {
             "actors",
             "features",
             "skills",
+            // The same two words at file level, meaning the same thing one
+            // scope up: the file holds a context's, a `##` chapter holds one
+            // feature's or one aggregate's.
+            "requirements",
+            "invariants",
             "model",
             "flow",
             "dependencies",
@@ -340,6 +358,34 @@ const TEST_RUNNERS = {
 // pasted into a field that takes test identifiers. Worth its own message,
 // because the author's intent is obvious and the fix is to move it to `related`.
 const DEVBOOK_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
+
+// What proves a behaviour chapter, by the file it sits in. The level of proof
+// follows the kind of promise: a requirement is made to someone outside the
+// model, so what proves it is the product driven the way that someone drives
+// it; an invariant is what the type guarantees, so a test that has to start
+// the product to reach it is asserting something else.
+//
+// This is the one place the schema reads `tests` against the chapter's `type`.
+// Everywhere else the field is a record of what asserts a chapter and carries
+// no expectation, and that stays true: these two kinds are checked because the
+// file they live in *is* the claim about their level, so a mismatch means one
+// of the two is wrong.
+const BEHAVIOUR_TEST_LEVELS = {
+    requirement: {
+        levels: ["e2e", "integration"],
+        reason:
+            "a requirement is proved `e2e` — it promises something to someone outside the model, so what proves it is the product driven the way that someone drives it — or `integration` where it is a policy no user triggers",
+    },
+    invariant: {
+        levels: ["unit"],
+        reason:
+            "an invariant is proved `unit` — it is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is not asserting the guarantee",
+    },
+};
+
+// The cases that prove one rule. They are structural headings one level under
+// the rule's own, so they are found by their text rather than by a block.
+const SCENARIO_HEADING = /^Scenario:/i;
 
 // Fields that steer how this document appears in the generated outline, and so
 // describe the document's place in its directory rather than a chapter inside
@@ -900,6 +946,69 @@ export function testIssues(meta) {
                 message: `has \`tests\` entry "${entry}" naming runner "${parsed.runner}", which this tooling has no command mapping for (known: ${Object.keys(TEST_RUNNERS).join(", ")}), so nothing can offer to run it. The entry is kept as written.`,
             });
         }
+    }
+
+    return issues;
+}
+
+/**
+ * How many `#### Scenario:` headings sit under the chapter at `index`.
+ *
+ * A scenario belongs to the rule above it by position, exactly as an
+ * annotation does: the count stops at the first heading back at or above the
+ * rule's own level, and only headings one level deeper count — a scenario of a
+ * scenario is not a thing, and a `#####` under one is its own business.
+ */
+export function scenarioCount(chapters, index) {
+    const rule = chapters[index];
+    if (!rule) return 0;
+    let count = 0;
+    for (let i = index + 1; i < chapters.length; i++) {
+        if (chapters[i].level <= rule.level) break;
+        if (chapters[i].level === rule.level + 1 && SCENARIO_HEADING.test(chapters[i].text)) count++;
+    }
+    return count;
+}
+
+/**
+ * Coverage warnings for one behaviour chapter — a `requirement` or an
+ * `invariant`. Every other type returns nothing.
+ *
+ * All of these are warnings, deliberately. Each reports a chapter that is
+ * incomplete rather than wrong, and an error would be counter-productive in
+ * the exact way this convention exists to avoid: refusing the document teaches
+ * people to leave `tests` off and to write the rule back into prose, where
+ * nothing reports it at all. A warning names the gap and leaves the rule
+ * recorded.
+ *
+ * Messages are sentence fragments beginning with a verb, matching `typeIssues`,
+ * so each caller can prefix its own subject.
+ */
+export function behaviourIssues(type, meta, scenarios = 0) {
+    const expected = BEHAVIOUR_TEST_LEVELS[type];
+    if (!expected) return [];
+    const issues = [];
+
+    if (scenarios === 0) {
+        issues.push({
+            severity: "warning",
+            message: `is a \`${type}\` chapter with no \`#### Scenario:\` under it — a rule with no case that exercises it is one nobody can tell has been broken, and a brief can derive no acceptance check from it.`,
+        });
+    }
+
+    // Absence still carries no claim: a chapter with no `tests` is one nobody
+    // has linked, which is the schema's standing rule for the field and is not
+    // narrowed here. Only a chapter that *does* claim coverage is held to the
+    // level its file implies.
+    const levels = toList(meta?.tests)
+        .map((entry) => parseTestReference(entry)?.level)
+        .filter((level) => TEST_LEVELS.includes(level));
+    if (levels.length && !levels.some((level) => expected.levels.includes(level))) {
+        const found = [...new Set(levels)].map((level) => `\`${level}\``).join(", ");
+        issues.push({
+            severity: "warning",
+            message: `is a \`${type}\` chapter whose \`tests\` reach only ${found}, where ${expected.reason}. Either the link is at the wrong level, or the rule is in the wrong file.`,
+        });
     }
 
     return issues;
@@ -1484,7 +1593,7 @@ export function validateDocument(relPath, markdown) {
         openQuestions.set(note.chapter.line, note.line);
     }
 
-    for (const chapter of chapters) {
+    for (const [index, chapter] of chapters.entries()) {
         const label = `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line})`;
         if (!chapter.meta) {
             // Level-1 heading already reported above as the file-level block.
@@ -1664,6 +1773,21 @@ export function validateDocument(relPath, markdown) {
         // as `<level>:<runner>:<selector>` identifiers a runner can resolve.
         for (const issue of testIssues(chapter.meta)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
+        // A rule chapter is one rule plus the cases that prove it, and the
+        // level of proof follows the file it sits in. Both are reported as
+        // coverage warnings — see `behaviourIssues`. Whether the chapter's
+        // `related` reaches the prose half it belongs to is the graph build's
+        // to say, since only it can resolve across files.
+        if (kind === "domain" && blockLevel === "chapter") {
+            for (const issue of behaviourIssues(
+                resolveType(kind, chapter.meta),
+                chapter.meta,
+                scenarioCount(chapters, index)
+            )) {
+                issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+            }
         }
 
         // The approval gate writes into the chapter, so the chapter is where
