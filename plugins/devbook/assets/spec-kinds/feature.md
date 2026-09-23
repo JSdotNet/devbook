@@ -1,6 +1,6 @@
 # Kind: feature
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature that `assets/code-sync-protocol.md` does not already say. The protocol
 carries the resolution ladder, the evidence rules, the five verdicts, the status
 rules, the brief contract, and the report table; this file carries the kind.
@@ -11,7 +11,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | File | `.devbook/domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into, plus `.devbook/domain/<context>/requirements.md` and its own split files |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `features.md` and `requirements.md`, `context.md` — the switches and the actors — and `domain.md` with `invariants.md`, the aggregates the capability exercises and the rules they enforce, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
-| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
 
@@ -51,7 +51,7 @@ value.
 | `related` | The `domain.md` aggregates, events, and services the capability exercises | Those chapters present and correct, with their counterparts |
 | Authorization | The role check or attribute gating a path — evidence about the **actor**, and the fourth beat of a `user` chapter in `context.md` or `actors.md`, never a line in `features.md`; the checked name is that chapter's `role` | The `user` whose `role` matches the check and whose chapter points at this feature, holding the right that chapter states — check the actor chapters and the repository's authorization configuration |
 
-## Capturing — `sync-specs`: run the application
+## Capturing — `capture-specs`: run the application
 
 This is the one chapter written from the **user's** point of view, and the one
 kind whose subject you can go and look at. Reading a controller tells you a
@@ -90,7 +90,7 @@ scope (the scenarios covered map onto the sub-features; an untested one is
 thinly covered), flag behaviour (a scenario run with the flag on and off
 establishes what it gates), and outcomes (a test naming an endpoint is evidence
 of the path, not the feature). A role check is the actor's right: carry it into
-the same routed write as the fourth beat and the `role` of that `user` chapter, and where no
+the same plan as the fourth beat and the `role` of that `user` chapter, and where no
 `user` chapter carries the role, report the missing actor — three beats a role
 check cannot supply are needed before one is written.
 

@@ -85,4 +85,4 @@ It does not fold `actors.md` or `dependencies.md` into `context.md`. A context
 that keeps either file is still valid — a kind lives in its own file or in
 `context.md`, never both — and whether a context is small enough to fold is a
 reading, not a rewrite. It writes no `setting` chapter: a setting is captured
-from code, with `sync-specs` and the `setting` kind, never invented.
+from code, with `capture-specs` and the `setting` kind, never invented.

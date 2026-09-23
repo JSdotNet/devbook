@@ -101,7 +101,7 @@ before, so the discipline is explicit, the same way `_meta/` has one:
   has queried has not thereby stopped saying what it says.
 - A reader working **in review mode** — a review skill, a queue, the approval
   gate — reads them, and reads nothing else in the chapter as instruction.
-- `sync-specs` never writes one. `apply-change` never carries one into
+- `capture-specs` never writes one. `apply-change` never carries one into
   a change brief. An open question is a reason to stop at the gate, not a line
   item to implement.
 

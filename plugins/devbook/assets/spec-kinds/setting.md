@@ -1,6 +1,6 @@
 # Kind: setting
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature flag or a setting that `assets/code-sync-protocol.md` does not already
 say. The protocol carries the resolution ladder, the evidence rules, the five
 verdicts, the status rules, the brief contract, and the report table; this file
@@ -12,7 +12,7 @@ carries the kind.
 | File | `.devbook/domain/<context>/context.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `context.md`, and the `features.md` or `skills.md` chapters that point at the switch through `feature-flag` or `setting`; when applying, the code those feature chapters resolve to |
-| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 | Extra input | Where the repository keeps its flag catalog and its configuration — a flag provider, an options class, a settings table, an environment file — since the key is resolved there and never guessed |
 
@@ -63,7 +63,7 @@ produces: a switch nobody can name in business language is either a capability
 `features.md` does not list or a leftover the code should lose. Report it
 rather than inventing a chapter around it.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Start from the reads. Find every flag check and configuration read in the
 context's code, resolve each to its key and its fallback, and follow each
@@ -76,7 +76,7 @@ never written from the product is a flag, however it is spelled.
 Reconcile the heading with the feature chapter that already describes the
 capability — usually it exists, and the switch takes its name. Then propose
 the feature side: `feature-flag` or `setting` on that chapter, pointing here.
-Draft with `status: draft`, `type`, `key`, and `default`; `scope` on a
+Draft with `type`, `key`, and `default`, and no `status`; `scope` on a
 setting; `related` to the feature chapters. Do not write an owner or a
 retirement condition the catalog does not state.
 

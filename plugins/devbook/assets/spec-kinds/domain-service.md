@@ -1,6 +1,6 @@
 # Kind: domain-service
 
-What `sync-specs`, `apply-change`, and `verify-change` need to know about a
+What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 domain service, policy, or process manager that `assets/code-sync-protocol.md`
 does not already say. The protocol carries the resolution ladder, the evidence
 rules, the five verdicts, the status rules, the brief contract, and the report
@@ -12,7 +12,7 @@ table; this file carries the kind.
 | File | `.devbook/domain/<context>/domain.md`, or the `domain.<name>.md` the chapter was split into, plus `invariants.md` for the rules it enforces |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `domain.md` and `invariants.md`, the chapters of every aggregate the service coordinates, and the dependency tables (`context.md`'s `## Dependencies`, or `dependencies.md` once split out) when it reaches across a context boundary. Never the whole `domain/` folder |
-| Write path | The `domain/` flow, per **Where the spec-side write goes** in the protocol |
+| Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 
 ## The deliberate exception to the aggregate rule
@@ -61,7 +61,7 @@ with `### Payload`, `### Consumers`, and `### Published language rules` as
 structural sub-sections carrying no `meta` blocks. An outward integration
 contract belongs in the dependency tables as a published language, not here.
 
-## Capturing — `sync-specs`
+## Capturing — `capture-specs`
 
 Read the service type in full, its registration in the dependency container,
 every call site, and the aggregates it touches. Then mine the tests: one that

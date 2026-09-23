@@ -3,14 +3,14 @@
 Shared rules for the three skills that connect a repository's devbook folders
 to its running code:
 
-- **`sync-specs`** — something already exists in the application, the matching
-  chapter is missing, thin, or stale, so read the implementation and write the
+- **`capture-specs`** — something already exists in the application, the matching
+  chapter is missing, thin, or stale, so read the implementation and plan the
   chapter.
 - **`apply-change`** — a chapter is agreed but not built, so turn it into a
   change brief and hand it to the flow that implements it.
 - **`verify-change`** — report where the two stand, and write nothing.
 
-Throughout this file and the files that load it, **capture** is what `sync-specs`
+Throughout this file and the files that load it, **capture** is what `capture-specs`
 does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
@@ -32,18 +32,19 @@ silent everywhere else.
 
 ## The two directions
 
-| | `sync-specs` | `apply-change` | `verify-change` |
+| | `capture-specs` | `apply-change` | `verify-change` |
 |---|---|---|---|
 | Starting point | Implementation exists | Chapter exists and is agreed | Both exist |
 | Missing thing | The chapter | The implementation | The knowledge of which side moved |
 | Reads | Source, tests, and the chapter as it stands | The chapter, plus code only to establish what is already there | Source, tests, and the chapter |
-| Writes | The chapter, through the folder's flow | A change brief, handed to the code-side flow | The report table, and nothing else |
-| Never | Changes source or test code | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
+| Writes | Nothing. A capture plan, delivered to the person | A change brief, handed to the code-side flow | The report table, and nothing else |
+| Never | Writes a file in the repository, source or chapter alike | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
 
-A single request often needs both directions, in sequence: `sync-specs` what is
-built, then `apply-change` what the corrected chapter now says is missing. Run
-them as two passes with the chapter settled in between — never interleave them,
-or the chapter becomes both the question and the answer. `verify-change` is the
+A single request often needs both directions, in sequence: `capture-specs` what is
+built, a person carrying its plan into the chapter, then `apply-change` what the
+corrected chapter now says is missing. Run them as two passes with the chapter
+settled in between — never interleave them, or the chapter becomes both the
+question and the answer. `verify-change` is the
 pass that says which one a chapter needs, and it is what both of the others do
 before they write.
 
@@ -89,8 +90,8 @@ not widen the chapter to cover several candidates at once.
 
 When the counterpart resolves through rung 3 and the chapter has no `aliases`
 entry for it yet, propose adding the discovered code name as one. That
-turns a one-off inference into a durable pairing for the next pass. Propose it —
-the write itself still routes through the folder's flow.
+turns a one-off inference into a durable pairing for the next pass. Propose it in
+the plan — nothing here writes the alias onto the chapter.
 
 ## Evidence rules
 
@@ -182,9 +183,8 @@ chapters in `requirements.md`. A pass that puts them on the wrong half is
 reported as a coverage warning, which usually means the rule itself is filed on
 the wrong side.
 
-Entries go in with the drafted content, so they route through the folder's
-flow along with everything else — a capture pass does not edit a
-chapter file directly, and that includes this field.
+Entries go in with the drafted content, in the plan and nowhere else — a capture
+pass writes no chapter file, and that includes this field.
 
 An apply pass writes no `tests` entries: the tests in its brief do not exist yet.
 Its acceptance checks are what those entries will name once someone has written
@@ -200,7 +200,7 @@ chapter in scope. For `verify-change` the verdict is the whole result, and the
 | Verdict | Meaning | What to do |
 |---|---|---|
 | `aligned` | The chapter and the code say the same thing. | Report it and stop. No write in either direction. Say what was compared, so the pass is not repeated. |
-| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Apply: stop — there is nothing to build; hand the scope to `sync-specs`. |
+| `code-ahead` | The code carries behaviour, structure, or language the chapter does not. | Capture: write the chapter from the code. Apply: stop — there is nothing to build; hand the scope to `capture-specs`. |
 | `spec-ahead` | The chapter carries agreed content the code does not implement. | Apply: emit the change brief and hand it to the code-side flow. Capture: stop — the chapter is not stale, it is unbuilt; hand the scope to `apply-change`. |
 | `conflict` | The chapter and the code make **incompatible** claims: a different invariant, a contradictory state transition, an event with a different meaning, a term used for two different concepts. | **Always stop and ask.** Never resolve a conflict by writing. |
 | `unresolved` | The counterpart could not be paired, or the evidence is too thin to tell which side is ahead. | Stop. Report the resolution attempts, the candidates found, and what evidence would settle it. |
@@ -217,26 +217,48 @@ concept nobody can pair to code is itself worth knowing about.
 ## Status rules
 
 `status` records how settled the written chapter is. It is not a report on the
-code, and the two directions each have a way of getting this wrong.
+code, and each of the three directions has a way of getting this wrong.
 
-**Capture must not promote status on the strength of code alone.** Finding an
-implementation is not agreement that the implementation is the intended model.
-So:
+The rule underneath every row below: **a spec that is ahead of the code stays
+ahead until a person says otherwise.** Nothing read from code may overwrite a
+chapter someone is still deciding about, and nothing gets built out of one.
 
-- A new chapter written from code starts at `draft`. It is a description of what
-  was found, not a ratified model.
-- An existing chapter's `status` is left exactly as it is. Capture changes the
-  chapter's *content*; a status change is a separate, deliberate decision that
-  belongs to the folder's flow and the person running it.
-- Never move a chapter to `active` because the code exists. `active` means "this
-  is the current agreed model", and only a person agrees. In `domain/`,
-  `arc42/`, and `design/` that move is spelled by *deleting* the `status` line,
-  since `active` is those folders' resting value — so a capture pass must leave
-  a `draft` or `proposed` line in place rather than tidying it away.
-- Never move a chapter to `deprecated` because the code was deleted. Code being
-  gone may mean the model was abandoned, or may mean it regressed. Report it as
-  `code-ahead` with the removal as the finding, and let the flow
-  and the user decide.
+| Target's `status` | `capture-specs` | `verify-change` | `apply-change` |
+|---|---|---|---|
+| `active` — the agreed model, nothing pending against it | May plan. The plan is an ordinary delta against an agreed chapter | Verdicts against the chapter as it stands | Proceeds. This is the model, and building it is the point; the status adds no gate of its own |
+| `draft` or `proposed` — someone is still deciding | **Never plans over it.** Reports what the code has beside what the draft says, and proposes a replacement for neither | Verdicts as usual, and marks the verdict `unagreed` | **Stops and confirms** before emitting a brief |
+| `deprecated` — retired | **Never.** Reports the finding and stops | Report only | **Refuses.** Nothing is built from a retired chapter |
+
+`unagreed` is a flag on a verdict, not a sixth verdict: the five below are still
+the whole set, and the flag says only that the verdict was measured against
+something nobody has agreed to yet. A `code-ahead` against a `draft` is a
+statement about a sketch, and reading it as a statement about the model is the
+mistake the flag exists to prevent.
+
+`approved` and `accepted`, `domain/`'s two decision rungs, read as `active` in
+every column — they are `active` with a signature. The rows are about the
+chapter the run is aimed at; a change folder open against a chapter is not a
+status and has no row here.
+
+**Capture writes no status at all.** Finding an implementation is not agreement
+that the implementation is the intended model, and a capture pass produces a
+plan rather than a chapter, so:
+
+- A plan for a chapter that does not exist yet proposes content and no `status`
+  line. What the chapter is worth is decided when someone carries the plan in,
+  not by the pass that found the code.
+- A plan against a chapter that exists proposes no change to its `status`
+  either. Capture plans the chapter's *content*; a status change is a separate,
+  deliberate decision that belongs to the folder's flow and the person running
+  it.
+- Never propose `active` because the code exists. `active` means "this is the
+  current agreed model", and only a person agrees. In `domain/`, `arc42/`, and
+  `design/` that move is spelled by *deleting* the `status` line, since `active`
+  is those folders' resting value — so a plan never carries the removal of a
+  `draft` or `proposed` line either.
+- Never propose `deprecated` because the code was deleted. Code being gone may
+  mean the model was abandoned, or may mean it regressed. Report it as
+  `code-ahead` with the removal as the finding, and let the person decide.
 
 **Apply must not brief an unsettled chapter without confirmation.** A
 chapter at `draft` or `proposed` has not been agreed:
@@ -260,22 +282,41 @@ promoting to `active` forbids this more strongly. Apply never sets it either —
 it reads the rung and stops or proceeds. Only the approval gate, and the person
 answering it, writes `approved`, `approved-by`, and `approved-at`.
 
-## Where the spec-side write goes
+## The capture plan
 
-A capture skill never writes a chapter file directly. It prepares the content and hands
-the write to whatever flow covers the folder, resolved in this order:
+A capture pass writes nothing. Its whole result is a **capture plan**, delivered to
+the person as a Markdown artifact, and what happens to it afterwards is theirs: they
+carry it into the folder through whatever flow covers it, take part of it, or leave
+it. Code is evidence, not agreement, and a pass that wrote the chapter would be
+agreeing on the person's behalf.
 
-1. **A repo-native `flow-*` skill** for that folder — it takes precedence over anything a
-   plugin provides.
-2. **The flow engine's own flow for the devbook folders** — `flow-spec`, which derives the
-   folder and drafts through the role it maps to — when an engine is installed.
-3. **Directly**, following that folder's `devbook-*.md` rule and
-   `devbook-chapter-metadata.md`, when no flow engine is installed at all.
+The plan has three parts.
 
-Name the rung that answered, once, in the report. Whichever rung it is owns template
-conformance, metadata blocks, and the consistency review; this skill owns the evidence.
-The dependency is one-way — no flow knows these skills exist, and none of them changes to
-accommodate this. `tech-update` has the same relationship with the `tech/` write.
+1. **The drafts**, to the folder rule's template, as the kind's file says: the
+   invariants the aggregate or domain service and its unit tests establish, each with
+   its `Enforced at:` line, and the requirements the running product and its e2e tests
+   establish, each as one SHALL sentence — both with their `#### Scenario:` cases and
+   their `tests` entries. Every claim carries the evidence behind it: the declaration,
+   guard clause, or passing test that settles it, named specifically enough to
+   re-check. A rule nothing asserts is drafted and marked thinly covered.
+2. **The delta**, which is how the drafts are arranged. One entry per heading in the
+   target file, marked exactly one of:
+
+   | Marker | Meaning |
+   |---|---|
+   | `ADDED` | The heading is not in the target file. The draft is its whole content. |
+   | `MODIFIED` | The heading is there and says something the code contradicts or omits. Give the current text beside the drafted one, so the reader sees what changes. |
+   | `REMOVED` | The heading is there and its counterpart is gone from the code. Never a deletion the pass performs — the evidence for the removal, and the question of whether the model was abandoned or regressed, is the entry. |
+
+   By heading, against a named target file, so the plan is legible against the chapter
+   it is about and stays legible when the chapter moves on before anyone reads it.
+3. **The report table**, as below, one row per chapter in scope, `aligned` rows
+   included.
+
+A plan never carries a `status` line, an `annotation` fence, or an edit to anything
+outside the headings it lists. Where the target is a chapter still being decided — a
+`draft` — the plan proposes no replacement for it: it reports what the code has
+beside what the draft says and leaves the two for the person to reconcile.
 
 ## Code-side writes: the change brief
 
@@ -354,8 +395,7 @@ gap rather than emitting a vague brief.
 
 ### Where the code-side write goes
 
-The mirror of the spec-side ladder. An apply pass never edits a source or test
-tree itself; it hands the brief to whatever flow implements a change of its
+An apply pass never edits a source or test tree itself; it hands the brief to whatever flow implements a change of its
 category, resolved in this order:
 
 1. **A repo-native `flow-*` skill** that covers the change category — it takes
@@ -375,22 +415,21 @@ no flow knows these skills exist, and a brief reaches a flow as ordinary input.
 
 ## The check
 
-Whenever a capture pass results in a chapter being added, renamed, or re-linked,
-close the pass with the check, at the scope of the folder that changed:
+None of the three skills writes a chapter, so none of them runs the check. Where a
+capture plan would add, rename, or re-link a chapter, it says so and names the check
+the person runs once they have carried it in, at the scope of the folder that
+changed:
 
 ```bash
 node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
 ```
 
-Run it with no `--scope` when the pass touched more than one folder. If it
-reports unresolved references or a schema violation, fix the source Markdown;
-run `devbook:check` for anything that does not resolve from the message alone.
-Never regenerate a committed `_meta/` index in the pass, and never hand-edit
-one: where a repository keeps them, their refresh is the layered plugin's own
-path, named in the repository's `AGENTS.md`.
-
-An apply pass changes no chapter file and therefore checks nothing, and neither
-does a verify pass.
+With no `--scope` when the plan touches more than one folder. If it reports
+unresolved references or a schema violation, the fix is in the source Markdown;
+`devbook:check` explains anything that does not resolve from the message alone.
+Never regenerate a committed `_meta/` index and never hand-edit one: where a
+repository keeps them, their refresh is the layered plugin's own path, named in the
+repository's `AGENTS.md`.
 
 ## Report table
 
@@ -399,7 +438,7 @@ scope, so a run's outcome is legible without reading the prose.
 
 | Chapter | Counterpart | Resolved via | Verdict | Evidence | Action |
 |---|---|---|---|---|---|
-| `.devbook/domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-spec` |
+| `.devbook/domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | `MODIFIED` in the capture plan: one `### Invariant:` chapter added |
 | `.devbook/domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
 
 Column rules:

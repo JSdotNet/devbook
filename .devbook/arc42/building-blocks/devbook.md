@@ -37,7 +37,7 @@ change belongs to the engine.
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
 | `annotation-sweep` | skill | A person, on one chapter |
-| `sync-specs`, `apply-change`, `verify-change` | skills | A person, one skill and one kind per run, routed there by the session-start hook when a task crosses between a chapter and its code |
+| `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill and one kind per run, routed there by the session-start hook when a task crosses between a chapter and its code |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper the install writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `check`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
@@ -109,19 +109,31 @@ Delete every resolved annotation fence in one chapter and nothing else — the l
 lifecycle, where `resolved` lives only the rest of the branch and gone is the resting state.
 Chapter-scoped, so a person sees what is about to go before it does.
 
-### sync-specs
+### capture-specs
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/building-blocks/devbook.md#catching-up-with-the-code"]
 ```
 
-Read an implementation and its unit tests and write the chapter that was missing, thin, or
-stale, for any of the six kinds. The kind is the chapter's `type`, or the file where the
+Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
+for any of the six kinds. It writes nothing. Its result is a capture plan handed to the
+person: the drafts to the folder's template, arranged as a delta against the target file —
+`ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind it,
+and the report table. Code is evidence, not agreement, so the pass that found the code does
+not also decide what the chapter says; a person carries the plan into the folder, or does
+not. The kind is the chapter's `type`, or the file where the
 folder defines none, and what a kind needs is read from its own file rather than carried in
-the skill. The three converters are named after OpenSpec's verbs, so a reader who has met
-OpenSpec first needs no translation; a skill is a direction, because ten skills carried one
-procedure ten times and the kind-specific part was a mapping table each pair restated from its
-two ends.
+the skill. A skill is a direction, because ten skills carried one procedure ten times and the
+kind-specific part was a mapping table each pair restated from its two ends.
+
+Two of the three converters carry OpenSpec's verb, so a reader who has met OpenSpec first
+needs no translation: `apply-change` implements an agreed spec there and here, and
+`verify-change` is report-only in both. This one does not, and cannot. OpenSpec's `sync-specs`
+merges the spec deltas a proposal already wrote and never opens source; reading an
+implementation to write the chapter is a move OpenSpec has no skill for at all, because there
+specs lead and code follows. A name that says "the specs catch up" in both places while
+meaning a different feeder in each buys back the translation it was meant to save, so this one
+takes the protocol's own word — **capture** — and the borrowing stops at two.
 
 The aggregate is the unit and not its parts: a consistency boundary decided twice is a
 boundary decided differently. A domain service is the deliberate exception — defined by
@@ -133,7 +145,7 @@ the one capture that **runs the application**. Reading a controller tells you a 
 using the feature tells you what the product lets someone do, in what order, with what
 wording. Screenshots are report evidence and are never committed into a devbook folder.
 
-Behaviour is captured into `requirements.md` and `invariants.md` rather than into the prose it
+Behaviour is planned into `requirements.md` and `invariants.md` rather than into the prose it
 belongs beside, one rule per chapter with the scenarios that prove it. Neither is a kind of
 its own: a feature's promises are that feature's pass and an aggregate's rules are that
 aggregate's, because a rule captured apart from the thing it constrains is a rule decided
@@ -167,6 +179,12 @@ Report the drift verdict per chapter and write nothing — no chapter, no brief,
 report's action column names which of the other two a verdict calls for. It is the step both
 of the others take before they write, offered on its own for the question "is this chapter
 still true".
+
+Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
+still one kind per run and still one table for all of it. Reading is cheap when nothing is
+written, and the question a person actually asks before a review — has this folder drifted —
+is not answerable one chapter at a time. A table per chapter would hide the shape of the
+whole, which is the only thing a folder-wide run adds.
 
 ## Structure
 
@@ -503,19 +521,21 @@ is visibly not. Materialized by the install only where `tech/` is adopted.
 ### Spec Converter
 
 ```meta
-related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/building-blocks/devbook.md#sync-specs", ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md"]
+related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md"]
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over six kinds: `sync-specs` reads an
-implementation and writes the chapter, `apply-change` reads an agreed chapter and turns it
+says which one a chapter needs, as three skills over six kinds: `capture-specs` reads an
+implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
 into a change brief for the flow that implements it, touching no source or test tree itself,
-and `verify-change` reports the drift verdict and writes nothing. The names are OpenSpec's
-verbs for the same moves, one of them approximate —
+and `verify-change` reports the drift verdict and writes nothing. Two of the names are
+OpenSpec's verbs for the same moves; the third is the protocol's own word, because the
+direction it names is one OpenSpec does not have —
 [debt record 6](../tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) holds
-the exact one.
+why the borrowed spelling was dropped.
 
-Invocation semantics: command-invoked, one skill and one kind per run. The kind is the
+Invocation semantics: command-invoked, one skill and one kind per run — one target for the
+two that produce something, and a folder or a bounded context for the one that does not. The kind is the
 chapter's `type`, or the file where the folder defines none, and everything a kind needs lives
 once in its own file rather than in a skill per kind and direction. The aggregate is the unit
 rather than its parts, because a consistency boundary decided twice is a boundary decided
@@ -662,10 +682,10 @@ Both open with the same resolve-and-verdict step, and `verify-change` is that st
 
 ```mermaid
 flowchart LR
-    subgraph capture["sync-specs"]
+    subgraph capture["capture-specs"]
         code["Implementation and its unit tests"] --> resolveA["Resolve counterpart"]
         resolveA --> verdictA{"Drift verdict"}
-        verdictA -->|"code-ahead"| write["Write the chapter through the folder's write path"]
+        verdictA -->|"code-ahead"| write["Deliver the capture plan to the person"]
         verdictA -->|"aligned"| noop["Report and stop"]
         verdictA -->|"conflict"| ask["Stop and ask"]
         verdictA -->|"unresolved"| ask
@@ -685,6 +705,10 @@ flowchart LR
     end
 ```
 
+- **Neither direction writes the thing it is about.** A capture pass delivers a plan and a
+  person carries it in; an apply pass delivers a brief and a flow builds it. Both name a
+  delta against something that already exists, which is what keeps either from re-specifying
+  work that is done.
 - **`apply-change` reads code without changing it.** Establishing what is already there is
   what lets the brief ask only for the delta, and it is why the update case can name where the
   current behaviour lives.
@@ -695,12 +719,17 @@ flowchart LR
   knows these skills exist; a brief reaches one as ordinary input, so the dependency still
   runs one way.
 - **A term chapter has no pair of its own.** Each capture pass that resolves a counterpart by
-  inference proposes the discovered code name as an alias, which turns a one-off inference
-  into a pairing the next pass can use.
+  inference proposes the discovered code name as an alias in its plan, which turns a one-off
+  inference into a pairing the next pass can use once someone accepts it.
+- **The target's status decides what each direction may do.** A spec that is ahead of the
+  code stays ahead until a person says otherwise: capture never plans over a `draft` and
+  reports what the code has beside what the draft says instead, verify flags such a verdict
+  `unagreed` — a flag, not a sixth verdict — and apply stops to confirm. Against a
+  `deprecated` chapter capture does not run, verify reports, and apply refuses.
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule
   nobody agreed.
-- **Each converter carries the annotation prohibition itself.** `sync-specs` never writes a
+- **Each converter carries the annotation prohibition itself.** `capture-specs` never writes a
   fence, `apply-change` never carries one into a brief, and both say so in their own `Do not`
   section. The session-start prompt states the reading rule; a writing rule has to be at the
   point of use to survive the session that reaches it.
