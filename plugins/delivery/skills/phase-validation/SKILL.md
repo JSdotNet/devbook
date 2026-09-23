@@ -183,7 +183,8 @@ or a restart, and do not ask the user to restart the app manually as the normal 
 
 These are what the QA sub-agent returns, and all of it. A failure is reported with the
 evidence path and the specific error, not with the page snapshot or log page it came from —
-the evidence file is the record, and the surface renders it from disk on demand.
+the evidence file is the record. Personal Validation shows it to the person, per **Step 4**
+of `skills/phase-personal-validation/SKILL.md`.
 
 ## Dashboard Reporting
 

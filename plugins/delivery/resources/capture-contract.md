@@ -39,7 +39,8 @@ at any depth.
 One entry per captured checkpoint and per failure: the scenario, what it shows, the form, and
 the path. Paths resolve **relative to the git worktree root**; one outside it is rejected, so
 a sub-agent in its own checkout copies evidence back before reporting it. These entries are
-what the phase passes as `scenarios[].evidence`, rendered from disk on demand.
+what the phase passes as `scenarios[].evidence`, and what Personal Validation shows the
+person, per **Step 4** of `skills/phase-personal-validation/SKILL.md`.
 
 ## Name the form honestly
 
