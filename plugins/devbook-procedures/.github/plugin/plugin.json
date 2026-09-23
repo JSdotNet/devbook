@@ -1,7 +1,7 @@
 {
   "name": "devbook-procedures",
   "description": "The four procedures every repository has and no plugin can write: start — how its application comes up; show — how the feature being built is put in front of a reviewer, running and with evidence; capture — how evidence is taken; debug — how a cause is found inside the running application, breakpoints included, without handing the debugger to a person. Each lands as one editable copy under .agents/skills/ with a managed wrapper per host that carries the fixed goal: the goal is the plugin's and refreshes on upgrade, the procedure is the repository's and is never overwritten once edited. Two skills, init and update, keyed by components.devbook-procedures.adopted in .devbook/config.json. An L1 extension over devbook: it follows devbook's reconcile protocol and stamp, and names no engine.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": {
     "name": "Job Schepers"
   },
