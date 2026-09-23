@@ -163,15 +163,15 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 
 A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
-one scope needs none: `devbook-config` holds `setup`, `update`, `ask`, and `adoption` bare,
-and the plugin name carries what a prefix would have.
+one scope needs none: `devbook-config` holds `init`, `update`, `doctor`, `ask`, `adoption`,
+and `local` bare, and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word once covered fan-out and single-session staging at once, and the
 fan-out it described no longer ships. `delivery` holds four `flow-*` — the
 code, the five devbook folders, the dependencies, and the project, since
 [flows belong to delivery](adr/plugin-boundaries.md) — and three `phase-*`, `delivery-schedule`
-holds sixteen `schedule-*` beside a bare `install`.
+holds seventeen `schedule-*` beside a bare `init` and `update`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -371,9 +371,9 @@ the file map. The same file's other top-level keys are the engine's — see
 
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes
-anything ships one `<component>-install` that writes its own entry and one `<component>-check`
-that reads it, and neither touches another component's. A component that materializes nothing
-and ships no install skill has its selection written by hand — `delivery-surface-dashboard`'s
+anything ships an `init` and an `update` that write its own entry and touch no other
+component's; `devbook-config:doctor` is the one reader of every entry. A component that
+materializes nothing and ships no `init` has its selection written by hand — `delivery-surface-dashboard`'s
 session-naming words are [the one case](adr/configuration.md) — and the boundary holds
 unchanged: the entry is still that component's alone. How a stamp moves is
 [Materializing a Component](06-runtime-view.md#materializing-a-component).

@@ -53,7 +53,7 @@ see a rule kept, and a rule kept only by a consumer is a rule whose next change 
 
 `plugins/devbook/rules/devbook-domain.md`, the four kind files under
 `plugins/devbook/assets/spec-kinds/`, the two domain migrations under
-`plugins/devbook/migrations/`, and the `domain` branches of `devbook:install`. Nothing a
+`plugins/devbook/migrations/`, and the `domain` branches of `devbook:init` and `devbook:update`. Nothing a
 consumer installs is wrong; the gap is that a change to any of these is exercised by the
 checker's unit fixtures and by a consuming repository, never by this one.
 
