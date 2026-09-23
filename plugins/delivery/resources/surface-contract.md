@@ -26,7 +26,7 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 ## The Stack Config
 
 `.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys
-and never edits another component's. `components` belongs to each component's own install skill.
+and never edits another component's. `components` belongs to each component's own `init` and `update` skills.
 `id` sits beside the four and is not a setting: it names the repository, once, so a machine can
 keep an overlay for it — see below.
 
@@ -52,7 +52,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     }
   },
   "extensions": {
-    "session.start": [ "devbook:check" ],
+    "session.start": [ "devbook:validate" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
     "validate":        "your-coding-plugin:coding",

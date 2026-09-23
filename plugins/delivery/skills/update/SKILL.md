@@ -1,22 +1,26 @@
 ---
-name: install
-description: 'Record the delivery engine in a repository — write its pluginVersion under components.delivery in .devbook/config.json and release any file an earlier engine seeded, so the repository''s own procedure skills are its own. Materializes nothing: the engine reads the config and the repository''s skills by path. Idempotent: first install and upgrade are one run. Use when: adopting the delivery engine, upgrading it, or components.delivery still claims a seeded start or capture skill. Triggers on: "delivery install", "install delivery", "delivery-install".'
+name: update
+description: 'Move the delivery engine''s record in a repository forward — release any file an earlier engine seeded, so the repository''s own procedure skills are its own, and rewrite components.delivery in .devbook/config.json to the installed pluginVersion. Materializes nothing. Refused where no components.delivery stamp exists: run delivery:init. Use when: upgrading the delivery engine, or components.delivery still claims a seeded start or capture skill. Triggers on: "delivery update", "update delivery", "upgrade delivery".'
 ---
 
-# delivery install
+# delivery update
 
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 The engine materializes nothing. Everything it reads from a repository is either
-`.devbook/config.json` — the four engine-owned keys, which `devbook-config:setup` writes — or
+`.devbook/config.json` — the four engine-owned keys, which `devbook-config:init` writes — or
 a skill the repository owns and the engine names by name: `start` at `app.start`, `capture`
 inside Validation. Neither is a dependency; a flow that finds one absent does without and
-says so. So this install records the engine and releases what an earlier one wrote.
+says so. So `delivery:init` records the engine, and this skill keeps the record current and
+releases what an earlier engine wrote.
 
 The stamp rules — the two shared fields, the hash, what customized and orphan mean — are
 `assets/reconcile-protocol.md` in the devbook plugin under **The stamp**, followed exactly.
 This plugin writes `components.delivery` and touches no other entry, and none of the four
 engine-owned top-level keys.
+
+**Refuse when `components.delivery` is absent.** Say "not initialized, run `delivery:init`"
+and stop.
 
 ## The run
 

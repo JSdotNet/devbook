@@ -49,9 +49,9 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 2: Stack Setup
 
-- Run `devbook-config:setup`. It decides which plugins the repository will use, writes the
+- Run `devbook-config:init`. It decides which plugins the repository will use, writes the
   engine keys of `.devbook/config.json`, declares the default MCP servers in the
-  repository's own MCP files, and hands each component its install — `devbook:install` for
+  repository's own MCP files, and hands each component its `init` — `devbook:init` for
   the devbook folders, and whichever component seeds the repository's procedure skills for
   `start`. A repository that already has the config runs `devbook-config:update` instead.
 - Fill the `start` skill's facts — the command, the entry points, the readiness signals, the
@@ -64,7 +64,7 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 - Expand `README.md` with the project description, architecture overview, setup steps, and
   contribution guide.
-- Write the repository's own guidance outside the section `devbook:install` owns in the
+- Write the repository's own guidance outside the section `devbook:init` writes in the
   file bound to the `repo-instructions` slot: tech stack, conventions, key patterns, agent
   guidance — from the MCP servers bound to `spec`, or derived from the project type when
   none is bound.

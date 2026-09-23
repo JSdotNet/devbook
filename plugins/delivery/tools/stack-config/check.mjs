@@ -217,7 +217,7 @@ export function checkLocalOverlay(local) {
     if ('components' in local) {
         errors.push(
             'components: a stamp is repo-scope and committed, and an overlay is neither. ' +
-                "Remove it — the owning component's install skill writes it.",
+                "Remove it — the owning component's init and update skills write it.",
         );
     }
 

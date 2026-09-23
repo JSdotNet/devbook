@@ -223,7 +223,7 @@ test('the overlay merges into a nested binding without flattening its neighbours
 
 test('an array replaces rather than concatenating — half a chore list runs nothing sane', () => {
     const merged = mergeStackConfig(
-        { extensions: { 'session.start': ['devbook:check', 'repo:a'] } },
+        { extensions: { 'session.start': ['devbook:validate', 'repo:a'] } },
         { extensions: { 'session.start': ['repo:b'] } },
     );
     assert.deepEqual(merged.extensions['session.start'], ['repo:b']);
