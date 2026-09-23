@@ -1,8 +1,8 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fifteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, eleven trigger files that fire one on a cadence, and three skills that put those
+report, twelve trigger files that fire one on a cadence, and three skills that put those
 triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -26,6 +26,7 @@ hand it one. Every one of them is also runnable by hand.
 | Skill | Does | Lands as |
 |---|---|---|
 | `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when `devbook-config:doctor` finds the installation needs a person |
+| `schedule-devbook-verify` | Runs `devbook:verify-change` over every adopted folder, one run per kind, and opens an issue per `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such row, and a `schedule-report` issue with the whole table |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
@@ -58,6 +59,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
+| `devbook-verify` | Monday 04:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a `schedule-report` issue |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
