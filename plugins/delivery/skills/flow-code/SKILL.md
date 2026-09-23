@@ -134,6 +134,7 @@ of truth.
 - `start_run` with `skillId: "flow-code"` and stages: Scope Discovery, Specification &
   Architecture Intake, the Stage 2 name the kind selects when it runs, Implementation, then
   the shared phase names for the tier.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - `set_run_context` with the `changeKind` as soon as Stage 0 derives it — it selects the
   closing tier and the Validation depth.
 - During Scope Discovery, put the restated request, the kind, the derived criteria, and the

@@ -1,7 +1,7 @@
 # Hosts
 
 ```meta
-date: 2026-09-21
+date: 2026-09-23
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/tech/hosts.md#copilot-plugin-api", ".devbook/arc42/adr/install.md"]
 ```
 
@@ -63,11 +63,16 @@ opens nothing, at the cost of one click per run.
   this marketplace ships, where the id is the permission a bound surface needs; a host's pane is
   a capability, and every call site already had a plain-link fallback.
 
-Two divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
+Three divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
 because where a plugin is installed is a fact about a host and nothing else; and
 `delivery-schedule` names the scheduler tool, because an install that could not would schedule
 nothing, and the workflow tool its issue sweep runs each resolution under, because a sweep that
-could not would resolve nothing ([plugin boundaries](plugin-boundaries.md)).
+could not would resolve nothing ([plugin boundaries](plugin-boundaries.md)). And every
+`delivery` skill that calls `start_run` carries `${CLAUDE_SESSION_ID}`, because Claude Code
+substitutes a session id only into skill content: a skill without the token could not tell a
+surface which session drove its run. The token is still bound and not branched — a host that
+substitutes nothing, as Copilot CLI does, leaves a placeholder, which is the `session-id`
+slot's unbound case ([chapter 5](../05-building-block-view.md#host-slots)).
 
 ## History
 
@@ -76,6 +81,7 @@ could not would resolve nothing ([plugin boundaries](plugin-boundaries.md)).
 
 | Date | Change |
 | --- | --- |
+| 2026-09-23 | The `session-id` slot: `delivery`'s `start_run` callers carry `${CLAUDE_SESSION_ID}`, the lane's third recorded divergence. |
 | 2026-09-21 | `fleet` deleted: no asset names the Claude CLI. `delivery-schedule`'s issue sweep names the workflow tool, the lane's second recorded divergence. |
 | 2026-09-09 | The runner's three browser-pane ids removed: a host capability, not a shipped server. |
 | 2026-09-07 | Repository rules move to `.agents/rules/` with a wrapper per host; `CLAUDE.md` goes from 154 lines to an import. |

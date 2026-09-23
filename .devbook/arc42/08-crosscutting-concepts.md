@@ -299,12 +299,12 @@ a relative import — the shape [the surfaces record](adr/surfaces.md) waited fo
 ## Host Slot
 
 ```meta
-date: 2026-09-03
+date: 2026-09-23
 related: [".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
 A name a shared asset reads instead of a host's own file: `repo-instructions`,
-`model-override`, `stage-delegation`, `surface`, `pr-lane`. A slot is
+`model-override`, `stage-delegation`, `surface`, `pr-lane`, `session-id`. A slot is
 bound, never branched — an asset that carries an if-this-host clause has not used a slot.
 
 Behavioural divergence binds as a capability rather than as a host: `stage-delegation` asks

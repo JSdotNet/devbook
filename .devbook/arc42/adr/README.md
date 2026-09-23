@@ -23,7 +23,7 @@ whether the document can end in an answer; if it ends in two options and no pick
 
 | Concern | Standing choice | Last decided |
 | --- | --- | --- |
-| [Hosts](hosts.md) | One authored copy per asset, a wrapper per host where filenames differ, nothing names a host's own file or capability, a checker over hand-authored files. | 2026-09-09 |
+| [Hosts](hosts.md) | One authored copy per asset, a wrapper per host where filenames differ, nothing names a host's own file or capability, a checker over hand-authored files. | 2026-09-23 |
 | [Configuration](configuration.md) | One committed `.devbook/config.json` with the engine's four keys and every component's entry; a three-layer overlay that can only tighten; runtime facts in the `start` skill. | 2026-09-17 |
 | [Install](install.md) | A plugin reaches a repository only through its `init` and is kept current by its `update`, one way, hash-tracked; `validate` checks the corpus and `devbook-config:doctor` the installation; only `devbook` carries a ledger; this repository stamps itself and materializes nothing. | 2026-09-23 |
 | [Checks and Indexes](checks-and-indexes.md) | Three checks on every pull request and the validator on the `--check` path, all `devbook`'s; the committed `_meta/` index, its refresh, and the canvas are `devbook-derived`'s, enabled only where the index is wanted. | 2026-09-23 |

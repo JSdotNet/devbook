@@ -87,5 +87,6 @@ of truth.
 
 - `start_run` with `skillId: "flow-spec"` and stages: Context Loading, Drafting, Check &
   Review, Personal Validation, Create Pull Request, Work Item Update, Summary.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - During Drafting, open/update `render_markdown` with the drafted chapter, and
   `render_diagram` with any changed Mermaid diagram.

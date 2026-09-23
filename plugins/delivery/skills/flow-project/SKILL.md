@@ -160,6 +160,7 @@ of truth.
   Specification & Architecture Intake, Tooling & Dependencies, Implementation, Build & Test,
   Validation, Personal Validation, Create Pull Request, Verification, Work Item Update,
   Summary.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - During README and Repository Instructions, open/update `render_markdown` with the
   expanded README; during Specification & Architecture Intake, with the reviewed or derived
   architecture, plus `render_diagram` for any Mermaid that goes with it.

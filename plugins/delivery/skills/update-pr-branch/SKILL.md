@@ -207,6 +207,7 @@ the source of truth.
 
 - `start_run` with `skillId: "update-pr-branch"` and these stages: Establish State, Integrate,
   Resolve Conflicts, Re-validate, Push.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 
 ## Output
 

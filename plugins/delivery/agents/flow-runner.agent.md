@@ -65,8 +65,11 @@ those contracts; it does not re-decide them per skill.
    per session and publish the returned URL in the conversation — this agent carries no
    browser tool, per **Surfacing the surface** in `surface-contract.md`.
    Then call `start_run` with the skill's `skillId` and the full ordered stage list —
-   **Update Base** first, then the skill's own stages, then its tier's closing phases — and the
-   `changeKind` when known; `resumed: true` means continue from the first stage that is not
+   **Update Base** first, then the skill's own stages, then its tier's closing phases — the
+   `changeKind` when known, and `sessionId` from the `session-id` host slot. Take it from the
+   invoked skill as the host loaded it, or from the prompt that started this agent: a skill
+   read by path keeps its token unsubstituted, and a value still reading `${…}` is unbound —
+   omit it. `resumed: true` means continue from the first stage that is not
    `done` rather than restarting. **No surface bound is a normal outcome** — produce the file
    artifacts, say so once, and never block a stage. A capability that resolves but whose
    required operation errors is a tooling failure: mark the run blocked and report the error

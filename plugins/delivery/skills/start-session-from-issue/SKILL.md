@@ -191,6 +191,7 @@ the source of truth.
 - `start_run` with `skillId: "start-session-from-issue"` and these stages: Fetch Matching Items,
   Filter Out Work Already In Flight, Select One Item, Route to an Flow, Claim and Run,
   Summary.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - The flow in Phase 5 opens its own run, with this run's tracker metadata
   carried into its `start_run`. Reference that run id in the Claim and Run stage output
   rather than duplicating its stages here.

@@ -168,6 +168,7 @@ the source of truth.
 
 - `start_run` with `skillId: "fix-pr-checks"` and these stages: Collect Failures, Classify,
   Reproduce Locally, Fix, Push and Verify, Report.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - Each fix-and-push iteration re-enters Fix and Push and Verify; record the
   iteration count in the stage `output` rather than starting a new run.
 

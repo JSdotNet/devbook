@@ -351,14 +351,15 @@ group.
 ## Host Slots
 
 ```meta
-date: 2026-09-05
+date: 2026-09-23
 related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md"]
 ```
 
-`delivery` declares a closed set of five names a shared asset reads instead of a host's own
+`delivery` declares a closed set of six names a shared asset reads instead of a host's own
 file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
 [deleted](adr/hosts.md), and nowhere in the stack is a
-host's own file, path, or capability named now.
+host's own file, path, or capability named now — save the `session-id` token, which
+[stands on purpose](adr/hosts.md).
 
 | Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |
@@ -367,12 +368,16 @@ host's own file, path, or capability named now.
 | `stage-delegation` | the live session | stages run inline |
 | `surface` | the live tool list | file artifacts only |
 | `model-override` | nothing, deliberately | category defaults |
+| `session-id` | the host's substitution into skill content | `start_run` carries no `sessionId` |
 
 The first three are host facts a repository can state. `stage-delegation` and `surface` are
 capability answers resolved at run time, which is what keeps two hosts from re-diverging the
 moment one gains what the other has. `model-override` takes no binding from anywhere: model
 choice is personal, so a repository may not set it, and with no profile left to name a path,
-every category takes its default.
+every category takes its default. `session-id` is answered by the host alone: Claude Code
+substitutes `${CLAUDE_SESSION_ID}` in skill content, so each skill that calls `start_run`
+carries that token verbatim, and Copilot CLI substitutes nothing and hands its session id only
+to hooks — a token still reading as a placeholder is the unbound case.
 
 Unbound is now the resting state of the whole table, and the table is what keeps that visible
 rather than silent.
