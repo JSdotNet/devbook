@@ -164,8 +164,8 @@ because neither plugin may name the other — left with them.
 A `rules/` folder holds exactly one thing: rules an install writes into a repository. Neither
 host applies one on its own — no manifest here declares a rules key and neither host has a
 rules component — so the folder's whole purpose is delivery. The plugin's
-`<component>-install` writes each into a repository as one `.agents/rules/<name>.md` body and a
-wrapper per host. `rules/<name>.md` carries name and description and no scope of its own;
+`init` writes each into a repository as one `.agents/rules/<name>.md` body and a wrapper per
+host, and its `update` refreshes them. `rules/<name>.md` carries name and description and no scope of its own;
 `rules/rules.json` keys each rule by that name and holds its `paths` and the adopted folder
 that pulls it in — see
 [the decision](adr/install.md).
@@ -193,8 +193,8 @@ Shared text a skill or an agent reads by path is not that, and lives in `resourc
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
-`<component>-install` is what puts it there and records it in the
-[stamp](08-crosscutting-concepts.md#stamp).
+`init` is what puts it there and records it in the
+[stamp](08-crosscutting-concepts.md#stamp); its `update` keeps it current.
 
 ## Level 2: What Lands in a Repository
 
@@ -391,13 +391,14 @@ because no other plugin is allowed to name every plugin.
 
 | Skill | Writes |
 | --- | --- |
-| `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
+| `init` | The four engine-owned keys of a repository's stack config, for the first time, before any component initializes itself |
 | `update` | The same four keys, moved forward, after each component reconciled itself |
+| `doctor` | Nothing. It reads every component's stamp against the disk, outstanding migrations, and the AGENTS.md sections, and names the `update` that fixes each finding |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
 | `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, the model-selection file, `AGENTS.local.md`. Never the committed config |
 
-The five take no prefix. It is named `devbook-config` for the file it writes,
+The six take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
 `devbook` included.
 

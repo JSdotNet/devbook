@@ -43,7 +43,7 @@ is the extension namespace the chapter `meta` block already reserves, applied to
 accepted in an overlay only, refused in the committed file, shape-checked as far as being an
 object of objects and otherwise opaque to the engine. The owning plugin reads it and asks only
 for what is absent, and may write its own namespace there and nothing else. `devbook-config:local`
-writes an overlay whole; `setup` never does, because an overlay is true of the person running
+writes an overlay whole; `devbook-config:init` never does, because an overlay is true of the person running
 it and of nobody they set a repository up for.
 
 **Two layers, keyed by a committed id, and none in the clone.** A gitignored file is in no

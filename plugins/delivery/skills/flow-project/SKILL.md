@@ -1,6 +1,6 @@
 ---
 name: flow-project
-description: 'Create, govern, and scaffold a repository — from an empty GitHub repository, or none, to a development project that builds and runs: the repository itself, its README and instructions, branch protection, templates and governance, the stack config through the setup skill, CI workflows, tooling, the Aspire AppHost, the project structure, and local validation. Use for a new project, and for scaffolding a project into a repository that already exists; stages the repository already has are a short check, not a reason to skip the flow.'
+description: 'Create, govern, and scaffold a repository — from an empty GitHub repository, or none, to a development project that builds and runs: the repository itself, its README and instructions, branch protection, templates and governance, the stack config through devbook-config:init, CI workflows, tooling, the Aspire AppHost, the project structure, and local validation. Use for a new project, and for scaffolding a project into a repository that already exists; stages the repository already has are a short check, not a reason to skip the flow.'
 ---
 
 # Flow: Project
