@@ -11,7 +11,7 @@ the feature being built is put in front of a reviewer; `capture`, how evidence i
 the same in every repository while how it is done never does.
 
 Inside the block: the four seeds and their goals, the wrapper per host that carries a goal, the
-install that puts them in a repository and records which were adopted, and the rule that a
+`init` that puts them in a repository and records which were adopted, and the rule that a
 body is the repository's from its first edit.
 
 Outside it: everything a procedure is *for*. The engine's Validation phase says what it does
@@ -24,25 +24,27 @@ of that is this block's. It owns no flow, no gate, and no state beyond its stamp
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#published-languages"]
 ```
 
-One skill: the install that puts the adopted procedures and their wrappers in place. The four
+Two skills: `init`, which puts the adopted procedures and their wrappers in place, and `update`, which keeps them current. The four
 procedures themselves are the repository's skills once they land, and this block runs none of
 them.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `install` | skill | A person, or `devbook-config:setup` during setup and a fan-out |
+| `init` | skill | A person, or `devbook-config:init` during setup and a fan-out |
+| `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `start`, `show`, `capture`, `debug` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host; then any session, either host, by name |
 | `SessionStart` | hook pair | Either host, at session start |
 
-### install
+### init and update
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook-procedures.md#dependencies", ".devbook/arc42/building-blocks/devbook-procedures.md#procedure", ".devbook/arc42/building-blocks/devbook.md#update"]
 ```
 
-Materialize `.agents/skills/<name>.md` and a wrapper per host for every name in
-`components.devbook-procedures.adopted`, asking which of the four to adopt only when no stamp
-answers, then stamp. Payload-only: hash-matching is its whole migration mechanism, per
+`init` materializes `.agents/skills/<name>.md` and a wrapper per host for every name the
+user adopts, then stamps `components.devbook-procedures`; it refuses where that stamp exists.
+`update` takes the list from the stamp's `adopted`, refreshes, and re-stamps; it refuses where
+no stamp exists. Payload-only: hash-matching is its whole migration mechanism, per
 devbook's reconcile protocol. A present body this component never stamped — a `start` an
 earlier engine seeded — is asked about once and kept as the repository's own or replaced; a
 wrapper is replaced without asking. A name dropped from `adopted` orphans its three files,
@@ -57,7 +59,7 @@ related: [".devbook/arc42/adr/install.md", ".devbook/arc42/08-crosscutting-conce
 ### Procedure
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/building-blocks/devbook-procedures.md#install", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
+related: [".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/building-blocks/devbook-procedures.md#init-and-update", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
 Also called: procedure skill, repository skill, seeded skill.
@@ -77,10 +79,10 @@ and stops when either is absent. None is a dependency of anything.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| A procedure is three files — the body and one wrapper per host — with one stamp entry each | `install()` | untested |
-| A body whose hash matches no shipped release is marked `managed: false`, reported on every reconcile and never overwritten | `install()` | untested |
-| The wrappers stay managed whatever the body's state | `install()` | untested |
-| A name dropped from `adopted` orphans its three files, reported and never deleted | `install()` | untested |
+| A procedure is three files — the body and one wrapper per host — with one stamp entry each | `init`, `update` | untested |
+| A body whose hash matches no shipped release is marked `managed: false`, reported on every reconcile and never overwritten | `init`, `update` | untested |
+| The wrappers stay managed whatever the body's state | `init`, `update` | untested |
+| A name dropped from `adopted` orphans its three files, reported and never deleted | `init`, `update` | untested |
 | `show` invokes `start` and `capture` by name and stops when either is absent | the `show` seed | untested |
 
 ### Goal
@@ -100,8 +102,8 @@ meet it and never edits it.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Every seed carries a `goal`, rendered into both wrappers above the pointer | `install()` | untested |
-| A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `install()` | untested |
+| Every seed carries a `goal`, rendered into both wrappers above the pointer | `init`, `update` | untested |
+| A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `init`, `update` | untested |
 
 ## Dependencies
 
@@ -121,8 +123,8 @@ it follows.
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | Follows `assets/reconcile-protocol.md` — the stamp's two shared fields, the hash rules, the plan-before-write phase — and stamps `components.devbook-procedures` | The protocol's **The stamp** section | It copies files and records hashes exactly the way devbook's rules land, and invents no second way. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the seeds under `assets/skills/`, the stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
-| Claude Code and Copilot Plugin APIs | Conformist | Manifests, one install skill, the hook pair, and the skill wrappers its install writes | Each host's own skill schema | A skill is reached by name only through a folder the host scans, which is what the wrapper is for. |
-| A consuming repository | Customer-Supplier, this block supplying | `devbook-procedures:install` materializes `.agents/skills/<name>.md` and a wrapper per host for each adopted name; `components.devbook-procedures` records `adopted` and every hash | The seed's `goal`, rendered into the wrapper | The body is the repository's from its first edit; only the goal is refreshed. |
+| Claude Code and Copilot Plugin APIs | Conformist | Manifests, the `init` and `update` skills, the hook pair, and the skill wrappers they write | Each host's own skill schema | A skill is reached by name only through a folder the host scans, which is what the wrapper is for. |
+| A consuming repository | Customer-Supplier, this block supplying | `devbook-procedures:init` materializes `.agents/skills/<name>.md` and a wrapper per host for each adopted name; `components.devbook-procedures` records `adopted` and every hash | The seed's `goal`, rendered into the wrapper | The body is the repository's from its first edit; only the goal is refreshed. |
 
 ### Inbound
 
@@ -132,7 +134,7 @@ it follows.
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Separate Ways | Names `start` at its `app.start` point and `capture` inside Validation, and reads `.agents/skills/<name>.md` when the flow-runner finds it | The skill names and the path — never this plugin | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
-| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.devbook-procedures`, invokes the install during setup and a fan-out, and answers its adoption question from the engine keys it just wrote | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
+| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.devbook-procedures`, invokes `init` during setup and `update` during a fan-out, and answers its adoption question from the engine keys it just wrote | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
 | Any session, either host | Conformist | Invokes `start`, `show`, `capture`, or `debug` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 
 **The goal is the seam.** Every procedure's body differs per repository; the one sentence that

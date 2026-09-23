@@ -29,7 +29,7 @@ the skill `start` or `capture` and finds it or does without; a session without o
 claude plugin marketplace add JSdotNet/devbook
 ```
 
-Then enable `devbook-procedures` with `/plugin` and run `devbook-procedures:install` in the
+Then enable `devbook-procedures` with `/plugin` and run `devbook-procedures:init` in the
 repository. It asks which of the four to adopt on the first run and records the answer as
 `components.devbook-procedures.adopted` in `.devbook/config.json`; a repository with nothing
 to start adopts neither `start`, `show`, nor `debug`, and one that takes no evidence adopts
@@ -47,7 +47,8 @@ neither `capture` nor `show`.
 
 | Skill | What it does |
 |---|---|
-| `install` | Materializes the adopted procedures and their wrappers and stamps `components.devbook-procedures` in `.devbook/config.json`. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md`. Idempotent — first install, upgrade, a changed seed, and a changed adoption are one run |
+| `init` | Materializes the adopted procedures and their wrappers and stamps `components.devbook-procedures` in `.devbook/config.json`. Refused where that stamp exists. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md` |
+| `update` | Refreshes the wrappers and every unedited body, seeds a newly adopted procedure, orphans a dropped one, and re-stamps. Refused where no stamp exists. Idempotent — an upgrade, a changed seed, and a changed adoption are one run |
 
 ## The line
 
