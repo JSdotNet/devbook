@@ -348,7 +348,8 @@ date: 2026-09-03
 ```
 
 The work-item system a repository tracks work in — GitHub issues, Jira tickets, Markdown
-chapters, or Backlog entries — bound per repository behind one set of operations. It is a
+chapters, Backlog entries, or a `plugin:skill` provider that reports a step's state off its
+pull request — bound per repository behind one set of operations. It is a
 binding and not a dependency for the same reason a role is: no repository should end up with Jira installed
 because it enabled the flows.
 
