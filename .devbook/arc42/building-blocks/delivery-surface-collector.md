@@ -198,6 +198,11 @@ only one carries this.
 That distinction is exactly what `start_run` needs in order to resume one and refuse the other,
 and it is the reason a marker is a stored value while idleness is derived.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A parked run carries a marker; an abandoned one does not, though both are idle by identical signals | `update_stage()` | untested |
+| `start_run` resumes a run that carries one and refuses one that does not | `start_run()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
+
 ### Report Export
 
 ```meta
@@ -212,6 +217,12 @@ Command-invoked, at the end of a run or long after it. **Markdown, and only Mark
 self-contained HTML report with evidence inlined is a rendering job, and rendering is the half
 this surface does not answer — so asking for another format still writes Markdown and says so
 in the result rather than failing the run over a file extension.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Markdown, and only Markdown | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
+| A request for another format still writes Markdown and says so in the result, never failing the run | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
+| The report carries the prompt history, stage output and links, QA scenarios with evidence cited by path, monitoring findings, the gate decision, and the summary | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 
 ## Runtime
 

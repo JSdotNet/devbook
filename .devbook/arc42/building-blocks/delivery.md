@@ -429,6 +429,13 @@ has no fixed tier and resolves one from the change kind it determined.
 Session Handoff belongs to no tier. It is an interrupt rather than a step, firing at whatever
 stage the run has reached when the context gauge crosses its threshold.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The code-modifying tier builds, tests, validates, opens a pull request, and verifies the result against the specification | tier resolution | untested |
+| The documentation tier runs none of those but the pull request | tier resolution | untested |
+| `flow-code` has no fixed tier and resolves one from the change kind it determined | `flow-code` | untested |
+| Session Handoff belongs to no tier, firing at whatever stage the run has reached | the flow-runner | untested |
+
 ### Extension Point
 
 ```meta
@@ -534,6 +541,11 @@ flow resolves the new one on its next run; there is nothing to migrate.
 An explicit `null` is a binding, not an absence: it says deliberately unbound, which the
 vocabulary distinguishes from a key nobody wrote.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A binding is a value: replace it and the next run resolves the new one, with nothing to migrate | config resolution | untested |
+| An explicit `null` is a binding — deliberately unbound — and never the same as a key nobody wrote | config resolution | untested |
+
 ### Flow Runner
 
 ```meta
@@ -555,6 +567,13 @@ It is also the commit point. A stage handing back is where the change set is com
 policy says so, which keeps a run's history legible without every provider having to know it
 is being recorded.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| One runner per run, holding the session for the run's whole length | the flow-runner | untested |
+| It prepends Update Base, resolves the configuration, delegates each stage to what the extension points bind, and tracks the run against the surface | the flow-runner | untested |
+| The gate is enforced by the runner, never by anything a provider can be | the flow-runner | untested |
+| The commit point is a stage handing back, when policy says so | the flow-runner | untested |
+
 ### Pull Request Lane
 
 ```meta
@@ -568,6 +587,12 @@ pull request itself is the host's own action rather than a skill here.
 Invocation semantics: command-invoked, and separately from a run — these skills are the one
 part of this block routinely used on a change no flow produced. Unbound, the `deliver` service
 writes file artifacts only and opens nothing.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Raising the pull request is the host's own action, never a skill here | the lane skills | untested |
+| The lane runs separately from a run, on a change no flow produced | the lane skills | untested |
+| Unbound, `deliver` writes file artifacts only and opens nothing | `deliver` | untested |
 
 ### Run Started
 
@@ -689,6 +714,12 @@ Two of the five are answered by the live session rather than by configuration, w
 keeps the hosts from re-diverging the moment one gains what the other has. Unbound is the
 resting state of the whole set.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A slot is bound or takes its documented unbound default, and is never branched on | the shared assets | untested |
+| An asset carrying an if-this-host clause has not used a slot | convention | untested |
+| Unbound is the resting state of the whole set | the shared assets | untested |
+
 ### Change Kind
 
 ```meta
@@ -705,6 +736,12 @@ goes.
 It is a claim about the change, never about the flow that carried it: `flow-code` resolves one
 at run time and reports it, and a flow with a fixed tier still records it because the QA depth
 downstream depends on it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| It is resolved once, early, and is the input to both the phase tier and the QA depth | the flow-runner | untested |
+| It is a claim about the change, never about the flow that carried it | the flow-runner | untested |
+| A flow with a fixed tier still records it, because the QA depth downstream depends on it | the flow-runner | untested |
 
 ## Runtime
 

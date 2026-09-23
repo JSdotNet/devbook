@@ -107,6 +107,13 @@ from `plugins/devbook/tools/devbook-meta/` in the repository that vendors them; 
 it names `devbook:install` and draws nothing. That runtime load is the "published shape to
 import" [the surfaces record](../adr/surfaces.md) waited for, and what closes it.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The reference graph is rebuilt from disk on open, so it can never show a stale index | `extension.mjs` | untested |
+| The canvas reads the Markdown, never `_meta/`, and writes nothing | `extension.mjs` | untested |
+| It bundles no parser: `graph.mjs`, `outline.mjs`, and `metadata.mjs` load at runtime from the installed path, or the vendored one | `extension.mjs` | untested |
+| With neither path present it names `devbook:install` and draws nothing | `extension.mjs` | untested |
+
 ## Dependencies
 
 ```meta

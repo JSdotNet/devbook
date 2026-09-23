@@ -75,6 +75,14 @@ files, reported and never deleted.
 `show` is the one procedure that names two others: it invokes `start` and `capture` by name
 and stops when either is absent. None is a dependency of anything.
 
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A procedure is three files — the body and one wrapper per host — with one stamp entry each | `install()` | untested |
+| A body whose hash matches no shipped release is marked `managed: false`, reported on every reconcile and never overwritten | `install()` | untested |
+| The wrappers stay managed whatever the body's state | `install()` | untested |
+| A name dropped from `adopted` orphans its three files, reported and never deleted | `install()` | untested |
+| `show` invokes `start` and `capture` by name and stops when either is absent | the `show` seed | untested |
+
 ### Goal
 
 ```meta
@@ -89,6 +97,11 @@ form named honestly; `debug` names a cause and proves it, doing the debugging it
 leaving nothing behind. It is the `goal` field of the plugin's seed, rendered into both
 wrappers above the pointer, and refreshed on every upgrade. A repository edits the body to
 meet it and never edits it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every seed carries a `goal`, rendered into both wrappers above the pointer | `install()` | untested |
+| A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `install()` | untested |
 
 ## Dependencies
 
