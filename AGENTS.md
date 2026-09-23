@@ -38,7 +38,7 @@ change. The workflow calls `--check` only and never refreshes `_meta/`.
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only
 resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
-`devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
+`devbook-validate` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and

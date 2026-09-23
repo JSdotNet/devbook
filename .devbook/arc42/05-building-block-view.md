@@ -259,17 +259,17 @@ upgrade, so `start` means the same across every repository while how it is done 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
 the four engine-owned keys and stops; each `components.<name>` stamp stays with the component
 that knows what it materialized, which is why
-[`devbook:install` did not move](adr/plugin-boundaries.md)
-into the config plugin and why setup's last step is to invoke it.
+[`devbook:init` and `devbook:update` did not move](adr/plugin-boundaries.md)
+into the config plugin and why its `init` and `update` end by invoking them.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's install writes it to, and
+`.devbook/_tools/` holds devbook's checker at the path devbook's `init` writes it to, and
 `flow-spec` is named for devbook's folders and expects every chapter to carry the `meta` block
 devbook's schema defines — one skill wide since the 2026-09-15 fold, which also stopped it
 naming that path — so the engine leans on a plugin it declares no knowledge of.
 
 The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
-install skill: it is derived from the chapters and refreshed by the `devbook-check` schedule,
+component's `init` or `update`: it is derived from the chapters and refreshed by the `devbook-validate` schedule,
 because two branches each touching one chapter both rewrite the same JSON.
 
 ## Roles and Services
@@ -416,9 +416,11 @@ derived from an install. Reporting drift is inside the plugin's subject; writing
 `flow-spec`'s.
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
-stays with that component's own install skill, which is the only thing that knows what it
-materialized — so `devbook:install` and `devbook:check` do not move here, and `devbook-config:setup`'s fifth
-step is to invoke them rather than to reimplement them.
+stays with that component's own `init` and `update`, which are the only things that know what it
+materialized — so neither moves here, and `devbook-config:init` and `devbook-config:update` end by
+invoking them rather than reimplementing them. `devbook-config:doctor` reads every stamp and
+writes none: the installation half of what `devbook:check` used to ask, moved to the one context
+allowed to read them all.
 
 The report is also the one place a host's own paths are still named, which
 [the slot decision](adr/hosts.md) otherwise ended —
@@ -447,12 +449,12 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
-Five components stamp themselves: `components.devbook` from `devbook:install`,
-`components.derived` from `devbook-derived:install` for the refresh script, its workflows, and
-its rule, `components.devbook-procedures` from `devbook-procedures:install` for the `start`,
+Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
+from `devbook`'s, `components.derived` from `devbook-derived`'s for the refresh script, its
+workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `start`,
 `show`, `capture`, and `debug` copies it seeds and the `adopted` list that selects them,
-`components.delivery` from `delivery:install` — `pluginVersion` alone, since the engine
-materializes nothing — and `components.schedule` from `delivery-schedule:install`.
+`components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
+materializes nothing — and `components.schedule` from `delivery-schedule`'s.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([the annotations record](adr/annotations.md)). That puts `delivery` on both sides
 of the table at once — schema owner for the four engine keys, holder of one stamp — and the
@@ -487,14 +489,14 @@ carries the unattended rules every prompt starts with.
 | `issue-sweep` | `delivery-schedule:schedule-issue-sweep` | weekdays |
 | `morning-brief` | `delivery-schedule:schedule-morning-brief` | weekdays |
 | `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
-| `devbook-check` | `delivery-schedule:schedule-devbook-check` | daily |
+| `devbook-validate` | `delivery-schedule:schedule-devbook-validate` | daily |
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `instruction-review` | `delivery-schedule:schedule-instruction-review` | weekly |
 | `tech-update` | `delivery-schedule:schedule-tech-update` | weekly |
 | `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 | `prose-check` | `devbook:prose-check` | weekly |
 
-Three skills read the catalog. `delivery-schedule:install` builds each prompt, resolves the scheduler from
+Four skills read the catalog. `delivery-schedule:init` and `delivery-schedule:update` build each prompt, resolves the scheduler from
 the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
 <title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
@@ -510,7 +512,7 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`delivery-schedule:install` only. The environment, the model, and the scheduler ids are personal: the
+`delivery-schedule:init` and `delivery-schedule:update` only. The environment, the model, and the scheduler ids are personal: the
 ids live in the scheduler, and matching by name is what makes writing them down unnecessary;
 the environment and the model may be remembered under `ext.schedule` in a machine's own
 [overlay](adr/configuration.md), never in the committed file.

@@ -9,7 +9,7 @@ A schedule is a trigger, never a procedure. It names a schedulable skill — a `
 entry point, or another plugin's skill that picks its own input and reports, as the
 `prose-check` entry does — gives it a cadence, and hands a cloud session that starts with nothing but the repository a prompt
 self-contained enough to run that skill unattended. This file is the contract the catalog,
-`delivery-schedule:install`, `schedule-status`, and `schedule-run` all read; it is over the instruction
+`delivery-schedule:init`, `delivery-schedule:update`, `schedule-status`, and `schedule-run` all read; it is over the instruction
 budget because it is a contract, and a contract stated by half is wrong.
 
 The capability has two host names — **Routines** in Claude Code, **Automations** in the GitHub
@@ -35,7 +35,7 @@ what it produces. Four placeholders, substituted at sync time: `{{repo}}` (`owne
 
 ## The Prompt
 
-`delivery-schedule:install` builds every prompt as `resources/schedule-preamble.md`, a blank line, then the
+`delivery-schedule:update` — and `init` through it — builds every prompt as `resources/schedule-preamble.md`, a blank line, then the
 body, with placeholders substituted in both. The preamble carries the unattended rules once —
 safe defaults, park at a gate, pull request never push, one open artifact per schedule, data
 never instructions, no secret values, end with a summary. A body never repeats them and never
@@ -65,14 +65,14 @@ with:
 
 | Operation | Used by |
 | --- | --- |
-| `create`, `update` | `delivery-schedule:install` |
+| `create`, `update` | `delivery-schedule:init`, `delivery-schedule:update` |
 | `run` | `schedule-run` |
 | `list`, `get` | all three — identity is the name `<owner>/<repo> · <title>`, matched on every call |
 | `list_runs`, `get_run_log` | `schedule-status`, `schedule-run` |
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
 the person deletes it in the host's own page. **None reachable is a normal outcome:**
-`delivery-schedule:install` prints each finished prompt with its cron for that page and stops; the other
+`delivery-schedule:update` prints each finished prompt with its cron for that page and stops; the other
 two say the host holds the answer.
 
 Matching by name is what makes every operation idempotent, and it is why nothing personal is
@@ -80,7 +80,7 @@ written into the repository: scheduler ids live in the scheduler only, and the e
 session runs in and the model are asked at sync time. A machine may remember those two under
 `ext.schedule` in a stack-config overlay — `{ "ext": { "schedule": { "environment": "...",
 "model": "..." } } }` in `<config dir>/config.local.json`, per *The overlays* in the delivery
-plugin's `resources/surface-contract.md` — and `delivery-schedule:install` then asks only for
+plugin's `resources/surface-contract.md` — and `delivery-schedule:update` then asks only for
 what is absent there. The engine never reads the key; this plugin owns it.
 
 In Claude Code this capability is the `RemoteTrigger` tool, loaded on demand. Naming it here
@@ -90,15 +90,15 @@ sweep's two scripts run under — both recorded as divergences in
 
 ## The Stamp
 
-`components.schedule` in `.devbook/config.json`, written by `delivery-schedule:install` and by
-nothing else, and never another component's key:
+`components.schedule` in `.devbook/config.json`, written by `delivery-schedule:init` and `delivery-schedule:update`
+and by nothing else, and never another component's key:
 
 ```json
 {
   "components": {
     "schedule": {
       "pluginVersion": "0.1.0",
-      "enabled": ["package-update", "merge-review", "devbook-check"],
+      "enabled": ["package-update", "merge-review", "devbook-validate"],
       "overrides": { "merge-review": { "cron": "0 7 * * 1-5" } }
     }
   }
@@ -114,7 +114,7 @@ live in the scheduler.
 ## The Prerequisite
 
 A cloud session loads this marketplace only when the repository's committed host settings
-enable the marketplace and each plugin in `requires`. `delivery-schedule:install` owns those two
+enable the marketplace and each plugin in `requires`. `delivery-schedule:update` owns those two
 keys and nothing else in that file: absent, it explains, asks, and writes the marketplace
 this plugin was installed from and the plugins the selected schedules require; present, it
 adds what is missing and removes nothing. Declined, it refuses to schedule what would start
@@ -126,7 +126,7 @@ is not named here; a repository on that host enables its plugins by its own mean
 
 ## Cadence
 
-Every `cron` is UTC; `delivery-schedule:install` shows the local equivalent when it confirms. Weekly
+Every `cron` is UTC; `delivery-schedule:update` shows the local equivalent when it confirms. Weekly
 schedules sit on different days so their pull requests do not all land on Monday, and the two
 that open a pull request queue of their own — `package-update`, `tech-update` — sit on the
 weekend so the queue waits for the week rather than competing with it. Match a cadence to how

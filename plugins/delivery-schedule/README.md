@@ -16,7 +16,7 @@ claude plugin marketplace add JSdotNet/devbook
 ```
 
 Enable `delivery-schedule` with `/plugin` — the host installs `delivery` with it — then run
-`delivery-schedule:install` in the repository.
+`delivery-schedule:init` in the repository.
 
 ## The entry points
 
@@ -25,7 +25,7 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
-| `schedule-devbook-check` | Runs `devbook:check` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when the ledger or the stamp needs a person |
+| `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when `devbook-config:doctor` finds the installation needs a person |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
@@ -57,7 +57,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a `schedule-report` brief, replaced while unread |
 | `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
 | `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
-| `devbook-check` | Daily 03:00 | `schedule-devbook-check`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
+| `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
@@ -68,7 +68,7 @@ Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
 cadence under `components.schedule.overrides` rather than in the catalog.
 
-`devbook-check` is one schedule, not one per folder. The generator walks every adopted folder
+`devbook-validate` is one schedule, not one per folder. The generator walks every adopted folder
 in a single pass, and the failures worth catching — a reference into a chapter another folder
 renamed — are exactly the ones a per-folder split would not see.
 
@@ -81,11 +81,12 @@ and replaces the body: nothing between two runs is lost, and closing the issue i
 acknowledged. The closed issues are the record. `issue-sweep`'s brief keeps the same one
 open issue without a window: the rows a person has not decided fold into the next run's.
 
-## The three catalog skills
+## The four catalog skills
 
 | Skill | Does |
 |---|---|
-| `delivery-schedule:install` | Creates or updates the selected schedules, disables the deselected, writes `components.schedule` |
+| `delivery-schedule:init` | Asks which schedules to enable, creates them, and stamps `components.schedule`; refused where that stamp exists |
+| `delivery-schedule:update` | Creates or updates the selected schedules, disables the deselected, rewrites `components.schedule`; refused where no stamp exists |
 | `schedule-status` | Lists them with their last runs, what each published, and the log where one failed |
 | `schedule-run` | Fires one now and reports the run |
 
@@ -124,7 +125,7 @@ data; only the scheduler resolution knows which tool answers.
 ## Before the first schedule
 
 A cloud session loads this marketplace only if the repository's committed host settings enable
-it and the plugins a schedule requires. `delivery-schedule:install` owns those two keys: it offers
+it and the plugins a schedule requires. `delivery-schedule:init` and `delivery-schedule:update` own those two keys: it offers
 to write what is missing, and refuses to schedule what would start without its skill when
 you decline. The first run is still the proof: fire one with
 `schedule-run` and read it with `schedule-status` before trusting the cadence.

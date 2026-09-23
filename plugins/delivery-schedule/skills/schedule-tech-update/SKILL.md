@@ -36,5 +36,5 @@ manifest and a chapter is a fact the run can state and a person can accept.
 - Do not mark a technology `adopted`, `hold`, or `retired` from here: a rating is a person's
   decision, and this run proposes it in the pull request at most.
 - Do not commit the temporary inventory JSON the scripts emit.
-- Do not regenerate a committed `_meta/` index here; the daily `devbook-check` schedule owns
+- Do not regenerate a committed `_meta/` index here; the daily `devbook-validate` schedule owns
   that refresh.

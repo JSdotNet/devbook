@@ -153,7 +153,7 @@ write.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `schedule-devbook-check` refreshes the committed indexes where this plugin materialized the refresh path, and skips the step where it did not | The refresh script's path | Nothing but the path: absent, the run fixes Markdown only. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `schedule-devbook-validate` refreshes the committed indexes where this plugin materialized the refresh path, and skips the step where it did not | The refresh script's path | Nothing but the path: absent, the run fixes Markdown only. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Separate Ways | `chapter-review-queue` prefers the committed indexes and scans when there are none | The derived-artifacts envelope | Nothing: the scan fallback is the contract. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.derived` and invokes `devbook-derived:init` or `devbook-derived:update` during a fan-out, after devbook's | The stamp shape and the two skill names | That the stamp exists and keeps its shape; it writes none of it. |
 | The Backlog desktop app, outside this repository | Conformist | Reads `.devbook/_meta/index.json` and `graph.json` off disk | The derived-artifacts envelope and `schemaVersion` | That the files are committed and current on the default branch — which is what the nightly refresh is for. |
