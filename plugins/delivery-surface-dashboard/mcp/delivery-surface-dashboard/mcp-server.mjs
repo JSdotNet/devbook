@@ -187,6 +187,22 @@ function normalizeWorkItem(workItem) {
     return Object.keys(issue).length ? issue : null;
 }
 
+// A host that substitutes nothing hands the token over as written; that is no id at all.
+function normalizeSessionId(sessionId) {
+    if (typeof sessionId !== "string") return null;
+    const id = sessionId.trim();
+    return id && !id.startsWith("${") ? id : null;
+}
+
+// Appends, never replaces, and never twice. Returns whether the run changed.
+function addSessionId(run, sessionId) {
+    const id = normalizeSessionId(sessionId);
+    if (!Array.isArray(run.sessionIds)) run.sessionIds = [];
+    if (!id || run.sessionIds.includes(id)) return false;
+    run.sessionIds.push(id);
+    return true;
+}
+
 function normalizeLinks(links) {
     if (!Array.isArray(links)) return undefined;
     return links
@@ -635,11 +651,15 @@ const tools = [
                     type: "boolean",
                     description: "If true (default), reattach to an existing in_progress run for the same skillId instead of starting a duplicate. Set false to force a new run.",
                 },
+                sessionId: {
+                    type: "string",
+                    description: "The host's own id for the agent session driving this run. Recorded in the run's sessionIds; a reattached run appends it beside the earlier ids rather than replacing them.",
+                },
             },
             required: ["skillId", "title", "stages"],
         },
         handler: async (input) => {
-            const { skillId, title, stages, originalPrompt, promptHistory, workItem, changeKind, resume } = input;
+            const { skillId, title, stages, originalPrompt, promptHistory, workItem, changeKind, resume, sessionId } = input;
             if (!skillId || !title || !Array.isArray(stages) || stages.length === 0) {
                 throw new ToolError("skillId, title, and a non-empty stages[] are required.");
             }
@@ -660,10 +680,13 @@ const tools = [
                     (r) => r.skillId === skillId && r.status === "in_progress" && (!isIdle(r) || isHandoffPending(r))
                 );
                 if (existing) {
+                    // A handoff continues the run in a new session, so its id joins the
+                    // earlier ones: which sessions drove a run is history, not a slot.
+                    const sessionAdded = addSessionId(existing, sessionId);
                     // Clear both stamps before the new session does anything: while
                     // `idleSince` is set, the telemetry hook drops this session's tool calls
                     // rather than attributing them to the run.
-                    if (existing.idleSince || isHandoffPending(existing)) {
+                    if (sessionAdded || existing.idleSince || isHandoffPending(existing)) {
                         clearHandoff(existing);
                         clearIdle(existing);
                         existing.updatedAt = new Date().toISOString();
@@ -690,6 +713,7 @@ const tools = [
                 title,
                 status: "in_progress",
                 changeKind: changeKind || null,
+                sessionIds: [],
                 approval: { state: "pending", decidedAt: null, note: "" },
                 originalPrompt: normalizedOriginalPrompt || (initialPrompt ? initialPrompt.prompt : ""),
                 promptHistory: normalizedPromptHistory,
@@ -711,6 +735,7 @@ const tools = [
                 summary: "",
                 insights: [],
             };
+            addSessionId(run, sessionId);
             await writeRun(baseDir, run);
             await writeActive({ runId: run.id, stage: null, updatedAt: now });
             bus.emit("update");

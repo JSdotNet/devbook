@@ -67,9 +67,12 @@ try {
         title: "Handoff round trip",
         stages: [{ name: "Implementation" }, { name: "Build & Test" }, { name: "Personal Validation" }],
         changeKind: "new-functionality",
+        sessionId: "s1",
     });
     const runId = started.runId;
     check("start_run creates a run", Boolean(runId) && started.resumed !== true);
+    const first = JSON.parse(readFileSync(path.join(STATE, "runs", `${runId}.json`), "utf8"));
+    check("start_run records the session id", JSON.stringify(first.sessionIds) === JSON.stringify(["s1"]), JSON.stringify(first.sessionIds));
 
     await call("update_stage", { runId, stageName: "Implementation", status: "in_progress" });
 
@@ -100,6 +103,7 @@ try {
         skillId: "example-feature",
         title: "Handoff round trip",
         stages: [{ name: "Implementation" }, { name: "Build & Test" }, { name: "Personal Validation" }],
+        sessionId: "s2",
     });
     check("start_run reattaches instead of duplicating", resumed.resumed === true && resumed.runId === runId, `resumed=${resumed.resumed} id=${resumed.runId}`);
 
@@ -108,6 +112,12 @@ try {
     check("reattach clears the pending flag but keeps the note", live.handoff && live.handoff.pending === false && live.handoff.note.includes("tests not run yet"));
     check("the handed-off stage is still in_progress", live.stages.find((s) => s.name === "Implementation").status === "in_progress");
     check("changeKind survived the handoff", live.changeKind === "new-functionality", live.changeKind);
+    check("reattach appends the new session id beside the first", JSON.stringify(live.sessionIds) === JSON.stringify(["s1", "s2"]), JSON.stringify(live.sessionIds));
+
+    await call("start_run", { skillId: "example-feature", title: "Handoff round trip", stages: [{ name: "Implementation" }], sessionId: "s2" });
+    await call("start_run", { skillId: "example-feature", title: "Handoff round trip", stages: [{ name: "Implementation" }], sessionId: "${CLAUDE_SESSION_ID}" });
+    const again = JSON.parse(readFileSync(path.join(STATE, "runs", `${runId}.json`), "utf8"));
+    check("a repeated or unsubstituted session id is not recorded", JSON.stringify(again.sessionIds) === JSON.stringify(["s1", "s2"]), JSON.stringify(again.sessionIds));
 
     const all = await call("list_runs", {});
     check("no duplicate run was created", (Array.isArray(all) ? all : all.runs || []).length === 1);
