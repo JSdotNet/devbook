@@ -1,6 +1,6 @@
 ---
 name: schedule-run
-description: 'Fire one of this repository''s schedules now, outside its cadence, and report the run. Use when: running a routine or automation now, testing one right after delivery-schedule:install, or re-running one that failed.'
+description: 'Fire one of this repository''s schedules now, outside its cadence, and report the run. Use when: running a routine or automation now, testing one right after delivery-schedule:init or delivery-schedule:update, or re-running one that failed.'
 ---
 
 # schedule run
