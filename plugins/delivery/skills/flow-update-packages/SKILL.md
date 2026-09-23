@@ -112,4 +112,5 @@ of truth.
   Planning, Implementation, Security Validation, New Feature Adoption when the depth is a
   framework upgrade, Build & Test, Validation, Personal Validation, Create Pull Request,
   Verification, Work Item Update, Summary.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - During Update Planning, open/update `render_markdown` with the update and rollback plan.

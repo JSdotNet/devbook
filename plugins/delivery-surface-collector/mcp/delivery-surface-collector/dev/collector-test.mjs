@@ -91,9 +91,11 @@ try {
         stages: [{ name: "Scope" }, { name: "Implementation" }, { name: "Validation" }, { name: "Work Item Update" }, { name: "Summary" }],
         originalPrompt: "add the export endpoint",
         changeKind: "new-functionality",
+        sessionId: "s1",
     });
     check("start_run records a run", Boolean(run.runId) && run.resumed === false, run.runId);
     check("it hands back no session title, because it observes no writes", run.sessionTitle === null);
+    check("it records the session id", JSON.stringify((await call("get_run", { runId: run.runId })).sessionIds) === JSON.stringify(["s1"]));
 
     await call("record_prompt", { runId: run.runId, prompt: "also cover the CSV case" });
     const withPrompt = await call("get_run", { runId: run.runId });
@@ -133,12 +135,13 @@ try {
     const handed = await call("set_run_context", { runId: run.runId, handoff: true, handoffNote: "Summary half written. Resume with the same skill." });
     check("a handoff records the stage in flight", handed.handoff.pending === true && handed.handoff.stage === "Summary", handed.handoff.stage);
 
-    const resumed = await call("start_run", { skillId: "example-feature", title: "Export endpoint", stages: [{ name: "Scope" }] });
+    const resumed = await call("start_run", { skillId: "example-feature", title: "Export endpoint", stages: [{ name: "Scope" }], sessionId: "s2" });
     check("start_run reattaches instead of duplicating", resumed.resumed === true && resumed.runId === run.runId, resumed.runId);
     const afterResume = await call("get_run", { runId: run.runId });
     check("reattach clears the pending flag but keeps the note", afterResume.handoff.pending === false && Boolean(afterResume.handoff.note));
     check("the handed-off stage is still in flight", afterResume.stages.find((s) => s.name === "Summary").status === "in_progress");
     check("the stage list survived the reattach", afterResume.stages.length === 5, `${afterResume.stages.length} stages`);
+    check("reattach appends the new session id beside the first", JSON.stringify(afterResume.sessionIds) === JSON.stringify(["s1", "s2"]), JSON.stringify(afterResume.sessionIds));
     const runs = await call("list_runs");
     check("no duplicate run was opened", runs.length === 1, `${runs.length} runs`);
 

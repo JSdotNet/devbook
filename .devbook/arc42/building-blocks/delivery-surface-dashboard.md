@@ -208,6 +208,7 @@ result.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | One record per run, keyed by worktree; a `start_run` naming a parked run reattaches rather than opening a second | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
+| The record lists every session that drove it in `sessionIds`: a reattach appends the caller's `sessionId`, never replaces one, never records one twice, and drops a token the host left unsubstituted | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | A stage finishing twice is recorded twice | `update_stage()` | untested |
 | Evidence paths resolve inside the git worktree root; anything outside is refused | `update_stage()` | untested |
 | Telemetry is captured from tool events and never accepted from a caller | telemetry hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
@@ -371,7 +372,7 @@ sequenceDiagram
 
     C->>S: open_dashboard
     S-->>C: dashboardUrl, or inline as an MCP App
-    C->>S: start_run(flow, phases, changeKind, worktree)
+    C->>S: start_run(flow, phases, changeKind, worktree, sessionId)
     alt a parked run exists for this worktree
         S-->>C: reattached to it, on the stage it stopped at
     else

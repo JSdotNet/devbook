@@ -118,6 +118,7 @@ the source of truth.
 
 - `start_run` with `skillId: "sre-alerts-to-work-items"` and these stages: Fetch Active
   Alerts, Deduplicate Against Open Items, Create Work Items, Summary.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 
 ## Output
 

@@ -292,6 +292,7 @@ the source of truth.
 
 - `start_run` with `skillId: "pr-merge-ready"` and these stages: Select the Pull Request, Score, Confirm,
   Remediate, Merge Decision, Report.
+  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - Under `/loop`, start a new run per pass so each pass is separately traceable.
 
 ## Output

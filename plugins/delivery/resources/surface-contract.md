@@ -372,6 +372,7 @@ is the normal case and never a gap.
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
 | `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |
+| `session-id` | The host's own id for the current agent session. Claude Code substitutes `${CLAUDE_SESSION_ID}` in skill content, so a skill that calls `start_run` carries that token verbatim; Copilot CLI substitutes nothing in skill content and hands its session id only to hooks, in their payload | Omit `sessionId` — a token still reading `${…}` is the unbound case |
 
 **Behavioural divergence is a capability, not a host.** `stage-delegation` asks whether
 sub-agents exist, not which host is running, so a stage declares an optional delegation hint
@@ -424,9 +425,15 @@ With `delivery.surface.lifecycle@1` bound:
 - **Open once.** Call `open_dashboard` once per session and surface it per **Surfacing the
   Surface** below; the page updates itself live, so it is opened once and left open. Then
   call `start_run` with the skill's `skillId`, the full ordered stage list (its own stages
-  followed by the shared phase names for its tier), and the `changeKind` when known.
+  followed by the shared phase names for its tier), the `changeKind` when known, and
+  `sessionId` from the `session-id` host slot when it is bound.
   `start_run` reattaches to an existing `in_progress` run for the same skill and returns
   `resumed: true`; continue from the first stage that is not `done` instead of restarting.
+- **`sessionId` is optional on both sides.** It lets a surface attach the run to the session
+  that drove it instead of guessing from worktree and time. A surface records it in a
+  `sessionIds` array: a fresh run starts it, and a resumed run — a handoff — appends the new
+  id beside the earlier ones, never replacing them and never recording one twice. A surface
+  that ignores the argument stays conformant.
 - **Persist gating state** with `set_run_context`: the `changeKind` as soon as it is
   determined, the `approval` decision recorded at every gate, and the resolved model.
 - **Before each stage**, `update_stage` with `status: "in_progress"`; **after each stage**,
