@@ -92,7 +92,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // `### Invariants` table is still a legal structural heading, and no state
 // exists for a script to move — so there is no `migrations/014-*`. Converting
 // a table into chapters is editorial work a repository does when it chooses to.
-export const CONTRACT_VERSION = 14;
+// Version 15 changes no chapter shape: it renames the skill ids a stack config
+// binds — every `install` becomes `init` and `update`, `devbook:check` becomes
+// `devbook:validate`, `devbook-config:setup` becomes `devbook-config:init` —
+// and the `devbook-check` schedule. A config still naming an old id binds a
+// skill that no longer exists, so `migrations/015-openspec-verbs/` rewrites
+// the committed config and both overlay layers.
+export const CONTRACT_VERSION = 15;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

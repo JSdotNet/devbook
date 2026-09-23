@@ -389,7 +389,10 @@ which removes the `.gitignore` block and moves a checkout-layer personal file ou
 clone now that nothing personal lives in one; the fourth is
 `013-decision-rungs-are-domains`, which takes the `approved` and `accepted` rungs and
 their six record fields off every folder but `domain/`, and names the `tech/` and `ai/`
-chapters whose original rating no script can restore. The
+chapters whose original rating no script can restore; the fifth is `015-openspec-verbs`,
+which rewrites the skill ids a stack config binds — in the committed config and in both
+overlay layers — now that every `install` is `init` and `update` and `check` is `validate`.
+Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -424,7 +427,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **14**, covering the metadata schema a repository authors
+One number, currently **15**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -461,7 +464,12 @@ Every part of it is an added value with a safe default — the aggregate's
 `### Invariants` table is still a legal structural heading, and nothing written
 under 13 stops validating — so it ships no migration folder. Converting a table
 into chapters is editorial work a repository does when it chooses to, and no
-script can write the scenarios that make the move worth anything.
+script can write the scenarios that make the move worth anything. 15 changes no
+chapter shape: it renames the skill ids a stack config binds — `devbook:install`
+to `devbook:update`, `devbook:check` to `devbook:validate`, and every other
+renamed provider — and the `devbook-check` schedule to `devbook-validate`. A
+config still naming an old id binds a skill that no longer exists, so it ships as
+`015-openspec-verbs`.
 
 ## Folder structure
 

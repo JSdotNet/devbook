@@ -20,13 +20,13 @@
   },
   "extensions": {
     "session.start": [
-      "devbook:check"
+      "devbook:validate"
     ],
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
     "flow.end": [
-      "devbook:install"
+      "devbook:update"
     ]
   },
   "policy": {
@@ -47,7 +47,7 @@
   "components": {
     "devbook": {
       "pluginVersion": "1.2.0",
-      "contractVersion": 12,
+      "contractVersion": 15,
       "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
         "AGENTS.md#devbook": {
@@ -59,7 +59,9 @@
       "migrations": [
         { "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" },
         { "id": "011-context-md", "applied": "2026-09-18" },
-        { "id": "012-no-checkout-overlay", "applied": "2026-09-21" }
+        { "id": "012-no-checkout-overlay", "applied": "2026-09-21" },
+        { "id": "013-decision-rungs-are-domains", "applied": "2026-09-23" },
+        { "id": "015-openspec-verbs", "applied": "2026-09-23" }
       ]
     },
     "derived": {
@@ -82,7 +84,7 @@
     },
     "schedule": {
       "pluginVersion": "1.2.0",
-      "enabled": ["devbook-check", "tech-update", "merge-review", "package-update"]
+      "enabled": ["devbook-validate", "tech-update", "merge-review", "package-update"]
     },
     "delivery-surface-dashboard": {
       "sessionNaming": {
