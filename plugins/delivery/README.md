@@ -123,8 +123,8 @@ skill changes who runs capture, never whether it runs.
   ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
-- **A tracker.** GitHub, Jira, Markdown chapters, or Backlog entries, whichever
-  `delivery.tracker` names. Unbound, a flow runs to its file artifacts and opens nothing.
+- **A tracker.** GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill`
+  provider, whichever `delivery.tracker` names. Unbound, a flow runs to its file artifacts and opens nothing.
 - **A surface.** A dashboard, a canvas, and a headless collector are three implementations of
   one capability, resolved by pattern from the live tool list; an implementation need not be a
   plugin from this marketplace, and the Backlog desktop application is the one that is not.
