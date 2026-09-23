@@ -21,14 +21,14 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Seventeen skills in two halves: fourteen entry points that pick their own input, and three that
+Nineteen skills in two halves: fifteen entry points that pick their own input, and four that
 put a trigger in the scheduler and read it back. Every one of them is also runnable by hand,
 which is how a cadence gets proved before it is trusted. Beside them: the shipped catalog, four
 contracts, the catalog checker, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, fifteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
@@ -49,6 +49,19 @@ the committed indexes where `devbook-derived` keeps them, and land one pull requ
 schedule-report issue when `devbook-config:doctor`, where installed, finds the installation
 needs a person. The daily `devbook-validate`
 trigger's target: the catalog names a schedule skill, never a foundation skill directly.
+
+### schedule-devbook-verify
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict"]
+```
+
+Run `devbook:verify-change` over every adopted folder, one run per kind, and open one
+`devbook-drift` issue per `code-ahead` or `conflict` row that no open pull request, approved
+change, or earlier issue already covers. A `code-ahead` row names a capture plan waiting to be
+asked for; a `spec-ahead` row, a change nobody proposed, stays in the schedule-report table.
+It reports and never writes a chapter or plans a capture on its own. The weekly
+`devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
 
 ### schedule-instruction-review
 
@@ -521,7 +534,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: eleven trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: twelve trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| settings{"Would a cloud session load the marketplace?"}
@@ -599,7 +612,7 @@ capability — a divergence taken on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and two of its own wrappers invoke `devbook:validate` and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
@@ -615,7 +628,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the eleven schedules
+**Naming a target is deliberately weaker than depending on one.** One of the twelve schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.
