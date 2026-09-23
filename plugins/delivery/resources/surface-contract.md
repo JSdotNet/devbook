@@ -209,6 +209,14 @@ A provider id is `plugin:skill`, a bare `plugin` (resolved through its role), or
 provider that does not resolve degrades to the point's unbound behaviour, named once in the
 run summary — never a silent skip, and never a reason to fail the run.
 
+**A `spec` provider may return a specification approved elsewhere.** Bound as
+`"spec": "your-spec-plugin:your-approved-spec-skill"`, it reads the specification the work item
+points at, already approved where it was written, and returns it unchanged. The flow-runner
+uses what it returns as the run's specification: it derives nothing inline and neither
+rewrites nor supplements it. A `spec` approval gate with `show: artifact` renders that
+returned specification — what the provider returned, not a summary of it — and `revise`
+re-runs the provider with the notes, as at any point.
+
 ## Gates
 
 A gate is the human-in-the-loop mechanism. It presents the output of the point it is attached
