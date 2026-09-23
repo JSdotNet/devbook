@@ -81,9 +81,16 @@ look, what to do, and what should happen.**
 ## Step 4 — Present The Reviews
 
 - **The code review** of the change set, for the person to read.
-- **The recorded QA review** when Validation ran: scenarios with pass/fail, monitoring
-  findings, and the captured evidence paths. When it was skipped, say so and why — never
-  imply a result that was not produced.
+- **The recorded QA review** when Validation ran: the scenarios in order, each with its
+  pass/fail and its evidence, then the monitoring findings. When it was skipped, say so and
+  why — never imply a result that was not produced.
+- **Show image evidence; never only list it.** Display every screenshot, and every frame of a
+  per-step sequence, inline in the conversation directly under its scenario's pass/fail,
+  using whatever file or image display the host offers. Reading an image into your own
+  context shows the person nothing — it has to reach their view. Only when the host cannot
+  display images, give each path as a clickable link and say once why. Non-image evidence — a
+  video, a trace, a log extract — stays a clickable path. Validation's sub-agent still returns
+  paths only; this session is where the images are shown.
 
 Then stop. Hand control back and wait. The decision, its recording, and everything downstream
 of it are the gate's, in `resources/flow-phases.md`.
