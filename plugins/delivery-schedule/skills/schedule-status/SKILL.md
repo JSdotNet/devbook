@@ -22,7 +22,7 @@ Read-only. The scheduler, the identity rule, and the stamp are in
    an open issue labelled `schedule-report`.
 5. **Report** one table: schedule, cron, enabled, last run with its outcome, what it published
    as a link, and one line from the log at the point a failed run went wrong. One in the stamp
-   the scheduler does not know is `not scheduled — run delivery-schedule:install`; a scheduled one the
+   the scheduler does not know is `not scheduled — run delivery-schedule:update`; a scheduled one the
    stamp does not list is `unmanaged`.
 
 An empty run list is not proof a schedule never fired: a fire refused before a session existed

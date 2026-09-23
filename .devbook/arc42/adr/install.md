@@ -5,8 +5,9 @@ date: 2026-09-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
-A plugin reaches a repository through its `install` skill and in no other way. The install
-writes its payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under
+A plugin reaches a repository through its `init` skill, is kept current by its `update`, and
+reaches it in no other way. `init` refuses where the component's stamp exists and `update`
+where it does not. Either writes the payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under
 `.devbook/_tools/`, one marker-fenced section of `AGENTS.md`, root wrappers where absent — and
 records every copy's hash in the repository's stamp. A copy that still hashes to a release is
 replaced; one edited since is reported as customized and never overwritten. Only `devbook`,
@@ -57,15 +58,23 @@ hashes, same customized rule; what differs is which of the three the plugin expe
 rewriting. A present file the component never stamped — a `start` an earlier engine seeded —
 is asked about once and kept as the repository's or replaced, never silently overwritten.
 
-**Install, not sync.** Sync names a two-way reconcile between peers; a plugin writes and the
-repository never writes back. Every install skill is `install`, addressed `plugin:install`,
-because the plugin name already carries the scope.
+**OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
+the marketplace uses it, so a person who knows one tool reads the other without translating.
+One `install` covering first setup and upgrade asked a stamped repository what its stamp already
+answered, and said nothing about which case a run was; `init` scaffolds and stamps, `update`
+refreshes, migrates, and re-stamps, and each refuses the other's case — "already initialized,
+run update", "not initialized, run init". The same split took `check` apart: `devbook:validate`
+asks whether the corpus is valid, and `devbook-config:doctor` whether the installation is
+current, because only the second reads every component's stamp and only devbook-config may.
+Sync was rejected earlier for the same reason as before: it names a two-way reconcile between
+peers, and a plugin writes while the repository never writes back. Every such skill is
+addressed `plugin:init` and `plugin:update`, because the plugin name already carries the scope.
 
 **This repository materializes nothing.** A consuming repository has no generator until the
 install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
 `.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
 the checker nine times, since a shipped rule carries no `paths`. The stamp lands anyway —
-`devbook:check` classes no stamp at all as hard drift — with `materialized` holding the one
+`devbook-config:doctor` classes no stamp at all as hard drift — with `materialized` holding the one
 rendered section and nothing else. Hashes are taken over LF-normalized text, because the
 working tree is CRLF and the index LF.
 
@@ -81,6 +90,8 @@ working tree is CRLF and the index LF.
 - Reconciling the root wrappers after creating them: a root file is where a repository puts what
   it wants said to one host and not the other, so every later edit is a customization.
 - Vendoring the generator into this repository's own `.devbook/_tools/`.
+- One `install` that branches on whether the stamp exists: it hides which case a run is, and
+  puts the adoption interview in front of an operation people run to change nothing.
 
 ## History
 
@@ -89,6 +100,7 @@ working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. |
 | 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. |
 | 2026-09-15 | `tools/devbook-meta/` and `tools/devbook-tech/` materialize into `.devbook/_tools/`, not `.github/tools/`. |
 | 2026-09-15 | The install creates `CLAUDE.md` and `.github/copilot-instructions.md` where absent, `managed: false`. |

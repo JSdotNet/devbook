@@ -38,7 +38,7 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Repository Creation (Manual) | — | — |
-| Stack Setup | the `implement` service, running `devbook-config:setup` | — |
+| Stack Setup | the `implement` service, running `devbook-config:init` | — |
 | README and Repository Instructions | the `docs` role, the `implement` service | servers bound to `spec` |
 | Repository Governance | *(default)*, through the `pr-lane` slot | servers bound to `spec` |
 | GitHub Actions Workflows | the `implement` service | — |

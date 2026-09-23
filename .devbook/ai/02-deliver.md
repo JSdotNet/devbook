@@ -25,7 +25,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   project — so an edit to `.devbook/` routes through `flow-spec` and a code change through `flow-code`. A run can report into a surface — `delivery-surface-dashboard` or
   `delivery-surface-collector` here, `delivery-surface-canvas` being a Copilot canvas this marketplace does not
   offer — and resolves its points from this repository's `.devbook/config.json`: the GitHub tracker,
-  `devbook:check` at session start, `devbook:verify-change` at `verify`, an approval gate
+  `devbook:validate` at session start, `devbook:verify-change` at `verify`, an approval gate
   before `deliver`, and every role and MCP point bound to `null` on purpose. `repo-instructions`
   resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file, and
   every category takes its default model. `stage-delegation` and `surface` still
@@ -83,7 +83,7 @@ date: 2026-09-07
 session with nobody watching, and lands what it produced as a pull request or a report issue.
 
 - **Used for** — four of the eleven schedules are enabled against this repository, per the
-  stamp in `.devbook/config.json`: `devbook-check`, `tech-update`, `merge-review`, and
+  stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, `merge-review`, and
   `package-update`. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a
   glance, not a rebase.

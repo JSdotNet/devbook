@@ -1,20 +1,24 @@
 ---
-name: install
-description: 'Put this repository''s schedules from the catalog into the host''s scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected one, disabling the rest, and recording the selection under components.schedule in .devbook/config.json. Idempotent by name. Use when: setting up recurring unattended runs for a repository, scheduling routines or automations, changing a cadence, adding or removing one, or after upgrading this plugin. Triggers on: "schedule install", "schedule-install", "set up my routines", "set up my automations".'
+name: update
+description: 'Bring the host''s scheduler level with this repository''s schedule selection — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected schedule, disabling the rest, and rewriting components.schedule in .devbook/config.json. Idempotent by name. Refused where no components.schedule stamp exists: run delivery-schedule:init. Use when: changing a cadence, adding or removing a schedule, or after upgrading this plugin. Triggers on: "schedule update", "update my routines", "update my automations", "change a cadence", "add a schedule", "remove a schedule".'
 ---
 
-# schedule install
+# schedule update
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-One idempotent operation for first setup, a changed selection, a changed cadence, and a plugin
-upgrade. Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
+One idempotent operation for a changed selection, a changed cadence, and a plugin upgrade.
+Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
+
+**Refuse when `components.schedule` is absent.** Say "not initialized, run
+`delivery-schedule:init`" and stop.
 
 ## Steps
 
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
-   plugin, and `components.schedule` from `.devbook/config.json`. No stamp: ask which
-   to enable, offering every schedule whose `requires` are met as the default.
+   plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
+   selection; change it only where the user asks. A selected name the catalog no longer ships
+   is reported and dropped from the selection.
 2. **Resolve the repository.** `gh repo view --json nameWithOwner,defaultBranchRef` gives
    `{{repo}}` and `{{base}}`.
 3. **Check `requires`** for each selected schedule against the plugins the repository's

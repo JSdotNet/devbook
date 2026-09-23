@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     On-demand wrapper around devbook's `.devbook/_tools/devbook-meta/build.mjs`,
-    passing --write; installed by the `devbook-derived:install` skill.
+    passing --write; installed by the `devbook-derived:init` skill.
 
     Refreshing the indexes is deliberate, not automatic. The pull-request check
     only warns when they have drifted, because making every devbook pull
@@ -93,7 +93,7 @@ $repoRoot = Resolve-RepositoryRoot -Requested $Root
 $generator = Join-Path $repoRoot '.devbook/_tools/devbook-meta/build.mjs'
 
 if (-not (Test-Path -LiteralPath $generator -PathType Leaf)) {
-    throw "Generator not found at '$generator'. Install it with the devbook:install skill."
+    throw "Generator not found at '$generator'. Install it with the devbook:init skill."
 }
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
     throw 'Node.js is required to run the devbook-meta generator, and `node` is not on PATH.'

@@ -56,5 +56,5 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 - Report configuration as declared or defaulted, never as absent-therefore-broken: an
   unset key takes the engine's documented default, and `null` is deliberately unbound.
 - Say when the clone is stale rather than reporting its versions as the newest.
-- Send writing elsewhere: `devbook-config:setup` and `devbook-config:update` set a repository up, each
-  component's own install skill materializes it. This skill only reads.
+- Send writing elsewhere: `devbook-config:init` and `devbook-config:update` set a repository up, each
+  component's own `init` and `update` materialize it. This skill only reads.

@@ -1,6 +1,6 @@
 # The `AGENTS.md` section
 
-`devbook-derived:install` writes one section of the repository's `AGENTS.md`, between the
+`devbook-derived:init` writes one section of the repository's `AGENTS.md`, between the
 two markers below and after devbook's own section, and rewrites it on every run while the
 text between the markers still matches the stamped hash. The marker rules — key, hash,
 customized — are devbook's, in its `assets/reconcile-protocol.md` under **What devbook
@@ -27,7 +27,7 @@ Render it from devbook's stamp, never from disk:
 <!-- devbook-derived:begin -->
 ## Devbook tooling
 
-Managed by `devbook-derived:install`. Edit outside these markers.
+Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
 generated tool input, written by `<generator> --write`. Never read one as a source of

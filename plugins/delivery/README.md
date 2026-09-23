@@ -86,7 +86,7 @@ flow reads its effective configuration on either host, per *The overlays* in
 own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
 `resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
-`devbook-config:setup` can copy them into a repository that declares no server yet.
+`devbook-config:init` can copy them into a repository that declares no server yet.
 
 **Configuration chooses among behaviour the engine already implements; it never introduces
 new behaviour.** A stage is a prompt, not a program — "apply TDD", "escalate instead of
@@ -108,7 +108,7 @@ engine names two skills by name and reads them by path, and writes neither:
 
 Whoever seeds them is the repository's business; the engine only expects a skill by that name
 to exist and to leave behind what its goal says — a running application, evidence paths.
-`delivery:install` materializes nothing and records the engine's version alone.
+`delivery:init` and `delivery:update` materialize nothing and record the engine's version alone.
 
 Neither is a dependency, and this is the part worth being precise about: **the guardrail is
 the contract, not the skill.** `resources/capture-contract.md` says what is captured, when it

@@ -24,36 +24,49 @@ takes a `--write` flag and nothing in this block passes it.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Eight skills — five that own the convention in a repository, and three that cross the boundary
+Nine skills — six that own the convention in a repository, and three that cross the boundary
 between a chapter and the code implementing it, each over six chapter kinds — plus the rules
-the install delivers, the tools it materializes, one workflow, and one hook. None of the
+`init` delivers, the tools it materializes, one workflow, and one hook. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
 change belongs to the engine.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `install` | skill | A person, or `devbook-config:setup` during a fan-out |
-| `check` | skill | A person, or the daily `devbook-check` schedule through `delivery-schedule`'s own wrapper |
+| `init` | skill | A person, or `devbook-config:init` during a fan-out |
+| `update` | skill | A person, or `devbook-config:update` during a fan-out |
+| `validate` | skill | A person, or the daily `devbook-validate` schedule through `delivery-schedule`'s own wrapper |
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
 | `annotation-sweep` | skill | A person, on one chapter |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill and one kind per run, routed there by the session-start hook when a task crosses between a chapter and its code |
-| `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper the install writes; a folder's own rule lands only where the folder is adopted |
-| `build.mjs` | checker CLI | `check`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
+| `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
+| `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 
-### install
+### init
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#reconciling-a-repository"]
 ```
 
-Bring a repository level with the installed release in one idempotent operation: detect,
-resolve, plan, migrate, materialize, stamp and verify. First install, an upgrade, a change in
-which folders are adopted, and an outstanding migration are the same run, and the stamp says
-which.
+Bring devbook into a repository that has none: ask which folders to adopt, scaffold each, copy
+the payload, and write the stamp. It refuses where `components.devbook` already exists —
+"already initialized, run update" — because the stamp is what the next run reads, and a second
+init would ask again what it already answers.
+
+### update
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#reconciling-a-repository"]
+```
+
+Bring a stamped repository level with the installed release in one idempotent operation:
+detect, resolve, plan, migrate, materialize, stamp and verify. An upgrade, a change in which
+folders are adopted, and an outstanding migration are the same run, and the stamp says which.
+It refuses where no stamp exists, since with no provenance every file on disk would read as
+customized.
 
 It is the only writer of everything it materializes — the rules and their per-host wrappers,
 the CI workflow, the tooling, and one marker-fenced section of the repository's agent
@@ -61,16 +74,18 @@ instructions. A materialized file that changed underneath is reported and left, 
 overwritten; an edit inside a marker-fenced section makes the next reconcile skip the section,
 which is what the markers exist for.
 
-### check
+### validate
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#index-generator"]
 ```
 
-The check-only half of the same protocol. It asks the same three questions — does the
-Markdown satisfy the schema, is the migration ledger current, does the stamp still describe
-what is on disk — then repairs what it can prove and hands every other write back. The daily
-`devbook-check` schedule reaches it through `delivery-schedule`'s own wrapper.
+Validates the corpus: does every chapter satisfy the schema, does every reference resolve. It
+repairs what it can prove in the chapters and hands every other write back. Whether the
+installation is current — the stamp, the ledger, the `AGENTS.md` section — is
+[devbook-config's `doctor`](devbook-config.md#doctor), the one context that reads every
+component's stamp. The daily `devbook-validate` schedule reaches it through
+`delivery-schedule`'s own wrapper.
 
 Two writers for one file is how a reconcile stops being idempotent, which is why this skill is
 deliberately narrow.
@@ -90,10 +105,10 @@ the check and never the writer; the weekly `tech-update` schedule reaches it thr
 ### prose-check
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#check", ".devbook/arc42/building-blocks/devbook.md#chapter"]
+related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook.md#chapter"]
 ```
 
-The prose half beside `devbook-check`'s structural half: read every adopted folder and report
+The prose half beside `validate`'s structural half: read every adopted folder and report
 the sentence that says nothing a reader needs or names something the tree no longer has — a
 stale name after a fold, a term defined twice, a hedge on a fact. It writes nothing. A chapter
 is content, so the standard is narrower than an instruction tightening and a record stays as
@@ -479,10 +494,10 @@ migrate, materialize, stamp and verify. First install, a plugin upgrade, a chang
 folders are adopted, and an outstanding migration are one idempotent operation, and the stamp
 says which of the four this run is.
 
-Invocation semantics: command-invoked, by `devbook:install`. Its check-only half writes
-nothing and asks the same three questions — does the Markdown satisfy the schema, is the
-ledger current, does the stamp still describe what is on disk — then hands every write back,
-because one writer is what makes re-running safe.
+Invocation semantics: command-invoked, by `devbook:init` where no stamp exists and by
+`devbook:update` where one does; each refuses the other's case. Nothing else writes what it
+materializes: `validate` repairs chapters only, and devbook-config's `doctor` reads the stamp
+and writes nothing, because one writer is what makes re-running safe.
 
 It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component stamp, and
 it is the only thing in this block that touches a file outside a devbook folder: the rule
@@ -491,9 +506,9 @@ of `AGENTS.md`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| First install, a plugin upgrade, a change in adopted folders, and an outstanding migration are one idempotent operation | `install()` | untested |
-| The check-only half writes nothing and hands every write back — one writer is what makes re-running safe | `install()` | untested |
-| It is the only part of this block that touches a file outside a devbook folder | `install()` | untested |
+| First install, a plugin upgrade, a change in adopted folders, and an outstanding migration run the same six phases | `init`, `update` | untested |
+| `init` refuses where a stamp exists and `update` where none does | `init`, `update` | untested |
+| It is the only part of this block that touches a file outside a devbook folder | `init`, `update` | untested |
 
 ### Index Generator
 
@@ -511,7 +526,7 @@ validator the graph build calls per file
 (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-check` schedule runs `check` through its own wrapper.
+request and the daily `devbook-validate` schedule runs `validate` through its own wrapper.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -550,12 +565,12 @@ Also called: `devbook-tech`, package inventory.
 Two scripts that read a repository's package manifests — .NET and frontend — and emit
 deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
 grounds a `tech/` chapter in, so a package-derived fact is reproducible and a hand-written one
-is visibly not. Materialized by the install only where `tech/` is adopted.
+is visibly not. Materialized by `init` or `update` only where `tech/` is adopted.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
-| Materialized only where `tech/` is adopted | `install()` | untested |
+| Materialized only where `tech/` is adopted | `init`, `update` | untested |
 
 ### Spec Converter
 
@@ -646,13 +661,15 @@ standing, and a chapter and its implementation catching up with each other.
 related: [".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md"]
 ```
 
-Six phases, one idempotent operation. The stamp is what tells first install from upgrade from
-a change of adopted folders from an outstanding migration — never a version comparison, which
-is what makes running it twice harmless.
+Six phases, one idempotent operation behind two entry points. The stamp is what tells first
+install from upgrade from a change of adopted folders from an outstanding migration — never a
+version comparison, which is what makes running it twice harmless. No stamp is `init`'s case
+and every other is `update`'s; each refuses the other's.
 
 ```mermaid
 flowchart TD
-    start(["devbook:install"]) --> detect["Detect: layout, adopted folders, stamp"]
+    init(["devbook:init"]) -->|"no stamp"| detect["Detect: layout, adopted folders, stamp"]
+    start(["devbook:update"]) -->|"stamp present"| detect
     detect --> resolve["Resolve: installed release against the stamp"]
     resolve --> plan["Plan: what to migrate, copy, and fence"]
     plan --> pending{"Ledger missing a migration id?"}
@@ -665,12 +682,11 @@ flowchart TD
     report --> stamp
     stamp --> done(["Level with the release"])
 
-    check(["devbook:check"]) -.->|"writes nothing, asks the same three questions"| detect
-    check --> repair["Repair references, blocks, stale indexes"]
+    check(["devbook:validate"]) --> repair["Repair references, blocks, stale indexes"]
     repair -.->|"hands every other write back"| start
 ```
 
-- **The check half never writes what the install owns.** It repairs what it can prove — a
+- **`validate` never writes what `init` and `update` own.** It repairs what it can prove — a
   broken reference, a malformed block, a field the schema no longer defines — and hands the
   rest back, because two writers for one file is how a reconcile stops being idempotent.
 - **A customized file is reported, never overwritten.** An edit inside a marker-fenced section
@@ -799,9 +815,9 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
-| Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper the install writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
-| Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper the install writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
-| A consuming repository | Customer-Supplier, this block supplying | `devbook:install` materializes rules, wrappers, the `tech/` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
+| Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
+| Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper `init` writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
+| A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
 
 ### Inbound
 
@@ -814,8 +830,8 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | [devbook-procedures](devbook-procedures.md#dependencies) | Customer-Supplier, declared | Follows this block's reconcile protocol — the stamp's two shared fields, the hash rules, the plan-before-write phase — and stamps `components.devbook-procedures` beside this block's entry | `assets/reconcile-protocol.md` under **The stamp** | That the protocol and the stamp keep their shape; it reads no chapter and runs no check. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Writes `review`, `reviewer`, `review-at` in a chapter's own block; annotation fences written through `annotations.mjs`; writes devbook's `approved` rung | The review triad, the annotation fence, and the `status` ladder | That the three review fields keep their meaning and the check holds them to it, that a fence keeps its schema and its open/resolved/gone lifecycle, and that `approved`, `approved-by`, and `approved-at` keep their meaning. |
 | [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; two of its own `schedule-*` wrappers invoke `check` and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
-| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, and this block's stamp in the stack config | The stack config schema and the folder layout | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; two of its own `schedule-*` wrappers invoke `validate` and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/` and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
 
 **The undeclared row is the one that matters.** `delivery` cannot be declared a dependent
@@ -827,12 +843,12 @@ restating this block's rules — is the one to take.
 **Nothing here names a flow.** This block ships the shape and the check; how a chapter change
 is carried is the engine's, and the two meet only in a repository that installed both.
 
-The checker, the fence writer, and the `tech/` inventory are this block's, and so are `check`,
+The checker, the fence writer, and the `tech/` inventory are this block's, and so are `validate`,
 `annotation-sweep`, and `tech-update`. The canvas is not: it is `devbook-derived`'s and loads
 these modules by path. The one thing this block never does is write a derived index:
 `build.mjs --write` is `devbook-derived`'s to pass — see
 [the checks and indexes record](../adr/checks-and-indexes.md).
 
-Every relationship above degrades rather than fails. A repository that has not run the install
+Every relationship above degrades rather than fails. A repository that has not run `init`
 still has readable Markdown, and a consumer of the `ext` namespace that is not installed
 leaves keys that parse and mean nothing.

@@ -29,11 +29,11 @@ a chapter edit rewrite the same JSON and conflict on merge.
 
    Without `pwsh`: `node .devbook/_tools/devbook-meta/build.mjs --write [--scope <folder>]`.
    Either way the output is deterministic — no timestamps — so "nothing moved" means the
-   committed indexes were already current. A missing checker means `devbook:install` has
+   committed indexes were already current. A missing checker means `devbook:init` has
    not run: say so and stop.
 
 3. **Fix what the check reports** in the source Markdown, never under `_meta/`, and refresh
-   again. A broken reference is devbook's finding; `devbook:check` has the repair table.
+   again. A broken reference is devbook's finding; `devbook:validate` has the repair table.
 
 4. **Report** which index files moved, and leave the commit to the user. Commit the
    refresh on its own, never folded into a chapter change.

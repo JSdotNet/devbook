@@ -600,7 +600,7 @@ supporting.
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the three surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
-| [devbook-derived](building-blocks/devbook-derived.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-devbook-check` refreshes where the script exists and skips where it does not |
+| [devbook-derived](building-blocks/devbook-derived.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-devbook-validate` refreshes where the script exists and skips where it does not |
 | [devbook](building-blocks/devbook.md) | [delivery](building-blocks/delivery.md) | **Undeclared** | No, and it should be — see [debt record 4](tdr/4-delivery-depends-on-devbook.md) |
 | every block | [devbook-config](building-blocks/devbook-config.md) | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every block | Conformist | Not declarable; the host decides what loads |

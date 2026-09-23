@@ -1,19 +1,19 @@
 ---
-name: check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook:install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
+name: validate
+description: 'Validate a repository''s devbook corpus without writing a generated file, and repair what it reports in the chapters — broken metadata references, malformed or missing meta blocks, fields the schema no longer defines, and stale _meta indexes. Asks about the chapters only, never about the installation: stamp drift and outstanding migrations are not this skill''s question. Use when: the devbook-meta check fails, CI warns about drifted indexes, or references do not resolve. Triggers on: "devbook validate", "validate devbook folders", "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "build.mjs --check".'
 ---
 
-# devbook check
+# devbook validate
 
 Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 ## Purpose
 
-Check this repository against devbook and write nothing; then repair whatever
-the check reports. It is `devbook:install`'s check-only half — the same three
-questions, asked without changing anything: does the authored Markdown satisfy
-the schema, is the migration ledger current, and does the stamp still describe
-what is on disk.
+Validate the authored Markdown against the schema and write nothing generated; then
+repair in the chapters whatever the check reports. One question: does every chapter
+satisfy the schema, and does every reference resolve. Whether the installation is
+current — the stamp, the migration ledger, the `AGENTS.md` section — is a question
+about every component at once, and no single plugin's skill asks it.
 
 This file exceeds the 40-line body budget on purpose. Most of it is the symptom
 table in step 2 — one row per thing the generator can report, with the fix — and
@@ -27,16 +27,16 @@ compressing a lookup table costs a repair, not a sentence.
    node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
-   When `.devbook/_tools/devbook-meta/` is absent, run `devbook:install` first —
+   When `.devbook/_tools/devbook-meta/` is absent, run `devbook:init` first —
    it materializes the checker.
 
    Exit codes:
 
    | Code | Meaning | Action |
    |------|---------|--------|
-   | `0` | Every reference resolves, every block matches the schema | Go to step 4 |
+   | `0` | Every reference resolves, every block matches the schema | Done |
    | `1` | One or more problems at `error` severity | Go to step 2 |
-   | `2` | No devbook folder found under `.devbook/` | Wrong directory, the repo has not adopted the convention — run `devbook:install` — or its folders sit at the repository root, which the message names: move them under `.devbook/` |
+   | `2` | No devbook folder found under `.devbook/` | Wrong directory, the repo has not adopted the convention — run `devbook:init` — or its folders sit at the repository root, which the message names: move them under `.devbook/` |
 
    `--check` parses and reports without writing. Add `--root <path>` when running
    from outside the repository root, and `--scope <folder>` to narrow the run to
@@ -87,35 +87,7 @@ compressing a lookup table costs a repair, not a sentence.
 
 3. **Re-run the check** until it exits `0`.
 
-4. **Check the migration ledger.** Run `migrate.mjs --check --root <repo>` for
-   every `migrations/<id>/` folder in the plugin, oldest first. An exit of `1` is
-   hard drift: work the ledger says is done that the repository has not had. Do
-   not apply it here — `devbook:install` owns the writing, and applying a migration
-   outside phase 4 leaves the ledger describing something that did not happen.
-   Report which migrations are outstanding and stop.
-
-5. **Check the stamp.** Read devbook's entry in `.devbook/config.json`
-   per `assets/reconcile-protocol.md` and compare it with disk:
-
-   | Drift | Severity | Fix |
-   |---|---|---|
-   | A migration the plugin's `contractVersion` requires is missing from the ledger | hard | Step 4 already reported it; run `devbook:install` |
-   | The stamped `contractVersion` is below `MINIMUM_CONTRACT_VERSION` in `tools/devbook-meta/graph.mjs` | hard | The migrations it needs no longer ship; upgrade through the previous major's last release first |
-   | A file the stamp says was materialized is gone | hard | Run `devbook:install` to put it back |
-   | A folder exists on disk that `adopted` does not list, or the reverse | hard | Adoption changed without a reconcile; run `devbook:install` |
-   | The `AGENTS.md` section is missing, or one of its markers is | hard | Run `devbook:install` to write it back |
-   | No stamp at all | hard | The repository has never been reconciled; run `devbook:install` |
-   | A materialized hash matches an older release | stale | Nothing is broken. An upgrade is available |
-   | The `AGENTS.md` section matches its stamped hash but not what `adopted` renders now | stale | Adoption or the template moved; run `devbook:install` to rewrite it |
-   | A materialized hash matches nothing ever shipped | customized | Report it and leave it. Often deliberate — both workflows are edited on install |
-   | The `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
-
-   Fail on hard drift; report staleness and customization without failing. That
-   split is the same one the CI workflow already makes about `_meta/`, and for
-   the same reason: a stale generated file must not block an unrelated pull
-   request.
-
-6. **Never refresh from here.** This skill writes nothing: the committed `_meta/`
+4. **Never refresh from here.** This skill writes nothing: the committed `_meta/`
    indexes, where a repository keeps them, are refreshed by the paths its
    `AGENTS.md` names and by their scheduled job, never in a session beside a
    chapter edit — that is what makes the generated JSON conflict on merge.
@@ -132,7 +104,7 @@ rather than your branch tip — a reference can break when two branches land
 together even though each was clean on its own.
 
 If the checker itself is missing from the repository, install it by running
-`devbook:install` rather than copying files ad hoc — a copy made by hand lands
+`devbook:init` rather than copying files ad hoc — a copy made by hand lands
 unstamped, and the next reconcile cannot tell it from a customized file.
 
 ## Do not
@@ -141,4 +113,4 @@ unstamped, and the next reconcile cannot tell it from a customized file.
 - Do not delete a chapter to resolve a dangling reference — repoint the reference.
 - Do not weaken or remove the CI workflow to get a pull request green.
 - Do not apply a migration from here, and do not edit the stamp. Both belong to
-  `devbook:install`, which records what it did as it does it.
+  `devbook:update`, which records what it did as it does it.

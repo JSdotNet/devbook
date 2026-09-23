@@ -28,25 +28,28 @@ const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 // (`.devbook/arc42/adr/annotations.md`), so a
 // repository adopts it by enabling it and nothing here reconciles it.
 //
-// `contract: false` is not "has not got round to it". Only a component whose install rewrites
+// `contract: false` is not "has not got round to it". Only a component whose update rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
 // it owns whole has hash-matching as its whole migration mechanism. So four of these five will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
 // `.devbook/arc42/adr/install.md`.
+//
+// Every component has two skills: `init` where its stamp is absent, and `update` where it is
+// present. Each refuses the other's case, so which one to name follows from the scope alone.
 const COMPONENTS = {
-    devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
-    derived: { plugin: 'devbook-derived', install: 'devbook-derived:install', contract: false },
-    'devbook-procedures': { plugin: 'devbook-procedures', install: 'devbook-procedures:install', contract: false },
-    delivery: { plugin: 'delivery', install: 'delivery:install', contract: false },
-    schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install', contract: false },
+    devbook: { plugin: 'devbook', init: 'devbook:init', update: 'devbook:update', contract: true },
+    derived: { plugin: 'devbook-derived', init: 'devbook-derived:init', update: 'devbook-derived:update', contract: false },
+    'devbook-procedures': { plugin: 'devbook-procedures', init: 'devbook-procedures:init', update: 'devbook-procedures:update', contract: false },
+    delivery: { plugin: 'delivery', init: 'delivery:init', update: 'delivery:update', contract: false },
+    schedule: { plugin: 'delivery-schedule', init: 'delivery-schedule:init', update: 'delivery-schedule:update', contract: false },
 };
 
-// The order the reconcile list is run in, and it is not cosmetic: devbook-derived's install
+// The order the reconcile list is run in, and it is not cosmetic: devbook-derived's update
 // refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
 // checks its targets against the plugins this repository enables, so it wants the settled
 // state. `devbook-procedures` sits before `delivery` so that a `start` or `capture` an older
-// engine seeded is adopted or replaced before the engine's install releases its claim on it,
+// engine seeded is adopted or replaced before the engine's update releases its claim on it,
 // and both sit before schedule because schedule's targets call those procedures. Anything not
 // named here follows, alphabetically.
 const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-procedures', 'delivery', 'delivery-schedule'];
@@ -55,7 +58,7 @@ const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-procedures', 'de
 // fact about this machine, enabled about this checkout, stamped about the repository and
 // everyone who shares it.
 const SCOPE = {
-    reconcile: 'in scope - run its install skill',
+    reconcile: 'in scope - run its update skill',
     blocked: 'stamped here, not installed on this machine',
     frozen: 'stamped here, not enabled in this checkout',
     adoptable: 'installed and enabled, never adopted here',
@@ -319,7 +322,8 @@ function buildPluginRows(catalogs, installed, enabled, marketplace, components) 
             scope,
             scopeMeans: SCOPE[scope],
             component: stampName ?? null,
-            installSkill: stampName ? COMPONENTS[stampName].install : null,
+            initSkill: stampName ? COMPONENTS[stampName].init : null,
+            updateSkill: stampName ? COMPONENTS[stampName].update : null,
             stampedVersion: stamp?.pluginVersion ?? null,
             description: described.get(name) ?? '',
         };
@@ -563,7 +567,7 @@ function render(model) {
             const drift = p.stampedVersion && p.stampedVersion !== p.installed
                 ? ` (stamped ${p.stampedVersion}, installed ${p.installed})`
                 : '';
-            out.push(`- \`${p.installSkill}\`${drift}`);
+            out.push(`- \`${p.updateSkill}\`${drift}`);
         }
         out.push('');
     }
@@ -709,7 +713,7 @@ function render(model) {
                 out.push([
                     '`payload-only` is the shape, not a gap. A component that only copies files it',
                     'owns needs no contract version and no ledger: a copy still hashing to a release',
-                    'that component shipped is stale and its install replaces it, and a copy hashing to',
+                    'that component shipped is stale and its update replaces it, and a copy hashing to',
                     'nothing shipped belongs to the repository and is never overwritten either way.',
                     'Only `devbook` rewrites content the repository authored, so only `devbook` carries',
                     'the other three fields -',

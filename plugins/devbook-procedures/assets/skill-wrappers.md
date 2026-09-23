@@ -6,7 +6,7 @@ reviewer; **capture**, how evidence is taken; **debug**, how a cause is found in
 application. Each is repository-specific by nature — one product runs `aspire start`, the next
 `docker compose up`; one has tracing, the next has screenshots — and each has one goal that
 never varies. So the plugin fixes the goal and seeds the procedure, in the shape
-`devbook:install` uses for its rules: one editable copy, a managed wrapper per host.
+`devbook:init` uses for its rules: one editable copy, a managed wrapper per host.
 
 ```
 plugins/devbook-procedures/assets/skills/<name>.md    what the plugin ships
@@ -61,6 +61,6 @@ edits a wrapper anyway keeps it — reported, left alone, like any customized fi
 
 `components.devbook-procedures.adopted` in `.devbook/config.json` names them, without
 ceremony: a repository with nothing to start drops `start`, `show`, and `debug`; one that takes
-no evidence drops `capture` and `show`. `install` asks on a first run and never re-asks what
+no evidence drops `capture` and `show`. `init` asks on a first run and `update` never re-asks what
 the stamp answers. None is a dependency of anything: a caller that names one of these skills
 and finds it absent does without and says so.

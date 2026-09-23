@@ -41,7 +41,7 @@ person picks a different model per folder through the personal override for that
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps the target folder, at the root or under `.devbook/`. If it
-  does not, stop and say so: adopting a folder is the devbook convention's own install, never
+  does not, stop and say so: adopting a folder is the devbook convention's own `init` or `update`, never
   a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the chapters
   in scope plus the ones the change links to — never the whole folder.

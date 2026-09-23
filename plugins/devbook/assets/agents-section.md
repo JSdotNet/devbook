@@ -1,7 +1,7 @@
 # The `AGENTS.md` section
 
-`devbook:install` writes one section of the repository's `AGENTS.md`, between the two
-markers below, and rewrites it on every reconcile while the text between them still
+`devbook:init` writes one section of the repository's `AGENTS.md`, between the two
+markers below, and `devbook:update` rewrites it on every reconcile while the text between them still
 matches the stamped hash. The rules — key, hash, customized, orphan — are in
 `reconcile-protocol.md` under **What devbook materializes**; this file is the template.
 
@@ -14,7 +14,7 @@ Render it from the stamp's `adopted` list, never from what happens to be on disk
   conventional path into a repository where it does not resolve. `<generator-dir>` is
   that path's folder.
 - Change nothing else. The `_meta/` rule and the refresh paths belong to the layered
-  plugin's own section, written after this one by its install. A wording change belongs
+  plugin's own section, written after this one by its own `init`. A wording change belongs
   in this template, so every adopting repository gets it on its next reconcile.
 
 When `AGENTS.md` is absent, create it holding only this section. When it exists without
@@ -28,7 +28,7 @@ never goes inside them; that stays in `routing-snippet.md`, offered and never ap
 <!-- devbook:begin -->
 ## Devbook folders
 
-Managed by `devbook:install`. Edit outside these markers; an edit inside them makes the
+Written by `devbook:init` and kept by `devbook:update`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its devbook as addressed Markdown chapters. Treat the folders as

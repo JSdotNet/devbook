@@ -38,7 +38,7 @@ change. The workflow calls `--check` only and never refreshes `_meta/`.
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only
 resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
-`devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
+`devbook-validate` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
@@ -86,7 +86,7 @@ A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`
 ### When a change ships a migration
 
 From 1.0.0 onward, a change to a devbook chapter schema, a stamp shape, a `.devbook/config.json`
-key, or a path `devbook:install` writes ships its migration in the same commit as the change,
+key, or a path `devbook:init` writes ships its migration in the same commit as the change,
 under `migrations/<version>-<slug>/` of the plugin that owns it: a `MIGRATION.md` beside an
 idempotent `migrate.mjs` whose `--check` exits `1` while work remains. The ledger it lands
 in, the `not-applicable` result, and the rule that a shipped id is never invented, renamed, or
@@ -100,7 +100,7 @@ Three cases decide whether one is owed:
 - A renamed or removed field always needs one, in a chapter `meta` block, the stamp, or a
   config key alike: every repository holding the old spelling is broken until a script rewrites
   it, and a prose note asking each one to do so by hand is not a migration.
-- A change to what `devbook:install` materializes — a path, a marker, a rendered section, a
+- A change to what `devbook:init` materializes — a path, a marker, a rendered section, a
   workflow — needs one whenever an already-installed repository would otherwise keep the stale
   file. Reconcile replaces only a copy that still hashes to a release devbook shipped, and
   never deletes: a moved path leaves the old copy behind as an orphan, and a copy edited since
@@ -159,7 +159,7 @@ what you are editing.
 <!-- devbook:begin -->
 ## Devbook folders
 
-Managed by `devbook:install`. Edit outside these markers; an edit inside them makes the
+Written by `devbook:init` and kept by `devbook:update`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its devbook as addressed Markdown chapters. Treat the folders as
@@ -195,7 +195,7 @@ Put no secret in it — your home directory is not private.
 <!-- devbook-derived:begin -->
 ## Devbook tooling
 
-Managed by `devbook-derived:install`. Edit outside these markers.
+Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
 generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of

@@ -1,6 +1,6 @@
 # The `.claude/settings.json` deny rule
 
-Offered by `devbook-derived:install`, never applied silently, and never placed inside any
+Offered by `devbook-derived:init` and `devbook-derived:update`, never applied silently, and never placed inside any
 `AGENTS.md` markers. It is a repository setting, so it is the user's to merge.
 
 Generated `_meta/` files are tool output, not agent context. One deny rule keeps

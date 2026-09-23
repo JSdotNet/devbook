@@ -23,7 +23,7 @@ mapping, and what each direction does differently there.
 
 ## Why this is an asset and not an instruction
 
-A rule declares the paths it governs, and `devbook:install` puts it in the
+A rule declares the paths it governs, and `devbook:init` puts it in the
 repository so both hosts apply it there. An honest `paths` list for these rules
 would have to cover source and test trees — which would make the plugin speak in
 every repository that has not adopted the devbook convention. This file is
@@ -426,7 +426,7 @@ node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check
 
 With no `--scope` when the plan touches more than one folder. If it reports
 unresolved references or a schema violation, the fix is in the source Markdown;
-`devbook:check` explains anything that does not resolve from the message alone.
+`devbook:validate` explains anything that does not resolve from the message alone.
 Never regenerate a committed `_meta/` index and never hand-edit one: where a
 repository keeps them, their refresh is the layered plugin's own path, named in the
 repository's `AGENTS.md`.

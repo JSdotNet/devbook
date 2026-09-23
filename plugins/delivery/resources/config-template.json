@@ -17,7 +17,7 @@
     }
   },
   "extensions": {
-    "session.start": ["devbook:check"],
+    "session.start": ["devbook:validate"],
     "spec": null,
     "implement": null,
     "validate": null,
@@ -25,7 +25,7 @@
     "app.start": null,
     "qa.run": null,
     "verify": "devbook:verify-change",
-    "flow.end": ["devbook:install"]
+    "flow.end": ["devbook:update"]
   },
   "policy": {
     "qa.depth": "targeted",

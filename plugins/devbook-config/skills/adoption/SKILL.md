@@ -18,7 +18,7 @@ skill reports the first half and never asserts the second.
 
 1. **Look.** Run `node scripts/report.mjs --root <repository> --json` from this
    plugin's root. If the report shows no `ai` folder, stop — adopting a devbook folder is
-   `devbook:install`, not this.
+   `devbook:update`, or `devbook:init` where devbook has no stamp, not this.
 
 2. **Read the record task-scoped.** The adoption map plus the stage files, nothing else in
    the folder. Skip `annotation` fences: review notes, not content.

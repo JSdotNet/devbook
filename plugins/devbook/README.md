@@ -50,30 +50,33 @@ and does not index it. An address is the chapter's real repository path.
 
 ## Features
 
-### Skill: `devbook:install`
+### Skills: `init` and `update`
 
-Reconciles a repository with the installed devbook release, in six phases:
-detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
-plugin upgrade, a change in which folders are adopted, and an outstanding
-migration are one idempotent operation — the stamp at
-`.devbook/config.json` says which. Materialize also writes devbook's
+Two halves of one reconcile, in six phases: detect, resolve, plan, migrate,
+materialize, stamp and verify. `devbook:init` brings devbook into a repository
+that has none — it asks which folders to adopt, scaffolds each one, and writes the
+stamp at `.devbook/config.json` — and refuses where that stamp already exists.
+`devbook:update` moves a stamped repository forward: a plugin upgrade, a change in
+which folders are adopted, and an outstanding migration are one idempotent
+operation, and it refuses where no stamp exists. Both write devbook's
 marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
 protocol is in `assets/reconcile-protocol.md`.
 
-**Trigger keywords:** `devbook install`, `devbook sync`, `set up devbook`, `adopt the devbook
-folders`, `scaffold arc42/`, `scaffold domain/`, `set up tech/`,
-`upgrade devbook`, `run devbook migrations`
+**Trigger keywords:** `devbook init`, `set up devbook`, `adopt the devbook folders`,
+`scaffold arc42/`, `scaffold domain/`, `set up tech/` for `init`; `devbook update`,
+`devbook sync`, `upgrade devbook`, `run devbook migrations` for `update`
 
-### Skill: `check`
+### Skill: `validate`
 
-The check-only half of the same protocol: writes nothing, and asks the same
-three questions. Does the authored Markdown satisfy the schema, is the migration
-ledger current, does the stamp still describe what is on disk. Then repairs what
-it reports — broken references, missing or malformed `meta` blocks, fields the
-schema no longer defines — and hands the rest back to `devbook:install`, which
-owns every write.
+Validates the corpus and writes nothing generated: does every chapter's `meta`
+block satisfy the schema, does every reference resolve. Then repairs what it
+reports in the chapters — broken references, missing or malformed `meta` blocks,
+fields the schema no longer defines — and hands anything it cannot fix back to
+`devbook:update`, which owns every write to the installation. Whether the
+installation itself is current — the stamp, the ledger, the `AGENTS.md` section —
+is asked across every component at once, never by this skill.
 
-**Trigger keywords:** `devbook check`, `devbook-meta failed`,
+**Trigger keywords:** `devbook validate`, `devbook check`, `devbook-meta failed`,
 `broken reference`, `validate devbook folders`, `build.mjs --check`
 
 ### Skill: `tech-update`
@@ -92,7 +95,7 @@ check, never the writer.
 Reads every adopted folder and reports the prose that does not earn its lines
 — a name that no longer exists in the tree, a term defined a second time, a
 hedge in a statement of fact, a paragraph restating its heading — beside what
-`devbook:check` reports about structure. Report only: it writes nothing, and a
+`devbook:validate` reports about structure. Report only: it writes nothing, and a
 finding becomes an edit when a person makes it through the folder's flow. ADRs
 and TDRs are records and stay out of the prose classes.
 
@@ -268,7 +271,7 @@ inside a plugin: there is no rules key in either manifest and no rules component
 plugin-root `CLAUDE.md` is not loaded either. A rule in the table above governs paths in
 *your* repository, and its globs can only resolve there.
 
-So `devbook:install` installs them — one copy of the rule, and a wrapper per host beside it,
+So `devbook:init` installs them, and `devbook:update` keeps them current — one copy of the rule, and a wrapper per host beside it,
 each in the folder that host already reads:
 
 ```
@@ -286,7 +289,7 @@ left alone, and dropping a folder from `adopted` orphans its trio rather than de
 it. The templates and the reasons are in
 [`assets/rule-wrappers.md`](assets/rule-wrappers.md).
 
-Until you run `devbook:install`, the rules still reach a session the way they always have:
+Until you run `devbook:init`, the rules still reach a session the way they always have:
 the session-start hook, and the skills that name one by path.
 
 ### Review state
@@ -353,8 +356,8 @@ for technologies that do not appear in package manifests.
 
 | File | Purpose |
 |------|---------|
-| `assets/reconcile-protocol.md` | Shared rules for `devbook:install` and `devbook:check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`, its path filters trimmed to the adopted folders: fails on broken references and schema violations |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook:init` and `devbook:update`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:init`, its path filters trimmed to the adopted folders: fails on broken references and schema violations |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
@@ -386,7 +389,10 @@ which removes the `.gitignore` block and moves a checkout-layer personal file ou
 clone now that nothing personal lives in one; the fourth is
 `013-decision-rungs-are-domains`, which takes the `approved` and `accepted` rungs and
 their six record fields off every folder but `domain/`, and names the `tech/` and `ai/`
-chapters whose original rating no script can restore. The
+chapters whose original rating no script can restore; the fifth is `015-openspec-verbs`,
+which rewrites the skill ids a stack config binds — in the committed config and in both
+overlay layers — now that every `install` is `init` and `update` and `check` is `validate`.
+Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
 `.devbook/arc42/adr/releases.md`.
@@ -406,7 +412,7 @@ Rules that keep a ledger trustworthy:
   floor sits above it. The decision is
   `.devbook/arc42/adr/releases.md`.
 - A migration is idempotent by rule: the second run changes nothing.
-- `--check` is mandatory. CI calls it, and so does `devbook:check`; it is what
+- `--check` is mandatory. CI calls it, and so does the plan phase of `devbook:update`; it is what
   makes a plan worth reading before anything is written.
 - `appliesTo` names adopted folders. A repository that never adopted one records
   *not-applicable*, and adopting it later re-evaluates the migration rather than
@@ -421,7 +427,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **14**, covering the metadata schema a repository authors
+One number, currently **15**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -458,11 +464,16 @@ Every part of it is an added value with a safe default — the aggregate's
 `### Invariants` table is still a legal structural heading, and nothing written
 under 13 stops validating — so it ships no migration folder. Converting a table
 into chapters is editorial work a repository does when it chooses to, and no
-script can write the scenarios that make the move worth anything.
+script can write the scenarios that make the move worth anything. 15 changes no
+chapter shape: it renames the skill ids a stack config binds — `devbook:install`
+to `devbook:update`, `devbook:check` to `devbook:validate`, and every other
+renamed provider — and the `devbook-check` schedule to `devbook-validate`. A
+config still naming an old id binds a skill that no longer exists, so it ships as
+`015-openspec-verbs`.
 
 ## Folder structure
 
-After running `devbook:install`, a repository that adopted everything has:
+After running `devbook:init`, a repository that adopted everything has:
 
 ```
 .devbook/
@@ -502,7 +513,7 @@ nightly and drift workflows, and its own `AGENTS.md` section beside these.
 Five layers, weakest to strongest:
 
 1. **Instructions** govern the paths above in every repository that has run
-   `devbook:install`, which installs each one where both hosts already look. Before that,
+   `devbook:init`, which installs each one where both hosts already look. Before that,
    they are reached by path only.
 2. **The session-start hook** stops agents treating devbook folders as baseline
    context, and is what carries the folder rules in a repository that has not

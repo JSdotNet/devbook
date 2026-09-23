@@ -4,7 +4,7 @@ A rule in `rules/` is read by no host while it sits in the plugin. There is no r
 either manifest and no rules component, and the globs in `rules/rules.json` name folders in
 the adopting repository, which is the only place they resolve.
 
-So `devbook:install` installs them, in the same shape the `devbook` repository uses for its own rules:
+So `devbook:init` installs them, and `devbook:update` refreshes them, in the same shape the `devbook` repository uses for its own rules:
 one copy of the rule, and a wrapper per host pointing at it.
 
 ```

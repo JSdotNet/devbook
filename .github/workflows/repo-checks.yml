@@ -7,7 +7,7 @@ name: Repository checks
 #
 # This workflow never regenerates and never commits the derived `_meta/`
 # indexes. `--check` reads them and reports; the refresh stays with the
-# `devbook-check` schedule, per .devbook/arc42/adr/checks-and-indexes.md.
+# `devbook-validate` schedule, per .devbook/arc42/adr/checks-and-indexes.md.
 #
 # No path filters, deliberately. Every folder here is authored assets that one
 # of the three checks reads, and a filter that silently matches nothing leaves

@@ -10,7 +10,7 @@ paths:
 The format is authored once, in
 [`schedule-catalog-contract.md`](../../plugins/delivery-schedule/resources/schedule-catalog-contract.md):
 the frontmatter table, the five-field UTC `cron` at one hour minimum, `requires`, the tool
-allowlist, and the four placeholders `delivery-schedule:install` substitutes. Read it before adding or
+allowlist, and the four placeholders `delivery-schedule:update` substitutes. Read it before adding or
 editing an entry — the contract is the copy, and this wrapper is not a summary of it.
 
 A schedule is a trigger and never a procedure. The body names a schedulable skill and its

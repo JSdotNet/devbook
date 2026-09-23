@@ -35,7 +35,8 @@ repository conforms to.
 | `phase-build-test`, `phase-validation`, `phase-personal-validation` | skills, shared phases | A flow, never directly |
 | `push-branch`, `update-pr-branch`, `fix-pr-checks`, `pr-merge-ready` | skills, the pull-request lane | A person, on a change a flow did or did not produce; `pr-merge-ready` uses the other three |
 | `start-session-from-issue`, `sre-alerts-to-work-items` | skills, tracker entry points | A person, through the bound tracker |
-| `install` | skill | A person, or `devbook-config:setup` during a fan-out |
+| `init` | skill | A person, or `devbook-config:init` during a fan-out |
+| `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `flow-runner` | agent | Command-invoked once per run by a flow, holding the session for the run's length |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
@@ -199,20 +200,21 @@ Turn active Azure Monitor alerts into tracked work items, so an incident becomes
 rest of this block already knows how to carry. Azure is the alert source; where the item lands
 is the tracker binding's answer, not this skill's.
 
-### install
+### init and update
 
 ```meta
-related: [".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
 ```
 
-Write the two procedures the engine names but cannot author — `start`, how this repository's
-application comes up, and `capture`, how evidence of the feature being built is taken — into
-the repository as one editable copy with a pointer wrapper per host, and record what landed.
+Record the engine in a repository, and nothing more: it materializes no file, because
+everything it reads is the four engine keys or a skill the repository owns. `init` writes
+`components.delivery` as `pluginVersion` alone and refuses where that entry exists; `update`
+rewrites it to the installed version and refuses where it does not.
 
-**Hand the procedure over.** Editing the installed copy is the intended path, not drift. Once
-its hash matches no release it is the repository's: reported on every later reconcile, never
-overwritten. The wrappers stay managed, so the name and description a phase matches on keep
-refreshing while the procedure does not.
+**Release what an earlier engine seeded.** An engine before the procedures moved to
+[devbook-procedures](devbook-procedures.md) wrote `start` and `capture` with a wrapper per host
+and stamped them under `components.delivery.materialized`. `update` drops those entries and
+deletes no file: each stays the repository's until the procedures component adopts it.
 
 ## Structure
 
@@ -326,7 +328,7 @@ classDiagram
   answers the lifecycle group and knows nothing about which implementation did — see
   [the surfaces record](../adr/surfaces.md).
 - **`StackConfig` here is four keys, not the file.** Every `components.<name>` stamp in the same
-  file belongs to that component's install skill, which is why the class carries the four names
+  file belongs to that component's `init` and `update` skills, which is why the class carries the four names
   and not a generic key bag.
 - **Nothing associates with a host.** `HostSlot` is a name with a documented unbound
   behaviour, bound from configuration or answered by the live session — the only shape in this
@@ -504,7 +506,7 @@ Also called: `config.json`, delivery config.
 `.devbook/config.json`, and specifically the four keys this block owns — `bindings`,
 `extensions`, `policy`, `gates`. It is the one file a consuming repository commits for the
 whole stack, and the boundary inside it is by key: every `components.<name>` stamp belongs to
-that component's own install skill and is never written here.
+that component's own `init` and `update` skills and is never written here.
 
 Reading the file is not adopting devbook. The path is a path: the engine reads it with no
 devbook folder present, which is the reason the file could move there at all.
@@ -513,7 +515,7 @@ devbook folder present, which is the reason the file could move there at all.
 | --- | --- | --- |
 | An unknown key is rejected, never ignored — a typo is an error, not a silently absent setting | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Nobody writes another owner's key | all mutations | untested |
-| The four engine keys are written by `devbook-config`'s setup and update, and by nothing else | all mutations | untested |
+| The four engine keys are written by `devbook-config`'s `init` and `update`, and by nothing else | all mutations | untested |
 | `policy` is a closed set of switches | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | A machine-scope overlay may add a gate and never remove one, at each of its two layers | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | An overlay never carries the `id` that located it | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
@@ -1009,8 +1011,8 @@ runner and named by no skill.
 - **It starts before the repository exists and enters wherever the repository has got to.**
   Creating the repository stays manual; every later stage opens by checking what is there, so
   a governed repository with no project runs the scaffold and a bare one runs everything.
-- **It writes no stack config of its own.** Stack Setup runs `devbook-config:setup`, which
-  owns the engine keys, the MCP files, and each component's install; the flow fills the
+- **It writes no stack config of its own.** Stack Setup runs `devbook-config:init`, which
+  owns the engine keys, the MCP files, and each component's `init`; the flow fills the
   `start` skill's facts afterwards, because those are the project's, not the config's.
 - It is code-tier because what it scaffolds has to build. A scaffold that was never compiled
   is a guess about somebody else's toolchain.
@@ -1068,7 +1070,7 @@ runner and named by no skill.
   question, and accepted debt. A stage that discovers it needs a decision escalates here
   rather than taking one inline.
 - It stops at Context Loading when the repository has not adopted the folder. Adopting one is
-  the convention's own install and never a flow's job.
+  the convention's own `init` or `update` and never a flow's job.
 
 ### flow-update-packages run
 

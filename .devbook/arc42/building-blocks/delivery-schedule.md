@@ -28,24 +28,26 @@ contracts, the catalog checker, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-check` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
-| `install` | skill | A person, or `devbook-config:setup` and `devbook-config:update` during a fan-out |
+| `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `init` | skill | A person, or `devbook-config:init` during a fan-out |
+| `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
-| `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `install`, reading a repository's selection against it |
+| `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
 | `schedule-catalog-contract.md`, `schedule-preamble.md`, `change-window-contract.md`, `instruction-tightening.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
-| `components.schedule` | stamp in the stack config | Written by `install` alone, read by [devbook-config](devbook-config.md) |
+| `components.schedule` | stamp in the stack config | Written by `init` and `update` alone, read by [devbook-config](devbook-config.md) |
 
-### schedule-devbook-check
+### schedule-devbook-validate
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#check", ".devbook/arc42/building-blocks/devbook-derived.md#install", ".devbook/arc42/adr/checks-and-indexes.md"]
+related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook-derived.md#update", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
-Run `devbook:check` over every adopted folder, fix what it reports in the chapters, refresh the
-committed indexes where `devbook-derived` keeps them, and land one pull request — or a
-schedule-report issue when the ledger or the stamp needs a person. The daily `devbook-check`
+Run `devbook:validate` over every adopted folder, fix what it reports in the chapters, refresh
+the committed indexes where `devbook-derived` keeps them, and land one pull request — or a
+schedule-report issue when `devbook-config:doctor`, where installed, finds the installation
+needs a person. The daily `devbook-validate`
 trigger's target: the catalog names a schedule skill, never a foundation skill directly.
 
 ### schedule-instruction-review
@@ -205,18 +207,20 @@ narrative. One per week, kept as the record of everything that changed; the
 
 Report what changed in the tracked repositories since the last run, over a stated window.
 
-### install
+### init and update
 
 ```meta
 ```
 
-Create or update the selected schedules through whatever scheduler the live session exposes,
+`init` asks which schedules to enable and stamps the answer, refusing where
+`components.schedule` exists; `update` reads the selection from that stamp, refusing where it
+does not. Both create or update the selected schedules through whatever scheduler the live session exposes,
 disable the deselected, and record the selection under this component's stamp — the
 [Schedule Selection](#schedule-selection) aggregate, drawn under
 [From Catalog to Scheduler](#from-catalog-to-scheduler).
 
 Refuse what would not run: a cloud session loads this marketplace only if the repository's
-committed host settings enable it and the plugins the target needs. The install owns those two
+committed host settings enable it and the plugins the target needs. `init` and `update` own those two
 settings keys — it explains, asks, and writes what the selected schedules require, removing
 nothing — and a schedule that would still start without its skill, because the person declined,
 is refused rather than created.
@@ -354,8 +358,8 @@ and why a trigger can be created, disabled, and re-created without touching what
 | A cron expression that could fire more than hourly is rejected | `check.mjs` | untested |
 | The `requires` list names the target's own plugin | `check.mjs` | untested |
 | Every prompt begins with the preamble, stated once and not restated per schedule | prompt assembly | untested |
-| A trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled | `install()` | untested |
-| Schedules are matched by name, so a second sync updates rather than duplicates | `install()` | untested |
+| A trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled | `init`, `update` | untested |
+| Schedules are matched by name, so a second sync updates rather than duplicates | `init`, `update` | untested |
 | No placeholder the contract does not name appears in a prompt | `check.mjs` | untested |
 
 The values it holds:
@@ -407,7 +411,7 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/05
 ```
 
 Which schedules this repository chose and any cadence it overrode, recorded under
-`components.schedule` in the stack config and written by this block's install skill alone.
+`components.schedule` in the stack config and written by this block's `init` and `update` alone.
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts
 and are committed; the environment, the model, and the scheduler's own ids are personal. The
@@ -417,10 +421,10 @@ stack-config overlay, where the engine merges them and this block alone reads th
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Nothing personal is written into the repository | `install()` | untested |
-| The selection is written by this block's install skill and by nothing else | `install()` | untested |
-| A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `install()` | untested |
-| A schedule that would start without its skill is refused rather than created | `install()` | untested |
+| Nothing personal is written into the repository | `init`, `update` | untested |
+| The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
+| A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
+| A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
 
 The value it holds:
 
@@ -538,7 +542,7 @@ flowchart TD
   id would be personal, so it could not be committed anyway.
 - **Refusing beats creating something that cannot run.** A cloud session loads this marketplace
   only if the repository's committed host settings enable it and the plugins the target needs;
-  the install offers to write those two keys first and refuses only when declined.
+  `init` and `update` offer to write those two keys first and refuses only when declined.
 - **The first run is the proof, not the creation.** A cadence that has never fired is a guess
   about somebody else's environment.
 
@@ -595,7 +599,7 @@ capability — a divergence taken on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and two of its own wrappers invoke `devbook:check` and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and two of its own wrappers invoke `devbook:validate` and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |

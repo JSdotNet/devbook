@@ -1,7 +1,7 @@
 name: Devbook index drift
 
 # Reports, and never fails on, a committed _meta/ index that no longer matches
-# the Markdown on this branch. Installed by the `devbook-derived:install` skill.
+# the Markdown on this branch. Installed by the `devbook-derived:init` skill.
 #
 # Forcing every devbook pull request to carry a regenerated index is what makes
 # those files conflict on merge, so this is advisory: the nightly refresh

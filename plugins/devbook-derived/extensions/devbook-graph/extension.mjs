@@ -27,10 +27,10 @@ const REPO_ROOT = process.cwd();
 
 // The graph, outline, and metadata modules are devbook's checker, and this
 // plugin never bundles a copy of them: a second implementation would be a
-// second thing to keep true. They are loaded from where devbook's install
+// second thing to keep true. They are loaded from where devbook's init
 // materializes them — or, in the repository that authors the checker and
 // vendors it under plugins/, from there — so the canvas and the check are one
-// parser (the checks-and-indexes record). Absent both, the canvas says which install to
+// parser (the checks-and-indexes record). Absent both, the canvas says which skill to
 // run rather than drawing from nothing.
 const CHECKER_CANDIDATES = [
     path.join(REPO_ROOT, ".devbook", "_tools", "devbook-meta"),
@@ -51,7 +51,7 @@ async function loadChecker() {
     throw new Error(
         "devbook-graph: devbook's checker is not installed — none of " +
             CHECKER_CANDIDATES.map((d) => path.relative(REPO_ROOT, d)).join(", ") +
-            " holds graph.mjs. Run devbook:install first."
+            " holds graph.mjs. Run devbook:init first."
     );
 }
 

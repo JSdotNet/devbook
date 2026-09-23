@@ -16,5 +16,5 @@ summary in this log is enough — no issue. If the skill stops because the repos
 adopted devbook, say so and stop.
 
 The tool list carries no editor on purpose. This run reads and reports; the daily
-`devbook-check` schedule owns the structural repairs, and a chapter's prose changes only when
+`devbook-validate` schedule owns the structural repairs, and a chapter's prose changes only when
 a person changes it through the folder's flow.
