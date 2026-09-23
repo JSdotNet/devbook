@@ -16,7 +16,7 @@ is installed at all. Substitute the skill names the target repository
 actually has as you copy the routes below.
 
 The task-scoped rule is in the section of `AGENTS.md` that
-`devbook:install` writes (`agents-section.md`), so do not restate them here. What follows
+`devbook:init` writes (`agents-section.md`), so do not restate them here. What follows
 is routing only, and none of it goes inside that section's markers.
 
 ## For a repository routing instructions file

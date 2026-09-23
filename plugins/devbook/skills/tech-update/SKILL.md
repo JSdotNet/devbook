@@ -23,8 +23,8 @@ technology chapter by hand.
 - Target `tech/` scope. Default to every `tech/` layer that exists.
 - Optional focus, such as backend packages, frontend packages, tooling, deployment, or all.
 
-If the repository has no `tech/` folder, stop and run `devbook:install` first for the
-`tech/` adoption path.
+If the repository has no `tech/` folder, stop and adopt it first — through `devbook:update`,
+or `devbook:init` where devbook has no stamp yet.
 
 ## Deterministic package inventories
 
@@ -94,8 +94,8 @@ chapters and generated `_meta/*.json` indexes.
    ```
 
    If it reports unresolved references or schema violations, fix the source Markdown or
-   run `devbook:check`. When `.devbook/_tools/devbook-meta/` is absent, run
-   `devbook:install` first.
+   run `devbook:validate`. When `.devbook/_tools/devbook-meta/` is absent, run
+   `devbook:init` first.
 
 ## Output expectations
 

@@ -45,7 +45,7 @@ rules require exactly that.
   repository package-update workflow, and the adopted result is recorded in
   `tech/`.
 
-If `design/` does not exist, stop and run `devbook:install`.
+If `design/` does not exist, stop and adopt it through `devbook:update`, or `devbook:init` where devbook has no stamp yet.
 
 ## Mapping
 

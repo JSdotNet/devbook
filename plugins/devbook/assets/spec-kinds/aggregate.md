@@ -30,7 +30,7 @@ groupings it draws from, and the events it raises.
 owns the events it raises itself. An event raised by a service rather than by
 this root is out of scope here — say which service raises it.
 
-If the repository has no `domain/` folder, stop and run `devbook:install`. If
+If the repository has no `domain/` folder, stop and adopt it through `devbook:update`, or `devbook:init` where devbook has no stamp yet. If
 the bounded-context folder does not exist, stop — the context's files are created
 together by the `domain/` flow, and creating only `domain.md` leaves the folder
 malformed.

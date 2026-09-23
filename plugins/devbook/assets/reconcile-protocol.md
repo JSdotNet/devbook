@@ -1,10 +1,11 @@
 # Reconcile protocol
 
-The shared detail behind `devbook:install` and `devbook:check`: the stamp devbook
+The shared detail behind `devbook:init` and `devbook:update`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
-does. Read it before running either skill; neither repeats it.
+does. Read it before running either skill; neither repeats it. Whatever checks an
+installation without writing reads **The stamp** and **Rules that hold in every phase**.
 
-Other plugins' installs read one section of it: a payload-only component takes
+Other plugins' `init` and `update` skills read one section of it: a payload-only component takes
 **The stamp**'s two shared fields and its hash rules, and nothing else here describes
 it: the three fields beside those, the asset table, and the six phases are devbook's
 own. The reason is
@@ -13,7 +14,9 @@ own. The reason is
 ## One reconcile, four situations
 
 First install, a version upgrade, a change in which folders are adopted, and a
-migration are the same idempotent operation. The stamp says which one this is:
+migration are the same idempotent phases. The stamp says which one this is, and which
+skill runs them: `devbook:init` where there is no stamp and refuses where there is one,
+`devbook:update` for the other three and refuses where there is none:
 
 | Situation | Detected by | What differs |
 |---|---|---|
@@ -151,7 +154,7 @@ it never goes inside the markers.
    planned: the migrations that would carry it forward no longer ship. Say which
    contract the repository is on, which the floor is, and that the way up is
    through the last release of the previous major — install that version, run
-   `devbook:install`, then return. Never run the migrations that are present
+   `devbook:update`, then return. Never run the migrations that are present
    over a gap: a ledger with a hole in it is a repository nobody can reason about.
 
 2. **Resolve.** Desired state is adopted folders × contract version × the asset
@@ -177,7 +180,7 @@ it never goes inside the markers.
    The `AGENTS.md` section follows the same rule, with the text between its
    markers standing in for the file.
 
-6. **Stamp and verify.** Rewrite devbook's entry, run `devbook:check`, and report
+6. **Stamp and verify.** Rewrite devbook's entry, run `devbook:validate`, and report
    what moved. A reconcile that ends with a failing check is reported as failing —
    never as "installed".
 

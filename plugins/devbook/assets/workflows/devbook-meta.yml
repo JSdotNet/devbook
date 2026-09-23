@@ -2,7 +2,7 @@ name: Devbook metadata
 
 # Enforces the devbook convention: every metadata reference must
 # resolve and every `meta` block must match the schema. Installed by the
-# `devbook:install` skill. It writes nothing; whether the committed _meta/
+# `devbook:init` skill. It writes nothing; whether the committed _meta/
 # indexes are current is devbook-derived's question, asked by its own
 # devbook-meta-drift.yml beside this file where that plugin is installed.
 #

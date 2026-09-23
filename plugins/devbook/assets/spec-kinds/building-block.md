@@ -29,7 +29,7 @@ carries the kind.
   `domain/`'s. A structural change is expensive to reverse, so the gate's
   confirmation below `active` matters here.
 
-If `arc42/` does not exist, stop and run `devbook:install`. Create the file
+If `arc42/` does not exist, stop and adopt it through `devbook:update`, or `devbook:init` where devbook has no stamp yet. Create the file
 only when the chapter will have real content — the folder rules forbid
 scaffolding an empty placeholder.
 

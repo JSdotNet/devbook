@@ -37,7 +37,7 @@ them.
 ### install
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook-procedures.md#dependencies", ".devbook/arc42/building-blocks/devbook-procedures.md#procedure", ".devbook/arc42/building-blocks/devbook.md#install"]
+related: [".devbook/arc42/building-blocks/devbook-procedures.md#dependencies", ".devbook/arc42/building-blocks/devbook-procedures.md#procedure", ".devbook/arc42/building-blocks/devbook.md#update"]
 ```
 
 Materialize `.agents/skills/<name>.md` and a wrapper per host for every name in
