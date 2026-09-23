@@ -1,6 +1,6 @@
 {
   "name": "delivery",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "The host-neutral delivery engine: 4 flow-* staged procedures named for what changes — the code, the devbook folders, the dependencies, the project — 3 shared phases, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, validate, app.start, qa.run, verify and deliver as services, session.start, flow.start, data.prepare and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .devbook/config.json.",
   "author": {
     "name": "Job Schepers"
