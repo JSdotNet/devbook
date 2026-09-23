@@ -17,30 +17,32 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `devbook-config` with `/plugin`. During development, add this working copy by path
 instead of by repository.
 
-## The five skills
+## The six skills
 
 | Skill | Does |
 | --- | --- |
-| [`setup`](skills/setup/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component installs itself. |
-| [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own install skill, and a re-validated config. |
+| [`init`](skills/init/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component initializes itself, then runs each adopted component's `init`. Refused where the config exists. |
+| [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own `update`, and a re-validated config. |
+| [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, installed against newest — each finding with the `update` that fixes it. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s surface contract. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
-| [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` — all under your devbook config directory. The one skill here that writes outside the repository, and the one that never writes the committed config. `setup` and `update` close by offering it. |
+| [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` — all under your devbook config directory. The one skill here that writes outside the repository, and the one that never writes the committed config. `init` and `update` close by offering it. |
 
 `devbook-config:adoption` is the one that writes nothing at all, and deliberately: `ai/` rates whether
 people actually work a certain way, and the report can only see what is on disk. It says which
 plugins, flows, and bindings a chapter's prose no longer matches, and leaves `status`,
-**Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:setup` and
-`devbook-config:update` keep against a `components.<name>` stamp.
+**Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:init`,
+`devbook-config:update`, and `devbook-config:doctor` keep against a `components.<name>` stamp.
 
-`setup` and `update` stay two skills rather than one that branches on detect. They answer
+`init` and `update` stay two skills rather than one that branches on detect. They answer
 different questions — *what should this repository use?* against *is what it uses current?* —
 and only the first is a conversation about intent. Merging them would put an interview in
 front of an operation people run to change nothing.
 
-The four carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
+The six carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
 scope against its neighbours in the same plugin; here the plugin name is the scope, and
-`devbook-config:setup` says everything a prefix would have.
+`devbook-config:init` says everything a prefix would have. The verbs are OpenSpec's —
+`init`, `update`, `doctor` — and so is every component's `init` and `update`.
 
 ## The report
 
@@ -69,10 +71,10 @@ shares it:
 
 | Scope | Installed | Enabled | Stamped | The run |
 | --- | --- | --- | --- | --- |
-| `reconcile` | yes | yes | yes | Runs its install skill |
+| `reconcile` | yes | yes | yes | Runs its `update` |
 | `blocked` | no | – | yes | Reports and skips. **Never drops the stamp.** |
 | `frozen` | yes | no | yes | Reports; offers to enable |
-| `adoptable` | yes | yes | no | Asks once whether to adopt |
+| `adoptable` | yes | yes | no | Asks once whether to adopt; runs its `init` on a yes |
 | `available` | yes | no | no | One line |
 | `out-of-scope` | no | – | no | A footnote |
 
@@ -96,10 +98,11 @@ committed and shared.
   reported as `not installed` — the same degrade-rather-than-fail shape `delivery` uses for a
   role or a service whose provider does not resolve. That is what keeps this outside the
   [layer](../../.devbook/arc42/08-crosscutting-concepts.md#layer) order rather than under it.
-- **Writing anything a component owns.** `devbook-config:setup` and `devbook-config:update` write the four
-  engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
-  install skill, which is the only thing that knows what it materialized. That is also why
-  `devbook:install` and `devbook-check` did not move here: `devbook` ships the payload, the
+- **Writing anything a component owns.** `devbook-config:init` and `devbook-config:update` write the four
+  engine-owned keys and stop, and `doctor` writes nothing. Every `components.<name>` stamp stays
+  with that component's own `init` and `update`, the only things that know what it materialized.
+  That is also why `devbook:init` and `devbook:update` did not move here, and why `doctor` only
+  runs devbook's migrations with `--check`: `devbook` ships the payload, the
   migrations, and the ledger, and a skill in this plugin has no supported path to any of them.
 
 ## Files
@@ -107,8 +110,9 @@ committed and shared.
 | Path | Holds |
 | --- | --- |
 | `.claude-plugin/plugin.json`, `.github/plugin/plugin.json` | The two manifests, agreeing on name, version, and description |
-| `skills/setup/SKILL.md` | First setup of the engine keys, before any component installs |
+| `skills/init/SKILL.md` | First setup of the engine keys, before any component initializes |
 | `skills/update/SKILL.md` | Version drift, migrations, re-validation |
+| `skills/doctor/SKILL.md` | The installation diagnosis: stamps, ledger, `AGENTS.md` sections, versions |
 | `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
 | `skills/local/SKILL.md` | The machine-scope settings: overlays, the model-selection file, `AGENTS.local.md` |

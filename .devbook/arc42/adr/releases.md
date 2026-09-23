@@ -35,7 +35,7 @@ deliberate exception to a ledger entry never being removed: it held three no-ops
 the day the stamp was created.
 
 **The argument expires at the first install.** The deletion was safe because no repository was
-behind; from the first `devbook:install` onward a schema, stamp, config, or path change leaves a
+behind; from the first install onward a schema, stamp, config, or path change leaves a
 repository behind unless a script moves it. So the obligation starts here and never again lapses.
 
 **The marketplace name is a per-machine primary key.** A host keys its registry, its cache
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-23 | Contract 15 and migration 015, which renames the skill ids a stack config binds, wait unreleased for `release-plan`, which reads the migration folder to pick the version. |
 | 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with migration 013, which takes the decision rungs off every folder but `domain/`. A contract bump is a minor release, with its migration only when one is owed. |
 | 2026-09-21 | Every plugin is `1.3.0`; contract 12 ships in it with migration 012, which retires the overlay's checkout layer and devbook's `.gitignore` block. |
 | 2026-09-18 | Every plugin is `1.2.0`; contract 11 ships in it with migration 011 — the first release where a contract bump moved the version. |

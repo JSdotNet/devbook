@@ -5,16 +5,17 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-b
 ```
 
 What this stack is, what this machine has, and how this repository is wired. Responsible for
-three things: that a repository's stack configuration exists before anything installs itself,
-that it can be moved forward in one run, and that every answer it gives about the stack names
+four things: that a repository's stack configuration exists before anything initializes itself,
+that it can be moved forward in one run, that its installation can be diagnosed without a write,
+and that every answer it gives about the stack names
 the file it came from.
 
 Inside the block: the four engine-owned keys of the stack config, the read-only report behind
 every fact, the scope verdict that decides what an update touches, and the drift report against
 the adoption record.
 
-Outside it: every `components.<name>` stamp, which belongs to that component's own install
-skill; the schema of the four keys, which is [delivery](delivery.md)'s; and writing a chapter,
+Outside it: every `components.<name>` stamp, which belongs to that component's own `init` and
+`update`; the schema of the four keys, which is [delivery](delivery.md)'s; and writing a chapter,
 which is a flow's. This block names every plugin in the marketplace and declares none.
 
 ## Interfaces
@@ -22,36 +23,38 @@ which is a flow's. This block names every plugin in the marketplace and declares
 ```meta
 ```
 
-Five skills, two of which write nothing and one of which writes nothing into the repository, and
-the one script all five read through. None of them writes a key another component owns.
+Six skills, three of which write nothing and one of which writes nothing into the repository, and
+the one script all six read through. None of them writes a key another component owns.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `setup` | skill | A person adopting the stack in a repository, before any component installs itself |
+| `init` | skill | A person adopting the stack in a repository, before any component initializes itself |
 | `update` | skill | A person moving the configured stack forward |
+| `doctor` | skill | A person asking whether the installation is current, `init` and `update` at their close, or the daily `devbook-validate` schedule where this plugin is installed |
 | `ask` | skill | A person with a question about this marketplace |
 | `adoption` | skill | A person checking the `ai/` adoption record against what is installed |
-| `local` | skill | A person saying what is true of their machine — after `setup` or `update` offers it, or when the report says no user overlay exists |
-| `scripts/report.mjs` | script, the read-only report | The five skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
-| The engine keys of `.devbook/config.json` | what it writes | `setup` and `update`, and nothing else in that file |
+| `local` | skill | A person saying what is true of their machine — after `init` or `update` offers it, or when the report says no user overlay exists |
+| `scripts/report.mjs` | script, the read-only report | The six skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
+| The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
 | The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` |
 
-### setup
+### init
 
 ```meta
 ```
 
 Write a repository's four engine-owned keys for the first time — which provider fills each
 point, which plugin fills each role, which tracker, which policy switches, which gates — then
-invoke every component's own install skill rather than reimplementing any of them. The service
-is [Setup Service](#setup-service); the run is drawn under
-[Setup, Then Every Component](#setup-then-every-component).
+invoke every component's own `init` rather than reimplementing any of them. It refuses where
+`.devbook/config.json` already exists: "already initialized, run update". The service is
+[Init Service](#init-service); the run is drawn under
+[Init, Then Every Component](#init-then-every-component).
 
 It is a conversation about intent, which is why it is not the same skill as the one that moves
 the stack forward.
 
 Stop at the engine keys: four keys and no more. Every `components.<name>` stamp stays with the
-component that knows what it materialized, which is why the install skills are invoked and not
+component that knows what it materialized, which is why each component's `init` is invoked and not
 absorbed — the boundary [Engine Configuration](#engine-configuration) holds.
 
 ### update
@@ -60,13 +63,27 @@ absorbed — the boundary [Engine Configuration](#engine-configuration) holds.
 ```
 
 Move the whole configured stack forward in one run: version drift, outstanding migrations, a
-fan-out to every adopted component's install skill, and a re-validated config. It changes
+fan-out to every adopted component's `update`, and a re-validated config. It changes
 nothing about intent, which is what makes it safe to run when nothing has changed. The service
 is [Update Service](#update-service); the verdicts are under [Update, By Scope](#update-by-scope).
 
 Never drop a stamp: a component this machine has not installed is reported, skipped, and **left
 stamped**. A stamp is committed and shared while installed-ness is personal, so dropping the
 entry would un-adopt the component for everyone on the next commit.
+
+### doctor
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook-config.md#stack-report"]
+```
+
+Say whether the installation is current and write nothing: every component's stamp against
+disk, devbook's migrations run with `--check`, each component's `AGENTS.md` section against its
+stamped hash and its template, and each installed plugin against the newest published. Every
+finding names the component's `update` that fixes it. It is the half of what `devbook:check`
+used to ask that reads every stamp — moved here because this is the one context allowed to read
+them all, and a devbook skill never names another plugin. Hard drift fails; staleness and
+customization are reported and do not.
 
 ### ask
 
@@ -104,9 +121,9 @@ an answer is about one repository; the model-selection file the engine's `model-
 resolves to; and `AGENTS.local.md` — all under the user's devbook config directory, none in
 the clone. Every question is optional and the default is nothing.
 
-It exists because `setup` may not write an overlay — an overlay is true of the person running
+It exists because `init` may not write an overlay — an overlay is true of the person running
 it, not of the repository they set up — and without it the first run on every machine took the
-team's defaults without saying so. `setup` and `update` close by offering it, and the report
+team's defaults without saying so. `init` and `update` close by offering it, and the report
 says when no user layer exists.
 
 ## Structure
@@ -180,8 +197,8 @@ classDiagram
   stamp and writes none. `EngineConfiguration` and `ComponentStamp` share one file and never a
   key, which is what [one config file, two kinds of key](../adr/configuration.md) means in a
   diagram.
-- **`ScopeVerdict` decides whether an install skill runs and never runs one itself.** The fan-out
-  is a delegation, so a component's install skill remains the only thing that knows what that
+- **`ScopeVerdict` decides whether a component's `init` or `update` runs and never runs one itself.** The fan-out
+  is a delegation, so a component's own skills remain the only thing that knows what that
   component materialized.
 - **`FactSource` is associated with the report rather than with a row, and it carries `present`.**
   A file that was absent still produces a source, which is what makes an empty table say "this was
@@ -249,16 +266,16 @@ file. The schema is [delivery](delivery.md#stack-config)'s and this block confor
 this block owns is the writing.
 
 The boundary is by key and it is absolute. A `components.<name>` stamp is written by that
-component's own install skill, which is the only thing that knows what it materialized — which
-is also why `devbook:install` did not move here.
+component's own `init` and `update`, the only things that know what it materialized — which
+is also why `devbook:init` and `devbook:update` did not move here.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Only the four engine keys are written here | `setup()`, `update()` | untested |
-| No component's stamp is ever written or dropped by this block | `setup()`, `update()` | untested |
+| Only the four engine keys are written here | `init()`, `update()` | untested |
+| No component's stamp is ever written or dropped by this block | `init()`, `update()`, `doctor()` | untested |
 | The result validates against the engine's schema, which rejects an unknown key | validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| Setup runs before any component installs itself, and hands each component its own install skill | `setup()` | untested |
-| Model choice is never written: it is personal, so there is no repository-level override | `setup()` | untested |
+| Init runs before any component initializes itself, and hands each component its own `init` | `init()` | untested |
+| Model choice is never written: it is personal, so there is no repository-level override | `init()` | untested |
 
 The value it holds:
 
@@ -274,14 +291,15 @@ The value it holds:
   overlay for the person running it; a plugin writes its own `ext` namespace there and nothing
   else. The reasoning is [the configuration record](../adr/configuration.md).
 
-### Setup Service
+### Init Service
 
 ```meta
 related: [".devbook/arc42/12-glossary.md#engine-key"]
 ```
 
 Writes a repository's four engine keys for the first time, then invokes each component's own
-install skill rather than reimplementing any of them. The `setup` skill is its entry.
+`init` rather than reimplementing any of them. The `init` skill is its entry, and refuses a
+repository whose config already exists.
 
 Invocation semantics: command-invoked, and it is a conversation about intent — which roles,
 which tracker, which providers, which gates. That is why it stays separate from
@@ -291,8 +309,8 @@ run to change nothing.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| It writes the four engine keys and invokes each component's own install skill, reimplementing none | `setup` | untested |
-| Command-invoked, and a conversation about intent — which is why it stays apart from `update` | `setup` | untested |
+| It writes the four engine keys and invokes each component's own `init`, reimplementing none | `init` | untested |
+| Command-invoked, and a conversation about intent — which is why it stays apart from `update` | `init` | untested |
 
 ### Update Service
 
@@ -300,7 +318,7 @@ run to change nothing.
 ```
 
 Moves the whole configured stack forward in one run: version drift, outstanding migrations, a
-fan-out to every adopted component's own install skill, and a re-validated config. The `update`
+fan-out to every adopted component's own `update`, and a re-validated config. The `update`
 skill is its entry.
 
 Invocation semantics: command-invoked, and it changes nothing about intent. It fans out over the
@@ -366,18 +384,18 @@ Reporting drift is inside this block's subject. Writing the chapter is not.
 
 Two flows: a repository being set up once, and the whole stack being moved forward afterwards.
 
-### Setup, Then Every Component
+### Init, Then Every Component
 
 ```meta
 ```
 
-Setup asks which installed components the repository adopts, writes `id` and — only when the
+Init asks which installed components the repository adopts, writes `id` and — only when the
 engine is among them — the four engine keys, and then gets out of the way. Everything that
 materializes anything is invoked, never reimplemented.
 
 ```mermaid
 flowchart TD
-    start(["devbook-config:setup"]) --> report["The read-only report: which plugins are installed and enabled here"]
+    start(["devbook-config:init"]) --> report["The read-only report: which plugins are installed and enabled here"]
     report --> adopt["Ask which adoptable components the repository takes. Not installed: reported, never offered"]
     adopt --> delivery{"delivery among them?"}
     delivery -->|no| idOnly["Write id alone. Nothing here reads an engine key"]
@@ -385,12 +403,12 @@ flowchart TD
     intent --> keys["Write id, bindings, extensions, policy, gates"]
     keys --> validate{"Validates against the engine's schema?"}
     validate -->|"unknown key"| reject["Reject. A typo is an error, never a silently absent setting"]
-    validate -->|clean| fanout["Invoke each adopted component's own install skill"]
+    validate -->|clean| fanout["Invoke each adopted component's own init"]
     idOnly --> fanout
-    fanout --> devbookInstall["devbook:install"]
-    fanout --> derivedInstall["devbook-derived:install"]
-    fanout --> deliveryInstall["delivery:install"]
-    fanout --> scheduleInstall["delivery-schedule:install"]
+    fanout --> devbookInstall["devbook:init"]
+    fanout --> derivedInstall["devbook-derived:init"]
+    fanout --> deliveryInstall["delivery:init"]
+    fanout --> scheduleInstall["delivery-schedule:init"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
     derivedInstall --> stamps
     deliveryInstall --> stamps
@@ -398,15 +416,15 @@ flowchart TD
     stamps --> done(["Configured, and every component stamped by its owner"])
 ```
 
-- **Setup is a conversation and update is not.** They answer *what should this repository use?*
+- **Init is a conversation and update is not.** They answer *what should this repository use?*
   and *is what it uses current?*; merging them would put an interview in front of an operation
   people run to change nothing.
 - **Nothing is set up that this machine has not installed.** Installing a plugin is the user's
   act; a stamp written for one the machine lacks is `blocked` on the very next update.
 - **The engine keys exist only for the engine.** They are `delivery.*` settings, so a repository
   adopting devbook without `delivery` is asked nothing about roles, points, policy, or gates.
-- **The fan-out is a delegation, always.** A component's install skill is the only thing that
-  knows what that component materialized, which is why nothing here writes a stamp.
+- **The fan-out is a delegation, always.** A component's own `init` and `update` are the only things that
+  know what that component materialized, which is why nothing here writes a stamp.
 - **An unknown key is rejected rather than ignored.** That single property is most of what the
   schema is for.
 
@@ -425,7 +443,7 @@ flowchart TD
     installed -->|no| blocked["blocked - report, skip, and never drop the stamp"]
     installed -->|yes| enabled{"Enabled in this checkout?"}
     enabled -->|no| frozen["frozen - report, offer to enable"]
-    enabled -->|yes| reconcile["reconcile - run its install skill"]
+    enabled -->|yes| reconcile["reconcile - run its update"]
     stamped -->|no| installed2{"Installed?"}
     installed2 -->|no| outOfScope["out-of-scope - a footnote"]
     installed2 -->|yes| enabled2{"Enabled?"}
@@ -461,9 +479,9 @@ included. That is the whole shape of it.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `extensions`, `policy`, `gates`; validates with the engine's own checker | `resources/config.schema.json` | The four keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
-| [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, and invokes `devbook:install` during setup and update | The folder layout, and the install skill's name | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
-| [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their install skills during a fan-out | The stamp shape and each install skill's name | Every component's stamp stays with the component. This block decides *whether* an install runs and never what it does. |
-| [devbook-collaboration](devbook-collaboration.md#dependencies) | Conformist, read-only | Reports whether it is installed and enabled | The marketplace entry and manifests | It has no stamp and no install; enabling it is the whole adoption. |
+| [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, invokes `devbook:init` during init and `devbook:update` during update, and runs its migrations with `--check` from `doctor` | The folder layout, the two skill names, and `migrate.mjs --check` | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
+| [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their `init` or `update` during a fan-out | The stamp shape and each component's two skill names | Every component's stamp stays with the component. This block decides *whether* one runs and never what it does. |
+| [devbook-collaboration](devbook-collaboration.md#dependencies) | Conformist, read-only | Reports whether it is installed and enabled | The marketplace entry and manifests | It has no stamp, no `init`, and no `update`; enabling it is the whole adoption. |
 | The three surfaces | Conformist, read-only | Reports whether each is installed, enabled, and at what version | The marketplace entries and manifests | Naming a plugin is not depending on one. Every row degrades to `not installed`. |
 | The host's own plugin state | Conformist, **and a known divergence** | Reads the host's config directory, its installed-plugin file, its marketplace clones, and three settings layers merged nearest-last | The host's own file layout | Where a plugin is installed and whether it is enabled is a fact about a host and nothing else, so an asset answering it either names those files or answers nothing. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `scripts/` run in place from the plugin root | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here. |
@@ -475,8 +493,8 @@ included. That is the whole shape of it.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| A repository being set up | Customer-Supplier, this block supplying | `.devbook/config.json`, written before any component installs itself | The engine's schema | That setup runs first and hands each component its own install skill. |
-| [devbook](devbook.md#dependencies) and every other component, during a fan-out | Customer-Supplier, reversed — this block calling | Their own install skills, invoked with a scope verdict already resolved | Each install skill's name and its idempotence | That an install run twice is harmless, which is what makes a whole-stack update safe. |
+| A repository being set up | Customer-Supplier, this block supplying | `.devbook/config.json`, written before any component initializes itself | The engine's schema | That init runs first and hands each component its own `init`. |
+| [devbook](devbook.md#dependencies) and every other component, during a fan-out | Customer-Supplier, reversed — this block calling | Their own `init` and `update`, invoked with a scope verdict already resolved | Each skill's name, its idempotence, and its refusal of the other's case | That an update run twice is harmless, which is what makes a whole-stack update safe. |
 | Nothing declares it | — | — | — | No manifest anywhere names this plugin, in either direction. |
 
 **Naming every plugin and depending on none is the position, and it is deliberate.** A plugin it
@@ -493,5 +511,5 @@ has no member for *where this host keeps its plugins*.
 while the catalog half still answers. The report says which files it read and which were absent,
 which is what keeps an empty table legible rather than misleading.
 
-**It writes four keys and calls other people's install skills.** Everything else it does, it
+**It writes four keys and calls other people's `init` and `update`.** Everything else it does, it
 reads.

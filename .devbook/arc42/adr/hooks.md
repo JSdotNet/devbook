@@ -41,7 +41,7 @@ calls and the least of its time. A panel that needs a new tool needs it in the m
 
 The cost of the guard is real: a repository running flows on pure defaults, with neither the
 config nor an `enabledPlugins` entry, starts its sessions without the routing text. The flows
-still work there; the file that restores the nudge is the one `devbook-config:setup` writes.
+still work there; the file that restores the nudge is the one `devbook-config:init` writes.
 
 ## History
 

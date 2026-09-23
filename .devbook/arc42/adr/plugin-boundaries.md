@@ -60,25 +60,25 @@ the point it fills, and a repository's config is the only place a specialist's n
 **Flows belong to `delivery`.** `devbook` enforces what a folder holds; the engine holds the
 flow for each folder. The bridge that once held them was not a bridge: both foundations named
 it, and it restated devbook's rules. No bridge is needed because rules reach a session through
-the host, not a flow — the install materializes them and any session reads them by path — so
+the host, not a flow — `init` materializes them and any session reads them by path — so
 the engine names folders and never the `devbook` plugin. What remains real and undeclared is
 [debt 4](../tdr/4-delivery-depends-on-devbook.md).
 
 **The guide is its own plugin.** A skill that explains the stack must name every part of it,
 and a lower layer never names a higher one; both cannot hold in one plugin, so `devbook-config`
 has an empty `dependencies` array and stays reachable with `devbook` absent. Its write skills
-stop at the engine keys and invoke `devbook:install` for the stamp. It names a host's own
+stop at the engine keys and invoke `devbook:init` or `devbook:update` for the stamp. It names a host's own
 plugin directories on purpose: where a plugin is installed is a fact about a host and nothing
 else, and no slot exists for it.
 
 **The committed index is an extension.** A repository that wants `_meta/` committed enables
-`devbook-derived` and runs its install; one that does not never sees a derived file. The
+`devbook-derived` and runs its `init`; one that does not never sees a derived file. The
 review plugin has the same shape after its state moved into devbook's schema: five skills, no
 rule, no install, no stamp ([annotations](annotations.md), [checks and
 indexes](checks-and-indexes.md)).
 
 **The repository's procedures are an extension over the convention, not a payload of the
-engine.** `start` and `capture` began as two seeds `delivery:install` wrote, because the
+engine.** `start` and `capture` began as two seeds the engine's install wrote, because the
 engine was the first thing that needed them. But the engine never read them as a plugin's
 files: it named the skill and the path and expected a running application or evidence
 back, which is the one shape that lets a repository hand-write both. Once `show` and `debug`
@@ -89,7 +89,7 @@ ride in the engine, and a repository with no engine at all still wants all four.
 devbook's; the engine keeps its contract for what Validation expects back and names the skill
 alone. The seam the move added is the **goal**: one sentence per procedure the plugin owns and
 the wrapper carries, refreshed on every upgrade, while the body under `.agents/skills/` is the
-repository's from the first edit. `delivery:install` survives as the stamp's holder and
+repository's from the first edit. `delivery:init` and `delivery:update` survive as the stamp's holder, and `update`
 releases its old claim on the two seeds — the protocol's adoption-changed case, which is why
 the handover ships no migration.
 

@@ -7,7 +7,7 @@ description: 'Say what is true of this machine and nobody else''s — QA depth i
 
 Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-`setup` and `update` write what is true of the repository; this writes what is true of you on
+`init` and `update` write what is true of the repository; this writes what is true of you on
 this machine, and it is the only skill here that does. Every layer, its merge rules, and what
 an overlay may not say are *The overlays* in the delivery plugin's `resources/surface-contract.md`;
 the model-selection file is *Personal Global Override File* in `resources/flow-model-selection.md`.

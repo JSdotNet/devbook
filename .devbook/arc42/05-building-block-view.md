@@ -419,7 +419,7 @@ The two write skills stop at the [engine keys](#stack-config). Every `components
 stays with that component's own `init` and `update`, which are the only things that know what it
 materialized — so neither moves here, and `devbook-config:init` and `devbook-config:update` end by
 invoking them rather than reimplementing them. `devbook-config:doctor` reads every stamp and
-writes none: the installation half of what `devbook:check` used to ask, moved to the one context
+writes none: the installation half of what `check` used to ask, moved to the one context
 allowed to read them all.
 
 The report is also the one place a host's own paths are still named, which
