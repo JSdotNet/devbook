@@ -10,7 +10,7 @@ default branch and never regenerated in a session.
 
 Inside the block: the refresh paths — the `refresh` skill, the on-demand script, the nightly
 workflow, the drift warning — the canvas that draws the graph live, the rule that says where a
-derived artifact lives and what its envelope is, and the install that puts them in a
+derived artifact lives and what its envelope is, and the `init` that puts them in a
 repository.
 
 Outside it: the checker that computes what these files hold, and the fence writer — both
@@ -30,26 +30,35 @@ time is a workflow or a script passing `--write` to devbook's checker.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `install` | skill | A person, or `devbook-config:setup` during a fan-out |
+| `init` | skill | A person, or `devbook-config:init` during a fan-out |
+| `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `refresh` | skill | A person who wants this branch current |
-| `devbook-derived-artifacts.md` | rule | Either host, on opening a file under `_meta/`, through the wrapper the install writes |
+| `devbook-derived-artifacts.md` | rule | Either host, on opening a file under `_meta/`, through the wrapper `init` writes |
 | `devbook-meta-nightly.yml`, `devbook-meta-drift.yml` | workflows | GitHub Actions, on the schedule and on a pull request |
 | `devbook-graph` | Copilot extension, two canvases | Copilot CLI, from the live tool list |
 
-### install
+### init
 
 ```meta
 ```
 
 Materialize the on-demand refresh script, the nightly refresh and drift-warning workflows where
 GitHub Actions is present, the `devbook-derived-artifacts.md` rule as a trio per host, and this
-plugin's own marker-fenced section of `AGENTS.md`; then stamp `components.derived`.
-Payload-only: hash-matching is its whole migration mechanism, per devbook's reconcile
-protocol.
+plugin's own marker-fenced section of `AGENTS.md`; then stamp `components.derived`. Refuses
+where that stamp already exists.
 
 Refuses to run until devbook's stamp names an adopted folder and devbook's checker is
 materialized, and ends by running that check — a run that ends on a failing check is reported
-as failing, never as installed.
+as failing, never as initialized.
+
+### update
+
+```meta
+```
+
+Replace every file `init` materialized that still hashes to a release this plugin shipped,
+report the customized ones, and re-stamp `components.derived`. Payload-only: hash-matching is
+its whole migration mechanism, per devbook's reconcile protocol. Refuses where no stamp exists.
 
 ### refresh
 
@@ -102,9 +111,9 @@ links and the command that runs each; and one chapter beside its parsed block an
 lint. It reads the Markdown, never `_meta/`, and writes nothing.
 
 It bundles no parser. It loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from
-`.devbook/_tools/devbook-meta/` — the path devbook's install materializes — at runtime, and
+`.devbook/_tools/devbook-meta/` — the path devbook's `init` materializes — at runtime, and
 from `plugins/devbook/tools/devbook-meta/` in the repository that vendors them; absent both,
-it names `devbook:install` and draws nothing. That runtime load is the "published shape to
+it names `devbook:init` and draws nothing. That runtime load is the "published shape to
 import" [the surfaces record](../adr/surfaces.md) waited for, and what closes it.
 
 | Invariant | Enforced at | Evidence |
@@ -112,7 +121,7 @@ import" [the surfaces record](../adr/surfaces.md) waited for, and what closes it
 | The reference graph is rebuilt from disk on open, so it can never show a stale index | `extension.mjs` | untested |
 | The canvas reads the Markdown, never `_meta/`, and writes nothing | `extension.mjs` | untested |
 | It bundles no parser: `graph.mjs`, `outline.mjs`, and `metadata.mjs` load at runtime from the installed path, or the vendored one | `extension.mjs` | untested |
-| With neither path present it names `devbook:install` and draws nothing | `extension.mjs` | untested |
+| With neither path present it names `devbook:init` and draws nothing | `extension.mjs` | untested |
 
 ## Dependencies
 
@@ -132,10 +141,10 @@ write.
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.1.0 <2.0.0` | Passes `--write` to `.devbook/_tools/devbook-meta/build.mjs` from `refresh`, its script, and both workflows; the canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from the same folder at runtime; reads `adopted` from devbook's stamp | The checker's CLI, its three module exports, and the derived-artifacts envelope | It computes nothing itself. Every byte under `_meta/` and every node the canvas draws is devbook's checker's output. |
 | Copilot Extension SDK | Conformist | `extensions/devbook-graph/`, registering two canvases | `copilot-extension.json` | The graph canvas is a host capability this block uses and does not define. |
-| [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its install delivers, the `components.derived` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
-| Claude Code and Copilot Plugin APIs | Conformist | Manifests, one install skill, the hook pair, and the rule wrappers its install writes | Each host's own schemas | The `_meta/` rule has to fire when either host opens a derived file, which only a materialized wrapper achieves. |
+| [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its `init` delivers, the `components.derived` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
+| Claude Code and Copilot Plugin APIs | Conformist | Manifests, the `init` and `update` skills, the hook pair, and the rule wrappers `init` writes | Each host's own schemas | The `_meta/` rule has to fire when either host opens a derived file, which only a materialized wrapper achieves. |
 | GitHub Actions | Conformist | The nightly refresh and the drift warning are workflows | The host's workflow schema | Refresh on a schedule needs a scheduler, and a pull-request warning needs a runner; without Actions the on-demand script is the only path. |
-| A consuming repository | Customer-Supplier, this block supplying | `devbook-derived:install` materializes the script, both workflows, the rule trio, and its own marker-fenced section of `AGENTS.md`; the stamp under `components.derived` records it | The materialized paths | The committed index exists only where it was asked for. |
+| A consuming repository | Customer-Supplier, this block supplying | `devbook-derived:init` materializes the script, both workflows, the rule trio, and its own marker-fenced section of `AGENTS.md`; the stamp under `components.derived` records it | The materialized paths | The committed index exists only where it was asked for. |
 
 ### Inbound
 
@@ -146,7 +155,7 @@ write.
 | --- | --- | --- | --- | --- |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `schedule-devbook-check` refreshes the committed indexes where this plugin materialized the refresh path, and skips the step where it did not | The refresh script's path | Nothing but the path: absent, the run fixes Markdown only. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Separate Ways | `chapter-review-queue` prefers the committed indexes and scans when there are none | The derived-artifacts envelope | Nothing: the scan fallback is the contract. |
-| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.derived` and invokes `devbook-derived:install` during a fan-out, after devbook's | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
+| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.derived` and invokes `devbook-derived:init` or `devbook-derived:update` during a fan-out, after devbook's | The stamp shape and the two skill names | That the stamp exists and keeps its shape; it writes none of it. |
 | The Backlog desktop app, outside this repository | Conformist | Reads `.devbook/_meta/index.json` and `graph.json` off disk | The derived-artifacts envelope and `schemaVersion` | That the files are committed and current on the default branch — which is what the nightly refresh is for. |
 
 Nothing below names this block: devbook's checker takes a `--write` flag and devbook never

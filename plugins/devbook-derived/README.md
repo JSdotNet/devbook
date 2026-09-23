@@ -15,8 +15,8 @@ never sees a derived file, a refresh script, or a nightly pull request.
 claude plugin marketplace add JSdotNet/devbook
 ```
 
-Then enable `devbook-derived` with `/plugin` and run `devbook-derived:install` in the
-repository, after `devbook:install` — there is nothing to derive until a folder is adopted.
+Then enable `devbook-derived` with `/plugin` and run `devbook-derived:init` in the
+repository, after `devbook:init` — there is nothing to derive until a folder is adopted.
 
 ## What it ships
 
@@ -35,14 +35,15 @@ repository, after `devbook:install` — there is nothing to derive until a folde
 
 | Skill | What it does |
 |---|---|
-| `install` | Materializes the table above and stamps `components.derived` in `.devbook/config.json`. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md`. Idempotent |
+| `init` | Materializes the table above and stamps `components.derived` in `.devbook/config.json`. Refused where that stamp exists. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md` |
+| `update` | Replaces every materialized file that still hashes to a release this plugin shipped, reports the customized ones, and re-stamps. Refused where no stamp exists. Idempotent |
 | `refresh` | Rewrites the committed indexes from this branch's chapters and says which files moved — the one session-time way to write a derived file, and only when a person asks for this branch to be current, never inside a flow or beside a chapter edit |
 
 ## The line
 
 devbook's `build.mjs` checks by default and writes only on `--write`. Nothing in devbook
 passes that flag; everything here does — the script, both workflows, and `refresh` — at `.devbook/_tools/devbook-meta/build.mjs`, the
-path devbook's install materializes. That one option is the whole boundary between the two
+path devbook's `init` materializes. That one option is the whole boundary between the two
 plugins: `.devbook/arc42/adr/checks-and-indexes.md`.
 
 ## Refresh

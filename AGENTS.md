@@ -195,7 +195,7 @@ Put no secret in it — your home directory is not private.
 <!-- devbook-derived:begin -->
 ## Devbook tooling
 
-Managed by `devbook-derived:install`. Edit outside these markers.
+Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
 generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of

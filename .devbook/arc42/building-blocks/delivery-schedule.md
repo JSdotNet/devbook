@@ -40,7 +40,7 @@ contracts, the catalog checker, one hook, and one stamp.
 ### schedule-devbook-check
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook-derived.md#install", ".devbook/arc42/adr/checks-and-indexes.md"]
+related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook-derived.md#update", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
 Run `devbook:check` over every adopted folder, fix what it reports in the chapters, refresh the
