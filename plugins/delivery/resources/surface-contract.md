@@ -209,6 +209,14 @@ A provider id is `plugin:skill`, a bare `plugin` (resolved through its role), or
 provider that does not resolve degrades to the point's unbound behaviour, named once in the
 run summary — never a silent skip, and never a reason to fail the run.
 
+**A `spec` provider may return a specification approved elsewhere.** Bound as
+`"spec": "your-spec-plugin:your-approved-spec-skill"`, it reads the specification the work item
+points at, already approved where it was written, and returns it unchanged. The flow-runner
+uses what it returns as the run's specification: it derives nothing inline and neither
+rewrites nor supplements it. A `spec` approval gate with `show: artifact` renders that
+returned specification — what the provider returned, not a summary of it — and `revise`
+re-runs the provider with the notes, as at any point.
+
 ## Gates
 
 A gate is the human-in-the-loop mechanism. It presents the output of the point it is attached
@@ -326,6 +334,14 @@ dependencies: one missing specialist must not demote every skill that names it.
   token so the entry's own lifecycle refuses an illegal move rather than the engine deciding
   one, and every scoped call carries `repository` in `owner/name` form, read off the git
   remote. Nothing listening means the application is closed, which is the unbound path above.
+  A `plugin:skill` provider — `{ "provider": "your-tracker-plugin:your-tracker-skill" }` —
+  hands every operation to that skill, which implements three: `read_item`, `update_item`,
+  and `comment`. `update_item` is `transition` and more: it sets the item's step state and
+  ticks the tasks the run completed. The state is one of four, read off the step's own branch
+  and pull request rather than decided by the engine — `open`, `in progress` (a branch
+  exists), `in review` (a pull request is open), `done` (merged). An operation outside the
+  three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
+  A skill that does not resolve is the unbound path for all of them.
 - **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
   the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
   A stage resolves the servers of the point it serves from the live tool list, by pattern,

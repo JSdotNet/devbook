@@ -23,7 +23,13 @@
               "type": "object",
               "required": ["provider"],
               "properties": {
-                "provider": { "enum": ["github", "jira", "markdown", "backlog"] },
+                "provider": {
+                  "description": "A built-in tracker, or a plugin:skill that implements read_item, update_item, and comment.",
+                  "oneOf": [
+                    { "enum": ["github", "jira", "markdown", "backlog"] },
+                    { "type": "string", "pattern": "^[a-z0-9-]+:[a-z0-9-]+$" }
+                  ]
+                },
                 "project": { "type": "string" },
                 "repository": { "type": "string" }
               },

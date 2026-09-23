@@ -182,6 +182,11 @@ test('the tracker provider set is closed', () => {
     assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'trello' } } }).length, 1);
 });
 
+test('a tracker may be a plugin:skill provider in provider-id shape', () => {
+    assert.deepEqual(check({ bindings: { 'delivery.tracker': { provider: 'your-tracker:work-items' } } }), []);
+    assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'Your:Skill' } } }).length, 1);
+});
+
 test('an MCP server binds to a point in the closed set, never to a free name', () => {
     assert.deepEqual(check({ bindings: { 'delivery.mcp': { implement: ['microsoft-learn'] } } }), []);
     const errors = check({ bindings: { 'delivery.mcp': { 'stage-1': ['your-guidelines-server'] } } });

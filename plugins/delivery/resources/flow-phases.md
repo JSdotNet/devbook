@@ -303,8 +303,9 @@ delegated per **Delegation Order** in `flow-execution-model.md`.
 ## Phase: Work Item Update
 
 Every tier. Runs after the pull request and Verification, before Summary. It
-speaks to whatever `bindings["delivery.tracker"]` names — GitHub issues, Jira tickets, or
-Markdown chapters in the folder a repository that plans work as Markdown names.
+speaks to whatever `bindings["delivery.tracker"]` names — GitHub issues, Jira tickets,
+Markdown chapters in the folder a repository that plans work as Markdown names, Backlog
+entries, or a `plugin:skill` provider.
 
 - **Detect the originating work item** from the run's tracker metadata when available, then
   from the origin block a pickup skill recorded when it claimed the item and routed this
@@ -315,6 +316,10 @@ Markdown chapters in the folder a repository that plans work as Markdown names.
 - **Add a new comment; never rewrite the item body.** The comment carries the captured
   result, the pull request link when one exists, the Personal Validation decision, the
   recorded QA report, and the spec verdict table.
+- **Tick the tasks this run completed** through the bound provider's own operation —
+  `update_item` for a `plugin:skill` provider, with the step state its pull request gives,
+  per **Bindings → Tracker** (`surface-contract.md`). Ticking a task is the one edit to the
+  item besides the comment; a provider with no task list skips it and says so.
 - **Include the QA report** for code-modifying flows: scenario pass/fail/flaky status,
   monitoring findings, and captured evidence or report links when available. If
   Validation was skipped or does not apply, state that explicitly rather than inventing a

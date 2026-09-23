@@ -1,7 +1,7 @@
 # Flow Engine
 
 ```meta
-date: 2026-09-15
+date: 2026-09-23
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -91,6 +91,7 @@ own audit already used.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-23 | The tracker may be a `plugin:skill` provider implementing `read_item`, `update_item`, and `comment`; a step's pull request is its state; a `spec` provider may return an already-approved specification. No new point: both fill a binding and a service that already exist. |
 | 2026-09-15 | Sixteen flows become four, named for what changes; no fallback flow. |
 | 2026-09-15 | `verify` is the spec check after the pull request; Build & Test serves `validate`; Documentation Update and `docs.update` removed. |
 | 2026-09-09 | The pull-request skills read the `pr-lane` slot and say what unbound means. |
