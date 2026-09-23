@@ -45,7 +45,7 @@ content.
 | [5. The derived index is not optional](5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | resolved |
 | [6. sync-specs borrows a name OpenSpec uses for something else](6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) | 2026-09-15 | Low | resolved |
 | [7. The decision set predates the concern rule](7-the-decision-set-predates-the-concern-rule.md) | 2026-09-17 | Medium | resolved |
-| [8. The domain rule is not exercised here](8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Low | identified |
+| [8. The domain rule is not exercised here](8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Medium | identified |
 
 None carries a target date. This repository has one maintainer and no release commitment to
 schedule against, so a date would be invented rather than agreed. Each record states the
