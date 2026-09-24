@@ -85,7 +85,8 @@ annotation, or a scenario, because only a chapter can, and a table cell reading 
 standing in for the `tests` field the schema already had. One rule per chapter fixes all of it
 at once, and the two files are where those chapters go. The heading shape is OpenSpec's —
 `### Requirement:`, `#### Scenario:` — kept deliberately, so a tool that reads OpenSpec reads
-a devbook repository without being taught anything; it is the one place this convention
+devbook's requirement blocks without being taught them — the `### Invariant:` heading and the
+grouping of requirements under a feature are devbook's, and a bridge maps those two; it is the one place this convention
 accepts a kind prefix in a heading, and it is bought by an external format rather than by
 taste. The words are not OpenSpec's throughout: a *requirement* is a promise to someone
 outside the model and keeps that name, an *invariant* is what a type guarantees and takes
