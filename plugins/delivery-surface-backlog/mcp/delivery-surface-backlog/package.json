@@ -1,0 +1,18 @@
+{
+  "name": "delivery-surface-backlog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "mcp-server.mjs",
+  "description": "MCP server: the Backlog desktop app as a run surface — forwards the lifecycle operations to the app's own MCP endpoint and passes its answers through.",
+  "keywords": [
+    "mcp",
+    "surface",
+    "backlog",
+    "runs",
+    "proxy"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
