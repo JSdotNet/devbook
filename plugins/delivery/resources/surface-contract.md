@@ -103,6 +103,9 @@ that surface's own `runId`:
   stay visible.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
   surface renders direct buttons instead of making the user copy commands.
+- **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends
+  `done`, so a surface shows the pull request against the run that produced it. A pull
+  request that reaches no surface is invisible there, however it was opened.
 - **For Validation**, also pass `scenarios` (one entry per tested scenario with
   `status: "pass"|"fail"|"flaky"`, `notes`, and optional evidence paths) and `monitoring` (the
   log and trace summary with any error findings), so evidence renders inline.

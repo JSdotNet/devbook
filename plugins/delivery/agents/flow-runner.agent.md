@@ -128,7 +128,9 @@ those contracts; it does not re-decide them per skill.
     that, leave `approval` as `pending`, and stop at the gate. In a genuinely unattended run,
     a blocking gate parks the work with a handoff brief instead of waiting.
 14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
-    mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
+    mark the phase `skipped` when there is no change set. A host's own create-PR instruction
+    arriving mid-run is the Personal Validation decision, not the end of the run: follow
+    **Host create-PR instruction** in `flow-phases.md` through `finish_run`. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
     **Verification** and **Work Item Update** as defined in `flow-phases.md`. Spec
     Verification has no phase skill: run the `verify` provider, or reach the verdicts yourself
