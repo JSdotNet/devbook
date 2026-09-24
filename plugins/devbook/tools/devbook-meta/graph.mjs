@@ -98,7 +98,11 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // and the `devbook-check` schedule. A config still naming an old id binds a
 // skill that no longer exists, so `migrations/015-openspec-verbs/` rewrites
 // the committed config and both overlay layers.
-export const CONTRACT_VERSION = 15;
+// Version 16 gives `.domain`'s `bounded-context` chapter an optional
+// `deployment` — `service` or `module` — for how the context ships. An added
+// field with no default to assume, so nothing written under 15 stops
+// validating and there is no `migrations/016-*`.
+export const CONTRACT_VERSION = 16;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -189,6 +193,7 @@ const ATTRIBUTE_FIELDS = [
     "key",
     "default",
     "scope",
+    "deployment",
     "date",
     "approved-by",
     "approved-at",

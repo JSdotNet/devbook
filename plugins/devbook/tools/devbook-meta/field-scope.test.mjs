@@ -203,6 +203,56 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
+// How a bounded context ships — its own `service`, or a `module` in a modular
+// monolith — belongs to the context, so `deployment` sits on
+// `context-map.md`'s `bounded-context` chapter and nowhere else.
+{
+    const issues = validateDocument(
+        ".devbook/domain/context-map.md",
+        `# Order Platform\n\n${fence("type: context-map\n")}\n## Ordering\n\n` +
+            `${fence("type: bounded-context\ndeployment: service\n")}\nProse.\n\n## Invoicing\n\n` +
+            `${fence("type: bounded-context\ndeployment: module\n")}\nProse.\n\n## Shipping\n\n` +
+            `${fence("type: bounded-context\n")}\nProse.\n`
+    );
+
+    check(
+        !issues.some((i) => i.severity === "error"),
+        "`deployment` of `service`, `module`, or none on a bounded context is silent",
+        dump(issues)
+    );
+}
+{
+    const issues = validateDocument(
+        ".devbook/domain/context-map.md",
+        `# Order Platform\n\n${fence("type: context-map\ndeployment: module\n")}\n## Ordering\n\n` +
+            `${fence("type: bounded-context\ndeployment: lambda\n")}\nProse.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", "`deployment` on the file-level block")),
+        "`deployment` on the file-level block is an error",
+        dump(issues)
+    );
+    check(
+        Boolean(find(issues, "error", '`deployment` "lambda", expected one of: service, module')),
+        "a `deployment` outside the two values is an error",
+        dump(issues)
+    );
+}
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/domain.md",
+        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
+            `${fence("type: aggregate\ndeployment: service\n")}\nProse.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", '`deployment` on a chapter of type "aggregate"')),
+        "`deployment` on an aggregate is an error",
+        dump(issues)
+    );
+}
+
 // --- .ai `stage` is a chapter's, never a file's ---------------------------
 
 // A file groups chapters and places none of them on the loop: the chapter says

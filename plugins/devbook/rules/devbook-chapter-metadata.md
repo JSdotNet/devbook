@@ -139,7 +139,7 @@ or optional by folder, exactly as above; `type` required where the folder
 defines a file-level value set; `related`, `issue`, `effort`, and `roadmap`
 optional) and the same omit-when-empty rule. Folder-specific fields defined for chapters
 (`depends-on`, `aliases`, `feature-flag`, `setting`, `role`, `key`, `default`,
-`scope`, `version`, `alternatives`) are chapter-scoped and are not used at file level — a file's
+`scope`, `deployment`, `version`, `alternatives`) are chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only.
 
 In `arc42/`, the file's top-level chapter heading (e.g. `# 01. Introduction
@@ -446,7 +446,8 @@ its directory. A chapter's position is already its position in the document.
 
 Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
 `feature-flag` and `setting` on domain feature chapters, `key`/`default`/`scope`
-on domain switch chapters, `role` on domain actor chapters,
+on domain switch chapters, `role` on domain actor chapters, `deployment` on
+domain `bounded-context` chapters,
 `version`/`alternatives` on tech chapters, `stage` on ai chapters and never on an ai file) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
