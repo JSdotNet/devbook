@@ -68,6 +68,12 @@ capability is split by operation group, because an implementation may answer par
   mark the run blocked. Do not fall back to chat-only tracking, which loses the run state. A
   surface that stops answering after the run started on it is this case, not the
   `unavailable` one.
+- **A call the host refuses is not a surface answer.** When the host's permission layer denies
+  a surface call — an auto-mode classifier refusing a `blocked` `update_stage`, a declined
+  approval — the surface never saw it, and the run state it holds is now wrong. Retry the call
+  once, unchanged. Refused again, tell the user which call, on which surface, with which stage
+  and status, so they can allow it or record it themselves. Never drop it silently and never
+  soften the call — a `blocked` sent as `done` to get past a classifier is a false record.
 
 ## Reporting Contract
 

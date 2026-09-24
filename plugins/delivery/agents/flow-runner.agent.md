@@ -67,6 +67,8 @@ those contracts; it does not re-decide them per skill.
    the first surface that answers. Record which surfaces answered and their `runId`s, per
    **The Surface Capability** in `surface-contract.md`. Publish each returned URL in the
    conversation — this agent carries no browser tool, per **Surfacing the surface** there.
+   A surface call the host's permission layer refuses is retried once and then reported to
+   the user — never dropped.
    Then call `start_run` on each with the skill's `skillId` and the full ordered stage list —
    **Update Base** first, then the skill's own stages, then its tier's closing phases — the
    `changeKind` when known, and `sessionId` from the `session-id` host slot. Take it from the

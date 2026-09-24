@@ -125,7 +125,7 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 
 | Date | Change |
 | --- | --- |
-| 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. |
+| 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. A surface call the host's permission layer refuses is retried once and then reported, never dropped. |
 | 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. |
 | 2026-09-24 | Supersedes 2026-09-22: a surface is a `delivery-surface-*` server, the order is `bindings["delivery.surface"]` with an alphabetical default, `unavailable` at open skips to the next surface, and Backlog is reached through `delivery-surface-backlog`. The contract names no implementation. |
 | 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. |
