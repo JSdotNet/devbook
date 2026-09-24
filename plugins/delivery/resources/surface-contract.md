@@ -342,6 +342,8 @@ dependencies: one missing specialist must not demote every skill that names it.
   exists), `in review` (a pull request is open), `done` (merged). An operation outside the
   three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
   A skill that does not resolve is the unbound path for all of them.
+- **Surface.** `bindings["delivery.surface"]` orders the installed surfaces, first wins; **The
+  Surface Capability** below states the rule.
 - **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
   the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
   A stage resolves the servers of the point it serves from the live tool list, by pattern,
@@ -370,7 +372,7 @@ is the normal case and never a gap.
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
 | `model-override` | Where a user's personal model preferences live: `CLAUDE_FLOW_MODEL_SELECTION_PATH` when set, else `<config dir>/model-selection.md` beside the overlays | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
-| `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
+| `surface` | Which installed `delivery-surface-*` server provides each capability below, in `bindings["delivery.surface"]` order | No surface; file artifacts only |
 | `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |
 | `session-id` | The host's own id for the current agent session. Claude Code substitutes `${CLAUDE_SESSION_ID}` in skill content, so a skill that calls `start_run` carries that token verbatim; Copilot CLI substitutes nothing in skill content and hands its session id only to hooks, in their payload | Omit `sessionId` — a token still reading `${…}` is the unbound case |
 
@@ -383,40 +385,45 @@ keeps two hosts from re-diverging the moment one gains a feature.
 
 A surface is where a run becomes visible or recorded, and nothing else. It is resolved at
 run time from the live tool list, is **never a dependency**, and no-ops when absent. The
-capability is split by operation group, because the known implementations do not implement
-the same half of it.
+capability is split by operation group, because an implementation may answer part of it.
 
-| Capability | Operations | backlog | dashboard | collector | canvas |
-| --- | --- | --- | --- | --- | --- |
-| `delivery.surface.lifecycle@1` | `open_dashboard`, `start_run`, `record_prompt`, `set_run_context`, `update_stage`, `finish_run`, `list_runs`, `get_run` | yes | yes | yes | no |
-| `delivery.surface.render@1` | `render_diagram`, `render_markdown` | no | yes | no | yes |
-| `delivery.surface.export@1` | `export_report` | later | yes | yes | no |
+| Capability | Operations |
+| --- | --- |
+| `delivery.surface.lifecycle@1` | `open_dashboard`, `start_run`, `record_prompt`, `set_run_context`, `update_stage`, `finish_run`, `list_runs`, `get_run` |
+| `delivery.surface.render@1` | `render_diagram`, `render_markdown` |
+| `delivery.surface.export@1` | `export_report` |
 
-`later` is a group an implementation is committed to and does not answer yet. Resolve it as
-absent until its operation names are in the live tool list: a promised group is not a bound one.
-
-- **Resolve by pattern, never by literal tool name.** A plugin-provided MCP server is
-  namespaced with the plugin that provides it, so the same server surfaces as
-  `mcp__plugin_<plugin>_<server>__<tool>` when installed as a plugin and as
-  `mcp__<server>__<tool>` when registered in a repository's own MCP configuration. The tool
-  names and arguments are identical; only the prefix differs. Match against the live tool
-  list. An agent that hardcodes one spelling loses every surface tool under the other.
-  A surface may arrive as a host canvas instead of an MCP server — `delivery-surface-canvas` does —
-  and then the same operation names are canvas actions: open the canvas once and invoke the
-  action through whatever the host exposes for that. Match the operation names, not the
-  transport.
-- **Bind each capability independently, in a fixed priority order,** and record which
-  implementation answered in the run summary: backlog before dashboard before collector before
-  canvas. `backlog` is first because it is where the work item already lives — an open Backlog
-  window is the surface. A closed one answers nothing, so the run falls through to the
-  dashboard, whose run files Backlog reads once it is open again.
+- **A surface is a server named `delivery-surface-*`.** Its tools surface as
+  `mcp__plugin_<plugin>_delivery-surface-<x>__<op>` when a plugin provides it and as
+  `mcp__delivery-surface-<x>__<op>` from a repository's own MCP configuration; the tool names
+  and arguments are identical, only the prefix differs. Match both against the live tool
+  list — an agent that hardcodes one spelling loses every surface tool under the other. The
+  same operation names on a server with any other name are **not** a surface: a server is
+  plugged in as a surface by being named one, and never by answering a name.
+  A surface may arrive as a host canvas instead of an MCP server, and then the operation names
+  are canvas actions: open the canvas once and invoke the action through whatever the host
+  exposes for that. Canvas actions are matched by operation name.
+- **A group is answered when its operation names are listed.** Resolve a group as absent until
+  they are: a group an implementation promises is not a bound one.
+- **Bind each capability group independently, in preference order,** and record which surface
+  answered each in the run summary. The order is `bindings["delivery.surface"]` — a list of
+  `delivery-surface-*` server names, first wins, which an overlay may set per machine. A name
+  not installed is skipped, and an installed surface the list does not name comes after every
+  one it does. Unset, surfaces are preferred in alphabetical order of server name, canvas
+  actions last.
+- **A surface that answers `unavailable` at open is skipped.** When `open_dashboard` returns
+  `unavailable: true` the surface cannot serve this run — its application is closed or not set
+  up. Say so once with the reason it gave, and try the next surface in preference order for
+  the lifecycle group. This is decided once, at open, and never re-decided mid-run.
 - **No surface bound is a normal outcome.** Produce the file artifacts, say once that no
   surface is attached, and never block a stage. A rendered view is never the source of truth.
 - **Surface plugins declare nothing.** No dependency, no awareness of the engine — they
-  expose the tool names above. That is exactly what makes them swappable.
+  expose the tool names above under a `delivery-surface-*` server name. That is exactly what
+  makes them swappable.
 - **If a capability resolves but a required operation errors**, treat it as a tooling failure:
   mark the run blocked and report the tool's error text. Do not fall back to chat-only
-  tracking, which loses the run state.
+  tracking, which loses the run state. A surface that stops answering after the run started
+  on it is this case, not the `unavailable` one.
 
 ## Reporting Contract
 
@@ -475,9 +482,8 @@ A run the user cannot see is a run they cannot steer.
 1. **Inline panel.** Where the host renders the surface inline on its own, nothing further is
    needed — do not also open a browser tab.
 2. **Plain link.** Otherwise, give the user the URL to open themselves.
-3. **Host application.** Where the surface is an application the user runs, `open_dashboard`
-   returns no URL — the run is visible in the host app's own window. Say so once and open
-   nothing.
+3. **No URL.** Where `open_dashboard` returns none, say once what it answered — the run is
+   recorded, or it is in a window the user already has — and open nothing.
 
 **The runner never opens a browser pane.** A pane is one host's own capability, and an
 exact-match `tools` allowlist can only reach it under that host's own tool name, so

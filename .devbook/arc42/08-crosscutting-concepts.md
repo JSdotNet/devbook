@@ -264,28 +264,31 @@ date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 ```
 
-Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, a headless
-collector, and the Backlog desktop application are four implementations of one capability,
-split by operation group — lifecycle, render, export — because they do not implement the same
-half of it.
+Where work becomes visible or recorded, and nothing else. A surface is any installed
+`delivery-surface-*` plugin — an MCP server under that name, or a host canvas — implementing
+one capability split by operation group — lifecycle, render, export — because an
+implementation may answer only part of it.
 
 A surface is never a dependency in either direction: the thing being rendered knows no surface
 exists, and the surface knows nothing about what produced its input. Whichever tool opens it
-resolves it at runtime, by pattern, from the live tool list. **Absence is a normal outcome:**
+resolves it at runtime from the live tool list, by its server name, in the order
+`bindings["delivery.surface"]` gives. **Absence is a normal outcome:**
 the run produces its file artifacts, says so once, and continues — it costs a view, never a
 capability.
 
-Three ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
-render only, and `delivery-surface-collector` lifecycle and export only. Backlog is not a
-plugin and ships from outside this marketplace; it answers lifecycle, is first in the binding
-priority, and its absence means its window is closed. Each declares exactly
+Four ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
+render only, `delivery-surface-collector` lifecycle and export only, and
+`delivery-surface-backlog` lifecycle by forwarding to the Backlog desktop app, answering
+`unavailable` at open while the app is closed so the run moves to the next surface. The
+engine names none of them. Each declares exactly
 the tool names its groups name and nothing more, which is what makes one substitutable for
 another — the table is in [chapter 5](05-building-block-view.md#surface-plugins), the reason in
 [the decision](adr/surfaces.md).
 
 A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
 nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
-which is why the contract matches operation names and never a transport.
+which is why canvas actions are matched by operation name while a server is matched by its
+name.
 
 `devbook-graph` ships in `devbook-derived` and loads devbook's checker modules from their
 materialized path at runtime; it renders the reference graph rebuilt from the
@@ -550,7 +553,7 @@ What one block publishes and others conform to without either side declaring the
 | The behaviour headings — `### Requirement:` with its SHALL sentence and `#### Scenario:` cases in `requirements.md`, `### Invariant:` with its `Enforced at:` line in `invariants.md` | [devbook](building-blocks/devbook.md) | `capture-specs`, `apply-change`, `verify-change`, and any tool that reads OpenSpec's requirement blocks | `rules/devbook-domain.md`, materialized into a repository |
 | The capture plan's delta markers — `ADDED`, `MODIFIED`, `REMOVED` by heading | [devbook](building-blocks/devbook.md) | The person carrying a plan into a folder, and any bridge that carries one across | `assets/code-sync-protocol.md` → *The capture plan* |
 | The `ext.<plugin>.<key>` [extension namespace](#extension-namespace) | [devbook](building-blocks/devbook.md) | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
-| `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | [delivery](building-blocks/delivery.md) | The three [surfaces](#surface) | `resources/surface-contract.md`; tool names matched by pattern |
+| `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | [delivery](building-blocks/delivery.md) | The four [surfaces](#surface) | `resources/surface-contract.md`; a `delivery-surface-*` server name |
 | The [extension-point](#extension-point) set and the [gate](#gate) contract | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md), and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
 | The `plugin:skill` tracker — `read_item`, `update_item`, `comment`, and the four step states — and the `spec` provider that returns a specification approved elsewhere | [delivery](building-blocks/delivery.md) | A tracker or spec plugin a repository binds | `resources/surface-contract.md` → *Bindings* → *Tracker*, and the `spec` provider paragraph |
 | `.devbook/config.json` — four engine keys plus one [stamp](#stamp) per component | [delivery](building-blocks/delivery.md) owns the four keys; each component owns its own stamp | [devbook-config](building-blocks/devbook-config.md) reads all of it; every install skill writes one key | `resources/config.schema.json` |
@@ -590,7 +593,7 @@ edge from the plugin that carries the coupling to the plugin it couples to, the 
 direction. This table reads the same relationships the way DDD does, upstream to downstream —
 from the block that owns a model to the block that has to live with it. Two blocks are core
 because everything else exists to serve them: the delivery engine carries work, and devbook is
-what the work is grounded in and what it writes back to. The three surfaces are generic on
+what the work is grounded in and what it writes back to. The four surfaces are generic on
 purpose — they answer one published contract and are interchangeable — and the rest are
 supporting.
 
@@ -602,7 +605,7 @@ supporting.
 | [devbook](building-blocks/devbook.md) | [devbook-procedures](building-blocks/devbook-procedures.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `start` and `capture` and their path, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
-| [delivery](building-blocks/delivery.md) | the three surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
+| [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
 | [devbook-derived](building-blocks/devbook-derived.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-devbook-validate` refreshes where the script exists and skips where it does not |
 | [devbook](building-blocks/devbook.md) | [delivery](building-blocks/delivery.md) | **Undeclared** | No, and it should be — see [debt record 4](tdr/4-delivery-depends-on-devbook.md) |

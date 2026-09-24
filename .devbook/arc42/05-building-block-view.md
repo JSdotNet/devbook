@@ -322,18 +322,17 @@ date: 2026-09-03
 related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Three plugins are where a run becomes visible or recorded. None declares a dependency, none
-names the engine, and each is resolved at run time from the live tool list — so which one
-answers is decided by what is installed, and none answering is a normal outcome. An
-implementation need not be a plugin: the Backlog desktop application answers the lifecycle
-group from a server inside its own process and is first in the binding priority, which is why
-this table lists the plugins rather than every implementation.
+Four plugins are where a run becomes visible or recorded. None declares a dependency, none
+names the engine, and each is resolved at run time from the live tool list by its
+`delivery-surface-*` server name — so which one answers is decided by what is installed and the
+order `bindings["delivery.surface"]` gives, and none answering is a normal outcome.
 
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |
 | `delivery-surface-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
 | `delivery-surface-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
 | `delivery-surface-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
+| `delivery-surface-backlog` | yes | no | once Backlog lists it | A stdio MCP server forwarding to the Backlog desktop app's own endpoint; the run lives in the app, and a closed app answers `unavailable` at open |
 
 Each declares exactly the tool names its groups name and nothing more, which is what makes one
 substitutable for another. `delivery-surface-dashboard` is also the only one that captures anything by

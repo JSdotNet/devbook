@@ -187,6 +187,31 @@ test('a tracker may be a plugin:skill provider in provider-id shape', () => {
     assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'Your:Skill' } } }).length, 1);
 });
 
+test('a surface preference is an ordered list of delivery-surface-* server names', () => {
+    assert.deepEqual(check({ bindings: { 'delivery.surface': ['delivery-surface-backlog', 'delivery-surface-dashboard'] } }), []);
+    assert.deepEqual(check({ bindings: { 'delivery.surface': [] } }), []);
+});
+
+test('a surface preference names only delivery-surface-* servers', () => {
+    const errors = check({ bindings: { 'delivery.surface': ['delivery-surface-dashboard', 'backlog'] } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /\[1\]: "backlog" is not a surface server name/);
+});
+
+test('a surface preference is a list, never a single name', () => {
+    const errors = check({ bindings: { 'delivery.surface': 'delivery-surface-dashboard' } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /expected array, got string/);
+});
+
+test('a machine may set its own surface preference in an overlay', () => {
+    const overlay = { bindings: { 'delivery.surface': ['delivery-surface-collector'] } };
+    assert.deepEqual(checkLocalOverlay(overlay), []);
+    assert.deepEqual(checkStackConfig(overlay, schema, { overlay: true }), []);
+    const merged = mergeStackConfig({ bindings: { 'delivery.surface': ['delivery-surface-dashboard', 'delivery-surface-backlog'] } }, overlay);
+    assert.deepEqual(merged.bindings['delivery.surface'], ['delivery-surface-collector']);
+});
+
 test('an MCP server binds to a point in the closed set, never to a free name', () => {
     assert.deepEqual(check({ bindings: { 'delivery.mcp': { implement: ['microsoft-learn'] } } }), []);
     const errors = check({ bindings: { 'delivery.mcp': { 'stage-1': ['your-guidelines-server'] } } });

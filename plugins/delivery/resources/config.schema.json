@@ -37,6 +37,15 @@
             }
           ]
         },
+        "delivery.surface": {
+          "description": "The order in which installed surfaces are preferred, by MCP server name, first wins, applied to each capability group separately. Only a server named delivery-surface-* is a surface; a name nobody installed is skipped. Absent, surfaces are preferred in alphabetical order of server name, canvas actions last. May be set per machine in an overlay.",
+          "type": "array",
+          "items": {
+            "title": "a surface server name — delivery-surface- followed by lowercase letters, digits, and single hyphens",
+            "type": "string",
+            "pattern": "^delivery-surface-[a-z0-9]+(-[a-z0-9]+)*$"
+          }
+        },
         "delivery.roles": {
           "description": "Which plugin fills each specialist role. null means deliberately unbound; an absent key means nobody has decided yet. A role is never a plugin dependency.",
           "type": "object",

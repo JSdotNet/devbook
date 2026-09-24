@@ -10,7 +10,7 @@ what it needs. There are three ways to couple — a declared dependency on a low
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
-repository's procedures, and unattended work, three surfaces, and a guide that names
+repository's procedures, and unattended work, four surfaces, and a guide that names
 every plugin and depends on none. An extension owns procedure, never schema or state. The specialists
 are published from another marketplace and are bound per repository, never depended on.
 
