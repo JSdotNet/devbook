@@ -51,7 +51,7 @@ async function loadChecker() {
     throw new Error(
         "devbook-graph: devbook's checker is not installed — none of " +
             CHECKER_CANDIDATES.map((d) => path.relative(REPO_ROOT, d)).join(", ") +
-            " holds graph.mjs. Run devbook:init first."
+            " holds graph.mjs. Run devbook:update, or devbook:init where devbook has no stamp yet."
     );
 }
 

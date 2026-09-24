@@ -27,8 +27,8 @@ compressing a lookup table costs a repair, not a sentence.
    node .devbook/_tools/devbook-meta/build.mjs --check
    ```
 
-   When `.devbook/_tools/devbook-meta/` is absent, run `devbook:init` first —
-   it materializes the checker.
+   When `.devbook/_tools/devbook-meta/` is absent, run `devbook:update`, or
+   `devbook:init` where devbook has no stamp yet — it materializes the checker.
 
    Exit codes:
 
@@ -103,9 +103,10 @@ If step 1 exits `0` locally but CI is red, compare against the merge result
 rather than your branch tip — a reference can break when two branches land
 together even though each was clean on its own.
 
-If the checker itself is missing from the repository, install it by running
-`devbook:init` rather than copying files ad hoc — a copy made by hand lands
-unstamped, and the next reconcile cannot tell it from a customized file.
+If the checker itself is missing from the repository, restore it with
+`devbook:update`, or `devbook:init` where devbook has no stamp yet, rather than
+copying files ad hoc — a copy made by hand lands unstamped, and the next
+reconcile cannot tell it from a customized file.
 
 ## Do not
 
