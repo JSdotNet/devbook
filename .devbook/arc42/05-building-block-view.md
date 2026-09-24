@@ -22,7 +22,7 @@ date: 2026-09-21
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Ten plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Eleven plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -43,6 +43,7 @@ flowchart TB
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
         SD["delivery-surface-dashboard<br/>lifecycle, render, export"]
         SL["delivery-surface-collector<br/>lifecycle, export"]
+        SB["delivery-surface-backlog<br/>lifecycle, forwarded to the Backlog app"]
         SC["delivery-surface-canvas<br/>render, one host, no marketplace entry"]
     end
 
@@ -53,6 +54,7 @@ flowchart TB
 
     SD -->|"delivery.surface.*@1"| DEL
     SL -->|"delivery.surface.*@1"| DEL
+    SB -->|"delivery.surface.*@1"| DEL
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
