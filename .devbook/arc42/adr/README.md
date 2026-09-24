@@ -33,7 +33,7 @@ whether the document can end in an answer; if it ends in two options and no pick
 | [Hooks](hooks.md) | A session-start hook speaks only where the repository adopted the plugin; a tool matcher names its tools. | 2026-09-07 |
 | [Flow Engine](flow-engine.md) | Four flows named for what changes over a closed set of eleven points; every outside party is a binding; the runner holds every gate and prepends Update Base; `verify` is the spec check. | 2026-09-23 |
 | [Plugin Boundaries](plugin-boundaries.md) | One folder per plugin, three ways to couple, a lower layer never names a higher one; review, the committed index, fan-out, the unattended lane, and the guide are their own plugins; the specialists live elsewhere. | 2026-09-17 |
-| [Releases](releases.md) | Every plugin `1.5.0`, moved together; a contract bump is a minor release and ships a migration when one is owed, which lives for one major; the marketplace name is a frozen per-machine key. | 2026-09-23 |
+| [Releases](releases.md) | Every plugin `1.6.0`, moved together; a contract bump is a minor release and ships a migration when one is owed, which lives for one major; the marketplace name is a frozen per-machine key. | 2026-09-24 |
 
 ## Where a numbered record went
 
