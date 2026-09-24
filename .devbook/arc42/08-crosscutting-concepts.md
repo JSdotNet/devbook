@@ -272,14 +272,15 @@ implementation may answer only part of it.
 A surface is never a dependency in either direction: the thing being rendered knows no surface
 exists, and the surface knows nothing about what produced its input. Whichever tool opens it
 resolves it at runtime from the live tool list, by its server name, in the order
-`bindings["delivery.surface"]` gives. **Absence is a normal outcome:**
+`bindings["delivery.surface"]` gives. A run is recorded by every lifecycle surface that
+opens; render and export go to the first that answers. **Absence is a normal outcome:**
 the run produces its file artifacts, says so once, and continues — it costs a view, never a
 capability.
 
 Four ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
 render only, `delivery-surface-collector` lifecycle and export only, and
 `delivery-surface-backlog` lifecycle by forwarding to the Backlog desktop app, answering
-`unavailable` at open while the app is closed so the run moves to the next surface. The
+`unavailable` at open while the app is closed so the run continues on the others. The
 engine names none of them. Each declares exactly
 the tool names its groups name and nothing more, which is what makes one substitutable for
 another — the table is in [chapter 5](05-building-block-view.md#surface-plugins), the reason in

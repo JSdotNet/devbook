@@ -38,7 +38,7 @@
           ]
         },
         "delivery.surface": {
-          "description": "The order in which installed surfaces are preferred, by MCP server name, first wins, applied to each capability group separately. Only a server named delivery-surface-* is a surface; a name nobody installed is skipped. Absent, surfaces are preferred in alphabetical order of server name, canvas actions last. May be set per machine in an overlay.",
+          "description": "The installed surfaces a run uses, by MCP server name, in order. The lifecycle group reports to every listed surface that opens, and to no unlisted one; render and export take the first that answers, listed surfaces before unlisted ones. Only a server named delivery-surface-* is a surface; a name nobody installed is skipped. Absent, every installed surface receives the lifecycle calls and render and export prefer surfaces in alphabetical order of server name, canvas actions last. May be set per machine in an overlay.",
           "type": "array",
           "items": {
             "title": "a surface server name — delivery-surface- followed by lowercase letters, digits, and single hyphens",

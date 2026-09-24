@@ -1,12 +1,12 @@
 ---
 name: surface-contract
-description: The contract between the delivery engine and the surface a run reports and renders through — the three capability groups, how a delivery-surface-* server is bound and in what order, the reporting contract every flow follows, rendering content, and token insight.
+description: The contract between the delivery engine and the surfaces a run reports and renders through — the three capability groups, how delivery-surface-* servers are bound, fanned out, and ordered, the reporting contract every flow follows, rendering content, and token insight.
 ---
 
 # Surface Contract
 
-The surface a run reports and renders through: what a surface is, how one is bound, and what
-every flow tells it. The engine owns this contract and no surface ever reads it — a surface
+The surfaces a run reports and renders through: what a surface is, how surfaces are bound, and
+what every flow tells them. The engine owns this contract and no surface ever reads it — a surface
 implements the operation names below and nothing else. The stack config, the bindings, and
 the host slots it refers to are `engine-contract.md` beside this file. Read this file once,
 before the first `update_stage`.
@@ -35,37 +35,55 @@ capability is split by operation group, because an implementation may answer par
   exposes for that. Canvas actions are matched by operation name.
 - **A group is answered when its operation names are listed.** Resolve a group as absent until
   they are: a group an implementation promises is not a bound one.
-- **Bind each capability group independently, in preference order,** and record which surface
-  answered each in the run summary. The order is `bindings["delivery.surface"]` — a list of
-  `delivery-surface-*` server names, first wins, which an overlay may set per machine. A name
-  not installed is skipped, and an installed surface the list does not name comes after every
-  one it does. Unset, surfaces are preferred in alphabetical order of server name, canvas
-  actions last.
-- **A surface that answers `unavailable` at open is skipped.** When `open_dashboard` returns
+- **The preference order is `bindings["delivery.surface"]`** — a list of `delivery-surface-*`
+  server names, which an overlay may set per machine. A name not installed is skipped. For
+  render and export, an installed surface the list does not name comes after every one it
+  does; for lifecycle, the list is the whole set, below. Unset, surfaces are
+  ordered alphabetically by server name, canvas actions last. Record which surfaces answered
+  each group in the run summary.
+- **The lifecycle group fans out to every surface that opened.** Call `open_dashboard` on each
+  surface answering `delivery.surface.lifecycle@1`, in preference order; every one that does
+  not answer `unavailable` is bound, and every lifecycle call from `start_run` to `finish_run`
+  goes to each of them. Each surface answers `start_run` with its own `runId`: keep the pairs,
+  send each surface its own id, and record them in the run summary — one surface's id means
+  nothing to another. With `bindings["delivery.surface"]` set, the fan-out is the surfaces it
+  lists, in its order, and an installed surface it does not name receives no lifecycle call;
+  unset, every installed lifecycle surface receives the run. A surface's return values — `resumed`, `sessionTitle` — are read per surface; a title
+  is taken from the first bound surface in order. `list_runs` and `get_run` read from that
+  first surface.
+- **Render and export bind to one surface each: the first in preference order that answers
+  the group.** A diagram shown twice is noise, and one exported report is the report.
+- **A surface that answers `unavailable` at open is left out.** When `open_dashboard` returns
   `unavailable: true` the surface cannot serve this run — its application is closed or not set
-  up. Say so once with the reason it gave, and try the next surface in preference order for
-  the lifecycle group. This is decided once, at open, and never re-decided mid-run.
+  up. Say so once with the reason it gave; the run continues on the surfaces that opened. This
+  is decided once, at open, and never re-decided mid-run.
 - **No surface bound is a normal outcome.** Produce the file artifacts, say once that no
   surface is attached, and never block a stage. A rendered view is never the source of truth.
 - **Surface plugins declare nothing.** No dependency, no awareness of the engine — they
   expose the tool names above under a `delivery-surface-*` server name. That is exactly what
   makes them swappable.
-- **If a capability resolves but a required operation errors**, treat it as a tooling failure:
-  mark the run blocked and report the tool's error text. Do not fall back to chat-only
-  tracking, which loses the run state. A surface that stops answering after the run started
-  on it is this case, not the `unavailable` one.
+- **If a bound surface's required operation errors**, treat it as a tooling failure: report
+  the tool's error text once, naming the surface. While another lifecycle surface still holds
+  the run, drop the failing one for the rest of the run and continue; when it was the last,
+  mark the run blocked. Do not fall back to chat-only tracking, which loses the run state. A
+  surface that stops answering after the run started on it is this case, not the
+  `unavailable` one.
 
 ## Reporting Contract
 
-With `delivery.surface.lifecycle@1` bound:
+With `delivery.surface.lifecycle@1` bound, every call below goes to each bound surface, with
+that surface's own `runId`:
 
-- **Open once.** Call `open_dashboard` once per session and surface it per **Surfacing the
-  Surface** below; the page updates itself live, so it is opened once and left open. Then
-  call `start_run` with the skill's `skillId`, the full ordered stage list (its own stages
+- **Open once.** Call `open_dashboard` once per session on each lifecycle surface and surface
+  each per **Surfacing the Surface** below; a page updates itself live, so it is opened once and
+  left open. Then call `start_run` on each with the skill's `skillId`, the full ordered stage list (its own stages
   followed by the shared phase names for its tier), the `changeKind` when known, and
   `sessionId` from the `session-id` host slot (`engine-contract.md`) when it is bound.
   `start_run` reattaches to an existing `in_progress` run for the same skill and returns
   `resumed: true`; continue from the first stage that is not `done` instead of restarting.
+  Surfaces may disagree — one resumed, one fresh: continue from the furthest stage any of
+  them holds, and bring a fresh one level by marking the stages already behind the run
+  `done` on it, with an output saying they ran before it joined.
 - **`sessionId` is optional on both sides.** It lets a surface attach the run to the session
   that drove it instead of guessing from worktree and time. A surface records it in a
   `sessionIds` array: a fresh run starts it, and a resumed run — a handoff — appends the new
