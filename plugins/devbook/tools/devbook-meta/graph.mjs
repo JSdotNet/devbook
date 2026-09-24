@@ -98,7 +98,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // and the `devbook-check` schedule. A config still naming an old id binds a
 // skill that no longer exists, so `migrations/015-openspec-verbs/` rewrites
 // the committed config and both overlay layers.
-export const CONTRACT_VERSION = 15;
+// Version 16 gives `.domain`'s `bounded-context` chapter an optional
+// `deployment` — `service` or `module` — for how the context ships, and the
+// context's own `context.md` the same field on its file-level block; where a
+// chapter's `related` names that `context.md`, the two must agree. An added
+// field with no default to assume, so nothing written under 15 stops
+// validating and there is no `migrations/016-*`.
+export const CONTRACT_VERSION = 16;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -189,6 +195,7 @@ const ATTRIBUTE_FIELDS = [
     "key",
     "default",
     "scope",
+    "deployment",
     "date",
     "approved-by",
     "approved-at",
@@ -533,6 +540,27 @@ export async function buildGraph(repoRoot, folders = null) {
                         .join(" or ")} chapter — the behaviour half of a chapter points at the prose half it belongs to, and nothing else pairs the two.`,
                 });
             }
+        }
+    }
+
+    // How a context ships is stated twice — on the map, by its
+    // `bounded-context` chapter, and by the context itself, on its
+    // `context.md` — so a reader of either sees it without opening the other.
+    // The pair is the chapter and the `context` file its `related` names, and
+    // the two have to agree: a context written as `module` on the map and
+    // `service` in its own folder has no answer at all.
+    for (const node of nodes.values()) {
+        if (node.type !== "chapter" || node.kind !== "bounded-context") continue;
+        for (const ref of asList(node.related)) {
+            const context = nodes.get(ref);
+            if (context?.type !== "file" || context.kind !== "context") continue;
+            if ((node.deployment ?? null) === (context.deployment ?? null)) continue;
+            const state = (value) => (value == null ? "no `deployment`" : `\`deployment: ${value}\``);
+            problems.push({
+                severity: "error",
+                path: node.path,
+                message: `${node.id} states ${state(node.deployment)} but ${context.id} states ${state(context.deployment)} — how a context ships is written the same on its \`bounded-context\` chapter and its \`context.md\`, or on neither.`,
+            });
         }
     }
 

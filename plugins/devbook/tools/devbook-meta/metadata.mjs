@@ -293,6 +293,10 @@ const FLAG_DEFAULTS = ["on", "off"];
 // administrator for the whole tenant, or an operator for the whole system.
 const SETTING_SCOPES = ["user", "tenant", "system"];
 
+// How a bounded context ships: as its own deployable `service`, or as a
+// `module` inside a modular monolith that hosts other contexts beside it.
+const CONTEXT_DEPLOYMENTS = ["service", "module"];
+
 // `roadmap` entries are lowercase kebab-case tag slugs, not chapter references.
 const ROADMAP_TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -426,6 +430,7 @@ const REMOVED_FIELDS = {
 const FOLDER_EXTRA_FIELDS = {
     domain: [
         "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
+        "deployment",
         ...DECISION_FIELDS,
     ],
     arc42: [],
@@ -460,6 +465,7 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "key",
     "default",
     "scope",
+    "deployment",
     "version",
     "alternatives",
     "stage",
@@ -500,11 +506,27 @@ const FIELD_TYPE_SCOPE = {
         key: ["feature-flag", "setting"],
         default: ["feature-flag", "setting"],
         scope: ["setting"],
+        // How the context ships is the context's own: `context-map.md`'s
+        // `bounded-context` chapter stands for it on the map, and the
+        // context's `context.md` carries it on its file-level block (see
+        // `FILE_FIELD_TYPE_SCOPE`). The graph build holds the two equal.
+        deployment: ["bounded-context"],
     },
     arc42: {},
     tech: {},
     design: {},
     ai: {},
+};
+
+// The exceptions to `CHAPTER_ONLY_EXTRA_FIELDS`: a chapter-only field a file
+// may carry after all, on the file-level block of the `type` values named.
+// `context.md` is the one document that *is* its subject — the bounded context
+// as a whole — so how the context ships describes that document, not a chapter
+// missing from it.
+const FILE_FIELD_TYPE_SCOPE = {
+    domain: {
+        deployment: ["context"],
+    },
 };
 
 /** Determine which devbook folder a repo-relative path belongs to. */
@@ -1199,8 +1221,10 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
     if (!folderFields) return issues;
 
     if (blockLevel === "file") {
+        const fileType = resolveType(folder, meta);
         for (const field of CHAPTER_ONLY_EXTRA_FIELDS) {
             if (!folderFields.includes(field) || meta[field] == null) continue;
+            if (FILE_FIELD_TYPE_SCOPE[folder]?.[field]?.includes(fileType)) continue;
             issues.push({
                 severity: "error",
                 message:
@@ -1697,6 +1721,16 @@ export function validateDocument(relPath, markdown) {
                         message: `${label} has \`scope\` "${scope}", expected one of: ${SETTING_SCOPES.join(", ")}.`,
                     });
                 }
+            }
+        }
+
+        if (kind === "domain") {
+            const deployment = chapter.meta.deployment;
+            if (deployment != null && !CONTEXT_DEPLOYMENTS.includes(deployment)) {
+                issues.push({
+                    severity: "error",
+                    message: `${label} has \`deployment\` "${deployment}", expected one of: ${CONTEXT_DEPLOYMENTS.join(", ")}.`,
+                });
             }
         }
 

@@ -456,7 +456,7 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
+  | Chapter | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
   | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `model`, `flow`, `dependencies` — or, for an additional page, its own filename |
 
   `requirements` and `invariants` are each in both sets, and mean the same
@@ -562,6 +562,22 @@ instructions.
   who may change it at runtime. A flag has no `scope`: it is decided at
   release, and writing one on it is an error. No other chapter carries any of
   the three.
+- A `bounded-context` chapter in `context-map.md` may carry `deployment`:
+  how the context ships. `service` is a deployable of its own, released and
+  scaled apart from the others; `module` runs inside a modular monolith beside
+  other contexts, sharing its process and its release. It is one plain value,
+  never a reference, and no other chapter carries it — an aggregate or a
+  feature ships with its context. The context's `context.md` carries the same
+  value on its file-level block, so a reader of the context sees it without
+  opening the map; where the chapter's `related` names that `context.md`, the
+  two must agree, and the check reports a difference or a value on one side
+  only. A repository that lists its contexts only in tables writes it on
+  `context.md` alone. Omit it until the choice is made. Name the
+  deployable itself — the service, or the monolith hosting the module — through
+  `related`, pointing at its `arc42/` building block; which contexts share one
+  host is read from those links, not restated here. Moving a context from
+  `module` to `service`, or back, is a decision worth an `arc42/adr/` record
+  that the chapter's `related` points at.
 - Actor chapters may carry a `role` field: the role, claim, or group name
   the authorization layer checks for this actor, as the code spells it — e.g.
   `role: Consultant` or, where one actor holds several, `role: [Consultant,
@@ -654,15 +670,28 @@ type: context-map
 > `domain/`'s root document. Prefer titling it after the system the map covers,
 > since the `type` above already carries the kind and the generator labels this
 > node `<System Name> (context-map)`; a plain `# Context Map` is also accepted.
-> Its structural `##` sections — the four below — carry no metadata blocks; the
-> file-level block above is the only metadata they need.
+> Its structural `##` sections — the four from `## Subdomain landscape` on —
+> carry no metadata blocks; the file-level block above is the only metadata
+> they need.
 >
 > A `##` section naming **one bounded context** is the exception, and it takes
 > `type: bounded-context`. Give a context its own section and block when another
 > chapter needs to address it — `.devbook/domain/context-map.md#order-management` — which
 > is how a building block, a technology, or an arc42 chapter points at the
-> context it belongs to. A repository whose contexts are only listed in the
-> tables below needs no such sections.
+> context it belongs to, or when its `deployment` is decided: `service` or
+> `module`. A repository whose contexts are only listed in the tables below
+> needs no such sections.
+
+## <Bounded Context Name>
+
+\`\`\`meta
+type: bounded-context
+deployment: module
+related: [.devbook/domain/<bounded-context-name>/context.md, .devbook/arc42/05-building-block-view.md#<host-heading-slug>]
+\`\`\`
+
+What the context is for, in one sentence, and where it runs: the service it
+is, or the modular monolith that hosts it as a module.
 
 ## Subdomain landscape
 
@@ -695,6 +724,7 @@ each one.>
 status: draft
 index: root
 type: context
+deployment: module
 \`\`\`
 
 What this context is responsible for, in one or two sentences.

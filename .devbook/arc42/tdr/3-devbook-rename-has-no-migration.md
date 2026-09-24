@@ -68,6 +68,10 @@ the next.
 renames in [the install record](../adr/install.md), after 14 shipped without a migration. The
 proposal is `016-devbook-names` at contract 16; the table below says so.
 
+**2026-09-24. Spent a seventh time.** Contract 16 went to a bounded context's `deployment`
+field in [the chapter schema record](../adr/chapter-schema.md), with no migration. The
+proposal is `017-devbook-names` at contract 17; the table below says so.
+
 ## Affected components
 
 ```meta
@@ -97,7 +101,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `016-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 16 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `017-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 17 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 

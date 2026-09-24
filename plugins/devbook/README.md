@@ -427,7 +427,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **15**, covering the metadata schema a repository authors
+One number, currently **16**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -469,7 +469,10 @@ chapter shape: it renames the skill ids a stack config binds — `devbook:instal
 to `devbook:update`, `devbook:check` to `devbook:validate`, and every other
 renamed provider — and the `devbook-check` schedule to `devbook-validate`. A
 config still naming an old id binds a skill that no longer exists, so it ships as
-`015-openspec-verbs`.
+`015-openspec-verbs`. 16 gives the `bounded-context` chapter in `context-map.md` and
+the context's own `context.md` an optional `deployment` — `service`, or `module` in
+a modular monolith — which the two must state alike, and ships no migration: the
+field is added, and a context without it reads as undecided.
 
 ## Folder structure
 
