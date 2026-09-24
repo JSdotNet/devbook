@@ -80,7 +80,7 @@ written into the repository: scheduler ids live in the scheduler only, and the e
 session runs in and the model are asked at sync time. A machine may remember those two under
 `ext.schedule` in a stack-config overlay — `{ "ext": { "schedule": { "environment": "...",
 "model": "..." } } }` in `<config dir>/config.local.json`, per *The overlays* in the delivery
-plugin's `resources/surface-contract.md` — and `delivery-schedule:update` then asks only for
+plugin's `resources/engine-contract.md` — and `delivery-schedule:update` then asks only for
 what is absent there. The engine never reads the key; this plugin owns it.
 
 In Claude Code this capability is the `RemoteTrigger` tool, loaded on demand. Naming it here

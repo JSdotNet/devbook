@@ -48,7 +48,8 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 | Roles, surfaces, host slots, stamps, migrations | the matching section of that same chapter |
 | Which plugin category a plugin falls in | `.devbook/arc42/05-building-block-view.md` |
 | Why something is shaped the way it is | `.devbook/arc42/09-architecture-decisions.md` |
-| Extension points, gates, the config schema | `plugins/delivery/resources/surface-contract.md` |
+| Extension points, gates, the config schema | `plugins/delivery/resources/engine-contract.md` |
+| What a surface is and how one is bound | `plugins/delivery/resources/surface-contract.md` |
 
 ## Answer rules
 

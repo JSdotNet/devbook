@@ -33,8 +33,9 @@ files follow the eleven plugin folders under `plugins/`, name for name.
 | [delivery-surface-dashboard](delivery-surface-dashboard.md) | Surface | The live view of a run, measured by hooks rather than told |
 | [delivery-surface-canvas](delivery-surface-canvas.md) | Surface | Mermaid and Markdown rendered live beside the files they came from |
 | [delivery-surface-collector](delivery-surface-collector.md) | Surface | A run recorded to disk rather than watched, for unattended sessions |
+| [delivery-surface-backlog](delivery-surface-backlog.md) | Surface | A run shown in the Backlog desktop app, where its work item already lives |
 
 The delivery engine and devbook are the two blocks everything else serves: the engine carries
-work, and devbook is what the work is grounded in and what it writes back to. The three
+work, and devbook is what the work is grounded in and what it writes back to. The four
 surfaces answer one published contract and are interchangeable, which is the whole reason
-there are three.
+there is more than one.

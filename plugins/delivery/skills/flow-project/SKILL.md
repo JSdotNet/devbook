@@ -25,7 +25,7 @@ Stage 1 is manual. Every other `gh` command in this flow is one spelling of the 
 Resolve the slot first and use whatever GitHub CLI or API the session offers for the same
 operation. Unbound, write the settings this flow would apply as file artifacts, report them as
 manual follow-up, and continue the remaining stages. Never fail on a missing binary. The slot
-and its unbound default are in `resources/surface-contract.md`.
+and its unbound default are in `resources/engine-contract.md`.
 
 ## Input Expectations
 

@@ -1,0 +1,35 @@
+{
+  "manifest_version": "0.3",
+  "name": "delivery-surface-backlog",
+  "version": "0.1.0",
+  "description": "The Backlog desktop app as a run surface: forwards the lifecycle operations to the app's MCP endpoint with its bearer token and passes Backlog's answers through unchanged. Needs the app open with its MCP server on.",
+  "author": {
+    "name": "Job Schepers",
+    "url": "https://github.com/JSdotNet"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "mcp-server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/mcp-server.mjs"]
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    { "name": "open_dashboard", "description": "Bring Backlog's Sessions pane forward, or answer unavailable when Backlog is closed or not set up." },
+    { "name": "start_run", "description": "Forwarded to Backlog: start a run, or reattach to the one under way." },
+    { "name": "record_prompt", "description": "Forwarded to Backlog: record a prompt in the run's history." },
+    { "name": "set_run_context", "description": "Forwarded to Backlog: persist the change kind, the approval decision, and the handoff marker." },
+    { "name": "update_stage", "description": "Forwarded to Backlog: move one stage." },
+    { "name": "finish_run", "description": "Forwarded to Backlog: close a run." },
+    { "name": "list_runs", "description": "Forwarded to Backlog: the runs this worktree can account for." },
+    { "name": "get_run", "description": "Forwarded to Backlog: one run, by id." }
+  ]
+}

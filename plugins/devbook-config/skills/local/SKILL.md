@@ -9,7 +9,7 @@ Open the reply with `devbook-config@<version>`, `version` read from `../../.clau
 
 `init` and `update` write what is true of the repository; this writes what is true of you on
 this machine, and it is the only skill here that does. Every layer, its merge rules, and what
-an overlay may not say are *The overlays* in the delivery plugin's `resources/surface-contract.md`;
+an overlay may not say are *The overlays* in the delivery plugin's `resources/engine-contract.md`;
 the model-selection file is *Personal Global Override File* in `resources/flow-model-selection.md`.
 
 ## Steps

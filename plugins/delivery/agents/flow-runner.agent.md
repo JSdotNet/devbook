@@ -2,7 +2,7 @@
 name: flow-runner
 description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports through whichever delivery surface is bound, and enforces the agentless Personal Validation gate before any pull request.'
 model: opus
-tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector']
+tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog']
 ---
 
 # Flow Runner Agent
@@ -21,7 +21,7 @@ preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
 (`resources/flow-model-selection.md`) and the resolution of the stack config
-and the surface (`resources/surface-contract.md`). It applies
+(`resources/engine-contract.md`) and the surface (`resources/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
 ## Expected Behavior
@@ -38,7 +38,7 @@ those contracts; it does not re-decide them per skill.
 3. **Resolve the stack config once per run.** Before `start_run`, run
    `node tools/stack-config/check.mjs --print` from this plugin's root and take `config`
    from its output: the committed `.devbook/config.json` with the user's overlays merged over
-   it, per **The Stack Config** in `surface-contract.md`. Never read a layer by hand — the
+   it, per **The Stack Config** in `engine-contract.md`. Never read a layer by hand — the
    overlay paths and the merge live in that script, on either host. Resolve `bindings`,
    `extensions`, `policy`, and `gates` from that document, and name in the run summary which
    `layers` were present. Persist the
@@ -59,11 +59,13 @@ those contracts; it does not re-decide them per skill.
    repository's declared runtime facts — command, entry points, readiness signals,
    credential pointer. Do not read it yourself; the `app.start` result carries what later
    stages need. Both files are optional; a missing or malformed one never blocks the run.
-5. **Bind the surface and open it once.** Resolve each surface capability by pattern from the
-   live tool list, in the priority order in the surface contract, and record which
-   implementation answered. With a lifecycle capability bound, call its open operation once
-   per session and publish the returned URL in the conversation — this agent carries no
-   browser tool, per **Surfacing the surface** in `surface-contract.md`.
+5. **Bind the surface and open it once.** Resolve each surface capability from the
+   `delivery-surface-*` servers in the live tool list, in `bindings["delivery.surface"]`
+   order or the contract's default, and record which surface answered. With a lifecycle
+   capability bound, call its open operation once per session; a surface that answers
+   `unavailable` is skipped for the next in order. Publish the returned URL in the
+   conversation — this agent carries no browser tool, per **Surfacing the surface** in
+   `surface-contract.md`.
    Then call `start_run` with the skill's `skillId` and the full ordered stage list —
    **Update Base** first, then the skill's own stages, then its tier's closing phases — the
    `changeKind` when known, and `sessionId` from the `session-id` host slot. Take it from the
@@ -213,6 +215,7 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 
 - `resources/flow-phases.md`
 - `resources/flow-execution-model.md`
+- `resources/engine-contract.md`
 - `resources/surface-contract.md`
 - `resources/flow-model-selection.md`
 - `skills/phase-build-test/SKILL.md`

@@ -568,6 +568,6 @@ writes review state, and every chapter still reads correctly.
 **Promotion to a work item is not here, and the Separate Ways row above is why.** A note that
 has become tracked work should be promoted through `bindings["delivery.tracker"]`, but the
 operations, their resolution order, and the key naming them are declared in `delivery`'s own
-surface contract — a file this block may not point at. Restating it here is what the Separate
+engine contract — a file this block may not point at. Restating it here is what the Separate
 Ways relationship exists to prevent, so promotion belongs in `delivery` or in a bridge allowed
 to name both. See [the annotations record](../adr/annotations.md).

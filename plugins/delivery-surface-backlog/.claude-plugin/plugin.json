@@ -1,0 +1,24 @@
+{
+  "name": "delivery-surface-backlog",
+  "version": "1.6.0",
+  "description": "A run surface that is an application: the Backlog desktop app. A stdio MCP server that forwards the lifecycle operations of the surface capability (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) to the MCP endpoint inside the running app, with the bearer token from the app's own settings, and passes Backlog's answers and refusals through unchanged; export_report only while Backlog lists it, render never. With Backlog closed or its MCP server off, open_dashboard answers unavailable so a caller moves on to the next surface. Registering Backlog's own backlog server, the tracker, never makes it a surface; installing this plugin does. Declares no dependency and names no engine.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "surface",
+    "backlog",
+    "runs",
+    "mcp",
+    "proxy"
+  ],
+  "mcpServers": {
+    "delivery-surface-backlog": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/mcp/delivery-surface-backlog/mcp-server.mjs"
+      ]
+    }
+  }
+}

@@ -82,7 +82,7 @@ over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
 (`%APPDATA%\devbook`, `~/.config/devbook`) for every repository and for this one's `id`,
 never a file inside the clone — and `--print` emits the merged result as JSON, which is how a
 flow reads its effective configuration on either host, per *The overlays* in
-`resources/surface-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
+`resources/engine-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
 own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
 `resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
@@ -125,11 +125,18 @@ skill changes who runs capture, never whether it runs.
   reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill`
   provider, whichever `delivery.tracker` names. Unbound, a flow runs to its file artifacts and opens nothing.
-- **A surface.** A dashboard, a canvas, and a headless collector are three implementations of
-  one capability, resolved by pattern from the live tool list; an implementation need not be a
-  plugin from this marketplace, and the Backlog desktop application is the one that is not.
-  **No surface bound is a normal outcome:** produce the file artifacts, say so once, never
-  block a stage.
+- **A surface.** Any installed `delivery-surface-*` plugin: its server name is what makes it
+  one, resolved from the live tool list, and `delivery.surface` orders them when more than one
+  is installed. **No surface bound is a normal outcome:** produce the file artifacts, say so
+  once, never block a stage. Four ship from this marketplace; which groups each answers is
+  information, not contract:
+
+  | Plugin | lifecycle | render | export |
+  |---|---|---|---|
+  | `delivery-surface-dashboard` | yes | yes | yes |
+  | `delivery-surface-collector` | yes | no | yes |
+  | `delivery-surface-backlog` — the Backlog desktop app, while it is open | yes | no | when Backlog lists it |
+  | `delivery-surface-canvas` — Copilot canvas actions | no | yes | no |
 - **A host.** A shared skill names a *slot* — `repo-instructions`, `model-override`,
   `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
   or which takes its documented unbound default. A slot is bound, never branched.
@@ -141,7 +148,8 @@ skill changes who runs capture, never whether it runs.
 | `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
 | `resources/flow-phases.md` | Which phases each tier runs, and the opening and closing phases in full |
-| `resources/surface-contract.md` | Extension points, gates, the stack config, host slots, and the surface capability |
+| `resources/engine-contract.md` | Extension points, gates, policy, the stack config and its overlays, bindings, and host slots |
+| `resources/surface-contract.md` | The surface capability, how a surface is bound, and the reporting contract every flow follows |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |

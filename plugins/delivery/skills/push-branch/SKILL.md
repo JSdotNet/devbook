@@ -20,7 +20,7 @@ The pull-request reporting in step 5 is one spelling of the `pr-lane` slot. Reso
 first and use whatever pull-request CLI or API the session offers for the same operation. The
 push itself is git and never needs the lane, so unbound: push, skip the pull request status,
 and say once that no pull request lane is available. Never fail on a missing binary. The slot
-and its unbound default are in `resources/surface-contract.md`.
+and its unbound default are in `resources/engine-contract.md`.
 
 ## Inputs
 

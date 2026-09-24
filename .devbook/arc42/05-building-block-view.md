@@ -22,27 +22,28 @@ date: 2026-09-21
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Ten plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Eleven plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.5.0"]
-        DEL["delivery 1.5.0"]
-        CFG["devbook-config 1.5.0"]
+        DEV["devbook 1.6.0"]
+        DEL["delivery 1.6.0"]
+        CFG["devbook-config 1.6.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.5.0"]
-        DPR["devbook-procedures 1.5.0"]
-        DBC["devbook-collaboration 1.5.0"]
-        SCH["delivery-schedule 1.5.0"]
+        DBD["devbook-derived 1.6.0"]
+        DPR["devbook-procedures 1.6.0"]
+        DBC["devbook-collaboration 1.6.0"]
+        SCH["delivery-schedule 1.6.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
         SD["delivery-surface-dashboard<br/>lifecycle, render, export"]
         SL["delivery-surface-collector<br/>lifecycle, export"]
+        SB["delivery-surface-backlog<br/>lifecycle, forwarded to the Backlog app"]
         SC["delivery-surface-canvas<br/>render, one host, no marketplace entry"]
     end
 
@@ -53,6 +54,7 @@ flowchart TB
 
     SD -->|"delivery.surface.*@1"| DEL
     SL -->|"delivery.surface.*@1"| DEL
+    SB -->|"delivery.surface.*@1"| DEL
     SC -->|"delivery.surface.render@1"| DEL
 
     SCH -.->|"names prose-check as a target"| DEV
@@ -322,18 +324,17 @@ date: 2026-09-03
 related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Three plugins are where a run becomes visible or recorded. None declares a dependency, none
-names the engine, and each is resolved at run time from the live tool list — so which one
-answers is decided by what is installed, and none answering is a normal outcome. An
-implementation need not be a plugin: the Backlog desktop application answers the lifecycle
-group from a server inside its own process and is first in the binding priority, which is why
-this table lists the plugins rather than every implementation.
+Four plugins are where a run becomes visible or recorded. None declares a dependency, none
+names the engine, and each is resolved at run time from the live tool list by its
+`delivery-surface-*` server name — so which one answers is decided by what is installed and the
+order `bindings["delivery.surface"]` gives, and none answering is a normal outcome.
 
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |
 | `delivery-surface-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
 | `delivery-surface-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
 | `delivery-surface-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
+| `delivery-surface-backlog` | yes | no | once Backlog lists it | A stdio MCP server forwarding to the Backlog desktop app's own endpoint; the run lives in the app, and a closed app answers `unavailable` at open |
 
 Each declares exactly the tool names its groups name and nothing more, which is what makes one
 substitutable for another. `delivery-surface-dashboard` is also the only one that captures anything by

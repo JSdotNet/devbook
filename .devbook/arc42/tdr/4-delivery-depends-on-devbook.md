@@ -58,7 +58,7 @@ called after and the `meta` block it expects every chapter to carry; still undec
 unchecked across the two plugins, and now one skill wide instead of five.
 
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
-[the surface contract](../../../plugins/delivery/resources/surface-contract.md) says: the engine
+[the engine contract](../../../plugins/delivery/resources/engine-contract.md) says: the engine
 reads that file whether or not a single folder is adopted, and `devbook-config` owns it and
 declares no dependency either.
 

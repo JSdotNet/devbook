@@ -25,7 +25,7 @@ filter, any item type, routed to the matching flow rather than always a defect.
 
 Every read and write here goes through the tracker operations — `find_item`, `read_item`,
 `transition`, `comment` — resolved from `bindings["delivery.tracker"]`. See **Bindings →
-Tracker** in `resources/surface-contract.md` for how an operation resolves and what each
+Tracker** in `resources/engine-contract.md` for how an operation resolves and what each
 provider maps an item to. Name the operation, never a provider's command.
 
 With no tracker bound there is nothing to pick up: say so and stop. A `plugin:skill` tracker

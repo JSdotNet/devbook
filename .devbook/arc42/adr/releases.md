@@ -1,11 +1,11 @@
 # Releases
 
 ```meta
-date: 2026-09-23
+date: 2026-09-24
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.5.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.6.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-24 | Every plugin is `1.6.0`. `delivery-surface-backlog` joins at that version; `delivery` adds the optional `bindings["delivery.surface"]` key, an added field with a safe default, so no migration is owed. |
 | 2026-09-23 | Every plugin is `1.5.0`, the one release of the OpenSpec preparation; contracts 14 and 15 ship in it with migration 015. It carries the `requirements.md` and `invariants.md` behaviour files and their converters, the rename to `init`, `update`, and `validate`, the `plugin:skill` tracker and approved-spec bindings, and the `devbook-verify` schedule. |
 | 2026-09-23 | Contract 15 and migration 015, which renames the skill ids a stack config binds, wait unreleased for `release-plan`, which reads the migration folder to pick the version. |
 | 2026-09-22 | Every plugin is `1.4.0`; contract 13 ships in it with migration 013, which takes the decision rungs off every folder but `domain/`. A contract bump is a minor release, with its migration only when one is owed. |

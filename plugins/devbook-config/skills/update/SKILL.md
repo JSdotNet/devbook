@@ -75,7 +75,7 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    `installPath` from `--json`. It picks up both overlays on its own, from the devbook
    config directory and the committed `id`.
    An upgrade can retire a key, and an unknown key is an error rather than a
-   silently absent setting. Fix against `resources/surface-contract.md` in that same plugin.
+   silently absent setting. Fix against `resources/engine-contract.md` in that same plugin.
 
 6. **Verify and report honestly.** Re-run the report and `devbook-config:doctor`.
    Name what was upgraded, what migrations ran, what was left customized, what was skipped and

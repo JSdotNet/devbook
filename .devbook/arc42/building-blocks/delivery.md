@@ -39,7 +39,7 @@ repository conforms to.
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `flow-runner` | agent | Command-invoked once per run by a flow, holding the session for the run's length |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
 
 ### flow-code
 
@@ -643,8 +643,8 @@ Payload:
 - `decision` — the gate outcome, where a gate was attached to this point
 
 Consumers: every surface implementation. The dashboard renders it live, the collector keeps it
-for the report and for a resumed session, Backlog shows it in the window the work item is
-already in, the canvas ignores it — it answers the render group only.
+for the report and for a resumed session, the Backlog surface hands it to the app, which shows
+it in the window the work item is already in, the canvas ignores it — it answers the render group only.
 
 Published language rules:
 
@@ -1152,7 +1152,7 @@ it never depends on — one row below says that is not the whole truth.
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
 | A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill` provider | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
-| A surface | Resolved at run time, never declared | Tool names matched by pattern from the live tool list | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
+| A surface | Resolved at run time, never declared | A `delivery-surface-*` server in the live tool list, in `bindings["delivery.surface"]` order | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. Host divergence is absorbed through a slot rather than a branch. |
 | A consuming repository | Customer-Supplier, this block supplying | `.devbook/config.json`, four engine-owned keys; the `start` and `capture` skills it names by name and reads at `.agents/skills/<name>.md`, whoever seeded them | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
 
@@ -1168,7 +1168,7 @@ it never depends on — one row below says that is not the whole truth.
 | [delivery-surface-canvas](delivery-surface-canvas.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | That a caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |
 | [delivery-surface-collector](delivery-surface-collector.md#dependencies) | Conformist to a Published Language | Implements `.lifecycle@1` and `.export@1` | Same contract, two groups | The same. Its absent render group is a declaration, not an omission. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads the four engine keys, every binding, every gate, and the `skills/` folder on disk | The config schema and the skill naming convention | That the four keys keep their shape and the `flow-*` / `phase-*` prefixes keep their meaning. It writes the four keys and nothing else. |
-| A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
+| A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
 
 - **Every binding row is a dependency this block refused to declare, and each refusal has the
   same reason:** a missing provider must cost capability rather than a load. Twenty-four
