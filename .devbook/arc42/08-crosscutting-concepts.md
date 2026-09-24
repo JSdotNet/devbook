@@ -110,7 +110,7 @@ wrapper beside it — the delivery is drawn in
 ```
 
 Reference an asset points at by path, as `resources/<name>.md`, carrying `name` and
-`description` and no scope of its own — the surface contract, the schedule catalog contract,
+`description` and no scope of its own — the engine and surface contracts, the schedule catalog contract,
 the issue sweep state contract. It is loaded by the explicit reference and by nothing else, so
 a contract no skill or agent names is unreachable. It takes the rule budget, because it is the
 same kind of prose, and it stays over that budget by kind. Distinct from a
@@ -554,8 +554,8 @@ What one block publishes and others conform to without either side declaring the
 | The capture plan's delta markers — `ADDED`, `MODIFIED`, `REMOVED` by heading | [devbook](building-blocks/devbook.md) | The person carrying a plan into a folder, and any bridge that carries one across | `assets/code-sync-protocol.md` → *The capture plan* |
 | The `ext.<plugin>.<key>` [extension namespace](#extension-namespace) | [devbook](building-blocks/devbook.md) | No current consumer; reserved for a later L1 extension | Reserved keys devbook carries through untouched and unvalidated |
 | `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | [delivery](building-blocks/delivery.md) | The four [surfaces](#surface) | `resources/surface-contract.md`; a `delivery-surface-*` server name |
-| The [extension-point](#extension-point) set and the [gate](#gate) contract | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md), and every provider a repository binds | `resources/surface-contract.md`, `resources/flow-phases.md` |
-| The `plugin:skill` tracker — `read_item`, `update_item`, `comment`, and the four step states — and the `spec` provider that returns a specification approved elsewhere | [delivery](building-blocks/delivery.md) | A tracker or spec plugin a repository binds | `resources/surface-contract.md` → *Bindings* → *Tracker*, and the `spec` provider paragraph |
+| The [extension-point](#extension-point) set and the [gate](#gate) contract | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md), and every provider a repository binds | `resources/engine-contract.md`, `resources/flow-phases.md` |
+| The `plugin:skill` tracker — `read_item`, `update_item`, `comment`, and the four step states — and the `spec` provider that returns a specification approved elsewhere | [delivery](building-blocks/delivery.md) | A tracker or spec plugin a repository binds | `resources/engine-contract.md` → *Bindings* → *Tracker*, and the `spec` provider paragraph |
 | `.devbook/config.json` — four engine keys plus one [stamp](#stamp) per component | [delivery](building-blocks/delivery.md) owns the four keys; each component owns its own stamp | [devbook-config](building-blocks/devbook-config.md) reads all of it; every install skill writes one key | `resources/config.schema.json` |
 | The schedule catalog entry | [delivery-schedule](building-blocks/delivery-schedule.md) | Whatever scheduler the live session exposes | `resources/schedule-catalog-contract.md` |
 | The plugin folder shape and the two manifests | This chapter | Every plugin; checked by `tools/check-assets.mjs` | [Chapter 5](05-building-block-view.md#plugin-folder) and the hosts' own schemas |

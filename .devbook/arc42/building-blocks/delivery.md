@@ -39,7 +39,7 @@ repository conforms to.
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `flow-runner` | agent | Command-invoked once per run by a flow, holding the session for the run's length |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
 
 ### flow-code
 
@@ -1168,7 +1168,7 @@ it never depends on — one row below says that is not the whole truth.
 | [delivery-surface-canvas](delivery-surface-canvas.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | That a caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |
 | [delivery-surface-collector](delivery-surface-collector.md#dependencies) | Conformist to a Published Language | Implements `.lifecycle@1` and `.export@1` | Same contract, two groups | The same. Its absent render group is a declaration, not an omission. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads the four engine keys, every binding, every gate, and the `skills/` folder on disk | The config schema and the skill naming convention | That the four keys keep their shape and the `flow-*` / `phase-*` prefixes keep their meaning. It writes the four keys and nothing else. |
-| A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
+| A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
 
 - **Every binding row is a dependency this block refused to declare, and each refusal has the
   same reason:** a missing provider must cost capability rather than a load. Twenty-four

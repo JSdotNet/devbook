@@ -19,7 +19,7 @@ Every `gh` command below is one spelling of the `pr-lane` slot. Resolve the slot
 whatever pull-request CLI or API the session offers for the same operation. The failing job
 logs are the whole input here, so unbound there is nothing to diagnose: say once that no pull
 request lane is available and stop, rather than guessing at a fix. Never fail on a missing
-binary. The slot and its unbound default are in `resources/surface-contract.md`.
+binary. The slot and its unbound default are in `resources/engine-contract.md`.
 
 ## Inputs
 

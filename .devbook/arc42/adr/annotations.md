@@ -33,7 +33,7 @@ swept.
 gets notes — in an editor, in a pull request — and still needs them swept; a foundation whose
 lifecycle needs an extension to finish is the shape a layered stack avoids. The sweep is
 chapter-scoped, so the list is one a person can read before the delete. Promotion of a note to
-tracked work is nobody's yet: its vocabulary lives in `delivery`'s surface contract, which
+tracked work is nobody's yet: its vocabulary lives in `delivery`'s engine contract, which
 `devbook-collaboration` may not name, so it belongs in `delivery` or a bridge.
 
 **The folders, and nothing else.** A fence in a rule, a resource, or `AGENTS.md` is parsed,

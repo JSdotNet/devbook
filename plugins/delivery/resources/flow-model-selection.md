@@ -148,7 +148,7 @@ every repository, which keeps personal cost and speed preferences out of shared 
 and avoids accidental commits.
 
 Where that file lives is the `model-override` host slot — see **Host Slots** in
-`surface-contract.md`. Unbound, it resolves to `CLAUDE_FLOW_MODEL_SELECTION_PATH` when that
+`engine-contract.md`. Unbound, it resolves to `CLAUDE_FLOW_MODEL_SELECTION_PATH` when that
 variable is set, else `model-selection.md` in the devbook config directory —
 `$XDG_CONFIG_HOME/devbook`, `%APPDATA%\devbook`, `~/.config/devbook` — beside the user's
 overlays and for the same reason: outside every clone, and host-neutral, so Copilot reads it

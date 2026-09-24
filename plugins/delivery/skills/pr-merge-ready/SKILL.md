@@ -28,7 +28,7 @@ Every `gh pr` command below is one spelling of the `pr-lane` slot. Resolve the s
 use whatever pull-request CLI or API the session offers for the same operation. Unbound, there
 is no pull request to read or score: report the branch, say once that no pull request lane is
 available, and end the pass. Never fail on a missing binary. The slot and its unbound default
-are in `resources/surface-contract.md`.
+are in `resources/engine-contract.md`.
 
 ## One Pull Request Per Pass
 

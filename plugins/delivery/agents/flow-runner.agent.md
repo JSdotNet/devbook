@@ -21,7 +21,7 @@ preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
 (`resources/flow-model-selection.md`) and the resolution of the stack config
-and the surface (`resources/surface-contract.md`). It applies
+(`resources/engine-contract.md`) and the surface (`resources/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
 ## Expected Behavior
@@ -38,7 +38,7 @@ those contracts; it does not re-decide them per skill.
 3. **Resolve the stack config once per run.** Before `start_run`, run
    `node tools/stack-config/check.mjs --print` from this plugin's root and take `config`
    from its output: the committed `.devbook/config.json` with the user's overlays merged over
-   it, per **The Stack Config** in `surface-contract.md`. Never read a layer by hand — the
+   it, per **The Stack Config** in `engine-contract.md`. Never read a layer by hand — the
    overlay paths and the merge live in that script, on either host. Resolve `bindings`,
    `extensions`, `policy`, and `gates` from that document, and name in the run summary which
    `layers` were present. Persist the
@@ -215,6 +215,7 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 
 - `resources/flow-phases.md`
 - `resources/flow-execution-model.md`
+- `resources/engine-contract.md`
 - `resources/surface-contract.md`
 - `resources/flow-model-selection.md`
 - `skills/phase-build-test/SKILL.md`

@@ -344,7 +344,7 @@ entry.
 
 Invocation semantics: query-oriented, and it writes nothing. Its state half comes from the
 [report](#stack-report) and its concept half from walking the canon — the plugin READMEs, the
-domain chapters, the arc42 chapters, and the engine's surface contract.
+domain chapters, the arc42 chapters, and the engine's two contracts.
 
 It is the only asset allowed to name every plugin, because it is the only one whose subject is
 the marketplace rather than a unit of work.

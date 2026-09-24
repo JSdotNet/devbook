@@ -21,7 +21,7 @@ repeated run never duplicates one.
 
 Every read and write here goes through the tracker operations — `find_item`, `create_item` —
 resolved from `bindings["delivery.tracker"]`. See **Bindings → Tracker** in
-`resources/surface-contract.md` for how an operation resolves and what each provider maps an
+`resources/engine-contract.md` for how an operation resolves and what each provider maps an
 item to. Name the operation, never a provider's command.
 
 With no tracker bound, run Phases 1 and 2 as a report and stop: list what would be created and

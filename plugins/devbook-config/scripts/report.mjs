@@ -215,7 +215,7 @@ function bindingPlugin(value) {
  * Every `delivery.roles` and `extensions` binding naming a plugin this checkout has not
  * enabled. The engine promises this is a warning and never a failure - a binding is committed
  * and shared, enablement is personal to this checkout, and a stage falls back to what its role
- * reference states. See `resources/surface-contract.md` in the delivery plugin, under Bindings.
+ * reference states. See `resources/engine-contract.md` in the delivery plugin, under Bindings.
  *
  * Marketplace is stripped from the enabled key on purpose: a repository may bind a plugin from
  * a marketplace this report does not read, and calling that unenabled would be a false alarm.
@@ -400,7 +400,7 @@ function buildRepository(repoRoot) {
             present: Boolean(overlay),
             keys: overlay ? ENGINE_KEYS.filter((key) => key in overlay) : [],
             // `ext.<plugin>` namespaces, named and never read: the engine merges them and
-            // the owning plugin interprets them (surface-contract.md, The overlays).
+            // the owning plugin interprets them (engine-contract.md, The overlays).
             ext: overlay && overlay.ext && typeof overlay.ext === 'object' ? Object.keys(overlay.ext) : [],
         };
     });

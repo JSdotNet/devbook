@@ -18,7 +18,8 @@ companion files so a run reads the part it is actually in.
 | --- | --- | --- |
 | `flow-execution-model.md` | Context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, run state and resume, **Session Handoff** | Once, at the start of the run |
 | `flow-model-selection.md` | Category → model resolution and the personal override | Once, before `start_run` |
-| `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
+| `engine-contract.md` | The extension points, the gates mechanism, policy, the stack config, bindings, and host slots | Once, when the stack config is resolved |
+| `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Verification, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-validation/SKILL.md` | Build & Test and Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
@@ -72,7 +73,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - Cross-plugin agents are recommended, not required. When a referenced plugin is not
   installed, skip the stage or perform it manually and continue with the remaining stages.
   A role bound in `.devbook/config.json` resolves first; see **Bindings** in
-  `surface-contract.md`.
+  `engine-contract.md`.
 - Internal transitions **do not require separate user approval**. The flow-runner may move
   between its own stages, sub-agents, and phase skills without pausing, so the run can
   build, test, and continue up to Personal Validation.
@@ -147,7 +148,7 @@ the phase:
   gets targeted verification, a dependency update gets startup-only validation, and a change
   with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
   `policy.qa.depth` outranks it, and `policy.qa.ceiling` caps the result — the full order is
-  in `surface-contract.md`.
+  in `engine-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire
   MCP server and it is unavailable, mark the phase `blocked`, name the missing server and
   the setup action, and stop before Personal Validation. Never complete this phase through a
@@ -182,7 +183,7 @@ it can approve, skip, or soften the gate below.
 
 ### The gate
 
-The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
+The mandatory instance of the gate pattern in **Gates** (`engine-contract.md`), placed after
 Validation — the `qa.run` point — with purpose `handoff`. A repository may declare further gates **in front of** this
 one — `{ "at": "validate", "when": "after", "purpose": "risk" }` is the usual shape — and that
 is the whole of what configuration may change here.
@@ -318,7 +319,7 @@ entries, or a `plugin:skill` provider.
   recorded QA report, and the spec verdict table.
 - **Tick the tasks this run completed** through the bound provider's own operation —
   `update_item` for a `plugin:skill` provider, with the step state its pull request gives,
-  per **Bindings → Tracker** (`surface-contract.md`). Ticking a task is the one edit to the
+  per **Bindings → Tracker** (`engine-contract.md`). Ticking a task is the one edit to the
   item besides the comment; a provider with no task list skips it and says so.
 - **Include the QA report** for code-modifying flows: scenario pass/fail/flaky status,
   monitoring findings, and captured evidence or report links when available. If

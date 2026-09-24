@@ -113,6 +113,7 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. |
 | 2026-09-24 | Supersedes 2026-09-22: a surface is a `delivery-surface-*` server, the order is `bindings["delivery.surface"]` with an alphabetical default, `unavailable` at open skips to the next surface, and Backlog is reached through `delivery-surface-backlog`. The contract names no implementation. |
 | 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. |
 | 2026-09-17 | `devbook-graph` moves to `devbook-derived`, loading devbook's modules from the materialized path. |
