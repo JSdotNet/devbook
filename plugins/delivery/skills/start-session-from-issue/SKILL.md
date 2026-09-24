@@ -1,11 +1,11 @@
 ---
 name: start-session-from-issue
 description: >
-  Start this session's work from a single tracker work item — a GitHub issue, a Jira ticket, or
-  a Markdown chapter: fetch the items matching a filter, select one, claim it, route it to the
-  flow-* skill that matches its type, and run that flow here. One item per run, no extra
-  sessions. Use when: picking up an issue for implementation, pulling the next item off the
-  backlog, or running a scheduled backlog pickup.
+  Start this session's work from a single tracker work item — a GitHub issue, a Jira ticket, a
+  Backlog entry, or a Markdown chapter: fetch the items matching a filter, select one, claim
+  it, route it to the flow-* skill that matches its type, and run that flow here. One item per
+  run, no extra sessions. Use when: picking up an issue for implementation, pulling the next
+  item off the backlog, or running a scheduled backlog pickup.
 ---
 
 # Start Session from a Work Item
@@ -28,7 +28,9 @@ Every read and write here goes through the tracker operations — `find_item`, `
 Tracker** in `resources/surface-contract.md` for how an operation resolves and what each
 provider maps an item to. Name the operation, never a provider's command.
 
-With no tracker bound there is nothing to pick up: say so and stop.
+With no tracker bound there is nothing to pick up: say so and stop. A `plugin:skill` tracker
+implements no `find_item`, so it has nothing to pick up either: say so and stop — its items
+reach a flow through that plugin's own entry skill, which hands the flow the origin metadata.
 
 ## One Item Per Run
 

@@ -12,6 +12,7 @@ Every component's `install` skill is now two: `init`, which scaffolds and stamps
 where the stamp exists, and `update`, which refreshes, migrates, and re-stamps and refuses
 where none does. `devbook-config:setup` is `devbook-config:init`. `devbook:check` is
 `devbook:validate`, and the half of it that read the stamp moved to `devbook-config:doctor`.
+`devbook:sync-specs` is `devbook:capture-specs`.
 `delivery-schedule`'s `schedule-devbook-check` is `schedule-devbook-validate`, and its catalog
 entry `devbook-check` is `devbook-validate`.
 
@@ -25,6 +26,7 @@ config directory, `config.local.json` and `repos/<id>/config.local.json`:
 | --- | --- |
 | `devbook:install` | `devbook:update` |
 | `devbook:check` | `devbook:validate` |
+| `devbook:sync-specs` | `devbook:capture-specs` |
 | `devbook-derived:install` | `devbook-derived:update` |
 | `devbook-procedures:install` | `devbook-procedures:update` |
 | `delivery:install` | `delivery:update` |

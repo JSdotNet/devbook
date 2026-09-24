@@ -95,7 +95,7 @@ chapters and generated `_meta/*.json` indexes.
 
    If it reports unresolved references or schema violations, fix the source Markdown or
    run `devbook:validate`. When `.devbook/_tools/devbook-meta/` is absent, run
-   `devbook:init` first.
+   `devbook:update`, or `devbook:init` where devbook has no stamp yet.
 
 ## Output expectations
 

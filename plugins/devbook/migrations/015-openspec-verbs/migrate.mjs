@@ -29,6 +29,7 @@ const STAMP = ".devbook/config.json";
 const RENAMED = {
     "devbook:install": "devbook:update",
     "devbook:check": "devbook:validate",
+    "devbook:sync-specs": "devbook:capture-specs",
     "devbook-derived:install": "devbook-derived:update",
     "devbook-procedures:install": "devbook-procedures:update",
     "delivery:install": "delivery:update",
