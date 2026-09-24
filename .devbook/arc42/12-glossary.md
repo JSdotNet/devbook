@@ -46,6 +46,24 @@ operation names and never a transport: these two operations arrive as canvas act
 than as namespaced tools, and the contract is still satisfied — a surface is not required to be
 an MCP server.
 
+## Capture Plan
+
+```meta
+date: 2026-09-24
+related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: capture, the delta.
+
+What `capture-specs` hands the person instead of writing a chapter: the drafts to the folder's
+template, arranged as a delta against the target file — `ADDED`, `MODIFIED`, or `REMOVED` by
+heading — each claim carrying the evidence behind it, and the report table. It is the markers
+OpenSpec's own deltas use, so a bridge can carry a plan across without translating it. Code is
+evidence, not agreement: the plan is a proposal the person carries into the folder, or does
+not.
+
 ## Catalog
 
 ```meta
@@ -61,6 +79,23 @@ The set of schedule files the plugin ships — the defaults, readable as default
 selects from it and overrides a cadence in its own stamp rather than by editing the file, so an
 upgrade can move a shipped default without silently reverting or silently keeping somebody's
 choice.
+
+## Change Brief
+
+```meta
+date: 2026-09-24
+related: [".devbook/arc42/building-blocks/devbook.md#apply-change", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: brief.
+
+What `apply-change` derives from an agreed but unbuilt chapter and hands to the code-side flow:
+outcomes, invariants, ubiquitous language, out of scope, acceptance checks, and exactly one
+change category — new functionality, a change to existing behaviour, or a defect. It asks only
+for the delta the code does not yet satisfy, and never carries an open annotation: an open
+question stops the run at the gate rather than becoming a line item.
 
 ## Claim
 
@@ -162,6 +197,23 @@ never stored, because a stored idleness is indistinguishable from a stale one. A
 parked run is idle by every one of those signals and is not abandoned; the handoff marker is the
 only thing that separates them, and separating them is what a later `start_run` needs in order
 to reattach to one and refuse the other.
+
+## Invariant
+
+```meta
+date: 2026-09-24
+related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: `### Invariant:`, rule.
+
+What a type guarantees, one `### Invariant: <name>` chapter per rule in a bounded context's
+`invariants.md`, under the aggregate or domain service that owns it. It carries an
+`Enforced at:` line naming where the guarantee is made and is proved by unit tests. The word is
+DDD's, not OpenSpec's, and the heading is the one a bridge has to map: OpenSpec has no
+invariant.
 
 ## Park
 
@@ -303,6 +355,24 @@ The read-only model behind every answer devbook-config gives, printing the path 
 and naming the files that were absent as well as the ones that were read. Naming the source is
 what makes an answer checkable rather than authoritative, and it is why an empty table here reads
 as *this file was not there* rather than as *there is nothing*.
+
+## Requirement
+
+```meta
+date: 2026-09-24
+related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: `### Requirement:`, promise.
+
+A promise the product makes to someone outside the model, one `### Requirement: <name>`
+chapter per rule in a bounded context's `requirements.md`, grouped under the feature it
+belongs to. It states one SHALL sentence and one `#### Scenario:` per case — Given, When,
+Then — and is proved by e2e tests. The heading shape is OpenSpec's; the grouping under a
+feature heading is devbook's, and is what a bridge maps to OpenSpec's per-capability
+`spec.md`.
 
 ## Review Pass
 
