@@ -506,14 +506,27 @@ const FIELD_TYPE_SCOPE = {
         key: ["feature-flag", "setting"],
         default: ["feature-flag", "setting"],
         scope: ["setting"],
-        // How the context ships is the context's own, and only
-        // `context-map.md`'s `bounded-context` chapter stands for one.
+        // How the context ships is the context's own: `context-map.md`'s
+        // `bounded-context` chapter stands for it on the map, and the
+        // context's `context.md` carries it on its file-level block (see
+        // `FILE_FIELD_TYPE_SCOPE`). The graph build holds the two equal.
         deployment: ["bounded-context"],
     },
     arc42: {},
     tech: {},
     design: {},
     ai: {},
+};
+
+// The exceptions to `CHAPTER_ONLY_EXTRA_FIELDS`: a chapter-only field a file
+// may carry after all, on the file-level block of the `type` values named.
+// `context.md` is the one document that *is* its subject — the bounded context
+// as a whole — so how the context ships describes that document, not a chapter
+// missing from it.
+const FILE_FIELD_TYPE_SCOPE = {
+    domain: {
+        deployment: ["context"],
+    },
 };
 
 /** Determine which devbook folder a repo-relative path belongs to. */
@@ -1208,8 +1221,10 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
     if (!folderFields) return issues;
 
     if (blockLevel === "file") {
+        const fileType = resolveType(folder, meta);
         for (const field of CHAPTER_ONLY_EXTRA_FIELDS) {
             if (!folderFields.includes(field) || meta[field] == null) continue;
+            if (FILE_FIELD_TYPE_SCOPE[folder]?.[field]?.includes(fileType)) continue;
             issues.push({
                 severity: "error",
                 message:

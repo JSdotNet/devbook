@@ -253,6 +253,46 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
+// `context.md` is the context itself, so its file-level block carries the
+// same `deployment` as the context's chapter on the map. Only that file type
+// gets the exception: the map's own file-level block is still an error above.
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/context.md",
+        `# Ordering\n\n${fence("type: context\nindex: root\ndeployment: service\n")}\nProse.\n`
+    );
+
+    check(
+        !issues.some((i) => i.severity === "error"),
+        "`deployment` on `context.md`'s file-level block is silent",
+        dump(issues)
+    );
+}
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/context.md",
+        `# Ordering\n\n${fence("type: context\nindex: root\ndeployment: serverless\n")}\nProse.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", '`deployment` "serverless", expected one of: service, module')),
+        "a `deployment` outside the two values on `context.md` is an error",
+        dump(issues)
+    );
+}
+{
+    const issues = validateDocument(
+        ".devbook/domain/ordering/domain.md",
+        `# Ordering\n\n${fence("type: domain\ndeployment: module\n")}\nProse.\n`
+    );
+
+    check(
+        Boolean(find(issues, "error", "`deployment` on the file-level block")),
+        "`deployment` on another file type's file-level block is still an error",
+        dump(issues)
+    );
+}
+
 // --- .ai `stage` is a chapter's, never a file's ---------------------------
 
 // A file groups chapters and places none of them on the loop: the chapter says

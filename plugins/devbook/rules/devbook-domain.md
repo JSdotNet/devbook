@@ -567,7 +567,12 @@ instructions.
   scaled apart from the others; `module` runs inside a modular monolith beside
   other contexts, sharing its process and its release. It is one plain value,
   never a reference, and no other chapter carries it — an aggregate or a
-  feature ships with its context. Omit it until the choice is made. Name the
+  feature ships with its context. The context's `context.md` carries the same
+  value on its file-level block, so a reader of the context sees it without
+  opening the map; where the chapter's `related` names that `context.md`, the
+  two must agree, and the check reports a difference or a value on one side
+  only. A repository that lists its contexts only in tables writes it on
+  `context.md` alone. Omit it until the choice is made. Name the
   deployable itself — the service, or the monolith hosting the module — through
   `related`, pointing at its `arc42/` building block; which contexts share one
   host is read from those links, not restated here. Moving a context from
@@ -682,7 +687,7 @@ type: context-map
 \`\`\`meta
 type: bounded-context
 deployment: module
-related: [.devbook/arc42/05-building-block-view.md#<host-heading-slug>]
+related: [.devbook/domain/<bounded-context-name>/context.md, .devbook/arc42/05-building-block-view.md#<host-heading-slug>]
 \`\`\`
 
 What the context is for, in one sentence, and where it runs: the service it
@@ -719,6 +724,7 @@ each one.>
 status: draft
 index: root
 type: context
+deployment: module
 \`\`\`
 
 What this context is responsible for, in one or two sentences.

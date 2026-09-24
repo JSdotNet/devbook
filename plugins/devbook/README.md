@@ -469,9 +469,10 @@ chapter shape: it renames the skill ids a stack config binds — `devbook:instal
 to `devbook:update`, `devbook:check` to `devbook:validate`, and every other
 renamed provider — and the `devbook-check` schedule to `devbook-validate`. A
 config still naming an old id binds a skill that no longer exists, so it ships as
-`015-openspec-verbs`. 16 gives the `bounded-context` chapter in `context-map.md` an
-optional `deployment` — `service`, or `module` in a modular monolith — and ships no
-migration: the field is added, and a context without it reads as undecided.
+`015-openspec-verbs`. 16 gives the `bounded-context` chapter in `context-map.md` and
+the context's own `context.md` an optional `deployment` — `service`, or `module` in
+a modular monolith — which the two must state alike, and ships no migration: the
+field is added, and a context without it reads as undecided.
 
 ## Folder structure
 
