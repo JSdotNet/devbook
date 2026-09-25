@@ -120,13 +120,14 @@ version it ships in: a major release raises the floor and drops the folders belo
 
 A rule that applies to one kind of file is authored once in `.agents/rules/` and wrapped per
 host: Claude loads `.claude/rules/<topic>.md` when it opens a matching file, Copilot loads
-`.github/instructions/<topic>.instructions.md`. Six topics, all plugin authoring — `agents`,
-`skills`, `plugin-rules`, `manifests`, `hooks`, `schedules`. Change a rule and its two
-wrappers in the same commit; `node tools/check-assets.mjs` fails on drift. The convention is
+`.github/instructions/<topic>.instructions.md`. Six topics are authored here, all plugin
+authoring — `agents`, `skills`, `plugin-rules`, `manifests`, `hooks`, `schedules`. Change a
+rule and its two wrappers in the same commit; `node tools/check-assets.mjs` fails on drift. The convention is
 [.agents/rules/README.md](.agents/rules/README.md).
 
-`.devbook/**` has no topic here on purpose: the devbook section at the end of this file states
-the folder rules for both hosts, and devbook owns it.
+The `devbook-*` rules beside them are delivered, not authored: `devbook:update` copies them
+from `plugins/devbook/rules/`, and they are edited there and refreshed here, never edited in
+place.
 
 A rule fires when a host **reads** a matching file, so authoring one from scratch may not
 trigger it. Open a sibling first, or read the rule directly.
@@ -183,9 +184,9 @@ chapter as context: they hold review notes, not content.
 
 Run the check before committing; it writes nothing:
 
-    node plugins/devbook/tools/devbook-meta/build.mjs --check
+    node .devbook/_tools/devbook-meta/build.mjs --check
 
-An annotation fence is written only through `plugins/devbook/tools/devbook-meta/annotations.mjs`.
+An annotation fence is written only through `.devbook/_tools/devbook-meta/annotations.mjs`.
 
 Nothing personal lives in this repository. Your own settings live under your devbook
 config directory — `$XDG_CONFIG_HOME/devbook` when set, else `%APPDATA%\devbook` on
