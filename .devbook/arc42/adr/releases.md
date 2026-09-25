@@ -5,7 +5,7 @@ date: 2026-09-24
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.7.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.8.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
