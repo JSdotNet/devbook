@@ -1,6 +1,7 @@
 ---
 name: init
 description: 'Record the delivery engine in a repository for the first time — write its pluginVersion under components.delivery in .devbook/config.json. Materializes nothing: the engine reads the config and the repository''s skills by path. Refused where components.delivery already exists: run delivery:update. Use when: adopting the delivery engine. Triggers on: "delivery init", "init delivery", "install delivery", "adopt the delivery engine".'
+user-invocable: false
 ---
 
 # delivery init

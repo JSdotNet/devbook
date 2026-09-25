@@ -1,6 +1,7 @@
 ---
 name: init
 description: 'Write the repository-owned procedure skills — start, show, capture, debug — into a repository for the first time, each as one editable copy under .agents/skills/ with a managed wrapper per host carrying the fixed goal, and stamp them under components.devbook-procedures in .devbook/config.json. Refused where that stamp already exists: run devbook-procedures:update. Use when: adopting devbook-procedures. Triggers on: "devbook-procedures init", "install devbook-procedures", "seed the start skill", "seed the show skill", "seed the capture skill", "seed the debug skill".'
+user-invocable: false
 ---
 
 # devbook-procedures init
