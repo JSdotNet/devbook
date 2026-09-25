@@ -28,9 +28,26 @@ export function renderShell() {
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Run dashboard</title>
 <style>
   :root { color-scheme: light dark; }
+  /* The colours are an MCP App host's tokens with light fallbacks. Opened in a plain browser
+     no host supplies them, so a dark system theme gets dark values for the same tokens. The
+     app preamble marks the page, and a host's own theme is never overridden. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-mcp-app]) {
+      --background-color-default: #0d1117;
+      --background-color-muted: rgba(127,127,127,0.14);
+      --text-color-default: #e6edf3;
+      --text-color-muted: #9198a1;
+      --border-color-default: #3d444d;
+      --color-focus-outline: #4493f8;
+      --true-color-blue: #4493f8;
+      --true-color-red: #f85149;
+      --true-color-yellow: #d29922;
+    }
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -351,6 +368,16 @@ export function renderShell() {
   .ctx-fill.danger { background: var(--true-color-red, #cf222e); }
   .ctx-meta { font-size: 12px; color: var(--text-color-muted, #59636e); margin-top: 4px; }
   .tag.tokens { background: rgba(191,135,0,0.16); color: #9a6700; }
+  /* A narrow pane beside the conversation: the run list stacks above the detail, which stays
+     the scroll container so stage navigation still scrolls it. */
+  @media (max-width: 720px) {
+    body { flex-direction: column; }
+    #runs { width: auto; max-height: 35vh; border-right: none; border-bottom: 1px solid var(--border-color-default, #d0d7de); }
+    #detail { flex: 1; min-height: 0; padding: 12px; }
+    .ctx-row { grid-template-columns: 90px minmax(0, 1fr) max-content; }
+    .bar-label { width: 80px; }
+    .bar-value { width: 56px; }
+  }
 </style>
 </head>
 <body>
@@ -368,7 +395,9 @@ export function renderShell() {
   <script>
     const STATUS_LABEL = ${JSON.stringify(STATUS_LABEL)};
     let runs = [];
-    let selectedId = null;
+    // ?run=<id> opens the dashboard on one run; choosing another run rewrites it, so a reload
+    // or a pane left open keeps its place.
+    let selectedId = new URLSearchParams(location.search).get("run") || null;
     let selectedRun = null;
     let activeStage = null;
 
@@ -983,9 +1012,32 @@ export function renderShell() {
       '</div></div>';
     }
 
+    function rememberSelection(id) {
+      if (document.documentElement.hasAttribute("data-mcp-app")) return;
+      try {
+        history.replaceState(null, "", "?run=" + encodeURIComponent(id));
+      } catch {
+        // A page without a real URL keeps the selection in memory only.
+      }
+    }
+
+    // The tab title carries the run's state, so a pane or tab in the background still says
+    // whether the run is moving, blocked, or waiting.
+    function updateTitle(run) {
+      if (!run) {
+        document.title = "Run dashboard";
+        return;
+      }
+      const state = run.handoffPending ? "handoff" : run.idle ? "idle" : run.status;
+      const stages = run.stages || [];
+      const current = stages.find((s) => s.status === "in_progress") || stages.find((s) => s.status === "blocked");
+      document.title = (STATUS_LABEL[state] || state || "") + (current ? " · " + current.name : "") + " — " + (run.title || run.id);
+    }
+
     function renderDetail(run) {
       const el = document.getElementById("detail");
       selectedRun = run;
+      updateTitle(run);
       if (!run) {
         el.innerHTML = '<div class="empty">Select a run to see progress and output.</div>';
         renderRunList();
@@ -1123,6 +1175,7 @@ export function renderShell() {
     async function selectRun(id) {
       if (id !== selectedId) activeStage = null;
       selectedId = id;
+      rememberSelection(id);
       renderRunList();
       const res = await fetch("/api/runs/" + encodeURIComponent(id));
       if (res.ok) renderDetail(await res.json());
@@ -1131,7 +1184,7 @@ export function renderShell() {
     async function refresh() {
       const res = await fetch("/api/runs");
       runs = await res.json();
-      if (!selectedId && runs.length) selectedId = runs[0].id;
+      if ((!selectedId || !runs.some((r) => r.id === selectedId)) && runs.length) selectedId = runs[0].id;
       renderRunList();
       if (selectedId) {
         const found = runs.find((r) => r.id === selectedId);

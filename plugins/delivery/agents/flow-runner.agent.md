@@ -2,7 +2,7 @@
 name: flow-runner
 description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request.'
 model: opus
-tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog']
+tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog', 'mcp__Claude_Browser__preview_start']
 ---
 
 # Flow Runner Agent
@@ -65,8 +65,9 @@ those contracts; it does not re-decide them per skill.
    surface, bind each that does not answer `unavailable`, and send every lifecycle call to
    all of them, each with the `runId` its own `start_run` returned. Render and export bind to
    the first surface that answers. Record which surfaces answered and their `runId`s, per
-   **The Surface Capability** in `surface-contract.md`. Publish each returned URL in the
-   conversation — this agent carries no browser tool, per **Surfacing the surface** there.
+   **The Surface Capability** in `surface-contract.md`. Open each returned URL once in the
+   host's browser pane when a pane tool is in the live tool list, and publish it in the
+   conversation either way, per **Surfacing the surface** there.
    A surface call the host's permission layer refuses is retried once and then reported to
    the user — never dropped.
    Then call `start_run` on each with the skill's `skillId` and the full ordered stage list —

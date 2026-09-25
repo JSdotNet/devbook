@@ -410,7 +410,7 @@ flowchart LR
     page["One page file"] --> bridge["app-bridge: answers the page's own fetch and EventSource"]
     bridge --> mcpApps{"Host implements MCP Apps?"}
     mcpApps -->|yes| inline["Read as a ui:// resource, rendered inline in the conversation"]
-    mcpApps -->|no| loopback["Served on a loopback address at an ephemeral port"]
+    mcpApps -->|no| loopback["Served on a loopback address, at a port derived from the worktree"]
     inline --> viewer(["The viewer"])
     loopback --> viewer
     viewer --> nav["Navigation and view inspection, over this plugin's own origin"]
@@ -420,6 +420,9 @@ flowchart LR
 - **Navigation is not a tool.** A surface that declares more than the contract stops being
   swappable for one that declares exactly it — so anything the pages need beyond the eleven
   names is served over the plugin's own origin.
+- **The loopback address is stable per worktree.** A tab or a host's browser pane left open
+  outlives a server restart, and `?run=<id>` lands on one run; a taken port falls back to an
+  ephemeral one rather than failing to serve.
 - **There is no authentication on the HTTP side**, and reaching it already requires local
   access to the machine. The [canvas](delivery-surface-canvas.md) implementation of the same
   contract does check a token, because it outlives the panel that opened it.
