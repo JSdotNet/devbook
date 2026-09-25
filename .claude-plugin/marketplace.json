@@ -10,61 +10,61 @@
       "name": "delivery",
       "source": "./plugins/delivery",
       "description": "The host-neutral delivery engine: 4 flow-* staged procedures named for what changes — the code, the devbook folders, the dependencies, the project — 3 shared phases, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, validate, app.start, qa.run, verify and deliver as services, session.start, flow.start, data.prepare and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .devbook/config.json.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "delivery-surface-collector",
       "source": "./plugins/delivery-surface-collector",
       "description": "A headless run surface: where a run becomes recorded rather than watched. An MCP server implementing two surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) and export (export_report) — keeping stage status, output, gate decisions, QA scenarios and the handoff marker on disk so a resumed session picks the run up where it stopped, and writing the run's Markdown report at the end. No page, no port, nothing rendered: the right surface for scheduled and unattended runs. Declares no dependency and names no engine.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "delivery-surface-dashboard",
       "source": "./plugins/delivery-surface-dashboard",
       "description": "A run surface: the live dashboard a run is watched in. An MCP server implementing all three surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run), render (render_diagram, render_markdown), and export (export_report) — with a run timeline carrying stage output, QA scenarios and their evidence, a Mermaid diagram viewer and a Markdown document viewer, and hook-captured tool and token telemetry. Rendered inline as an MCP App where the host supports it, served on 127.0.0.1 where it does not. Declares no dependency and names no engine.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "delivery-surface-backlog",
       "source": "./plugins/delivery-surface-backlog",
       "description": "A run surface that is an application: the Backlog desktop app. A stdio MCP server that forwards the lifecycle operations of the surface capability (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) to the MCP endpoint inside the running app, with the bearer token from the app's own settings, and passes Backlog's answers and refusals through unchanged; export_report only while Backlog lists it, render never. With Backlog closed or its MCP server off, open_dashboard answers unavailable so a caller moves on to the next surface. Registering Backlog's own backlog server, the tracker, never makes it a surface; installing this plugin does. Declares no dependency and names no engine.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "delivery-schedule",
       "source": "./plugins/delivery-schedule",
       "description": "The unattended lane, stacked on delivery: the seventeen schedule-* skills that run with nobody watching, plus init and update, plus the catalog of triggers that fires them. Fifteen schedulable entry points that pick their own input and run a flow, a review, a check, a sweep, or a report — devbook validate, devbook verify, instruction review, issue sweep, merge review, morning brief, package update, performance review, review, security review, tech update, week starter, weekly cost analysis, weekly update, and what's new — and twelve trigger definitions naming a target, a cadence, the plugins that target needs, and the prompt for a cloud session that starts with nothing but the repository. delivery-schedule:init creates them through whatever scheduler the live session exposes and stamps the selection under components.schedule, and delivery-schedule:update keeps them level with it; schedule-status reads their runs and logs; schedule-run fires one now. One capability, two host names: Routines in Claude Code, Automations in the GitHub Copilot app. Depends on delivery and names devbook: a trigger whose target is not enabled is reported and skipped, never scheduled.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "devbook-config",
       "source": "./plugins/devbook-config",
       "description": "Owns a repository's .devbook/config.json and explains the stack that reads it. `init` decides which installed plugins a repository adopts, writes .devbook/config.json — its id, plus the engine-owned keys (bindings, extensions, policy, gates) when delivery is among them — before anything is installed, then hands every adopted component its own init skill; `update` moves the whole configured stack forward in one run, fanning out to every adopted component’s own update skill and skipping what this machine has not installed or this checkout has not enabled, migrations included; `doctor` diagnoses the installation without writing — every stamp against disk, outstanding migrations, a stale AGENTS.md section, installed against newest — and names the update that fixes each finding; `ask` answers a question about this marketplace from what is on disk — what devbook, the delivery engine, the bridges, the surfaces, and the fan-out lane are and how they fit, which version of each plugin is installed against the newest published, and which are enabled; `adoption` reports where the ai/ adoption record no longer matches what is installed and hands the write to flow-spec; `local` writes what is true of one machine — the stack-config overlay at the user or repository layer, the model-selection file, AGENTS.local.md — and never the committed config. All six are backed by a read-only report that names the file behind every fact. Declares no dependency, devbook included: it is named for the folder it writes into, not for a plugin it needs, and one it names but cannot find is reported as not installed.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "devbook",
       "source": "./plugins/devbook",
       "description": "The devbook convention: arc42/, domain/, tech/, design/, and ai/ folders of addressed Markdown chapters, behaviour captured one rule per chapter into requirements.md and the domain.invariants.md subpages, each chapter carrying a parseable meta block with status ladders, the review triad, and domain/'s two decision rungs — approved, then accepted — with their signatures and content fingerprints, runnable test-case links, a reserved ext namespace, and annotation fences that keep a review note in the chapter beside the passage it is about. Ships the checker — build.mjs, which validates every meta block and reference and writes nothing unless a layered plugin asks it to — the fence writer, the tech/ inventory scripts, three converters between chapters and code (capture-specs, apply-change, verify-change, each over six chapter kinds), validate, annotation-sweep, tech-update, a versioned contract with runnable migrations, and init and update, which put the rules, the tools, and its AGENTS.md section into a repository and keep them current. Ships the shape and the check, never a flow: the delivery engine carries a chapter change, and devbook-derived keeps the committed _meta/ index fresh.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "devbook-derived",
       "source": "./plugins/devbook-derived",
       "description": "The committed devbook index, and the canvas that draws it: keeps the derived _meta/ artifacts — the reference graph, the reading outline, and the open-note index, one set per adopted folder and a rollup under .devbook/_meta/ — in a repository's tree for a reader that cannot run devbook's checker itself, and ships the devbook-graph Copilot canvas that renders the graph live from devbook's modules at their materialized path. Ships the refresh paths that pass --write to devbook's build.mjs: the refresh skill and the on-demand Update-DevbookIndex.ps1, the nightly refresh workflow that opens one pull request when the indexes moved, and the pull-request drift warning; the derived-artifacts rule with a wrapper per host; its own AGENTS.md section; and the .claude/settings.json deny snippet. Three skills, init, update, and refresh. An L1 extension over devbook: enable it to commit the index, disable it to stop, and the check is devbook's either way.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "devbook-procedures",
       "source": "./plugins/devbook-procedures",
       "description": "The four procedures every repository has and no plugin can write: start — how its application comes up; show — how the feature being built is put in front of a reviewer, running and with evidence; capture — how evidence is taken; debug — how a cause is found inside the running application, breakpoints included, without handing the debugger to a person. Each lands as one editable copy under .agents/skills/ with a managed wrapper per host that carries the fixed goal: the goal is the plugin's and refreshes on upgrade, the procedure is the repository's and is never overwritten once edited. Two skills, init and update, keyed by components.devbook-procedures.adopted in .devbook/config.json. An L1 extension over devbook: it follows devbook's reconcile protocol and stamp, and names no engine.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     },
     {
       "name": "devbook-collaboration",
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records each finding as a devbook annotation fence beside the passage it is about, runs the approval decision that writes devbook's own approved rung, runs the acceptance decision that writes the accepted rung above it, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. Five skills and nothing else, over devbook: the state it writes is devbook's own review triad — review, reviewer, review-at — and its approval and acceptance rungs, all validated by the check, so it owns no schema, materializes nothing into a repository, and stamps nothing.",
-      "version": "1.6.0"
+      "version": "1.7.0"
     }
   ]
 }
