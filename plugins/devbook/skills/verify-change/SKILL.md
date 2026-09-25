@@ -1,6 +1,6 @@
 ---
 name: verify-change
-description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same six kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and unit tests only; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
+description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same six kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and the tests each chapter names at its level — unit for an invariant, e2e or integration for a requirement; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
 ---
 
 # verify-change
@@ -33,10 +33,11 @@ repository root.
    the opening line, so a wide run says what it covered before it says what it
    found.
 2. Resolve each counterpart by the protocol's ladder; record the rung.
-3. Read the implementation and its unit tests, as the kind's file directs.
-   Only code that executes and tests that pass are evidence. Do not start the
-   application: a `feature` is verified from code and tests here, and the run
-   belongs to `capture-specs`.
+3. Read the implementation, as the kind's file directs, then for each chapter
+   the test files its `tests` field names at the level its type calls for —
+   `unit` for an invariant, `e2e` or `integration` for a requirement. Read them
+   as files: run no test and do not start the application; the run belongs to
+   `capture-specs`. Only code that executes and tests that pass are evidence.
 4. Reach exactly one verdict per chapter, with the evidence that settles it,
    specific enough to re-check. Mark it `unagreed` where the chapter's `status`
    says so, per the protocol's status table: a verdict against a draft is a
