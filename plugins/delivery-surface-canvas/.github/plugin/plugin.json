@@ -1,6 +1,6 @@
 {
   "name": "delivery-surface-canvas",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "A render surface for hosts with a canvas panel: a Mermaid diagram viewer and a Markdown document viewer, shown live beside the files they were written from. Implements one surface capability group — render (render_diagram, render_markdown) — with push/replace navigation and a history the Back button walks, as two Copilot canvases and nothing else. Tracks no runs and exports nothing; declares no dependency and names no engine.",
   "author": {
     "name": "Job Schepers"

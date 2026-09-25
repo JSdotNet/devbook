@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | Every plugin is `1.8.0`; contract 18 ships in it with migration 018, which retitles a context's behaviour files `# Requirements` and `# Invariants`. The same contract takes `#### Scenario:` off an invariant — a claim, its rejection code, and `Enforced at:` — and leaves any an older invariant carries. |
 | 2026-09-25 | Every plugin is `1.7.0`; contract 17 ships in it with migration 017, which moves a context's `invariants.md` and `invariants.<name>.md` into the invariants subpage of their domain page — `domain.invariants.md`, `domain.<name>.invariants.md` — and rewrites every reference to them. |
 | 2026-09-24 | Every plugin is `1.6.0`. `delivery-surface-backlog` joins at that version; `delivery` adds the optional `bindings["delivery.surface"]` key, an added field with a safe default, so no migration is owed. |
 | 2026-09-23 | Every plugin is `1.5.0`, the one release of the OpenSpec preparation; contracts 14 and 15 ship in it with migration 015. It carries the `requirements.md` and `invariants.md` behaviour files and their converters, the rename to `init`, `update`, and `validate`, the `plugin:skill` tracker and approved-spec bindings, and the `devbook-verify` schedule. |
