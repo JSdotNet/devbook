@@ -17,8 +17,9 @@
 //   ui:// resource, rendered inline    page served on 127.0.0.1
 //   tools/call through app-bridge.js   the page's own fetch and EventSource
 //
-// Everything is served on 127.0.0.1 with an ephemeral port. There is no authentication:
-// reaching it already requires local access to the machine.
+// Everything is served on 127.0.0.1, on a port derived from the worktree so a browser tab left
+// open survives a server restart (see preferredPort). There is no authentication: reaching it
+// already requires local access to the machine.
 
 import { createServer } from "node:http";
 import { createReadStream, watch as fsWatch } from "node:fs";
@@ -26,6 +27,7 @@ import { stat as fsStat, readFile as fsReadFile, mkdir, writeFile } from "node:f
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EventEmitter } from "node:events";
+import { createHash } from "node:crypto";
 import { ensureDir, writeRun, readRun, listRuns, newRunId } from "./store.mjs";
 import { renderShell } from "./render.mjs";
 import { summarizeInsights, summarizeContext } from "./insight.mjs";
@@ -372,7 +374,9 @@ async function appPageHtml(page) {
     // files rather than JSON. Starting the server here is what makes that origin knowable.
     const origin = await ensureHttpServer().catch(() => "");
     const preamble =
-        `<script>window.__DELIVERY_HTTP_ORIGIN__ = ${JSON.stringify(origin || "")};</script>\n` +
+        // data-mcp-app tells the page a host supplies its theme and owns its URL.
+        `<script>window.__DELIVERY_HTTP_ORIGIN__ = ${JSON.stringify(origin || "")};` +
+        `document.documentElement.setAttribute("data-mcp-app", "");</script>\n` +
         `<script>\n${bridge}\n</script>\n`;
     const headIndex = body.indexOf("<head>");
     if (headIndex < 0) return preamble + body;
@@ -546,16 +550,73 @@ async function handleRequest(req, res) {
     res.end("not found");
 }
 
-async function ensureHttpServer() {
-    if (httpServer) return httpUrl;
+// The same worktree asks for the same port every time, so a dashboard tab — a host's browser
+// pane especially — keeps working after the server restarts. DELIVERY_SURFACE_DASHBOARD_PORT
+// overrides it and 0 asks for an ephemeral port. A taken port falls back to an ephemeral one:
+// a second server for the same worktree, or a collision with another worktree's.
+function preferredPort() {
+    const override = process.env.DELIVERY_SURFACE_DASHBOARD_PORT;
+    if (override !== undefined && override !== "") {
+        const port = Number(override);
+        if (Number.isInteger(port) && port >= 0 && port <= 65535) return port;
+        process.stderr.write(`delivery-surface-dashboard: ignoring DELIVERY_SURFACE_DASHBOARD_PORT=${override}
+`);
+    }
+    const hash = createHash("sha1").update(worktreeRoot().toLowerCase()).digest();
+    return 41000 + (hash.readUInt16BE(0) % 8000);
+}
+
+function listenOn(server, port) {
+    return new Promise((resolve, reject) => {
+        const onError = (err) => {
+            server.off("listening", onListening);
+            reject(err);
+        };
+        const onListening = () => {
+            server.off("error", onError);
+            resolve();
+        };
+        server.once("error", onError);
+        server.once("listening", onListening);
+        server.listen(port, "127.0.0.1");
+    });
+}
+
+// The dashboard opened on one run. Where a host shows the page in a pane, this is the link
+// that lands on the work in progress rather than on the run list.
+function runUrl(base, runId) {
+    return runId ? `${base}?run=${encodeURIComponent(runId)}` : base;
+}
+
+// One start, however many callers race for it: resources/list and the first tool call often
+// arrive together, and listening now takes more than one tick.
+let httpStarting = null;
+function ensureHttpServer() {
+    if (!httpStarting) {
+        httpStarting = startHttpServer().catch((err) => {
+            httpStarting = null;
+            throw err;
+        });
+    }
+    return httpStarting;
+}
+
+async function startHttpServer() {
     await ensureDir(baseDir);
-    httpServer = createServer((req, res) => {
+    const server = createServer((req, res) => {
         handleRequest(req, res).catch((err) => {
             res.statusCode = 500;
             res.end(String((err && err.message) || err));
         });
     });
-    await new Promise((resolve) => httpServer.listen(0, "127.0.0.1", resolve));
+    const port = preferredPort();
+    try {
+        await listenOn(server, port);
+    } catch (err) {
+        if (port === 0 || !err || err.code !== "EADDRINUSE") throw err;
+        await listenOn(server, 0);
+    }
+    httpServer = server;
     const address = httpServer.address();
     httpUrl = `http://127.0.0.1:${typeof address === "object" && address ? address.port : 0}/`;
     // The telemetry hook writes run files from its own process, so the dashboard cannot
@@ -698,7 +759,7 @@ const tools = [
                         runId: existing.id,
                         resumed: true,
                         run: existing,
-                        dashboardUrl,
+                        dashboardUrl: runUrl(dashboardUrl, existing.id),
                         sessionTitle: computeSessionTitle(existing, await loadSessionNaming(worktreeRoot())),
                     };
                 }
@@ -739,7 +800,7 @@ const tools = [
             await writeRun(baseDir, run);
             await writeActive({ runId: run.id, stage: null, updatedAt: now });
             bus.emit("update");
-            return { runId: run.id, resumed: false, dashboardUrl, sessionTitle: computeSessionTitle(run, await loadSessionNaming(worktreeRoot())) };
+            return { runId: run.id, resumed: false, dashboardUrl: runUrl(dashboardUrl, run.id), sessionTitle: computeSessionTitle(run, await loadSessionNaming(worktreeRoot())) };
         },
     },
     {

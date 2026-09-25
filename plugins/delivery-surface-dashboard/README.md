@@ -48,9 +48,23 @@ never by one spelling.
 
 Each is served two ways from the same file. A host that implements MCP Apps
 (SEP-1865) reads it as a `ui://` resource and renders it inline in the conversation;
-every other host opens it on `127.0.0.1` at an ephemeral port. `app-bridge.js` is what
-makes one page work in both — it answers the page's own `fetch` and `EventSource` calls
-with tool calls, so neither page learns which way it was loaded.
+every other host opens it on `127.0.0.1`. `app-bridge.js` is what makes one page work in
+both — it answers the page's own `fetch` and `EventSource` calls with tool calls, so neither
+page learns which way it was loaded.
+
+Opened in a browser — a tab, or a host's browser pane beside the conversation — the dashboard
+is built to be left open:
+
+- **The address holds across restarts.** The port is derived from the worktree path, so a
+  tab left open reconnects when the server comes back. A taken port falls back to an ephemeral
+  one. `DELIVERY_SURFACE_DASHBOARD_PORT` pins a port of your own; `0` always takes an
+  ephemeral one.
+- **`?run=<id>` opens one run.** `start_run` returns its `dashboardUrl` that way, and choosing
+  another run rewrites the address, so a reload keeps its place.
+- **The tab title is the run's state** — status, the stage in flight, and the title — readable
+  while the pane is in the background.
+- **It fits a narrow pane and follows the system's dark theme.** Below 720px the run list
+  stacks above the detail. Rendered inline, the host's own theme applies instead.
 
 There is no authentication on the HTTP side: reaching it already requires local access
 to the machine.
