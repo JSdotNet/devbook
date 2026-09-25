@@ -1,6 +1,7 @@
 ---
 name: init
 description: 'Bring devbook into a repository for the first time — adopt the .devbook/arc42/.domain/.tech/.design/.ai devbook folders, scaffold one starting chapter per adopted folder, install the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption".'
+user-invocable: false
 ---
 
 # devbook init

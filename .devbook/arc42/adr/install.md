@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-23
+date: 2026-09-25
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -70,6 +70,17 @@ Sync was rejected earlier for the same reason as before: it names a two-way reco
 peers, and a plugin writes while the repository never writes back. Every such skill is
 addressed `plugin:init` and `plugin:update`, because the plugin name already carries the scope.
 
+**`devbook-config` is the front door; a component's own pair is hidden from the menu.**
+`devbook-config:init` and `devbook-config:update` fan out to every adopted component's pair,
+so a menu listing both the orchestrator and six component pairs offered two ways to do one
+thing and no hint which to pick. The pairs of `devbook`, `delivery`, `devbook-derived`, and
+`devbook-procedures` carry `user-invocable: false`: gone from the `/` menu, still invocable by
+the model, which is what the fan-out needs — `disable-model-invocation` would be the opposite
+and break it. They are not removed, because no plugin depends on `devbook-config` and a
+repository with `devbook` alone still reaches `devbook:init` by asking for it in words.
+`delivery-schedule`'s pair stays visible: a person runs it directly to change a cadence, not
+only through the fan-out. A host that does not know the key ignores it and keeps listing them.
+
 **This repository materializes nothing.** A consuming repository has no generator until the
 install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
 `.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
@@ -92,6 +103,8 @@ working tree is CRLF and the index LF.
 - Vendoring the generator into this repository's own `.devbook/_tools/`.
 - One `install` that branches on whether the stamp exists: it hides which case a run is, and
   puts the adoption interview in front of an operation people run to change nothing.
+- Removing the component pairs in favour of `devbook-config`: every plugin installs alone, and
+  a repository without `devbook-config` would have no way in.
 
 ## History
 
@@ -100,6 +113,7 @@ working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. |
 | 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. |
 | 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. |
 | 2026-09-15 | `tools/devbook-meta/` and `tools/devbook-tech/` materialize into `.devbook/_tools/`, not `.github/tools/`. |

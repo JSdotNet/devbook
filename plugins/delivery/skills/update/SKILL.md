@@ -1,6 +1,7 @@
 ---
 name: update
 description: 'Move the delivery engine''s record in a repository forward — release any file an earlier engine seeded, so the repository''s own procedure skills are its own, and rewrite components.delivery in .devbook/config.json to the installed pluginVersion. Materializes nothing. Refused where no components.delivery stamp exists: run delivery:init. Use when: upgrading the delivery engine, or components.delivery still claims a seeded start or capture skill. Triggers on: "delivery update", "update delivery", "upgrade delivery".'
+user-invocable: false
 ---
 
 # delivery update

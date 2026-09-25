@@ -1,6 +1,7 @@
 ---
 name: update
 description: 'Move a repository that already has devbook forward — refresh the devbook-meta checker, its CI workflow, the folder rules with a wrapper per host, and devbook''s section of AGENTS.md, run outstanding schema migrations, create a folder adopted since or orphan one dropped, and re-stamp. One idempotent operation covering a plugin upgrade, a change in which folders are adopted, and migration-only. Refused where no components.devbook stamp exists: run devbook:init first. Use when: upgrading devbook, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook update", "update devbook", "upgrade devbook", "devbook sync", "run devbook migrations", "adopt another devbook folder", "drop a devbook folder".'
+user-invocable: false
 ---
 
 # devbook update
