@@ -359,8 +359,8 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc4
 `delivery` declares a closed set of six names a shared asset reads instead of a host's own
 file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
 [deleted](adr/hosts.md), and nowhere in the stack is a
-host's own file, path, or capability named now — save the `session-id` token, which
-[stands on purpose](adr/hosts.md).
+host's own file, path, or capability named now — save the `session-id` token and the runner's
+browser-pane tool, which [stand on purpose](adr/hosts.md).
 
 | Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |

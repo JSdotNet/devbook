@@ -650,7 +650,7 @@ const tools = [
     {
         name: "open_dashboard",
         description:
-            "Show the run dashboard. In a host that supports MCP Apps it renders inline; otherwise it starts the local dashboard server and returns URLs for the run dashboard and the diagram/document viewers. Call once per session, before start_run. Where it does not render inline, publish the returned dashboardUrl to the user as a link rather than opening it yourself.",
+            "Show the run dashboard. In a host that supports MCP Apps it renders inline; otherwise it starts the local dashboard server and returns URLs for the run dashboard and the diagram/document viewers. Call once per session, before start_run. Where it does not render inline, open the returned dashboardUrl once in the host's in-app browser when one is available, and give the user the link either way.",
         inputSchema: { type: "object", properties: {}, additionalProperties: false },
         _meta: { ui: { resourceUri: "ui://delivery-surface-dashboard/dashboard.html" } },
         handler: async () => {

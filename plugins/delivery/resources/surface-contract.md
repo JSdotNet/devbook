@@ -138,18 +138,21 @@ A run the user cannot see is a run they cannot steer.
 
 1. **Inline panel.** Where the host renders the surface inline on its own, nothing further is
    needed — do not also open a browser tab.
-2. **Plain link.** Otherwise, give the user the URL to open themselves.
-3. **No URL.** Where `open_dashboard` returns none, say once what it answered — the run is
+2. **Browser pane.** Otherwise, where the live tool list has a tool that opens a URL in the
+   host's in-app browser, open the returned URL there once, so the surface sits beside the
+   conversation, and still give the link.
+3. **Plain link.** With neither, give the user the URL to open themselves.
+4. **No URL.** Where `open_dashboard` returns none, say once what it answered — the run is
    recorded, or it is in a window the user already has — and open nothing.
 
-**The runner never opens a browser pane.** A pane is one host's own capability, and an
-exact-match `tools` allowlist can only reach it under that host's own tool name, so
-`flow-runner` carries none. A host that renders the surface inline still does; a user who
-wants a pane opens the published link in one.
+A link cannot ask to open in a pane — where a clicked link opens is the host's choice — so
+the pane is opened, not linked. An exact-match `tools` allowlist reaches a pane only under
+the host's own tool name, which is why `flow-runner` names one; a host whose pane it does not
+name gets the plain link.
 
-Publish it once — the page updates live, so re-publishing on later stages is noise. Never
-block on it: the URL not reaching the user is a presentation problem, not a run problem.
-Report it and continue.
+Open and publish it once — the page updates live, so re-opening on later stages steals focus
+and re-publishing is noise. Never block on it: a pane that does not open, or a URL that does not
+reach the user, is a presentation problem, not a run problem. Report it and continue.
 
 ## Rendering Content
 
