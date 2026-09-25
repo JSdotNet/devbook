@@ -81,7 +81,8 @@ them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
+Follow the **Reporting Contract** in `resources/surface-contract.md`: every lifecycle call
+goes to each bound surface, with the `runId` that surface's own `start_run` returned. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

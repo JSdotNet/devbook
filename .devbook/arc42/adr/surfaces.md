@@ -1,18 +1,19 @@
 # Surfaces
 
 ```meta
-date: 2026-09-24
+date: 2026-09-25
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
 ```
 
 A surface is a viewer for a run: an MCP server named `delivery-surface-*`, resolved from the
 live tool list in either host spelling, or a host canvas whose actions carry the contract's
-operation names. The same names on a server with any other name are not a surface. Each
-capability group binds to the first surface that answers it, in the order
-`bindings["delivery.surface"]` gives — per machine through an overlay — or, unset,
-alphabetically by server name with canvas actions last. A surface that answers `unavailable`
-at open is skipped for the next, and a run with no surface bound produces its file artifacts
-and continues. `delivery` ships none and the contract names none. Four plugins implement it
+operation names. The same names on a server with any other name are not a surface. The
+lifecycle group fans out: every lifecycle surface that opens records the run, each under its
+own `runId`, restricted to and ordered by `bindings["delivery.surface"]` when a machine sets
+it through an overlay. Render and export bind to the first surface that answers, in that
+order or, unset, alphabetically by server name with canvas actions last. A surface that
+answers `unavailable` at open is left out, and a run with no surface bound produces its file
+artifacts and continues. `delivery` ships none and the contract names none. Four plugins implement it
 and none depends on the engine or on each other: `delivery-surface-dashboard` answers every
 group, `delivery-surface-collector` lifecycle and export, `delivery-surface-backlog`
 lifecycle — and export once the Backlog app lists it — by forwarding to the app, and
@@ -38,6 +39,15 @@ absent. The collector captures no telemetry and reports no token figures rather 
 zeroes; `export_report` writes Markdown only, because an HTML report with evidence inlined is a
 rendering job. One run store per surface: two surfaces bound at once record a run twice,
 which is the price of no dependency in either direction.
+
+**Lifecycle fans out; render and export do not.** First-wins per group meant a machine with
+both the Backlog surface and the dashboard installed reported every run to Backlog alone —
+alphabetical order picked it — and the dashboard never saw one, with nothing in the session
+saying so. A person installs a lifecycle surface to see runs in it, so installing one is the
+opt-in and the list in `bindings["delivery.surface"]` is how a machine opts one out. The run
+store is already per surface, so fanning out adds no coupling: each surface keeps its own
+`runId` and the runner keeps the pairs. Render and export stay single — the same diagram in
+two viewers is noise, and one exported report is the report.
 
 **Only the contract's names.** An extra tool is one more thing a caller can depend on and the
 first thing that makes one implementation not substitutable — a run calling `pop_view` works on
@@ -81,9 +91,9 @@ surface already has. It forwards and passes answers through, adding no guard of 
 **Unavailable at open is a skip, not a failure.** A closed Backlog is the common case, not a
 fault, and the contract's rule that an erroring operation blocks the run would have made an
 unopened app stop every flow. So `open_dashboard` may answer `unavailable: true`, and the
-caller tries the next surface. The rule is written for every surface; a surface that stops
-answering after the run started on it is still a tooling failure, because the run already
-lives there.
+run continues on the surfaces that opened. The rule is written for every surface; a surface
+that stops answering after the run started on it is still a tooling failure, because the run
+already lives there.
 
 **`devbook-graph` is not a surface, and it left `devbook`.** It answers no operation group
 and substitutes for nothing, so its name carries no surface word. It imported `graph.mjs`,
@@ -105,6 +115,8 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 - An HTTP entry for Backlog's endpoint in a plugin's MCP configuration: the token is in a file,
   and neither host reads a header from one.
 - A fixed priority order in the contract, and matching a surface by operation name alone.
+- Lifecycle bound first-wins like render and export: one installed surface silently receives
+  nothing.
 
 ## History
 
@@ -113,6 +125,7 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. A surface call the host's permission layer refuses is retried once and then reported, never dropped. |
 | 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. |
 | 2026-09-24 | Supersedes 2026-09-22: a surface is a `delivery-surface-*` server, the order is `bindings["delivery.surface"]` with an alphabetical default, `unavailable` at open skips to the next surface, and Backlog is reached through `delivery-surface-backlog`. The contract names no implementation. |
 | 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. |

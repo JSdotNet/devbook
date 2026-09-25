@@ -343,7 +343,8 @@ dependencies: one missing specialist must not demote every skill that names it.
   exists), `in review` (a pull request is open), `done` (merged). An operation outside the
   three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
   A skill that does not resolve is the unbound path for all of them.
-- **Surface.** `bindings["delivery.surface"]` orders the installed surfaces, first wins;
+- **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
+  group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
 - **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
   the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.

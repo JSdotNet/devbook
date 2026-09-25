@@ -126,12 +126,12 @@ sequenceDiagram
         P-->>C: unchanged
     else nothing listens, the endpoint is absent, or the token is refused
         P-->>C: unavailable true, with the reason
-        Note over C: the next surface in preference order is tried
+        Note over C: the run continues on the other surfaces that opened
     end
 ```
 
 - **Unavailable is an answer, not an error.** It is the one thing this proxy composes, and it
-  is given at open time because that is where a caller can still choose another surface.
+  is given at open time because that is where a caller still decides which surfaces record the run.
 - **Mid-run is different.** A Backlog that closes after `start_run` fails the next call as a
   tool error, and the caller treats it as the tooling failure it is.
 

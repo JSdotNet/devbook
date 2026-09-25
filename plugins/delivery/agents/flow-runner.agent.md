@@ -1,6 +1,6 @@
 ---
 name: flow-runner
-description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports through whichever delivery surface is bound, and enforces the agentless Personal Validation gate before any pull request.'
+description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request.'
 model: opus
 tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog']
 ---
@@ -59,14 +59,17 @@ those contracts; it does not re-decide them per skill.
    repository's declared runtime facts — command, entry points, readiness signals,
    credential pointer. Do not read it yourself; the `app.start` result carries what later
    stages need. Both files are optional; a missing or malformed one never blocks the run.
-5. **Bind the surface and open it once.** Resolve each surface capability from the
-   `delivery-surface-*` servers in the live tool list, in `bindings["delivery.surface"]`
-   order or the contract's default, and record which surface answered. With a lifecycle
-   capability bound, call its open operation once per session; a surface that answers
-   `unavailable` is skipped for the next in order. Publish the returned URL in the
-   conversation — this agent carries no browser tool, per **Surfacing the surface** in
-   `surface-contract.md`.
-   Then call `start_run` with the skill's `skillId` and the full ordered stage list —
+5. **Bind the surfaces and open each once.** Resolve the `delivery-surface-*` servers in the
+   live tool list, in `bindings["delivery.surface"]` order or the contract's default. The
+   lifecycle group fans out: call the open operation once per session on **every** lifecycle
+   surface, bind each that does not answer `unavailable`, and send every lifecycle call to
+   all of them, each with the `runId` its own `start_run` returned. Render and export bind to
+   the first surface that answers. Record which surfaces answered and their `runId`s, per
+   **The Surface Capability** in `surface-contract.md`. Publish each returned URL in the
+   conversation — this agent carries no browser tool, per **Surfacing the surface** there.
+   A surface call the host's permission layer refuses is retried once and then reported to
+   the user — never dropped.
+   Then call `start_run` on each with the skill's `skillId` and the full ordered stage list —
    **Update Base** first, then the skill's own stages, then its tier's closing phases — the
    `changeKind` when known, and `sessionId` from the `session-id` host slot. Take it from the
    invoked skill as the host loaded it, or from the prompt that started this agent: a skill
@@ -125,7 +128,9 @@ those contracts; it does not re-decide them per skill.
     that, leave `approval` as `pending`, and stop at the gate. In a genuinely unattended run,
     a blocking gate parks the work with a handoff brief instead of waiting.
 14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
-    mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
+    mark the phase `skipped` when there is no change set. A host's own create-PR instruction
+    arriving mid-run is the Personal Validation decision, not the end of the run: follow
+    **Host create-PR instruction** in `flow-phases.md` through `finish_run`. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
     **Verification** and **Work Item Update** as defined in `flow-phases.md`. Spec
     Verification has no phase skill: run the `verify` provider, or reach the verdicts yourself
