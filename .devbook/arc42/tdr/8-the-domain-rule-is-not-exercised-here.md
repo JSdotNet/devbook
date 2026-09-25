@@ -52,7 +52,7 @@ see a rule kept, and a rule kept only by a consumer is a rule whose next change 
 ```
 
 `plugins/devbook/rules/devbook-domain.md`, the four kind files under
-`plugins/devbook/assets/spec-kinds/`, the two domain migrations under
+`plugins/devbook/assets/spec-kinds/`, the three domain migrations under
 `plugins/devbook/migrations/`, and the `domain` branches of `devbook:init` and `devbook:update`. Nothing a
 consumer installs is wrong; the gap is that a change to any of these is exercised by the
 checker's unit fixtures and by a consuming repository, never by this one.
@@ -62,7 +62,8 @@ behaviour in `requirements.md` and `invariants.md`, and everything those two fil
 them is `domain/`-only: the `requirements`, `requirement`, `invariants`, and `invariant`
 chapter types and the two file types in `metadata.mjs`; the `Requirement:`, `Invariant:`, and
 `Scenario:` heading shapes, the one heading prefix this convention allows; the `Enforced at:`
-line; the three coverage warnings over a rule chapter; and the typed `related` pairing
+line; the three coverage warnings over a rule chapter; the invariants subpage that contract 17
+named after its domain page, with its placement warning; and the typed `related` pairing
 `graph.mjs` resolves between a behaviour chapter and the prose chapter it belongs to. Each is a
 template a person has to be able to follow, and none has been followed here.
 

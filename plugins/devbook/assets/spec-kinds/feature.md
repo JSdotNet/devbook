@@ -10,7 +10,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 | Chapters | A `##` chapter, `type: feature`, and its `###` parts, `type: sub-feature`; and in `requirements.md`, the matching `## <FeatureName>` chapter, `type: requirements`, with every `### Requirement:` under it, `type: requirement` |
 | File | `.devbook/domain/<context>/features.md` — or `skills.md`, where the context describes skills rather than product features — or the `features.<name>.md` / `skills.<name>.md` the chapter was split into, plus `.devbook/domain/<context>/requirements.md` and its own split files |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `features.md` and `requirements.md`, `context.md` — the switches and the actors — and `domain.md` with `invariants.md`, the aggregates the capability exercises and the rules they enforce, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
+| Context to load | The target context's `features.md` and `requirements.md`, `context.md` — the switches and the actors — and `domain.md` with `domain.invariants.md`, the aggregates the capability exercises and the rules they enforce, plus `actors.md` where the context has split it out; when applying, every chapter in `depends-on`, `feature-flag`, and `setting`, and every `related` `domain.md` chapter too |
 | Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 | Extra input | A runnable environment for capturing: local or disposable, never shared or production, plus how the repository starts the app and what it takes to reach the feature |
@@ -121,7 +121,7 @@ the `### Requirement:` chapters in `requirements.md`, quoted as they stand — o
 SHALL sentence each — and their scenarios are the acceptance checks, already
 phrased so a single test can assert each one. The invariants
 come from the `related` `domain.md` chapters, not from the feature chapter:
-quote the `### Invariant:` chapters under those aggregates in `invariants.md`
+quote the `### Invariant:` chapters under those aggregates in the invariants subpages
 with each `Enforced at:`, and report a rule with `open` on that line as a
 decision the feature depends on. The actor comes from
 the actor chapters where the context has them — the brief carries the `role` and

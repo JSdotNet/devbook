@@ -16,7 +16,7 @@ omitting the field. A bounded
 context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
 capabilities are switched by, and its actors and dependencies until they outgrow the file —
 describes its skills or its features, states what they guarantee in `requirements.md` and
-`invariants.md`, says who acts with `user`, `organisation`, `technical`
+what its aggregates enforce in the invariants subpage of their domain page, says who acts with `user`, `organisation`, `technical`
 chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
 the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
@@ -99,11 +99,27 @@ written before it stops validating and no migration is owed; the table stays leg
 converting one is editorial work, because no script can write the scenarios that make the move
 worth doing.
 
+**Invariants are a subpage of their domain page.** Contract 14 gave invariants a file of their
+own, `invariants.md`, which split on its own schedule as `invariants.<name>.md`, so the rules
+of an aggregate and the aggregate could sit in files that no longer matched. Contract 17 names
+the file after the page instead: `domain.invariants.md` holds the rules of the aggregates on
+`domain.md`, and `domain.order.invariants.md` those of the aggregate split out to
+`domain.order.md`. The name is the pairing, the file reads directly after its page, and
+splitting an aggregate out moves its rules with it. A trailing `.invariants` types the file
+`invariants`, the one place a filename suffix sets the kind rather than narrowing the scope;
+the graph build warns when a chapter's aggregate is on another page. Requirements keep
+`requirements.md` and do not follow: a requirement pairs with a feature, a feature lives in
+`features.md` or `skills.md`, and a subpage there would rename nothing a reader looks for.
+The asymmetry is deliberate and revisited only if requirements start pairing with domain
+chapters. The old names validate with a warning for one release, and
+`017-invariants-under-domain` moves them, because a moved path is broken in every repository
+until a script moves it.
+
 **A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
-`invariants.md`, `model.md`, and
+`model.md`, and
 `flow.md` each grow with the context, and a reader looking for one aggregate should not have
 to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
-`features.checkout.md`, `invariants.order.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
+`features.checkout.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
 it is named after, carries that file's `type`, and keeps the chapter's heading and block as
 they stood, so the address changes and nothing else does. The generator reads a split file
 directly after its base, or in the base's slot when every chapter has moved out; `domain.md`
@@ -207,6 +223,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | Invariants are a subpage of their domain page: `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split `domain.<name>.md`, typed `invariants` by the trailing suffix and read directly after the page. A chapter whose aggregate sits on another page is a warning; the old `invariants.md` and `invariants.<name>.md` validate with a warning for one release. Requirements keep `requirements.md`. Contract 17, migration 017. |
 | 2026-09-24 | A `bounded-context` chapter in `context-map.md` records how the context ships with `deployment`: `service`, a deployable of its own, or `module`, inside a modular monolith. The context's `context.md` carries the same value on its file-level block, and where the chapter's `related` names that file the graph build holds the two equal. The host is named through `related` to its building block, never a second field. Contract 16, additive, no migration. |
 | 2026-09-22 | A bounded context states behaviour in `requirements.md` and `invariants.md`, one rule per chapter: `### Requirement:` in OpenSpec's heading shape with DDD's word kept for `### Invariant:`, `#### Scenario:` cases under each, `Enforced at:` on an invariant, and the aggregate's `### Invariants` table retired into them. A rule's `related` is held to the prose chapter it belongs to; its level of proof — `e2e` for a requirement, `unit` for an invariant — and a missing scenario are coverage warnings. Contract 14, additive, no migration. |
 | 2026-09-22 | `accepted` is a rung above `approved`, with `accepted-by`, `accepted-at`, and `accepted-hash`, standing on the approval record it keeps; `approved-hash` makes a lapsed approval a check result; both rungs and their six fields are `domain/`'s alone; a bounded context may carry a page the convention does not name, typed by its own filename. Contract 13, migration 013. |

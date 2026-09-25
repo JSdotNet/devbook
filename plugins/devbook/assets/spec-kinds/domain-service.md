@@ -8,10 +8,10 @@ table; this file carries the kind.
 
 | | |
 |---|---|
-| Chapters | The service's `##` chapter, `type: domain-service`, plus every `## <EventName>` the service itself raises, `type: domain-event`; and, where it enforces rules of its own, its `## <ServiceName>` chapter in `invariants.md`, `type: invariants`, with every `### Invariant:` under it |
-| File | `.devbook/domain/<context>/domain.md`, or the `domain.<name>.md` the chapter was split into, plus `invariants.md` for the rules it enforces |
+| Chapters | The service's `##` chapter, `type: domain-service`, plus every `## <EventName>` the service itself raises, `type: domain-event`; and, where it enforces rules of its own, its `## <ServiceName>` chapter in the invariants subpage of its domain page, `type: invariants`, with every `### Invariant:` under it |
+| File | `.devbook/domain/<context>/domain.md`, or the `domain.<name>.md` the chapter was split into, plus that page's invariants subpage for the rules it enforces |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md` and `invariants.md`, the chapters of every aggregate the service coordinates, and the dependency tables (`context.md`'s `## Dependencies`, or `dependencies.md` once split out) when it reaches across a context boundary. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md` and `domain.invariants.md`, the chapters of every aggregate the service coordinates, and the dependency tables (`context.md`'s `## Dependencies`, or `dependencies.md` once split out) when it reaches across a context boundary. Never the whole `domain/` folder |
 | Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 
@@ -44,7 +44,7 @@ gets no chapter. A type named `...Service` is not evidence either way.
 | Process state | For a process manager: where in-flight state lives — a persisted saga record, a correlation id, or nothing, meaning the process cannot resume | Persisted in-flight state where the chapter says the process resumes |
 | Transactional behaviour | Whether the service mutates several aggregates in one transaction or in separate ones — the fact consumers most need and prose most often omits | One transaction or several, exactly as stated — and where they are separate, what happens when the second one fails |
 | Events raised | Publication sites the service itself owns, with condition, payload, registered consumers, and dispatch mechanism | Each event raised at the condition its chapter names, carrying every named payload field, with each named consumer subscribed |
-| Rules it enforces itself, one `### Invariant:` chapter each in `invariants.md` | Guard clauses in the service's own methods that no caller can get past, and the unit tests that assert them | Enforcement at the chapter's `Enforced at:` point, inside the service, never in a caller |
+| Rules it enforces itself, one `### Invariant:` chapter each in the invariants subpage | Guard clauses in the service's own methods that no caller can get past, and the unit tests that assert them | Enforcement at the chapter's `Enforced at:` point, inside the service, never in a caller |
 | Rules it reacts with | What the service does *when* something happens: the subscription, the condition, and the effect — from the handler and the tests that publish an event and assert the effect | A `### Requirement:` chapter in `requirements.md`, under the feature the reaction belongs to, proved `integration` where no user triggers it |
 
 **The two kinds of rule split by who is held to them.** A reactive rule — "when
@@ -52,7 +52,7 @@ an order is confirmed, reserve the stock" — is a promise to whoever uses the
 product, so it is a **requirement** of the feature that promise belongs to, and
 it lives in `requirements.md` under that feature rather than under the service.
 A rule the service will not let a caller break is an **invariant** and gets a
-`## <ServiceName>` chapter in `invariants.md` like an aggregate's. A process
+`## <ServiceName>` chapter in the invariants subpage like an aggregate's. A process
 manager usually has both, and putting the reactive one under the service is the
 common error: it hides the promise from the feature that makes it.
 

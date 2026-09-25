@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
     parseDocument,
+    domainFileName,
     folderKindForPath,
     resolveType,
     resolveStatus,
@@ -104,7 +105,14 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // chapter's `related` names that `context.md`, the two must agree. An added
 // field with no default to assume, so nothing written under 15 stops
 // validating and there is no `migrations/016-*`.
-export const CONTRACT_VERSION = 16;
+// Version 17 moves a context's invariants out of their own `invariants.md` and
+// into a subpage of the domain page whose aggregates enforce them:
+// `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split
+// `domain.<name>.md`. The old names still validate for one release, with a
+// warning, and `migrations/017-invariants-under-domain/` moves the files and
+// rewrites every reference into them — a moved path is broken in every
+// repository until a script moves it.
+export const CONTRACT_VERSION = 17;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -414,7 +422,7 @@ export async function buildGraph(repoRoot, folders = null) {
             // chapter that cannot be addressed is the error; two structural
             // headings sharing an anchor is the ordinary shape of a chapter
             // file (`#### Scenario: The order is already confirmed` under two
-            // rules in one `invariants.md`, `### Payload` under every event),
+            // rules in one `domain.invariants.md`, `### Payload` under every event),
             // and those are materialized on demand, never referenced by
             // accident.
             if (headingIndex.has(id)) {
@@ -530,8 +538,10 @@ export async function buildGraph(repoRoot, folders = null) {
         // grouping chapter that contains it.
         const pairKinds = node.type === "chapter" ? RELATED_TARGET_KINDS[node.kind] : null;
         if (pairKinds) {
-            const found = asList(node.related).map((ref) => nodes.get(ref)?.kind);
-            if (!found.some((kind) => pairKinds.includes(kind))) {
+            const paired = asList(node.related)
+                .map((ref) => nodes.get(ref))
+                .filter((target) => pairKinds.includes(target?.kind));
+            if (!paired.length) {
                 problems.push({
                     severity: "error",
                     path: node.path,
@@ -539,6 +549,21 @@ export async function buildGraph(repoRoot, folders = null) {
                         .map((kind) => `\`${kind}\``)
                         .join(" or ")} chapter — the behaviour half of a chapter points at the prose half it belongs to, and nothing else pairs the two.`,
                 });
+            } else if (node.kind === "invariants") {
+                // An invariants subpage belongs to one domain page: the
+                // aggregates it holds rules for are chapters of that page, so
+                // splitting an aggregate out moves its rules with it.
+                const { page } = domainFileName(node.path);
+                const pagePath = page && path.posix.join(path.posix.dirname(node.path), page);
+                if (pagePath && !paired.some((target) => target.path === pagePath)) {
+                    problems.push({
+                        severity: "warning",
+                        path: node.path,
+                        message: `${node.id} is in the invariants subpage of ${pagePath}, but pairs with ${paired
+                            .map((target) => target.id)
+                            .join(", ")} — an aggregate's invariants sit in the subpage of the page that holds the aggregate. Move the chapter there.`,
+                    });
+                }
             }
         }
     }

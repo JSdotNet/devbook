@@ -78,11 +78,15 @@ const corpus = [
     [`${at("tech")}/shared.md`, `# Shared\n\n${fence("status: adopted\n")}\nFirst by convention.\n`],
     [`${at("tech")}/backend.md`, `# Backend\n\n${fence("status: adopted\n")}\nIn between.\n`],
     // A bounded context with split files: beside their base (`domain`, `flow`),
-    // in a dropped base's slot (`features`, `model`), two for one base, and an
-    // unprescribed extra that must stay filename-sorted among the rest.
+    // in a dropped base's slot (`features`, `model`), two for one base, an
+    // invariants subpage after the page it belongs to (`domain.md`, a split
+    // `domain.order.md`) and none for a page without one (`domain.invoice.md`),
+    // and an unprescribed extra that must stay filename-sorted among the rest.
     ...[
         ["domain.md", "domain"],
+        ["domain.invariants.md", "invariants"],
         ["domain.order.md", "domain"],
+        ["domain.order.invariants.md", "invariants"],
         ["domain.invoice.md", "domain"],
         ["actors.md", "actors"],
         ["features.checkout.md", "features"],
@@ -133,8 +137,10 @@ try {
     const context = domain.entries.find((e) => e.name === "order-management");
     const expected = [
         "domain.md",
+        "domain.invariants.md",
         "domain.invoice.md",
         "domain.order.md",
+        "domain.order.invariants.md",
         "actors.md",
         "features.checkout.md",
         "model.order.md",
@@ -145,7 +151,7 @@ try {
     ];
     check(
         JSON.stringify(context?.children.map((e) => e.name)) === JSON.stringify(expected),
-        "a split file reads after the file it is named after, or in that file's slot when it is gone",
+        "a split file reads after the file it is named after, or in that file's slot when it is gone, and a subpage after its page",
         JSON.stringify(context?.children.map((e) => e.name))
     );
     check(

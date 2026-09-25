@@ -7,10 +7,10 @@ rules, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
-| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in `invariants.md`, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant` |
-| File | `.devbook/domain/<context>/domain.md` and `.devbook/domain/<context>/invariants.md`, or the `domain.<name>.md` / `invariants.<name>.md` the chapters were split into |
+| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in the invariants subpage, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant` |
+| File | `.devbook/domain/<context>/domain.md` and its subpage `domain.invariants.md`, or the `domain.<name>.md` the chapters were split into and its `domain.<name>.invariants.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md` and `invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md` and `domain.invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
 | Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 
@@ -45,7 +45,7 @@ malformed.
 | Identity | The id type and how it is assigned: constructor argument, factory-generated, database-assigned | An id type and an assignment path |
 | Responsibility | What the root's public methods, taken together, let a caller do — not what any one method is called | Public methods that let a caller do what the chapter describes, and nothing beyond it |
 | Consistency boundary | Which types are loaded, mutated, and saved in one transaction: the repository's granularity, what the root's collections own, what it references by id only | One transactional unit: a repository whose granularity is this root, owned collections inline, other aggregates referenced by id |
-| Invariants, one `### Invariant:` chapter each in `invariants.md` | Guard clauses in the constructor and every mutating method, the exceptions they throw, validation actually enforced, and passing tests asserting the rule — each unit test that rejects a case is one `#### Scenario:` | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
+| Invariants, one `### Invariant:` chapter each in the invariants subpage | Guard clauses in the constructor and every mutating method, the exceptions they throw, validation actually enforced, and passing tests asserting the rule — each unit test that rejects a case is one `#### Scenario:` | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
 | Lifecycle | The creation path, the state transitions the mutating methods allow, and the terminal states | The creation path plus exactly the transitions the chapter allows — and no transition it does not |
 
 An id-only reference to another aggregate is the strongest single signal of
@@ -60,7 +60,7 @@ one prose most often loses.
 | Identity | The id type and its **scope**: globally unique, or unique only within this aggregate. A local-only id is a strong signal of an entity rather than a root | An id at the scope the sub-chapter states |
 | Role within the aggregate | Which of the root's methods create, mutate, or remove it | Creation through the root |
 | Lifecycle | Whether it can be removed independently, and whether removal cascades from the root | Removal with the cascade behaviour stated |
-| Invariants | Guard clauses on the entity's own constructor and mutating methods | The same enforcement rule as the root's chapters. They sit under the root's `## <AggregateName>` chapter in `invariants.md` like every other rule of this boundary, with `Enforced at:` naming the entity's own constructor or method |
+| Invariants | Guard clauses on the entity's own constructor and mutating methods | The same enforcement rule as the root's chapters. They sit under the root's `## <AggregateName>` chapter in the invariants subpage like every other rule of this boundary, with `Enforced at:` naming the entity's own constructor or method |
 | Relationships | Whether it back-references the root, references siblings, or is reachable only through the root's collection | Held by the root and saved in its transaction — **never given a repository of its own** |
 
 Reachability decides placement. A type reachable only through this root is an
@@ -128,7 +128,7 @@ An invariant is what the type guarantees no matter who calls it — enforced in
 the constructor or the mutating method itself, not in an application service
 upstream. Record caller-side rules as such or leave them out. Write one
 `### Invariant:` chapter per rule under the root's `## <AggregateName>` chapter
-in `invariants.md`: the rule as one claim that is either true or false,
+in the invariants subpage: the rule as one claim that is either true or false,
 `Enforced at:` from the guard clause's location, the `unit` selectors that
 assert it in `tests`, and one `#### Scenario:` per case those tests establish —
 the events already applied, the command issued, the events raised or the
@@ -150,7 +150,7 @@ the aggregate's `##` — there are no `### Entities` / `### Value Objects` /
 `### Payload`, `### Consumers`, and `### Published language rules` are structural
 sub-sections of one chapter and carry no `meta` blocks.
 
-The rules draft to the `invariants.md` template, in the same pass and the same
+The rules draft to the `domain.invariants.md` template, in the subpage of the page the aggregate is on, in the same pass and the same
 plan: one `## <AggregateName>` chapter whose `related` names the
 aggregate chapter, the aggregate chapter's `related` naming it back, and one
 `### Invariant:` chapter per rule. Each rule's `#### Scenario:` headings are
@@ -210,8 +210,8 @@ another aggregate reachable only by id.
 - Do not brief a repository, store, or DAO for an owned entity.
 - Do not add `depends-on` to a `domain.md` chapter.
 - Do not extend the pass into `context.md`, `features.md`, `requirements.md`,
-  `model.md`, `flow.md`, or `dependencies.md`. `invariants.md` is the one
-  exception, because the rules are this boundary's and nothing else owns them.
+  `model.md`, `flow.md`, or `dependencies.md`. The invariants subpage is the
+  one exception, because the rules are this boundary's and nothing else owns them.
 - Do not leave a rule in the aggregate chapter's prose, and do not write a new
   `### Invariants` table. A rule stated in prose has no `Enforced at:`, no
   scenarios, and no `tests` — which is the whole reason it moved.

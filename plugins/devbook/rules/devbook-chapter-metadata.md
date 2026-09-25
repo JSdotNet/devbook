@@ -607,7 +607,7 @@ tests: unit:dotnet:Ordering.Domain.Tests.OrderTests
 \`\`\`
 ```
 
-One of that aggregate's rules, in `invariants.md`, names the test for that one
+One of that aggregate's rules, in `domain.invariants.md`, names the test for that one
 rule rather than the suite:
 
 ```markdown

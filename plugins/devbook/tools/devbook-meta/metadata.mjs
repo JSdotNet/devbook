@@ -161,7 +161,7 @@ const TYPE_BY_FOLDER = {
             "domain-event",
             "feature",
             "sub-feature",
-            // `requirements.md` and `invariants.md`: behaviour, one rule per
+            // `requirements.md` and `domain.invariants.md`: behaviour, one rule per
             // chapter, out of the prose the rest of the context is written in.
             // The plural is the per-feature or per-aggregate grouping chapter,
             // whose `related` names the prose chapter it belongs to; the
@@ -1547,6 +1547,24 @@ export function removedFieldIssues(meta) {
 }
 
 /**
+ * What a `.domain` filename says about its file. `base` is the name before any
+ * split suffix — `context.md` is `context`, and `domain.order.md` is `domain`,
+ * because a split file is the kind of the file it is named after. A trailing
+ * `.invariants` makes the file an invariants subpage instead:
+ * `domain.invariants.md` and `domain.order.invariants.md` are `invariants`,
+ * and `page` names the domain page each belongs to. `legacy` marks the
+ * `invariants.md` and `invariants.<name>.md` of contract 16 and before.
+ */
+export function domainFileName(relPath) {
+    const name = (String(relPath).replace(/\\/g, "/").split("/").pop() ?? "").replace(/\.md$/i, "");
+    const segments = name.split(".");
+    if (segments.length > 1 && segments.at(-1) === "invariants") {
+        return { base: "invariants", page: `${segments.slice(0, -1).join(".")}.md`, legacy: false };
+    }
+    return { base: segments[0], page: null, legacy: segments[0] === "invariants" };
+}
+
+/**
  * Heuristic lint of a document's metadata blocks against
  * chapter-metadata.instructions.md. Not a full structural validator (it does
  * not know which headings are "addressable chapters" per folder — see that
@@ -1555,12 +1573,8 @@ export function removedFieldIssues(meta) {
  */
 export function validateDocument(relPath, markdown) {
     const kind = folderKindForPath(relPath);
-    // The filename's own name, before any split suffix: `context.md` is
-    // `context`, and `domain.order.md` is `domain`, because a split file is
-    // the kind of the file it is named after.
-    const fileBase = (String(relPath).replace(/\\/g, "/").split("/").pop() ?? "")
-        .replace(/\.md$/i, "")
-        .split(".")[0];
+    const named = domainFileName(relPath);
+    const fileBase = named.base;
     const issues = [];
     if (!kind) {
         issues.push({
@@ -1597,6 +1611,30 @@ export function validateDocument(relPath, markdown) {
             severity: "error",
             message: `File-level heading "${fileTitle}" is missing its \`meta\` block.`,
         });
+    }
+
+    // Invariants are a subpage of the domain page whose aggregates enforce
+    // them. The name is the whole pairing, so a subpage of anything else, or
+    // one that declares another type, is a file nobody can place.
+    if (kind === "domain") {
+        const declared = fileMeta ? resolveType(kind, fileMeta) : null;
+        if (named.page && named.page.split(".")[0] !== "domain") {
+            issues.push({
+                severity: "error",
+                message: `${relPath} is an invariants subpage of ${named.page}, which is not a domain page — invariants sit beside the aggregates that enforce them, as \`domain.invariants.md\` or \`domain.<name>.invariants.md\`.`,
+            });
+        } else if (named.page && declared !== null && declared !== "invariants") {
+            issues.push({
+                severity: "error",
+                message: `${relPath} is an invariants subpage and has type "${declared}" — a \`*.invariants.md\` file is \`type: invariants\`.`,
+            });
+        }
+        if (named.legacy) {
+            issues.push({
+                severity: "warning",
+                message: `${relPath} is where invariants lived before contract 17. They are now a subpage of the domain page they belong to — \`domain.invariants.md\`, or \`domain.<name>.invariants.md\` beside a split \`domain.<name>.md\`. Run the \`017-invariants-under-domain\` migration.`,
+            });
+        }
     }
 
     // Where an open question sits, keyed by the line of the heading it is
