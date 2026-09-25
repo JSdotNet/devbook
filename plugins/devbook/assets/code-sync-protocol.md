@@ -177,7 +177,7 @@ Two rules on top of the ones there:
   asserts nothing.
 
 A rule chapter sorts its own entries by the file it sits in: the `unit` tests
-land on the `### Invariant:` chapters in `invariants.md`, the `e2e` ones — or
+land on the `### Invariant:` chapters in the invariants subpage, the `e2e` ones — or
 `integration`, for a policy no user triggers — on the `### Requirement:`
 chapters in `requirements.md`. A pass that puts them on the wrong half is
 reported as a coverage warning, which usually means the rule itself is filed on
@@ -373,7 +373,7 @@ The brief has five parts, and a change category.
    sentence about what the product promises, which is what an outcome is.
 2. **Invariants** — the rules that must hold at all times afterwards, stated as
    the chapter states them. They come from the `### Invariant:` chapters in
-   `invariants.md`, each with its `Enforced at:` line, reached from the
+   the invariants subpage, each with its `Enforced at:` line, reached from the
    aggregate or domain service the change touches. This is the part an
    implementer cannot recover from the code, and the part most often lost.
 3. **Ubiquitous language** — the canonical terms this change must use, with the

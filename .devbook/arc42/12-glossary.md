@@ -209,8 +209,10 @@ Owned by [devbook](building-blocks/devbook.md).
 
 Also called: `### Invariant:`, rule.
 
-What a type guarantees, one `### Invariant: <name>` chapter per rule in a bounded context's
-`invariants.md`, under the aggregate or domain service that owns it. It carries an
+What a type guarantees, one `### Invariant: <name>` chapter per rule in the invariants subpage
+of the domain page that holds its owner — `domain.invariants.md`, or
+`domain.<name>.invariants.md` beside a split page — under the aggregate or domain service that
+owns it. It carries an
 `Enforced at:` line naming where the guarantee is made and is proved by unit tests. The word is
 DDD's, not OpenSpec's, and the heading is the one a bridge has to map: OpenSpec has no
 invariant.

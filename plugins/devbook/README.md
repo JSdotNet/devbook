@@ -168,8 +168,8 @@ where the folder defines no `type`:
 
 | Kind | Target | `type` value(s) | Kind file |
 |------|--------|-----------------|-----------|
-| `aggregate` | `.devbook/domain/<context>/domain.md` and `invariants.md`, or the files split from them | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event`, plus `invariants` and `invariant` for the rules it enforces | `assets/spec-kinds/aggregate.md` |
-| `domain-service` | `.devbook/domain/<context>/domain.md` and `invariants.md`, or the files split from them | `domain-service`, plus `domain-event` for events the service itself raises and `invariants`/`invariant` for the rules it enforces | `assets/spec-kinds/domain-service.md` |
+| `aggregate` | `.devbook/domain/<context>/domain.md` and `domain.invariants.md`, or the split `domain.<name>.md` and its `domain.<name>.invariants.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event`, plus `invariants` and `invariant` for the rules it enforces | `assets/spec-kinds/aggregate.md` |
+| `domain-service` | `.devbook/domain/<context>/domain.md` and `domain.invariants.md`, or the split `domain.<name>.md` and its `domain.<name>.invariants.md` | `domain-service`, plus `domain-event` for events the service itself raises and `invariants`/`invariant` for the rules it enforces | `assets/spec-kinds/domain-service.md` |
 | `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
@@ -194,8 +194,8 @@ A **domain service** is the deliberate exception: it is defined by coordinating
 across boundaries rather than living in one, so folding it into a boundary's pass
 would be backwards. It is its own kind, and owns the events it raises itself.
 
-**Behaviour lives in `requirements.md` and `invariants.md`, one rule per
-chapter.** A `### Requirement:` is one SHALL sentence about what the product
+**Behaviour lives in `requirements.md` and the invariants subpages, one rule
+per chapter.** A `### Requirement:` is one SHALL sentence about what the product
 promises; an `### Invariant:` is one claim a type guarantees, with the
 `Enforced at:` line that says where. Both carry `#### Scenario:` cases, and both
 are captured and briefed with the prose chapter they belong to rather than as a
@@ -391,7 +391,10 @@ clone now that nothing personal lives in one; the fourth is
 their six record fields off every folder but `domain/`, and names the `tech/` and `ai/`
 chapters whose original rating no script can restore; the fifth is `015-openspec-verbs`,
 which rewrites the skill ids a stack config binds — in the committed config and in both
-overlay layers — now that every `install` is `init` and `update` and `check` is `validate`.
+overlay layers — now that every `install` is `init` and `update` and `check` is `validate`;
+the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
+`invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
+reference to them.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -427,7 +430,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **16**, covering the metadata schema a repository authors
+One number, currently **17**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -472,7 +475,11 @@ config still naming an old id binds a skill that no longer exists, so it ships a
 `015-openspec-verbs`. 16 gives the `bounded-context` chapter in `context-map.md` and
 the context's own `context.md` an optional `deployment` — `service`, or `module` in
 a modular monolith — which the two must state alike, and ships no migration: the
-field is added, and a context without it reads as undecided.
+field is added, and a context without it reads as undecided. 17 moves a context's
+invariants into a subpage of the domain page whose aggregates enforce them —
+`domain.invariants.md`, and `domain.<name>.invariants.md` beside a split
+`domain.<name>.md` — and ships as `017-invariants-under-domain`, which moves the files and
+rewrites every reference into them. The old names validate with a warning for one release.
 
 ## Folder structure
 

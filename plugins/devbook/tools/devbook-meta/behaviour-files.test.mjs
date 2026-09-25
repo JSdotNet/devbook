@@ -1,6 +1,8 @@
-// Exercises `requirements.md` and `invariants.md`: the four chapter types and
-// two file types, the three coverage warnings over a rule chapter, and the
-// typed `related` pairing that joins a behaviour chapter to its prose half.
+// Exercises `requirements.md` and the invariants subpages — `domain.invariants.md`
+// and `domain.<name>.invariants.md`: the four chapter types and two file types,
+// the naming rules for a subpage, the three coverage warnings over a rule
+// chapter, and the typed `related` pairing that joins a behaviour chapter to its
+// prose half.
 //
 // The coverage checks are warnings by design, so every case here asserts the
 // severity as well as the count — a regression that promoted one to an error
@@ -8,7 +10,7 @@
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { behaviourIssues, scenarioCount, parseDocument, typeIssues, validateDocument } from "./metadata.mjs";
+import { behaviourIssues, domainFileName, scenarioCount, parseDocument, typeIssues, validateDocument } from "./metadata.mjs";
 import { buildGraph } from "./graph.mjs";
 
 let failed = 0;
@@ -33,13 +35,51 @@ for (const type of ["requirements", "invariants"]) {
     check(errors === 0, `\`type: ${type}\` is a legal .domain file type`, `got ${errors} error(s)`);
 }
 
-// A split file carries the base file's type, so `invariants.order.md` — whose
-// fileBase is `invariants` — is the same case and must not need the
-// additional-page escape hatch to pass.
-check(
-    counts(typeIssues("domain", "file", { type: "invariants" }, "invariants")).errors === 0,
-    "a split `invariants.<name>.md` is typed by its base file"
-);
+// ── What a filename says ───────────────────────────────────────────────────
+
+const naming = [
+    ["domain.md", { base: "domain", page: null, legacy: false }],
+    ["domain.order.md", { base: "domain", page: null, legacy: false }],
+    ["domain.invariants.md", { base: "invariants", page: "domain.md", legacy: false }],
+    ["domain.order.invariants.md", { base: "invariants", page: "domain.order.md", legacy: false }],
+    ["invariants.md", { base: "invariants", page: null, legacy: true }],
+    ["invariants.order.md", { base: "invariants", page: null, legacy: true }],
+    ["requirements.checkout.md", { base: "requirements", page: null, legacy: false }],
+];
+for (const [name, expected] of naming) {
+    const actual = domainFileName(`.devbook/domain/ordering/${name}`);
+    check(
+        JSON.stringify(actual) === JSON.stringify(expected),
+        `\`${name}\` reads as ${expected.page ? `the invariants subpage of ${expected.page}` : `\`${expected.base}\``}${expected.legacy ? ", legacy" : ""}`,
+        JSON.stringify(actual)
+    );
+}
+
+const fileOnly = (type) => `# Ordering
+
+\`\`\`meta
+type: ${type}
+\`\`\`
+
+A file.
+`;
+const fileCases = [
+    { name: "`domain.invariants.md` typed `invariants` is clean", file: "domain.invariants.md", type: "invariants", errors: 0, warnings: 0 },
+    { name: "a split page's subpage is clean", file: "domain.order.invariants.md", type: "invariants", errors: 0, warnings: 0 },
+    { name: "a subpage typed as its page is an error", file: "domain.invariants.md", type: "domain", errors: 1, warnings: 0 },
+    { name: "a subpage of a page that is not a domain page is an error", file: "model.invariants.md", type: "invariants", errors: 1, warnings: 0 },
+    { name: "a legacy `invariants.md` warns and does not fail", file: "invariants.md", type: "invariants", errors: 0, warnings: 1 },
+    { name: "a legacy split `invariants.<name>.md` warns too", file: "invariants.order.md", type: "invariants", errors: 0, warnings: 1 },
+];
+for (const c of fileCases) {
+    const issues = validateDocument(`.devbook/domain/ordering/${c.file}`, fileOnly(c.type));
+    const { errors, warnings } = counts(issues);
+    check(
+        errors === c.errors && warnings === c.warnings,
+        `naming: ${c.name}`,
+        issues.map((i) => `${i.severity}: ${i.message}`).join(" | ")
+    );
+}
 
 check(
     counts(typeIssues("domain", "chapter", { type: "requirment" })).errors === 1,
@@ -206,7 +246,7 @@ An order that has been confirmed cannot be confirmed again.
 Enforced at: Confirm()
 `;
 
-const documentIssues = validateDocument(".devbook/domain/ordering/invariants.md", document);
+const documentIssues = validateDocument(".devbook/domain/ordering/domain.invariants.md", document);
 const behaviour = documentIssues.filter((i) => /`invariant` chapter/.test(i.message));
 check(
     behaviour.length === 2 && behaviour.every((i) => i.severity === "warning"),
@@ -321,7 +361,7 @@ for (const c of pairing) {
     const graph = await graphOf({
         [`${CONTEXT}/domain.md`]: domainMd,
         [`${CONTEXT}/features.md`]: featuresMd,
-        [`${CONTEXT}/invariants.md`]: invariantsMd(c.related),
+        [`${CONTEXT}/domain.invariants.md`]: invariantsMd(c.related),
     });
     const found = graph.problems.filter((p) => /names no .* chapter/.test(p.message));
     check(
@@ -333,10 +373,10 @@ for (const c of pairing) {
 
 // The file-level block carries the same `type` word and covers the whole
 // context, so it is deliberately exempt — without this the pairing check would
-// fail every `requirements.md` and `invariants.md` ever written.
+// fail every `requirements.md` and `domain.invariants.md` ever written.
 const fileLevel = await graphOf({
     [`${CONTEXT}/domain.md`]: domainMd,
-    [`${CONTEXT}/invariants.md`]: invariantsMd(`${CONTEXT}/domain.md#order`),
+    [`${CONTEXT}/domain.invariants.md`]: invariantsMd(`${CONTEXT}/domain.md#order`),
 });
 check(
     fileLevel.problems.filter((p) => /names no .* chapter/.test(p.message)).length === 0,
@@ -369,6 +409,57 @@ check(
     "a `requirements` chapter pointing at its feature resolves",
     JSON.stringify(requirementsGraph.problems.map((p) => p.message))
 );
+
+// ── A subpage holds the rules of its own page's aggregates ─────────────────
+
+const splitOrder = `# Ordering
+
+\`\`\`meta
+type: domain
+\`\`\`
+
+## Order
+
+\`\`\`meta
+type: aggregate
+\`\`\`
+
+The order.
+`;
+const placement = [
+    {
+        name: "a split page's subpage pairing with that page is clean",
+        file: "domain.order.invariants.md",
+        related: `${CONTEXT}/domain.order.md#order`,
+        warnings: 0,
+    },
+    {
+        name: "a split page's subpage pairing with another page warns",
+        file: "domain.order.invariants.md",
+        related: `${CONTEXT}/domain.md#pricing`,
+        warnings: 1,
+    },
+    {
+        name: "`domain.invariants.md` holding a split-out aggregate's rules warns",
+        file: "domain.invariants.md",
+        related: `${CONTEXT}/domain.order.md#order`,
+        warnings: 1,
+    },
+];
+for (const c of placement) {
+    const graph = await graphOf({
+        [`${CONTEXT}/domain.md`]: domainMd.replace(/## Order[\s\S]*?(?=## Pricing)/, ""),
+        [`${CONTEXT}/domain.order.md`]: splitOrder,
+        [`${CONTEXT}/${c.file}`]: invariantsMd(c.related),
+    });
+    const found = graph.problems.filter((p) => /invariants subpage of/.test(p.message));
+    check(
+        found.length === c.warnings && found.every((p) => p.severity === "warning") &&
+            graph.problems.every((p) => p.severity !== "error"),
+        `placement: ${c.name}`,
+        JSON.stringify(graph.problems.map((p) => `${p.severity}: ${p.message}`))
+    );
+}
 
 console.log(failed ? `\n${failed} case(s) failed.` : "\nAll cases passed.");
 process.exit(failed ? 1 : 0);

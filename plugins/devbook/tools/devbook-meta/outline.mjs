@@ -64,7 +64,9 @@ function testList(meta) {
  * `last` pin the prescribed siblings around whatever else the directory holds.
  * `split` names the files a `<file>.<name>.md` may be split out of; such a
  * file sorts directly after its base, or in the base's slot when the base is
- * absent, never among the unprescribed rest.
+ * absent, never among the unprescribed rest. `subpage` names a suffix and the
+ * files that take it: `domain.invariants.md` and `domain.order.invariants.md`
+ * read directly after the page they belong to.
  *
  * This mirrors the structure block in each folder's own instructions file —
  * change one and change the other in the same edit.
@@ -84,6 +86,7 @@ const DIRECTORY_CONVENTION = {
         ],
         last: [],
         split: ["domain.md", "features.md", "skills.md", "model.md", "flow.md"],
+        subpage: { suffix: "invariants", of: ["domain.md"] },
     },
     "tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },
     // `.ai` needs no `first`/`last`: its usage files are numbered, so the
@@ -198,9 +201,19 @@ function orderedSequence(relDir, names, numbers, rootName, problems) {
     // its slot when the base was dropped once every chapter moved out. `rest`
     // is filename-sorted, so a base's split files keep that order among
     // themselves.
+    const subpage = convention.subpage;
+    const isSubpage = (name) => Boolean(subpage) && name.endsWith(`.${subpage.suffix}.md`);
+    const subpageOf = (name) => {
+        if (!subpage?.of.includes(splitBase(name) ?? name)) return [];
+        const sub = name.replace(/\.md$/, `.${subpage.suffix}.md`);
+        return rest.includes(sub) ? [sub] : [];
+    };
     const splitsOf = (base) =>
-        convention.split?.includes(base) ? rest.filter((name) => splitBase(name) === base) : [];
-    const slot = (name) => [...(rest.includes(name) ? [name] : []), ...splitsOf(name)];
+        convention.split?.includes(base)
+            ? rest.filter((name) => !isSubpage(name) && splitBase(name) === base)
+            : [];
+    const slot = (name) =>
+        [...(rest.includes(name) ? [name] : []), ...splitsOf(name)].flatMap((page) => [page, ...subpageOf(page)]);
 
     const rootSplits = splitsOf(convention.root);
     const pinnedFirst = convention.first.flatMap(slot);
