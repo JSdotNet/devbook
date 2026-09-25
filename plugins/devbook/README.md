@@ -197,8 +197,8 @@ would be backwards. It is its own kind, and owns the events it raises itself.
 **Behaviour lives in `requirements.md` and the invariants subpages, one rule
 per chapter.** A `### Requirement:` is one SHALL sentence about what the product
 promises; an `### Invariant:` is one claim a type guarantees, with the
-`Enforced at:` line that says where. Both carry `#### Scenario:` cases, and both
-are captured and briefed with the prose chapter they belong to rather than as a
+`Enforced at:` line that says where. A requirement carries `#### Scenario:`
+cases; an invariant is proved by its `unit` test instead. Both are captured and briefed with the prose chapter they belong to rather than as a
 kind of their own — the rules of an aggregate are that aggregate's pass. The
 heading shape is OpenSpec's, kept so a tool that reads OpenSpec reads these
 files; the two words are not, because a promise made outside the model and a
@@ -480,6 +480,11 @@ invariants into a subpage of the domain page whose aggregates enforce them —
 `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split
 `domain.<name>.md` — and ships as `017-invariants-under-domain`, which moves the files and
 rewrites every reference into them. The old names validate with a warning for one release.
+18 takes the `#### Scenario:` cases off an `### Invariant:` — it is a claim, its rejection
+code, and `Enforced at:`, proved by its `unit` test — so only a requirement is warned for
+having none, and a scenario an older invariant carries is tolerated. It titles the behaviour
+files by kind, `# Requirements` and `# Invariants`, and ships as `018-behaviour-titles`,
+which retitles them; an old title still validates.
 
 ## Folder structure
 

@@ -41,8 +41,8 @@ has one, and the repository root. The kind's file lists what else it needs.
    `aligned`: report and stop. `spec-ahead`: stop and hand the scope to
    `apply-change`. `conflict` or `unresolved`: stop and ask.
 5. Draft the content to the folder rule's template, as the kind's file says:
-   the invariants with the `Enforced at:` line and the requirements as SHALL
-   sentences, each with its `#### Scenario:` cases and the evidence behind it.
+   the invariants as claims with the `Enforced at:` line, the requirements as SHALL
+   sentences with their `#### Scenario:` cases, each with the evidence behind it.
    Put the tests that assert each one in `tests`. Where a counterpart resolved
    by inference, propose a term with the code name as an `alias`.
 6. Assemble the capture plan — the drafts as a delta against the target file,

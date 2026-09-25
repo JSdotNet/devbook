@@ -1011,10 +1011,13 @@ export function behaviourIssues(type, meta, scenarios = 0) {
     if (!expected) return [];
     const issues = [];
 
-    if (scenarios === 0) {
+    // Only a requirement is held to its scenarios. An invariant's claim is
+    // already the case and its `unit` test names it, so one with none is
+    // complete — and one an older chapter still carries is left alone.
+    if (type === "requirement" && scenarios === 0) {
         issues.push({
             severity: "warning",
-            message: `is a \`${type}\` chapter with no \`#### Scenario:\` under it — a rule with no case that exercises it is one nobody can tell has been broken, and a brief can derive no acceptance check from it.`,
+            message: `is a \`${type}\` chapter with no \`#### Scenario:\` under it — a promise with no case that exercises it is one nobody can tell has been broken, and a brief can derive no acceptance check from it.`,
         });
     }
 

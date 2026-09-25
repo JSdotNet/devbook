@@ -1,6 +1,6 @@
 {
   "name": "delivery-schedule",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "The unattended lane, stacked on delivery: the seventeen schedule-* skills that run with nobody watching, plus init and update, plus the catalog of triggers that fires them. Fifteen schedulable entry points that pick their own input and run a flow, a review, a check, a sweep, or a report — devbook validate, devbook verify, instruction review, issue sweep, merge review, morning brief, package update, performance review, review, security review, tech update, week starter, weekly cost analysis, weekly update, and what's new — and twelve trigger definitions naming a target, a cadence, the plugins that target needs, and the prompt for a cloud session that starts with nothing but the repository. delivery-schedule:init creates them through whatever scheduler the live session exposes and stamps the selection under components.schedule, and delivery-schedule:update keeps them level with it; schedule-status reads their runs and logs; schedule-run fires one now. One capability, two host names: Routines in Claude Code, Automations in the GitHub Copilot app. Depends on delivery and names devbook: a trigger whose target is not enabled is reported and skipped, never scheduled.",
   "author": {
     "name": "Job Schepers"

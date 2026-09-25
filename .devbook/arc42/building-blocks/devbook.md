@@ -161,7 +161,8 @@ using the feature tells you what the product lets someone do, in what order, wit
 wording. Screenshots are report evidence and are never committed into a devbook folder.
 
 Behaviour is planned into `requirements.md` and the invariants subpages rather than into the prose it
-belongs beside, one rule per chapter with the scenarios that prove it. Neither is a kind of
+belongs beside, one rule per chapter: a requirement with the scenarios that prove it, an
+invariant with the unit test that does. Neither is a kind of
 its own: a feature's promises are that feature's pass and an aggregate's rules are that
 aggregate's, because a rule captured apart from the thing it constrains is a rule decided
 twice. The split follows who is held to it — a promise made outside the model is a
@@ -635,7 +636,7 @@ carrying no `meta` block claims its anchor the same way, so the rule is about he
 about chapters. The graph reports the collision where a chapter is on either side of it,
 because a chapter that cannot be addressed is a chapter that has left the graph. Two
 structural headings sharing an anchor is not reported: it is the ordinary shape of a chapter
-file, where two rules in one `domain.invariants.md` carry a `#### Scenario:` of the same name and
+file, where two rules in one `requirements.md` carry a `#### Scenario:` of the same name and
 every event carries its own `### Payload`, and such a heading is only ever
 materialized when something cites it.
 

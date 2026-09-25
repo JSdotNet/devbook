@@ -45,7 +45,7 @@ malformed.
 | Identity | The id type and how it is assigned: constructor argument, factory-generated, database-assigned | An id type and an assignment path |
 | Responsibility | What the root's public methods, taken together, let a caller do — not what any one method is called | Public methods that let a caller do what the chapter describes, and nothing beyond it |
 | Consistency boundary | Which types are loaded, mutated, and saved in one transaction: the repository's granularity, what the root's collections own, what it references by id only | One transactional unit: a repository whose granularity is this root, owned collections inline, other aggregates referenced by id |
-| Invariants, one `### Invariant:` chapter each in the invariants subpage | Guard clauses in the constructor and every mutating method, the exceptions they throw, validation actually enforced, and passing tests asserting the rule — each unit test that rejects a case is one `#### Scenario:` | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
+| Invariants, one `### Invariant:` chapter each in the invariants subpage | Guard clauses in the constructor and every mutating method, the exceptions they throw and the rejection codes they carry, validation actually enforced, and passing tests asserting the rule | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
 | Lifecycle | The creation path, the state transitions the mutating methods allow, and the terminal states | The creation path plus exactly the transitions the chapter allows — and no transition it does not |
 
 An id-only reference to another aggregate is the strongest single signal of
@@ -129,12 +129,12 @@ the constructor or the mutating method itself, not in an application service
 upstream. Record caller-side rules as such or leave them out. Write one
 `### Invariant:` chapter per rule under the root's `## <AggregateName>` chapter
 in the invariants subpage: the rule as one claim that is either true or false,
-`Enforced at:` from the guard clause's location, the `unit` selectors that
-assert it in `tests`, and one `#### Scenario:` per case those tests establish —
-the events already applied, the command issued, the events raised or the
-rejection. A rule nothing asserts still gets its chapter, with no `tests`: the
-field's absence is the honest record, and a rule nothing asserts is one
-refactor away from being gone. A rule visible only in a disabled test, a TODO,
+in the domain's words, with the rejection code the guard raises in parentheses,
+`Enforced at:` from the guard clause's location, and the `unit` selectors that
+assert it in `tests`. No `#### Scenario:` — the test names the case. A rule
+nothing asserts still gets its chapter, with no `tests`: the field's absence is
+the honest record, and a rule nothing asserts is one refactor away from being
+gone. A rule visible only in a disabled test, a TODO,
 or a comment gets `open` on its `Enforced at:` line and the question in a
 `kind: question` annotation fence, never a fact. Never merge chapters — a
 chapter is what a brief quotes and an acceptance check is derived from.
@@ -153,8 +153,7 @@ sub-sections of one chapter and carry no `meta` blocks.
 The rules draft to the `domain.invariants.md` template, in the subpage of the page the aggregate is on, in the same pass and the same
 plan: one `## <AggregateName>` chapter whose `related` names the
 aggregate chapter, the aggregate chapter's `related` naming it back, and one
-`### Invariant:` chapter per rule. Each rule's `#### Scenario:` headings are
-structural and carry no `meta` blocks either.
+`### Invariant:` chapter per rule, with no `#### Scenario:` under it.
 
 ## Applying — `apply-change`
 
@@ -174,9 +173,8 @@ the rule and carrying its `Enforced at:`. A chapter whose `tests` name a passing
 test is already enforced: verify and drop it from the ask. One with no `tests`
 still gets its acceptance check — an unasserted rule is one refactor from gone.
 A chapter with `open` on its `Enforced at:` line is not briefed; name it as
-needing a decision. The scenarios come with the rule: each one is an acceptance
-check already phrased as something a single test can assert, which is what they
-are for.
+needing a decision. The acceptance check is the claim and its rejection code:
+the violating case is refused with that code, the honouring case is not.
 
 Raising an event is rarely the whole change: say which named consumers must be
 subscribed and which are out of scope. A missing payload field on an event
@@ -213,5 +211,5 @@ another aggregate reachable only by id.
   `model.md`, `flow.md`, or `dependencies.md`. The invariants subpage is the
   one exception, because the rules are this boundary's and nothing else owns them.
 - Do not leave a rule in the aggregate chapter's prose, and do not write a new
-  `### Invariants` table. A rule stated in prose has no `Enforced at:`, no
-  scenarios, and no `tests` — which is the whole reason it moved.
+  `### Invariants` table. A rule stated in prose has no `Enforced at:` and no
+  `tests` — which is the whole reason it moved.

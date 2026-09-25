@@ -99,6 +99,20 @@ written before it stops validating and no migration is owed; the table stays leg
 converting one is editorial work, because no script can write the scenarios that make the move
 worth doing.
 
+**An invariant is a claim, not a scenario.** Contract 14 gave both behaviour kinds `#### Scenario:`
+cases. On an invariant they were noise: Given/When/Then in the aggregate's event terms restated
+a rule like "the start date is not after the end date" three times over, and the `unit` test in
+`tests` already names the case. Contract 18 takes them off: an `### Invariant:` is one claim in
+the domain's words, the rejection code in parentheses where the type has one, an optional
+sentence of why, and `Enforced at:`. Only a requirement is warned for having no scenario, and
+its scenarios stay, because OpenSpec reads them and a promise to someone outside the model is
+checked by a case. Scenarios already under an invariant are tolerated rather than stripped: the
+text is the author's, and dropping it by script would lose what no one asked to lose. The same
+contract titles the behaviour files by kind — `# Requirements`, `# Invariants` — where every
+other `domain/` file carries the context name, because a menu that lists pages by title showed
+the context three times with nothing to tell them apart; `018-behaviour-titles` retitles them.
+Both came from a consumer's pilot, which ran them first as local deviations.
+
 **Invariants are a subpage of their domain page.** Contract 14 gave invariants a file of their
 own, `invariants.md`, which split on its own schedule as `invariants.<name>.md`, so the rules
 of an aggregate and the aggregate could sit in files that no longer matched. Contract 17 names
@@ -223,6 +237,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | An `### Invariant:` carries no `#### Scenario:` — a claim, its rejection code, and `Enforced at:`, proved by its `unit` test; a missing scenario warns on a requirement only, and one an older invariant carries is tolerated. `requirements.md` is titled `# Requirements` and an invariants subpage `# Invariants`. Contract 18, migration 018, which retitles. |
 | 2026-09-25 | Invariants are a subpage of their domain page: `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split `domain.<name>.md`, typed `invariants` by the trailing suffix and read directly after the page. A chapter whose aggregate sits on another page is a warning; the old `invariants.md` and `invariants.<name>.md` validate with a warning for one release. Requirements keep `requirements.md`. Contract 17, migration 017. |
 | 2026-09-24 | A `bounded-context` chapter in `context-map.md` records how the context ships with `deployment`: `service`, a deployable of its own, or `module`, inside a modular monolith. The context's `context.md` carries the same value on its file-level block, and where the chapter's `related` names that file the graph build holds the two equal. The host is named through `related` to its building block, never a second field. Contract 16, additive, no migration. |
 | 2026-09-22 | A bounded context states behaviour in `requirements.md` and `invariants.md`, one rule per chapter: `### Requirement:` in OpenSpec's heading shape with DDD's word kept for `### Invariant:`, `#### Scenario:` cases under each, `Enforced at:` on an invariant, and the aggregate's `### Invariants` table retired into them. A rule's `related` is held to the prose chapter it belongs to; its level of proof — `e2e` for a requirement, `unit` for an invariant — and a missing scenario are coverage warnings. Contract 14, additive, no migration. |

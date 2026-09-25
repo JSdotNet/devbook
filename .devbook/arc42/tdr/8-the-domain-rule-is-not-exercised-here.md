@@ -62,8 +62,9 @@ behaviour in `requirements.md` and `invariants.md`, and everything those two fil
 them is `domain/`-only: the `requirements`, `requirement`, `invariants`, and `invariant`
 chapter types and the two file types in `metadata.mjs`; the `Requirement:`, `Invariant:`, and
 `Scenario:` heading shapes, the one heading prefix this convention allows; the `Enforced at:`
-line; the three coverage warnings over a rule chapter; the invariants subpage that contract 17
-named after its domain page, with its placement warning; and the typed `related` pairing
+line; the coverage warnings over a rule chapter; the invariants subpage that contract 17
+named after its domain page, with its placement warning; the scenario-free invariant and the
+kind titles of contract 18; and the typed `related` pairing
 `graph.mjs` resolves between a behaviour chapter and the prose chapter it belongs to. Each is a
 template a person has to be able to follow, and none has been followed here.
 
