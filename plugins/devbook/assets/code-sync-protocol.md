@@ -293,10 +293,10 @@ agreeing on the person's behalf.
 The plan has three parts.
 
 1. **The drafts**, to the folder rule's template, as the kind's file says: the
-   invariants the aggregate or domain service and its unit tests establish, each with
-   its `Enforced at:` line, and the requirements the running product and its e2e tests
-   establish, each as one SHALL sentence — both with their `#### Scenario:` cases and
-   their `tests` entries. Every claim carries the evidence behind it: the declaration,
+   invariants the aggregate or domain service and its unit tests establish, each as
+   one claim with its rejection code and its `Enforced at:` line, and the requirements
+   the running product and its e2e tests establish, each as one SHALL sentence with its
+   `#### Scenario:` cases — both with their `tests` entries. Every claim carries the evidence behind it: the declaration,
    guard clause, or passing test that settles it, named specifically enough to
    re-check. A rule nothing asserts is drafted and marked thinly covered.
 2. **The delta**, which is how the drafts are arranged. One entry per heading in the
@@ -384,10 +384,12 @@ The brief has five parts, and a change category.
    an unstated boundary is the one that gets crossed.
 5. **Acceptance checks** — how to tell it is done, each one checkable against
    code or a test. Derived from the invariants and outcomes, phrased so a test
-   can assert it. Where a rule carries `#### Scenario:` cases, those *are* the
-   acceptance checks — Given/When/Then is already one test's worth — so carry
-   them rather than paraphrasing them into something weaker. Do not write the
-   tests; state what they must establish.
+   can assert it. Where a requirement carries `#### Scenario:` cases, those *are*
+   the acceptance checks — Given/When/Then is already one test's worth — so carry
+   them rather than paraphrasing them into something weaker. An invariant's check
+   is its claim and its rejection code: the violating case is refused with that
+   code, and the case that honours it is not. Do not write the tests; state what
+   they must establish.
 
 A brief that cannot state its invariants or its acceptance checks is not ready.
 That is an `unresolved` verdict on the chapter's own completeness — report the
