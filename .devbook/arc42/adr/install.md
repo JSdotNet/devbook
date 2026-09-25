@@ -83,8 +83,9 @@ only through the fan-out. A host that does not know the key ignores it and keeps
 
 **This repository materializes nothing.** A consuming repository has no generator until the
 install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
-`.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
-the checker nine times, since a shipped rule carries no `paths`. The stamp lands anyway —
+`.devbook/_tools/` would drift on the first edit. The rule trios no longer stand in the way:
+`tools/check-assets.mjs` recognizes a delivered rule by name and derives its wrappers from the
+shipping plugin's `rules.json`. The stamp lands anyway —
 `devbook-config:doctor` classes no stamp at all as hard drift — with `materialized` holding the one
 rendered section and nothing else. Hashes are taken over LF-normalized text, because the
 working tree is CRLF and the index LF.

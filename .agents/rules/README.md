@@ -39,6 +39,17 @@ repository by that plugin's `init` and kept current by its `update`, which deriv
 [plugin-rules.md](plugin-rules.md) and
 [the decision](../../.devbook/arc42/adr/install.md).
 
+**A delivered rule carries no `paths`.** This repository adopts its own plugins like any
+other, so the folder also holds the rules their installs deliver — `devbook-arc42.md`,
+`devbook-derived-artifacts.md`, and the rest — each a verbatim copy of a
+`plugins/*/rules/<name>.md`. Its globs stay in that plugin's `rules/rules.json`, and both
+wrappers derive from there, per
+[rule-wrappers.md](../../plugins/devbook/assets/rule-wrappers.md). The checker recognizes one
+by name and fails when it has drifted from the plugin file; every other rule here still
+declares its own `paths`. The procedure trio — `.agents/skills/<name>.md` with a wrapper
+under `.claude/skills/` and `.github/skills/` — is checked the same way, against
+[skill-wrappers.md](../../plugins/devbook-procedures/assets/skill-wrappers.md).
+
 A shared file may point at a plugin instruction file rather than restate it, when that plugin
 file is already the one authored copy. The rule stays one hop from the wrapper either way;
 what is forbidden is copying the content.

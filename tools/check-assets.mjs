@@ -22,7 +22,10 @@
 //   rules         every .agents/rules/<topic>.md has a wrapper per host, the wrappers'
 //                 globs and description are derived from it, and neither wrapper has
 //                 grown a rule of its own (see the decision "One Rule, One Wrapper Per
-//                 Host")
+//                 Host"); a rule named for a plugins/*/rules/<name>.md is a delivered
+//                 copy — verbatim, globs from that plugin's rules.json
+//   procedures    every .agents/skills/<name>.md has a wrapper per host, rendered from
+//                 the devbook-procedures seed and pointing at the copy
 //   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
 //                 description, no glob of its own, and an entry with globs in the
 //                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
@@ -261,6 +264,21 @@ function scalar(fm, key) {
     return m ? m[1].replace(/^['"]|['"]$/g, "") : null;
 }
 
+// A delivered rule is the other shape in the same folder: a plugin's rules/<name>.md that its
+// install copied here verbatim, with no globs of its own. Its wrappers derive from the plugin's
+// rules.json instead (see plugins/devbook/assets/rule-wrappers.md). It is recognized by name,
+// and in the repository that authors it the copy must still be the plugin file, or it is stale.
+
+const lf = (text) => text.replace(/\r\n/g, "\n");
+const delivered = new Map();
+for (const folder of await readdir(PLUGINS)) {
+    const mapPath = path.join(PLUGINS, folder, "rules", "rules.json");
+    if (!(await exists(mapPath))) continue;
+    for (const [name, entry] of Object.entries((await json(mapPath)).rules ?? {})) {
+        delivered.set(name, { source: `plugins/${folder}/rules/${name}.md`, paths: entry.paths ?? [] });
+    }
+}
+
 if (await exists(SHARED_RULES)) {
     const topics = new Set();
     for (const entry of await readdir(SHARED_RULES)) {
@@ -268,15 +286,28 @@ if (await exists(SHARED_RULES)) {
         const topic = entry.slice(0, -3);
         topics.add(topic);
         const shared = `.agents/rules/${entry}`;
-        const { fm } = frontmatter(await readFile(path.join(SHARED_RULES, entry), "utf8"));
+        const text = await readFile(path.join(SHARED_RULES, entry), "utf8");
+        const { fm } = frontmatter(text);
 
         if (scalar(fm, "name") !== topic) error(`${shared}: frontmatter name must equal the filename "${topic}"`);
         const description = scalar(fm, "description");
         if (!description) error(`${shared}: description is required; the Copilot wrapper copies it`);
-        const paths = yamlPaths(fm);
-        if (!paths || paths.length === 0) {
-            error(`${shared}: needs a paths list; without one neither wrapper can be derived`);
-            continue;
+        let paths;
+        let globs = shared;
+        const source = delivered.get(topic);
+        if (source) {
+            const shipped = path.join(ROOT, source.source);
+            if (!(await exists(shipped)) || lf(await readFile(shipped, "utf8")) !== lf(text)) {
+                error(`${shared}: differs from ${source.source}; a delivered rule is that file verbatim — refresh it with devbook:update`);
+            }
+            paths = source.paths;
+            globs = source.source.replace(/[^/]+$/, `rules.json (${topic})`);
+        } else {
+            paths = yamlPaths(fm);
+            if (!paths || paths.length === 0) {
+                error(`${shared}: needs a paths list; without one neither wrapper can be derived`);
+                continue;
+            }
         }
 
         const claudePath = path.join(CLAUDE_RULES, `${topic}.md`);
@@ -286,7 +317,7 @@ if (await exists(SHARED_RULES)) {
             const { fm: cfm, body } = frontmatter(await readFile(claudePath, "utf8"));
             const cpaths = yamlPaths(cfm) ?? [];
             if (cpaths.join(",") !== paths.join(",")) {
-                error(`.claude/rules/${topic}.md: paths differ from ${shared} (${cpaths.join(",")} vs ${paths.join(",")})`);
+                error(`.claude/rules/${topic}.md: paths differ from ${globs} (${cpaths.join(",")} vs ${paths.join(",")})`);
             }
             const lines = bodyLines(body);
             if (lines > WRAPPER_BODY_MAX) error(`.claude/rules/${topic}.md: ${lines} body lines; a wrapper points at ${shared}, it does not restate it`);
@@ -299,7 +330,7 @@ if (await exists(SHARED_RULES)) {
             const { fm: gfm, body } = frontmatter(await readFile(copilotPath, "utf8"));
             const applyTo = scalar(gfm, "applyTo");
             if (applyTo !== paths.join(",")) {
-                error(`.github/instructions/${topic}.instructions.md: applyTo must be ${shared}'s paths joined with commas (${paths.join(",")})`);
+                error(`.github/instructions/${topic}.instructions.md: applyTo must be ${globs}'s paths joined with commas (${paths.join(",")})`);
             }
             if (scalar(gfm, "description") !== description) {
                 error(`.github/instructions/${topic}.instructions.md: description differs from ${shared}`);
@@ -319,6 +350,55 @@ if (await exists(SHARED_RULES)) {
             if (!entry.endsWith(suffix)) continue;
             const topic = entry.slice(0, -suffix.length);
             if (!topics.has(topic)) error(`${label}/${entry}: no .agents/rules/${topic}.md behind it; a rule is authored once and wrapped, never written in a wrapper`);
+        }
+    }
+}
+
+// ── procedures ──────────────────────────────────────────────────────────────
+//
+// The rule trio with the ownership reversed (see plugins/devbook-procedures/assets/
+// skill-wrappers.md): .agents/skills/<name>.md is the repository's and may say anything, so
+// only its name and goal are checked; each host's wrapper is rendered from the plugin's seed,
+// so its name and description must be the seed's and its body must point at the copy.
+
+const SHARED_SKILLS = path.join(ROOT, ".agents", "skills");
+const SEEDS = path.join(PLUGINS, "devbook-procedures", "assets", "skills");
+const SKILL_WRAPPERS = [[".claude", "skills"], [".github", "skills"]];
+
+if (await exists(SHARED_SKILLS)) {
+    const procedures = new Set();
+    for (const entry of await readdir(SHARED_SKILLS)) {
+        if (!entry.endsWith(".md") || entry === "README.md") continue;
+        const name = entry.slice(0, -3);
+        procedures.add(name);
+        const shared = `.agents/skills/${entry}`;
+        const { fm } = frontmatter(await readFile(path.join(SHARED_SKILLS, entry), "utf8"));
+        if (scalar(fm, "name") !== name) error(`${shared}: frontmatter name must equal the filename "${name}"`);
+        if (!scalar(fm, "goal")) error(`${shared}: goal is required; the wrappers carry it`);
+        const seedPath = path.join(SEEDS, entry);
+        const seed = (await exists(seedPath)) ? frontmatter(await readFile(seedPath, "utf8")).fm : fm;
+        const pointer = `Read \`.agents/skills/${name}.md\``;
+        for (const parts of SKILL_WRAPPERS) {
+            const label = [...parts, name, "SKILL.md"].join("/");
+            const file = path.join(ROOT, ...parts, name, "SKILL.md");
+            if (!(await exists(file))) { error(`${shared}: no ${label}, so that host never loads it`); continue; }
+            const { fm: wfm, body } = frontmatter(await readFile(file, "utf8"));
+            if (scalar(wfm, "name") !== name) error(`${label}: name must be "${name}"`);
+            if (scalar(wfm, "description") !== scalar(seed, "description")) error(`${label}: description differs from the seed's; the wrapper is rendered from it`);
+            if (!body.includes(pointer)) error(`${label}: body must point at .agents/skills/${name}.md, never restate it`);
+        }
+    }
+    // A wrapper that points into .agents/skills/ at nothing is a procedure in one host only.
+    for (const parts of SKILL_WRAPPERS) {
+        const dir = path.join(ROOT, ...parts);
+        if (!(await exists(dir))) continue;
+        for (const entry of await readdir(dir, { withFileTypes: true })) {
+            const file = path.join(dir, entry.name, "SKILL.md");
+            if (!entry.isDirectory() || !(await exists(file))) continue;
+            const body = await readFile(file, "utf8");
+            if (body.includes(`.agents/skills/${entry.name}.md`) && !procedures.has(entry.name)) {
+                error(`${[...parts, entry.name].join("/")}/SKILL.md: points at .agents/skills/${entry.name}.md, which does not exist`);
+            }
         }
     }
 }
