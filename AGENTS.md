@@ -43,8 +43,12 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
 the committed index is `devbook-derived`'s, per
-`.devbook/arc42/adr/checks-and-indexes.md`; this
-repository vendors both from the plugins rather than materializing them.
+`.devbook/arc42/adr/checks-and-indexes.md`. This repository
+adopts them the way any other does, through `devbook:update`: the copies under
+`.devbook/_tools/`, `.agents/rules/`, and the workflows are the plugins' payload, never edited
+in place. Edit the plugin and refresh the copy in the same commit — `check-assets` fails on a
+vendored `.devbook/_tools/` file or a delivered rule that differs from its source, per
+`.devbook/arc42/adr/install.md`.
 
 ## Committing
 

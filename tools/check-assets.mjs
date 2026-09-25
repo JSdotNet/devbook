@@ -34,6 +34,9 @@
 //   skills        every plugins/*/skills/<name>/SKILL.md opens with the line that reports
 //                 its plugin name and version from the manifest beside it (see the
 //                 decision "Every Skill Opens With Its Plugin Version")
+//   vendored      .devbook/_tools/devbook-meta/ and devbook-tech/, where present, are
+//                 byte-identical over LF to plugins/devbook/tools/ (see the decision
+//                 "Install")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -472,6 +475,30 @@ for (const folder of await readdir(PLUGINS)) {
             error(`${where}: ../../.claude-plugin/plugin.json does not resolve from the skill folder`);
         }
     }
+}
+
+// ── vendored tools ──────────────────────────────────────────────────────────
+//
+// devbook's init copies tools/devbook-meta/ and tools/devbook-tech/ whole into
+// .devbook/_tools/. In the repository that authors them the copy could drift on the first
+// edit, which is why vendoring was once rejected here; this check makes drift an error
+// instead. Compared over LF, because the working tree is CRLF and the index LF.
+
+for (const tool of ["devbook-meta", "devbook-tech"]) {
+    const copy = path.join(ROOT, ".devbook", "_tools", tool);
+    if (!(await exists(copy))) continue;
+    const source = path.join(PLUGINS, "devbook", "tools", tool);
+    const label = `.devbook/_tools/${tool}`;
+    const files = async (dir) => (await walk(dir)).map((f) => path.relative(dir, f).replace(/\\/g, "/"));
+    const shipped = new Set(await files(source));
+    const vendored = new Set(await files(copy));
+    for (const f of shipped) {
+        if (!vendored.has(f)) error(`${label}/${f}: missing; the vendored copy must equal plugins/devbook/tools/${tool}/ — refresh it with devbook:update`);
+        else if (lf(await readFile(path.join(copy, f), "utf8")) !== lf(await readFile(path.join(source, f), "utf8"))) {
+            error(`${label}/${f}: differs from plugins/devbook/tools/${tool}/${f}; edit the plugin and refresh the copy in the same commit`);
+        }
+    }
+    for (const f of vendored) if (!shipped.has(f)) error(`${label}/${f}: not in plugins/devbook/tools/${tool}/; the vendored copy carries nothing of its own`);
 }
 
 // ── budgets (report only) ───────────────────────────────────────────────────
