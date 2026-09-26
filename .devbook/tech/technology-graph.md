@@ -9,7 +9,7 @@ Everything this repository builds with. There is no runtime and no dependency ma
 the assets are Markdown and JSON, and the platforms below are what reads them. The
 technologies themselves live one chapter each in the layer files; this file is the map.
 
-## Layers
+**Layers**
 
 | File | Covers |
 | --- | --- |
@@ -20,7 +20,7 @@ technologies themselves live one chapter each in the layer files; this file is t
 Three layers is the whole stack. A fourth appears only when a technology genuinely belongs to
 none of these, and it is registered in this table in the same change that adds its file.
 
-## Graph
+**Graph**
 
 Nodes are technologies, edges are `depends-on`, shading is `status`. Five edges is the honest
 count: almost everything here is read by a host rather than built on another technology.
@@ -54,7 +54,7 @@ graph LR
   class mcpApps,claudeCli,copilotSdk,scheduler trial;
 ```
 
-## How to Read It
+**How to Read It**
 
 `status` rates a technology in this repository, on the radar ladder `candidate`, `trial`,
 `adopted`, `hold`, `retired`. The four `trial` entries are `trial` for the same reason: nothing
