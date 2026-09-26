@@ -1,7 +1,7 @@
 {
   "name": "devbook-derived",
   "description": "The committed devbook index, and the canvas that draws it: keeps the derived _meta/ artifacts — the reference graph, the reading outline, and the open-note index, one set per adopted folder and a rollup under .devbook/_meta/ — in a repository's tree for a reader that cannot run devbook's checker itself, and ships the devbook-graph Copilot canvas that renders the graph live from devbook's modules at their materialized path. Ships the refresh paths that pass --write to devbook's build.mjs: the refresh skill and the on-demand Update-DevbookIndex.ps1, the nightly refresh workflow that opens one pull request when the indexes moved, and the pull-request drift warning; the derived-artifacts rule with a wrapper per host; its own AGENTS.md section; and the .claude/settings.json deny snippet. Three skills, init, update, and refresh. An L1 extension over devbook: enable it to commit the index, disable it to stop, and the check is devbook's either way.",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "author": {
     "name": "Job Schepers"
   },
