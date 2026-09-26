@@ -523,7 +523,9 @@ and the annotation index for the repository and for each adopted folder. It chec
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
 [devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
-block is reported and tolerated. Every per-block rule reaches the gate through the schema
+block is reported and tolerated — except in a structural document the folder rules name, such
+as `technology-graph.md` or `adoption-map.md`, whose sections are not chapters and draw
+nothing. Every per-block rule reaches the gate through the schema
 validator the graph build calls per file
 (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
@@ -534,6 +536,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | --- | --- | --- |
 | It checks by default and writes only on `--write`, which nothing in this block passes | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | An unresolved reference fails; a heading with no block is reported and tolerated | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A structural document's heading with no block is not reported | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 
 ### Fence Writer
