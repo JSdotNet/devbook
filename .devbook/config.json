@@ -198,8 +198,69 @@
     },
     "devbook-procedures": {
       "pluginVersion": "1.8.0",
-      "adopted": [],
-      "materialized": {}
+      "adopted": ["start", "show", "capture", "debug"],
+      "materialized": {
+        ".agents/skills/capture.md": {
+          "from": "1.8.0",
+          "hash": "sha256:675886a3012eb560d1823ed53573a70a57b328612ab7159d89a945e9e9173651",
+          "managed": true
+        },
+        ".agents/skills/debug.md": {
+          "from": "1.8.0",
+          "hash": "sha256:6c24e16f47519e36ffbc6896a2313b2832e98e65093a58c59b6d01dce797bc3b",
+          "managed": true
+        },
+        ".agents/skills/show.md": {
+          "from": "1.8.0",
+          "hash": "sha256:11c64a5c3d2f6a17d7d9538ff8abdb2542d149b780a2ae2085fe6d3b87fd8461",
+          "managed": true
+        },
+        ".agents/skills/start.md": {
+          "from": "1.8.0",
+          "hash": "sha256:371f3a16e7762164568059ffb9a12700dd6713d84e87bcff730f39d499e7ed18",
+          "managed": true
+        },
+        ".claude/skills/capture/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:36a9747effbfa406050b77d79fe9cf38843f1a1a3afe8e5b853ee6d73e6d3403",
+          "managed": true
+        },
+        ".claude/skills/debug/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:3b4d67c5f8385574f04d6b8ffba870edfee2ba9ac0c8a015e3267537143514ff",
+          "managed": true
+        },
+        ".claude/skills/show/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:35e9994fdc2e01fd7143337536dd87b06dc0aed2b382b080eebf7b22d57085c9",
+          "managed": true
+        },
+        ".claude/skills/start/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:00fdab521f742c325df36617c365a0046160ba7b24340412f9fa919a7d935c21",
+          "managed": true
+        },
+        ".github/skills/capture/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:36a9747effbfa406050b77d79fe9cf38843f1a1a3afe8e5b853ee6d73e6d3403",
+          "managed": true
+        },
+        ".github/skills/debug/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:3b4d67c5f8385574f04d6b8ffba870edfee2ba9ac0c8a015e3267537143514ff",
+          "managed": true
+        },
+        ".github/skills/show/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:35e9994fdc2e01fd7143337536dd87b06dc0aed2b382b080eebf7b22d57085c9",
+          "managed": true
+        },
+        ".github/skills/start/SKILL.md": {
+          "from": "1.8.0",
+          "hash": "sha256:00fdab521f742c325df36617c365a0046160ba7b24340412f9fa919a7d935c21",
+          "managed": true
+        }
+      }
     },
     "delivery": {
       "pluginVersion": "1.8.0"
