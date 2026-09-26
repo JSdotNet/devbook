@@ -20,7 +20,7 @@ file is a reading unit and places nothing — each chapter says its own stages o
 | --- | --- |
 | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
 | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out and scheduling lanes nothing here has used. |
-| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
+| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation, and the procedure skills that try, show, and evidence a change. |
 
 **Adoption Picture**
 
@@ -43,6 +43,8 @@ graph LR
   schedule[Scheduling] --- operate
   schedule --- monitor
   eval[Plugin Evaluation] --- test
+  procs[Procedure Skills] --- code
+  procs --- test
   flows -. never yet .-> fanout
   schedule -. never yet .-> fanout
   classDef stage fill:#fff,stroke:#333,color:#333;
@@ -51,7 +53,7 @@ graph LR
   classDef candidate fill:#e6e6e6,stroke:#7a7a7a,color:#333;
   class plan,code,build,test,release,deploy,operate,monitor stage;
   class host adopted;
-  class flows trial;
+  class flows,procs trial;
   class fanout,schedule,eval candidate;
 ```
 
@@ -59,14 +61,14 @@ graph LR
 
 `status` reuses the `tech/` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
-here has been made. One is `trial` because everything it needs has landed and nothing has used
-it. Three are `candidate` because the honest first use is somewhere else, or has not happened.
+here has been made. Two are `trial` because everything they need has landed and nothing has
+used them. Three are `candidate` because the honest first use is somewhere else, or has not happened.
 Each chapter's `date` is the day its current rating was set.
 
 The picture above is the hand-drawn form of the loop a tool draws from the same fields: the
 eight stages in loop order, and at each stage the chapters whose `stage` names it, shaded by
 rating and carrying the `tech/` chapter their `depends-on` names. Two usages rest on the
-Claude Code plugin API and one on the CLI; the other two name none, which is the normal case
+Claude Code plugin API and two on the CLI; the other two name none, which is the normal case
 for a practice.
 
 To add a practice, write its `##` chapter in the file where it reads best, with `status`,
