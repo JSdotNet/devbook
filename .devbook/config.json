@@ -46,7 +46,7 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.2.0",
+      "pluginVersion": "1.8.0",
       "contractVersion": 18,
       "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
@@ -77,15 +77,15 @@
       }
     },
     "devbook-procedures": {
-      "pluginVersion": "1.2.0",
+      "pluginVersion": "1.8.0",
       "adopted": [],
       "materialized": {}
     },
     "delivery": {
-      "pluginVersion": "1.2.0"
+      "pluginVersion": "1.8.0"
     },
     "schedule": {
-      "pluginVersion": "1.2.0",
+      "pluginVersion": "1.8.0",
       "enabled": ["devbook-validate", "tech-update", "merge-review", "package-update"]
     },
     "delivery-surface-dashboard": {
