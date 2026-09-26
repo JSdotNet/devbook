@@ -1,2 +1,5 @@
 # Worktrees this repository's own sessions cut. Tooling state, not content.
 .claude/worktrees/
+
+# Evidence and throwaway repositories the show, capture, and debug procedures take. Never content.
+.wip/

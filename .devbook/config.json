@@ -202,23 +202,23 @@
       "materialized": {
         ".agents/skills/capture.md": {
           "from": "1.8.0",
-          "hash": "sha256:675886a3012eb560d1823ed53573a70a57b328612ab7159d89a945e9e9173651",
-          "managed": true
+          "hash": "sha256:6ad0bdeda2911b86fc98eac3c8bf3f992bf9022f6b081410f57f158ed9889623",
+          "managed": false
         },
         ".agents/skills/debug.md": {
           "from": "1.8.0",
-          "hash": "sha256:6c24e16f47519e36ffbc6896a2313b2832e98e65093a58c59b6d01dce797bc3b",
-          "managed": true
+          "hash": "sha256:1e9475265ad52f1f7801c0cad3ec5e306716eb829d0ba322ad51a3d16c4f5def",
+          "managed": false
         },
         ".agents/skills/show.md": {
           "from": "1.8.0",
-          "hash": "sha256:11c64a5c3d2f6a17d7d9538ff8abdb2542d149b780a2ae2085fe6d3b87fd8461",
-          "managed": true
+          "hash": "sha256:82f6500a747cfd626dc3b750b53a831fa161c3ac10f5c06946eea0211c3af0ef",
+          "managed": false
         },
         ".agents/skills/start.md": {
           "from": "1.8.0",
-          "hash": "sha256:371f3a16e7762164568059ffb9a12700dd6713d84e87bcff730f39d499e7ed18",
-          "managed": true
+          "hash": "sha256:2a897542d606d73646c654d10b57836864d25424ac9780a82997b144f9d29bb3",
+          "managed": false
         },
         ".claude/skills/capture/SKILL.md": {
           "from": "1.8.0",
