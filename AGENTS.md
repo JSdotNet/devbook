@@ -203,7 +203,7 @@ Put no secret in it — your home directory is not private.
 Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
-generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
+generated tool input, written by `.devbook/_tools/devbook-meta/build.mjs --write`. Never read one as a source of
 fact and never hand-edit one. Never regenerate or commit them in a session — the scheduled job owns that refresh. Fix what devbook's check reports in the source
 Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->

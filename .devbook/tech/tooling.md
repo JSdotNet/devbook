@@ -86,7 +86,8 @@ Retiring the *runtime* with it was the error. A repository-level generator was r
 shipped payload script was not, and `retired` reads as "no longer used" to everyone downstream
 of a plugin that installs it into their repository on every sync.
 
-This repository does not hold the script. `devbook-derived`'s stamp is still 1.2.0 and
-materialized its `AGENTS.md` section alone, so there is no `build/` here and the refresh path is
+This repository does not hold the script. `devbook-derived` materialized its `AGENTS.md`
+section alone — the adoption predates this repository installing like any other, and `update`
+reconciles only what is stamped — so there is no `build/` here and the refresh path is
 the daily `devbook-validate` schedule passing `--write` to the vendored checker. No such run has
 landed yet: the committed indexes under `.devbook/_meta/` date from 2026-09-17.

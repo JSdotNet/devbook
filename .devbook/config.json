@@ -187,11 +187,11 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.2.0",
+      "pluginVersion": "1.9.0",
       "materialized": {
         "AGENTS.md#devbook-derived": {
-          "from": "1.2.0",
-          "hash": "sha256:46959bd8bcbf2c341502016850abc0b82d65416da9252974bf699ec8fa6efe77",
+          "from": "1.9.0",
+          "hash": "sha256:db6b072ab66b182b9ad1d880627cb08fba9c1f661ad759ee512586f3c5c27aea",
           "managed": true
         }
       }
