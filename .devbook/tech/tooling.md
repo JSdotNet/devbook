@@ -39,10 +39,16 @@ where the constraint is negotiated rather than held:
   [the SDK entry](hosts.md#copilot-extension-sdk). Nothing else here imports anything it does
   not ship.
 
-`.github/workflows/repo-checks.yml` runs the asset checker, the generator's `--check`, and
-`claude plugin validate --strict` on every pull request; the Node suites are run by hand
-before a commit, and the workflow files under `plugins/devbook/assets/workflows/` are payload
-for a consuming repository rather than a pipeline of this one.
+The checker runs here from two paths. `plugins/devbook/tools/devbook-meta/` is where it is
+authored; `.devbook/_tools/devbook-meta/` is the copy `devbook:update` vendored, as into any
+adopting repository, and the one this repository's `AGENTS.md` section names.
+`tools/check-assets.mjs` fails when the two differ by a byte, so an edit to the first lands with
+its refresh of the second.
+
+`.github/workflows/repo-checks.yml` runs the asset checker, the authored generator's `--check`,
+and `claude plugin validate --strict` on every pull request, and `devbook-meta.yml` — the
+workflow `devbook:update` materialized from `plugins/devbook/assets/workflows/` — runs the
+vendored one's `--check`. The Node suites are run by hand before a commit.
 
 The surface servers are where the constraint bites hardest and still holds: an HTTP server, a
 server-sent event stream, a Markdown renderer, and a Mermaid page are all reachable from
@@ -79,3 +85,8 @@ retired alongside it. That decision stands and this entry does not reopen it —
 Retiring the *runtime* with it was the error. A repository-level generator was removed; a
 shipped payload script was not, and `retired` reads as "no longer used" to everyone downstream
 of a plugin that installs it into their repository on every sync.
+
+This repository does not hold the script. `devbook-derived`'s stamp is still 1.2.0 and
+materialized its `AGENTS.md` section alone, so there is no `build/` here and the refresh path is
+the daily `devbook-validate` schedule passing `--write` to the vendored checker. No such run has
+landed yet: the committed indexes under `.devbook/_meta/` date from 2026-09-17.
