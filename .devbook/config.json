@@ -217,8 +217,8 @@
         },
         ".agents/skills/start.md": {
           "from": "1.8.0",
-          "hash": "sha256:371f3a16e7762164568059ffb9a12700dd6713d84e87bcff730f39d499e7ed18",
-          "managed": true
+          "hash": "sha256:2a897542d606d73646c654d10b57836864d25424ac9780a82997b144f9d29bb3",
+          "managed": false
         },
         ".claude/skills/capture/SKILL.md": {
           "from": "1.8.0",

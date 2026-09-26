@@ -4,68 +4,62 @@ description: "Start this repository's application the way this repository says t
 goal: "Leave this repository's application running and healthy, and report the command that started it, the health verdict, and its entry points. Never hand the person a command to run themselves."
 ---
 
-# Start the Application
+# Start the Marketplace
 
-Start the app from what this file declares, not from a command guessed per session. **Edit
-this file** — it is yours: the facts are examples to replace, the procedure a starting point.
-Whoever invokes `start` expects only what the wrapper's goal says: a running application and
-the three facts reported.
-
-A repository with nothing to start drops `start` from `components.devbook-procedures.adopted`
-in `.devbook/config.json` instead of keeping this file.
+There is no application here. This repository is the `jsdotnet-devbook` plugin marketplace,
+`extensions.app.start` is `null`, and "running" means one thing: a Claude Code host loading
+the plugins from this working copy instead of from GitHub, so the change on this branch is
+what a skill, rule, hook, or MCP server does when invoked. `AGENTS.md` under *Trying a change*
+is the source; this file is how it is done.
 
 ## Run
 
-<!-- The command, where it runs from, and what it needs. Replace the example. -->
+1. **Check what is already there.** `claude plugin marketplace list`. When `jsdotnet-devbook`
+   already reads as a path, and that path is this worktree, reuse it and say so. Another
+   worktree's path is not this branch: replace it and say so.
+2. **Add this working copy by path**, for this checkout only:
 
-```bash
-aspire start
-```
+   ```bash
+   claude plugin marketplace add . --scope local
+   ```
 
-- From the repository root; needs the .NET SDK and a running container runtime.
-- AppHost: `src/Orders.AppHost/Orders.AppHost.csproj`
+   The name comes from `.claude-plugin/marketplace.json` and is the same `jsdotnet-devbook`
+   `.claude/settings.json` declares from GitHub. `--scope local` writes the gitignored
+   `.claude/settings.local.json`, never the committed settings and never the person's user
+   settings. Never remove or rewrite the user- or project-scope declaration to make the path
+   win.
+3. **Enable what is being edited.** `claude plugin install <plugin>@jsdotnet-devbook --scope
+   local` for each plugin under `plugins/` that `git diff --name-only main...HEAD` touches —
+   the CLI form of `/plugin`. One already enabled at project scope needs nothing.
+4. **Reload.** A host reads plugins when a session starts. Say that the change is live in the
+   next session, or after `/reload-plugins` in an interactive one; never claim it is live in
+   this one.
 
-1. **Check whether it is already running** before starting a second copy — worktrees share
-   ports. Reuse a running instance and say so.
-2. **Run the declared command** in the background. Never substitute a different command when
-   the declared one fails; report the failure.
-3. **Wait for the signals under Healthy.** Stop waiting on a fatal error, or after two
-   minutes of silence. Do not report a partially-started app as healthy.
-4. **Re-read the entry points** every start — a port changes.
-
-Report in a couple of lines: the command, the health verdict, the entry points. Leave the app
-running — `show`, `debug`, and a flow's later stages work against it.
+For one headless run that writes no setting at all, `claude --plugin-dir plugins/<plugin>`
+loads that plugin for that session only — `show` uses it.
 
 ## Healthy
 
-<!-- What a good start looks like, and which warnings are known and benign. -->
-
-- Every AppHost resource reaches `Running`; the database resource reports `Healthy`.
-- `GET /health` on the API returns `200`.
-- Benign: one `Detected container runtime restart` warning on first start.
+- `claude plugin marketplace list` shows `jsdotnet-devbook` with this worktree's path as its
+  source, not GitHub.
+- `claude plugin list` shows every plugin the branch touches as enabled, at the version in its
+  `plugins/<plugin>/.claude-plugin/plugin.json`.
+- `claude plugin validate --strict plugins/<plugin>` passes for each of them. A manifest the
+  validator rejects is a failed start, whatever the list says.
+- A source still reading GitHub after step 2 is not healthy: report it and stop, never edit the
+  person's settings by hand to force it.
 
 ## Entry points
 
-<!-- What `show` opens and a stage validates against. -->
-
-| Entry point | URL |
+| Entry point | Where |
 | --- | --- |
-| Aspire dashboard | `https://localhost:17090` |
-| Web front end | `https://localhost:7080` |
-| API | `https://localhost:7081/api` |
-
-## Sign in
-
-<!-- A pointer only — where the credential lives, never its value. Delete if there is no sign-in. -->
-
-- Local development uses the seeded `qa@example.test` account; its password is the
-  `ORDERS_QA_PASSWORD` environment variable, provisioned from the team's secret store.
-- Never type a password, token, or key into a form yourself: open the page, name where the
-  credential lives, and let the user sign in.
+| A skill | `/<plugin>:<skill>`, from `plugins/<plugin>/skills/<skill>/SKILL.md` |
+| An agent | `<plugin>:<role>`, from `plugins/<plugin>/agents/<role>.agent.md` |
+| A rule | Loads when the host opens a file its `paths` match — open one |
+| An MCP server | `mcpServers` in the plugin's `.claude-plugin/plugin.json` |
 
 ## Never
 
-- Restart a running instance without saying so.
-- Run destructive setup — a database drop, a volume prune, `git clean` — as part of starting.
-  Propose it instead.
-- Put a secret in this file. It is committed.
+- Write `.claude/settings.json` or the person's user settings. Local scope only.
+- Uninstall a plugin, or remove a marketplace, the person did not add in this session.
+- Report the branch as tried from a session that started before step 2.
