@@ -73,11 +73,11 @@ record work this skill did not do.
 6. **Let each adopted component initialize itself.** For every component chosen in step 2,
    invoke that component's own `init` and let it materialize its payload and write its
    own stamp — `devbook:init` for the devbook folders, `devbook-procedures:init` for
-   the repository's `start`, `show`, `capture`, and `debug` skills. Answer that one's
-   adoption question from the engine keys just written: `extensions.app.start` of `null`
-   drops `start`, `show`, and `debug`; `policy.qa.depth` of `skipped` drops `capture` and
-   `show`. Do not copy a component's files by hand: a copy made here lands unstamped, and the
-   next reconcile cannot tell it from a file someone deliberately customized.
+   the repository's `start`, `show`, `capture`, `debug`, and `estimate` skills. Answer
+   that one's adoption question from the engine keys just written: `extensions.app.start` of
+   `null` drops `start`, `show`, and `debug`; `policy.qa.depth` of `skipped` drops `capture`
+   and `show`; no engine key answers `estimate`, so ask it. Do not copy a component's files
+   by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 
 7. **Verify and report.** Re-run the report, run `devbook-config:doctor`, and say plainly
    what was set up, what was deliberately left unbound, what was not installed and therefore

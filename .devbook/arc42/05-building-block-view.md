@@ -223,7 +223,7 @@ flowchart TB
     subgraph repo["A consuming repository"]
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
-        sk[".agents/skills/ - the procedure bodies: start, show, capture, debug"]
+        sk[".agents/skills/ - the procedure bodies: start, show, capture, debug, estimate"]
         sw[".claude/skills/ and .github/skills/ - one wrapper each, carrying the goal"]
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
