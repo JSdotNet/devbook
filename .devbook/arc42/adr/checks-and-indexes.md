@@ -1,7 +1,7 @@
 # Checks and Indexes
 
 ```meta
-date: 2026-09-23
+date: 2026-09-26
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
@@ -84,6 +84,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-26 | This repository materializes `devbook-derived`'s refresh script and both workflows, the nightly at 02:17 UTC so it runs ahead of the 03:00 `devbook-validate` schedule. Its `AGENTS.md` section keeps the never-in-session sentence and is stamped `managed: false`: the stricter rule here outranks the template's on-demand refresh, and the script serves `-Check` and the drift warning's hint. |
 | 2026-09-23 | A weekly `devbook-verify` schedule runs `verify-change` over every adopted folder through `delivery-schedule`'s wrapper and opens an issue per uncovered `code-ahead` or `conflict` row; like the validate schedule it targets the wrapper, and unlike it, it writes nothing. |
 | 2026-09-22 | `verify-change` takes a folder or a bounded context as scope, one kind per run and one table; the other two converters stay at one target, because only the report-only one can widen without deciding more. |
 | 2026-09-17 | The checker, fence writer, and three skills return to `devbook`; `build.mjs` writes only on `--write`; `devbook-derived` is the committed index alone, with the canvas and a `refresh` skill. |

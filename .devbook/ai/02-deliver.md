@@ -27,7 +27,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
   `.devbook/config.json` record what they materialized: `devbook` 1.9.0 over `arc42`, `tech`,
   `design`, and `ai`; `delivery` and `schedule` 1.9.0; `devbook-derived` 1.9.0, with its
-  `AGENTS.md` section and nothing else. `devbook-procedures` is stamped 1.9.0 with `start`,
+  refresh script, its nightly and drift workflows, and its `AGENTS.md` section. `devbook-procedures` is stamped 1.9.0 with `start`,
   `show`, `capture`, and `debug` but enabled per person, since its wrappers are committed and
   only an upgrade needs the plugin. A surface is enabled per person too: a run reports into
   every one bound — `delivery-surface-dashboard` and `delivery-surface-backlog` where they were
