@@ -202,8 +202,8 @@
       "materialized": {
         ".agents/skills/capture.md": {
           "from": "1.8.0",
-          "hash": "sha256:675886a3012eb560d1823ed53573a70a57b328612ab7159d89a945e9e9173651",
-          "managed": true
+          "hash": "sha256:6ad0bdeda2911b86fc98eac3c8bf3f992bf9022f6b081410f57f158ed9889623",
+          "managed": false
         },
         ".agents/skills/debug.md": {
           "from": "1.8.0",

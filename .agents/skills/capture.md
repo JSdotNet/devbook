@@ -6,55 +6,50 @@ goal: "Return evidence a reviewer can open instead of taking your word for it: o
 
 # Capture Evidence
 
-**Edit this file** — the layout and the tooling below are yours. What comes back is fixed by
-the wrapper's goal: one entry per checkpoint and per failure, paths under the worktree root,
-the form named honestly.
+Evidence here is text: command output, a host's transcript, a diff. There is no browser and no
+screen, so the form is always a **text log** — never call it a screenshot, a recording, or a
+trace.
 
-## First: what can this server actually record?
+## The three checks
 
-**Read the live tool list before choosing a form.** Do not assume video is available.
-`@playwright/mcp` 0.0.79 exposes no tracing or video tools — `browser_start_tracing` and
-`browser_stop_tracing` do not exist, and there is no `--save-trace` or `--save-video` option.
-Only `--save-session` and screenshots.
+Every capture of a branch's state is these three, run from the worktree root on the commit
+under review, each into its own file:
 
-| The tool list shows | Capture as |
+| Check | Command |
 | --- | --- |
-| No tracing tools — the common case | A numbered screenshot sequence |
-| `browser_start_tracing` / `browser_stop_tracing` | A video or trace file |
+| Assets | `node tools/check-assets.mjs` |
+| Devbook metadata | `node plugins/devbook/tools/devbook-meta/build.mjs --check` |
+| Manifests | `claude plugin validate --strict .`, then once per `plugins/*/` with a `.claude-plugin/plugin.json` |
 
-**Never call a screenshot sequence a video or a trace.** Name the form you actually produced,
-in the report and in the filename.
+These are the three `.github/workflows/repo-checks.yml` runs; a local capture that disagrees
+with CI is a finding about the environment, reported as one.
 
-Tool names here are bare. Resolve the prefix from your own tool list — a plugin-provided
-server is namespaced with its plugin, a repository-registered one is not.
+## Take it
 
-## Capture
+1. **Record what it was run on.** The first lines of every file: the command, `git rev-parse
+   --short HEAD`, and whether the tree was clean.
+2. **Take the whole output**, stdout and stderr together, and end the file with the exit
+   code. A trimmed log hides the line that mattered.
+3. **Capture a failure before fixing it.** The failing run is the one that cannot be retaken
+   once the fix lands.
 
-1. **Stabilize first.** Wait for a specific expected element or text, never a fixed sleep. A
-   frame taken mid-transition is misleading evidence, not evidence.
-2. **Take the shot.** Full page by default; scope to one element when only that component's
-   state matters — a field error, a toast, a modal.
-3. **Capture the failure before recovering.** The moment a check fails is the one frame that
-   cannot be retaken.
+An invocation `show` walks is captured the same way: the prompt, the host's full output, and
+the files it wrote as `git status --short` plus the diff.
 
 ## Where it lands
 
 ```
-.wip/qa/<feature>/screenshots/<NN>-<what-it-shows>.png     single checkpoints
-.wip/qa/<feature>/sequence/<scenario>/<NN>-<step>.png      a multi-step flow
-.wip/qa/<feature>/video/<scenario>.webm                    only if tracing exists
+.wip/evidence/<branch>/<NN>-<what-it-shows>.txt
 ```
 
-`<NN>` is zero-padded so evidence sorts in execution order. Name a failure so the failure is
-obvious: `05-submit-500-error.png`. Never reuse a filename — an overwritten frame is a lost
-one.
-
-Change this layout to suit the repository. Keep every path under the worktree root: a path
-outside it is rejected, and a sub-agent in its own checkout must copy evidence back before
-reporting it.
+`<branch>` is the branch name with `/` as `-`; `<NN>` is zero-padded in the order taken. Name a
+failure so it reads as one: `03-validate-strict-fails.txt`. Never overwrite a file; a rerun is
+the next number. `.wip/` is gitignored — evidence is never committed. What a reviewer needs from
+it travels in the pull request body: each check's verdict and summary line, with the path it
+came from.
 
 ## In the report
 
-Every visual claim cites the path that proves it. "The form validated correctly" with no path
-attached is not a finding. For a sequence, cite the folder and say which step each frame is;
-for a failure inside a recording, give the timestamp too.
+Every claim cites its file. "The checks pass" is a claim; `0 error(s)` quoted from
+`.wip/evidence/<branch>/01-check-assets.txt` is evidence. Report a budget overrun or a note as
+what it is — reported, not an error — and never round it into a pass or a fail.
