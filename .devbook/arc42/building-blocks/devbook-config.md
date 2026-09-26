@@ -495,6 +495,7 @@ included. That is the whole shape of it.
 | --- | --- | --- | --- | --- |
 | A repository being set up | Customer-Supplier, this block supplying | `.devbook/config.json`, written before any component initializes itself | The engine's schema | That init runs first and hands each component its own `init`. |
 | [devbook](devbook.md#dependencies) and every other component, during a fan-out | Customer-Supplier, reversed — this block calling | Their own `init` and `update`, invoked with a scope verdict already resolved | Each skill's name, its idempotence, and its refusal of the other's case | That an update run twice is harmless, which is what makes a whole-stack update safe. |
+| [delivery-schedule](delivery-schedule.md#schedule-devbook-update) | Conformist, by name | `schedule-devbook-update` runs `update` unattended; `schedule-devbook-validate` runs `doctor` | Each skill's name, and every question `update` asks having a safe answer | That `update` stops where a person must act rather than guessing, so an unattended run can answer or skip each question. |
 | Nothing declares it | — | — | — | No manifest anywhere names this plugin, in either direction. |
 
 **Naming every plugin and depending on none is the position, and it is deliberate.** A plugin it

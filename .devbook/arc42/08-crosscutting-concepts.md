@@ -171,7 +171,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 fan-out it described no longer ships. `delivery` holds four `flow-*` — the
 code, the five devbook folders, the dependencies, and the project, since
 [flows belong to delivery](adr/plugin-boundaries.md) — and three `phase-*`, `delivery-schedule`
-holds seventeen `schedule-*` beside a bare `init` and `update`.
+holds eighteen `schedule-*` beside a bare `init` and `update`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

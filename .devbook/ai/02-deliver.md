@@ -82,7 +82,7 @@ date: 2026-09-07
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
 session with nobody watching, and lands what it produced as a pull request or a report issue.
 
-- **Used for** — four of the twelve schedules are enabled against this repository, per the
+- **Used for** — four of the thirteen schedules are enabled against this repository, per the
   stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, `merge-review`, and
   `package-update`. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a

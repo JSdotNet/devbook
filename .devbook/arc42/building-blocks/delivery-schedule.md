@@ -21,14 +21,14 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Nineteen skills in two halves: fifteen entry points that pick their own input, and four that
+Twenty skills in two halves: sixteen entry points that pick their own input, and four that
 put a trigger in the scheduler and read it back. Every one of them is also runnable by hand,
 which is how a cadence gets proved before it is trusted. Beside them: the shipped catalog, four
 contracts, the catalog checker, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, fifteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, sixteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
@@ -62,6 +62,19 @@ change, or earlier issue already covers. A `code-ahead` row names a capture plan
 asked for; a `spec-ahead` row, a change nobody proposed, stays in the schedule-report table.
 It reports and never writes a chapter or plans a capture on its own. The weekly
 `devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
+
+### schedule-devbook-update
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook-config.md#update", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-devbook-validate", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+Run `devbook-config:update` with the safe answer at every question it would ask a person, so
+outstanding migrations run and stale copies are refreshed from the plugins the cloud session
+loaded, and land what moved as one draft pull request. It installs no plugin and never runs
+`delivery-schedule:update`: that one writes to the scheduler, and a schedule changes only on a
+person's own turn, so it is listed as that person's step. `schedule-devbook-validate` finds the
+drift; this moves it. The weekly `devbook-update` trigger's target.
 
 ### schedule-instruction-review
 
@@ -403,7 +416,7 @@ A `schedule-*` skill that picks its own input, so it needs no person to hand it 
 unclassified issues and the top of the backlog, every pull request waiting on a reviewer, the
 outdated packages, the week's changes in the tracked repositories, the repository's own day or
 week, the instruction assets a model loads.
-Fourteen ship here.
+Sixteen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
@@ -534,7 +547,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: twelve trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| settings{"Would a cloud session load the marketplace?"}
@@ -613,6 +626,7 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
