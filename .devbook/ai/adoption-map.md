@@ -10,7 +10,7 @@ How this repository is itself built with AI. The assets it ships are the product
 described in `.devbook/arc42`; what follows is only how the work gets
 done here. The practices live one chapter each in the usage files; this file is the map.
 
-## Files
+**Files**
 
 Three files group the usages the way work happens for a repository whose product is
 Markdown: an asset is written, a change is carried to a commit, and the result is checked. A
@@ -22,7 +22,7 @@ file is a reading unit and places nothing — each chapter says its own stages o
 | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out and scheduling lanes nothing here has used. |
 | [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
 
-## Adoption Picture
+**Adoption Picture**
 
 The eight stages of the loop, with each chapter attached to the stages its `stage` lists.
 Shading is `status`. `build`, `release`, and `deploy` are empty because nothing here uses AI
@@ -55,7 +55,7 @@ graph LR
   class fanout,schedule,eval candidate;
 ```
 
-## How to Read It
+**How to Read It**
 
 `status` reuses the `tech/` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
