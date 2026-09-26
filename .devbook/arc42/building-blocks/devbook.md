@@ -196,6 +196,11 @@ report's action column names which of the other two a verdict calls for. It is t
 of the others take before they write, offered on its own for the question "is this chapter
 still true".
 
+Its evidence is the source and, per chapter, the tests its `tests` field names at the level
+its type calls for: `unit` for an invariant, `e2e` or `integration` for a requirement. It
+reads them as files and runs none of them, nor the application — a requirement proven only
+end to end would otherwise go unchecked, and running the product belongs to `capture-specs`.
+
 Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
 still one kind per run and still one table for all of it. Reading is cheap when nothing is
 written, and the question a person actually asks before a review — has this folder drifted —
@@ -752,7 +757,7 @@ Both open with the same resolve-and-verdict step, and `verify-change` is that st
 ```mermaid
 flowchart LR
     subgraph capture["capture-specs"]
-        code["Implementation and its unit tests"] --> resolveA["Resolve counterpart"]
+        code["Implementation and its tests"] --> resolveA["Resolve counterpart"]
         resolveA --> verdictA{"Drift verdict"}
         verdictA -->|"code-ahead"| write["Deliver the capture plan to the person"]
         verdictA -->|"aligned"| noop["Report and stop"]

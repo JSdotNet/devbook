@@ -125,7 +125,12 @@ Nothing else does. In particular:
 When a rule is visible only in a comment or a disabled test, it is not captured
 as fact. Record it as an open question in the chapter, or leave it out.
 
-### Unit tests are first-class evidence, not a cross-check
+### Tests are first-class evidence, not a cross-check
+
+Every level counts, read at the level the chapter's type calls for: `unit` tests
+for what a type guarantees, an `### Invariant:`; `e2e` tests — `integration` for a
+policy no user triggers — for what the product promises, a `### Requirement:`. A
+pass that reads only unit tests leaves every requirement unproven.
 
 A capture pass that reads only production code will systematically under-record
 two things, and both are exactly what a chapter is for.
