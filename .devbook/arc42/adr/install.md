@@ -12,8 +12,9 @@ where it does not. Either writes the payload one way — rules as a host-neutral
 records every copy's hash in the repository's stamp. A copy that still hashes to a release is
 replaced; one edited since is reported as customized and never overwritten. Only `devbook`,
 which rewrites content the repository authored, carries a contract version and a migration
-ledger; every other component is payload-only. This repository stamps itself and materializes
-nothing, because it is the payload's source.
+ledger; every other component is payload-only. This repository adopts its own plugins the
+same way, and its checker makes every vendored copy unable to drift from the plugin it came
+from.
 
 ## Why
 
@@ -81,13 +82,16 @@ repository with `devbook` alone still reaches `devbook:init` by asking for it in
 `delivery-schedule`'s pair stays visible: a person runs it directly to change a cadence, not
 only through the fan-out. A host that does not know the key ignores it and keeps listing them.
 
-**This repository materializes nothing.** A consuming repository has no generator until the
-install brings one; here it is `plugins/devbook/tools/devbook-meta/`, and a second copy under
-`.devbook/_tools/` would drift on the first edit. Landing the rule trios here would also fail
-the checker nine times, since a shipped rule carries no `paths`. The stamp lands anyway —
-`devbook-config:doctor` classes no stamp at all as hard drift — with `materialized` holding the one
-rendered section and nothing else. Hashes are taken over LF-normalized text, because the
-working tree is CRLF and the index LF.
+**This repository adopts like any other.** It was once exempt: a second copy of
+`plugins/devbook/tools/` under `.devbook/_tools/` would drift on the first edit, and a delivered
+rule trio failed the checker for want of `paths`. An exempt repository never exercised the
+install it ships, and every path a flow names — `.devbook/_tools/devbook-meta/build.mjs`
+among them — resolved everywhere but here. Both blockers are now checks rather than reasons:
+`tools/check-assets.mjs` recognizes a delivered rule or procedure by name and derives its
+wrappers from the shipping plugin, and fails when `.devbook/_tools/devbook-meta/` or
+`devbook-tech/` differs by a byte from `plugins/devbook/tools/`, so an edit to the plugin and
+the refresh of its copy land in one commit. Hashes and that comparison are taken over
+LF-normalized text, because the working tree is CRLF and the index LF.
 
 ## Rejected
 
@@ -100,7 +104,8 @@ working tree is CRLF and the index LF.
   that stays empty.
 - Reconciling the root wrappers after creating them: a root file is where a repository puts what
   it wants said to one host and not the other, so every later edit is a customization.
-- Vendoring the generator into this repository's own `.devbook/_tools/`.
+- Exempting this repository from its own install: nothing then tested the payload where it
+  is authored, and it was rejected on 2026-09-25 once the checker made the copies drift-proof.
 - One `install` that branches on whether the stamp exists: it hides which case a run is, and
   puts the adoption interview in front of an operation people run to change nothing.
 - Removing the component pairs in favour of `devbook-config`: every plugin installs alone, and
@@ -113,6 +118,7 @@ working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. |
 | 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. |
 | 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. |
 | 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. |

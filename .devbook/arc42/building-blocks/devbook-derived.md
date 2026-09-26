@@ -112,7 +112,7 @@ lint. It reads the Markdown, never `_meta/`, and writes nothing.
 
 It bundles no parser. It loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from
 `.devbook/_tools/devbook-meta/` — the path devbook's `init` materializes — at runtime, and
-from `plugins/devbook/tools/devbook-meta/` in the repository that vendors them; absent both,
+from `plugins/devbook/tools/devbook-meta/` in the repository that authors them; absent both,
 it names `devbook:init` and draws nothing. That runtime load is the "published shape to
 import" [the surfaces record](../adr/surfaces.md) waited for, and what closes it.
 
