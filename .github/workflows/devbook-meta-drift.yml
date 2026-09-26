@@ -1,0 +1,48 @@
+name: Devbook index drift
+
+# Reports, and never fails on, a committed _meta/ index that no longer matches
+# the Markdown on this branch. Installed by the `devbook-derived:init` skill.
+#
+# Forcing every devbook pull request to carry a regenerated index is what makes
+# those files conflict on merge, so this is advisory: the nightly refresh
+# (devbook-meta-nightly.yml) reconciles the default branch, and
+# ./build/Update-DevbookIndex.ps1 refreshes a branch on demand. Broken
+# references and schema violations are devbook's own check, devbook-meta.yml.
+#
+# The path filters below are rendered, not copied: delete the rows for folders
+# this repository has not adopted.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.devbook/arc42/**'
+      - '.devbook/tech/**'
+      - '.devbook/design/**'
+      - '.devbook/ai/**'
+      - '.devbook/_tools/devbook-meta/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: devbook-meta-drift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: Report drift in the committed indexes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Report drift in the committed indexes
+        run: |
+          node .devbook/_tools/devbook-meta/build.mjs --write
+          if ! git diff --quiet -- '*_meta/*.json'; then
+            echo "::warning::Derived _meta indexes have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"
+            git --no-pager diff --stat -- '*_meta/*.json'
+          fi

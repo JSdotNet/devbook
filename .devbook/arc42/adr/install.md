@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-25
+date: 2026-09-26
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -118,6 +118,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. |
 | 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. |
 | 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. |
 | 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. |

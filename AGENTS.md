@@ -37,8 +37,9 @@ change. The workflow calls `--check` only and never refreshes `_meta/`.
 
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only
-resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
-`devbook-validate` schedule refreshes the indexes daily and opens a pull request when they moved.
+resolvable by re-running the generator. Never regenerate or commit `_meta/` here, and run
+`build/Update-DevbookIndex.ps1` with `-Check` only — `devbook-meta-nightly.yml` and the
+`devbook-validate` schedule refresh the indexes daily and open a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook-derived/rules/devbook-derived-artifacts.md`. The checker is `devbook`'s and
@@ -126,8 +127,9 @@ rule and its two wrappers in the same commit; `node tools/check-assets.mjs` fail
 [.agents/rules/README.md](.agents/rules/README.md).
 
 The `devbook-*` rules beside them are delivered, not authored: `devbook:update` copies them
-from `plugins/devbook/rules/`, and they are edited there and refreshed here, never edited in
-place.
+from `plugins/devbook/rules/`, and `devbook-derived:update` copies `devbook-derived-artifacts`
+from `plugins/devbook-derived/rules/`. They are edited there and refreshed here, never edited
+in place.
 
 A rule fires when a host **reads** a matching file, so authoring one from scratch may not
 trigger it. Open a sibling first, or read the rule directly.
@@ -203,7 +205,7 @@ Put no secret in it — your home directory is not private.
 Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
-generated tool input, written by `plugins/devbook/tools/devbook-meta/build.mjs --write`. Never read one as a source of
+generated tool input, written by `.devbook/_tools/devbook-meta/build.mjs --write`. Never read one as a source of
 fact and never hand-edit one. Never regenerate or commit them in a session — the scheduled job owns that refresh. Fix what devbook's check reports in the source
 Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->
