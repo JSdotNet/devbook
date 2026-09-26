@@ -212,8 +212,8 @@
         },
         ".agents/skills/show.md": {
           "from": "1.8.0",
-          "hash": "sha256:11c64a5c3d2f6a17d7d9538ff8abdb2542d149b780a2ae2085fe6d3b87fd8461",
-          "managed": true
+          "hash": "sha256:82f6500a747cfd626dc3b750b53a831fa161c3ac10f5c06946eea0211c3af0ef",
+          "managed": false
         },
         ".agents/skills/start.md": {
           "from": "1.8.0",
