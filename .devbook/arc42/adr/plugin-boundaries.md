@@ -115,6 +115,7 @@ the handover ships no migration.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-26 | `devbook-procedures` seeds a fifth procedure, `estimate`: story points sized against the repository's own finished work, so a pace measured in points means the same across plans. Nothing depends on it; a caller that finds it absent sizes by its own rule and says so. |
 | 2026-09-21 | `fleet` is deleted: the issue sweep is a `delivery-schedule` entry point, sequential in one session, and nothing in the marketplace spawns a session. An unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request the sweep opens is a draft. |
 | 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. |
 | 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |

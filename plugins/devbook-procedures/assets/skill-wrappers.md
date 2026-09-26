@@ -1,11 +1,12 @@
 # A procedure, in the repository
 
-`assets/skills/` holds four procedures every repository has and no plugin can write: **start**,
+`assets/skills/` holds five procedures every repository has and no plugin can write: **start**,
 how its application comes up; **show**, how the feature being built is put in front of a
 reviewer; **capture**, how evidence is taken; **debug**, how a cause is found inside the running
-application. Each is repository-specific by nature — one product runs `aspire start`, the next
-`docker compose up`; one has tracing, the next has screenshots — and each has one goal that
-never varies. So the plugin fixes the goal and seeds the procedure, in the shape
+application; **estimate**, how work is sized against the repository's own finished work. Each
+is repository-specific by nature — one product runs `aspire start`, the next `docker compose
+up`; one has tracing, the next has screenshots; a 3 in one codebase is not a 3 in the next —
+and each has one goal that never varies. So the plugin fixes the goal and seeds the procedure, in the shape
 `devbook:init` uses for its rules: one editable copy, a managed wrapper per host.
 
 ```
@@ -61,6 +62,6 @@ edits a wrapper anyway keeps it — reported, left alone, like any customized fi
 
 `components.devbook-procedures.adopted` in `.devbook/config.json` names them, without
 ceremony: a repository with nothing to start drops `start`, `show`, and `debug`; one that takes
-no evidence drops `capture` and `show`. `init` asks on a first run and `update` never re-asks what
-the stamp answers. None is a dependency of anything: a caller that names one of these skills
+no evidence drops `capture` and `show`; `estimate` needs neither. `init` asks on a first run
+and `update` never re-asks what the stamp answers. None is a dependency of anything: a caller that names one of these skills
 and finds it absent does without and says so.

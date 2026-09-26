@@ -25,7 +25,7 @@ files follow the eleven plugin folders under `plugins/`, name for name.
 | --- | --- | --- |
 | [devbook](devbook.md) | L0 foundation | Addressed Markdown chapters, the `meta` block under them, the check, and the reconcile that puts the convention into a repository |
 | [devbook-derived](devbook-derived.md) | L1 on devbook | The committed `_meta/` index, its refresh paths, and the canvas that draws the graph |
-| [devbook-procedures](devbook-procedures.md) | L1 on devbook | The four procedures every repository has and no plugin can write — `start`, `show`, `capture`, `debug` — seeded once with a goal the plugin fixes and a body the repository owns |
+| [devbook-procedures](devbook-procedures.md) | L1 on devbook | The five procedures every repository has and no plugin can write — `start`, `show`, `capture`, `debug`, `estimate` — seeded once with a goal the plugin fixes and a body the repository owns |
 | [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
