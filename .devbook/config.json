@@ -207,8 +207,8 @@
         },
         ".agents/skills/debug.md": {
           "from": "1.8.0",
-          "hash": "sha256:6c24e16f47519e36ffbc6896a2313b2832e98e65093a58c59b6d01dce797bc3b",
-          "managed": true
+          "hash": "sha256:1e9475265ad52f1f7801c0cad3ec5e306716eb829d0ba322ad51a3d16c4f5def",
+          "managed": false
         },
         ".agents/skills/show.md": {
           "from": "1.8.0",

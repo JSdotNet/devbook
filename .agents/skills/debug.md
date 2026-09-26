@@ -4,56 +4,50 @@ description: "Find the cause of an issue observed in this repository's running a
 goal: "Name the cause of an observed issue and prove it with evidence — the log line, the trace span, or the breakpoint state that shows it — doing the debugging yourself rather than handing the person a debugger, and leaving no breakpoint, diagnostic line, or temporary setting behind in the change."
 ---
 
-# Debug the Application
+# Debug the Marketplace
 
-Go from a symptom to a cause with the evidence attached. **Edit this file** — where this
-repository's logs live, which debugger reaches it, and how a reproduction is set up are yours;
-the goal in the wrapper is not.
+What runs here is Node: the checker, the devbook-meta generator, a hook's command, an MCP
+server over stdio. Each can be run alone, outside a host, and that is always the first move —
+a cause reproduced without Claude Code in the loop is one whose evidence nobody has to take on
+trust.
 
-## Run it
+## Reproduce it alone
 
-Invoke the `start` skill and reuse the instance it reports. Reproduce the symptom once, the
-narrowest way that shows it — one request, one click, one command — and note the exact time.
-
-## Observe
-
-<!-- Where the running app can be seen from. Replace the example rows. -->
-
-| Signal | Where |
+| Symptom in | Run it as |
 | --- | --- |
-| Structured logs and traces | The Aspire dashboard `start` reports, or the Aspire MCP tools when the tool list has them |
-| Browser console and network | The browser tool's console and request tools |
-| Process output | The terminal `start` left running |
+| `check-assets` | `node tools/check-assets.mjs` — every message names its file; read that file first |
+| `build.mjs --check` | The same with `--scope <folder>`; `--print` emits the parsed documents as JSON, so a wrong value is read rather than guessed. Narrow further with `--root .wip/try/<slug>` over a minimal copy |
+| A hook | Its command from `hooks/hooks.json`, with `CLAUDE_PLUGIN_ROOT=plugins/<p>` and `CLAUDE_PROJECT_DIR` set to the repository it misbehaves in, the event payload on stdin |
+| An MCP server | The `command` and `args` from `mcpServers`, driven over stdio: `initialize`, `notifications/initialized`, then `tools/list` or the failing `tools/call`, one JSON-RPC message per line |
+| A skill or agent | Not code. Read what it loads by path and check each path resolves; the cause is almost always a pointer to nothing or two files that disagree |
 
-Read the window around the reproduction, not the whole log. Follow one request's trace end to
-end before reading a second. Quote the line or span that points at the cause.
+Reproduce once, the narrowest way that shows it, and note the exact command.
 
-## Break
+## Inside the host
 
-<!-- The debugger this repository is reached with. Replace the example. -->
+When it only fails under Claude Code, take the host's own log: `claude -p --plugin-dir
+plugins/<p> --debug-file .wip/evidence/<branch>/<NN>-debug.log "<prompt>"`, narrowed with
+`--debug hooks` or `--debug mcp`. Read the window around the failure, not the whole file.
 
-When a log cannot say what a value was, set a breakpoint and read it yourself:
+## Where a log cannot say
 
-- Attach with the debugger tool the live tool list exposes for this stack — a DAP-based MCP
-  server, or the host's own debug tool — at the file and line the trace points at, reproduce,
-  and read the locals.
-- No such tool in the list: add one temporary diagnostic — a log line or an assertion at that
-  line — rebuild, reproduce, read it, and remove it before anything else happens. Say that
-  you did.
+No debugger tool is in reach here. Add one temporary `console.error` at the line the output
+points at — stderr, so an MCP server's stdout protocol stays clean — rerun, read it, and remove
+it before anything else happens. Say that you did.
 
 Never ask the person to attach a debugger, set a breakpoint, or read a value for you.
 
 ## Report
 
-The cause in one sentence; the evidence that proves it — a quoted log line with its
-timestamp, a trace id and span, or the breakpoint's file, line, and the values read; the
-reproduction steps; and what a fix would touch. A cause without evidence is a hypothesis, and
-is reported as one.
+The cause in one sentence; the evidence — the checker message, the `--print` value, the
+JSON-RPC response, or the diagnostic's output, each captured through `capture` and cited by
+path; the reproduction command; and what a fix would touch. A cause without evidence is a
+hypothesis, and is reported as one.
 
 ## Never
 
-- Leave a breakpoint file, a temporary log line, a `.env` change, or a debug flag in the
-  change. `git diff` before reporting.
-- Change data or configuration to make the symptom go away instead of finding why it is
-  there.
-- Run destructive setup to reproduce — a database reset, a volume prune. Propose it instead.
+- Leave a diagnostic line, a `.wip/` file, or a settings change in the change. `git diff`
+  before reporting.
+- Regenerate or hand-edit a `_meta/` folder to make a check pass; the source Markdown is what
+  is wrong.
+- Weaken a check in `tools/check-assets.mjs` to make a symptom go away.
