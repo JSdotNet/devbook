@@ -189,6 +189,21 @@
     "derived": {
       "pluginVersion": "1.9.0",
       "materialized": {
+        ".agents/rules/devbook-derived-artifacts.md": {
+          "from": "1.9.0",
+          "hash": "sha256:4344c2e9f33ab4e9d953d4dc1db739b223fe6c070152b54f28c9b25b12bb056e",
+          "managed": true
+        },
+        ".claude/rules/devbook-derived-artifacts.md": {
+          "from": "1.9.0",
+          "hash": "sha256:5cd14940a5dcb4f7b819df31f3dfddba2edb5ac2240ac8ad2e254541d2c009e4",
+          "managed": true
+        },
+        ".github/instructions/devbook-derived-artifacts.instructions.md": {
+          "from": "1.9.0",
+          "hash": "sha256:45dd32eb696918b6180bb34edff7a96739691c559ca7f0627eaa80fbceaf24e6",
+          "managed": true
+        },
         ".github/workflows/devbook-meta-drift.yml": {
           "from": "1.9.0",
           "hash": "sha256:568f5dcab675b9be6b58656a20da8e9fc04763d30bd6e916289745f2096533c9",

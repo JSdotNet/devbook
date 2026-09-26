@@ -127,8 +127,9 @@ rule and its two wrappers in the same commit; `node tools/check-assets.mjs` fail
 [.agents/rules/README.md](.agents/rules/README.md).
 
 The `devbook-*` rules beside them are delivered, not authored: `devbook:update` copies them
-from `plugins/devbook/rules/`, and they are edited there and refreshed here, never edited in
-place.
+from `plugins/devbook/rules/`, and `devbook-derived:update` copies `devbook-derived-artifacts`
+from `plugins/devbook-derived/rules/`. They are edited there and refreshed here, never edited
+in place.
 
 A rule fires when a host **reads** a matching file, so authoring one from scratch may not
 trigger it. Open a sibling first, or read the rule directly.
