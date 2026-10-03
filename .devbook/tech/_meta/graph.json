@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 25,
+  "schemaVersion": 26,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
@@ -276,7 +276,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "marketplace-root",
           "level": 2,
-          "line": 7,
+          "line": 8,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -336,7 +336,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 110,
+          "line": 111,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -385,7 +385,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "schedule-plugin",
           "level": 2,
-          "line": 491,
+          "line": 492,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -425,7 +425,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 332,
+          "line": 333,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",

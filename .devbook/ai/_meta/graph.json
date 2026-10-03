@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 25,
+  "schemaVersion": 26,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/ai",
   "sources": [
@@ -269,7 +269,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 94,
+          "line": 126,
           "status": "active",
           "statusDeclared": false,
           "related": [

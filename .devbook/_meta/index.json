@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 25,
+  "schemaVersion": 26,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
@@ -133,7 +133,7 @@
               "title": "Chapter Schema",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-10-01",
+              "date": "2026-10-02",
               "summary": "A devbook is five folders of Markdown chapters under one parent — .devbook/arc42, .devbook/domain, .devbook/tech, .devbook/design, .devbook/ai — and nowhere else, each addressable heading carrying a fenced meta block. status is one field with one ladder per folder; on domain/'s ladder alone sit two…"
             },
             {
@@ -151,8 +151,7 @@
               "name": "configuration.md",
               "path": ".devbook/arc42/adr/configuration.md",
               "title": "Configuration",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "proposed",
               "date": "2026-09-29",
               "summary": "A repository's wiring is one committed file, .devbook/config.json: the engine's four keys — bindings, extensions, policy, gates — beside every component's components.<name> entry and a committed id. Unknown keys are rejected by name. A config.local.json outside every clone overlays the engine keys…"
             },
@@ -172,8 +171,7 @@
               "name": "flow-engine.md",
               "path": ".devbook/arc42/adr/flow-engine.md",
               "title": "Flow Engine",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "proposed",
               "date": "2026-09-30",
               "summary": "delivery is a flow engine: four flows named for what changes — flow-code, flow-spec, flow-update-packages, flow-project — over a closed set of eleven extension points, seven services and four chores, that a repository fills and never extends. Everything a flow talks to outside the engine is a…"
             },
