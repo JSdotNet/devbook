@@ -501,7 +501,7 @@ a host frames it sandboxed without same-origin.
 
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
-`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta.
+`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta, one of the two routes a demo has into `domain/`.
 `demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address, and
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`

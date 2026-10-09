@@ -112,11 +112,12 @@ A repository edits the body to meet it and never edits it.
 
 `prototype` is the only writer of a demo outside the template's managed region, per the
 [demos record](../adr/demos.md). Its file
-stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
+stays a standalone prototype until its author carries it into `domain/`, in a `flow-spec` pull
+request or an OpenSpec proposal, and a
 prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
 exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
 delta to `domain.md`, `flow.md`, or an invariants subpage. The seed's body carries the rest of
-the record: variants trimmed to the chosen one only when a proposal carries the file, walkthroughs
+the record: variants trimmed to the chosen one only when the file is carried into `domain/`, walkthroughs
 listed in `demo-model` by id — the scenario's slug when one is played — data at real density,
 the 500 KB target kept with inline SVG, shared markup, and page demos and allowed to be exceeded,
 and the two things it is not for: a settled design goes to `flow-code`, a bug to `diagnose`.

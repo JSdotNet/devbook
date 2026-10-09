@@ -99,7 +99,7 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
 - **Walkthroughs** are listed in `demo-model` by `id`, and the id is the scenario's slug when the
   walkthrough plays a `#### Scenario:` — `a-declined-card-keeps-the-basket` — each step's `text`
   the scenario line it shows. The happy path first, then each edge case.
-- **Trim to the chosen variant only when a proposal carries the file**: drop every other
+- **Trim to the chosen variant only when the file is carried into `domain/`**: drop every other
   variant's markup and `demo-model` entries, keep the chosen one's ids and anchors, and list what
   went. Until then every variant stays.
 - **Revising a demo:** keep every id and anchor that still exists; rename none without cause.
@@ -123,7 +123,8 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
 
 - Open it in the host's inline browser when it has one; otherwise give the path.
 - **The answer, one line, first**, for whoever asked — never written into the file. Then where it
-  lands: a UI answer as the file itself, carried by a proposal as a demo with one variant; a
+  lands: a UI answer as the file itself, carried into `domain/` as a demo with one variant — in a
+  `flow-spec` pull request or by a proposal, its author's choice; a
   logic answer as a delta to `domain.md`, `flow.md`, or an invariants subpage; or nowhere, the
   file kept as evidence of what was tried. A person decides; the answer is a proposal until they do.
 - Then the path, the size, the screens or walkthroughs shown, per convention the guideline,
@@ -132,7 +133,7 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
 
 ## Never
 
-- Write into `.devbook/` or `openspec/`. The answer reaches them only through a change.
+- Write into `.devbook/` or `openspec/`. A person carries the answer there, never this procedure.
 - Write a stage, status, verdict, or page name into the file.
 - Change a source file, a story, or a guideline to make the prototype fit. A gap is a finding.
 - Merge the prototype, harden it, or present it as the implementation.

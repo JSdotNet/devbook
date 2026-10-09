@@ -166,7 +166,7 @@ The agreed, clickable picture of what a person sees in a bounded context: one se
 HTML file in `domain/<context>/`, built on the repository's demo template. It is the source of
 truth for which screens exist, how a person moves between them, their copy, and their states.
 A rule, a term, or a design token still wins where the demo disagrees. A demo is a prototype
-that an OpenSpec proposal carried into `domain/`, and the file itself never says so: only its
+its author carried into `domain/`, by a `flow-spec` pull request or an OpenSpec proposal, and the file itself never says so: only its
 location does. It is never the running application.
 
 ## Derived Index

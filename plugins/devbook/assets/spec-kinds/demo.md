@@ -12,7 +12,7 @@ the kind.
 | File | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or any other `*.demo.html` a chapter's `demo` field names |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` for the `demo` field |
 | Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; `domain.md`'s ubiquitous language for the copy |
-| Plan target | None. Only `/prototype` writes a demo, and it reaches `domain/` only as a demo delta of a change, per `devbook-changes.md` |
+| Plan target | None. Only `/prototype` writes a demo; it reaches `domain/` directly in a `flow-spec` pull request or as a demo delta of a change, per `devbook-domain.md` |
 | Index scope | `--scope domain` |
 | Extra input | The front end that renders the screens, and the e2e tests the requirements' `tests` name beside their walkthroughs |
 

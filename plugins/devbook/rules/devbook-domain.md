@@ -276,8 +276,13 @@ The file is one HTML document built on the repository's demo template,
 `.devbook/design/demo-template.html`: every style, script, and image inline and
 nothing fetched, the template's managed region kept byte for byte, and no
 `<script>` outside it except `demo-model` and `demo-meta`. It aims at 500 KB and may exceed it.
-Only `/prototype` writes one, and it reaches `domain/` only as a delta of a
-change, per `devbook-changes.md`; it is never edited in place. The one exception
+Only `/prototype` writes one. It lands as a copy of a prototype trimmed to the
+agreed variant, by whichever route its author picks: directly, in a `flow-spec`
+pull request whose description records the verdict — the question and its
+answer — or, where the change folder is adopted, as a demo delta of a change,
+per `devbook-changes.md`, with the verdict in the proposal's `Why`. Both routes
+are equal, and neither is owed the other. Once landed it is never edited in
+place: a revision starts from a new prototype of the current demo. The one exception
 is the managed region: `demo-template.mjs --refresh` rewrites it in every demo
 from the template, and touches nothing else in the file. The region stands outside
 the page's fingerprint, so a refresh lifts no approval.

@@ -8,7 +8,8 @@ related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/buildin
 A demo is the agreed, clickable picture of what a person sees in a bounded context. It is one
 self-contained HTML file under `domain/`, and it is a separate artifact from the disposable
 prototype it grew from. Only `/prototype` writes or revises one, always as a standalone file,
-and that file becomes a demo only when an OpenSpec proposal carries it as a delta.
+and that file becomes a demo when its author carries it into `domain/`: directly in a
+`flow-spec` pull request, or as a delta of an OpenSpec proposal.
 
 ## Why
 
@@ -59,6 +60,7 @@ ends in.
 stateDiagram-v2
     [*] --> Prototype: /prototype writes it
     Prototype --> Prototype: not taken further, kept as evidence
+    Prototype --> Demo: a flow-spec pull request copies it in
     Prototype --> ProposedDemo: a proposal carries it as a delta
     ProposedDemo --> Demo: approved, built, accepted, delta.mjs --apply
     Demo --> Prototype: /prototype revises it, ids kept
@@ -70,10 +72,13 @@ the demo, and only their location says which. A prototype sits wherever the repo
 `prototype` procedure body says, never under `.devbook/` or `openspec/`. A proposed demo sits
 under the change's `devbook-delta/domain/<context>/`. The demo sits in `domain/<context>/`.
 
-A prototype needs no change, no task, and no approval. It enters the change process only when
-an OpenSpec proposal copies it in as a delta at the path where it will land. The proposal's
-approval covers it from then on. A demo is never edited in place: every revision starts by
-prototyping from the current demo.
+A prototype needs no change, no task, and no approval. Its author picks the route into
+`domain/` per demo, and both are equal. A `flow-spec` pull request copies it in directly,
+with the verdict in the pull request's description, and the review of that pull request is
+its agreement. An OpenSpec proposal copies it in as a delta at the path where it will land,
+with the verdict in the proposal's `Why`, and the proposal's approval covers it from then on.
+The second route exists only where the change folder is adopted. Either way a demo is never
+edited in place: every revision starts by prototyping from the current demo.
 
 ### How prototyping works
 
@@ -82,8 +87,8 @@ prototyping from the current demo.
 
 `/prototype` starts from a question it can state in one sentence and ends with a one-line
 answer for whoever asked. The question goes into the file. The answer does not, because a
-verdict is a step in a lifecycle the file does not know. When a proposal carries the
-prototype, that answer becomes the proposal's verdict.
+verdict is a step in a lifecycle the file does not know. When the prototype is carried into
+`domain/`, that answer becomes the verdict of the pull request or the proposal that carries it.
 
 | | UI mode | Logic mode |
 | --- | --- | --- |
@@ -161,6 +166,11 @@ and `archive` skills carry a demo delta from proposal to archive.
   anyone knew whether the idea was worth one. A standalone file costs nothing to throw away.
 - **Promoting a logic prototype.** It is running code. Hardening it is building the
   application, which is where prototyping stops.
+- **The change folder as a demo's only route.** It left a repository that had not adopted
+  OpenSpec no way to land a demo at all, and made a reviewer flag a demo copied in a
+  `flow-spec` pull request although nothing about the demo was wrong. A per-repository policy
+  key to restore that mandate was rejected too: the author knows per demo whether it needs a
+  change's two gates, and a key adds wording for two cases to every rule that mentions a demo.
 - **A product-level demo.** It would duplicate the screens of every context it crosses and
   belong to none of them.
 - **A hard size limit.** A large context can need more than 500 KB, and refusing it would push
@@ -176,6 +186,7 @@ and `archive` skills carry a demo delta from proposal to archive.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
