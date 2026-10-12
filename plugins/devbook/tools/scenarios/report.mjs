@@ -9,7 +9,8 @@
 //   - A run that executed none of a page's parts writes nothing for it:
 //     `playwright test --list` schedules every part and runs none.
 //   - A failed part records the step that threw and its message.
-//   - A label the run did not reach keeps its file and its earlier entry.
+//   - A label the run did not reach keeps its file and its earlier entry,
+//     signature included: each shot names the signature of the run that took it.
 //   - A file whose label the page no longer has is pruned, and so is a failure
 //     screenshot of a part that did not fail this time.
 //
@@ -159,11 +160,11 @@ export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, pag
             await putImage(captured[label], path.join(folder, file));
             written.push(file);
             keep.add(file);
-            shots[label] = { file, part: partOf.get(label), ranAt };
+            shots[label] = { file, part: partOf.get(label), ranAt, signature: signature ?? null };
         } else if (existing.includes(file)) {
             keep.add(file);
             const before = previous?.shots?.[label];
-            shots[label] = { file, part: partOf.get(label), ranAt: before?.ranAt ?? null };
+            shots[label] = { file, part: partOf.get(label), ranAt: before?.ranAt ?? null, signature: before?.signature ?? null };
         }
     }
 

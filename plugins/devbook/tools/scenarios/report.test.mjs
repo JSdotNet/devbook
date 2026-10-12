@@ -1,7 +1,7 @@
 // The run reporter: run.json version 2 with its English fields, one PNG per
 // label, a filtered run writing nothing, an unreached label keeping its file,
 // a dropped label pruned, the failure screenshot and the failing step of a
-// failed part, and a listing writing nothing.
+// failed part, each shot's signature, and a listing writing nothing.
 //
 // Run: `node --test report.test.mjs`
 import { test } from "node:test";
@@ -98,8 +98,8 @@ test("writeRun writes run.json version 2 and one PNG per label", async () => {
             { title: "An item is moved", anchor: "an-item-is-moved", outcome: "passed", durationMs: 900 },
         ]);
         assert.deepEqual(run.shots, {
-            "statuses-set-up": { file: "statuses-set-up.png", part: "statuses-are-set-up", ranAt: "2026-10-08T08:30:00.000Z" },
-            "item-moved": { file: "item-moved.png", part: "an-item-is-moved", ranAt: "2026-10-08T08:30:00.000Z" },
+            "statuses-set-up": { file: "statuses-set-up.png", part: "statuses-are-set-up", ranAt: "2026-10-08T08:30:00.000Z", signature: "1234abcd" },
+            "item-moved": { file: "item-moved.png", part: "an-item-is-moved", ranAt: "2026-10-08T08:30:00.000Z", signature: "1234abcd" },
         });
         assert.deepEqual((await readdir(runFolder(root))).sort(), ["item-moved.png", "run.json", "statuses-set-up.png"]);
         assert.equal(await readFile(path.join(runFolder(root), "statuses-set-up.png"), "utf8"), "a.png");
@@ -125,14 +125,15 @@ test("an unreached label keeps its file and earlier entry; a dropped label and a
 
         const second = "2026-10-08T00:00:00.000Z";
         const { pruned } = await writeRun({
-            repoRoot: root, page, signature: "1234abcd", ranAt: second, profile: "tenant-acme", effectiveConfig: null,
+            repoRoot: root, page, signature: "5678ef00", ranAt: second, profile: "tenant-acme", effectiveConfig: null,
             parts: { "statuses-are-set-up": { outcome: "failed" } },
             captured: { "statuses-set-up": { path: path.join(root, "out/b.png") } },
         });
         const run = await readRun(root);
         assert.equal(run.parts[1].outcome, "not-run");
-        assert.equal(run.shots["statuses-set-up"].ranAt, second);
-        assert.deepEqual(run.shots["item-moved"], { file: "item-moved.png", part: "an-item-is-moved", ranAt: first });
+        assert.deepEqual(run.shots["statuses-set-up"], { file: "statuses-set-up.png", part: "statuses-are-set-up", ranAt: second, signature: "5678ef00" });
+        // Kept from the first run, with the signature of the run that took it.
+        assert.deepEqual(run.shots["item-moved"], { file: "item-moved.png", part: "an-item-is-moved", ranAt: first, signature: "1234abcd" });
         assert.deepEqual(pruned.sort(), ["fail.an-item-is-moved.png", "old-label.png"]);
         assert.deepEqual((await readdir(runFolder(root))).sort(), ["item-moved.png", "run.json", "statuses-set-up.png"]);
     } finally {

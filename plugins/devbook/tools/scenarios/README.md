@@ -116,14 +116,15 @@ export default defineConfig({
 | `ranAt`, `profile`, `effectiveConfig` | When, under which profile, and the tenant, flags, settings, and data sets it resolved to |
 | `parts[]` | `title`, `anchor`, `outcome` — `passed`, `failed`, or `not-run` — `durationMs`, and for a failed part `failureShot` and `failure` |
 | `parts[].failure` | `step`, the number of the page step that threw, counted across the part from 1, or `null` when the error came from outside every step; `message`, the error without terminal colours |
-| `shots` | Per label: `file`, the `part` anchor, and the `ranAt` of the run that captured it |
+| `shots` | Per label: `file`, the `part` anchor, and the `ranAt` and `signature` of the run that captured it |
 
 A filtered run writes nothing: a page is written only when every part its spec declares was
 scheduled, so `--grep`, `.only`, and a line filter all count. A run that executed none of a
 page's parts writes nothing for it either, so `playwright test --list` leaves every run alone.
-A label the run did not reach keeps its file and its earlier entry. A PNG whose label the
-page dropped is pruned. A part that needed a retry is `failed`. `failure` came after the first
-version-2 reporter, so a reader treats it as optional.
+A label the run did not reach keeps its file and its earlier entry, signature included: a
+reader holds each shot against the page through its own `signature`, not the run's. A PNG
+whose label the page dropped is pruned. A part that needed a retry is `failed`. `failure` and a
+shot's `signature` came after the first version-2 reporter, so a reader treats both as optional.
 
 ## The coverage check
 
