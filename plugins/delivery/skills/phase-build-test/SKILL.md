@@ -72,7 +72,8 @@ starts repairing turns a cheap summary into a repair session nobody reviews.
 - Build result (pass/fail) and the failing targets when red.
 - Unit and E2E test results with pass/fail counts.
 - The failing targets, each named with the error that identifies it, not with the
-  surrounding log — this is what the ready check puts in its brief.
+  surrounding log — this is what the ready check puts in its brief, and what the flow-runner
+  records as one escaped defect each under **Quality Facts** in `resources/surface-contract.md`.
 
 These are what the sub-agent returns, and all of it.
 

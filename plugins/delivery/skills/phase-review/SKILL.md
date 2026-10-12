@@ -46,4 +46,4 @@ Append this round to `review.md` in the run folder the brief names, under `## <s
 - **Blockers** — `rule` and `bug`, each `- [kind] path:line — finding. Cites: …` with `open` or `fixed`.
 - **Advisories** — `smell` and `risk`, same shape, a smell with its fix.
 
-Return its path and the counts — blockers open, blockers fixed, advisories — never the findings' text. The flow-runner hands the open blockers to `phase-implement` as its fix brief; Personal Validation's Step 4 presents `review.md` as the code review, in those three groups, and the pull request description carries the same list. Phase order: `../../resources/flow-phases.md`.
+Return its path and this round's counts — `rule` open and fixed, `bug` open and fixed, advisories — never the findings' text; the flow-runner reports them as `blockers` under **Quality Facts** in `../../resources/surface-contract.md`. The flow-runner hands the open blockers to `phase-implement` as its fix brief; Personal Validation's Step 4 presents `review.md` as the code review, in those three groups, and the pull request description carries the same list. Phase order: `../../resources/flow-phases.md`.

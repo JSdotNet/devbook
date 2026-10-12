@@ -131,7 +131,8 @@ those contracts; it does not re-decide them per skill.
      `policy.review.retryBudget` rounds are spent, then the next slice. Both run from this
      session, one level deep; a forked `implement` is never relied on to fork the reviewer.
      Blockers still open go to the ready check. `policy.phases.review: false` runs `implement`
-     alone. A `revise: phase-scope` from `implement` re-runs Scope rather than redesigning inline.
+     alone. Count every review pass per slice, take each round's `rule` and `bug` counts from
+     what `phase-review` returns, and send both as `quality` on Review's closing call. A `revise: phase-scope` from `implement` re-runs Scope rather than redesigning inline.
    - **The ready check, back to implement.** Before Personal Validation, run `phase-ready`
      inline, never configured: it reads what the earlier phases recorded and does no
      new work. Not ready with `policy.ready.retryBudget` left: write a brief of exactly what
@@ -184,7 +185,10 @@ those contracts; it does not re-decide them per skill.
 16. **Track the run durably.** The run state the surface persists is the source of truth, not
     the conversation. Persist `changeKind`, `approval`, the resolved phases, the loop rounds
     spent, and the resolved stack config so a compacted or resumed session recovers the run's
-    position and gate state.
+    position and gate state. Keep `quality` there too — the review rounds, the blockers, and
+    every defect found after review, tagged with the stage that found it, a Personal Validation
+    `revise` among them — per **Quality Facts** in `surface-contract.md`, and send
+    it whole on `finish_run`.
 17. **Watch the context gauge, never author it.** Stage token deltas and the run-level gauge
     are captured automatically; do not invent, estimate, or write token numbers into stage
     output or the summary. Judge which stage is expensive on the **uncached** figure, never

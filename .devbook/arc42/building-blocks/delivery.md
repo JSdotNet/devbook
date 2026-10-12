@@ -321,6 +321,7 @@ another block.
 | A stage repeated after a revise decision is recorded as repeated, not as one long stage | `update_stage()` | untested |
 | A revise round reports on the stage of the phase it reopens, never on Personal Validation | the flow-runner | untested |
 | A run records each phase as resolved, in `runContext.phases`, and each stage as it actually ran, in its `execution` | `set_run_context()`, `update_stage()` | untested |
+| A run keeps its quality facts in `runContext.quality` as they accrue, so a resumed session continues the count, and sends them whole on `finish_run` | the flow-runner | untested |
 | A run whose surface is unbound still produces its file artifacts and says so once | all stages | untested |
 
 A run owns one entity, one value object, and one enum.
@@ -572,6 +573,8 @@ Payload:
 - `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
   entry per sub-agent call — beside what the run resolved for it
 - `decision`: the gate outcome, where a gate was attached to this phase
+- `quality`: optional, on the Review stage; the review rounds each slice took and the `rule`
+  and `bug` blockers each round left open or fixed, as they stand so far
 
 Consumers: every surface implementation. The dashboard renders it live, and the collector keeps
 it for the report and for a resumed session. The Backlog surface hands it to the app, which
@@ -585,6 +588,11 @@ Published language rules:
 - **Scenario evidence is additive.** `evidence` joins the lifecycle group without raising it
   past `@1`: a run that ran no scenario page sends none, and a surface that does not read it
   keeps everything else the stage carries.
+- **Quality is reported, never derived.** Only the phase that reviews or verifies the work knows
+  how many rounds it took, what review blocked, and what got past it, so the engine sends
+  those facts with the stage that found each, and a surface that keeps them records them as
+  sent and derives none. They are
+  additive under `@1`, and they never enter how a run is priced.
 - **A repeat is a repeat.** A stage finishing twice is recorded twice, because a revise
   decision that reads as one long stage has erased the decision.
 - **Telemetry is never written by hand.** A surface that measures reports it, and one that does
@@ -608,6 +616,9 @@ Payload:
 - `report`: where the exported report was written, when a surface answered the export group
 - `verdicts`: optional; the unit rows of a sync sweep's `devbook-sync-report`, each with its
   direction, verdict, action, link, and the verdict and evidence per chapter
+- `quality`: optional; the run's totals of review rounds and blockers, and every defect found
+  after review, each tagged with the stage that found it — Build & Test, Verify, the ready
+  check, or Personal Validation
 
 Consumers: every surface implementation, for the report and for closing the run; and
 [delivery-schedule](delivery-schedule.md)'s issue sweep. Its brief reports every resolution's
