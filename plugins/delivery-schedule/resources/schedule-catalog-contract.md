@@ -112,9 +112,13 @@ that creates it, so `delivery-schedule:update` runs from the main checkout and n
 worktree: a worktree is removed with its session, and the routine would start in a folder
 that no longer exists. The catalog's `cron` is UTC and the scheduler reads the machine's own
 timezone, so the sync converts it and reports both side by side. The session never works in
-the checkout itself: the preamble's rule 1 makes it add a worktree of `{{base}}` under
-`{{checkout}}/.claude/worktrees/`, which keeps the fresh checkout the rest of the preamble
-assumes. It takes no repository, no environment, no model, and no tool allowlist; the tools a
+the checkout itself. **The routine's worktree option is on by default:** the host then starts
+each run in a worktree of its own, and the preamble's rule 1 moves it to `origin/{{base}}`.
+A scheduler whose `create` or `update` takes the option is passed it on; one that does not —
+Claude Code's `scheduled-tasks` today — gets a report row per routine telling the person to
+switch it on in the host's own page. With the option off, rule 1 adds a worktree of `{{base}}`
+under `{{checkout}}/.claude/worktrees/` instead, so either way the run gets the fresh checkout
+the rest of the preamble assumes. It takes no repository, no environment, no model, and no tool allowlist; the tools a
 run uses are approved on the routine itself, which is why the first run is fired by hand.
 
 **A cloud copy is retired, never kept beside it.** When a cloud scheduler is reachable as

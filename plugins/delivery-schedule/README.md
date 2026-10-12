@@ -166,7 +166,9 @@ data; only the scheduler resolution knows which tool answers.
 A routine loads the plugins installed on this machine for the checkout, so install every
 plugin a schedule `requires` first: `delivery-schedule:update` skips a schedule whose plugin
 this session has not loaded, and names it. Run it from the repository's main checkout, never a
-worktree — the routine keeps the folder it was created from. The first run is the proof, and
+worktree — the routine keeps the folder it was created from. Keep each routine's worktree
+option on, its default here: `delivery-schedule:update` sets it where the scheduler lets it,
+and names every routine you still have to switch on in the host's own page. The first run is the proof, and
 it is where the routine's tools are approved: fire one with `schedule-run` and read it with
 `schedule-status` before trusting the cadence. A local scheduler runs only while its host
 is running; a routine due while it was closed runs on the next launch.

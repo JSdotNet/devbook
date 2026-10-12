@@ -251,6 +251,7 @@ belongs to a person's map.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. |
 | 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. |
 | 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. |
 | 2026-10-05 | The fold lands: the seeds, the wrapper shape, and the demo template and sample move under `devbook`'s `assets/procedures/`, `devbook:init` and `devbook:update` adopt and reconcile the procedures, the session-start paragraph joins devbook's hook, and `devbook-procedures` leaves the marketplace. |

@@ -40,15 +40,17 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    body, placeholders substituted, `{{maxResolve}}` from the stamp's override when it has
    one — then `list` and match on `<owner>/<repo> · <title>`: `update` on a match, `create`
    otherwise, with the cron (the stamp's override when it has one) converted to this
-   machine's timezone and `enabled: true`. Then set `enabled: false`
+   machine's timezone, `enabled: true`, and the worktree option on wherever the scheduler
+   takes it — the contract's *What a local routine changes*. Then set `enabled: false`
    on every entry carrying this repository's name prefix that is no longer selected, and say
    that deleting one is done on the host's own page.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —
    and no other key in the file. Leave the commit to the user, and say so.
 8. **Report** one table: schedule, the catalog's UTC cron beside the local one, created /
-   updated / disabled / retired / skipped with the reason, and the link the scheduler
-   returned. Close by pointing at `schedule-run`: a routine's tools are approved on its first
-   run, so the first one is fired while a person is there to approve them.
+   updated / disabled / retired / skipped with the reason, the worktree option — *on*, or
+   *switch on in the host's page* where the scheduler could not set it — and the link the
+   scheduler returned. Close by pointing at `schedule-run`: a routine's tools are approved on
+   its first run, so the first one is fired while a person is there to approve them.
 
 ## Do not
 
