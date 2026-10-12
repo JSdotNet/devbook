@@ -13,12 +13,31 @@ to `.devbook/_tools/scenarios/` where `domain/` is adopted. Edit the plugin, nev
 | `scenario-page.vector.json` | The shared vector every implementation of the signature is tested against |
 | `setup.mjs`, `setup.ts` | The runner a derived spec imports: effective configuration, the setup hook, one browser context per portal, `start` |
 | `shot.ts` | `shot(page, label)` and the failure screenshot taken in `afterEach` |
+| `playwright.mjs` | Finds the `@playwright/test` the suite runs under, for the two `.ts` files |
+| `package.json` | `"type": "module"`, so Playwright loads the two `.ts` files and the `.mjs` they import as ES modules |
 | `report.mjs` | The Playwright reporter that writes `run.json` version 2 and the PNGs |
 | `check.mjs` | The coverage check |
 
-Everything ending in `.mjs` is plain Node with no dependencies. The two `.ts` files import
-`@playwright/test`, which the repository's e2e suite already has, and load the `.mjs` modules
-beside them — which needs Node 22.12 or later, or an ESM test package.
+Everything ending in `.mjs` is plain Node with no dependencies. The two `.ts` files use
+`@playwright/test`, which the repository's e2e suite already has.
+
+## Where the suite lives
+
+The suite is an ES module package — its `package.json` says `"type": "module"` — either the
+repository root or a folder of its own, such as `.test/` with its own `node_modules`. Both work
+with no mapping in a tsconfig and no file added under `.devbook/_tools/`:
+
+- `playwright.mjs` resolves `@playwright/test` from the script Playwright runs, then the
+  working folder, then this folder — so the runner and the suite share one Playwright, and a
+  copy at the root never shadows the suite's own.
+- The `package.json` here makes this folder an ES module scope, so its `.ts` files load as ES
+  modules whatever the suite above it is.
+
+`tsc` over the specs follows the import into this folder, and looks for the Playwright types
+from here. Where the suite is its own package, map them in the tsconfig `tsc` runs with —
+`"paths": { "@playwright/test": ["./node_modules/@playwright/test"] }` — and leave the Playwright
+config's `tsconfig` without it: Playwright needs no mapping, and one there changes which entry
+of the package every spec loads.
 
 ## The contract
 
