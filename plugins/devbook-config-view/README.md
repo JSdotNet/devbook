@@ -62,4 +62,5 @@ is the **Phases** table in `plugins/delivery/resources/engine-contract.md`.
 
 `types/index.d.ts` declares the plugin's `$.state` — `rollout`, `view`, `selected` under
 `devbook-config-view` — and the manifest's `types` key points at it. The
-`.claude-plugin/types/` folder `tsconfig.json` extends is written by the host and is ignored.
+`.claude-plugin/types/` folder `tsconfig.json` extends is written by the host and is ignored. From a worktree, where it is absent,
+`node tools/typecheck-mod.mjs plugins/<name>` type-checks the mod in one command.
