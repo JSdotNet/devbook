@@ -105,4 +105,5 @@ does for a typed `revise`. In `/flows-demo` the buttons only say what they would
 `seen` under `delivery-run-view` — and the manifest's `types` key points at it, which is what
 `claude plugin validate` checks the module's state reads and writes against. The
 `.claude-plugin/types/` folder `tsconfig.json` extends is written by the host for type-checking
-and is ignored.
+and is ignored. From a worktree, where it is absent,
+`node tools/typecheck-mod.mjs plugins/<name>` type-checks the mod in one command.
