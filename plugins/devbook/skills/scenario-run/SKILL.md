@@ -30,8 +30,8 @@ The reporter writes only for a run that covered a whole page. The contract is in
    `SCENARIO_PROFILE` unset unless the person asked for one profile across every page, and say
    so when it was set.
 5. **Report** from `<scenario folder>/<stem>/run.json`: per page its signature and profile, per
-   part its `outcome` — `passed`, `failed`, or `not-run` — and for a failed part the step, the
-   message from the Playwright output, and the screenshot its `failureShot` names. Name each
+   part its `outcome` — `passed`, `failed`, or `not-run` — and for a failed part the step and
+   message its `failure` holds and the screenshot its `failureShot` names. Name each
    label's PNG. A part a `test.fixme()` holds back reads `not-run`: report it as unfinished, not
    as a defect.
 6. **Leave the files in the working tree.** `run.json` and the PNGs are committed with the change

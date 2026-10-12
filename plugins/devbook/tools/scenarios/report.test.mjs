@@ -1,7 +1,7 @@
 // The run reporter: run.json version 2 with its English fields, one PNG per
 // label, a filtered run writing nothing, an unreached label keeping its file,
-// a dropped label pruned, the failure screenshot of a failed part, and a
-// listing writing nothing.
+// a dropped label pruned, the failure screenshot and the failing step of a
+// failed part, and a listing writing nothing.
 //
 // Run: `node --test report.test.mjs`
 import { test } from "node:test";
@@ -11,7 +11,7 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseScenarioPage } from "./parse.mjs";
-import ScenarioReporter, { outcomeOf, specFileOf, writeRun } from "./report.mjs";
+import ScenarioReporter, { failureOf, outcomeOf, plainMessage, specFileOf, writeRun } from "./report.mjs";
 
 const F = "```";
 const PAGE_PATH = ".devbook/domain/work/set-up-and-fill-the-backlog.md";
@@ -261,6 +261,38 @@ test("a listing — every part scheduled, none run — writes nothing", async ()
     try {
         await report(root, fakeRun(root, { results: {} }));
         assert.equal(existsSync(runFolder(root)), false);
+    } finally {
+        await rm(root, { recursive: true, force: true });
+    }
+});
+
+test("failureOf: the page step whose step() threw, numbered across the part, and the message without colours", () => {
+    const part = parseScenarioPage(PAGE, PAGE_PATH).parts[1];
+    const error = { message: "\u001b[31mExpected: 3 columns\u001b[39m\nReceived: 2" };
+    const steps = [
+        { title: "Before Hooks", category: "hook", steps: [] },
+        { title: "When I drag it", category: "test.step", steps: [] },
+        { title: "Then  it moves", category: "test.step", error, steps: [{ title: "expect.toHaveCount", category: "expect", error, steps: [] }] },
+    ];
+    assert.deepEqual(failureOf(part, steps, error), { step: 2, message: "Expected: 3 columns\nReceived: 2" });
+    // Thrown outside every page step — in the setup, say — the message stands alone.
+    assert.deepEqual(failureOf(part, [{ title: "beforeAll hook", category: "hook", error, steps: [] }], error), { step: null, message: "Expected: 3 columns\nReceived: 2" });
+    assert.equal(plainMessage("x".repeat(3000)).length, 2001);
+});
+
+test("the reporter records a failed part's step and message in run.json, and a passed part none", async () => {
+    const root = await repo();
+    try {
+        const error = { message: "Expected: 3 columns" };
+        await report(root, fakeRun(root, {
+            results: {
+                "Statuses are set up": [{ status: "passed", duration: 1, attachments: [], steps: [] }],
+                "An item is moved": [{ status: "failed", duration: 1, attachments: [], error, steps: [{ title: "Then it moves", category: "test.step", error, steps: [] }] }],
+            },
+        }));
+        const run = await readRun(root);
+        assert.equal(run.parts[0].failure, undefined);
+        assert.deepEqual(run.parts[1].failure, { step: 2, message: "Expected: 3 columns" });
     } finally {
         await rm(root, { recursive: true, force: true });
     }

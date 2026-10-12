@@ -717,6 +717,7 @@ not installed, the repository's own specs are the model.
 | A filtered run writes nothing; a label the run did not reach keeps its file; a label the page dropped is pruned | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | A part is grouped under the spec of its file suite, not the `setup.ts` that declares it | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | A run that executed none of a page's parts, such as a listing, writes nothing | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| A failed part records the page step that threw, numbered across the part, and its message | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | The runner takes `@playwright/test` from the running Playwright before its own folder, and loads as an ES module | `playwright.mjs`, `package.json` | `unit:node:plugins/devbook/tools/scenarios/playwright.test.mjs` |
 | `runSetup` declares `dataFolder` as taking a name, so a consumer's `tsc` passes through `setup.ts` | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |

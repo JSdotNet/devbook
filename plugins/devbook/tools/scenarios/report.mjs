@@ -8,6 +8,7 @@
 //     leave one out. A spec run in several projects records one of them.
 //   - A run that executed none of a page's parts writes nothing for it:
 //     `playwright test --list` schedules every part and runs none.
+//   - A failed part records the step that threw and its message.
 //   - A label the run did not reach keeps its file and its earlier entry.
 //   - A file whose label the page no longer has is pruned, and so is a failure
 //     screenshot of a part that did not fail this time.
@@ -21,7 +22,7 @@
 
 import { copyFile, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { FAILURE_ATTACHMENT, labelsOf, normalizePath, parseScenarioPage, parseSpecHeader, readProfiles, SCENARIO_FOLDER, SHOT_ATTACHMENT, specParts } from "./parse.mjs";
+import { collapse, FAILURE_ATTACHMENT, labelsOf, normalizePath, parseScenarioPage, parseSpecHeader, readProfiles, SCENARIO_FOLDER, SHOT_ATTACHMENT, specParts } from "./parse.mjs";
 import { effectiveConfig, findRepoRoot, recordedConfig } from "./setup.mjs";
 
 export const RUN_VERSION = 2;
@@ -58,6 +59,42 @@ export function specFileOf(test) {
     return test.location.file;
 }
 
+const MESSAGE_LIMIT = 2000;
+
+/** An error message as text: terminal colours stripped, trimmed, and cut at a readable length. */
+export function plainMessage(message) {
+    const text = String(message ?? "").replace(/\u001b\[[0-9;]*m/g, "").trim();
+    return text.length > MESSAGE_LIMIT ? `${text.slice(0, MESSAGE_LIMIT)}…` : text;
+}
+
+/**
+ * Where a failed part failed: `{ step, message }`, `step` the 1-based number
+ * of the page step whose `step()` threw — numbered across the part, as the
+ * page lists them — or null when the error was thrown outside every page
+ * step, such as in the setup. `steps` is Playwright's result step tree;
+ * `error` the result's error.
+ */
+export function failureOf(part, steps = [], error) {
+    const texts = part.steps.map((step) => collapse(step.keyword ? `${step.keyword} ${step.text}` : step.text));
+    const numberOf = (title) => {
+        const text = collapse(title);
+        const at = texts.indexOf(text);
+        return at >= 0 ? at + 1 : null;
+    };
+    const find = (list) => {
+        for (const step of list ?? []) {
+            if (!step.error) continue;
+            const number = step.category === "test.step" ? numberOf(step.title) : null;
+            if (number !== null) return { number, step };
+            const inner = find(step.steps);
+            if (inner) return inner;
+        }
+        return null;
+    };
+    const found = find(steps);
+    return { step: found?.number ?? null, message: plainMessage(error?.message ?? found?.step.error?.message ?? "") };
+}
+
 async function readJson(file) {
     try {
         return JSON.parse(await readFile(file, "utf8"));
@@ -66,16 +103,6 @@ async function readJson(file) {
     }
 }
 
-/**
- * Write one page's run.
- *
- * `page` is the parsed page; `parts` maps a part's anchor to `{ outcome,
- * durationMs }` (a part absent from it is `not-run`); `captured` maps a label
- * to the PNG this run took for it and `failures` a part's anchor to its
- * failure screenshot, each an image: `{ body }` holding the bytes, or
- * `{ path }` naming a file. Returns `{ folder, written, pruned }`, file names
- * relative to the page's run folder.
- */
 /** Write an image — `{ body }` or `{ path }` — to `target`. */
 async function putImage(image, target) {
     if (image?.body) await writeFile(target, image.body);
@@ -84,6 +111,17 @@ async function putImage(image, target) {
 
 const isImage = (image) => Boolean(image?.body || image?.path);
 
+/**
+ * Write one page's run.
+ *
+ * `page` is the parsed page; `parts` maps a part's anchor to `{ outcome,
+ * durationMs, failure }` (a part absent from it is `not-run`; `failure` is
+ * `{ step, message }` and kept on a failed part only); `captured` maps a label
+ * to the PNG this run took for it and `failures` a part's anchor to its
+ * failure screenshot, each an image: `{ body }` holding the bytes, or
+ * `{ path }` naming a file. Returns `{ folder, written, pruned }`, file names
+ * relative to the page's run folder.
+ */
 export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, page, signature, ranAt, profile, effectiveConfig: config, parts = {}, captured = {}, failures = {} }) {
     const folder = path.join(repoRoot, scenarioFolder, page.stem);
     await mkdir(folder, { recursive: true });
@@ -102,6 +140,7 @@ export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, pag
         const entry = { title: part.title, anchor: part.anchor, outcome: result.outcome };
         if (typeof result.durationMs === "number") entry.durationMs = result.durationMs;
         if (result.outcome === "failed" && isImage(failures[part.anchor])) entry.failureShot = failureFile(part.anchor);
+        if (result.outcome === "failed" && result.failure) entry.failure = { step: result.failure.step ?? null, message: result.failure.message ?? "" };
         return entry;
     });
 
@@ -150,7 +189,7 @@ export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, pag
 export default class ScenarioReporter {
     constructor(options = {}) {
         this.options = options;
-        this.results = new Map(); // "<project>\u0000<spec file>" → title → [{ status, duration, attachments }]
+        this.results = new Map(); // "<project>\u0000<spec file>" → title → [{ status, duration, attachments, steps, error }]
         this.scheduled = new Map(); // spec file → project → Set of titles
         this.projectOrder = [];
         this.ranAt = null;
@@ -178,7 +217,13 @@ export default class ScenarioReporter {
         if (!this.results.has(key)) this.results.set(key, new Map());
         const byTitle = this.results.get(key);
         if (!byTitle.has(test.title)) byTitle.set(test.title, []);
-        byTitle.get(test.title).push({ status: result.status, duration: result.duration, attachments: result.attachments ?? [] });
+        byTitle.get(test.title).push({
+            status: result.status,
+            duration: result.duration,
+            attachments: result.attachments ?? [],
+            steps: result.steps ?? [],
+            error: result.error ?? result.errors?.[0],
+        });
     }
 
     /** The project whose results stand for a spec file. */
@@ -250,6 +295,8 @@ export default class ScenarioReporter {
             const attempts = byTitle.get(part.title) ?? [];
             const outcome = outcomeOf(attempts.map((attempt) => attempt.status));
             parts[part.anchor] = { outcome, durationMs: attempts.reduce((sum, attempt) => sum + (attempt.duration ?? 0), 0) };
+            const failed = [...attempts].reverse().find((attempt) => attempt.status !== "passed" && attempt.status !== "skipped");
+            if (outcome === "failed" && failed) parts[part.anchor].failure = failureOf(part, failed.steps, failed.error);
             const last = attempts[attempts.length - 1];
             for (const attachment of last?.attachments ?? []) {
                 const image = attachment.body ? { body: attachment.body } : attachment.path ? { path: attachment.path } : null;
