@@ -60,7 +60,9 @@ disable the deselected, and record the selection under this component's stamp �
 [From Catalog to Scheduler](#from-catalog-to-scheduler).
 
 Local routines only: a routine runs on this machine, in the repository's main checkout, with
-the plugins installed there, and works in a fresh worktree of its own. A cloud scheduler is
+the plugins installed there, and works in a fresh worktree of its own — the one the host
+starts it in, since the routine's worktree option is on by default, or one the run adds when
+the option is off. A cloud scheduler is
 never used to create one — a cloud session starts on a clone without this marketplace's
 plugins and cannot reach its skill — and an enabled cloud copy carrying the repository's name
 is disabled on every sync, so a schedule never fires twice.
@@ -228,8 +230,9 @@ The values it holds:
 - **Prompt** — a value object. What the scheduled session is given, assembled from the shared
   [preamble](../12-glossary.md#preamble) and the schedule's own task half. It has to be
   self-contained: the session starts with nothing but the repository, so anything the prompt
-  does not say is not available to be remembered. The preamble's first rule makes the run add
-  a fresh worktree of the base branch, so the checkout it starts in is never the one it edits.
+  does not say is not available to be remembered. The preamble's first rule puts the run on a
+  fresh worktree of the base branch — the host's own when the worktree option is on, one it
+  adds otherwise — so the checkout the routine starts from is never the one it edits.
 
 ### Schedule Selection
 
