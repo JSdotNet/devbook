@@ -65,6 +65,9 @@ vendored `.devbook/_tools/` file or a delivered rule that differs from its sourc
   reviewed, so a commit that mixes two decisions hides both.
 - Leave nothing uncommitted when handing back. Whenever the session stops for input, the
   working tree is clean.
+- Edit with the file tools. A multi-line script goes to a scratchpad file and runs by path,
+  never inline in a heredoc, where the shell mis-parses its quotes. Line endings need no
+  handling: the worktree checks out CRLF and git commits LF.
 - Never push and never open a pull request until asked. Committing locally is not publishing.
 
 ## Plugin layout
