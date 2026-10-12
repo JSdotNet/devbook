@@ -118,8 +118,10 @@ export default defineConfig({
 | `shots` | Per label: `file`, the `part` anchor, and the `ranAt` of the run that captured it |
 
 A filtered run writes nothing: a page is written only when every part its spec declares was
-scheduled, so `--grep`, `.only`, and a line filter all count. A label the run did not reach keeps its file and its earlier
-entry; a PNG whose label the page dropped is pruned. A part that needed a retry is `failed`.
+scheduled, so `--grep`, `.only`, and a line filter all count. A run that executed none of a
+page's parts writes nothing for it either, so `playwright test --list` leaves every run alone.
+A label the run did not reach keeps its file and its earlier entry; a PNG whose label the page
+dropped is pruned. A part that needed a retry is `failed`.
 
 ## The coverage check
 

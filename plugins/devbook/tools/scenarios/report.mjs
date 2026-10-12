@@ -6,6 +6,8 @@
 //   - A filtered run writes nothing: a page counts only when every part its
 //     spec declares was scheduled — a grep, `.only`, or a line filter each
 //     leave one out. A spec run in several projects records one of them.
+//   - A run that executed none of a page's parts writes nothing for it:
+//     `playwright test --list` schedules every part and runs none.
 //   - A label the run did not reach keeps its file and its earlier entry.
 //   - A file whose label the page no longer has is pruned, and so is a failure
 //     screenshot of a part that did not fail this time.
@@ -236,7 +238,11 @@ export default class ScenarioReporter {
             config = null;
         }
 
+        // A run that executed none of the page's parts — a listing, or a run that
+        // stopped before the page — says nothing about it.
         const byTitle = this.results.get(`${project}\u0000${file}`) ?? new Map();
+        if (!page.parts.some((part) => byTitle.has(part.title))) return;
+
         const parts = {};
         const captured = {};
         const failures = {};

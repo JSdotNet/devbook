@@ -1,6 +1,7 @@
 // The run reporter: run.json version 2 with its English fields, one PNG per
 // label, a filtered run writing nothing, an unreached label keeping its file,
-// a dropped label pruned, and the failure screenshot of a failed part.
+// a dropped label pruned, the failure screenshot of a failed part, and a
+// listing writing nothing.
 //
 // Run: `node --test report.test.mjs`
 import { test } from "node:test";
@@ -253,4 +254,14 @@ test("specFileOf: the file suite's location, else the test's own", () => {
     const declared = { location: { file: "/repo/.devbook/_tools/scenarios/setup.ts" }, parent: { type: "describe", parent: fileSuite } };
     assert.equal(specFileOf(declared), "/repo/e2e/tests/journey.spec.ts");
     assert.equal(specFileOf({ location: { file: "/repo/e2e/plain.spec.ts" } }), "/repo/e2e/plain.spec.ts");
+});
+
+test("a listing — every part scheduled, none run — writes nothing", async () => {
+    const root = await repo();
+    try {
+        await report(root, fakeRun(root, { results: {} }));
+        assert.equal(existsSync(runFolder(root)), false);
+    } finally {
+        await rm(root, { recursive: true, force: true });
+    }
 });
