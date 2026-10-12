@@ -64,6 +64,9 @@ new work — it reads what the earlier phases recorded and decides.
 
 - The verdict — `ready`, `not ready` with the brief, or `budget spent` with the open items —
   and the round it was reached in.
+- The open items recorded by `phase-scope` or `phase-spec-check`, which the flow-runner
+  reports as escaped defects found at `Ready`, per **Quality Facts** in
+  `resources/surface-contract.md`.
 - The questions for the gate: `code-ahead` and `unresolved` rows, the `stale` rows for pages
   Verify could not run at its depth, and on a spent budget every open item.
 

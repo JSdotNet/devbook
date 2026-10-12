@@ -235,7 +235,8 @@ and do not ask the user to restart the app manually as the normal path.
   wrote, which the flow-runner reports as `evidence` (`resources/surface-contract.md`), and each
   label's PNG; or the page recorded as not run, with the reason.
 - These outputs feed the ready check and then Personal Validation, which presents the
-  recorded QA review.
+  recorded QA review. The flow-runner reports its failures as escaped defects, per **Quality
+  Facts** in `resources/surface-contract.md`.
 
 These are what the QA sub-agent returns, and all of it. A failure is reported with the
 evidence path and the specific error, not with the page snapshot or log page it came from —

@@ -125,6 +125,7 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-13 | `update_stage` on the Review stage and `finish_run` take an optional `quality`: `reviewRounds` per slice and in total, `blockers` — `rule` and `bug`, open and fixed, per round and in total — and on `finish_run` `escapedDefects`, each tagged `foundAt` with the stage that found it. Every value names the stage that reported it. Additive, so the lifecycle group stays `@1`; the engine reports the facts and no surface derives them, and pricing is unchanged. |
 | 2026-10-08 | `update_stage` takes an optional `evidence` for Verify: one `{ stem, part, outcome, runAt }` per scenario-page part, `outcome` `passed`, `failed`, or `not-run`. Additive, so the lifecycle group stays `@1`; `delivery-surface-backlog` forwards it unchanged, and a surface that ignores it loses nothing. |
 | 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. A surface call the host's permission layer refuses is retried once and then reported, never dropped. |
 | 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. |

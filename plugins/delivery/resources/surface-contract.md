@@ -155,6 +155,8 @@ that surface's own `runId`:
   the file's `ranAt`.
   Optional and additive: the capability stays `@1`, a run that ran no page sends none, and a
   surface that ignores the key stays conformant and loses nothing `scenarios` carries.
+- **Report the quality facts as `quality`**, per **Quality Facts** below: on every closing
+  `update_stage` of the Review stage, and on `finish_run` as the run's totals.
 - **Keep the gate and `deliver` as separate stages.** Gate `deliver` on the approval recorded
   at Personal Validation, mark it `skipped` when there is no change set, and record all
   delivery-time changes under its stage output.
@@ -171,6 +173,55 @@ that surface's own `runId`:
   `delivery-schedule`, under *The Report Block*. A surface may keep
   the latest verdict per chapter; one that ignores the argument stays conformant, and a run
   that verified nothing sends none.
+
+### Quality Facts
+
+Three facts let a surface compare the configurations that ran a flow on quality, not only on
+cost. Only the phase that reviews or verifies the work knows them, so the engine reports them
+and a surface derives none. They are optional and additive: the lifecycle group stays `@1`, a
+run with no implement ⇄ review loop sends no `reviewRounds` or `blockers` but still sends
+`escapedDefects`, and a surface that ignores the key stays conformant. They never enter how a
+run is priced.
+
+```json
+{
+  "reviewRounds": { "reportedBy": "Review", "total": 3,
+                    "slices": [{ "slice": "contract", "rounds": 2 }, { "slice": "runner", "rounds": 1 }] },
+  "blockers": { "reportedBy": "Review",
+                "rule": { "open": 0, "fixed": 1 }, "bug": { "open": 0, "fixed": 1 },
+                "rounds": [{ "slice": "contract", "round": 1, "rule": { "open": 1, "fixed": 0 }, "bug": { "open": 1, "fixed": 0 } },
+                           { "slice": "contract", "round": 2, "rule": { "open": 0, "fixed": 1 }, "bug": { "open": 0, "fixed": 1 } },
+                           { "slice": "runner", "round": 1, "rule": { "open": 0, "fixed": 0 }, "bug": { "open": 0, "fixed": 0 } }] },
+  "escapedDefects": { "total": 1,
+                      "items": [{ "foundAt": "Verify", "summary": "Checkout scenario: total not refreshed" }] }
+}
+```
+
+- **`reviewRounds`** — one round is one Review pass over a slice, a fix round included; a pass
+  after the ready check sends the run back adds to the slice it reviews. `total` sums
+  `slices[].rounds`. The flow-runner counts it as it alternates the two phases.
+- **`blockers`** — the `rule` and `bug` findings in `review.md`. Each `rounds` entry counts
+  the blockers its section lists, by the state that round gives them: a new blocker and an
+  earlier one still unresolved are `open`, an earlier one the round marks resolved is
+  `fixed`; a round with none is listed with zeros. The top-level `rule` and `bug` count each
+  distinct blocker once, by its state after its slice's last round. Advisories are never
+  counted.
+- **`escapedDefects`** — a defect found later than review, one item per distinct defect: a
+  failing build target or test from Build & Test; a failed scenario from Verify, a failed
+  scenario-page part once and never again as its `scenarios` row; a ready-check item neither
+  of those recorded, such as a Spec Check `spec-ahead` or `conflict` or a criterion in scope
+  with no passing test; and a Personal Validation `revise`, whose note names what the person
+  found. A `decline` is a call on the change, not a defect, and an open review blocker is
+  review's own finding, never an escape. A defect still failing in a later round is the same
+  item; each gate decision is its own. `foundAt` is the stage that recorded it first, by its
+  stage name — `Ready` for a ready-check item; `summary` is one line naming the target,
+  scenario, or note.
+- **`reportedBy` names the stage each value came from**, so a surface can attribute it without
+  knowing the engine's phases.
+- **Send it cumulatively.** The Review stage carries `reviewRounds` and `blockers` as they
+  stand; `finish_run` carries all three. A later value replaces an earlier one whole. The
+  flow-runner keeps the running facts in `runContext.quality`, so a resumed session continues
+  the count rather than restarting it.
 
 ### Naming the session
 
