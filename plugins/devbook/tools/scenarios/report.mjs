@@ -44,6 +44,18 @@ export function outcomeOf(statuses) {
     return "failed";
 }
 
+/**
+ * The spec file a test belongs to: the location of its file suite. A part is
+ * declared by `part()` inside `setup.ts`, so `test.location.file` names that
+ * file and never the spec.
+ */
+export function specFileOf(test) {
+    for (let suite = test.parent; suite; suite = suite.parent) {
+        if (suite.type === "file" && suite.location?.file) return suite.location.file;
+    }
+    return test.location.file;
+}
+
 async function readJson(file) {
     try {
         return JSON.parse(await readFile(file, "utf8"));
@@ -150,7 +162,7 @@ export default class ScenarioReporter {
         this.ranAt = new Date().toISOString();
         this.projectOrder = (config?.projects ?? []).map((project) => project.name ?? "");
         for (const test of suite.allTests()) {
-            const file = test.location.file;
+            const file = specFileOf(test);
             const project = projectOf(test);
             if (!this.scheduled.has(file)) this.scheduled.set(file, new Map());
             const byProject = this.scheduled.get(file);
@@ -160,7 +172,7 @@ export default class ScenarioReporter {
     }
 
     onTestEnd(test, result) {
-        const key = `${projectOf(test)}\u0000${test.location.file}`;
+        const key = `${projectOf(test)}\u0000${specFileOf(test)}`;
         if (!this.results.has(key)) this.results.set(key, new Map());
         const byTitle = this.results.get(key);
         if (!byTitle.has(test.title)) byTitle.set(test.title, []);

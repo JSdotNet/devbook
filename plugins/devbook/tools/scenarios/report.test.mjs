@@ -10,7 +10,7 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseScenarioPage } from "./parse.mjs";
-import ScenarioReporter, { outcomeOf, writeRun } from "./report.mjs";
+import ScenarioReporter, { outcomeOf, specFileOf, writeRun } from "./report.mjs";
 
 const F = "```";
 const PAGE_PATH = ".devbook/domain/work/set-up-and-fill-the-backlog.md";
@@ -141,9 +141,17 @@ test("an unreached label keeps its file and earlier entry; a dropped label and a
 
 // The reporter receives Playwright's objects; these are the fields it reads.
 // `results` maps a title to its attempts, or `<project>|<title>` with several projects.
+// As in Playwright, a part's own location is setup.ts, where `part()` calls `test()`;
+// only its file suite names the spec.
 function fakeRun(root, { titles = ["Statuses are set up", "An item is moved"], projects = ["chromium"], results }) {
     const file = path.join(root, "e2e/tests/set-up-and-fill-the-backlog.spec.ts");
-    const tests = projects.flatMap((name) => titles.map((title) => ({ title, location: { file }, parent: { project: () => ({ name }) } })));
+    const setup = path.join(root, ".devbook/_tools/scenarios/setup.ts");
+    const tests = projects.flatMap((name) => {
+        const project = () => ({ name });
+        const fileSuite = { type: "file", location: { file }, project, parent: { type: "project", project } };
+        const group = { type: "describe", title: "set-up-and-fill-the-backlog", location: { file: setup }, project, parent: fileSuite };
+        return titles.map((title) => ({ title, location: { file: setup }, parent: group }));
+    });
     return { config: { grep: /.*/, projects: projects.map((name) => ({ name, grep: /.*/ })) }, suite: { allTests: () => tests }, tests, results };
 }
 
@@ -238,4 +246,11 @@ test("a page that cannot be written is reported and does not stop the others", a
         console.error = original;
         await rm(root, { recursive: true, force: true });
     }
+});
+
+test("specFileOf: the file suite's location, else the test's own", () => {
+    const fileSuite = { type: "file", location: { file: "/repo/e2e/tests/journey.spec.ts" } };
+    const declared = { location: { file: "/repo/.devbook/_tools/scenarios/setup.ts" }, parent: { type: "describe", parent: fileSuite } };
+    assert.equal(specFileOf(declared), "/repo/e2e/tests/journey.spec.ts");
+    assert.equal(specFileOf({ location: { file: "/repo/e2e/plain.spec.ts" } }), "/repo/e2e/plain.spec.ts");
 });
