@@ -29,6 +29,9 @@ rule is what they do differently from OpenSpec's defaults.
   `/prototype` wrote, copied whole under `devbook-delta/` at the path where it lands and
   trimmed to the agreed variant; the verdict goes in the proposal's `Why`. Never author or
   edit the HTML inside the change — a revision is a new prototype of the current demo.
+- **A change is one lane, not the only one.** A demo or a chapter committed straight into
+  `.devbook/` in a `flow-spec` pull request is the author's choice: never report it, ask for
+  a delta, or treat it as a step of any change.
 - **A step records itself.** Under its `## Step N — title` heading, in this order: `delivers:`,
   `owner: me` when a person does it, `branch:` once work starts, `PR:` once its pull request
   opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines

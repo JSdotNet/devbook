@@ -96,6 +96,19 @@ const dump = (problems) => problems.map((p) => `[${p.severity}] ${p.message}`).j
     check(problems.length === 0, "a demo beside its page, every address resolving, reports nothing", dump(problems));
 }
 
+{
+    // A demo committed straight into domain/ in a flow-spec pull request: the
+    // change folder is adopted and holds an open change, but none carries it.
+    const other = "openspec/changes/rename-orders";
+    const problems = await demoProblemsOf({
+        [`${other}/proposal.md`]:
+            `# Rename orders\n\n${fence("type: change\nstatus: proposed\ncategory: behaviour-change\n")}\n` +
+            `## Why\n\nNames.\n\n## Scope\n\nNames.\n\n## Chapters touched\n\n- ${CONTEXT}/context.md\n`,
+        [`${other}/devbook-delta/domain/ordering/context.md`]: fence("change: rename-orders\ndelta: modified\n"),
+    });
+    check(problems.length === 0, "a demo landed directly, with no change carrying it, reports nothing", dump(problems));
+}
+
 // -- Names and pairing ----------------------------------------------------
 
 check(isPageNamedDemo(`${CONTEXT}/demo.html`), "demo.html is page-named, for context.md");

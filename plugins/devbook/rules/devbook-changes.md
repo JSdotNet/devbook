@@ -73,6 +73,8 @@ not resolve is reported against the delta that causes it.
 
 ## A demo
 
+A change is one route for a demo, not the only one: `devbook-domain.md` lets its author land it
+directly in a `flow-spec` pull request instead, and a demo with no delta is never a finding.
 A proposal may contain a demo: a standalone prototype from `/prototype`, copied in as a delta at
 the path where it lands — `devbook-delta/domain/ordering/features.demo.html` lands as
 `.devbook/domain/ordering/features.demo.html` — and trimmed to the one variant agreed, per
@@ -91,4 +93,4 @@ a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 `tasks.md` is `## Step N — title` blocks, one pull request each. Each names the deltas it
 delivers on a `delivers:` line by address — a scenario page by its delta's path, or one part
 of it as `<path>#<part>` — and `owner: me` when a person does it. A prototype
-is no step: it needs no change and no task, and enters one only as a demo delta.
+is no step: it needs no change and no task, and enters a change only as a demo delta.
