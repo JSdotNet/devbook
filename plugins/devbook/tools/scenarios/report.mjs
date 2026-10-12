@@ -77,15 +77,20 @@ export function plainMessage(message) {
  */
 export function failureOf(part, steps = [], error) {
     const texts = part.steps.map((step) => collapse(step.keyword ? `${step.keyword} ${step.text}` : step.text));
-    const numberOf = (title) => {
+    // A text the part repeats is told apart by how often it ran before: the nth run is the nth match.
+    const numberOf = (title, occurrence) => {
         const text = collapse(title);
-        const at = texts.indexOf(text);
-        return at >= 0 ? at + 1 : null;
+        let seen = 0;
+        for (let at = 0; at < texts.length; at++) if (texts[at] === text && seen++ === occurrence) return at + 1;
+        return null;
     };
     const find = (list) => {
+        const runs = new Map();
         for (const step of list ?? []) {
+            const occurrence = runs.get(collapse(step.title)) ?? 0;
+            if (step.category === "test.step") runs.set(collapse(step.title), occurrence + 1);
             if (!step.error) continue;
-            const number = step.category === "test.step" ? numberOf(step.title) : null;
+            const number = step.category === "test.step" ? numberOf(step.title, occurrence) : null;
             if (number !== null) return { number, step };
             const inner = find(step.steps);
             if (inner) return inner;

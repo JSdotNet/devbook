@@ -281,6 +281,17 @@ test("failureOf: the page step whose step() threw, numbered across the part, and
     assert.equal(plainMessage("x".repeat(3000)).length, 2001);
 });
 
+test("failureOf: a step text the part repeats is numbered by the occurrence that threw", () => {
+    const part = { steps: [{ keyword: "When", text: "I press Save" }, { keyword: "Then", text: "it saves" }, { keyword: "When", text: "I press Save" }] };
+    const error = { message: "no Save button" };
+    const steps = [
+        { title: "When I press Save", category: "test.step", steps: [] },
+        { title: "Then it saves", category: "test.step", steps: [] },
+        { title: "When I press Save", category: "test.step", error, steps: [] },
+    ];
+    assert.equal(failureOf(part, steps, error).step, 3);
+});
+
 test("the reporter records a failed part's step and message in run.json, and a passed part none", async () => {
     const root = await repo();
     try {
