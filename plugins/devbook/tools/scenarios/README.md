@@ -30,8 +30,11 @@ with no mapping in a tsconfig and no file added under `.devbook/_tools/`:
 - `playwright.mjs` resolves `@playwright/test` from the script Playwright runs, then the
   working folder, then this folder — so the runner and the suite share one Playwright, and a
   copy at the root never shadows the suite's own.
-- The `package.json` here makes this folder an ES module scope, so its `.ts` files load as ES
-  modules whatever the suite above it is.
+- The `package.json` here makes this folder an ES module scope, so when an ES module suite
+  imports `setup.ts`, it and the `.mjs` modules it loads run as ES modules.
+
+A CommonJS suite loads `setup.ts` through `require`, which compiles it to CommonJS whatever this
+folder says; it then needs Node 22.12 or later to load the `.mjs` modules beside it.
 
 `tsc` over the specs follows the import into this folder, and looks for the Playwright types
 from here. Where the suite is its own package, map them in the tsconfig `tsc` runs with —

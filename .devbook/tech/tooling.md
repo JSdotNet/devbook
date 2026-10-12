@@ -41,7 +41,8 @@ where the constraint is negotiated rather than held:
 - **The scenario tools' two Playwright files are the other exception.** `setup.ts` and `shot.ts` under
   `plugins/devbook/tools/scenarios/` use `@playwright/test`, which the adopting repository's
   own e2e suite supplies: `playwright.mjs` resolves it from the running Playwright, so a suite
-  that is its own npm package works, and the folder's `package.json` loads both as ES modules.
+  that is its own npm package works, and the folder's `package.json` loads both as ES modules
+  under an ES module suite. A CommonJS suite needs Node 22.12 to load the `.mjs` modules beside them.
   Every `.mjs` there — the parser, the signature, the reporter, the coverage check, the loader —
   stays on `node:` built-ins.
 
