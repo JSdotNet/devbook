@@ -85,7 +85,9 @@ page by the spec's `// scenario:` header. A hook written as `.js` or `.mjs` alwa
 ```
 
 A portal URL or a tenant written `env:<NAME>` is read from the environment, and an unset one
-is an error. Flag and setting values are passed to the hook as written.
+is an error. Flag and setting values are passed to the hook as written. A page's `flags` name
+`feature-flag` chapters only, and reach `setFlag`; a switch the product models as a `setting`
+chapter goes under `settings` as `<chapter>=true` or `=false`, and reaches `setSetting`.
 
 ## Wiring it in
 

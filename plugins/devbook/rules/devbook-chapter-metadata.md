@@ -785,7 +785,7 @@ is written from the page, from its bounded context, or from the repository root.
 | `actor` | Who is signed in at the start, as `[portal:]<path>#<slug>`; a journey that crosses portals lists one per portal. | A `user`, `organisation`, or `technical` chapter |
 | `data` | The named test data sets imported, in order, before the journey starts. | A data set in `.devbook/scenarios/data/<name>/` |
 | `profile` | The named configuration to run under; absent means `default`. | A profile in `.devbook/scenarios/profiles.json`, when the repository has one |
-| `flags` | The feature flags switched on for this journey; a leading `-` switches one off. | A `feature-flag` chapter |
+| `flags` | The feature flags switched on for this journey; a leading `-` switches one off. A switch modelled as a `setting` goes under `settings` as `=true` or `=false`. | A `feature-flag` chapter |
 | `settings` | The settings set for this journey, as `<path>#<slug>=<value>`. | A `setting` chapter |
 
 The effective configuration is the profile with the page's `flags` and `settings`

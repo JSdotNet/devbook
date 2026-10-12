@@ -375,6 +375,9 @@ a kind.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
+- A scenario page's `flags` accepting a boolean `setting` chapter: the setup hook sets a flag
+  and a setting through different methods, and a `setting`'s `default` is free-form, so no
+  check could tell a boolean one apart without splitting settings by the shape of their value.
 
 ## History
 
@@ -383,6 +386,7 @@ a kind.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-12 | A scenario page's `flags` stays limited to `feature-flag` chapters. A switch a product models as a `setting` goes under `settings` as `<chapter>=true` or `=false`, and the check names that entry when `flags` points at a `setting`. No contract change: only a message and the rule's text move. |
 | 2026-10-08 | The scenario page: a `domain/` file typed `scenario`, in a bounded context at any depth, is one end-to-end journey whose `##` parts owe no block and stay addressable. Its `status` is absent, `draft`, or `proposed`; it carries no `tests`, since the page is the test; its stem is unique across the corpus; its steps open with a bold Given, When, Then, or And. The six setup fields — `start`, `actor`, `data`, `profile`, `flags`, `settings` — are legal there alone and resolve against the chapters and `.devbook/scenarios/profiles.json`. A requirement's `#### Scenario:` may hold one `Proved by: <page>.md#<part>` line instead of its steps, which derives its `e2e` entry, and a part no case names is reported. `shot:` and `scenario:` images are no diagrams. Contract 30, additive, no migration. |
 | 2026-10-06 | The `actor` converter kind: a `user` or `technical` chapter roots a sync unit, paired through its `role`, the policies admitting it, and a `technical` actor's client registration, so a `sync` value on `actors.md` is inherited. An `organisation` roots no unit. A grant wider than the chapter is a `conflict`. Contract 28, additive, no migration. |
 | 2026-10-06 | `model.md`, `flow.md`, and their splits stay context: no converter kind, no sync unit, no `sync`. Every claim they draw belongs to an aggregate, domain service, feature, or skill chapter that has a kind. No contract, no migration. |
