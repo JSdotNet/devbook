@@ -237,6 +237,8 @@ const problemsAbout = (graph, needle) => graph.problems.filter((p) => p.message.
     const graph = await graphOf(base("type: scenario\nactor: features.md#backlog-board\nflags: [context.md#backlog-max-columns]\nsettings: [context.md#nowhere=5]\n"));
     check(problemsAbout(graph, "`actor` entry \"features.md#backlog-board\" that resolves to a `feature` chapter").length === 1, "an actor resolving to a feature is an error", dump(graph.problems));
     check(problemsAbout(graph, "`flags` entry \"context.md#backlog-max-columns\" that resolves to a `setting` chapter").length === 1, "a flag resolving to a setting is an error", dump(graph.problems));
+    // A switch modelled as a setting is set through setSetting, so the error says where it goes.
+    check(problemsAbout(graph, "goes under `settings` as `context.md#backlog-max-columns=true`").length === 1, "a flag resolving to a setting names the settings entry it should be", dump(graph.problems));
     check(problemsAbout(graph, "`settings` entry \"context.md#nowhere\" that does not resolve").length === 1, "an unresolved setting is an error", dump(graph.problems));
 }
 

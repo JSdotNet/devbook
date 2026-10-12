@@ -1,6 +1,6 @@
 {
   "name": "delivery-run-view",
-  "version": "1.22.0",
+  "version": "1.23.0",
   "description": "A read-only view of delivery runs inside Claude Code, drawn from the run files the surfaces already write: a /flows pane with one row per phase — how it ran (inline, delegate, fork, gate; inferred and marked ? where the run does not record it), agent, model and effort, duration, repeated passes, the sub-agents it delegated to, and the focused phase's output, QA scenarios, links, tokens and tool calls — a Personal Validation review card with the stage's links, the Ready stage's open items, and Approve, Revise, and Reject buttons that submit the gate's reply to the session — a band above the prompt while this session's run is open, surface start_run and update_stage calls drawn as one-line phase transitions, a toast and a sound once whenever any checkout's run turns waiting at a gate or blocked, the status line set to the waiting gate or else the flow and its stage, and /flows-demo playing a simulated flow-code run in memory. Function-hook modules, so Claude Code only. Not a surface: it answers no operation, writes no run file, and declares no dependency.",
   "author": {
     "name": "Job Schepers"

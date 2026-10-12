@@ -39,10 +39,12 @@ where the constraint is negotiated rather than held:
   [the SDK entry](hosts.md#copilot-extension-sdk). Only the scenario tools, below, also import something they do
   not ship.
 - **The scenario tools' two Playwright files are the other exception.** `setup.ts` and `shot.ts` under
-  `plugins/devbook/tools/scenarios/` import `@playwright/test`, which the adopting repository's
-  own e2e suite supplies, and load the `.mjs` modules beside them, which needs Node 22.12 or an
-  ESM test package. Every `.mjs` there — the parser, the signature, the reporter, the coverage
-  check — stays on `node:` built-ins.
+  `plugins/devbook/tools/scenarios/` use `@playwright/test`, which the adopting repository's
+  own e2e suite supplies: `playwright.mjs` resolves it from the running Playwright, so a suite
+  that is its own npm package works, and the folder's `package.json` loads both as ES modules
+  under an ES module suite. A CommonJS suite needs Node 22.12 to load the `.mjs` modules beside them.
+  Every `.mjs` there — the parser, the signature, the reporter, the coverage check, the loader —
+  stays on `node:` built-ins.
 
 The checker runs here from two paths. `plugins/devbook/tools/devbook-meta/` is where it is
 authored; `.devbook/_tools/devbook-meta/` is the copy `devbook:update` vendored, as into any

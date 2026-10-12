@@ -13,12 +13,34 @@ to `.devbook/_tools/scenarios/` where `domain/` is adopted. Edit the plugin, nev
 | `scenario-page.vector.json` | The shared vector every implementation of the signature is tested against |
 | `setup.mjs`, `setup.ts` | The runner a derived spec imports: effective configuration, the setup hook, one browser context per portal, `start` |
 | `shot.ts` | `shot(page, label)` and the failure screenshot taken in `afterEach` |
+| `playwright.mjs` | Finds the `@playwright/test` the suite runs under, for the two `.ts` files |
+| `package.json` | `"type": "module"`, so Playwright loads the two `.ts` files and the `.mjs` they import as ES modules |
 | `report.mjs` | The Playwright reporter that writes `run.json` version 2 and the PNGs |
 | `check.mjs` | The coverage check |
 
-Everything ending in `.mjs` is plain Node with no dependencies. The two `.ts` files import
-`@playwright/test`, which the repository's e2e suite already has, and load the `.mjs` modules
-beside them — which needs Node 22.12 or later, or an ESM test package.
+Everything ending in `.mjs` is plain Node with no dependencies. The two `.ts` files use
+`@playwright/test`, which the repository's e2e suite already has.
+
+## Where the suite lives
+
+The suite is an ES module package — its `package.json` says `"type": "module"` — either the
+repository root or a folder of its own, such as `.test/` with its own `node_modules`. Both work
+with no mapping in a tsconfig and no file added under `.devbook/_tools/`:
+
+- `playwright.mjs` resolves `@playwright/test` from the script Playwright runs, then the
+  working folder, then this folder — so the runner and the suite share one Playwright, and a
+  copy at the root never shadows the suite's own.
+- The `package.json` here makes this folder an ES module scope, so when an ES module suite
+  imports `setup.ts`, it and the `.mjs` modules it loads run as ES modules.
+
+A CommonJS suite loads `setup.ts` through `require`, which compiles it to CommonJS whatever this
+folder says; it then needs Node 22.12 or later to load the `.mjs` modules beside it.
+
+`tsc` over the specs follows the import into this folder, and looks for the Playwright types
+from here. Where the suite is its own package, map them in the tsconfig `tsc` runs with —
+`"paths": { "@playwright/test": ["./node_modules/@playwright/test"] }` — and leave the Playwright
+config's `tsconfig` without it: Playwright needs no mapping, and one there changes which entry
+of the package every spec loads.
 
 ## The contract
 
@@ -66,7 +88,9 @@ page by the spec's `// scenario:` header. A hook written as `.js` or `.mjs` alwa
 ```
 
 A portal URL or a tenant written `env:<NAME>` is read from the environment, and an unset one
-is an error. Flag and setting values are passed to the hook as written.
+is an error. Flag and setting values are passed to the hook as written. A page's `flags` name
+`feature-flag` chapters only, and reach `setFlag`; a switch the product models as a `setting`
+chapter goes under `settings` as `<chapter>=true` or `=false`, and reaches `setSetting`.
 
 ## Wiring it in
 
@@ -95,12 +119,17 @@ export default defineConfig({
 | `version` | `2` |
 | `page`, `signature` | The page's path, and the signature from the spec header the run executed |
 | `ranAt`, `profile`, `effectiveConfig` | When, under which profile, and the tenant, flags, settings, and data sets it resolved to |
-| `parts[]` | `title`, `anchor`, `outcome` — `passed`, `failed`, or `not-run` — `durationMs`, and `failureShot` for a failed part |
-| `shots` | Per label: `file`, the `part` anchor, and the `ranAt` of the run that captured it |
+| `parts[]` | `title`, `anchor`, `outcome` — `passed`, `failed`, or `not-run` — `durationMs`, and for a failed part `failureShot` and `failure` |
+| `parts[].failure` | `step`, the number of the page step that threw, counted across the part from 1, or `null` when the error came from outside every step; `message`, the error without terminal colours |
+| `shots` | Per label: `file`, the `part` anchor, and the `ranAt` and `signature` of the run that captured it |
 
 A filtered run writes nothing: a page is written only when every part its spec declares was
-scheduled, so `--grep`, `.only`, and a line filter all count. A label the run did not reach keeps its file and its earlier
-entry; a PNG whose label the page dropped is pruned. A part that needed a retry is `failed`.
+scheduled, so `--grep`, `.only`, and a line filter all count. A run that executed none of a
+page's parts writes nothing for it either, so `playwright test --list` leaves every run alone.
+A label the run did not reach keeps its file and its earlier entry, signature included: a
+reader holds each shot against the page through its own `signature`, not the run's. A PNG
+whose label the page dropped is pruned. A part that needed a retry is `failed`. `failure` and a
+shot's `signature` came after the first version-2 reporter, so a reader treats both as optional.
 
 ## The coverage check
 
