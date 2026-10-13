@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, phases, policy, gates, and the optional areas) — the change lane''s spec, tracker, and grill bindings among them when devbook-openspec is adopted — validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo", "set up the change lane".'
+description: 'Set a repository up for this marketplace for the first time: choose which installed plugins it uses, write .devbook/config.json with its id and, when the delivery engine is adopted, the engine-owned keys, validate them, then hand each adopted component its own init. Refused where .devbook/config.json exists: run devbook-config:update. Use when: adopting the stack, wiring flows for the first time, "devbook-config init".'
 ---
 
 # devbook-config init

@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every agent and provider id the phase maps bind that resolves to nothing, a key or flow map 1.14.0 retired, a leftover model-selection.md, a missing or out-of-range OpenSpec CLI and an unapproved change nobody has touched in a week, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill", "is the OpenSpec CLI current", "stale proposals".'
+description: 'Diagnose this marketplace''s installation in a repository without writing anything — stamps against disk, outstanding migrations, a stale AGENTS.md section, a phase binding that resolves to nothing or a retired key, the OpenSpec CLI and stale proposals, installed against newest plugins — and name the skill that fixes each finding. Use when: after an upgrade, something may be out of date or drifted, "doctor", "is the stack healthy".'
 ---
 
 # devbook-config doctor

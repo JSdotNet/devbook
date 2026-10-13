@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own update skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json — the phase maps among them — and the overlays over it. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, the config still carries extensions or delivery.roles, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
+description: 'Move a repository''s whole configured stack forward in one run: report which plugins are behind, run every adopted component''s own update so migrations run and stale files are replaced, and re-validate .devbook/config.json and its overlays. Skips what this machine has not installed or enabled, never dropping a stamp. Use when: "update the stack", upgrading plugins, a migration is outstanding, the config stopped validating.'
 ---
 
 # devbook-config update

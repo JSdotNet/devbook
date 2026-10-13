@@ -1,6 +1,6 @@
 ---
 name: ask
-description: 'Answer a question about this marketplace and the plugins in it — what devbook, delivery, the surfaces, the change lane, and the unattended lane are and how they fit together, which version of a plugin is installed against the newest one published, which plugins are enabled here, and how this repository has wired its flows, phases, gates, and policy. Reads only; it never installs or reconciles anything. Use when: asking how the stack works, comparing installed against newest, checking what is enabled, or reading a repository''s flow wiring. Triggers on: "what is devbook", "explain the delivery engine", "what is the change lane", "how does OpenSpec fit in", "how do the plugins fit together", "which version am I on", "is there a newer version", "which plugins are enabled", "how are my flows set up", "what does this repo bind", "which gates are on".'
+description: 'Answer a question about this marketplace — what devbook, delivery, the surfaces, the change lane, and the unattended lane are and how they fit, installed against newest versions, what is enabled here, and how this repository wires its flows, phases, gates, and policy. Reads only. Use when: "what is devbook", how the stack works, "which version am I on", "how are my flows set up".'
 ---
 
 # devbook-config ask

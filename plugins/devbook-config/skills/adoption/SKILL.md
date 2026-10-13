@@ -1,6 +1,6 @@
 ---
 name: adoption
-description: 'Check whether a repository''s ai/ adoption record still describes the stack it actually has — which plugins are installed and enabled, which flows and schedules the copies on disk ship, and what the stack config wires — then hand every edit to flow-spec. Reports drift; never writes a chapter and never rates one. Use when: the adoption record has gone stale after an upgrade, a plugin was added or removed, or you are reviewing how this repository works with AI. Triggers on: "refresh the adoption record", "is my ai/ still accurate", "update .devbook/ai", "which plugins are missing from the adoption map", "does the ai folder match what is installed".'
+description: 'Check whether the ai/ adoption record still describes the stack the repository has — installed and enabled plugins, the flows and schedules on disk, what the stack config wires — and hand every edit to flow-spec. Reports drift; writes and rates nothing. Use when: the adoption record is stale after an upgrade, a plugin was added or removed, "refresh the adoption record".'
 ---
 
 # devbook-config adoption
