@@ -27,7 +27,8 @@ device ([the annotations record](../adr/annotations.md)).
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
-Five skills, and nothing else in the plugin. They move one chapter through a review to the
+Five skills, and nothing else in the plugin but the gate the two decisions share,
+`resources/decision-gate.md`. They move one chapter through a review to the
 two decisions past it, and one of the five writes nothing at all. There is no install: the state they write is devbook's
 schema, so enabling the plugin is the whole adoption. Deleting the answered notes is
 `devbook:annotation-sweep`, in the plugin that owns the fence.
