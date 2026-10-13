@@ -122,7 +122,8 @@ the user it will rewrite the branch, and never on a branch someone else is worki
       | Both sides edited unrelated lines in the same hunk | Keep both edits |
       | Base refactored an API the PR calls | Adapt the PR's calls to the new API |
       | Both sides changed the same logic differently | Combine the intents; ask the user if they are mutually exclusive |
-      | Generated or lock file (`package-lock.json`, `*.g.cs`, `_meta` indexes) | Take the base version, then regenerate |
+      | Lock or generated source file (`package-lock.json`, `*.g.cs`) | Take the base version, then regenerate |
+      | Generated `_meta/` index | Take the base version and leave the refresh to the scheduled job, per `devbook-derived-artifacts.md` |
       | Version or changelog line | Take the base value and re-apply the PR's entry on top |
       | File deleted on one side, edited on the other | Ask the user — never decide silently |
 
@@ -164,7 +165,8 @@ the user it will rewrite the branch, and never on a branch someone else is worki
 
 ### Phase 4 — Re-validate
 
-12. Regenerate anything derived from conflicted generated files before validating.
+12. Regenerate the lock and generated source files taken from the base before validating;
+    never a `_meta/` index.
 13. Run the repository's own validation. Detect the toolchain from the repository rather than
     assuming one:
 
