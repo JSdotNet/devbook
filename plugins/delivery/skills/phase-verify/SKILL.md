@@ -84,29 +84,11 @@ The Playwright preflight is one live check, not a config inspection: navigate to
 page and take a screenshot before running scenarios. If that fails, screenshot and video
 capture are unavailable for this run — treat it per `resources/capture-contract.md`.
 
-When QA is delegated to the bound QA agent or the runtime monitor, verify availability in
-the target agent/session tool surface, not only in the parent flow session. An agent is
-expected to declare the required `aspire` and `playwright` MCP servers and to allowlist them
-at server granularity, so the child agent gets every tool of each server (Aspire's `list_resources`,
-`list_structured_logs`, `list_console_logs`, `list_traces`, `list_trace_structured_logs`, and
-Playwright's `browser_*`).
-
-Two failure modes are worth naming separately, because they look identical from the outside
-and only one is a real outage:
-
-- **Stale tool name.** A tool called by a remembered name the server no longer exposes fails
-  per call — Aspire renamed its query tools from `get_*` to `list_*` and dropped metrics
-  entirely. Resolve the current name from the tool list; this is not a missing server.
-- **Wrong prefix in an allowlist.** A plugin-provided MCP server is namespaced with its
-  plugin, and only a server registered directly in a repository's MCP configuration surfaces
-  under its bare id — the two shapes `flow-execution-model.md` gives for a bound server. An
-  allowlist naming the wrong form
-  matches nothing, and the child agent loses every tool of that server while the parent
-  session still has them.
-
-If the tools are present in normal sessions but absent only in the delegated child agent,
-report it as a child-agent MCP/tool allowlist exposure failure, name the missing server, and
-say which of the two forms the agent's allowlist used.
+Check availability in your own tool list and in the runtime monitor's, never only in the
+parent session's. Call each tool by the name the tool list gives now, never a remembered one.
+When a server's tools reach the parent but not you or the monitor, report a child-agent
+allowlist exposure failure: name the server, and say whether the allowlist used the
+plugin-namespaced or the bare form — the two shapes `resources/flow-execution-model.md` gives.
 
 If required MCP tooling is unavailable:
 
@@ -247,8 +229,7 @@ of `skills/phase-personal-validation/SKILL.md`.
 - `playwright` is required for browser automation, smoke/E2E execution of browser-facing
   scenarios, and evidence capture.
 - Aspire MCP is required when verification depends on Aspire resource state, logs, traces,
-  metrics, or health evidence. Initialize/start it with `aspire mcp init` and
-  `aspire mcp start` before verification, or block with a clear missing-monitoring report.
+  or health evidence; without it, block with a missing-monitoring report.
 - Missing required MCP tooling is a blocking prerequisite failure; stop and prompt the user
   for setup instead of completing QA through degraded fallback.
 
