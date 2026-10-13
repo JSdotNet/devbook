@@ -1,6 +1,6 @@
 ---
 name: schedule-weekly-retro
-description: 'Review how AI was used in this repository over the week — sessions, surface runs, pull requests — in a fresh context, and land what would get more out of it as one draft pull request, one commit per recommendation. Runs only while the plan has credit to spare. The weekly-retro schedule''s target.'
+description: 'Review how AI was used here over the week — sessions, surface runs, pull requests — in a fresh context, and land what would help as one draft pull request, a commit per recommendation. Runs only while the plan has credit to spare. The weekly-retro schedule''s target.'
 ---
 
 # Scheduled: Weekly Retro

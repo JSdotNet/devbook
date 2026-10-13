@@ -1,6 +1,6 @@
 ---
 name: schedule-tech-update
-description: 'The unattended technology-graph refresh: run devbook:tech-update over every tech/ layer the repository has and land what moved as one draft pull request, never a merge. The weekly tech-update schedule''s target.'
+description: 'Run devbook:tech-update over every tech/ layer the repository has and land what moved as one draft pull request, never a merge — a rating stays a person''s decision. The tech-update schedule''s target.'
 ---
 
 # Scheduled: Tech Update

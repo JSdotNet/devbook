@@ -1,6 +1,6 @@
 ---
 name: schedule-review
-description: 'Review a codebase or a path in three layers — open TODOs, improvement suggestions, and the code review checklist — rank every finding in one table, and open one GitHub issue per finding at or above a severity, never two. Use when: a review sweep, a health check before a release.'
+description: 'Review a codebase or path in three layers — open TODOs, improvement suggestions, the code review checklist — rank every finding in one table, and open one issue per finding at or above a severity. Use when: a review sweep, a health check before a release.'
 ---
 
 # Scheduled: Review

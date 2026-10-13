@@ -1,6 +1,6 @@
 ---
 name: schedule-devbook-sweep
-description: 'Bring devbook chapters and code level in the direction each chapter''s sync field states — pull carries code into chapters, push builds agreed chapters into code — filing a devbook-drift issue per group a person must answer and landing up to N groups as draft pull requests. The devbook pull and push sweep schedules'' target.'
+description: 'Level devbook chapters and code in the direction each chapter''s sync field states — pull carries code into chapters, push builds agreed chapters — filing a devbook-drift issue where a person must answer and landing up to N groups as draft pull requests. The devbook sweep schedules'' target.'
 ---
 
 # Scheduled: Devbook Sweep

@@ -1,6 +1,6 @@
 ---
 name: schedule-morning-brief
-description: 'Report what changed in this repository since yesterday and what needs a person today, in one screen: failed runs on the base branch, pull requests waiting on someone, what merged and opened, and what the schedules landed overnight. The morning-brief schedule''s target; by hand, a catch-up after time away.'
+description: 'Report what changed in this repository since yesterday and what needs a person today, in one screen: red runs, pull requests waiting, what merged and opened, what the schedules landed. The morning-brief schedule''s target; by hand, a catch-up after time away.'
 ---
 
 # Scheduled: Morning Brief

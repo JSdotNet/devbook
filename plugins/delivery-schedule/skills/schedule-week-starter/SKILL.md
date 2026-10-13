@@ -1,6 +1,6 @@
 ---
 name: schedule-week-starter
-description: 'Digest what a set of topics published over the last week — Aspire releases and announcements, the Claude Code changelog, Anthropic news and engineering posts by default — as one report, with any breaking change that touches this repository first. Use when: what is new this week, a weekly tech digest.'
+description: 'Digest what a set of topics published over the last week — Aspire, the Claude Code changelog, Anthropic news and engineering by default — with any breaking change that touches this repository first. Use when: what is new this week, a weekly tech digest.'
 ---
 
 # Scheduled: Week Starter
