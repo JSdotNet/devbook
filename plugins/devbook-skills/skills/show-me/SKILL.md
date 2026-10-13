@@ -1,6 +1,6 @@
 ---
 name: show-me
-description: 'Explain with a picture before prose: pick the diagram, tree, signature, diff, or table that shows what the content describes, put it first, and keep the words after it to what the picture cannot say. Use when explaining code, a change, a plan, or a design in chat; writing a pull request description; reporting a stage or a gate back to a person; or writing a chapter section that describes steps, states, parts, files, or shapes. Triggers on: "show me", "/show-me", "explain visually", "draw it", "diagram this", "too much text", "wall of text", "make this readable", "how does this fit together".'
+description: 'Explain with a picture before prose: pick the diagram, tree, signature, diff, or table that shows the content, put it first, and keep the words to what it cannot say. Use when: explaining code, a change, a plan, or a design; writing a PR description or a stage report; a chapter section describing steps, states, parts, or files; "/show-me", "too much text".'
 ---
 
 # Show Me
