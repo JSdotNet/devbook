@@ -18,7 +18,7 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
    installed version and the range and stop; never install, and never widen the range yourself.
 2. **Migrate.** Run each script under `../../migrations/` in number order with node, the
    repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
-   its plan, run it without `--check`, and report what moved. `001` removes the Step 0 prototype; `002` the git workflow and a step's `branch:` and `PR:` lines.
+   its plan, run it without `--check`, and report what moved.
 3. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
    stamped hash. Equal is stale-or-current and replaceable; different is customized.
 4. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip
