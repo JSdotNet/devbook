@@ -26,13 +26,10 @@ specs already there. The contract is `.devbook/_tools/scenarios/README.md`, whic
 3. **Write the header** as the first two lines — `// scenario: <page path from the repository
    root>` and `// signature: <signature>` — and import `scenario` and `shot` from the
    materialized `setup` module by relative path.
-4. **Write the shape.** `scenario('<stem>', ({ part }) => { … })` is the setup call: it applies
-   the profile, data sets, flags, settings, and sign-in, and opens `start`, so no step repeats
-   them. Inside it, one `part('<title>', async ({ page, step, portal }) => { … })` per `##`, in
-   page order, titled exactly as the heading; in each, one `await step('<Keyword> <text>', …)`
-   per step, titled as written without the bold, and `await shot(page, '<label>')` where the page
-   puts each screenshot point. A step that moves to another portal rebinds the page —
-   `page = await portal('<name>')` — so later steps and `shot` calls in that part act there.
+4. **Write the shape** per the README under *The contract*. The `scenario('<stem>', …)` call
+   already applies the setup and opens `start`, so no step repeats it. Title each `part` exactly
+   as its `##`, in page order, and each `step` as written without the bold. A step that moves to
+   another portal rebinds `page = await portal('<name>')` for the rest of that part.
 5. **Re-derive in place.** Keep every step body whose text is unchanged; add, remove, reorder,
    and retitle parts, steps, and `shot` calls to match the page; write the signature last.
 6. **Fill what the page says**, per `qa:playwright-e2e-authoring`: a **When** is the action, a
@@ -42,9 +39,5 @@ specs already there. The contract is `.devbook/_tools/scenarios/README.md`, whic
 7. **Check**: `node .devbook/_tools/scenarios/check.mjs` reports nothing for this page, and
    `npx playwright test --list <spec>` lists one test per part.
 
-## Do not
-
-- Edit the setup hook — the file `scenarioHook` names — `profiles.json`, or the page. A step that
-  needs new setup is reported to the implementer, not written into the hook.
-- Title a part or a step away from the page's text, add a test the page has no part for, or
-  write a signature by hand.
+Never edit the setup hook — the file `scenarioHook` names — `profiles.json`, or the page: a step
+that needs new setup is reported to the implementer. Never write a signature by hand.
