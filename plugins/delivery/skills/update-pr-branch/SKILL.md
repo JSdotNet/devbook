@@ -24,8 +24,8 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
 ## Inputs
 
 - Pull request number or branch name (default: the PR for the current branch).
-- Base branch (default: the PR's own base through the lane, `gh pr view --json baseRefName`;
-  with no lane, the repository default branch).
+- Base branch (default: the PR's own `baseRefName` through the lane; with no lane, the
+  repository default branch).
 - Integration strategy: `merge` (default) or `rebase`.
 
 ## Strategy Selection
@@ -37,176 +37,72 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
 | Repository requires a linear history / rebase-merge only | `rebase` |
 | Branch is private, unreviewed, and history is messy | `rebase` |
 
-`rebase` rewrites published history and needs `--force-with-lease`. Only use it after telling
-the user it will rewrite the branch, and never on a branch someone else is working on.
+`rebase` rewrites published history. Only use it after telling the user it will rewrite the
+branch, and never on a branch someone else is working on.
 
 ## Hard Constraints
 
-- Never resolve a conflict by discarding one side wholesale without reading both sides.
-- Never use `git checkout --ours` / `--theirs` as a blanket resolution.
-- Never force-push with plain `--force`; always `--force-with-lease`.
-- Never push a branch that fails to build after conflict resolution.
+- Read both sides of every conflict before resolving it; never resolve by taking one side
+  wholesale, and never with a blanket `git checkout --ours` / `--theirs`.
+- Push a branch only after it builds and validates following conflict resolution.
 - Stop and report rather than guessing when a conflict encodes a genuine design decision.
 
 ## Workflow
 
 ### Phase 1 — Establish State
 
-1. Identify the PR and its base:
-
-   ```bash
-   gh pr view <number> --json number,headRefName,baseRefName,mergeable,mergeStateStatus,url
-   ```
-
-   `mergeable: CONFLICTING` or `mergeStateStatus: DIRTY` means real conflicts;
-   `mergeStateStatus: BEHIND` means the branch only needs the base merged in.
-
-2. Confirm the local checkout matches the PR head and is clean:
-
-   ```bash
-   git --no-pager branch --show-current
-   git --no-pager status --short
-   ```
-
-   If there are uncommitted changes, stop and ask the user to commit them, or to set them
-   aside as a temporary commit — never a stash, whose stack is shared across worktrees.
-
-3. Fetch the base:
-
-   ```bash
-   git --no-pager fetch origin <base>
-   git --no-pager log HEAD..origin/<base> --oneline
-   ```
-
-4. If there are no incoming commits, report that the branch is already up to date and stop.
+1. Read the PR's `number`, `headRefName`, `baseRefName`, `mergeable`, `mergeStateStatus`, and
+   `url`. `mergeable: CONFLICTING` or `mergeStateStatus: DIRTY` means real conflicts;
+   `mergeStateStatus: BEHIND` means the branch only needs the base merged in. GitHub's own
+   "Update branch" button helps only with `BEHIND`.
+2. Confirm the local checkout is the PR head and clean. With uncommitted changes, stop and ask
+   the user to commit them, or to set them aside as a temporary commit — never a stash, whose
+   stack is shared across worktrees.
+3. Fetch the base. With no incoming commits, report that the branch is already up to date and
+   stop.
 
 ### Phase 2 — Integrate
 
-5. Merge strategy:
-
-   ```bash
-   git merge origin/<base>
-   ```
-
-   Rebase strategy:
-
-   ```bash
-   git rebase origin/<base>
-   ```
-
-6. If the command completes cleanly, skip to Phase 4.
+4. Merge or rebase onto `origin/<base>` per the strategy. A clean result skips to Phase 4.
 
 ### Phase 3 — Resolve Conflicts
 
-7. List the conflicted files:
+5. For each conflicted file, read the whole file, not just the hunk, and each side's recent
+   commits to the file to learn what it intended. Then resolve by type:
 
-   ```bash
-   git --no-pager diff --name-only --diff-filter=U
-   ```
+   | Conflict type | Resolution |
+   | --- | --- |
+   | Both sides edited unrelated lines in the same hunk | Keep both edits |
+   | Base refactored an API the PR calls | Adapt the PR's calls to the new API |
+   | Both sides changed the same logic differently | Combine the intents; ask the user if they are mutually exclusive |
+   | Lock or generated source file (`package-lock.json`, `*.g.cs`) | Take the base version, then regenerate |
+   | Generated `_meta/` index | Take the base version and leave the refresh to the scheduled job, per `devbook-derived-artifacts.md` |
+   | Version or changelog line | Take the base value and re-apply the PR's entry on top |
+   | File deleted on one side, edited on the other | Ask the user — never decide silently |
 
-8. For each conflicted file, resolve deliberately:
-
-   a. Read the full file, not just the conflict hunk.
-
-   b. Understand what each side intended:
-
-      ```bash
-      git --no-pager log --oneline -3 origin/<base> -- <file>
-      git --no-pager log --oneline -3 HEAD -- <file>
-      ```
-
-   c. Classify the conflict and resolve accordingly:
-
-      | Conflict type | Resolution |
-      | --- | --- |
-      | Both sides edited unrelated lines in the same hunk | Keep both edits |
-      | Base refactored an API the PR calls | Adapt the PR's calls to the new API |
-      | Both sides changed the same logic differently | Combine the intents; ask the user if they are mutually exclusive |
-      | Lock or generated source file (`package-lock.json`, `*.g.cs`) | Take the base version, then regenerate |
-      | Generated `_meta/` index | Take the base version and leave the refresh to the scheduled job, per `devbook-derived-artifacts.md` |
-      | Version or changelog line | Take the base value and re-apply the PR's entry on top |
-      | File deleted on one side, edited on the other | Ask the user — never decide silently |
-
-   d. Remove every conflict marker (`<<<<<<<`, `=======`, `>>>>>>>`) and stage the file:
-
-      ```bash
-      git add <file>
-      ```
-
-9. Verify no markers remain anywhere:
-
-   ```bash
-   git --no-pager grep -n -E "^(<<<<<<<|=======|>>>>>>>)" || echo "clean"
-   ```
-
-10. Complete the integration:
-
-    ```bash
-    git merge --continue
-    ```
-
-    or, for rebase:
-
-    ```bash
-    git rebase --continue
-    ```
-
-    Repeat Phase 3 for each subsequent rebase step that conflicts.
-
-11. If resolution is not possible, abort cleanly and report which files blocked it:
-
-    ```bash
-    git merge --abort
-    ```
-
-    ```bash
-    git rebase --abort
-    ```
+6. Stage each resolved file, then grep the tree for `^(<<<<<<<|=======|>>>>>>>)`; continue
+   only when no marker remains. Continue the merge or rebase, repeating this phase for each
+   rebase step that conflicts.
+7. If resolution is not possible, abort the merge or rebase and report which files blocked it.
 
 ### Phase 4 — Re-validate
 
-12. Regenerate the lock and generated source files taken from the base before validating;
-    never a `_meta/` index.
-13. Run the repository's own validation. Detect the toolchain from the repository rather than
-    assuming one:
-
-    | Repository marker | Validation |
-    | --- | --- |
-    | `*.sln`, `*.csproj` | `dotnet restore` then `dotnet build` then `dotnet test` |
-    | `package.json` | the `build`, `lint`, and `test` scripts that exist |
-    | `scripts/*.ps1` check modes | run each `-Check` script the repository defines |
-    | none of the above | the commands named in the `repo-instructions` file, `AGENTS.md`, or the CI workflow |
-
-14. If validation fails, fix the fallout from the integration before pushing. Failures that
-    predate the integration belong to `fix-pr-checks`.
+8. Regenerate the lock and generated source files taken from the base; never a `_meta/` index.
+9. Run the repository's own validation — the commands its instruction files or CI workflow
+   name. Fix fallout from the integration before pushing; failures that predate the
+   integration belong to `fix-pr-checks`.
 
 ### Phase 5 — Push
 
-15. Confirm with the user before pushing, stating the strategy used and the conflicts resolved.
-16. Push:
-
-    ```bash
-    git push
-    ```
-
-    After a rebase:
-
-    ```bash
-    git push --force-with-lease
-    ```
-
-17. Re-check the PR state:
-
-    ```bash
-    gh pr view <number> --json mergeable,mergeStateStatus
-    gh pr checks <number>
-    ```
+10. Confirm with the user before pushing, stating the strategy used and the conflicts resolved.
+11. Push — after a rebase with `--force-with-lease`, never plain `--force`. A lease that fails
+    because the branch moved elsewhere is the guard working; report it.
+12. Re-read the PR's mergeability and checks. After a rebase, inline review comments on
+    rewritten commits become outdated; say so in the PR when it matters to reviewers.
 
 ## Surface Reporting
 
 Follow the **Reporting Contract** in `resources/surface-contract.md`.
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
 
 - `start_run` with `skillId: "update-pr-branch"` and these stages: Establish State, Integrate,
   Resolve Conflicts, Re-validate, Push.
@@ -216,18 +112,9 @@ the source of truth.
 
 - Branch integrated with its base, or an explicit report of why it could not be.
 - Per-file conflict resolution summary with the decision taken for each.
-- Post-integration validation result.
-- Updated PR mergeability and check status.
+- Post-integration validation result, and the PR's mergeability and check status.
 
 ## Related Skills
 
 - `fix-pr-checks` — for check failures that are not caused by the integration.
-- `pr-merge-ready` — pick the pull request that needs this integration and run it, one PR per pass, on a timer.
-
-## Notes
-
-- GitHub's own "Update branch" button performs the merge strategy without conflict resolution;
-  it only helps when `mergeStateStatus` is `BEHIND`, not `DIRTY`.
-- Re-running this skill is safe: an already-integrated branch reports "up to date" and stops.
-- After a rebase, existing inline review comments on rewritten commits become outdated. Say so
-  in the PR when it matters to reviewers.
+- `pr-merge-ready` — picks the pull request that needs this integration, one PR per pass.
