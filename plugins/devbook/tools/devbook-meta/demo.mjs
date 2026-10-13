@@ -213,7 +213,7 @@ function networkFetches(html) {
 const MODEL_KEYS = ["app", "screens", "roles", "flags", "settings", "viewports", "variants", "walkthroughs"];
 
 /** A linked walkthrough's `part`, `<page>.md#<part>`, and the signature it was copied at. */
-const LINKED_PART = /^[^#\s]+\.md#[^#\s]+$/;
+export const LINKED_PART = /^[^#\s]+\.md#[^#\s]+$/;
 const SIGNATURE = /^[0-9a-f]{8}$/;
 
 /**
@@ -743,7 +743,7 @@ async function loadScenarioTools() {
  * `pages`: a repository path, a path from the demo's folder — its landing
  * place when the demo sits in a change — or a bare `<stem>.md`.
  */
-function resolveLinkedPage(demoPath, pagePart, pages) {
+export function resolveLinkedPage(demoPath, pagePart, pages) {
     if (pagePart.startsWith(DEVBOOK_PREFIX)) return pages.has(pagePart) ? { path: pagePart } : { error: `${pagePart} is not a scenario page` };
     if (pagePart.includes("/")) {
         const from = changePathParts(demoPath)?.target ?? demoPath;
@@ -757,7 +757,7 @@ function resolveLinkedPage(demoPath, pagePart, pages) {
 }
 
 /** Whether a linked step's embedded text is its part step's, with or without the keyword. */
-function stepTextMatches(text, target, collapse) {
+export function stepTextMatches(text, target, collapse) {
     const shown = collapse(text).replace(/^\*\*(Given|When|Then|And)\*\*/, "$1");
     return shown === target.text || (target.keyword !== null && shown === `${target.keyword} ${target.text}`);
 }

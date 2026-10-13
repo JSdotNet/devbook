@@ -107,7 +107,8 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
   variant's markup and `demo-model` entries, keep the chosen one's ids and anchors, and list what
   went. Until then every variant stays.
 - **Revising a demo:** keep every id and anchor that still exists; rename none without cause.
-  Re-copy every linked walkthrough's `text` and `signature` from its page as it is now, and link
+  Re-copy every linked walkthrough's `text` and `signature` from its page as it is now with
+  `node .devbook/_tools/scenarios/demo-sync.mjs <demo>`, and link
   a free walkthrough to the part of a scenario page that now tells its journey, keeping its id —
   the requirement's hand-written `demo` entry for it then goes, since the link derives it.
 - Semantic HTML, labelled controls, visible focus, the contrast the design system requires.
