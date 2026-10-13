@@ -734,6 +734,7 @@ not installed, the repository's own specs are the model.
 | The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
 | The demo sync replaces only a stale `signature` and drifted step `text`, keeps a copy's keyword style, leaves a current demo byte for byte, and with `--check` writes nothing and exits 1 while either remains | `demo-sync.mjs` | `unit:node:plugins/devbook/tools/scenarios/demo-sync.test.mjs` |
+| A path taken from an argument, a page, a spec header, or a profile that resolves outside the repository is reported the way that tool reports a bad path, and is never read or written | `resolveInside` in `parse.mjs`, and in devbook-meta's `paths.mjs` | `unit:node:plugins/devbook/tools/scenarios/parse.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/paths.test.mjs` |
 | Materialized only where `domain/` is adopted | `init`, `update` | untested |
 
 ### Shared Value Objects
