@@ -7,6 +7,8 @@ description: 'Report a repository''s week as one update a stakeholder can read: 
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Keep a record of everything that changed in the repository, one update per week, written so
@@ -46,20 +48,6 @@ Nothing here restates it.
 ### Phase 3 — Deliver
 
 5. Render the update in chat, and `render_markdown` it on the bound surface when there is one.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue.
-
-- `start_run` with `skillId: "schedule-weekly-update"` and these stages: Gather, Write the
-  Update, Deliver.
-
-## Output
-
-One update for one repository and one week: prose, numbers, the four sections, carry-over,
-every item linked. Read-only and idempotent: re-run with an explicit range to rewrite any past
-week. An empty window is `Nothing changed since <since>.` under the numbers, never padded.
 
 ## Related Skills
 

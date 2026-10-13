@@ -7,6 +7,8 @@ description: 'Check one or more GitHub repositories for what changed since the l
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Give a concise, de-duplicated "what shipped and what's in flight" report across one or more
@@ -140,24 +142,6 @@ one entry per repo:
       closure follow-up.
     - If an open or merged PR has no discoverable ticket reference at all: note it for manual
       traceability follow-up if the team requires ticket linkage.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-whats-new"` and these stages: Load Checkpoint, Gather
-  Open Pull Requests, Gather Merged Pull Requests, Correlate Tickets, Report,
-  Persist Checkpoint, Follow-Up.
-
-## Output
-
-- Consolidated "what's new" report across all configured repos, grouped by repo and split
-  into merged pull requests and open-PR changes.
-- Ticket/issue context attached to each PR where discoverable.
-- Updated checkpoint file so the next run reports only genuinely new activity.
-- Optional follow-up suggestions for closeable open PRs and unclosed linked issues.
 
 ## Notes
 

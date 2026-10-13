@@ -7,6 +7,8 @@ description: 'The unattended devbook sync sweep, one entry point for both direct
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Keep chapters and code level in the direction each chapter states in its own `sync` field,
@@ -107,11 +109,5 @@ result, the report block — is `../../resources/devbook-sweep-contract.md`.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md` (`delivery` plugin). No
-surface bound: say so once and continue.
-
-- `start_run` with `skillId: "schedule-devbook-sweep"`, `trigger` (`scheduled` from a schedule,
-  `attended` by hand), `schedule: "devbook-<direction>-sweep"` when scheduled, and `repo`; stages
-  Select, Verify, File, Resolve, Brief.
-- Workflow agents never call surface tools. The Resolve stage's `links` carry every pull request
-  URL; `finish_run` carries the report block's `units` as `verdicts`.
+`schedule` is `devbook-<direction>-sweep`; the Resolve stage's `links` carry every pull request
+URL.

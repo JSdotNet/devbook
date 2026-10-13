@@ -7,6 +7,8 @@ description: 'Review every open pull request that is waiting on a reviewer: run 
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Keep every open pull request reviewed within a day of its last push, so a person deciding
@@ -187,22 +189,6 @@ whether or not Phase 1 left any pull request to review.
     `../../resources/report-contract.md`: every reviewed pull request with its verdict and
     comment link, and the hotspots with the change that would end each. None over the
     threshold: a *Run* row naming the window and how many merges were re-run.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the comments remain the
-source of truth.
-
-- `start_run` with `skillId: "schedule-merge-review"` and these stages: Collect, Review
-  Each Pull Request, Conflict Hotspots, Post, Summary.
-
-## Output
-
-- One review comment per open pull request whose head had not been reviewed, carrying the
-  findings, the door, and a verdict weighed by it.
-- A summary table of verdicts and of what was skipped, and a table of the conflict hotspots
-  with the change that would end each.
 
 ## Notes
 

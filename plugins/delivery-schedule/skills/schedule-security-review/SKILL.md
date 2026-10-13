@@ -7,6 +7,8 @@ description: 'Run a layered security review of the repository: vulnerable depend
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Find what a feature review does not look for: a dependency with a published advisory, a
@@ -120,21 +122,6 @@ re-reads.
 
 10. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
     per-layer counts, then the ranked table from Phase 5 as *Findings*.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the issues remain the
-source of truth.
-
-- `start_run` with `skillId: "schedule-security-review"` and these stages: Dependencies,
-  Secrets, Workflows, Code, Report, Issues, Summary.
-
-## Output
-
-- One severity-ranked findings report across the four layers.
-- One GitHub issue per new finding at or above the threshold, none for findings already open.
-- A per-layer summary table.
 
 ## Notes
 

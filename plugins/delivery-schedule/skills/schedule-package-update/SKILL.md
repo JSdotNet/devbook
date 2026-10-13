@@ -7,6 +7,8 @@ description: 'Update all outdated NuGet packages in a .NET solution, check insta
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Scan a .NET solution for outdated NuGet packages, apply safe updates,
@@ -131,21 +133,6 @@ skipped and named, never forced.
 14. Once the pull request is created (or the run concludes without one), output the report
     in `report.md` beside this file, per `../../resources/report-contract.md`: one *Packages*
     row per package — updated, skipped with the reason, or a plugin behind.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-package-update"` and these stages: Audit, Apply
-  Updates, Verify, Decide, Pull Request, Summary.
-
-## Output
-
-- Branch with all safe NuGet and Aspire package updates applied and tests passing.
-- Pull request with a full audit table in the body.
-- Summary table of results per package.
 
 ## Notes
 

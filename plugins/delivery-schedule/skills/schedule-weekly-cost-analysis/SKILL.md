@@ -7,6 +7,8 @@ description: 'Analyse the token usage the bound delivery surface recorded for th
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Read the token usage the bound delivery surface recorded for each flow run
@@ -67,20 +69,6 @@ session starts with the two delivery plugins.
 7. Unattended, the repository-specific actions stand in the report for a person to take.
    Run by hand, offer to act on any of them — trimming the prompt of a skill named as
    high-cost, moving a low-complexity agent to a cheaper tier.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-weekly-cost-analysis"` and these stages: Retrieve Cost
-  Data, Analyse Patterns, Produce Report, Follow-Up.
-
-## Output
-
-- Structured weekly cost report with summary metrics and prioritised tips.
-- Repository-specific action items with optional one-click follow-up.
 
 ## Notes
 

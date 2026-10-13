@@ -7,6 +7,8 @@ description: 'The unattended issue sweep: classify every open issue nobody has c
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Turn an inbox into a backlog, and the top of the backlog into draft pull requests, in one
@@ -224,24 +226,8 @@ at `high` confidence, and nothing lowers that.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the labels, the pull
-requests, and the brief remain the source of truth.
-
-- `start_run` with `skillId: "schedule-issue-sweep"` and these stages: Fetch the Backlog,
-  Triage, Write the Triage Back, Close the Resolved, Resolve, Brief.
-- Both workflows' agents are sub-agents and never call surface tools. Record the triage
-  verdict counts as the Triage stage output, and each resolution's `outcome` and `route` as
-  the Resolve stage output, one line per issue.
-
-## Output
-
-- Every untriaged issue classified in the repository's own labels, asked for what is missing,
-  or reported as a proposal — and marked `triaged` so the next sweep moves on.
-- Issues shown already resolved by high-confidence evidence closed, with the evidence.
-- Up to `maxResolve` issues resolved on their own branches, each a draft pull request whose
-  body says what personal validation has to cover.
-- One brief, needs-you first.
+The Triage stage's output is the verdict counts; the Resolve stage's is each resolution's
+`outcome` and `route`, one line per issue.
 
 ## Notes
 

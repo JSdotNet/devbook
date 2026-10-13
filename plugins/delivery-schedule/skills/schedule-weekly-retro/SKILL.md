@@ -7,6 +7,8 @@ description: 'Review how AI was used in this repository over the week — its se
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 A week of sessions shows where AI was used well and where it was not: a task that took forty
@@ -126,13 +128,7 @@ week's sessions get further.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the pull request remains
-the source of truth.
-
-- `start_run` with `skillId: "schedule-weekly-retro"` and these stages: Gate, Resolve the
-  Reviewer, Gather, Review and Edit, Pull Request, Report. A run the gate stops calls
-  `finish_run` after Gate.
+A run the gate stops calls `finish_run` after Gate.
 
 ## Notes
 

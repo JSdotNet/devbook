@@ -7,6 +7,8 @@ description: 'Report what changed in this repository since yesterday and what ne
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Answer one question before the day starts: **what changed since yesterday, and what needs me?**
@@ -48,20 +50,6 @@ Nothing here restates it.
 
 5. Render the brief in chat, and `render_markdown` it on the bound surface when there is one.
    Keep it to one screen: detail belongs behind the links, and the brief's job is triage.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue.
-
-- `start_run` with `skillId: "schedule-morning-brief"` and these stages: Gather, Write the
-  Brief, Deliver.
-
-## Output
-
-One brief for one repository and one window, needs-you first, every item linked. Read-only
-and idempotent: run it again after acting and it gets shorter, and a brief with nothing under
-*Needs you* is the good outcome.
 
 ## Related Skills
 

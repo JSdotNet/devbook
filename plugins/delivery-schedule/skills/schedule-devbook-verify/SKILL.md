@@ -7,6 +7,8 @@ description: 'The unattended drift check for the sync units no sweep writes to: 
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Say where the chapters and the code have parted with nobody asking: a `code-ahead` row is a
@@ -46,13 +48,6 @@ It covers the sync units at `report` and nothing else: a unit at `pull`, `push`,
    unit would hand it to a sweep.
 4. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`,
    with the issues from step 3 linked. Every row `aligned`: the counts and nothing else.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin): `start_run`
-with `skillId: "schedule-devbook-verify"`, `trigger`, `schedule: "devbook-verify"` when a
-schedule fired it, and `repo`, and stages Collect, Filter, Issues, Report. No surface
-bound: say so once and continue — the issues are the source of truth.
 
 ## Do not
 

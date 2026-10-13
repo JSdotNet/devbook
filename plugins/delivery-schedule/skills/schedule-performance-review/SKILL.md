@@ -7,6 +7,8 @@ description: 'Identify 10 performance improvements across the codebase, score ea
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Run a structured performance scan across the codebase to surface the top 10 improvement
@@ -132,22 +134,6 @@ high-allocation paths first; read them before scanning.
     - Implemented finding: file, issue, expected improvement.
     - Link to the opened PR.
     - Remaining 9 findings listed for future review cycles.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-performance-review"` and these stages: Scan for
-  Findings, Present Findings, Implement the Winning Finding, Decide, Pull
-  Request, Summary.
-
-## Output
-
-- Top-10 performance findings table.
-- Branch and PR implementing the highest-impact, lowest-effort finding.
-- Remaining findings preserved for future runs.
 
 ## Notes
 

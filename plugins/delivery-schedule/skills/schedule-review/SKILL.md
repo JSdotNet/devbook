@@ -7,6 +7,8 @@ description: 'Run a full automated review cycle on the codebase or a specific sc
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Run a layered, automated review of the codebase. Each review layer adds a different
@@ -91,21 +93,6 @@ else:
 10. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
     the per-layer counts, then the ranked list from Phase 4 as *Findings*, each linked to the
     issue Phase 5 opened for it.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-review"` and these stages: TODO Review, Suggestion
-  Review, Code Review, Consolidated Report, Issue Creation, Summary.
-
-## Output
-
-- Consolidated, prioritised findings report covering TODOs, suggestions, and code review.
-- GitHub issues created for all approved high-priority findings.
-- Summary table per review layer.
 
 ## Notes
 

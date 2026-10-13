@@ -7,6 +7,8 @@ description: 'The unattended stack update: run devbook-config:update with the sa
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 `schedule-devbook-validate` finds a repository behind the marketplace and says so; this run

@@ -7,6 +7,8 @@ description: 'The unattended devbook validation: run devbook:validate over every
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Keep a repository's devbook honest with nobody watching: broken references and schema

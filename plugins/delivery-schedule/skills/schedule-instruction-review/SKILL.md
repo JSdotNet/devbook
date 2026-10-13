@@ -7,6 +7,8 @@ description: 'Tighten the instruction assets a repository loads into a model —
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Instructions decay the opposite way from code: nobody deletes a sentence, so every asset grows
@@ -85,20 +87,6 @@ None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` nam
 
 11. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
     files read, edited, skipped, lines removed, the standard applied, and the link.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the pull request remains
-the source of truth.
-
-- `start_run` with `skillId: "schedule-instruction-review"` and these stages: Inventory,
-  Read, Edit, Pull Request, Summary.
-
-## Output
-
-- One draft pull request, one commit per file, a ledger in the body — or nothing.
-- A summary naming what was skipped and why.
 
 ## Notes
 

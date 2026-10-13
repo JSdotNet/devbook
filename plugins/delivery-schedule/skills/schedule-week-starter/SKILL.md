@@ -7,6 +7,8 @@ description: 'Scan configured topics for updates published in the last 7 days an
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
+
 ## Purpose
 
 Fetch recent release notes, changelogs, and announcements for each configured topic,
@@ -110,21 +112,6 @@ For each topic in the configured Topics list:
      this repository's own customizations: note it as a candidate for review or reuse (do not
      copy content automatically).
    - Otherwise, confirm the digest is complete and the week can start.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-week-starter"` and these stages: Fetch Updates per
-  Topic, Produce Digest, Follow-Up.
-
-## Output
-
-- Structured weekly digest grouped by topic (or in timeline order).
-- Per-item summaries with links to full release notes or changelog entries.
-- Optional follow-up action suggestions for actionable updates.
 
 ## Notes
 
