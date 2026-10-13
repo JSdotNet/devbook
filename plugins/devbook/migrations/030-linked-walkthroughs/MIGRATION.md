@@ -15,8 +15,9 @@ walkthrough that played a `Proved by:` case was written free, under the case's s
 own step text that nothing kept level with the page.
 
 For every `*.demo.html` under `.devbook/domain/`, this migration takes each free walkthrough
-whose `id` is the slug of a `#### Scenario:` holding one `Proved by:` line that resolves, and
-rewrites it to linked form, in the demo's `demo-model` and nowhere else:
+whose `id` is the slug of a `#### Scenario:` holding one `Proved by:` line that resolves, under
+a requirement in the demo's own bounded context, and rewrites it to linked form, in the demo's
+`demo-model` and nowhere else:
 
 | Value | Written from |
 | --- | --- |
@@ -26,13 +27,15 @@ rewrites it to linked form, in the demo's `demo-model` and nowhere else:
 | each step's `text` | The part step it now names, copied by `tools/scenarios/demo-sync.mjs`, keeping a leading keyword where the old text had one |
 
 The slug is matched both ways a requirement's walkthrough id is: the heading's own anchor and
-the case's name without `Scenario:`. A demo inside a change's `devbook-delta/` is not read.
+the case's name without `Scenario:`. A demo inside a change's `devbook-delta/` is not read, and
+a walkthrough already linked is not touched, its drift being the checker's to report.
 
-Two walkthroughs the rule matches are left free, and each run lists them `not-applicable`
-with the reason:
+A walkthrough the rule matches is left free, and each run lists it `not-applicable` with the
+reason, when:
 
 - its step count differs from the part's, so no step maps to a part step by position;
-- its slug is the slug of `Proved by:` cases naming more than one part.
+- its slug is the slug of `Proved by:` cases naming more than one part;
+- a step is not an object, so it cannot carry `step`.
 
 Link either by hand with `/prototype`, or rename it if it plays something else. A listed
 walkthrough is never work left: the migration cannot move it, and nothing records it beyond

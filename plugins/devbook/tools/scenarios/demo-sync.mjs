@@ -122,9 +122,9 @@ function copiedText(current, target) {
  * `html` the file with every stale `signature` and drifted `text` replaced and
  * nothing else; `changes` one `{ id, kind, step?, from, to }` per replaced
  * value, `kind` `signature` or `text`; `problems` the walkthroughs it could not
- * resolve, as messages.
+ * resolve, as messages. `only`, a set of walkthrough ids, limits the sync to those.
  */
-export function syncDemo(html, relPath, pages) {
+export function syncDemo(html, relPath, pages, { only = null } = {}) {
     const changes = [];
     const problems = [];
     const demo = parseDemo(html);
@@ -141,6 +141,7 @@ export function syncDemo(html, relPath, pages) {
         const id = node.members?.get("id")?.value;
         const partNode = node.members?.get("part");
         if (partNode?.kind !== "string" || !LINKED_PART.test(partNode.value)) continue;
+        if (only && !only.has(id)) continue;
         const part = partNode.value;
         const at = `${relPath} walkthrough "${id}" (\`part\` "${part}")`;
         const hash = part.indexOf("#");

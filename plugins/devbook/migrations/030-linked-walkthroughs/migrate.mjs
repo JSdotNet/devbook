@@ -60,14 +60,20 @@ function provedPage(fromPath, pagePart, pages) {
     return found.length === 1 ? found[0].path : null;
 }
 
+/** The bounded context a path under `domain/` sits in: its folder there, or "" at the root. */
+export function contextOf(relPath) {
+    const segments = relPath.split("/");
+    return segments.length > 3 ? segments[2] : "";
+}
+
 /**
- * Every `Proved by:` case under `domain/` that resolves to a part, keyed by the case's
- * slug — the heading's own anchor and its name without `Scenario:`, as a requirement's
- * walkthrough id is matched — each to the parts it names, `<page path>#<anchor>` to the
- * pointer as written.
+ * Every `Proved by:` case under `domain/` that resolves to a part, keyed by the bounded
+ * context its requirement sits in and then by the case's slug — the heading's own anchor
+ * and its name without `Scenario:`, as a requirement's walkthrough id is matched — each to
+ * the parts it names, `<page path>#<anchor>` to the pointer as written.
  */
 async function provedCases(root, pages) {
-    const bySlug = new Map();
+    const byContext = new Map();
     for (const relPath of await filesUnder(root, DOMAIN_FOLDER, /\.md$/i)) {
         const markdown = await readFile(path.join(root, relPath), "utf8");
         for (const scenarioCase of provedByCases(relPath, markdown)) {
@@ -79,6 +85,9 @@ async function provedCases(root, pages) {
             const anchor = target.slice(hash + 1);
             if (!page || !pages.get(page).page.parts.some((p) => p.anchor === anchor)) continue;
             const name = scenarioCase.heading.replace(/^\s*Scenario:\s*/i, "");
+            const context = contextOf(relPath);
+            if (!byContext.has(context)) byContext.set(context, new Map());
+            const bySlug = byContext.get(context);
             for (const slug of new Set([slugify(scenarioCase.heading), slugify(name)])) {
                 const parts = bySlug.get(slug) ?? new Map();
                 if (!parts.has(`${page}#${anchor}`)) parts.set(`${page}#${anchor}`, { page, anchor, target, requirement: scenarioCase.requirement });
@@ -86,16 +95,18 @@ async function provedCases(root, pages) {
             }
         }
     }
-    return bySlug;
+    return byContext;
 }
 
 /**
  * Rewrite one demo. Returns `{ html, linked, notApplicable }`: `html` the file with each
  * matched free walkthrough of the part's step count linked and its text copied, nothing
  * else moved; `linked` the ids rewritten; `notApplicable` one `{ id, reason }` per matched
- * walkthrough left free.
+ * walkthrough left free; `problem` what the sync could not resolve, when it could not.
+ * Only a case whose requirement sits in the demo's own bounded context is matched.
  */
-export function migrateDemo(html, relPath, pages, bySlug) {
+export function migrateDemo(html, relPath, pages, byContext) {
+    const bySlug = byContext.get(contextOf(relPath)) ?? new Map();
     const linked = [];
     const notApplicable = [];
     const demo = parseDemo(html);
@@ -120,6 +131,10 @@ export function migrateDemo(html, relPath, pages, bySlug) {
         const entry = pages.get(page);
         const partSteps = entry.page.parts.find((p) => p.anchor === anchor).steps;
         const steps = node.members.get("steps")?.items ?? [];
+        if (steps.some((step) => step.kind !== "object")) {
+            notApplicable.push({ id, reason: "a step is not an object, so it cannot carry `step`; fix the walkthrough's shape first" });
+            continue;
+        }
         if (steps.length !== partSteps.length) {
             notApplicable.push({ id, reason: `it has ${steps.length} step(s) and ${page}#${anchor} has ${partSteps.length}, so no step maps to a part step by position; link it by hand` });
             continue;
@@ -138,7 +153,6 @@ export function migrateDemo(html, relPath, pages, bySlug) {
             edits.push({ start: idNode.end, end: idNode.end, to: `, "part": ${scriptString(part)}, "signature": ${scriptString(entry.signature)}` });
         }
         steps.forEach((step, index) => {
-            if (step.kind !== "object") return; // the checker reports the shape
             const stepNode = step.members.get("step");
             const add = [];
             if (stepNode) edits.push({ start: stepNode.start, end: stepNode.end, to: String(index + 1) });
@@ -159,8 +173,10 @@ export function migrateDemo(html, relPath, pages, bySlug) {
     for (const edit of edits.sort((a, b) => b.start - a.start)) body = body.slice(0, edit.start) + edit.to + body.slice(edit.end);
     const rewritten = html.slice(0, bodyAt) + body + html.slice(bodyAt + script.body.length);
     // The step text is demo-sync's to copy: each linked step takes its part step's.
-    const synced = syncDemo(rewritten, relPath, pages);
-    return { html: synced.html, linked, notApplicable, problem: synced.problems.length ? synced.problems.join("\n") : undefined };
+    // Only the walkthroughs linked here: an older linked one's drift is the checker's to report.
+    const synced = syncDemo(rewritten, relPath, pages, { only: new Set(linked) });
+    if (synced.problems.length) return { html, linked: [], notApplicable, problem: synced.problems.join("\n") };
+    return { html: synced.html, linked, notApplicable };
 }
 
 async function main(argv) {
@@ -176,7 +192,7 @@ async function main(argv) {
     if (!(devbook.adopted ?? []).includes("domain")) done("not-applicable — `domain` is not adopted.");
 
     const pages = await scenarioPages(ROOT, scenarioFolder);
-    const bySlug = await provedCases(ROOT, pages);
+    const byContext = await provedCases(ROOT, pages);
     let work = 0;
     let failed = false;
     for (const relPath of await filesUnder(ROOT, DOMAIN_FOLDER, DEMO_FILE)) {
@@ -184,7 +200,7 @@ async function main(argv) {
         const html = await readFile(file, "utf8");
         let result;
         try {
-            result = migrateDemo(html, relPath, pages, bySlug);
+            result = migrateDemo(html, relPath, pages, byContext);
         } catch (error) {
             result = { html, linked: [], notApplicable: [], skipped: `${relPath}: its \`${DEMO_MODEL_ID}\` is not valid JSON — ${error.message}` };
         }

@@ -182,6 +182,47 @@ test("a Proved by path written from the requirement's folder becomes the page's 
     });
 });
 
+test("an older linked walkthrough keeps its stale signature and text for the checker to report", () => {
+    const older = `    { "id": "older", "part": "set-up-the-board.md#statuses-are-set-up", "signature": "00000000", "title": "Older",
+      "steps": [ {"step": 3, "screen": "board", "text": "the columns show"} ] }`;
+    return withRepo(board(demo([FREE, older])), (root) => {
+        assert.equal(run(root).status, 0);
+        assert.equal(read(root, DEMO_PATH), demo([LINKED, older]));
+    });
+});
+
+test("a stray signature and step on a free walkthrough are overwritten, not repeated", () => {
+    const stray = FREE.replace('"title"', '"signature": "00000000", "title"').replace('{"screen": "statuses", "text": "**Given', '{"step": 7, "screen": "statuses", "text": "**Given');
+    return withRepo(board(demo([stray])), (root) => {
+        assert.equal(run(root).status, 0);
+        assert.equal(read(root, DEMO_PATH), demo([LINKED]));
+    });
+});
+
+test("a demo checked out with CRLF line endings keeps them", () => {
+    const crlf = (text) => text.replace(/\n/g, "\r\n");
+    return withRepo(board(crlf(demo([FREE]))), (root) => {
+        assert.equal(run(root).status, 0);
+        assert.equal(read(root, DEMO_PATH), crlf(demo([LINKED])));
+    });
+});
+
+test("a Proved by case in another bounded context links nothing", () =>
+    withRepo({ [PAGE_PATH]: PAGE, ".devbook/domain/billing/requirements.md": requirements(PROVED), [DEMO_PATH]: demo([FREE]) }, (root) => {
+        assert.equal(run(root, "--check").status, 0);
+        assert.equal(run(root).status, 0);
+        assert.equal(read(root, DEMO_PATH), demo([FREE]));
+    }));
+
+test("a repository with no stamp has nothing to do", () =>
+    withRepo(board(demo([FREE])), (root) => {
+        rmSync(path.join(root, ".devbook/config.json"));
+        const check = run(root, "--check");
+        assert.equal(check.status, 0);
+        assert.match(check.stdout, /nothing to do — no stamp/);
+        assert.equal(read(root, DEMO_PATH), demo([FREE]));
+    }));
+
 test("a repository that never adopted domain/ is not-applicable", () =>
     withRepo(board(demo([FREE])), (root) => {
         const check = run(root, "--check");
