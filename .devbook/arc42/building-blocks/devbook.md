@@ -486,7 +486,8 @@ The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.htm
 what a person sees in a bounded context. It belongs to the Devbook Folder aggregate and is no
 chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
 `context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
-the chapters whose `demo` field names it. Links run from Markdown to the demo only. The file
+the chapters whose `demo` field names it. Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
+scenario page part it plays. The file
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose

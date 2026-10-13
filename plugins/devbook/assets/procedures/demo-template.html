@@ -7,7 +7,7 @@
 <script type="application/json" id="demo-meta">{"question": ""}</script>
 </head>
 <body>
-<!-- template:begin hash=sha256:eccdef86c11bb98823adc9741a3d071fbb9497f2e4fed8c58b8c0f36810b7215 -->
+<!-- template:begin hash=sha256:e3e6363d74710dbbfe3b1705a6400a49c6ebd0adbb150ac23943716562eb4521 -->
 <!--
   The managed region of the demo template. A demo copies it byte for byte and never edits it:
   a change to it is a change to .devbook/design/demo-template.html, and every demo is refreshed
@@ -37,9 +37,13 @@
     settings      [{"key", "label", "options": [{"value", "label"}], "default"?}]
     viewports     [{"key", "label", "width"?, "default"?}]: width in px; none fills the window
     variants      [{"key", "label"}]: the panel switches them while there are two or more
-    walkthroughs  [{"id", "title", "steps": [{"screen", "anchor"?, "role"?, "flags"?, "text"}]}]
-                  "id" is the scenario's slug when the walkthrough plays one; each step's
-                  "text" is the scenario line it shows
+    walkthroughs  [{"id", "title", "part"?, "signature"?,
+                    "steps": [{"screen", "anchor"?, "role"?, "flags"?, "step"?, "text"}]}]
+                  free: "id" is the slug of the #### Scenario: it plays, each step's "text"
+                  the scenario line it shows. linked: "part" is "<page>.md#<part>", the
+                  scenario page part it shows; "signature" the page signature its text was
+                  copied at; each step's "step" the 1-based index of the part step it
+                  shows and "text" that step's English text, embedded so nothing is fetched
 
   Addresses and the four messages follow devbook's demo-address contract,
   devbook.demo.address@1. demo:ready carries the hash above as its template version.
