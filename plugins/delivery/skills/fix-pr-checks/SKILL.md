@@ -29,42 +29,21 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
 
 ## Hard Constraints
 
-- Never make a test pass by weakening or deleting the assertion it is failing on.
-- Never skip, `[Fact(Skip=...)]`, `it.skip`, or `continue-on-error` a failing check to go green.
-- Never disable a lint rule repository-wide to silence one violation.
-- Never re-run a failing job more than once hoping for a different result — classify it as flaky
-  and say so explicitly.
-- Never push a fix that was not validated locally when local validation is possible.
+- Make a failing check pass by fixing the code, or the test when the test carries the wrong
+  expectation. Never weaken or delete the assertion that fails, skip the test, mark the step
+  `continue-on-error`, or disable a lint rule repository-wide to silence one violation: each
+  turns a red check green while the defect it caught ships.
+- Re-run a failing job at most once. A failure that passes on that re-run is classified flaky
+  and reported as flaky.
+- Validate a fix locally before pushing it whenever local validation is possible.
 
 ## Workflow
 
 ### Phase 1 — Collect Failures
 
-1. List every check and its conclusion:
-
-   ```bash
-   gh pr checks <number>
-   ```
-
-2. Get the failing runs with their job detail:
-
-   ```bash
-   gh pr view <number> --json statusCheckRollup
-   ```
-
-3. For each failing workflow run, read only the failing steps:
-
-   ```bash
-   gh run view <run-id> --log-failed
-   ```
-
-   For a specific job:
-
-   ```bash
-   gh run view --job <job-id> --log-failed
-   ```
-
-4. Build the failure inventory before changing anything:
+1. List every check and its conclusion, then read only the failing steps of each failing run
+   or job with `gh run view --log-failed` — the full log is mostly setup noise.
+2. Build the failure inventory before changing anything:
 
    | Check | Job | Failure Type | First Error | Reproducible Locally |
    |---|---|---|---|---|
@@ -72,9 +51,14 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
    | `test` | `test (net9.0)` | Test | `OrderTests.Total_Rounds` | Yes |
    | `lint` | `markdownlint` | Lint | `MD013 line-length` | Yes |
 
+   Matrix jobs fail per leg: fix the leg that failed first — the others often share one cause.
+   A required check that never started (`EXPECTED` in the rollup) usually means a path filter
+   or a workflow trigger mismatch, not a code failure. A check that needs repository secrets
+   always fails on a fork PR; recognise that before treating it as a code defect.
+
 ### Phase 2 — Classify
 
-5. Classify each failure and route it:
+3. Classify each failure and route it:
 
    | Failure type | Signal | Route |
    | --- | --- | --- |
@@ -88,71 +72,34 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
    | Infrastructure | runner outage, registry 5xx, network timeout | Re-run once, then report |
    | Security scan | new vulnerability or secret detected | Fix the vulnerability as code; a detected secret is removed and reported for rotation, never re-supplied |
 
-6. When a failure is caused by an out-of-date base rather than by the PR's own changes, run
+4. When a failure is caused by an out-of-date base rather than by the PR's own changes, run
    `update-pr-branch` first and re-check before fixing anything.
 
 ### Phase 3 — Reproduce Locally
 
-7. Map the failing CI step to a local command by reading the workflow file:
-
-   ```bash
-   gh run view <run-id> --json workflowName
-   ```
-
-   ```bash
-   ls .github/workflows/
-   ```
-
-8. Run the same command locally, narrowed to the failing unit where possible:
-
-   ```bash
-   dotnet build
-   ```
-
-   ```bash
-   dotnet test --filter "FullyQualifiedName~OrderTests.Total_Rounds"
-   ```
-
-   ```bash
-   npm run lint
-   ```
-
-9. If the failure does not reproduce locally, compare the environment before concluding it is
+5. Reproduce with the exact command the failing step runs, read from its workflow file and
+   narrowed to the failing unit where possible.
+6. If the failure does not reproduce locally, compare the environment before concluding it is
    flaky: runner OS, SDK/runtime version, environment variables, matrix leg, and whether the
    job runs against the merge commit rather than the branch head.
 
 ### Phase 4 — Fix
 
-10. Fix the root cause, smallest change first. For a failing test, decide explicitly whether the
-    code or the test carries the wrong expectation, and state the reasoning.
-11. Re-run the local command until it passes.
-12. Run the full local validation, not just the narrowed command, so the fix does not trade one
-    red check for another.
+7. Fix the root cause, smallest change first. For a failing test, decide explicitly whether the
+   code or the test carries the wrong expectation, and state the reasoning.
+8. Re-run the narrowed command until it passes, then the full local validation, so the fix does
+   not trade one red check for another.
 
 ### Phase 5 — Push and Verify
 
-13. Commit with a message naming the check that was failing.
-14. Push, then wait for the checks:
-
-    ```bash
-    git push
-    ```
-
-    ```bash
-    gh pr checks <number> --watch
-    ```
-
-15. If new failures appear, return to Phase 1. Stop after the configured maximum iterations and
+9. Commit with a message naming the check that was failing, push, and watch the checks.
+10. If new failures appear, return to Phase 1. Stop after the configured maximum iterations and
     report what remains, rather than looping indefinitely.
-16. Re-run a job only when the failure is classified flaky or infrastructural:
-
-    ```bash
-    gh run rerun <run-id> --failed
-    ```
+11. Re-run a job only when the failure is classified flaky or infrastructural.
 
 ### Phase 6 — Report
 
-17. Output the result per check:
+12. Output the result per check:
 
     | Check | Before | Cause | Fix | After |
     |---|---|---|---|---|
@@ -160,11 +107,11 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
     | `test` | ❌ | Rounding changed in `Money` | Updated expectation with rationale | ✅ |
     | `deploy` | ❌ | Missing `AZURE_CLIENT_ID` secret | Not fixable here | ⚠️ Needs user |
 
+    Name every escalation — secrets, permissions, or a human decision.
+
 ## Surface Reporting
 
 Follow the **Reporting Contract** in `resources/surface-contract.md`.
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
 
 - `start_run` with `skillId: "fix-pr-checks"` and these stages: Collect Failures, Classify,
   Reproduce Locally, Fix, Push and Verify, Report.
@@ -172,26 +119,9 @@ the source of truth.
 - Each fix-and-push iteration re-enters Fix and Push and Verify; record the
   iteration count in the stage `output` rather than starting a new run.
 
-## Output
-
-- Failure inventory with the real first error per failing job.
-- Root cause and fix per check, or an explicit reason it could not be fixed here.
-- Final check status after the push.
-- Escalations for anything requiring secrets, permissions, or a human decision.
-
 ## Related Skills
 
 - `update-pr-branch` — when the failure is a conflict or an out-of-date base.
 - `pr-merge-ready` — score one pull request against the merge-ready checklist and clear its blockers, one PR per pass.
 - `phase-build-test` — the shared build-and-test procedure the `flow-*` flows run
   before a PR exists.
-
-## Notes
-
-- `gh run view --log-failed` is the fastest path to the real error; the full log is usually
-  thousands of lines of setup noise.
-- Matrix jobs fail per leg. Fix the leg that failed first — the others often share one cause.
-- A check that requires repository secrets will always fail on a fork PR. Recognise that before
-  treating it as a code defect.
-- Required checks that never started (`EXPECTED` in the rollup) usually mean a path filter or a
-  workflow trigger mismatch, not a code failure.
