@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s change lane forward after upgrading devbook-openspec or the OpenSpec CLI — check the CLI against the stamped range, run openspec update, replace the devbook schema and the change-folder rule wherever they still hash to what this plugin wrote, report the customized ones, and re-stamp components.openspec. Never rewrites openspec/config.yaml. Refused where no components.openspec stamp exists: run devbook-openspec:init. Use when: upgrading devbook-openspec, a new OpenSpec release, the schema or rule is stale. Triggers on: "devbook-openspec update", "update devbook-openspec", "upgrade the change lane", "openspec update".'
+description: 'Move a repository''s change lane forward after upgrading devbook-openspec or the OpenSpec CLI: check the CLI range, run openspec update, replace the schema and rule where unmodified, report customized ones, re-stamp. Never rewrites openspec/config.yaml. Refused where no components.openspec stamp exists: run devbook-openspec:init. Use when: "devbook-openspec update", a new OpenSpec release.'
 ---
 
 # devbook-openspec update
