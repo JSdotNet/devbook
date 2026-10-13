@@ -9,18 +9,14 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 ## Purpose
 
-Get the current branch and its commits onto the remote, and nothing more. This is the
-lightweight alternative to opening a pull request for when the branch just needs to exist
-on the remote — to back up work, to trigger CI, or because a pull request already exists
-and only needs the new commits.
+Get the current branch and its commits onto the remote, and nothing more — to back up work,
+to trigger CI, or because a pull request already exists and only needs the new commits.
 
 ## Pull Request Lane
 
-The pull-request reporting in step 5 is one spelling of the `pr-lane` slot. Resolve the slot
-first and use whatever pull-request CLI or API the session offers for the same operation. The
-push itself is git and never needs the lane, so unbound: push, skip the pull request status,
-and say once that no pull request lane is available. Never fail on a missing binary. The slot
-and its unbound default are in `resources/engine-contract.md`.
+The push is git alone and never needs the lane. The pull-request status in step 5 is one
+spelling of the `pr-lane` slot, per `resources/engine-contract.md`: resolve it, and when it is
+unbound or unauthenticated skip that step and say so once. Never fail on a missing binary.
 
 ## Inputs
 
@@ -39,13 +35,6 @@ and its unbound default are in `resources/engine-contract.md`.
 
 ### 1 — Check the branch
 
-Read the current branch and working-tree state:
-
-```bash
-git --no-pager branch --show-current
-git --no-pager status --short --branch
-```
-
 - If the branch is the repository default branch (`main`, `master`), say so and ask for
   confirmation before pushing.
 - If there are uncommitted or untracked changes, list them and report that they will stay
@@ -56,72 +45,29 @@ git --no-pager status --short --branch
 
 ### 2 — Review what goes out
 
-List the commits and files that the push will publish:
-
-```bash
-git --no-pager log @{upstream}..HEAD --oneline
-git --no-pager diff @{upstream}..HEAD --stat
-```
-
-For a branch with no upstream yet, compare against the default branch instead:
-
-```bash
-git --no-pager log origin/<default>..HEAD --oneline
-git --no-pager diff origin/<default>...HEAD --stat
-```
-
-Scan the file list for anything that should not leave the machine (credentials, `.env`,
-local settings). Stop and report if something looks wrong.
+List the commits and files the push will publish — against `@{upstream}`, or against the
+default branch for a branch with no upstream yet. Scan the file list for anything that should
+not leave the machine (credentials, `.env`, local settings); stop and report if something
+looks wrong.
 
 ### 3 — Push
 
-For a branch that already has an upstream:
-
-```bash
-git push
-```
-
-For a branch being published for the first time:
-
-```bash
-git push --set-upstream origin <branch>
-```
+Push, setting the upstream when the branch is published for the first time.
 
 ### 4 — Handle a rejected push
 
-If the remote rejects the push because the branch diverged, do not force-push. Report the
-rejection and hand off to `update-pr-branch` to integrate the base branch first.
-
-If the push fails on authentication, report the error and the remote URL so the user can
-fix their credentials.
+If the remote rejects the push because the branch diverged, report the rejection and hand off
+to `update-pr-branch` to integrate the base branch first. If the push fails on
+authentication, report the error and the remote URL so the user can fix their credentials.
 
 ### 5 — Report
 
-State the branch, the remote and upstream it now tracks, and the commits pushed. If an open
-pull request already exists for this branch, report its URL and check status so the user can
-see the effect of the push:
+State the branch, the upstream it now tracks, the commits pushed, and any local changes left
+behind. If an open pull request exists for this branch, report its URL and check status.
 
-```bash
-gh pr view --json number,url,state 2>/dev/null
-gh pr checks 2>/dev/null
-```
-
-Skip this step when the lane is unbound or unauthenticated — it is informational only.
-
-## Output
-
-- The branch pushed, its remote tracking reference, and the list of commits now on the
-  remote.
-- Any local changes deliberately left behind.
-- The existing pull request URL and check status, when there is one.
+This skill reports in chat and starts no surface run — a single push does not warrant one.
 
 ## Related Skills
 
 - `update-pr-branch` — integrate the base branch and resolve conflicts after a rejected push.
 - `fix-pr-checks` — diagnose and fix checks that go red after the push.
-
-## Notes
-
-- `gh` is optional here; every required step uses `git` alone.
-- This skill reports through normal chat and does not use the bound delivery surface —
-  a single push does not warrant a run.
