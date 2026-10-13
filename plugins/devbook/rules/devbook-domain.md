@@ -422,7 +422,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     the part in the journey's words, and the two may differ.
   - A `Proved by:` case counts as a scenario for the coverage warning, and the
     requirement's `e2e` `tests` entry is derived from it and the spec that
-    implements the page, so it is never written by hand. A part no case points
+    implements the page, and its `demo` walkthroughs from the walkthroughs
+    linked to the part, so neither is written by hand. A part no case points
     at is reported as an unclaimed journey. Inline Given/When/Then stays valid
     for a requirement with no journey yet.
   - `tests` on a requirement chapter are `e2e`, or `integration` for a policy
@@ -1305,7 +1306,16 @@ The system SHALL <one promise, stated once>.
 - **When** <the one thing that happens>
 - **Then** <what is true afterwards>
 
-#### Scenario: <the next case>
+### Requirement: <a promise a journey proves>
+
+```meta
+status: draft
+type: requirement
+```
+
+The system SHALL <one promise, stated once>.
+
+#### Scenario: <the case, in the requirement's words>
 
 Proved by: <journey>.md#<part-heading-slug>
 
@@ -1317,6 +1327,10 @@ Proved by: <journey>.md#<part-heading-slug>
 
 ...
 ```
+
+A requirement proved by a journey writes no `tests` and no `demo`: its `e2e`
+entry and its walkthroughs are derived from the `Proved by:` line. A
+requirement with inline Given/When/Then names both by hand.
 
 ### domain.invariants.md
 
