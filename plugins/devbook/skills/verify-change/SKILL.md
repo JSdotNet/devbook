@@ -49,9 +49,5 @@ repository root.
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.
 
-## Do not
-
-- Do not write a chapter, a brief, an `annotation` fence, or a `tests` entry.
-- Do not resolve a `conflict` by picking a side, or an `unresolved` by guessing.
-- Do not touch a `status` line. A verdict is a report about drift, never about
-  agreement.
+Write nothing — no chapter, brief, `annotation` fence, `tests` entry, or `status` line — and
+settle no `conflict` by picking a side or `unresolved` by guessing.

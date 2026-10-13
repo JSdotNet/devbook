@@ -62,14 +62,7 @@ context where the kind has one, and the repository root.
    Write mode: carry in the `code-ahead` entries, run the check, and return the report
    table with every chapter edit listed — file, verdict row, what changed.
 
-## Do not
-
-- Never edit a source or test tree. Outside write mode, write no devbook file:
-  the plan is the result, and carrying it in is a person's move.
-- Do not put a `status` line in the plan, and never write `approved` or another
-  decision rung, in either mode. Code is evidence, not agreement.
-- Do not plan over a chapter someone is still deciding about. Where the target
-  is a `draft`, report what the code has beside what the draft says, per the
-  protocol's status table; where it is `deprecated`, report and stop.
-- Do not write an `annotation` fence: an open question belongs in review.
-- Do not treat a comment, a TODO, a docstring, or a disabled test as evidence.
+Never edit a source or test tree, and outside write mode write no devbook file: carrying the
+plan in is a person's move. The protocol's **Status rules** and **Evidence rules** bind every
+step — no `status` line or decision rung in either mode, no plan over a `draft` or an open
+change — and an open question belongs in review, never in an `annotation` fence written here.

@@ -46,19 +46,10 @@ or group per **The sync unit** in the protocol; the bounded context; the root.
    Quote every invariant row with its `Enforced at`; name an `open` row as a
    decision, never as work. An update brief lists where the current behaviour
    lives.
-7. Hand the brief to the code-side flow, per **Where the code-side write
-   goes** in the protocol: a repo-native flow first, then the engine's flow for
-   the category, and no flow at all when no engine is installed — then stop
-   with the brief, which is the whole result. Name the rung that answered,
-   once. This skill opens no source file for editing and creates no test.
+7. Hand the brief on per **Where the code-side write goes** in the protocol, and name the
+   rung that answered, once.
 8. Close with the protocol's report table, one row per chapter in scope, with
    the brief attached and the flow it went to.
 
-## Do not
-
-- Do not edit the chapter: a wrong chapter is a verdict, not an edit.
-- Do not carry an `annotation` fence into the brief: an open question is a
-  reason to stop at the gate, not a line item to implement.
-- Do not summarize invariants by reference, or drop a row's `Enforced at`.
-- Do not choose a representation, persistence, dispatch, layout, or library —
-  the brief states what must be true, and the flow decides how.
+A wrong chapter is a verdict, never an edit. An open `annotation` is a reason to stop at the
+gate, never a line in the brief, per `rules/devbook-annotations.md`.
