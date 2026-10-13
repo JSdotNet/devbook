@@ -26,9 +26,10 @@ A change routes to the flow named for what it changes, which runs it end to end.
   change through `flow-code`.
   `.claude/settings.json` enables five plugins for every session here — `devbook`,
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
-  `.devbook/config.json` record what they materialized: `devbook` 1.19.0, contract 29, over
-  `arc42`, `tech`, `design`, and `ai`; `delivery` and `schedule` 1.18.0; `devbook-derived`
-  1.18.0, with its refresh script, its nightly and drift workflows, its rule trio, and its
+  `.devbook/config.json` record what they materialized: `devbook` 1.25.0, contract 30, over
+  `arc42`, `tech`, `design`, and `ai`; `delivery` and `schedule` 1.25.0, the schedule
+  selection being `devbook-validate`, `tech-update`, and `merge-review`; `devbook-derived`
+  1.25.0, with its refresh script, its nightly and drift workflows, its rule trio, and its
   `AGENTS.md` section. No procedure is adopted: the procedures are this marketplace's product,
   kept as seeds in `devbook`, and a repository with no application to run has none of its own.
   A surface is enabled per person: a run reports into every one bound — `delivery-surface-backlog`
