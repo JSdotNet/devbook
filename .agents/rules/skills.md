@@ -11,6 +11,13 @@ paths:
 trigger — say when to use it, in the words a user would use. Keep host-specific tool names out
 of skill prose.
 
+Keep the description under 1024 characters, the Agent Skills cap, and aim for 400. Every
+installed skill's description shares one listing budget, and a host that overflows it drops
+descriptions — a skill whose description was dropped never triggers on its own. State what it
+does, `Use when`, and `DO NOT USE FOR` or a refusal; leave the procedure to the body and quote
+at most one literal trigger. `node tools/check-assets.mjs` fails a description over 1024, and
+`--budgets` lists those over 500.
+
 The first body line after the title is the version line, verbatim with the plugin's own name:
 
 > Open the reply with `<plugin>@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
