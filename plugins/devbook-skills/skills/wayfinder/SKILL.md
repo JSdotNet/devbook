@@ -1,6 +1,6 @@
 ---
 name: wayfinder
-description: 'Plan an effort too big for one session as a map on the issue tracker — one wayfinder:map issue naming the destination, with decision tickets as child issues (research, prototype, grilling, task) linked by native blocking — then resolve one frontier ticket per session until the way to the destination is clear. Plans and decides; it never builds the destination. Use when: an idea is too big or too foggy for one session, or to take the next decision on a map. Triggers on: "/wayfinder", "chart a map", "wayfinder map", "plan this across sessions", "work the map", "next ticket on the map".'
+description: 'Plan an effort too big for one session as a map on the issue tracker — a wayfinder:map issue naming the destination, decision tickets as blocking child issues — then resolve one frontier ticket per session. Plans and decides; never builds the destination. Use when: an idea is too big or foggy for one session, or to take the next ticket on a map ("/wayfinder").'
 disable-model-invocation: true
 ---
 

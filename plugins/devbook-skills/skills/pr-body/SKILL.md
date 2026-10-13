@@ -1,6 +1,6 @@
 ---
 name: pr-body
-description: 'Write a pull request description as three sections — Summary, one picture of the change; Evidence, a before and an after with the tier of each and the depth validation reached; Merge Danger, a one-way or two-way door and its blast radius — inside the repository''s own pull request template when it has one. A one-way door links the decision record behind it. Use when opening a pull request, writing or rewriting its description, or landing a draft pull request from an unattended run. Triggers on: "write the PR body", "/pr-body", "PR description", "describe this pull request", "is this safe to merge", "one-way door".'
+description: 'Write a pull request description in three sections — Summary, Evidence (before and after, with tier and validation depth), Merge Danger (one-way or two-way door, blast radius) — inside the repository''s PR template when it has one. Use when: opening a pull request, writing or rewriting its description, landing an unattended run''s draft, "/pr-body".'
 ---
 
 # PR Body
