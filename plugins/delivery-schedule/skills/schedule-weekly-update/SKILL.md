@@ -52,4 +52,4 @@ Nothing here restates it.
 ## Related Skills
 
 - `schedule-morning-brief` — the same sources over one day, as triage rather than record.
-- `schedule-whats-new` — pull requests across several repositories, with a checkpoint.
+- `schedule-whats-new` — pull requests across several repositories, traced to their tickets.

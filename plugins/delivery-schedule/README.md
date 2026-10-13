@@ -48,15 +48,15 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
 | `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — on a stronger model, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
-| `schedule-whats-new` | What changed in the tracked repositories since last run | A change report |
+| `schedule-whats-new` | Pull requests across the tracked repositories over a window, each traced to its ticket | A change report |
 
 None of them is a flow, and none may be scheduled as one: a `flow-*` skill ends at Personal
 Validation, and no unattended run can pass a gate.
 
 The two change reports read the same sources over different windows, stated once in
 `resources/change-window-contract.md`: the morning brief is triage for one day, the weekly
-update is the record for one week. `schedule-whats-new` is the third and older one: pull
-requests across several repositories, with a checkpoint and ticket correlation.
+update is the record for one week. `schedule-whats-new` reads the pull request rows alone,
+across several repositories, and traces each to its ticket.
 
 ## The catalog
 

@@ -55,4 +55,4 @@ Nothing here restates it.
 
 - `schedule-weekly-update` — the same sources over a week, with the numbers and the narrative
   a stakeholder reads.
-- `schedule-whats-new` — pull requests across several repositories, with a checkpoint.
+- `schedule-whats-new` — pull requests across several repositories, traced to their tickets.

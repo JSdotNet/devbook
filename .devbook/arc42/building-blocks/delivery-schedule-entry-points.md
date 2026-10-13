@@ -296,7 +296,9 @@ narrative. One per week, kept as the record of everything that changed; the
 ```meta
 ```
 
-Report what changed in the tracked repositories since the last run, over a stated window.
+Report the pull requests opened, merged, and still open across the tracked repositories over a
+window, each traced to its ticket. It keeps no state: the window is the checkpoint, per the
+change window contract, so every run reads it fresh.
 
 ## Structure
 
