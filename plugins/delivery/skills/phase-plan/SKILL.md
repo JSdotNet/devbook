@@ -36,7 +36,6 @@ A design question the scope record does not answer is not settled here: return
 `resources/flow-execution-model.md`.
 
 **Output:** `plan.md`, written into the run folder the brief names — the brief
-`phase-implement` loads for a `create` run. Return its path and a short summary as the stage
-output. Report
-the stage per **Reporting Contract** in `resources/surface-contract.md`. Its place in the
+`phase-implement` loads for a `create` run. Return its path and a short summary, and make no
+surface calls: the flow-runner reports the stage from what you return. Its place in the
 order: `resources/flow-phases.md`.

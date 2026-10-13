@@ -46,7 +46,7 @@ source code.
 
 ## Output
 
-The changed files and one line each on what changed, every status the draft set, and a
-rendered copy through `render_markdown` and `render_diagram` per **Reporting Contract** in
-`resources/surface-contract.md`. Report as the `Drafting` stage. Its place in the order:
+Return the changed files with one line each on what changed, and every status the draft set.
+Make no surface calls: the flow-runner reports the `Drafting` stage and renders the draft, per
+**Reporting Contract** in `resources/surface-contract.md`. Its place in the order:
 `resources/flow-phases.md`.
