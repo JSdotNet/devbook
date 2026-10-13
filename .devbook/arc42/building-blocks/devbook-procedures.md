@@ -118,7 +118,8 @@ prototype nobody takes further stays where it is as evidence. A UI prototype is 
 exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
 delta to `domain.md`, `flow.md`, or an invariants subpage. The seed's body carries the rest of
 the record: variants trimmed to the chosen one only when the file is carried into `domain/`, walkthroughs
-listed in `demo-model` by id — the scenario's slug when one is played — data at real density,
+listed in `demo-model` by id — the scenario's slug when a free one plays a case, a scenario page
+part's step text re-copied into a linked one on every revision — data at real density,
 the 500 KB target kept with inline SVG, shared markup, and page demos and allowed to be exceeded,
 and the two things it is not for: a settled design goes to `flow-code`, a bug to `diagnose`.
 

@@ -154,6 +154,15 @@ journey, the case is one thing a requirement promises. Runs, profiles, and data 
 `devbook-chapter-metadata.md` under *Scenario pages*, and a page is written in English whatever
 language the other chapters use, because its steps are the test's steps.
 
+A demo's **walkthrough** plays a journey through its screens, and is one of two kinds. A **free
+walkthrough** carries its own step text and takes the slug of the inline scenario case it plays
+as its id. A **linked walkthrough** keeps its own id, names a part with `part`, and embeds that
+part's English step text with the page **signature** it was copied at, so the demo still opens
+with nothing fetched. A requirement whose case is `Proved by:` a part gets every walkthrough
+linked to that part as a derived `demo` entry, and a linked walkthrough whose signature is not
+the page's is stale until `/prototype` re-copies its text. The convention is
+`devbook-chapter-metadata.md` under the `demo` field.
+
 ## Flow Skill
 
 ```meta
