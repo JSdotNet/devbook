@@ -1,6 +1,6 @@
 ---
 name: phase-ready
-description: 'The ready check before Personal Validation in every flow-* flow. Reads what review, Build & Test, Verify, Spec Check, and the scope recorded, and either hands the run to the gate or sends a brief of what is missing back to phase-implement — phase-drafting in flow-spec — within policy.ready.retryBudget. Run inline by the flow-runner agent, never configured, never directly.'
+description: "Ready check before Personal Validation in every flow-*: reads what the phases recorded, then passes the run or sends it back. flow-runner only."
 ---
 
 # Phase: Ready

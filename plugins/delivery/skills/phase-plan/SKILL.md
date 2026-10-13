@@ -1,6 +1,6 @@
 ---
 name: phase-plan
-description: 'Shared Plan phase of flow-code, create kind only. Maps the recorded design for a new module, service, or first runnable increment onto the project structure — contracts, wiring, health and observability, slices — before phase-implement writes any code. Delegated by the flow-runner agent, never invoked directly.'
+description: "Plan phase of flow-code, create kind only: maps the recorded design onto the project structure and its slices before implementation. flow-runner only."
 ---
 
 # Phase: Plan

@@ -1,6 +1,6 @@
 ---
 name: phase-create-pr
-description: 'Shared Create Pull Request phase for every flow-* flow, after an approved Personal Validation gate. Stops the validation runtime, pushes, and opens the pull request with a description built from the review, the evidence, and the spec-check table. Invoked inline by the flow-runner agent, never directly.'
+description: "Create Pull Request phase of every flow-*: after an approved gate, stops the app, pushes, and opens the PR from review and evidence. flow-runner only."
 ---
 
 # Phase: Create Pull Request

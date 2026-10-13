@@ -1,6 +1,6 @@
 ---
 name: phase-review
-description: 'Shared Review phase for flow-code: one fresh-context reviewer over a slice''s diff against the merge base, untracked files included — the repository''s rules first, then the smell baseline, then correctness — with every finding cited. Runs in tandem with phase-implement, per slice. Never edits. Invoked by the flow-runner with a brief file; never by a person.'
+description: "Review phase of flow-code: one fresh-context reviewer per slice — the repository's rules, then smells, then correctness — every finding cited, never edits. flow-runner only."
 context: fork
 model: opus
 effort: high

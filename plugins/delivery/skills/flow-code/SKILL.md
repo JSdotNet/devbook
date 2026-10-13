@@ -1,6 +1,6 @@
 ---
 name: flow-code
-description: 'Run any change to a repository outside its devbook folders, end to end — a feature or an incremental change, a bug fix, a structure or layout refactor, a new module, service, or first product increment, the tooling, CI, scripting, and housekeeping around them, a dependency, SDK, or framework move, and creating and scaffolding a repository. One tier for every kind: scope, implement with review per slice, build and test, verify, spec check, the ready check, and personal approval before the pull request. Missing scope, acceptance criteria, reproduction steps, or architecture context is derived in scope rather than being a reason to skip the flow. DO NOT USE FOR: a devbook chapter (flow-spec).'
+description: "Run any change to a repository outside its devbook folders, end to end — a feature, bug fix, refactor, new module or service, tooling, CI, scripting, housekeeping, a dependency or framework move, or scaffolding a repository — with review, verification, and personal approval before the pull request. DO NOT USE FOR: a devbook chapter (flow-spec)."
 ---
 
 # Flow: Code Change

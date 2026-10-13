@@ -1,6 +1,6 @@
 ---
 name: phase-drafting
-description: 'Shared Drafting phase of flow-spec: writes the devbook chapter, decision record, or debt record the scope settled, through the agent its folder qualifier binds — phase-drafting:arc42, :domain, :tech, :design, :ai — under the repository''s own instruction files for that folder. Delegated by the flow-runner agent with a brief file, never invoked directly.'
+description: "Drafting phase of flow-spec: writes the chapter, decision record, or debt record scope settled, through the folder's agent and instruction files. flow-runner only."
 ---
 
 # Phase: Drafting

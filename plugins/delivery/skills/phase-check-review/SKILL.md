@@ -1,6 +1,6 @@
 ---
 name: phase-check-review
-description: 'Shared Check & Review phase of flow-spec, after Drafting: checks every touched chapter''s meta block and every reference a rename or move broke, runs the repository''s devbook check, and lists every status change for the Personal Validation gate. Invoked inline by the flow-runner agent, never directly.'
+description: "Check & Review phase of flow-spec: checks touched chapters' meta blocks and broken references, runs the devbook check, lists status changes. flow-runner only."
 ---
 
 # Phase: Check & Review
