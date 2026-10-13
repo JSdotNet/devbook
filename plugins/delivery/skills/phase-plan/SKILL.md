@@ -19,17 +19,10 @@ stage. It runs delegated, through the agent its `phases` entry names, per
 `resources/phase-resolution.md`. Its input is the scope record: the design, the seams, the
 constraints, and the chapters every brief loads.
 
-1. **Place the unit** in the repository's existing layout: its project or folder, and what
-   references it.
-2. **Define the contracts**: the data contracts and their error handling at each seam scope
-   recorded.
-3. **Plan the wiring.** For a service: service discovery, the host project's references such
-   as the AppHost, and the configuration model.
-4. **Name the health and observability signals** the unit exposes, so `phase-verify` has
-   something to check.
-5. **Plan the integration points** with what already exists.
-6. **Break the work into slices**, each a seam or an area, in the order `phase-implement`
-   works through them and `phase-review` reviews them.
+Place the unit in the repository's existing layout and plan its contracts at each seam scope
+recorded, its wiring, its integration points, and the health and observability signals
+`phase-verify` will check — then break the work into slices, each a seam or an area, in the
+order `phase-implement` builds them and `phase-review` reviews them.
 
 A design question the scope record does not answer is not settled here: return
 `revise: phase-scope` with the question, and escalate a new decision per **Escalation** in

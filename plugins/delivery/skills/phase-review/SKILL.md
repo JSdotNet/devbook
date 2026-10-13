@@ -21,7 +21,6 @@ Doesn't:
 
 - Edit code
 - Check conformance to the spec (spec-check does)
-- Invoke a review skill or spawn agents
 
 **Perform this review directly.** Do not invoke any review skill — `/code-review` included — and do not start a sub-agent. A reviewer that delegates recurses.
 
@@ -34,7 +33,7 @@ Loads the brief's slice and run folder, the diff against the merge base with unt
 1. **Pin the diff.** `git merge-base HEAD <base>` with the base the brief names; diff the working tree against it, and read every untracked file (`git ls-files --others --exclude-standard`) in full — nothing is committed yet. Limit it to the slice's paths. A bad ref blocks; an empty diff returns "nothing to review" with no findings. On a fix round, review only the delta since the previous round, and mark each earlier blocker `fixed` or `open`.
 2. **Rules.** The repository's instructions (`AGENTS.md` and its host twins), `.agents/rules/*` matching the changed paths, the named guideline ADRs, and architecture tests. A breach is a `rule` finding, a blocker. Skip what a linter, formatter, or analyzer already enforces.
 3. **Smells.** The twelve in `../../resources/smell-baseline.md`, only where step 2 says nothing. A `smell` finding is advisory and carries its fix.
-4. **Correctness.** Logic errors, concurrency, error handling, resource leaks, security — reading callers and tests where a change reaches them. A `bug` names a concrete failure: this input or state, this wrong result. It is a blocker. Plausible without one is a `risk`, advisory.
+4. **Correctness**, reading callers and tests where a change reaches them. A `bug` names a concrete failure: this input or state, this wrong result. It is a blocker. Plausible without one is a `risk`, advisory.
 5. **Cite or drop.** Every finding carries `file:line` and the rule's path and line, the smell's name, or the failure scenario. A finding without one is dropped, not softened.
 
 Run no build and no suite: that is Build & Test's. Whether to loop again is the flow-runner's, against `policy.review.retryBudget` (default `1`). `policy.phases.review: false` turns this phase off, and `phase-implement` runs alone.
