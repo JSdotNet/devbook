@@ -136,6 +136,8 @@ that surface's own `runId`:
   phase and `runs`, one `{ agent, model, effort, slice }` per sub-agent call when a stage made
   several. A surface stores the latest verbatim on the stage; one that ignores it stays
   conformant.
+- **Say what the pass found** on the same `execution`, per **Stage Counts** below: `round` on
+  Implement and Review, `blockers` on Review, `defectsFound` on Verify.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
   surface renders direct buttons instead of making the user copy commands.
 - **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends
@@ -222,6 +224,23 @@ run is priced.
   stand; `finish_run` carries all three. A later value replaces an earlier one whole. The
   flow-runner keeps the running facts in `runContext.quality`, so a resumed session continues
   the count rather than restarting it.
+
+### Stage Counts
+
+Three optional integers on a stage's `execution`, so a surface can show each pass's result on
+the stage it belongs to. **Quality Facts** is the run's cumulative record; these are the one
+pass a stage call reports, and they come from the same counts.
+
+| Field | Stage | Value |
+| --- | --- | --- |
+| `round` | Implement, Review | The implement ⇄ review round of the slice in progress, counting from 1; a fix round is the next one |
+| `blockers` | Review | The `rule` and `bug` blockers this round's `review.md` section lists `open`; `0` for a clean round |
+| `defectsFound` | Verify | The distinct defects this pass found that review had passed — its failed scenarios and failed scenario-page parts, each once; `0` when all passed |
+
+- **Send them on the closing call**; `round` also on `in_progress`. A stage that did not run
+  the work sends none, and a field is never `null` in place of omitted.
+- **They are optional and additive.** The lifecycle group stays `@1`, `execution` is stored
+  verbatim, and a surface that predates them ignores them and loses nothing else.
 
 ### Naming the session
 

@@ -249,6 +249,10 @@ of `skills/phase-personal-validation/SKILL.md`.
   `resources/surface-contract.md`. Also pass `scenarios` (per-scenario
   `status`, `notes`, `evidence`) and `monitoring` (log/trace summary) so the surface
   renders QA results with evidence inline.
+- Pass `execution.defectsFound`: the distinct defects this pass found — failed scenarios and
+  failed scenario-page parts, each once — `0` when all passed, per **Stage Counts** in
+  `resources/surface-contract.md`. Omit it when the stage ran no scenario: startup-only,
+  `skipped`, or `blocked`.
 - When required MCP tooling is unavailable, report the stage as `blocked` with the missing
   tooling and user-actionable setup guidance in `output`. Do not report pass scenarios or
   success wording for checks that could not be completed correctly.
