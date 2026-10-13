@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.20.1",
-      "contractVersion": 29,
+      "pluginVersion": "1.25.0",
+      "contractVersion": 30,
       "adopted": [
         "arc42",
         "tech",
@@ -82,8 +82,8 @@
           "managed": true
         },
         ".agents/rules/devbook-annotations.md": {
-          "from": "1.13.0",
-          "hash": "sha256:fce8bf2f71a09e072ae2cf6e7b678a0fa653422646b10fec3ce4aacb37ac865c",
+          "from": "1.25.0",
+          "hash": "sha256:101f815225e519a2ff6084fe56122a2da23e839a0cfafc7501cd05b9b4cf7138",
           "managed": true
         },
         ".agents/rules/devbook-arc42.md": {
@@ -92,8 +92,8 @@
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.19.0",
-          "hash": "sha256:18ffc079c6715eef98b7e305730b69115db7b9be8956f4e65039b5d63ea02109",
+          "from": "1.25.0",
+          "hash": "sha256:207f5c8ded2e8f880a9c7ceee4b7b5dff99fae8ee05b640f621943b60059e40f",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
@@ -102,8 +102,8 @@
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
-          "from": "1.13.0",
-          "hash": "sha256:c1e38d72cb1b2bc2c7da20507c3839bdc278a9f3cec344f538defd793580abc0",
+          "from": "1.25.0",
+          "hash": "sha256:f2a8522e16b2fbe8c58fd7d5205387544006824a6dfefb97a7dbc3f21eed6cd0",
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
@@ -112,8 +112,8 @@
           "managed": true
         },
         ".agents/rules/devbook-writing.md": {
-          "from": "1.19.0",
-          "hash": "sha256:33c6f1191ade1834190f9eb3e3b287f32b40415c9755398f683cbf54edd06f9a",
+          "from": "1.25.0",
+          "hash": "sha256:6986c7fbb380f2cad557f2dd95505246c835f7ba0ce787938420500ff35a4bdf",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
@@ -157,8 +157,8 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.20.1",
-          "hash": "sha256:00f68472e5c6680b3ff2982d36921c7f1ac6645e1df02515721b7e90997bd5b7",
+          "from": "1.25.0",
+          "hash": "sha256:e40a41c0a6fb47d81576df1b6025989853baa4f08f1dc93ffa91ec62fd5637b8",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
@@ -269,15 +269,23 @@
         {
           "id": "027-procedures-in-devbook",
           "result": "not-applicable"
+        },
+        {
+          "id": "030-linked-walkthroughs",
+          "result": "not-applicable"
+        },
+        {
+          "id": "030-scenario-tools",
+          "result": "not-applicable"
         }
       ]
     },
     "derived": {
-      "pluginVersion": "1.18.0",
+      "pluginVersion": "1.25.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
-          "from": "1.18.0",
-          "hash": "sha256:2aca9a6ebdc3a441aef8c5f5c2f38efdf5ac0b2ee9a636ce2842dbde29422a7a",
+          "from": "1.25.0",
+          "hash": "sha256:a9415cb564f6bbfa114c1d426f99ee71db69e5cbe01f82181996a37a8a80dbb0",
           "managed": true
         },
         ".claude/rules/devbook-derived-artifacts.md": {
@@ -313,10 +321,10 @@
       }
     },
     "delivery": {
-      "pluginVersion": "1.20.1"
+      "pluginVersion": "1.25.0"
     },
     "schedule": {
-      "pluginVersion": "1.18.0",
+      "pluginVersion": "1.25.0",
       "enabled": [
         "devbook-validate",
         "tech-update",
