@@ -212,7 +212,8 @@ it to minor and patch, because a major version is a decision rather than an upda
 
 Score ten performance findings and implement the best one, landing as a pull request. Ten scored
 and one implemented is the shape: an unattended run that fixed all ten would be ten unreviewed
-changes in one branch.
+changes in one branch. While the previous run's pull request is still open, a run reports and
+implements nothing, so one pull request never carries two findings.
 
 ### schedule-review
 

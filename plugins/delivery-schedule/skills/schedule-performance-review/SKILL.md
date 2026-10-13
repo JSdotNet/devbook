@@ -40,6 +40,10 @@ high-allocation paths first; read them before scanning.
 
 ### Phase 1 — Scan for Findings
 
+0. List open pull requests on a `schedule/performance-review/` branch. One is open: its
+   finding still waits on a person, so this run scans and reports and implements nothing —
+   no branch, no commit, no pull request; Phases 3–5 are skipped and *Run* says why.
+
 1. If .NET Aspire is in use, read its recent structured logs and
    surface endpoints or operations with high latency or allocation counts. Use these as
    priority hints for the scan.
@@ -76,10 +80,11 @@ high-allocation paths first; read them before scanning.
 
 ### Phase 3 — Implement the Winning Finding
 
-9. Implement the fix in a Red-Green-Refactor cycle:
-   a. Write a benchmark or test that exposes the performance issue (Red).
-   b. Apply the fix the finding names (Green).
-   c. Run `dotnet test` to verify the fix is correct and nothing regresses (Refactor / verify).
+9. Implement the fix test first:
+   a. Write a benchmark or test that exposes the performance issue (red).
+   b. Apply the fix the finding names (green).
+   c. Run the whole suite with the test command the repository's build files name —
+      `dotnet test`, `npm test`, `pytest`, `go test ./...` — so nothing regressed (verify).
 
 10. Review the change before committing, against the checklist in
     `../schedule-merge-review/SKILL.md`:
@@ -110,8 +115,8 @@ high-allocation paths first; read them before scanning.
 
 ### Phase 5 — Pull Request
 
-14. Push the branch and open the pull request, updating one a previous run left open on
-    the same branch prefix rather than opening a second:
+14. Push the branch and open the pull request — never on top of an earlier run's, which
+    step 0 already stopped at:
     - **Title:** `perf: <short description>`
     - **Body:**
       - Full top-10 findings table from Phase 2.
@@ -149,5 +154,5 @@ the source of truth.
 - Only one finding is implemented per run to keep PRs focused and reviewable.
 - If the top finding was already fixed in a previous run, skip it and take the next one.
 - Run this skill weekly or before each release to accumulate incremental gains.
-- For non-.NET repositories, omit Aspire and dotnet steps; adapt the scan and build commands
-  to the project's actual ecosystem.
+- The checklist's examples are .NET's; the scan applies each item in the ecosystem the
+  repository's build files name, and the Aspire hint only where an AppHost exists.
