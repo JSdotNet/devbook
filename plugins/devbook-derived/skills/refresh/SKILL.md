@@ -34,7 +34,7 @@ a chapter edit rewrite the same JSON and conflict on merge.
    stamp yet — and stop.
 
 3. **Fix what the check reports** in the source Markdown, never under `_meta/`, and refresh
-   again. A broken reference is devbook's finding; `devbook:validate` has the repair table.
+   again. A broken reference is devbook's finding, repaired per the `repairs.md` beside `devbook:validate`'s skill.
 
 4. **Report** which index files moved, and leave the commit to the user. Commit the
    refresh on its own, never folded into a chapter change.

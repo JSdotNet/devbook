@@ -35,7 +35,7 @@ setup field changed here turns the last run stale until the spec is re-derived a
    written once, in the page, per `../../rules/devbook-domain.md`. One case, one part. Never
    write the requirement's `e2e` `tests` entry; it is derived.
 7. **Check**: `node .devbook/_tools/devbook-meta/build.mjs --check`, fixing what it reports per
-   `../validate/SKILL.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
+   `../validate/repairs.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
    the flags its README lists for a non-default scenario folder or spec folder: a new page reports
    `page-without-spec`, an edited one `signature-mismatch`, a renamed one `spec-without-page`.
    Each is closed by `scenario-derive`, so name it in the reply. A changed page whose parts a
