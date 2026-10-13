@@ -41,8 +41,11 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 | `<page>.demo.html` | `<page>.md`, which it sits beside and moves with when a feature is split out. |
 | Any other `*.demo.html` | The chapters whose `demo` field names it. |
 
-Links run one way, from Markdown to HTML. A chapter points at a screen, a state, or a
+Links run from Markdown to HTML. A chapter points at a screen, a state, or a
 walkthrough through an optional `demo` field in its `meta` block, and the demo names no page.
+The one exception is a linked walkthrough, whose `part` names the scenario page part it
+plays and embeds that part's step text, so a requirement the part proves derives its
+walkthroughs instead of naming them.
 That keeps every link where the checker and the indexes read, because they read Markdown.
 The address a `demo` field holds, and the four messages a frame that hosts a demo exchanges
 with it, are devbook's contract `plugins/devbook/resources/demo-address.md`, which the
@@ -67,7 +70,7 @@ stateDiagram-v2
 ```
 
 The file carries the question it answers and nothing else about itself. It has no stage,
-status, or verdict, and it names no page. The same bytes are a prototype, a proposed demo, or
+status, or verdict, and it names no page beyond a linked walkthrough's `part`. The same bytes are a prototype, a proposed demo, or
 the demo, and only their location says which. A prototype sits wherever the repository's
 `prototype` procedure body says, never under `.devbook/` or `openspec/`. A proposed demo sits
 under the change's `devbook-delta/domain/<context>/`. The demo sits in `domain/<context>/`.
@@ -186,6 +189,8 @@ and `archive` skills carry a demo delta from proposal to archive.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-13 | Migration `030-linked-walkthroughs` rewrites a free walkthrough whose id is a `Proved by:` case's slug to a linked one — `part` from the line, `signature` from the page, `step` by position, and the text copied by `demo-sync.mjs` — and leaves one whose step count differs from its part's free, listed `not-applicable` with the reason. |
+| 2026-10-13 | A walkthrough is free or linked. A linked one keeps its own id, names a scenario page part with `part`, embeds that part's English step text with the `signature` it was copied at, and is stale when the page moves; a requirement proved by the part gets it as a derived `demo` entry, and `verify-change` compares it with the part rather than a test file. The one link out of a demo is that `part`, naming a journey and no chapter. |
 | 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |

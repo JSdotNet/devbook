@@ -63,13 +63,14 @@ change belongs to the engine.
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
-| `demo.mjs` | demo rules, in-process | The graph build through `demoProblems`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
+| `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
 | `scenario.mjs` | scenario page rules, in-process | The graph build through `scenarioProblems`: the stem register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, and the parts no requirement claims |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
+| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a page a walkthrough links, and migration `030-linked-walkthroughs` for the walkthroughs it links: each linked walkthrough's step `text` and `signature` re-copied from its page; `--check` exits 1 while one is stale or drifted |
 | `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
@@ -486,7 +487,8 @@ The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.htm
 what a person sees in a bounded context. It belongs to the Devbook Folder aggregate and is no
 chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
 `context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
-the chapters whose `demo` field names it. Links run from Markdown to the demo only. The file
+the chapters whose `demo` field names it. Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
+scenario page part it plays. The file
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
@@ -503,7 +505,12 @@ a host frames it sandboxed without same-origin.
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
 `demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta, one of the two routes a demo has into `domain/`.
-`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address, and
+`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address. It
+resolves a linked walkthrough's `part` to its scenario page part, reports a `step` past the
+part's steps as an error, a `signature` that is not the page's as stale, and embedded `text`
+unlike its part step as drifted, and derives a `Proved by:` requirement's `demo` entries from
+the walkthroughs linked to its part, beside its derived `tests`. It computes the signature with
+the scenario tools' `signature.mjs`, loaded only when a demo links a walkthrough, and
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`
 replaces the target whole.
@@ -693,8 +700,11 @@ reporter writes `run.json` version 2 and one screenshot per `shot:` label into
 `.devbook/scenarios/<stem>/`, in the working tree, so the run is committed with the change.
 The coverage check reads files only and reports a page with no spec, a signature mismatch,
 label drift, an image inside a step list, a duplicate stem, a dangling `scenario:`
-reference, and an unknown profile. Materialized by `init` or `update` only where `domain/`
-is adopted, because scenario pages live there.
+reference, and an unknown profile. The demo sync re-copies each linked walkthrough's step
+`text` from the part it names and its `signature` from the page, replacing those values in the
+demo's `demo-model` and no other byte; it reads the demo and resolves the part through
+devbook-meta's `demo.mjs`, so it and the checker agree on what is stale or drifted. Materialized
+by `init` or `update` only where `domain/` is adopted, because scenario pages live there.
 
 The signature is sha256 over the normalized setup fields — a data set by its name and the
 hash of its folder — the part headings, the steps, and the labels, in document order, first 8
@@ -723,6 +733,7 @@ not installed, the repository's own specs are the model.
 | `runSetup` declares `dataFolder` as taking a name, so a consumer's `tsc` passes through `setup.ts` | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
+| The demo sync replaces only a stale `signature` and drifted step `text`, keeps a copy's keyword style, leaves a current demo byte for byte, and with `--check` writes nothing and exits 1 while either remains | `demo-sync.mjs` | `unit:node:plugins/devbook/tools/scenarios/demo-sync.test.mjs` |
 | Materialized only where `domain/` is adopted | `init`, `update` | untested |
 
 ### Shared Value Objects

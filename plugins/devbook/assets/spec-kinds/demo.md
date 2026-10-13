@@ -11,10 +11,10 @@ the kind.
 | Chapters | None of its own: a `*.demo.html` file, addressed by screen and walkthrough per `resources/demo-address.md` |
 | File | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or any other `*.demo.html` a chapter's `demo` field names |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` for the `demo` field |
-| Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; `domain.md`'s ubiquitous language for the copy |
+| Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; the scenario page part every linked walkthrough's `part` names; `domain.md`'s ubiquitous language for the copy |
 | Plan target | None. Only `/prototype` writes a demo; it reaches `domain/` directly in a `flow-spec` pull request or as a demo delta of a change, per `devbook-domain.md` |
 | Index scope | `--scope domain` |
-| Extra input | The front end that renders the screens, and the e2e tests the requirements' `tests` name beside their walkthroughs |
+| Extra input | The front end that renders the screens, the e2e tests the requirements' `tests` name beside their free walkthroughs, and the page signature `.devbook/_tools/scenarios/signature.mjs` prints for each linked walkthrough's page, with `--scenario-folder` per `assets/code-sync-protocol.md` |
 
 ## It rides with its page
 
@@ -46,8 +46,10 @@ the demo: the feature or requirement naming an address resolves to its code by
 its own kind, and the screen's counterpart is the route, page, or component in
 that code that renders it. Then try the screen's `id` and its `title` in
 `demo-model` against route names and component names. A screen with no single
-match is `unresolved`. A walkthrough pairs with the e2e test its requirement's
-`tests` names; one with none pairs only through its screens.
+match is `unresolved`. A free walkthrough pairs with the e2e test its
+requirement's `tests` names; one with none pairs only through its screens. A
+linked walkthrough pairs with the scenario page part its `part` names, never
+with a test file: the page is the test, and its run proves it.
 
 ## Mapping
 
@@ -58,7 +60,8 @@ match is `unresolved`. A walkthrough pairs with the e2e test its requirement's
 | Copy | The interface strings, in the language `domain.md` declares | The demo's words, verbatim where it names a domain term |
 | A `data-anchor` | The element a test or a person targets | The element present, with the role and label the demo gives it |
 | Role, flag, setting, viewport in `demo-model` | The checks that gate the screen in code, by the switch chapters' `key` and the actors' `role` | Each switch gating what the demo shows under it |
-| A walkthrough | The e2e test its requirement's `tests` names, read step against step | The path played end to end, each step's `text` an assertion the test makes |
+| A free walkthrough | The e2e test its requirement's `tests` names, read step against step | The path played end to end, each step's `text` an assertion the test makes |
+| A linked walkthrough | The part's steps, each `step` index against the step it names and its `text` against that step's text; its `signature` against the page's | The part's journey played end to end; the page's run proves it |
 
 ## Capturing — `capture-specs`
 
@@ -74,7 +77,8 @@ reading the app is a screenshot of it, and code never leads.
 A demo is agreed when the page or chapter that places it is, and its fingerprint
 is part of that approval. The brief quotes each address in scope and turns it
 into acceptance checks: the screen reachable, each state rendered under its
-condition, the copy as written, every walkthrough's steps as an e2e path. The
+condition, the copy as written, every free walkthrough's steps as an e2e path,
+and a linked one as its part, proved by the spec derived from the page. The
 demo stays the reference the built work is compared with at Personal Validation.
 Out of scope: the managed region, the panel, variants, and anything the demo
 shows that a requirement or `design/` contradicts — that is a `conflict` to
@@ -85,7 +89,17 @@ settle first.
 One row per screen and per walkthrough in scope, the **Chapter** column carrying
 the demo address. Read the front-end code and the e2e tests as files; start
 nothing. `aligned` when the code renders the screen and its states with the
-demo's copy, and a walkthrough when its test drives the same steps.
+demo's copy; a free walkthrough when its test drives the same steps, and a
+linked one when its `signature` is the page's and every step's `text` is the
+part step its `step` names. A linked walkthrough whose `signature` is not the
+page's is **`stale`** until `/prototype` re-copies its text, a qualifier like a
+stale run's and not a sixth verdict. List each after the protocol's scenario
+page table, or the line "No stale walkthroughs.":
+
+| Walkthrough | Part | Walkthrough signature | Page signature | Action |
+|---|---|---|---|---|
+| `.devbook/domain/ordering/features.demo.html#walkthrough/declined-card` | `pay-at-checkout.md#a-declined-card-keeps-the-basket` | `51d0b7e3` | `9c41e2a0` | `/prototype` re-copies the text |
+
 `spec-ahead` when the demo shows what the code does not build. `code-ahead`
 when the code shows a screen, state, or step no demo has — a UI change that
 started in code, with no demo revision. A demo contradicting a requirement or

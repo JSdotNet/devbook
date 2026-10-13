@@ -165,7 +165,8 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
-| 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. A path that did not exist before needs no migration: `update` creates it, and nothing stale is left behind. |
+| 2026-10-13 | A newly materialized path ships its migration, per `AGENTS.md` under *When a change ships a migration*: the 2026-10-08 reasoning that `update` creates a new path and so owes none is withdrawn, since without one the ledger never records the path and `doctor` has no `--check` to report it missing. `030-scenario-tools` materializes `.devbook/_tools/scenarios/` where `domain` is adopted and the folder is missing or still an older release's copy, and reports a customized copy. |
+| 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. Shipped without a migration; corrected on 2026-10-13. |
 | 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`; it wrote `delivery:phase-validation`, a phase skill retired since. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. |
 | 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. |
 | 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |

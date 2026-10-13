@@ -27,9 +27,11 @@ version, and every message carries it as `v`. Why a demo exists and where it liv
   list of feature-flag keys switched on, `vp` one viewport. Every key is the one `demo-model`
   lists, which is the repository's own `key` for that actor, flag, or setting. An omitted
   parameter means the panel's default.
-- **`walkthrough/<id>`** names a walkthrough by its own `id` in `demo-model`; when it plays a
-  `#### Scenario:`, that id is the scenario's slug. `<step>` is a 1-based step number; omitted,
-  the walkthrough opens at its first step. `walkthrough` is therefore never a screen id.
+- **`walkthrough/<id>`** names a walkthrough by its own `id` in `demo-model`. A free
+  walkthrough playing an inline `#### Scenario:` takes the scenario's slug as its id; a linked
+  one keeps its own id, and its `part` names the scenario page part it shows. `<step>` is a
+  1-based step number of the walkthrough, never the part's `step` index; omitted, the
+  walkthrough opens at its first step. `walkthrough` is therefore never a screen id.
 
 Every part resolves against `demo-model`, the `application/json` script with that id: an
 address naming a screen, anchor, walkthrough, step, or key it does not list does not resolve.

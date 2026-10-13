@@ -38,7 +38,8 @@ setup field changed here turns the last run stale until the spec is re-derived a
    `../validate/SKILL.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
    the flags its README lists for a non-default scenario folder or spec folder: a new page reports
    `page-without-spec`, an edited one `signature-mismatch`, a renamed one `spec-without-page`.
-   Each is closed by `scenario-derive`, so name it in the reply.
+   Each is closed by `scenario-derive`, so name it in the reply. A changed page whose parts a
+   demo's walkthrough links: run its `demo-sync.mjs`, which re-copies their text and signature.
 
 ## Do not
 

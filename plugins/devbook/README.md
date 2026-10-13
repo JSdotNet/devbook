@@ -498,7 +498,13 @@ files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Sc
 off an `### Invariant:`; the eighth is `021-no-review-triad`, which deletes `review`,
 `reviewer`, and `review-at` from every `meta` block and reports the review state it took off;
 the ninth is `027-procedures-in-devbook`, which moves `components.devbook-procedures` under
-`components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's.
+`components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's;
+the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios/` where
+`domain/` is adopted and the folder is missing or still an older release's copy, since 1.21.0
+added the path without one; the eleventh is `030-linked-walkthroughs`, which rewrites a demo's
+free walkthrough under a `Proved by:` case's slug to a linked one, `step` by position and text
+copied by `demo-sync.mjs`, and lists one whose step count differs from its part's
+`not-applicable`.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -538,7 +544,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **27**, covering the metadata schema a repository authors
+One number, currently **30**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -617,7 +623,13 @@ resolved against the demo's `demo-model`, the HTML contract each `*.demo.html` k
 demo folded into the fingerprint of the page it belongs to. Each is an added field or rule a
 corpus without it never meets, so none ships a migration. 27 changes no chapter: the
 procedures' stamp entry moves under `components.devbook`, and it ships as
-`027-procedures-in-devbook`.
+`027-procedures-in-devbook`. 28 makes a `user` and a `technical` actor chapter a sync unit, and 29 leaves a
+demo's managed region out of every fingerprint. 30 adds the `scenario` type, its setup fields,
+and the `Proved by:` line a requirement's scenario may carry instead of its own steps. Each is
+added with a safe default, so none of the three owes a migration. `030-scenario-tools` and
+`030-linked-walkthroughs` ship later under 30 without moving it: one materializes a path 1.21.0
+added, the other rewrites free walkthroughs to the linked form a free one still validates
+beside, and the ledger, not the number, decides that a repository on 30 runs both.
 
 ## Folder structure
 
