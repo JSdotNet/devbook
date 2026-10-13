@@ -34,9 +34,7 @@ rule is what they do differently from OpenSpec's defaults.
   a delta, or treat it as a step of any change.
 - **A step records itself.** Under its `## Step N — title` heading, in this order: `delivers:`,
   `owner: me` when a person does it, then the `- [ ]` tasks. Tick a step's tasks in the commit
-  that completes them; `devbook-openspec:tracker` reads the state from the ticks. A step names
-  no branch and no pull request: a change is built whole, and where a pull request falls is
-  decided per case, never in the change.
+  that completes them; `devbook-openspec:tracker` reads the state from the ticks.
 - **Apply refuses an unapproved change.** Never take a step while `proposal.md` is below
   `approved`, or while its `approved-hash` no longer matches
   `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`.
