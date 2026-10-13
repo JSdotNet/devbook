@@ -1,6 +1,6 @@
 ---
 name: refresh
-description: 'Rewrite the committed derived devbook indexes — .devbook/_meta/ and one _meta/ per adopted folder — from the chapters as they are on this branch, and say which files moved. The one session-time way to write a derived file, and only when a person asks for this branch to be current: never inside a flow, never beside a chapter edit. Use when: something is about to read the indexes from this branch — a release, a local viewer — or after a large chapter change on the default branch. Triggers on: "refresh the devbook index", "regenerate _meta", "update the graph", "rebuild the indexes", "devbook-derived refresh".'
+description: 'Rewrite the committed derived devbook indexes (.devbook/_meta/ and each folder''s _meta/) from this branch''s chapters and say which files moved. Only when a person asks for this branch to be current — never inside a flow or beside a chapter edit. Use when: a release or a local viewer is about to read the indexes, "refresh the devbook index", "regenerate _meta".'
 ---
 
 # devbook-derived refresh
