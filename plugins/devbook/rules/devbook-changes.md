@@ -90,8 +90,7 @@ and none otherwise. It names, by address, the chapters a builder loads beyond th
 why each matters, then the approach. Nothing in it lands in the devbook: a decision the change makes is
 a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 
-`tasks.md` is `## Step N — title` blocks, in dependency order; a change is built whole, so a
-step is a unit of the work and never a branch or a pull request of its own. Each names the deltas it
+`tasks.md` is `## Step N — title` blocks, in dependency order. Each names the deltas it
 delivers on a `delivers:` line by address — a scenario page by its delta's path, or one part
 of it as `<path>#<part>` — and `owner: me` when a person does it. A prototype
 is no step: it needs no change and no task, and enters a change only as a demo delta.
