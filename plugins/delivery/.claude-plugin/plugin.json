@@ -1,6 +1,6 @@
 {
   "name": "delivery",
-  "version": "1.25.0",
+  "version": "1.25.1",
   "description": "The host-neutral delivery engine: two flow-* staged procedures named for what changes — flow-code for every change to the code, flow-spec for the devbook folders — run over a closed list of phase-* skills, and the pull-request lane, sequenced by the flow-runner agent, which resolves each phase's agent, skill, model and effort, with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, phases, policy, and gates are declared per repository in .devbook/config.json.",
   "author": {
     "name": "Job Schepers"
