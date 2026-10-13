@@ -1,6 +1,6 @@
 ---
 name: chapter-accept
-description: 'Run the acceptance decision on a devbook chapter, or on a change once every step is done and verified aligned — show the built work against the chapter as evidence rather than a summary of it, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on acceptance write devbook''s own status: accepted rung with accepted-by, accepted-at, and accepted-hash beside the approval record it stands on. Use when: accepting delivered work against its chapter, recording that what was built satisfies what was agreed, signing off a feature at a personal-validation gate, or lifting an acceptance that has gone stale. Triggers on: "accept this chapter", "does the build match the spec", "record the acceptance", "is this accepted", "the acceptance is stale", "sign off the delivered work".'
+description: 'Run the acceptance decision on a devbook chapter, or on a change whose steps are done and verified aligned: show the built work against the chapter, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on accept write the accepted rung. Use when: accepting delivered work against its chapter, signing off at a personal-validation gate, an acceptance went stale.'
 ---
 
 # chapter accept

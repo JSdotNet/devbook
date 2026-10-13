@@ -1,6 +1,6 @@
 ---
 name: chapter-review
-description: 'Review one devbook chapter, or one change as a whole, and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about — the open fences are the verdict. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
+description: 'Review one devbook chapter, or one change, against its folder''s rules, its linked neighbours, and the evidence it claims, and write each unresolved finding as an annotation fence beside its passage — the open fences are the verdict. Use when: reviewing a chapter, answering a review request, checking a chapter is still accurate, resolving findings left on one.'
 ---
 
 # chapter review

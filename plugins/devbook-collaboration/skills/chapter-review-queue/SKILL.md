@@ -1,6 +1,6 @@
 ---
 name: chapter-review-queue
-description: 'Sweep a repository''s devbook folders and open changes for everything a review pass has left open — chapters and changes carrying unresolved notes, approved work awaiting acceptance, notes answered but not yet swept, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
+description: 'List everything a review pass left open across the devbook folders and open changes — unresolved notes, approved work awaiting acceptance, answered notes not yet swept, approvals stale since the content changed — grouped by who owes the next move. Use when: what is awaiting review or approval, whose turn it is, has an approval lapsed ("review queue").'
 ---
 
 # chapter review queue

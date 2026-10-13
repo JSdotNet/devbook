@@ -1,6 +1,6 @@
 ---
 name: chapter-approve
-description: 'Run the approval decision on a devbook chapter, or on a change as one review of its proposal and deltas — show the chapter itself with its open annotation fences, flags first and any note raised since approved-at named as such, take approve, revise, or decline from a person, and on approval write devbook''s own status: approved rung with approved-by and approved-at while sweeping the notes it answered. Use when: approving a chapter, signing off a specification before it becomes work, recording who approved what, weighing objections raised after an approval, or lifting an approval that has gone stale. Triggers on: "approve this chapter", "sign off on this", "record the approval", "is this approved", "the approval is stale", "what was raised since the approval".'
+description: 'Run the approval decision on a devbook chapter, or on a change''s proposal and deltas: show the chapter with its open annotations, take approve, revise, or decline from a person, and on approve write the approved rung and sweep the notes it answered. Use when: approving or signing off a chapter before it becomes work, weighing objections raised after an approval, an approval went stale.'
 ---
 
 # chapter approve
