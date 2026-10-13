@@ -47,8 +47,7 @@ what happens inside `phase-implement` — in full in `resources/implement-kinds.
 
 ## Surface Reporting
 
-Per **Reporting Contract** in `resources/surface-contract.md`; with no surface bound, say so
-once and continue on the file artifacts.
+Per **Reporting Contract** in `resources/surface-contract.md`, which also covers no surface bound.
 
 - `start_run` with `skillId: "flow-code"`, `sessionId: "${CLAUDE_SESSION_ID}"` per the
   `session-id` slot, and one stage per phase above in order, each named by its phase skill's
