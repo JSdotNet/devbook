@@ -211,7 +211,7 @@ result.
 | The record lists every session that drove it in `sessionIds`: a reattach appends the caller's `sessionId`, never replaces one, never records one twice, and drops a token the host left unsubstituted | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | A stage finishing twice is recorded twice | `update_stage()` | untested |
 | A change kind is one `flow-code` derives, or a 1.13.0 kind a run file from before the per-phase flows still carries | `start_run()`, `set_run_context()` | untested |
-| How a stage ran, `execution`, is stored on the stage verbatim and kept until a later call replaces it; one that is not an object is refused | `update_stage()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
+| How a stage ran, `execution`, is stored on the stage verbatim and kept until a later call replaces it — its optional `round`, `blockers`, and `defectsFound` counts with it; one that is not an object is refused | `update_stage()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | Evidence paths resolve inside the git worktree root; anything outside is refused | `update_stage()` | untested |
 | Telemetry is captured from tool events and never accepted from a caller | telemetry hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
 | Idleness and the session title are derived on read, never stored as status | `get_run()`, `list_runs()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/session-title-test.mjs` |

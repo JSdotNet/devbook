@@ -132,7 +132,9 @@ those contracts; it does not re-decide them per skill.
      session, one level deep; a forked `implement` is never relied on to fork the reviewer.
      Blockers still open go to the ready check. `policy.phases.review: false` runs `implement`
      alone. Count every review pass per slice, take each round's `rule` and `bug` counts from
-     what `phase-review` returns, and send both as `quality` on Review's closing call. A `revise: phase-scope` from `implement` re-runs Scope rather than redesigning inline.
+     what `phase-review` returns, and send both as `quality` on Review's closing call; each pass's own `round`, `blockers`,
+     and Verify's `defectsFound` go on that stage's `execution`, per **Stage Counts** in
+     `surface-contract.md`. A `revise: phase-scope` from `implement` re-runs Scope rather than redesigning inline.
    - **The ready check, back to implement.** Before Personal Validation, run `phase-ready`
      inline, never configured: it reads what the earlier phases recorded and does no
      new work. Not ready with `policy.ready.retryBudget` left: write a brief of exactly what

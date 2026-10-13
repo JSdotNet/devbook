@@ -571,7 +571,8 @@ Payload:
 - `evidence`: optional; one `{ stem, part, outcome, runAt }` per part of each scenario page
   `verify` ran, `outcome` being `passed`, `failed`, or `not-run`
 - `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
-  entry per sub-agent call — beside what the run resolved for it
+  entry per sub-agent call — beside what the run resolved for it; and, optionally, what the
+  pass found: `round` on Implement and Review, `blockers` on Review, `defectsFound` on Verify
 - `decision`: the gate outcome, where a gate was attached to this phase
 - `quality`: optional, on the Review stage; the review rounds each slice took and the `rule`
   and `bug` blockers each round left open or fixed, as they stand so far

@@ -37,6 +37,10 @@ export type FlowStage = {
   /** The fields where what ran differs from what was configured. */
   mismatch: string[]
   passes: number
+  /** What the pass found, from the stage's `execution`: the implement ⇄ review round, Review's open blockers, Verify's defects; null when unrecorded. */
+  round: number | null
+  blockers: number | null
+  defectsFound: number | null
   durationMs: number | null
   outputTokens: number | null
   toolCalls: number
