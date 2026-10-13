@@ -12,14 +12,8 @@ Open the reply with `devbook-collaboration@<version>`, `version` read from `../.
 Request a review of one chapter and hand back the brief that carries the ask.
 This is the author's half of the pass; `chapter-review` is the reviewer's.
 
-The chapter records no review state — `devbook-chapter-metadata.md` says why.
-What the reviewer is asked lives in the brief, and in the pull request or
-tracker item the user sends it through; what is still open lives in the
-chapter's annotation fences.
-
-This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
-five-row lookup, and a reviewer who is handed four of the five rows starts by
-asking for the fifth.
+The chapter records no review state, per `devbook-chapter-metadata.md`: the ask lives in the
+brief and wherever the user sends it, and what is still open in the chapter's annotation fences.
 
 ## Steps
 
@@ -53,12 +47,5 @@ asking for the fifth.
    anywhere — handing the brief back is the deliverable, and the user chooses
    where it goes.
 
-## Do not
-
-- Do not review the chapter here. Requesting and answering are different moves
-  by different people; doing both in one pass is how a chapter gets approved by
-  the person who wrote it.
-- Do not write `status: approved` from this skill. Approval is
-  `chapter-approve`'s, and only after a review clears.
-- Do not record the brief or the reviewer in the chapter. Who owes the next
-  move is workflow state, and a reassignment is not a change to the content.
+Never review the chapter in the same pass: requesting and answering are moves by different
+people, and doing both is how a chapter gets approved by the person who wrote it.
