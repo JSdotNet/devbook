@@ -333,7 +333,7 @@ needs a person, and a person is exactly what an unattended run does not have.
 | It is runnable by hand as well as on a cadence | authoring | untested |
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
 | It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
-| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
+| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report is the session's last message, never an issue | run | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ### Schedule Report Published
