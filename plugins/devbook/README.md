@@ -501,7 +501,10 @@ the ninth is `027-procedures-in-devbook`, which moves `components.devbook-proced
 `components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's;
 the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios/` where
 `domain/` is adopted and the folder is missing or still an older release's copy, since 1.21.0
-added the path without one.
+added the path without one; the eleventh is `030-linked-walkthroughs`, which rewrites a demo's
+free walkthrough under a `Proved by:` case's slug to a linked one, `step` by position and text
+copied by `demo-sync.mjs`, and lists one whose step count differs from its part's
+`not-applicable`.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
