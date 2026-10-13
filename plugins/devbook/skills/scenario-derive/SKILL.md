@@ -1,6 +1,6 @@
 ---
 name: scenario-derive
-description: 'Write or re-derive the Playwright spec that runs a scenario page, from the page: the // scenario: and // signature: header, the setup call, one test per part titled exactly as its ##, one step per step, and a shot call at each screenshot point, leaving to the implementer every step body the page cannot say. Builds on qa:playwright-e2e-authoring. Use when: a scenario page has no spec, its steps or parts changed, or the scenario coverage check reports page-without-spec, spec-without-page, signature-mismatch, or label-drift. Triggers on: "derive the spec", "scenario-derive", "re-derive the scenario spec", "signature mismatch", "page without spec". DO NOT USE FOR: writing the page (scenario-write), running it (scenario-run), or the setup hook.'
+description: 'Write or re-derive the Playwright spec that runs a scenario page, from the page, leaving step bodies to the implementer. Use when: a scenario page has no spec, its steps or parts changed, or the coverage check reports page-without-spec, spec-without-page, signature-mismatch, or label-drift. DO NOT USE FOR: writing the page (scenario-write), running it (scenario-run), or the setup hook.'
 ---
 
 # devbook scenario-derive

@@ -1,6 +1,6 @@
 ---
 name: scenario-run
-description: 'Run one scenario page, or every scenario page, through the repository''s Playwright suite under the page''s own profile, so the run reporter writes run.json and one screenshot per shot: label into the scenario folder, .devbook/scenarios/<stem>/ by default. Use when: proving a scenario page, refreshing a stale run, a page''s screenshots are missing or out of date, or committing runs on the target branch. Triggers on: "run the scenario", "scenario-run", "run the scenario pages", "refresh the scenario screenshots", "stale scenario run". DO NOT USE FOR: writing the page (scenario-write), or its spec (scenario-derive).'
+description: 'Run one scenario page, or all of them, through the repository''s Playwright suite under the page''s profile, writing run.json and one screenshot per shot into the scenario folder. Use when: proving a scenario page, refreshing a stale run or missing screenshots, or committing runs on the target branch. DO NOT USE FOR: writing the page (scenario-write) or its spec (scenario-derive).'
 ---
 
 # devbook scenario-run

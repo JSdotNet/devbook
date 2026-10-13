@@ -1,6 +1,6 @@
 ---
 name: annotation-sweep
-description: 'Delete every resolved annotation fence in a devbook chapter and nothing else, so a branch merges without carrying answered notes in its chapters and its diff. The last step of the annotation lifecycle: open means someone is waiting, resolved means answered and lives only the rest of the branch, gone is the resting state. Use when: clearing resolved notes before a pull request, tidying a chapter after a review, or when a chapter has answered comments still in it. Triggers on: "sweep the annotations", "clear resolved notes", "delete the answered comments", "resolved annotations are still in the chapter", "sweep before merging".'
+description: 'Delete every resolved annotation fence in a devbook chapter and nothing else, so a branch merges without answered notes. Use when: clearing resolved notes before a pull request, tidying a chapter after a review, or a chapter still holds answered comments ("sweep the annotations").'
 ---
 
 # annotation sweep

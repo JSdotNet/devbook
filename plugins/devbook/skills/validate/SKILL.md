@@ -1,6 +1,6 @@
 ---
 name: validate
-description: 'Validate a repository''s devbook corpus without writing a generated file, and repair what it reports in the chapters — broken metadata references, malformed or missing meta blocks, and fields the schema no longer defines. Asks about the chapters only, never about the installation: stamp drift and outstanding migrations are not this skill''s question. Use when: the devbook-meta check fails or references do not resolve. Triggers on: "devbook validate", "validate devbook folders", "devbook check", "devbook-meta failed", "broken reference", "build.mjs --check".'
+description: 'Run the devbook check over the chapters and repair what it reports in the source Markdown — broken references, malformed or missing meta blocks, fields the schema no longer defines. Never writes a generated file and never judges the installation (stamps, migrations). Use when: the devbook-meta check fails, a reference does not resolve, "devbook validate".'
 ---
 
 # devbook validate

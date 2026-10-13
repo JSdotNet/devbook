@@ -1,6 +1,6 @@
 ---
 name: scenario-write
-description: 'Write or revise a scenario page — one end-to-end journey as a type: scenario page beside the chapter it demonstrates in .devbook/domain/<context>/ — with its setup fields, English Given/When/Then steps, and shot: screenshot labels, and point every requirement it proves at its part with a Proved by: line. Use when: writing an end-to-end journey down, a feature or a requirement needs a journey, revising a page''s steps, parts, or screenshot points. Triggers on: "write a scenario page", "scenario-write", "add a journey", "new e2e scenario", "Proved by". DO NOT USE FOR: the spec that runs the page (scenario-derive), or running it (scenario-run).'
+description: 'Write or revise a scenario page — one end-to-end journey beside the chapter it demonstrates, with setup fields, Given/When/Then steps, and shot: labels — and point each requirement it proves at its part with a Proved by: line. Use when: writing a journey down, a feature or requirement needs one, revising steps, parts, or screenshot points. DO NOT USE FOR: its spec (scenario-derive) or running it (scenario-run).'
 ---
 
 # devbook scenario-write

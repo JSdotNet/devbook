@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Read every adopted devbook folder and report the prose that does not earn its lines or does not read — a hedge in a sentence stating a fact, a paragraph restating its heading, a closing summary repeating the body, a term defined a second time outside the ubiquitous language, a name in prose that no longer exists in the tree, fragments chained with dashes, an overlong sentence, a coined name nobody defined, a sequence or state machine told in prose with no diagram — beside what devbook:validate reports about structure. Writes nothing: the report is the output, and an edit is a person''s, through the folder''s flow. Use when: tightening chapters before a review, finding what a fold or rename left behind in prose, a chapter is hard to read, or on a cadence. Triggers on: "check the chapters'' prose", "what is stale in the devbook", "tighten the chapters", "prose check", "devbook prose", "is the devbook readable", "where is a diagram missing".'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, overlong sentences, a sequence told without a diagram. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
