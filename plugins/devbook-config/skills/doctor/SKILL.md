@@ -46,28 +46,8 @@ two writers for one stamp is how a reconcile stops being idempotent.
    — `phases.flow-update-packages`, `phases.flow-project` — in the committed file or an
    overlay: each is hard, fixed by `delivery:update`. A `model-selection.md` it names as left
    over is a warning — nothing reads it — fixed by `devbook-config:local`.
-5. **Resolve every provider.** Run `node <installPath>/tools/stack-config/check.mjs --print`,
-   `installPath` being delivery's, with the repository as the working directory — it resolves
-   `.devbook/config.json` from there — and read `config` from its stdout; never merge the
-   layers by hand. A non-zero exit is hard, with the checker's lines as the finding. delivery
-   not installed: say the providers are unchecked, and why. Take, from every entry of every
-   map under `phases`, its `agent`, its `skill`, `phase-verify`'s `app` provider, and each
-   `before` and `after` chore's id, less any `--flag` arguments after it; and under
-   `bindings`, `openspec.grill` and a `delivery.tracker` provider that is not `github`,
-   `jira`, `markdown`, or `backlog`. `mcp` names servers, not providers. `null` is a
-   deliberate choice, not a finding. Resolve each:
-   - an `agent` — `agents/<name>.agent.md` under that plugin's `installPath`; a bare `plugin`
-     — it ships exactly one agent, else a warning to name one; `repo:<agent>` —
-     `.claude/agents/<agent>.md` or `.github/agents/<agent>.agent.md`;
-   - any other `plugin:skill` — `skills/<skill>/SKILL.md` under that plugin's `installPath`;
-   - `repo:<skill>` — `.agents/skills/<skill>.md`, `.claude/skills/<skill>/SKILL.md`, or
-     `.github/skills/<skill>/SKILL.md` in the repository.
-
-   An id in the **Old** column of devbook's `migrations/015-openspec-verbs/MIGRATION.md` is
-   hard: name its successor from the **New** column, and say `devbook:update` runs the
-   migration that rewrites it. Any other id that resolves to nothing is a warning naming the
-   file and key that bind it — the flow degrades past it, so it never fails the run. A
-   plugin the report does not list is outside this catalog: say it is unchecked.
+5. **Resolve every provider** per `../../resources/provider-resolution.md`: a failing checker
+   and a retired id are hard, any other id that resolves to nothing a warning.
 6. **Check the change lane** when `components.openspec` exists. Run `openspec --version`
    from the repository root: absent, or outside `components.openspec.cli`, is a warning —
    a fact about this machine, like a plugin it lacks — and the fix is
@@ -80,10 +60,5 @@ two writers for one stamp is how a reconcile stops being idempotent.
    hard drift; report staleness, customization, and unresolved providers without failing — a
    stale generated file must not block an unrelated pull request.
 
-## Do not
-
-- Do not apply a migration, edit a stamp, rewrite an `AGENTS.md` section, or rebind a
-  provider. Each belongs to
-  its component's `update`, which records what it did as it does it.
-- Do not treat a component this machine has not installed as drift: its stamp is shared, and
-  the report's `blocked` scope already says so.
+A component this machine has not installed is not drift: its stamp is shared, and the
+report's `blocked` scope already says so.
