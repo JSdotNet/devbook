@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 25,
+  "schemaVersion": 30,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
@@ -254,7 +254,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "powershell",
           "level": 2,
-          "line": 58,
+          "line": 65,
           "status": "adopted",
           "kind": "runtime",
           "date": "2026-09-04",
@@ -276,7 +276,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "marketplace-root",
           "level": 2,
-          "line": 7,
+          "line": 8,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -336,7 +336,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 110,
+          "line": 121,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -357,7 +357,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-10-01",
+          "date": "2026-10-05",
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
@@ -385,7 +385,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "schedule-plugin",
           "level": 2,
-          "line": 491,
+          "line": 513,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -406,11 +406,12 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 405,
+          "line": 439,
           "status": "active",
           "statusDeclared": false,
           "related": [
             ".devbook/tech/shared.md#model-context-protocol",
+            ".devbook/arc42/08-crosscutting-concepts.md#phase",
             ".devbook/arc42/adr/flow-engine.md"
           ],
           "outOfScope": true
@@ -425,7 +426,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 332,
+          "line": 352,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",

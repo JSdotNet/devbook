@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
+  "scope": ".devbook/tech",
+  "sources": [
+    ".devbook/tech"
+  ],
+  "stats": {
+    "pages": 0,
+    "parts": 0,
+    "labels": 0,
+    "unclaimed": 0
+  },
+  "problems": [],
+  "scenarios": []
+}
