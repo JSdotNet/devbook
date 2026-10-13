@@ -179,6 +179,54 @@ test('reads how each phase resolved and ran, and marks where they differ', async
   expect(pr!.mcp).toEqual(['backlog'])
 })
 
+test('reads the round, blockers, and defects a stage records, and ignores what is not a count', async ($, on) => {
+  const runs = storedRuns(on)
+  machine(on, ROOT, {
+    [at('run-q.json')]: JSON.stringify({
+      id: 'run-q',
+      skillId: 'flow-code',
+      updatedAt: '2026-10-07T10:00:00.000Z',
+      sessionIds: [SESSION],
+      stages: [
+        { name: 'Implement', status: 'done', execution: { mode: 'fork', round: 2 } },
+        { name: 'Review', status: 'done', execution: { mode: 'fork', round: 2, blockers: 1 } },
+        { name: 'Verify', status: 'done', execution: { mode: 'delegate', defectsFound: 0 } },
+        { name: 'Spec Check', status: 'done', execution: { round: 0, blockers: -1, defectsFound: '2' } },
+        { name: 'Ready', status: 'done' },
+      ],
+    }),
+  })
+
+  await start($, ROOT)
+  const counts = runs()[0]!.stages.map(s => [s.round, s.blockers, s.defectsFound])
+
+  expect(counts).toEqual([
+    [2, null, null],
+    [2, 1, null],
+    [null, null, 0],
+    [null, null, null],
+    [null, null, null],
+  ])
+
+  const ui = await $.ui.mount({
+    plugin: 'delivery-run-view',
+    surface: 'terminal',
+    component: 'Pane',
+    requestId: 'delivery-run-view',
+    props: {
+      title: 'Delivery flows',
+      isFocused: true,
+      bodyColumns: 120,
+      placement: 'dock',
+      scroll: { offset: 0, bodyRows: 40 },
+      view: {},
+    },
+  })
+  expect(await ui.find({ type: 'Text', text: 'round 2 · 1 blocker' })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: '0 defects' })).toBeDefined()
+  await ui.unmount()
+})
+
 test('names a phase by its bound worker, labels the revise round, and reads the old stage names', async ($, on) => {
   const runs = storedRuns(on)
   machine(on, ROOT, {
