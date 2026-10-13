@@ -7,9 +7,6 @@ description: 'Explain with a picture before prose: pick the diagram, tree, signa
 
 Open the reply with `devbook-skills@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-Show the shape first, then say only what the shape cannot. A person takes in a picture faster
-than the paragraph describing it.
-
 ## Pick the picture
 
 | The content describes | Show |
