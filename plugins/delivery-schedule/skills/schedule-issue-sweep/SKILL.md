@@ -1,6 +1,6 @@
 ---
 name: schedule-issue-sweep
-description: 'The unattended issue sweep: classify every open issue nobody has classified yet in the repository''s own labels, close the ones high-confidence evidence shows already resolved, resolve up to N of the rest one at a time — each on its own branch, each landing as a draft pull request — and publish one brief of what was labelled, closed, opened, and left for a person. Also runnable by hand; the weekday issue-sweep schedule''s target. At maxResolve 0 it is the triage alone.'
+description: 'Classify unclassified open issues in the repository''s own labels, close those high-confidence evidence shows already resolved, resolve up to N of the rest one at a time as draft pull requests, and brief what is left for a person. At maxResolve 0, triage alone. The issue-sweep schedule''s target.'
 ---
 
 # Scheduled: Issue Sweep
@@ -9,21 +9,9 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
-## Purpose
-
-Turn an inbox into a backlog, and the top of the backlog into draft pull requests, in one
-session with nobody watching. The sweep asks two questions of every open issue. **What is
-it?** — type, area, severity for a defect, a likely duplicate, what the report is missing —
-answered once, in the repository's own labels, and written back so the next sweep does not
-ask again. **Is it still worth doing, and can it be worked now?** — relevance against the
-code and collision with work in flight — answered every sweep. Then it closes what evidence
-shows already resolved, resolves the best of the rest one at a time, and writes the brief a
-person reviews from. Personal validation happens on the pull requests, which is why every one
-of them is a draft.
-
-The resolution is sequential and stays in this session: one branch per issue, one worktree
-cut and removed per issue, no second session anywhere. A scheduled run has hours; it does not
-need parallelism, and it cannot hand a parked worktree to anyone.
+A classification — type, area, severity, a likely duplicate, what the report is missing — is
+written once and marked `triaged`; relevance and collision with work in flight are judged
+every sweep, because the code moved. Removing `triaged` from an issue has it classified again.
 
 ## Inputs
 
@@ -37,9 +25,6 @@ need parallelism, and it cannot hand a parked worktree to anyone.
 - `maxRepairAttempts`: diagnose-and-fix cycles the resolution may spend on a red build
   (default `2`).
 - Base branch (default: the repository default branch).
-
-Closing has no threshold input: an unattended run closes only on the evidence Phase 4 names,
-at `high` confidence, and nothing lowers that.
 
 ## Hard Constraints
 
@@ -80,10 +65,8 @@ at `high` confidence, and nothing lowers that.
 
    Drop, before triage, anything already in flight or off limits: labelled `in-progress`,
    `sweep-failed`, `blocked`, `wip`, or `needs-discussion`; assigned to somebody other than
-   the current user; referenced by an open pull request. Drop every issue with a label
-   starting `wayfinder:` first, ahead of every other check, and keep only their count for the
-   brief. Mark each remaining issue
-   `triaged: true` when it carries that label — it is judged for relevance and collision only,
+   the current user; referenced by an open pull request; and, first, every `wayfinder:*` issue
+   (constraint 8). Mark each remaining issue `triaged: true` when it carries that label — it is judged for relevance and collision only,
    never re-classified. A `needs-info` issue updated since this skill's last comment on it
    loses the mark: the reporter answered, so it is classified again from the answer.
 
@@ -108,8 +91,7 @@ at `high` confidence, and nothing lowers that.
    git --no-pager branch --all
    ```
 
-4. If no issue survives step 1, publish nothing and stop with a clean no-op in the run log —
-   the `wayfinder:*` count, when not zero, is its one line.
+4. If no issue survives step 1, publish nothing and stop with a clean no-op in the run log.
 
 ### Phase 2 — Triage
 
@@ -209,20 +191,7 @@ at `high` confidence, and nothing lowers that.
 
 ### Phase 6 — Brief
 
-14. End the run with the brief, in `report.md` beside this file, per
-    `../../resources/report-contract.md` — never as an issue. Its sections, needs-you first,
-    done last:
-
-    | § | Holds |
-    | --- | --- |
-    | ① Draft pull requests | One row per pull request: issue, link, and **what could not be proved** quoted from the body — that is what to validate |
-    | ② Proposals awaiting an answer | Stale verdicts not closed, each with its evidence and a ready-to-run close command; classifications below `labelConfidence` with their verdicts and reason; every label the repository lacks; `needs-info` questions asked; a `duplicate` named but not closed |
-    | ③ Flagged | Every issue excluded for agent-directed text, quoted verbatim |
-    | ④ Did not complete | Each failed resolution — the stage it stopped at, the reason, the label left on the issue |
-    | ⑤ Closed | Each closed issue with the evidence in its closing comment |
-    | ⑥ Triaged and deferred | Counts of classifications written per type and severity; issues judged but not resolved — conflicts (with what), surplus past `maxResolve`, untriaged past `maxTriage`; the count of `wayfinder:*` issues excluded, never their numbers |
-
-    Nothing in ① to ④ and nothing closed: the verdict line and *Run* alone.
+14. End the run with the brief in `report.md` beside this file.
 
 ## Surface Reporting
 
@@ -231,16 +200,6 @@ The Triage stage's output is the verdict counts; the Resolve stage's is each res
 
 ## Notes
 
-- **Classification is written once; relevance is judged every sweep.** `triaged` is what
-  separates the two: remove it from an issue to have it classified again. A proposed label
-  that keeps coming back is the brief telling the maintainer the vocabulary has a gap.
-- **Match `maxResolve` to how many draft pull requests you will review the next day**, not to
-  how many issues exist. The default of ten assumes a day of review; lower it per repository through an override.
-- **No verify phase.** The resolution checks itself with the unit suite only; a change that
-  touches a runtime surface says so under *what could not be proved*, and that is what to
-  check by hand before flipping the draft. For work that needs a person present from the
-  start, use `start-session-from-issue` in `delivery`.
-- **Every resolution builds in the same environment.** Give the repository's `run` recipe its
-  own ports and containers if a build assumes exclusive use of them.
-- The conflict scan is a heuristic: it compares likely paths against open pull request diffs.
-  Two issues that turn out to touch the same file cost a rebase, not a lost change.
+- The resolution checks itself with the unit suite only: a change that touches a runtime
+  surface says so under *what could not be proved*, which is what to check before flipping
+  the draft.

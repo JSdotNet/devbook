@@ -42,7 +42,9 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 
 The two *Needs you* sections take the frame's place for this skill. A classification below
 `labelConfidence`, a label the repository lacks, a `needs-info` question asked, and a duplicate
-named but not closed are each a proposal row.
+named but not closed are each a proposal row. *Triaged and deferred* counts the classifications
+written per type and severity, and the issues judged but not resolved — a conflict, with what
+it collides with; past `maxResolve`; past `maxTriage`.
 
 The `wayfinder:*` row is a count, never a list: those issues belong to the person working the
 map, so the brief names none of them. Omit the row when the count is zero.
