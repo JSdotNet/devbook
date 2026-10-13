@@ -75,8 +75,8 @@ chapters and generated `_meta/*.json` indexes.
    | Protocols and formats | OpenAPI files, GraphQL schemas, protobuf files, message contracts | `protocol`, `format` |
 
    Do not infer adoption from a stale file alone. Prefer active manifests, referenced scripts,
-   and architecture documentation. Mark uncertain technologies as `candidate` or leave them
-   out with an open question in `technology-graph.md`.
+   and architecture documentation. Leave an uncertain technology out, with an open question
+   in `technology-graph.md`.
 
 4. **Map findings to `tech/`.** For each technology, choose exactly one owning layer. Shared
    technologies used by multiple layers belong in `shared.md`; layer-specific technologies
