@@ -1,6 +1,6 @@
 ---
 name: schedule-devbook-sweep
-description: 'The unattended devbook sync sweep, one entry point for both directions: list the sync groups whose chapters say direction pull (code to chapter) or push (chapter to code), verify them in parallel, file one devbook-drift issue per group a person must answer, bring up to N of the rest level one at a time — each on its own branch, each landing as a draft pull request — and publish one brief with a devbook-sync-report block. The devbook-pull-sweep and devbook-push-sweep schedules'' target; also runnable by hand.'
+description: 'Bring devbook chapters and code level in the direction each chapter''s sync field states — pull carries code into chapters, push builds agreed chapters into code — filing a devbook-drift issue per group a person must answer and landing up to N groups as draft pull requests. The devbook pull and push sweep schedules'' target.'
 ---
 
 # Scheduled: Devbook Sweep
@@ -9,11 +9,6 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
-## Purpose
-
-Keep chapters and code level in the direction each chapter states in its own `sync` field,
-with nobody watching. The issue sweep's shape with a sync group where it has an issue: select,
-verify in parallel, file what needs a person, resolve the best of the rest one at a time, brief.
 What the two directions share — pickup, the verdict per sweep, landing, the work script's
 result, the report block — is `../../resources/devbook-sweep-contract.md`.
 
@@ -48,11 +43,10 @@ result, the report block — is `../../resources/devbook-sweep-contract.md`.
 
 ## Skill Dependencies
 
-- **`devbook`** — `.devbook/_tools/devbook-meta/units.mjs` and `devbook:verify-change`. Either
-  absent: say which and stop.
-- **The direction's work script** beside this file, per the contract. Absent: run Phases 1–3
-  and 5, skip Phase 4, and say in the brief which script this plugin version lacks.
-- `gh` CLI, and the `Workflow` tool; the schedule's prompt is its opt-in.
+- `.devbook/_tools/devbook-meta/units.mjs` and `devbook:verify-change`. Either absent: say which
+  and stop.
+- The direction's work script beside this file. Absent: run Phases 1–3 and 5, skip Phase 4,
+  and say in the brief which script this plugin version lacks.
 
 ## Workflow
 
@@ -78,7 +72,8 @@ result, the report block — is `../../resources/devbook-sweep-contract.md`.
 
 ### Phase 2 — Verify
 
-3. Invoke the `Workflow` tool with `verify-units.workflow.js` beside this file:
+3. Invoke the `Workflow` tool — the schedule's prompt, or the user's turn, is its opt-in — with
+   `verify-units.workflow.js` beside this file:
    `{ repo, direction, groups, openWork: { pullRequests }, maxVerify }`. One read-only agent per
    group runs `devbook:verify-change` with the group as scope; the script rolls the verdicts up
    per the contract, runs one conflict scan, and returns `assessed`, `readyForPickup`, `toFile`,
@@ -104,8 +99,8 @@ result, the report block — is `../../resources/devbook-sweep-contract.md`.
 
 ### Phase 5 — Brief
 
-7. End with the brief in `report.md` beside this file, per `../../resources/report-contract.md`,
-   closed by the `devbook-sync-report` block. Never as an issue.
+7. End with the brief in `report.md` beside this file, closed by the `devbook-sync-report`
+   block.
 
 ## Surface Reporting
 

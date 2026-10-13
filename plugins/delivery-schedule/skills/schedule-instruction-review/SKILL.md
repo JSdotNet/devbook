@@ -1,6 +1,6 @@
 ---
 name: schedule-instruction-review
-description: 'Tighten the instruction assets a repository loads into a model — AGENTS.md and its host twins, rules, skills, agents, prompts, contracts: cut sentences that change nothing, replace a duplicate with a pointer, turn a prohibition positive, strip hedging, fix pointers that no longer resolve. Lands as one draft pull request, one commit per file, with a ledger of every cut; skips what the previous run''s rejected pull request touched.'
+description: 'Tighten the instruction assets a repository loads into a model — cut what changes nothing, replace a duplicate with a pointer, turn a prohibition positive, fix dead pointers — as one draft pull request, one commit per file, skipping what a rejected earlier run touched. The instruction-review schedule''s target.'
 ---
 
 # Scheduled: Instruction Review
@@ -9,28 +9,16 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
-## Purpose
-
-Instructions decay the opposite way from code: nobody deletes a sentence, so every asset grows
-until the model attends to none of it. This run is the deletion discipline nobody schedules by
-hand. It reads every instruction asset, applies `resources/instruction-tightening.md`, and lands
-the cuts where a person accepts or drops them file by file.
-
 ## Inputs
 
 - Scope: `all` (default) or a path glob.
 - Rewrites: `true` (default) or `false` — cuts only.
 - Exclude: path globs left alone, on top of what the contract keeps out.
 
-## Skill Dependencies
-
-None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` names them.
-
 ## Hard Constraints
 
-- `resources/instruction-tightening.md` decides scope, the standard, and what stays in full.
+- `../../resources/instruction-tightening.md` decides scope, the standard, and what stays in full.
   Read it before the first edit and again before the pull request; it does not repeat here.
-- Never edit frontmatter, a code fence, a managed section, or anything under `.devbook/`.
 - A file touched by a pull request from `schedule/instruction-review/` that was closed without
   merging is skipped and named in the summary. A rejection is an answer.
 - One commit per file, so a reviewer drops one file without losing the rest.
@@ -87,9 +75,3 @@ None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` nam
 
 11. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
     files read, edited, skipped, lines removed, the standard applied, and the link.
-
-## Notes
-
-- Weekly at most. A cut a reviewer rejected is skipped next time, so the run converges.
-- Run it by hand with `Rewrites: false` first: cuts alone show whether the standard fits the
-  repository before a rewrite changes a sentence's meaning.
