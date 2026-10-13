@@ -63,7 +63,7 @@ change belongs to the engine.
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
-| `demo.mjs` | demo rules, in-process | The graph build through `demoProblems`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
+| `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
 | `scenario.mjs` | scenario page rules, in-process | The graph build through `scenarioProblems`: the stem register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, and the parts no requirement claims |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
@@ -504,7 +504,12 @@ a host frames it sandboxed without same-origin.
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
 `demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta, one of the two routes a demo has into `domain/`.
-`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address, and
+`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address. It
+resolves a linked walkthrough's `part` to its scenario page part, reports a `step` past the
+part's steps as an error, a `signature` that is not the page's as stale, and embedded `text`
+unlike its part step as drifted, and derives a `Proved by:` requirement's `demo` entries from
+the walkthroughs linked to its part, beside its derived `tests`. It computes the signature with
+the scenario tools' `signature.mjs`, loaded only when a demo links a walkthrough, and
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`
 replaces the target whole.
