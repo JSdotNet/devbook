@@ -41,8 +41,11 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 | `<page>.demo.html` | `<page>.md`, which it sits beside and moves with when a feature is split out. |
 | Any other `*.demo.html` | The chapters whose `demo` field names it. |
 
-Links run one way, from Markdown to HTML. A chapter points at a screen, a state, or a
+Links run from Markdown to HTML. A chapter points at a screen, a state, or a
 walkthrough through an optional `demo` field in its `meta` block, and the demo names no page.
+The one exception is a linked walkthrough, whose `part` names the scenario page part it
+plays and embeds that part's step text, so a requirement the part proves derives its
+walkthroughs instead of naming them.
 That keeps every link where the checker and the indexes read, because they read Markdown.
 The address a `demo` field holds, and the four messages a frame that hosts a demo exchanges
 with it, are devbook's contract `plugins/devbook/resources/demo-address.md`, which the
@@ -67,7 +70,7 @@ stateDiagram-v2
 ```
 
 The file carries the question it answers and nothing else about itself. It has no stage,
-status, or verdict, and it names no page. The same bytes are a prototype, a proposed demo, or
+status, or verdict, and it names no page beyond a linked walkthrough's `part`. The same bytes are a prototype, a proposed demo, or
 the demo, and only their location says which. A prototype sits wherever the repository's
 `prototype` procedure body says, never under `.devbook/` or `openspec/`. A proposed demo sits
 under the change's `devbook-delta/domain/<context>/`. The demo sits in `domain/<context>/`.

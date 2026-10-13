@@ -251,7 +251,8 @@ one names the invariants subpage, it means `domain.invariants.md` or any
 
 **A demo is the one HTML file a context holds.** It is the agreed, clickable
 picture of what a person sees, and it is not a chapter: it carries no `meta`
-block, has no reading position, and names no page. Its name says what it
+block, has no reading position, and names no page but the scenario page part
+a linked walkthrough's `part` plays. Its name says what it
 belongs to:
 
 | Name | Belongs to |
@@ -1328,9 +1329,9 @@ Proved by: <journey>.md#<part-heading-slug>
 ...
 ```
 
-A requirement proved by a journey writes no `tests` and no `demo`: its `e2e`
-entry and its walkthroughs are derived from the `Proved by:` line. A
-requirement with inline Given/When/Then names both by hand.
+A requirement proved by a journey writes no `tests` and no `demo` for its
+`Proved by:` cases: its `e2e` entry and its walkthroughs are derived from the
+line. Its inline Given/When/Then cases keep both written by hand.
 
 ### domain.invariants.md
 

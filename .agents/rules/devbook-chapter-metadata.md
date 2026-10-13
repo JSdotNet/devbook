@@ -458,21 +458,23 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   - A **linked** walkthrough shares its journey with a scenario page part. It
     keeps its own `id` and adds `part: "<page>.md#<part>"`, the link, and
     `signature: "<8 hex>"`, the page signature its text was copied at. Each step
-    adds `step`, the 1-based index of the part step it shows, and keeps
+    adds `step`, the 1-based index of the part step it shows — ascending, and
+    a part step may be left out — and keeps
     `screen`, `anchor`, `role`, `flags`, and `text` — an embedded copy of that
     step's English text, so the demo plays with nothing fetched. Its screens'
     copy still follows `domain.md`'s language. A `signature` that is not the
     page's current one makes it stale until its text is re-copied.
   - A requirement whose `#### Scenario:` is a `Proved by:` line gets its
-    walkthroughs derived, the way its `e2e` test is: every walkthrough linked to
-    that part. A hand-written walkthrough entry on such a requirement is
-    redundant (warning); only an inline case's walkthrough is written by hand.
+    walkthroughs derived, the way its `e2e` test is: every walkthrough in any
+    `*.demo.html` under `domain/` whose `part` names that part. A hand-written
+    walkthrough entry on such a requirement is redundant (warning); only an
+    inline case's walkthrough is written by hand.
 
   The shape is the authoring reference opening the demo template. Quote an
   address whose `flags` lists more than one key, since a comma otherwise ends
   the entry. Links run from Markdown to the demo; the one link out of a demo
-  is a linked walkthrough's `part`, which names a journey and no chapter. A
-  demo names no chapter, and its own metadata script,
+  is a linked walkthrough's `part`, which names the scenario page part it
+  plays. Beyond it a demo names no chapter, and its own metadata script,
   `<script type="application/json" id="demo-meta">`, holds `question` — the one
   question it was prototyped to answer — and nothing else: no stage, status,
   verdict, or page, because where the file sits already says which it is. What
