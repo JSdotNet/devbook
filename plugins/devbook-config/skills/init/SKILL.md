@@ -111,22 +111,5 @@ record work this skill did not do.
     deliberately left unbound, not installed and therefore not offered, or failing for
     *Still open*.
 
-This skill is the empty case only. Everything about moving an already-configured repository
-forward — version drift, migrations, the fan-out across components — belongs to
-`devbook-config:update`, which runs the whole stack in one go.
-
-## Do not
-
-- Do not write, edit, or remove a `components.<name>` key. It is not yours.
-- Do not set up, or ask about, a plugin the report shows as not installed. Report it; do not
-  install it on the user's behalf.
-- Do not write an engine key into a repository that is not adopting `delivery`. The grill
-  binding is the change lane's, not the engine's, and is the one exception.
-- Do not run `npm install`, or install the OpenSpec CLI any other way. Print the command.
-- Do not write an overlay, at either of its layers. `devbook-config:local` does, for the
-  person running it.
-- Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
-  rename, or reshape a server somebody declared.
-- Do not invent a policy switch, a phase, or a gate purpose. All three sets are closed and
-  declared by the engine; configuration chooses among behaviour it already has.
-- Do not remove a gate. Configuration may add one anywhere and may never take one away.
+Policy switches, phases, and gate purposes are closed sets the engine declares: choose among
+them and never invent one. Configuration may add a gate anywhere and never removes one.

@@ -68,16 +68,11 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    and rewrite its own stamp. `devbook-collaboration` has no `init` or `update`: enabling it is the
    whole adoption.
 
-   The order is load-bearing at four points: derived's `update` refuses to run until
-   `components.devbook` names an adopted folder; the change lane's `update` needs devbook's
-   change folder current, and stops on an OpenSpec CLI outside its stamped range — print
-   the install command and never run it; `devbook:update` moves a `start` procedure to `run`,
-   moves a `components.devbook-procedures` stamp under `components.devbook`, and asks about a
-   `capture` an older engine seeded before `delivery:update` releases its claim on it; and
-   schedule checks its targets against what the repository enables. `delivery:update` is the
-   one that rewrites a 1.13.0 config's `extensions`, `delivery.roles`, and `delivery.mcp` into
-   the phase maps; show the diff it shows and its notes. Each is **required**: a
-   failure does not abort the rest, and does make the whole run report as failing.
+   The order is load-bearing: each later `update` reads what an earlier one rewrote. Show the
+   diff and the notes each one shows. When the change lane's `update` stops on an OpenSpec CLI
+   outside its stamped range, print the install command and never run it. Each is
+   **required**: a failure does not abort the rest, and does make the whole run report as
+   failing.
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
    against the config; take its checkout root from the report's catalog line, or the plugin's
@@ -104,10 +99,5 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    migrations it ran, what it left customized, and every skipped row with its scope; and
    for *Still open*, the unenabled bindings and whatever is still outstanding.
 
-## Do not
-
-- Do not write, edit, or remove a `components.<name>` key, and do not apply a component's
-  migration yourself. Both belong to that component's own `update`.
-- Do not enable or install a plugin on the user's behalf. Report it and let them decide.
-- Do not edit a generated file to make a check pass. Fix the source it was generated from.
-- Do not silently drop a key an upgrade retired — say it was removed and why.
+Fix a failing check in the source a generated file came from, never in the file, and say so
+when an upgrade retired a key — never drop one silently.
