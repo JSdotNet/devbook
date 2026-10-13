@@ -11,12 +11,5 @@
         "repo": "JSdotNet/devbook"
       }
     }
-  },
-  "enabledPlugins": {
-    "devbook@jsdotnet-devbook": true,
-    "devbook-derived@jsdotnet-devbook": true,
-    "delivery@jsdotnet-devbook": true,
-    "delivery-schedule@jsdotnet-devbook": true,
-    "devbook-config@jsdotnet-devbook": true
   }
 }
