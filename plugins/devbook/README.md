@@ -498,7 +498,10 @@ files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Sc
 off an `### Invariant:`; the eighth is `021-no-review-triad`, which deletes `review`,
 `reviewer`, and `review-at` from every `meta` block and reports the review state it took off;
 the ninth is `027-procedures-in-devbook`, which moves `components.devbook-procedures` under
-`components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's.
+`components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's;
+the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios/` where
+`domain/` is adopted and the folder is missing or still an older release's copy, since 1.21.0
+added the path without one.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
