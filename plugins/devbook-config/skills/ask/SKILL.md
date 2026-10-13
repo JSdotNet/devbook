@@ -13,9 +13,6 @@ Answer one question about the stack from what is actually on disk. Every questio
 state half and a concept half, and most need both: *"is my devbook current"* is a version
 comparison, *"why does devbook not ship flows"* is the layer rule.
 
-Answer nothing from memory. A version, an enablement, and a binding are all facts with a
-file behind them, and that file is the answer.
-
 ## The state half
 
 Run from this plugin's own root:
@@ -54,9 +51,9 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 
 ## Answer rules
 
-- Name the file behind every fact. An unsourced version number is a guess.
+- Answer nothing from memory, and name the file behind every fact. An unsourced version
+  number is a guess.
 - Report configuration as declared or defaulted, never as absent-therefore-broken: an
   unset key takes the engine's documented default, and `null` is deliberately unbound.
-- Say when the clone is stale rather than reporting its versions as the newest.
 - Send writing elsewhere: `devbook-config:init` and `devbook-config:update` set a repository up, each
   component's own `init` and `update` materialize it. This skill only reads.

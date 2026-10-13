@@ -37,18 +37,12 @@ skill reports the first half and never asserts the second.
    for a person to decide. Name the file behind every row.
 
 5. **Stop at the judgment.** `status`, **Adopted by**, **Evidence**, and **Limits** are not
-   in the report and are not inferred from one. Show the drift and ask.
+   in the report and are not inferred from one. Show the drift and ask: promoting or demoting
+   a `status` is a person's call, because an install proves only that people could work this
+   way.
 
 6. **Hand off the write.** `delivery:flow-spec` carries every edit under the repository's own
    `ai/` instruction files. A usage whose `depends-on` names an unregistered technology goes
    through the same flow for `tech/` first, or the reference will not resolve.
 
 7. **Report honestly.** What moved, what was handed off, and what the report could not see.
-
-## Do not
-
-- Do not write, edit, or create a chapter, a stage file, or the adoption map. That path is
-  `flow-spec`'s, and a chapter written here bypasses the folder's own check.
-- Do not propose promoting a `status`. The ladder rates whether people work this way; an
-  install proves only that they could. Demotion is equally a person's call.
-- Do not register a technology in `tech/`, and do not read or regenerate `_meta/`.

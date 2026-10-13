@@ -47,11 +47,6 @@ a phase entry's fields are its *Phases*, and how they resolve is `resources/phas
 8. **Report** each file written, left alone, or retired, by path and layer, and re-run the
    report.
 
-## Do not
-
-- Never touch `.devbook/config.json`. Nothing here is true of the repository.
-- Never write `id`, `components`, `policy.pr.required`, `policy.qa.ceiling`,
-  `policy.gate.personalValidation`, `policy.openspec.scenarios`, or a
-  `phase-personal-validation` entry in an overlay; the checker refuses each by name.
-- Never write a secret. Gitignored is not private, and neither is a home directory.
-- Never write an overlay for someone else: on a shared account, say so and stop.
+An overlay never carries a key *The overlays* refuses; the checker names each one. Never write
+a secret — gitignored is not private, and neither is a home directory — and never write an
+overlay for someone else: on a shared account, say so and stop.
