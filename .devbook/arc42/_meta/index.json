@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 25,
+  "schemaVersion": 30,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/arc42",
   "sources": [
@@ -123,7 +123,7 @@
           "title": "Chapter Schema",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-10-01",
+          "date": "2026-10-08",
           "summary": "A devbook is five folders of Markdown chapters under one parent — .devbook/arc42, .devbook/domain, .devbook/tech, .devbook/design, .devbook/ai — and nowhere else, each addressable heading carrying a fenced meta block. status is one field with one ladder per folder; on domain/'s ladder alone sit two…"
         },
         {
@@ -143,8 +143,8 @@
           "title": "Configuration",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-29",
-          "summary": "A repository's wiring is one committed file, .devbook/config.json: the engine's four keys — bindings, extensions, policy, gates — beside every component's components.<name> entry and a committed id. Unknown keys are rejected by name. A config.local.json outside every clone overlays the engine keys…"
+          "date": "2026-10-06",
+          "summary": "A repository's wiring is one committed file, .devbook/config.json: the engine's four keys — bindings, phases, policy, gates — and the optional areas, beside every component's components.<name> entry and a committed id. Unknown keys are rejected by name. phases holds one complete map per flow, and…"
         },
         {
           "type": "file",
@@ -164,8 +164,9 @@
           "title": "Flow Engine",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-30",
-          "summary": "delivery is a flow engine: four flows named for what changes — flow-code, flow-spec, flow-update-packages, flow-project — over a closed set of eleven extension points, seven services and four chores, that a repository fills and never extends. Everything a flow talks to outside the engine is a…"
+          "date": "2026-10-13",
+          "summary": "delivery is a flow engine: two flows named for what changes — flow-code for every change to a repository's code, flow-spec for a devbook chapter — over a closed list of phases with stable ids, and the phase is the unit a repository configures. Everything a flow talks to outside the engine is a…",
+          "diagrams": 1
         },
         {
           "type": "file",
@@ -194,7 +195,7 @@
           "title": "Install",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-30",
+          "date": "2026-10-06",
           "summary": "A plugin reaches a repository through its init skill, is kept current by its update, and reaches it in no other way. init refuses where the component's stamp exists and update where it does not. Either writes the payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under…"
         },
         {
@@ -204,7 +205,7 @@
           "title": "Plugin Boundaries",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-10-01",
+          "date": "2026-10-05",
           "summary": "Every plugin is self-contained under plugins/<name>/ and either works alone or declares what it needs. There are three ways to couple — a declared dependency on a lower layer, a bridge plugin depending on both sides, a surface capability resolved from the live tool list — and a lower layer never…"
         },
         {
@@ -215,7 +216,7 @@
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-30",
-          "summary": "Every plugin carries the same version — 1.15.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+          "summary": "Every plugin carries the same version — 1.25.1 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
         },
         {
           "type": "file",
@@ -247,13 +248,52 @@
         },
         {
           "type": "file",
+          "name": "delivery-phases.md",
+          "path": ".devbook/arc42/building-blocks/delivery-phases.md",
+          "title": "delivery-phases",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The phases of the delivery engine, a block inside it. Responsible for two things: that the list of phases a flow runs is closed and declared by the engine, and that a person's checkpoint is a gate attached to a phase, which configuration may add and never remove.",
+          "diagrams": 1
+        },
+        {
+          "type": "file",
+          "name": "delivery-pr-lane.md",
+          "path": ".devbook/arc42/building-blocks/delivery-pr-lane.md",
+          "title": "delivery-pr-lane",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The pull-request lane of the delivery engine, a block inside it. Responsible for one thing: that a finished change gets reviewed and merge-ready, whether a flow produced it or not."
+        },
+        {
+          "type": "file",
+          "name": "delivery-run-view.md",
+          "path": ".devbook/arc42/building-blocks/delivery-run-view.md",
+          "title": "delivery-run-view",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "A delivery run drawn inside Claude Code itself. Responsible for one thing: that the person in the session sees the run they are in — its phases, how each one ran, and the phase it is in now — without opening another window, and hears when any run on the machine stops for them.",
+          "diagrams": 1
+        },
+        {
+          "type": "file",
+          "name": "delivery-schedule-entry-points.md",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
+          "title": "delivery-schedule-entry-points",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The entry points of delivery-schedule, a block inside it. Responsible for one thing: that each procedure a schedule fires picks its own input, runs with nobody watching, and publishes what it did without passing a gate or merging anything.",
+          "diagrams": 1
+        },
+        {
+          "type": "file",
           "name": "delivery-schedule.md",
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "title": "delivery-schedule",
           "status": "active",
           "statusDeclared": false,
           "summary": "Work that runs with nobody watching, and the catalog of triggers that fires it. Responsible for one thing: that a procedure can run in a session nobody is watching without ever passing a gate, without merging anything, and without carrying anything personal into the repository.",
-          "diagrams": 3
+          "diagrams": 2
         },
         {
           "type": "file",
@@ -307,6 +347,16 @@
         },
         {
           "type": "file",
+          "name": "devbook-code-sync.md",
+          "path": ".devbook/arc42/building-blocks/devbook-code-sync.md",
+          "title": "devbook-code-sync",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The code-sync part of devbook, a block inside it. Responsible for one thing: that a chapter and the code implementing it can be brought back into agreement, in whichever direction is behind, without either side being guessed.",
+          "diagrams": 1
+        },
+        {
+          "type": "file",
           "name": "devbook-collaboration.md",
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "title": "devbook-collaboration",
@@ -314,6 +364,16 @@
           "statusDeclared": false,
           "summary": "How a chapter is reviewed and decided. Responsible for two things: that every objection to a chapter is written into it, beside the passage it is about, and that an approval on it was chosen by a person in the session that wrote it.",
           "diagrams": 3
+        },
+        {
+          "type": "file",
+          "name": "devbook-config-view.md",
+          "path": ".devbook/arc42/building-blocks/devbook-config-view.md",
+          "title": "devbook-config-view",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "The stack's rollout across one machine, drawn inside Claude Code itself. Responsible for one thing: that the person in the session sees, for every repository on this machine that has adopted the stack, which version each component is stamped at and how far that is from the newest, and how any one…",
+          "diagrams": 1
         },
         {
           "type": "file",
@@ -350,7 +410,7 @@
           "title": "devbook-procedures",
           "status": "active",
           "statusDeclared": false,
-          "summary": "Responsible for one thing: that a repository has, by name, the five procedures every repository has and no plugin can write — run, how its application is built and comes up; capture, how evidence is taken; diagnose, how a cause is found inside the running application; estimate, how work is sized…"
+          "summary": "The procedures part of devbook, a block inside it. Responsible for one thing: that every repository has the five things it knows how to do and no plugin can write — run, capture, diagnose, estimate, prototype — each with a goal this block fixes and a body the repository owns."
         },
         {
           "type": "file",
@@ -359,8 +419,8 @@
           "title": "devbook-skills",
           "status": "active",
           "statusDeclared": false,
-          "summary": "This block makes sure output reads well. It holds reusable guidance that any plugin can name and none has to depend on. Today that is one skill, show-me: put a picture before the prose whenever the content has a shape.",
-          "diagrams": 1
+          "summary": "This block makes sure output reads well, and that a large effort is planned before it is built. It holds reusable guidance that any plugin can name and none has to depend on, and one planning procedure a person runs by hand. Today that is five skills: show-me, which puts a picture before the prose…",
+          "diagrams": 2
         },
         {
           "type": "file",

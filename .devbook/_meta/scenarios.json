@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
+  "scope": ".",
+  "sources": [
+    ".devbook/arc42",
+    ".devbook/tech",
+    ".devbook/design",
+    ".devbook/ai"
+  ],
+  "stats": {
+    "pages": 0,
+    "parts": 0,
+    "labels": 0,
+    "unclaimed": 0
+  },
+  "problems": [],
+  "scenarios": []
+}
