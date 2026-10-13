@@ -1,6 +1,6 @@
 ---
 name: tracker
-description: 'Keep a change''s tasks.md as its work items — read a step with the scenario pages it delivers, set its state and tick its tasks, or leave a note on it — for an engine that binds its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over the steps of openspec/changes/<name>/tasks.md: a step''s state — open, in progress, done — read off its ticks, and the close''s off the change''s one pull request. Use when: a run reads or updates the step it is building, "which steps of this change are done", "mark step 2 done".'
+description: 'Keep a change''s tasks.md as its work items — read a step with the scenario pages it delivers, set its state and tick its tasks, or leave a note on it — for an engine that binds its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over the steps of openspec/changes/<name>/tasks.md: a step''s state — open, in progress, done — read off its ticks, and the close''s off the archive. Use when: a run reads or updates the step it is building, "which steps of this change are done", "mark step 2 done".'
 ---
 
 # devbook-openspec tracker
@@ -14,17 +14,11 @@ acceptance and archive. The lines under a step heading are
 operations; anything else — find, create, link — is not this tracker's, and the caller takes
 its unbound path.
 
-**The state is read, never decided.** A step has no branch or pull request of its own: it is
-`done` when every one of its tasks is ticked in `tasks.md` on `change/<change>` or on the base
-branch, locally or on the remote; `in progress` while that branch exists or a task is ticked,
-with a task unticked; `open` otherwise. A step is never `in review`. Ticks are what let the
-closing run accept and archive before the one pull request opens; waiting for a merge there
-would wait for a pull request that only opens after the acceptance it is waiting on.
-
-The close is read off `change/<change>`'s pull request: `done` merged, `in review` open,
-`in progress` while the branch exists, `open` otherwise. Read the pull request's state through
-whatever the host exposes for it — the GitHub CLI, a connector — and say so when none answers:
-the state is then unknown, never `done`.
+**The state is read off the files, never decided, and never off a branch or a pull request.**
+A step is `done` when every one of its tasks is ticked in `tasks.md` as the current branch
+holds it, `in progress` when some are, `open` when none are. The close is `done` once the
+change sits under `openspec/changes/archive/`, `open` before. Nothing here is ever
+`in review`: ticks let a run accept and archive before its pull request opens.
 
 - **`read_item`** — for every item, `change` and `part` (`proposal`, `step` with its number,
   or `close`). For a step, also its title, `delivers:` and `owner`, its tasks with their

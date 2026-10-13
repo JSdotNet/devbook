@@ -96,15 +96,15 @@ stays `devbook-changes.md`.
 ```meta
 ```
 
-A change is built whole, on one branch with one pull request; where a person or a planning
-tool splits it further is decided per case, and nothing in the change or the stamp records it.
-So `tracker` reads a step's state off its ticks and never decides it: `done` once every task
-is ticked in a commit on `change/<name>` or on the base, `in progress` while the branch exists
-or a task is ticked, `open` otherwise, and never `in review`. The one pull request is the
-close's, opened after the acceptance and the archive it carries, and the close is read off it.
-`update_item` only ticks. Its items are the proposal, each step, and the close, and
-`read_item` reports each one's `change` and `part`, which the engine turns into
-`change/<name>`. For a step it
+Nothing in a change or the stamp says which branch or pull request carries it: that is
+decided per case by whoever starts the run, and a run ends in its own pull request — the
+proposal alone, the whole change, or one step of a plan. So `tracker` reads state off the
+files and never off a branch or a pull request: a step is `done` once every task is ticked in
+`tasks.md` as the current branch holds it, `in progress` when some are, `open` when none are;
+the close is `done` once the change is archived. Nothing is ever `in review`, which is what
+lets a run accept and archive before its pull request opens. `update_item` only ticks. Its
+items are the proposal, each step, and the close, and `read_item` reports each one's `change`
+and `part`. For a step it
 also lists the scenario pages `delivers:` names, each with its run as `verify-change` reports
 it — `current`, `stale`, or `missing` — and `status` gives each a row with `scenario-run` as
 the action when the run is not current, which stands before acceptance.
@@ -128,7 +128,7 @@ exited 0 with only its `## What Changes` warning.
 
 `components.openspec`: `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
 default), `tools` (the hosts `openspec init` set up), and `materialized`. It records no git
-workflow: migration `002-a-change-is-built-whole` removed the `workflow` field. Whether
+workflow: migration `002-no-git-workflow` removed the `workflow` field. Whether
 OpenSpec may send usage statistics is one machine's answer and lives in the stack-config
 overlay as `ext["devbook-openspec"].telemetry`.
 

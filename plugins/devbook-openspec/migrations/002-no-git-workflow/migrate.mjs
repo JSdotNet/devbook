@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 002-a-change-is-built-whole — see MIGRATION.md.
+// 002-no-git-workflow — see MIGRATION.md.
 //
 //   node migrate.mjs --check   verify only; exit 1 while work remains
 //   node migrate.mjs           apply; a second run changes nothing
@@ -61,7 +61,7 @@ function replaceEntry(text, entry) {
 
 const stampText = (await exists(STAMP)) ? await readFile(abs(STAMP), "utf8") : null;
 const entry = stampText ? JSON.parse(stampText)?.components?.openspec : null;
-if (!entry) { console.log("002-a-change-is-built-whole: no components.openspec, nothing to do."); process.exit(0); }
+if (!entry) { console.log("002-no-git-workflow: no components.openspec, nothing to do."); process.exit(0); }
 
 const plan = [];
 const writes = new Map();
@@ -102,7 +102,7 @@ for (const name of names.sort()) {
     }
 }
 
-if (!plan.length) { console.log("002-a-change-is-built-whole: nothing to do."); process.exit(0); }
+if (!plan.length) { console.log("002-no-git-workflow: nothing to do."); process.exit(0); }
 for (const p of plan) console.log(`- ${p}`);
 if (splitInFlight) {
     console.log("  note: a proposal-first change may have step/ or archive/ branches in flight; they are left as they are.");
@@ -112,4 +112,4 @@ if (checkOnly) process.exit(1);
 for (const [rel, text] of writes) await writeFile(abs(rel), text, "utf8");
 const newStamp = replaceEntry(stampText, next);
 if (newStamp !== stampText) await writeFile(abs(STAMP), newStamp, "utf8");
-console.log("002-a-change-is-built-whole: applied.");
+console.log("002-no-git-workflow: applied.");

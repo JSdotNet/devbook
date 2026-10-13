@@ -1,4 +1,4 @@
-# 002 — a change is built whole, from 1.25.0
+# 002 — no git workflow, from 1.25.0
 
 ```meta
 appliesTo: [changes]
@@ -7,8 +7,8 @@ breaking: yes
 
 ## What
 
-A change is built on one branch, `change/<name>`, and opens one pull request. The repository
-no longer chooses a git workflow, and a step no longer records a branch or a pull request:
+A change names no branch and no pull request. The repository no longer chooses a git
+workflow, and a step no longer records a branch or a pull request:
 
 | Before | After |
 | --- | --- |
@@ -24,16 +24,17 @@ In the stamp it rewrites only the `components.openspec` entry.
 
 ## Why
 
-Whether a change lands as one pull request or several is decided per case, by whoever plans
+Whether a change lands as one pull request or several is decided per case, by whoever starts
 the work — a person, or a planning tool such as Backlog's plan with one item per session — and
-a repository-wide default chose it for every change ahead of time. The record is
+a repository-wide default chose it for every change ahead of time. A run now works on the
+branch it was started on and ends in its own pull request. The record is
 `.devbook/arc42/adr/flow-engine.md` in the marketplace, under its 2026-10-13 history row.
 
 ## What breaks
 
 Nothing fails loudly. Until this runs, `openspec/config.yaml` tells `/opsx:apply` to tick each
-step in its own pull request while the schema says to build the change whole, and a
-`proposal-first` repository's tracker lines name branches the engine no longer cuts. A change
+step in its own pull request while the schema says to build every open step, and a
+`proposal-first` repository's tracker lines name branches the engine no longer reads. A change
 already in flight under `proposal-first` keeps its `step/` and `archive/` branches: the script
 reports it and leaves them alone — finish or fold them by hand.
 

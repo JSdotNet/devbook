@@ -1,6 +1,6 @@
 ---
 name: engine-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed phase list and the phases map that configures each phase, the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the branch a change is built on, and the host slots.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed phase list and the phases map that configures each phase, the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, and the host slots.
 ---
 
 # Engine Contract
@@ -454,8 +454,9 @@ above.
   outside the three — `find_item`, `create_item`, `link_change` — takes the unbound path,
   reported once. A skill that does not resolve is the unbound path for all of them. Its
   `read_item` may also report the larger change an item belongs to: the `change` name and the
-  item's `part` — `proposal`, `step` with its number, or `close` — which **The Change Branch**
-  below turns into the run's branch.
+  item's `part` — `proposal`, `step` with its number, or `close`. Neither names a branch or
+  holds a pull request back: every run works on the branch it was started on and ends in its
+  own pull request, so what one pull request carries is decided by what the run was given.
 - **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
   group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
@@ -463,27 +464,6 @@ above.
   change is proposed, as `plugin:skill`, or `null` for none. The engine never reads it; it is
   carried here so the change lane's skills find it in the same effective configuration, and
   so a machine may bind its own in an overlay.
-
-## The Change Branch
-
-A change is built whole: a work item the tracker reports as part of a change runs on
-`change/<name>`, and the change makes one pull request — the proposal, every step, and the
-close together. The engine never splits a change into more branches or pull requests; a split
-is decided per case by whoever starts the work, and an item started that way reports no change.
-
-- **Update Base takes the branch.** The run checks `change/<name>` out when it exists and cuts
-  it from the fetched base when it does not.
-- **A step is a commit, not a pull request.** Each run on the change commits on
-  `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the one
-  pull request only on the run that closes the change; an earlier run pushes and stops there.
-  The tracker reports a step `done` once its tasks are ticked in a commit, so the closing run
-  can take the acceptance and the archive before it opens the one pull request, which then
-  carries them.
-- **Both decisions are taken in the session.** Approval before the first step; acceptance on
-  the closing run, before the archive. The pull request's review is the last look, not the
-  decision.
-- **No change reported, no change branch.** Every other item runs on the branch it was started
-  on.
 
 ## Host Slots
 

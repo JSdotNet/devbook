@@ -162,7 +162,7 @@ skill changes who runs capture, never whether it runs.
 | `agents/flow-runner.agent.md` | The agent that runs a flow: sequences the phases, resolves the config, enforces the gate |
 | `runners/runner-<effort>.agent.md` | The five effort runners, `low` through `max`, that carry a delegated phase's effort — Claude Code only |
 | `resources/flow-phases.md` | The phase order of both flows, the Personal Validation gate in full, and a pointer to each phase skill |
-| `resources/engine-contract.md` | The phase list and the `phases` map, gates, policy, the stack config and its overlays, bindings, the change branch, and host slots |
+| `resources/engine-contract.md` | The phase list and the `phases` map, gates, policy, the stack config and its overlays, bindings, and host slots |
 | `resources/surface-contract.md` | The surface capability, how a surface is bound, and the reporting contract every flow follows |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/phase-resolution.md` | How a phase entry resolves into inline, delegated, or forked, and the effort runners |
