@@ -34,8 +34,8 @@ the work inside `implement` and `review`.
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Fetch the base and fast-forward, or rebase the branch's own unpushed commits, and check out the
-branch a change's workflow names. It never stashes and never touches a dirty tree. A conflict
+Fetch the base and fast-forward, or rebase the branch's own unpushed commits, on the branch
+the run was started on. It never switches branches, never stashes, and never touches a dirty tree. A conflict
 blocks the phase rather than being resolved here, and a branch with an open pull request
 belongs to `update-pr-branch`.
 
@@ -212,8 +212,8 @@ job: a list of commands for the person to run is a failed handback rather than a
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Open the pull request for the approved change set with the host's own action or `gh`, on the
-branch the change's workflow names. With the `pr-lane` slot unbound, it writes file artifacts
+Open the pull request for the approved change set with the host's own action or `gh`, one per
+run. With the `pr-lane` slot unbound, it writes file artifacts
 only and opens nothing.
 
 ### phase-report-back

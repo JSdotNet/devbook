@@ -16,7 +16,7 @@ path is OpenSpec's and fixed: its CLI resolves `changes/` only under a folder na
 | `devbook-delta/<path>` | One delta per devbook file the change touches | yes |
 | `devbook-delta/domain/<context>/*.demo.html` | A demo the change lands, replaced whole | no |
 | `solution.md` | The chapters to load beyond the delta, then the approach | no |
-| `tasks.md` | The steps, one pull request each | no |
+| `tasks.md` | The steps, in dependency order | no |
 
 ## proposal.md
 
@@ -90,7 +90,7 @@ and none otherwise. It names, by address, the chapters a builder loads beyond th
 why each matters, then the approach. Nothing in it lands in the devbook: a decision the change makes is
 a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 
-`tasks.md` is `## Step N — title` blocks, one pull request each. Each names the deltas it
+`tasks.md` is `## Step N — title` blocks, in dependency order. Each names the deltas it
 delivers on a `delivers:` line by address — a scenario page by its delta's path, or one part
 of it as `<path>#<part>` — and `owner: me` when a person does it. A prototype
 is no step: it needs no change and no task, and enters a change only as a demo delta.

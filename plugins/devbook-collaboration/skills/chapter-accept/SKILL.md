@@ -96,7 +96,7 @@ A change is accepted as one, on its `proposal.md`, per `devbook-changes.md`:
 
   | Condition | Say |
   |---|---|
-  | A step in `tasks.md` is not `done` as the bound tracker's `read_item` reports it — merged under `proposal-first`; every task ticked in a commit on `change/<name>` under `single-branch`, where a step has no pull request of its own | Each step not done, with its state. With no tracker bound, read the same off the step's pull request, or its ticks on `change/<name>` under `single-branch`; unknown is not done |
+  | A step in `tasks.md` is not `done` as the bound tracker's `read_item` reports it — every task ticked in a commit | Each step not done, with its state. With no tracker bound, read the same off its ticks in `tasks.md`; unknown is not done |
   | The last `devbook:verify-change` verdict is not `aligned` for every delta whose target it covers — a chapter or demo of one of its kinds, or a requirement or invariant belonging to one | Each such delta and its verdict. A `code-ahead` reported `covered by change <name>, step N` for a done step is aligned for this purpose; none run is not aligned — run it first. A delta against any other chapter — a decision or debt record, a prose `arc42/` chapter, the glossary — has no code to be measured against, so no verdict is owed: list it as the person's reading alone, and never block on it |
   | `policy["openspec.scenarios"]` is `linked` in the effective stack configuration and a scenario in a delta names no test | Each unverified scenario. Under `advisory` — the default, and what an absent key or config means — list them as what the person weighs, and do not block |
 

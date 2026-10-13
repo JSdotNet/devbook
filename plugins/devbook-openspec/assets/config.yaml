@@ -23,7 +23,7 @@ operations:
   apply:
     guidance:
       - Route a step through a repo-native flow-* skill first, then the delivery engine's flow for the proposal's category, and implement inline only when no engine is installed.
-      - Tick the step's tasks in the step's own pull request.
+      - Build the change whole unless the caller names one step, and tick a step's tasks in the commit that completes them.
   archive:
     guidance:
       - Archive through devbook-openspec:archive, never openspec archive alone; the CLI moves the folder and merges no devbook delta.

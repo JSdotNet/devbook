@@ -18,7 +18,7 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
    installed version and the range and stop; never install, and never widen the range yourself.
 2. **Migrate.** Run each script under `../../migrations/` in number order with node, the
    repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
-   its plan, run it without `--check`, and report what moved. `001` removes the Step 0 prototype.
+   its plan, run it without `--check`, and report what moved. `001` removes the Step 0 prototype; `002` the git workflow and a step's `branch:` and `PR:` lines.
 3. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
    stamped hash. Equal is stale-or-current and replaceable; different is customized.
 4. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip
@@ -29,7 +29,6 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
    for the stamped `tools` and touches neither the schema nor the config.
 6. **Materialize.** Overwrite only what step 3 found replaceable. Delete `openspec/specs/`
    again when it holds nothing but `.gitkeep`.
-7. **Stamp.** Rewrite `components.openspec` — `pluginVersion` and `materialized`; keep `cli`,
-   `tools`, and `workflow` as they were. A stamp without `workflow` reads as
-   `single-branch`; leave it absent rather than writing a choice nobody made.
+7. **Stamp.** Rewrite `components.openspec` — `pluginVersion` and `materialized`; keep `cli` and
+   `tools` as they were.
 8. **Verify and report** exactly as `init` does, and leave the commit to the person.

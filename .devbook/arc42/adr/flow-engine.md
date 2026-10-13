@@ -1,7 +1,7 @@
 # Flow Engine
 
 ```meta
-date: 2026-10-06
+date: 2026-10-13
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -172,6 +172,7 @@ restates none of devbook's rules — it loads the repository's own instruction f
 
 | Date | Change |
 | --- | --- |
+| 2026-10-13 | The engine no longer derives a branch from a change: every run works on the branch it was started on and ends in its own pull request, and the tracker names no branch and holds no pull request back. Both git workflows go with it — `single-branch`'s `change/<name>` and `proposal-first`'s per-step branches — along with the `workflow` stamp field, a proposal's `Workflow:` line, and a step's `branch:` and `PR:` lines. The tracker reads a step's state off its ticks and the close's off the archive; `apply` builds every open step unless the caller names one. What one pull request carries — a change's proposal alone, the whole change, or one step of Backlog's plan — is decided per case by whoever starts the run, never in a repository: a per-repository default chose for every change what only the one planning it can judge, and a single tracker binding could not serve a plan and a whole change side by side. Migration `002-no-git-workflow` in `devbook-openspec`. |
 | 2026-10-06 | Update Base is listed first by each flow skill rather than prepended by the runner unnamed. An unconfigured phase runs as the engine contract's *Runs by default* says — inline, fork, or delegated — rather than always inline. A red build skips `verify` and `spec-check` and goes to the ready check. |
 | 2026-10-06 | Unit seams narrowed to the backend area: `scope` derives one per invariant's `Enforced at:` line and leaves each `#### Scenario:` to `verify` and the e2e suite, so a frontend slice has no test-first seams. Decided by the Devbook Skill Intake proposal; implement no longer writes tests at every recorded seam whatever its area. |
 | 2026-10-05 | Per-Phase Delivery Config decided. The phase replaces the extension point as the unit of configuration; `flow-update-packages` and `flow-project` fold into `flow-code` as the `dependency` and `project` kinds; `scope` merges scope discovery, spec intake, and context loading; `review` runs in tandem with `implement` per slice, before Build & Test; `phase-implement` picks its areas and their order; Validation, the old `verify`, and Work Item Update become `verify`, `spec-check`, and `report-back`; `spec-check` runs before the gate; a ready check sends missing work back and hands what is left to the gate once the budgets are spent; Report Back goes to every origin by kind. Effort runners ship for Claude only and drop the specialist's tool list; splitting review is revisited later. Three mechanisms nobody could read in one place became one entry per phase. |

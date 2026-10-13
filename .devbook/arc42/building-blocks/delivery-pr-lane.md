@@ -8,7 +8,7 @@ The pull-request lane of the [delivery](delivery.md) engine, a block inside it. 
 one thing: that a finished change gets reviewed and merge-ready, whether a flow produced it or
 not.
 
-Inside the block: the four lane skills, and the git workflow a tracker reports with an item.
+Inside the block: the four lane skills.
 
 Outside it: opening the pull request at the end of a run, which is
 [`phase-create-pr`](delivery-phases.md#phase-create-pr); checking out the branch a run works on,
@@ -88,16 +88,11 @@ unbound, `create-pr` writes file artifacts only and opens nothing.
 | Raising the pull request is the host's own action, never a skill here | the lane skills | untested |
 | The lane runs separately from a run, on a change no flow produced | the lane skills | untested |
 | With the `pr-lane` slot unbound, `create-pr` writes file artifacts only and opens nothing | `phase-create-pr` | untested |
-| An item the tracker reports as part of a change runs on the branch its workflow names; the engine reads the workflow and never chooses it | `phase-update-base` | untested |
-| A proposal's status follows its pull request, and the engine writes none of it | `phase-create-pr` | untested |
+| A run works on the branch it was started on and ends in its own pull request; no tracker names a branch or holds a pull request back | `phase-update-base`, `phase-create-pr` | untested |
 
-**Git Workflow** (enum) is `single-branch` or `proposal-first`, reported by the tracker with
-the item. `single-branch` works the whole change on `change/<name>` and opens one pull request
-on the closing run, after the acceptance and archive it carries. A step there is a commit,
-`done` once its tasks are ticked. `proposal-first` gives the proposal `change/<name>`, each
-step `step/<name>/<N>`, and the close `archive/<name>`, one pull request each, the proposal's
-opened as a draft. The step prefix is not `change/` because git refuses a ref that is both a
-leaf and a directory.
+What one pull request carries is decided per case by whoever starts the run — the proposal of
+a change alone, the whole change, or one step of a plan such as Backlog's — and never by the
+engine or a repository's configuration.
 
 ## Dependencies
 
@@ -116,8 +111,6 @@ A part of delivery, shipped and versioned with it. What the plugin as a whole de
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | GitHub, through `gh` | Conformist | Pushing a branch, reading a failing job's logs, and scoring a pull request | The `gh` command line | The lane works on a pull request where it lives. |
-| A bound tracker | Binding, never a dependency | Reports an item's git workflow with the item | `bindings["delivery.tracker"]` | The engine reads the workflow and never chooses it. |
-
 ### Inbound
 
 ```meta
@@ -125,6 +118,6 @@ A part of delivery, shipped and versioned with it. What the plugin as a whole de
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [delivery-phases](delivery-phases.md#phase-update-base) | Same plugin | `phase-create-pr` and `phase-update-base` work on the branch the git workflow names, and `phase-update-base` leaves a branch with an open pull request to `update-pr-branch` | The Git Workflow enum | That the branch names keep their shape. |
+| [delivery-phases](delivery-phases.md#phase-update-base) | Same plugin | `phase-update-base` leaves a branch with an open pull request to `update-pr-branch` | The skill name | That a branch under review is the lane's to update. |
 | [delivery](delivery.md#start-session-from-issue) | Same plugin | `start-session-from-issue` names `pr-merge-ready` as the next step for finished work | The skill name | That one pull request is taken to merge-ready per pass. |
 | [delivery-schedule](delivery-schedule-entry-points.md#schedule-merge-review) | Separate Ways | `schedule-merge-review` reports what `pr-merge-ready` fixes with a person present | The skill name alone | That the attended counterpart exists; the review never fixes anything itself. |
