@@ -51,7 +51,3 @@ them in `adoption-map.md`. Do not impose a default flow. Then confirm git tracks
 `git check-ignore -v .devbook/ai/adoption-map.md`. A repo holding Adobe Illustrator files
 often carries a `*.ai` rule; `.devbook/ai/` does not match it, but a file inside named
 `<something>.ai` would — check before adopting.
-
-The notes on rules, the `AGENTS.md` section, root wrappers, `.gitignore`, and routing are
-`../update/SKILL.md` under *Notes*, and hold here unchanged. Report an init that ends on a
-failing check as failing, never as initialized.

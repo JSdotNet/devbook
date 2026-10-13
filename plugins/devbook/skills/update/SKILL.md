@@ -31,25 +31,3 @@ are one operation — the stamp says which.
 5. **Materialize.** Overwrite stale, report customized, never both — the procedures too,
    per `assets/procedures/skill-wrappers.md` under *What lands, and how*.
 6. **Stamp and verify.** Rewrite the entry, run `devbook:validate`, report.
-
-## Notes
-
-- The folder rules land in the repository as a trio per rule — the rule verbatim under
-  `.agents/rules/`, a `paths` wrapper under `.claude/rules/`, and an `applyTo` wrapper under
-  `.github/instructions/` — so both hosts apply them on a matching read. Which rules exist and
-  what each one's `paths` are is `rules/rules.json`, never a hardcoded list. Shape and table:
-  `assets/rule-wrappers.md`.
-- Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
-  never from what is on disk. Then create `CLAUDE.md` and `.github/copilot-instructions.md`
-  from `assets/root-wrappers/` where absent, so both hosts reach that file; one that exists
-  is never touched, whatever it holds.
-- Write nothing to `.gitignore` and create no personal file: `AGENTS.local.md` and the
-  overlay live under the user's devbook config directory, never in the clone, and an empty
-  overlay reads as a setting somebody chose.
-- Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
-  specialist agents are installed — with neither, they name nothing. Never apply any of
-  it silently, and never put routing inside the `AGENTS.md` markers.
-- The committed `_meta/` index, its refresh script, its nightly and drift workflows, and
-  the `Read(_meta/**)` deny rule are a layered plugin's, not this skill's. It never
-  writes inside another plugin's markers.
-- Report an update that ends on a failing check as failing, never as updated.
