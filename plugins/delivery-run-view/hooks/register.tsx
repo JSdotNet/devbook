@@ -260,6 +260,9 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
     configured,
     mismatch,
     passes: typeof s.doneCount === 'number' ? s.doneCount : 0,
+    round: count(ran.round, 1),
+    blockers: count(ran.blockers, 0),
+    defectsFound: count(ran.defectsFound, 0),
     durationMs: typeof s.durationMs === 'number' ? s.durationMs : null,
     outputTokens: raw.tokenUsage?.byStage?.[index]?.total?.outputTokens ?? null,
     toolCalls: insights.filter(i => i.kind === 'tool' && i.stageIndex === index).length,
@@ -268,6 +271,22 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
     links: Array.isArray(s.links) ? s.links.map(linkOf).filter((l: FlowLink) => l.label || l.url) : [],
     output: String(s.output ?? '').slice(0, 600),
   }
+}
+
+/** A stage count from `execution`: a whole number at or above `min`, else unrecorded. */
+const count = (value: unknown, min: number) => (Number.isInteger(value) && (value as number) >= min ? (value as number) : null)
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
+
+/** What the pass found, for the phase row: `round 2 · 1 blocker`, `0 defects`; empty when the stage records none. */
+function countsOf(s: FlowStage): string {
+  return [
+    s.round !== null ? `round ${s.round}` : '',
+    s.blockers !== null ? plural(s.blockers, 'blocker') : '',
+    s.defectsFound !== null ? plural(s.defectsFound, 'defect') : '',
+  ]
+    .filter(Boolean)
+    .join(' · ')
 }
 
 const linkOf = (l: any): FlowLink =>
@@ -395,6 +414,9 @@ const DEMO_PHASES: Record<string, { mode: FlowMode; [field: string]: unknown }> 
 }
 const DEMO_EXECUTION: Record<string, object> = {
   Scope: { agent: 'general-purpose', fallback: 'architecture:architect' },
+  Implement: { round: 2 },
+  Review: { round: 2, blockers: 0 },
+  Verify: { defectsFound: 0 },
 }
 type DemoWorker = [name: string, model: string, durationMs: number, tokens: number, toolCalls: number]
 const DEMO_WORKERS: Record<string, DemoWorker[]> = {
@@ -776,6 +798,15 @@ export const register: Register = on => {
                 </Box>
                 {badge(s)}
                 {(s.mismatch.length > 0 || s.fallback) && <Text color="yellow">≠</Text>}
+                {countsOf(s) && (
+                  <Text
+                    color={s.defectsFound ? 'red' : s.blockers ? 'yellow' : undefined}
+                    dimColor={!s.defectsFound && !s.blockers}
+                    wrap="truncate-end"
+                  >
+                    {countsOf(s)}
+                  </Text>
+                )}
                 {isWide && who(s) && (
                   <Text dimColor wrap="truncate-end">
                     {who(s)}
