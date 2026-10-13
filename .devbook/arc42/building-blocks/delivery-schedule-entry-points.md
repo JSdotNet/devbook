@@ -24,8 +24,9 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 
 Eighteen skills, each reached by the scheduler on a cadence or by a person by hand, which is how
 a cadence gets proved before it is trusted. The contracts they share are delivery-schedule's:
-the preamble every prompt opens with, the report contract, the change window, the tightening
-standard, the draft pull request contract, and the devbook sweep contract.
+the preamble every prompt opens with, the report contract, the change window, the findings
+contract, the tightening standard, the draft pull request contract, and the devbook sweep
+contract.
 
 ### schedule-devbook-validate
 
@@ -436,7 +437,7 @@ the rows below are the ones inside the plugin and the engine it calls.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
+| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `findings-contract.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
 | [delivery](delivery.md#flow-code) | Customer-Supplier, declared by the plugin | An entry point calls a flow, or `resolve-issue.workflow.js` runs a `flow-code` kind's phases | The flow names and the parking rule at a gate | The entry point is the adapter that picks the input a flow would otherwise need a person for. |
 
 ### Inbound

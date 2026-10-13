@@ -1,6 +1,6 @@
 ---
 name: schedule-merge-review
-description: 'Review every open pull request that is waiting on a reviewer: run the code review checklist over its diff, read its checks and its distance from the base branch, find the files that keep conflicting and say how to stop them, and post one review comment per pull request with the findings and a merge verdict. Never approves, never merges, never pushes. Idempotent per head commit, so a daily run re-reviews only what changed.'
+description: 'Review every open pull request waiting on a reviewer — the checklist over its diff, its checks, its declared door, and the files that keep conflicting — and post one comment per head commit with a merge verdict. Never approves or merges. The merge-review schedule''s target.'
 ---
 
 # Scheduled: Merge Review
@@ -8,12 +8,6 @@ description: 'Review every open pull request that is waiting on a reviewer: run 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
-
-## Purpose
-
-Keep every open pull request reviewed within a day of its last push, so a person deciding
-whether to merge starts from findings rather than from a cold diff. The output is a comment; the
-approval and the merge stay with a person, which is what makes this safe to run unattended.
 
 ## Inputs
 
@@ -24,30 +18,6 @@ approval and the merge stay with a person, which is what makes this safe to run 
 - Post comments: `true` (default) or `false` to only report.
 - Hotspot window: days of history read for conflicts (default: `30`).
 - Hotspot threshold: conflicts in the window that make a file a hotspot (default: `3`).
-
-## Skill Dependencies
-
-- The **Checklist** below, carried here because a scheduled session starts with the two
-  delivery plugins and nothing else; a repository that ships a richer review procedure in
-  its own skills folder runs that one as well.
-- `gh` CLI, already authenticated in the session, for every GitHub read and the one write.
-
-## Checklist
-
-For each diff:
-
-- **Correctness** — a branch the change does not handle, an off-by-one, a null or empty
-  case, a return value ignored, a resource opened and not closed.
-- **Behaviour** — a public contract changed without every caller, a default silently moved,
-  an error swallowed or turned into a success.
-- **Concurrency** — shared state written without a lock, an async call not awaited, a
-  cancellation ignored.
-- **Security** — input trusted at a public entry point, a string-built query, authorization
-  missing on a new endpoint, a secret in source or in a log line.
-- **Tests** — new behaviour with no test, a test changed to pass rather than to cover, a
-  suite skipped.
-- **Readability** — a name that says less than the one it replaced, dead code left behind,
-  a comment the code no longer matches.
 
 ## Hard Constraints
 
@@ -91,8 +61,9 @@ For each diff:
    gh pr view <number> --repo <owner>/<repo> --json body,mergeable,mergeStateStatus,reviewRequests,closingIssuesReferences
    ```
 
-5. Run the **Checklist** over the diff. Classify each finding **Blocking**,
-   **Important**, or **Suggestion**, with file and line.
+5. Run the review checklist in `../../resources/findings-contract.md` over the diff. Classify
+   each finding **Blocking**, **Important**, or **Suggestion** — the contract's `blocking`,
+   `high`, and `medium` or `low` — with file and line.
 
 6. Add the merge-state findings: failing or pending checks, `mergeStateStatus` of `BEHIND` or
    `DIRTY`, a linked issue whose acceptance the diff does not visibly meet, and a pull request
@@ -185,18 +156,11 @@ whether or not Phase 1 left any pull request to review.
 
 ### Phase 5 — Summary
 
-14. Output the report in `report.md` beside this file, per
-    `../../resources/report-contract.md`: every reviewed pull request with its verdict and
-    comment link, and the hotspots with the change that would end each. None over the
-    threshold: a *Run* row naming the window and how many merges were re-run.
+14. The report in `report.md` beside this file. A hotspot is reported every run it stays over
+    the threshold; none over it is a *Run* row naming the window and the merges re-run.
 
 ## Notes
 
-- Run it daily on weekdays. The marker keys on the head commit, so a quiet pull request costs
-  one list call and nothing else.
-- `pr-merge-ready` is the attended counterpart: it fixes what this skill only reports.
-  Pair them by hand, never on one schedule, or the fixer races the reviewer.
-- A hotspot outlives the pull requests that found it, so it is reported every run it stays
-  over the threshold; fixing it is a code change for a person, through the code flow.
-- A pull request opened by another scheduled run is reviewed like any other. Nothing here reads
-  who opened it.
+- `pr-merge-ready` is the attended counterpart that fixes what this skill reports. Never
+  schedule it beside this one: the fixer would race the reviewer.
+- A pull request another scheduled run opened is reviewed like any other.
