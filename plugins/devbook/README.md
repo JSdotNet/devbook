@@ -544,7 +544,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **27**, covering the metadata schema a repository authors
+One number, currently **30**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -623,7 +623,13 @@ resolved against the demo's `demo-model`, the HTML contract each `*.demo.html` k
 demo folded into the fingerprint of the page it belongs to. Each is an added field or rule a
 corpus without it never meets, so none ships a migration. 27 changes no chapter: the
 procedures' stamp entry moves under `components.devbook`, and it ships as
-`027-procedures-in-devbook`.
+`027-procedures-in-devbook`. 28 makes a `user` and a `technical` actor chapter a sync unit, and 29 leaves a
+demo's managed region out of every fingerprint. 30 adds the `scenario` type, its setup fields,
+and the `Proved by:` line a requirement's scenario may carry instead of its own steps. Each is
+added with a safe default, so none of the three owes a migration. `030-scenario-tools` and
+`030-linked-walkthroughs` ship later under 30 without moving it: one materializes a path 1.21.0
+added, the other rewrites free walkthroughs to the linked form a free one still validates
+beside, and the ledger, not the number, decides that a repository on 30 runs both.
 
 ## Folder structure
 
