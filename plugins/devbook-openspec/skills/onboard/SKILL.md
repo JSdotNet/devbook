@@ -21,8 +21,8 @@ otherwise offer `devbook-openspec:init` and stop.
    `openspec/changes/<name>/`, and run `delta.mjs --check <name>` together.
 4. **Approve**: `devbook-collaboration:chapter-approve` on the change folder. Point out that the
    approval is one record on `proposal.md`, and that any later edit lapses it.
-5. **Build**: `/opsx:apply` for each step, one pull request each — or `owner: me` and the
-   person's own branch. Show `devbook-openspec:status` between steps.
+5. **Build**: `/opsx:apply`, which builds the change whole — a step marked
+   `owner: me` is the person's. Show `devbook-openspec:status` between steps.
 6. **Verify and accept**: `devbook:verify-change`, then `devbook-collaboration:chapter-accept`.
 7. **Archive**: `devbook-openspec:archive`, and show the merged chapters with `change` on them.
 

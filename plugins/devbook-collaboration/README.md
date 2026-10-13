@@ -49,8 +49,8 @@ delta under `devbook-delta/` are shown together with their open notes, one
 decision is taken, and it is written once, on `proposal.md`, with a hash that
 covers the whole change. The chapters the deltas target get no rung — their
 `change` provenance points at the archived proposal. `chapter-accept` on a
-change also refuses until every step in `tasks.md` is done — merged, or under
-`single-branch` ticked in a commit — and the last `verify-change` verdict is
+change also refuses until every step in `tasks.md` is done — every task
+ticked in a commit — and the last `verify-change` verdict is
 `aligned` for every delta it can verify, and devbook's
 `delta.mjs --apply` refuses to merge a change that is not accepted. Deciding a
 chapter outside a change is unchanged.

@@ -25,9 +25,9 @@ gives. Absent or outside it, print `npm install -g @fission-ai/openspec@latest` 
 install it. Every CLI call runs from the repository root.
 
 **Ask**, before writing anything: which hosts OpenSpec installs its skills for — its `--tools`
-list, `claude,github-copilot` by default — and which git workflow a change runs in by default:
-`single-branch`, one branch and one pull request, or `proposal-first`, the proposal and every
-step each its own pull request. Both are the repository's and go in the stamp. Whether to send OpenSpec's anonymous
+list, `claude,github-copilot` by default. That is the repository's and goes in the stamp.
+Never ask how a change maps to branches or pull requests: a change is built whole, and any
+split is decided per case, outside the repository. Whether to send OpenSpec's anonymous
 usage statistics is this machine's alone: read `ext["devbook-openspec"].telemetry` from the
 stack-config overlay's user layer, ask only when it is absent, and write the answer there, never
 to the repository. Run every CLI call with `OPENSPEC_TELEMETRY=0` when the answer is no.
@@ -49,7 +49,7 @@ not where this repository's behaviour lives, and `archive` recreates it empty, w
 1. **Plan.** One table of the paths above, `create` or `skip-customized`, and write nothing.
 2. **Materialize** in the table's order, then delete `openspec/specs/`.
 3. **Stamp** `components.openspec`: `pluginVersion`, `cli` (the range checked), `tools`,
-   `workflow`, and `materialized`, each entry with `from`, `hash`, and `managed`.
+   and `materialized`, each entry with `from`, `hash`, and `managed`.
 4. **Verify.** `openspec schema validate devbook`, `openspec schema which devbook` answering
    `Source: project`, and `node .devbook/_tools/devbook-meta/build.mjs --check`. A failing check
    is reported as failing, never as initialized.

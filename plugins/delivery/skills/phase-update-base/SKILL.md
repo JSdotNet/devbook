@@ -9,7 +9,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 **Does**
 - Fetches the base and fast-forwards, or rebases the branch's own unpushed commits
-- Checks out the branch a change's workflow names
+- Checks out a change's `change/<name>` branch
 
 **Doesn't**
 - Stash, or touch a dirty tree
@@ -22,9 +22,9 @@ a branch is stale whenever the local default branch is behind, and nothing later
 1. **Resolve the base** from `policy.pr.base`, else the repository's default branch, and fetch
    it. No remote, or a failed fetch, is `skipped` with the reason, never `blocked`: offline is
    not an error, and a `project` run with no remote yet is the usual case.
-2. **Take the workflow's branch** when the tracker reports the item as part of a change: check
-   out the branch **Git Workflows** in `resources/engine-contract.md` names, or cut it from
-   the fetched base. No change reported, stay on the current branch.
+2. **Take the change branch** when the tracker reports the item as part of a change: check
+   out `change/<name>` per **The Change Branch** in `resources/engine-contract.md`, or cut it
+   from the fetched base. No change reported, stay on the current branch.
 3. **Refuse a dirty tree.** Uncommitted changes make the phase `skipped`, naming the files.
    **Never stash**: the stash stack is shared by every worktree, so an entry left here can be
    popped by another session.

@@ -93,7 +93,7 @@ Every flow. Runs **first**, before the flow's own phases, so the work starts fro
 base. It heads the stage list passed to `start_run`, and the flow-runner runs it inline.
 
 **Defined in `skills/phase-update-base/SKILL.md`** — resolving and fetching the base, taking
-the workflow's branch, the dirty-tree and open-pull-request refusals, fast-forward or rebase,
+a change's branch, the dirty-tree and open-pull-request refusals, fast-forward or rebase,
 and blocking on conflict.
 
 ## Phase: Scope
@@ -283,7 +283,7 @@ user's turn, so it is their decision; it is not a new task and it does not end t
 
 Both flows, after an approved Personal Validation. **Defined in
 `skills/phase-create-pr/SKILL.md`** — the approval check, shutting down the runtime and the
-flow-owned browser windows, the description, the change's git workflow, and opening the pull
+flow-owned browser windows, the description, holding a change's one pull request for its close, and opening the pull
 request through the lane without validating anything twice. The description is the `pr-body`
 skill's, by name alone, when it is available. Its shutdown rules hold for every
 exit the run takes, not only a pull request.

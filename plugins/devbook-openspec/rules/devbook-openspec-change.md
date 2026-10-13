@@ -1,6 +1,6 @@
 ---
 name: devbook-openspec-change
-description: What an OpenSpec skill does inside openspec/changes/ when the devbook schema is in use — the artifact ids, the folders it never creates, the fields it never writes, how a step records its branch and pull request, and why a change is archived through devbook-openspec:archive.
+description: What an OpenSpec skill does inside openspec/changes/ when the devbook schema is in use — the artifact ids, the folders it never creates, the fields it never writes, how a step records its state, and why a change is archived through devbook-openspec:archive.
 ---
 
 # OpenSpec inside the change folder
@@ -33,15 +33,10 @@ rule is what they do differently from OpenSpec's defaults.
   `.devbook/` in a `flow-spec` pull request is the author's choice: never report it, ask for
   a delta, or treat it as a step of any change.
 - **A step records itself.** Under its `## Step N — title` heading, in this order: `delivers:`,
-  `owner: me` when a person does it, `branch:` once work starts, `PR:` once its pull request
-  opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines
-  and the pull request, and writes them for a run; a person doing a step writes the same
-  lines by hand. Tick a step's tasks in its own pull request — or, under `single-branch`, where
-  a step is a commit on `change/<name>` with no pull request of its own, in that commit.
-- **A proposal may name its workflow.** One `Workflow: single-branch` or
-  `Workflow: proposal-first` line under the proposal's title overrides
-  `components.openspec.workflow` for that change alone; write it only to differ from the
-  repository's default. The branches each workflow uses are the engine's.
+  `owner: me` when a person does it, then the `- [ ]` tasks. Tick a step's tasks in the commit
+  that completes them; `devbook-openspec:tracker` reads the state from the ticks. A step names
+  no branch and no pull request: a change is built whole, and where a pull request falls is
+  decided per case, never in the change.
 - **Apply refuses an unapproved change.** Never take a step while `proposal.md` is below
   `approved`, or while its `approved-hash` no longer matches
   `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`.

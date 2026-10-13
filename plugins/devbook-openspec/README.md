@@ -30,6 +30,7 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 | `assets/config.yaml` | OpenSpec's project config: `schema: devbook`, the context every OpenSpec skill is given, per-artifact rules, and apply and archive guidance. Seeded once; the repository's after |
 | `rules/devbook-openspec-change.md` | What an OpenSpec skill does inside `openspec/changes/`, installed as a trio so both hosts apply it |
 | `migrations/001-no-step-0-prototype/` | Removes the `prototype` stamp field and the Step 0 rule line `init` once seeded into `openspec/config.yaml`; `update` runs it first |
+| `migrations/002-a-change-is-built-whole/` | Removes the `workflow` stamp field, a proposal's `Workflow:` line, a step's `branch:` and `PR:` lines, and the per-step pull request line `init` once seeded into `openspec/config.yaml` |
 
 ## Skills
 
@@ -38,7 +39,7 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 | `init` | Checks the CLI, runs `openspec init` at the repository root, writes the schema, the config, and the rule, removes the scaffolded `specs/`, and stamps `components.openspec`. Refused where that stamp exists |
 | `update` | Checks the CLI against the stamped range, runs `openspec update`, replaces every managed file that still hashes to what landed, and re-stamps, after running any outstanding migration. Refused where no stamp exists |
 | `spec` | The skill an engine's Scope phase follows for a step of a change: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change below `approved` or whose approval has lapsed |
-| `tracker` | The provider for an engine's tracker: `tasks.md` as the work items, with `read_item`, `update_item`, and `comment`, and a step's state — `open`, `in progress`, `in review`, `done` — read off its `branch:` and `PR:` lines and the pull request |
+| `tracker` | The provider for an engine's tracker: `tasks.md` as the work items, with `read_item`, `update_item`, and `comment`, and a step's state — `open`, `in progress`, `done` — read off its ticks, the close's off the change's one pull request |
 | `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. With `--replan`, a chore after the engine's Scope phase: re-checks the deltas, the open steps, and the related chapters against `main` and fails on any flag. Writes nothing |
 | `archive` | Checks both gates, merges every delta with `delta.mjs --apply --no-move`, then lets `openspec archive` move the folder |
 | `onboard` | Walks a person through a first real change, one move at a time |
@@ -95,8 +96,7 @@ openspec/
 ## The stamp
 
 `components.openspec` in `.devbook/config.json`: `pluginVersion`, `cli` (the range the CLI is
-checked against), `tools` (the hosts `openspec init` set up), `workflow` (`single-branch` or `proposal-first`, the git workflow a
-change runs in unless its proposal's `Workflow:` line says otherwise), and `materialized`, per devbook's `assets/reconcile-protocol.md`.
+checked against), `tools` (the hosts `openspec init` set up), and `materialized`, per devbook's `assets/reconcile-protocol.md`.
 Payload-only: no contract version and no migration ledger. Whether OpenSpec may send usage
 statistics is one machine's answer and lives in the stack-config overlay as
 `ext["devbook-openspec"].telemetry`, never in the stamp.

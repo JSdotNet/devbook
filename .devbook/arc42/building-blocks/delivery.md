@@ -24,7 +24,7 @@ flowchart LR
     L["delivery-pr-lane"]
   end
   F -->|"sequences, resolves, gates"| P
-  P -->|"create-pr, update-base follow the git workflow"| L
+  P -->|"create-pr, update-base work on the change branch"| L
 ```
 
 Outside it: deploy, which is where "delivery" stops here; expertise, which is an agent a

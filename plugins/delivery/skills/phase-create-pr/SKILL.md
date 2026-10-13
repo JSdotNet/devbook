@@ -1,6 +1,6 @@
 ---
 name: phase-create-pr
-description: 'Shared Create Pull Request phase for every flow-* flow, after an approved Personal Validation gate. Stops the validation runtime, pushes, and opens the pull request with a description built from the review, the evidence, and the spec-check table, following the change''s git workflow. Invoked inline by the flow-runner agent, never directly.'
+description: 'Shared Create Pull Request phase for every flow-* flow, after an approved Personal Validation gate. Stops the validation runtime, pushes, and opens the pull request with a description built from the review, the evidence, and the spec-check table, holding a change''s one pull request for the run that closes it. Invoked inline by the flow-runner agent, never directly.'
 ---
 
 # Phase: Create Pull Request
@@ -9,7 +9,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 **Does**
 - Stops the runtime, pushes, opens the PR with a description from the review and evidence
-- Follows the change's git workflow (draft proposal, single-branch)
+- Opens a change's one pull request only on the run that closes it
 
 **Doesn't**
 - Run before an approved gate
@@ -32,9 +32,9 @@ so once, and continue. Nothing to submit is `skipped`.
    `Closes` when merging resolves it, `Refs` when not. With the `pr-body` skill available, write
    the description per it — Summary, Evidence at the depth Verify reached, Merge Danger;
    else, with the `show-me` skill available, write each section per it.
-4. **Follow the change's workflow** per **Git Workflows** in `resources/engine-contract.md`: a
-   `proposal-first` proposal opens as a draft; a `single-branch` run that does not close the
-   change pushes its branch, opens nothing, and says so.
+4. **Hold a change's pull request for its close** per **The Change Branch** in
+   `resources/engine-contract.md`: a run on a change that does not close it pushes
+   `change/<name>`, opens nothing, and says so.
 5. **Push, then open** with the host's own pull-request action when the session offers one,
    else `gh pr create` or the bound GitHub tooling. Build & Test, Verify, Spec Check, and the
    recorded approval **are** the validation: never rebuild, re-run tests or QA, or ask again.

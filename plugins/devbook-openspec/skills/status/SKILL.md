@@ -15,7 +15,7 @@ nothing: every edit this report points at is a person's or another skill's.
    the change is complete. `node .devbook/_tools/devbook-meta/delta.mjs --check <name>`: every
    delta resolves, or which does not.
 2. **Steps.** Each step of `tasks.md` with its state, read exactly as
-   `../tracker/SKILL.md` reads it, its `owner`, its pull request, and the scenario pages
+   `../tracker/SKILL.md` reads it, its `owner`, and the scenario pages
    its `delivers:` names, whole or by part.
 3. **Verdicts.** Run `devbook:verify-change` over the chapters the deltas target, which reads
    an agreed change as pending truth. One row per delta: the verdict, and for `code-ahead`

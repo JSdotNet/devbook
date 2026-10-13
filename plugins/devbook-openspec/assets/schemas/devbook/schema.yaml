@@ -91,10 +91,10 @@ artifacts:
 
   - id: tasks
     generates: tasks.md
-    description: The steps, one pull request each
+    description: The steps of the change, in dependency order
     template: tasks.md
     instruction: |
-      `## Step N — title` blocks, one pull request each, in dependency order.
+      `## Step N — title` blocks, in dependency order.
       Under each heading, a `delivers:` line naming the deltas it delivers by
       address — a demo delta by its path, a scenario page by its delta's path
       or one part as `<path>#<part>` — then — when a person will do the step — a line reading exactly
@@ -107,8 +107,9 @@ apply:
   requires: [tasks]
   tracks: tasks.md
   instruction: |
-    Take the first open step without `owner: me`. Never take a step of a change
-    whose proposal is not `approved`. Hand the step to a repo-native flow-* skill
+    Build the change whole: every open step without `owner: me`, in order, or
+    only the step the caller names. Never take a step of a change whose
+    proposal is not `approved`. Hand the work to a repo-native flow-* skill
     first, then the delivery engine's flow for the proposal's category, and
-    implement inline only when no engine is installed. One step is one pull
-    request, and its tasks are ticked in that pull request.
+    implement inline only when no engine is installed. Tick a step's tasks in
+    the commit that completes them.

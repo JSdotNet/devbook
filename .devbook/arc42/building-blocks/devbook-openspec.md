@@ -87,8 +87,8 @@ the Step 0 rule line an earlier `init` seeded out of an installed config.
 
 `devbook-openspec-change.md`, installed as a trio on `openspec/changes/**`: four artifacts and
 no `specs/` or `design`, no gate field written by an OpenSpec skill, `delta.mjs --check` after
-every delta edit, and the lines a step records itself with — `delivers:`, `owner: me`,
-`branch:`, `PR:`. It is what OpenSpec's defaults would otherwise get wrong; the shape itself
+every delta edit, and the lines a step records itself with — `delivers:` and `owner: me`,
+never a branch or a pull request. It is what OpenSpec's defaults would otherwise get wrong; the shape itself
 stays `devbook-changes.md`.
 
 ### Step state
@@ -96,14 +96,15 @@ stays `devbook-changes.md`.
 ```meta
 ```
 
-`tracker` reads a step's state and never decides it: `done` when its `PR:` pull request is
-merged, `in review` while it is open, `in progress` while its `branch:` exists, `open`
-otherwise. Under `single-branch` a step is a commit with no pull request of its own, so it is
-`done` once its tasks are ticked in a commit on `change/<name>` and never `in review`; the one
-pull request is the close's, opened after the acceptance and the archive it carries. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
-with the merge, and never writes `done`. Its items are the proposal, each step, and the close,
-and `read_item` reports each one's `change`, `part`, and `workflow` — the proposal's
-`Workflow:` line, else the stamp's — which the engine turns into branch names. For a step it
+A change is built whole, on one branch with one pull request; where a person or a planning
+tool splits it further is decided per case, and nothing in the change or the stamp records it.
+So `tracker` reads a step's state off its ticks and never decides it: `done` once every task
+is ticked in a commit on `change/<name>` or on the base, `in progress` while the branch exists
+or a task is ticked, `open` otherwise, and never `in review`. The one pull request is the
+close's, opened after the acceptance and the archive it carries, and the close is read off it.
+`update_item` only ticks. Its items are the proposal, each step, and the close, and
+`read_item` reports each one's `change` and `part`, which the engine turns into
+`change/<name>`. For a step it
 also lists the scenario pages `delivers:` names, each with its run as `verify-change` reports
 it — `current`, `stale`, or `missing` — and `status` gives each a row with `scenario-run` as
 the action when the run is not current, which stands before acceptance.
@@ -126,8 +127,8 @@ exited 0 with only its `## What Changes` warning.
 ```
 
 `components.openspec`: `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
-default), `tools` (the hosts `openspec init` set up), `workflow` (`single-branch` or
-`proposal-first`; absent reads as `single-branch`), and `materialized`. Whether
+default), `tools` (the hosts `openspec init` set up), and `materialized`. It records no git
+workflow: migration `002-a-change-is-built-whole` removed the `workflow` field. Whether
 OpenSpec may send usage statistics is one machine's answer and lives in the stack-config
 overlay as `ext["devbook-openspec"].telemetry`.
 

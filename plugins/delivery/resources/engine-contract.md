@@ -1,6 +1,6 @@
 ---
 name: engine-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed phase list and the phases map that configures each phase, the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the two git workflows a change runs in, and the host slots.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed phase list and the phases map that configures each phase, the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the branch a change is built on, and the host slots.
 ---
 
 # Engine Contract
@@ -449,14 +449,13 @@ above.
   A `plugin:skill` provider — `{ "provider": "your-tracker-plugin:your-tracker-skill" }` —
   hands every operation to that skill, which implements three: `read_item`, `update_item`,
   and `comment`. `update_item` is `transition` and more: it sets the item's step state and
-  ticks the tasks the run completed. The state is one of four, read off the step's own branch
-  and pull request rather than decided by the engine — `open`, `in progress` (a branch
-  exists), `in review` (a pull request is open), `done` (merged). An operation outside the
-  three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
-  A skill that does not resolve is the unbound path for all of them. Its `read_item` may also
-  report the larger change an item belongs to: the `change` name, the item's `part` —
-  `proposal`, `step` with its number, or `close` — and the `workflow`, which **Git
-  Workflows** below turns into the run's branch.
+  ticks the tasks the run completed. The state is one of four, read off the item's own record
+  rather than decided by the engine — `open`, `in progress`, `in review`, `done`. An operation
+  outside the three — `find_item`, `create_item`, `link_change` — takes the unbound path,
+  reported once. A skill that does not resolve is the unbound path for all of them. Its
+  `read_item` may also report the larger change an item belongs to: the `change` name and the
+  item's `part` — `proposal`, `step` with its number, or `close` — which **The Change Branch**
+  below turns into the run's branch.
 - **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
   group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
@@ -465,36 +464,26 @@ above.
   carried here so the change lane's skills find it in the same effective configuration, and
   so a machine may bind its own in an overlay.
 
-## Git Workflows
+## The Change Branch
 
-A work item the tracker reports as part of a change runs in one of two workflows, and the
-workflow names the branch the run works on and the pull requests the change makes. The tracker
-reports it with the item — the default its own component stamps for the repository, which a
-`Workflow:` line in the change's proposal overrides. Reported as neither, it is
-`single-branch`. The engine reads the workflow and never chooses it.
+A change is built whole: a work item the tracker reports as part of a change runs on
+`change/<name>`, and the change makes one pull request — the proposal, every step, and the
+close together. The engine never splits a change into more branches or pull requests; a split
+is decided per case by whoever starts the work, and an item started that way reports no change.
 
-| Workflow | Branches | Pull requests | Where the two decisions happen |
-| --- | --- | --- | --- |
-| `single-branch` | `change/<name>`, for the whole change | One: the proposal, every step, and the close together | Approval in the session, before the first step; acceptance in the session on the closing run, before the archive — that pull request's review is the last look, not the decision |
-| `proposal-first` | `change/<name>` for the proposal, `step/<name>/<N>` per step, `archive/<name>` for the close | One per branch, each against `policy.pr.base` | Approval in the proposal's pull request; acceptance and the close share the last |
-
-- **The branch is the workflow's.** At Update Base the run checks the named branch out when
-  it exists and cuts it from the fetched base when it does not. A `proposal-first` step is
-  always cut from the base, which by then holds the merged proposal every step reads.
-- **A `single-branch` step is a commit, not a pull request.** Each run on the change commits
-  on `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the
-  one pull request only on the run that closes the change; an earlier run pushes and stops
-  there. The tracker reports such a step `done` once its tasks are ticked in a commit on the
-  branch, so the closing run can take the acceptance and the archive before it opens the one
-  pull request, which then carries them.
-- **A proposal's status follows its pull request.** Under `proposal-first` the proposal's
-  pull request opens as a draft: a draft is proposed, an approving review is approved — the
-  approval gate records that decision in the review, never the engine — and merged is on the
-  base. The engine reads each state through the tracker and writes none of them.
-- **Why these names.** Git refuses a ref that is both a leaf and a directory, so
-  `change/<name>` beside `change/<name>/1` fails; a step is `step/<name>/<N>` for that reason.
-- **No change reported, no workflow.** Every other item runs on the branch it was started on,
-  as before.
+- **Update Base takes the branch.** The run checks `change/<name>` out when it exists and cuts
+  it from the fetched base when it does not.
+- **A step is a commit, not a pull request.** Each run on the change commits on
+  `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the one
+  pull request only on the run that closes the change; an earlier run pushes and stops there.
+  The tracker reports a step `done` once its tasks are ticked in a commit, so the closing run
+  can take the acceptance and the archive before it opens the one pull request, which then
+  carries them.
+- **Both decisions are taken in the session.** Approval before the first step; acceptance on
+  the closing run, before the archive. The pull request's review is the last look, not the
+  decision.
+- **No change reported, no change branch.** Every other item runs on the branch it was started
+  on.
 
 ## Host Slots
 
