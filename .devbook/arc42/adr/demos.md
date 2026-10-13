@@ -189,6 +189,7 @@ and `archive` skills carry a demo delta from proposal to archive.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-13 | Migration `030-linked-walkthroughs` rewrites a free walkthrough whose id is a `Proved by:` case's slug to a linked one — `part` from the line, `signature` from the page, `step` by position, and the text copied by `demo-sync.mjs` — and leaves one whose step count differs from its part's free, listed `not-applicable` with the reason. |
 | 2026-10-13 | A walkthrough is free or linked. A linked one keeps its own id, names a scenario page part with `part`, embeds that part's English step text with the `signature` it was copied at, and is stale when the page moves; a requirement proved by the part gets it as a derived `demo` entry, and `verify-change` compares it with the part rather than a test file. The one link out of a demo is that `part`, naming a journey and no chapter. |
 | 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |

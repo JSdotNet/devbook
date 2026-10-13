@@ -70,7 +70,7 @@ change belongs to the engine.
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
-| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, and `scenario-write` after it changes a page a walkthrough links: each linked walkthrough's step `text` and `signature` re-copied from its page; `--check` exits 1 while one is stale or drifted |
+| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a page a walkthrough links, and migration `030-linked-walkthroughs` for the walkthroughs it links: each linked walkthrough's step `text` and `signature` re-copied from its page; `--check` exits 1 while one is stale or drifted |
 | `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
