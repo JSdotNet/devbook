@@ -34,21 +34,11 @@ The `flow-runner` agent invokes this skill once every slice of `phase-implement`
 - The change set the run produced.
 - Optional project-specific build/test entry points (solution, test projects, E2E runner).
 
-## Run This Phase In A Sub-Agent
+## You Run Delegated
 
-**This phase is delegated, not run inline.** Build and test output is the most verbose,
-least reusable text a flow produces, and every line of it read inline stays in the
-owner session's context for the rest of the run — re-sent, and re-billed, on every later
-turn. Run in a sub-agent it costs one summary instead.
-
-- **Invoke it with a single `Agent` call** in the **same worktree** (no `isolation`), using
-  the agent, model, and effort resolved for this phase per `resources/phase-resolution.md`.
-- **Ask for a summary, never logs.** The sub-agent returns the structured **Outputs** below:
-  results, counts, and the failing targets with the specific error lines that matter. It
-  does not return build transcripts, full test output, or restated command invocations.
-- **The flow-runner reports the stage** from that summary — the sub-agent never
-  calls surface tools itself.
-- **Run inline only when delegation is impossible** (the `Agent` tool is unavailable).
+You run delegated, per `resources/phase-resolution.md`. Return only the **Outputs** below —
+no build transcript, no full test output, no restated commands, and no surface calls: the
+flow-runner reports the stage from what you return.
 
 ## Steps
 
@@ -85,9 +75,8 @@ These are what the sub-agent returns, and all of it.
 
 ## Agents
 
-- The agent the `phase-build-test` entry names, invoked as a sub-agent per **Run This Phase In
-  A Sub-Agent** above. With none, this skill is the procedure and the sub-agent runs the
-  builds and suites itself. Continue without a separate approval prompt before this phase.
+- The agent the `phase-build-test` entry names. With none, this skill is the procedure.
+  Continue without a separate approval prompt before this phase.
 
 ## MCP Servers
 

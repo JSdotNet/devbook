@@ -30,35 +30,21 @@ follows the repository's own `run` and `capture` procedures instead.
 - Every `flow-code` run, after Build & Test. `flow-spec` has no Verify.
 - Skip when `phase-verify.app` is `null` (see **Repo Context**).
 
-## Run This Phase In A Sub-Agent
+## You Run Delegated
 
-**Scenario execution is delegated, not run inline.** This is the single most expensive
-phase to run in the owner session: browser snapshots, `browser_evaluate` results, page
-accessibility trees, and Aspire log pages are large, and every one read inline is re-sent on
-every later turn of the run — through Personal Validation, the pull request, and the
-summary. Delegated, the owner session pays for the QA *result* instead of the QA *session*.
+You run delegated, in the run's worktree, per `resources/phase-resolution.md`.
 
-- **Invoke the agent the `phase-verify` entry names with a single `Agent` call** in the
-  **same worktree** (never `isolation: "worktree"` — an isolated checkout cannot see the
-  change set under test or reach the running application), using the model and effort
-  resolved for this phase per `resources/phase-resolution.md`.
 - **Keep the runtime monitor a separate background agent** — the log-and-trace watcher the
-  bound QA agent supplies alongside its scenario driver. Its own context window is the
-  point:
-  log and trace polling is high-volume and low-value to retain, so it belongs anywhere other
-  than the session that has to survive to Personal Validation. Merging monitoring into the
-  QA agent, or running it inline, puts exactly that volume back into a context that keeps
-  paying for it.
-- **Ask for the report, never the transcript.** The sub-agent returns the structured
-  **Outputs** below — per-scenario pass/fail, evidence paths, monitoring findings. It does
-  not return page snapshots, DOM dumps, log pages, or a narration of the steps it drove.
-- **The flow-runner reports the stage** from that report, including `scenarios`
-  and `monitoring` — the sub-agent never calls surface tools itself.
-- **Run inline only when delegation is impossible** (the `Agent` tool is unavailable), or
-  for startup-only verification, which is a handful of calls and not worth a sub-agent.
+  bound QA agent supplies. Log and trace polling is high-volume and worthless to retain, so it
+  stays out of the context that drives the scenarios.
+- **Stop the monitor before you return** — request its summary, then end it. It polls until
+  told otherwise; **Delegation Order** in `resources/flow-execution-model.md` names the calls
+  per host.
+- **Return the report, never the transcript.** Return only the **Outputs** below — no page
+  snapshots, DOM dumps, log pages, or narration — and make no surface calls: the flow-runner
+  reports the stage, `scenarios` and `monitoring` included.
 
-Evidence paths must still resolve under the running worktree root — see
-`resources/capture-contract.md`, which is why the QA sub-agent shares the worktree rather than isolating.
+Evidence paths resolve under the worktree root, per `resources/capture-contract.md`.
 
 ## Repo Context
 
@@ -144,19 +130,10 @@ selected, per **QA depth** in `resources/engine-contract.md`.
      and failure per `resources/capture-contract.md`. Capture resolves to the repository's
      `capture` skill first, then the agent's own, then this phase driving it directly;
      name which answered. Capture is **required** here.
-  3. **Monitor runtime behavior continuously** — the runtime monitor watches Aspire logs,
-     traces, and metrics. Run it as a background sub-agent (the `Agent` tool with
-     `run_in_background`) so monitoring runs concurrently with Playwright verification;
-     otherwise hand off in the same session, where the agent offers that.
-  4. **Stop the monitor when the scenarios are done** — request its summary, then end the
-     background agent. The monitor polls until told otherwise, so this phase must not be
-     marked `done` while one is still running. **Delegation Order** in
-     `resources/flow-execution-model.md` names the calls per host.
+  3. **Monitor runtime behavior continuously** — the runtime monitor watches Aspire logs and
+     traces as a background agent, concurrently with the scenarios, per **You Run Delegated**.
+  4. **Stop the monitor when the scenarios are done**, per **You Run Delegated**.
   5. **Record the QA result** with pass/fail per scenario and the captured evidence.
-
-  Playwright execution stays in the running **worktree** — delegated to a sub-agent
-  that shares it, per **Run This Phase In A Sub-Agent** — so it exercises the actual change
-  set while its output stays out of the owner session's context.
 - **`feature` changing existing behaviour, `defect`, `refactor` → targeted QA without
   required capture:**
   1. **Run the application locally** via the `phase-verify.app` provider and verify the
