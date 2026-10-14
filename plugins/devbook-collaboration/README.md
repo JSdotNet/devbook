@@ -7,10 +7,11 @@ schema and no state. A review in progress is the chapter's `status` and its
 open `annotation` fences — devbook's own device, one finding per fence beside
 the passage it is about — and who owes the next move lives in the pull request
 or the tracker, never in the chapter. The only fields it writes are devbook's
-approval and acceptance rungs. It ships five skills and the one read-only
-script the queue runs on: no rule, no install, no hook, and no entry in the
-stamp. Enable it and the five skills are there; a repository that never
-enables it reviews the same way by hand.
+approval and acceptance rungs. It ships five skills, the decision gate two of
+them share, `resources/decision-gate.md`, and the one read-only script the
+queue runs on: no rule, no install, no hook, and no entry in the stamp. Enable
+it and the five skills are there; a repository that never enables it reviews
+the same way by hand.
 
 ## Installation
 

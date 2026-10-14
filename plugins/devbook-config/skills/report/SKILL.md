@@ -1,6 +1,6 @@
 ---
 name: report
-description: 'Print the setup report for this repository as it stands now — every plugin''s installed and newest version and its scope, what the repository adopted (devbook folders, the committed index, the change lane, the engine and what it binds), its procedures, its routines, the overlays this machine applies, and what is still open — without writing anything. init and update close on it; run it by hand at any time. Use when: after init, update, or setup, checking how a repository is set up, what is installed, which configuration is in force, or handing the setup to someone else. Triggers on: "devbook-config report", "setup report", "show the setup", "what is installed here", "what is configured here", "how is this repository set up", "report the stack", "installation status".'
+description: 'Print this repository''s setup report as it stands — each plugin''s installed and newest version and scope, what is adopted, its procedures and routines, the overlays in force, and what is still open — writing nothing. init and update close on it. Use when: checking how a repository is set up or what is installed, handing the setup to someone, "setup report".'
 ---
 
 # devbook-config report

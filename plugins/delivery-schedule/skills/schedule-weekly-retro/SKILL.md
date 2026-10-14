@@ -1,21 +1,16 @@
 ---
 name: schedule-weekly-retro
-description: 'Review how AI was used in this repository over the week — its sessions, the delivery runs the surface recorded, and the pull requests they produced — on a stronger model than the week ran on, and recommend what would get more out of it: the bottlenecks that cost turns, the context loaded that the work did not need or lacked, and the model and effort that did not fit the task. Lands the edits to instruction assets and devbook chapters as one draft pull request, one commit per recommendation, and lists the rest — product code and personal settings. Runs only while the plan has credit to spare: it reads the plan limits first and stops when a window is past the threshold, or when this week already has a retro. The weekend weekly-retro schedule''s target.'
+description: 'Review how AI was used here over the week — sessions, surface runs, pull requests — in a fresh context, and land what would help as one draft pull request, a commit per recommendation. Runs only while the plan has credit to spare. The weekly-retro schedule''s target.'
 ---
 
 # Scheduled: Weekly Retro
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-## Purpose
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
-A week of sessions shows where AI was used well and where it was not: a task that took forty
-turns because the agent kept rediscovering the same layout, a session that compacted twice
-because every rule loaded at start, the strongest model at full effort spent renaming files.
-Nobody reads it back. This run reads it back on credit that would expire unused at the weekly
-reset, and turns it into changes a person can accept or drop one by one.
-`schedule-weekly-cost-analysis` reports what the runs cost; this asks what would make next
-week's sessions get further.
+It spends credit the weekly reset would otherwise discard, so it gates on the plan's limits
+first and stops when this week already has a retro.
 
 ## Inputs
 
@@ -27,8 +22,9 @@ week's sessions get further.
 ## Hard Constraints
 
 - The credit gate runs before anything else reads the week. A run that cannot evaluate it stops.
-- The review runs delegated, on the model resolved in Phase 2. Inline it runs on the session's
-  model, which is the model this run exists to improve on.
+- The review runs delegated, on the model resolved in Phase 2, in a fresh context: a reader
+  that did not do the week's work. Even when the week already ran on that model, the fresh
+  context is what the retro adds; inline, it would inherit this session's gathering.
 - Edit only instruction assets — `AGENTS.md`, `CLAUDE.md` and their host twins, rules and their
   wrappers, skills, agents and their `## Model` sections, contracts, hooks — the repository's
   own checks and scripts, and chapters in its adopted devbook folders, the `ai/` record and
@@ -126,17 +122,5 @@ week's sessions get further.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — the pull request remains
-the source of truth.
+A run the gate stops calls `finish_run` after Gate.
 
-- `start_run` with `skillId: "schedule-weekly-retro"` and these stages: Gate, Resolve the
-  Reviewer, Gather, Review and Edit, Pull Request, Report. A run the gate stops calls
-  `finish_run` after Gate.
-
-## Notes
-
-- Run by hand with Threshold `off` to review a week on demand.
-- `schedule-weekly-update` reports what the repository shipped; this reads how AI got it there.
-  `schedule-instruction-review` cuts what an instruction says twice; this adds what the week
-  showed was missing and cuts what it showed was never used.

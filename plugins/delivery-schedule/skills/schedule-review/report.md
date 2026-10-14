@@ -19,7 +19,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | <blocking finding, own words> | `<file>:<line>` | [#<n>](<url>) or <the fix, one line> |
 
 ### Findings
-| Priority | Layer | Where | Finding | Issue |
+| Severity | Layer | Where | Finding | Issue |
 | --- | --- | --- | --- | --- |
 | `blocking` | Code review | `<file>:<line>` | <own words, 12 at most> | [#<n>](<url>) or — |
 
@@ -30,5 +30,5 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 *`schedule-review@<version>` · <scope> · layers <list> · <ISO datetime UTC>*
 ```
 
-A priority is a word — `blocking`, `high`, `important`, `quick win`, `low` — never an emoji.
-The issues this skill opens are findings someone works; the report links them and is not one.
+The severity words are `../../resources/findings-contract.md`'s. The issues this skill opens
+are findings someone works; the report links them and is not one.

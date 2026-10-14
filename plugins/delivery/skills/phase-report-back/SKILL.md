@@ -1,6 +1,6 @@
 ---
 name: phase-report-back
-description: 'Shared Report Back phase for every flow-* flow. Runs after Create Pull Request and before Summary: sends the run''s result to every entry in phase-report-back.targets — every origin the run recorded, each by its kind, the work items the change set links, and any custom destination skill — attempts every target, and blocks naming which succeeded when one fails. Invoked by the flow-runner agent.'
+description: "Report Back phase of every flow-*: sends the run's result to every origin, linked item, and custom target, blocking when one fails. flow-runner only."
 ---
 
 # Phase: Report Back

@@ -1,11 +1,13 @@
 ---
 name: schedule-devbook-update
-description: 'The unattended stack update: run devbook-config:update with the safe answer at every question it would ask a person, so outstanding migrations run and stale copies are re-materialized from the plugins the session loaded, and land the result as one draft pull request — or a report naming the step when only a person''s step is left. The weekly devbook-update schedule''s target.'
+description: 'Run devbook-config:update with the safe answer at every question it would ask, so outstanding migrations run and stale copies are re-materialized, and land the result as one draft pull request — or report the person''s step that is left. The devbook-update schedule''s target.'
 ---
 
 # Scheduled: Devbook Update
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
 ## Purpose
 

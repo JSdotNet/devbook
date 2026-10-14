@@ -1,6 +1,6 @@
 ---
 name: local
-description: 'Say what is true of this machine and nobody else''s — QA depth inside the repository''s ceiling, the retry budget, the agent, model, and effort each phase runs with here, an MCP server that exists only here, an extra checkpoint of your own, a personal grill skill for the change lane, and machine-only instructions — and write it where the stack reads it: the user layer of the stack-config overlay by default, the repository layer when an answer is about one repository, and AGENTS.local.md — all under your devbook config directory, none inside the clone. Converts a retired model-selection.md into overlay phase entries and retires it. Never the committed config. Use when: a first run would otherwise take the team''s defaults without saying so, the report says no user overlay exists or a model-selection.md is left over, or a personal setting should stop being re-asked. Triggers on: "devbook-config local", "set up my overlay", "what is true of my machine", "remember my QA depth", "set my model preferences", "set my effort per phase", "convert my model-selection", "create AGENTS.local.md".'
+description: 'Record what is true of this machine only — QA depth, retry budget, each phase''s agent, model, and effort, a local MCP server or checkpoint, a personal grill skill, machine-only instructions — in the stack-config overlay or AGENTS.local.md under the devbook config directory, never the committed config. Use when: the report shows no user overlay or a leftover model-selection.md, "set up my overlay".'
 ---
 
 # devbook-config local
@@ -47,11 +47,6 @@ a phase entry's fields are its *Phases*, and how they resolve is `resources/phas
 8. **Report** each file written, left alone, or retired, by path and layer, and re-run the
    report.
 
-## Do not
-
-- Never touch `.devbook/config.json`. Nothing here is true of the repository.
-- Never write `id`, `components`, `policy.pr.required`, `policy.qa.ceiling`,
-  `policy.gate.personalValidation`, `policy.openspec.scenarios`, or a
-  `phase-personal-validation` entry in an overlay; the checker refuses each by name.
-- Never write a secret. Gitignored is not private, and neither is a home directory.
-- Never write an overlay for someone else: on a shared account, say so and stop.
+An overlay never carries a key *The overlays* refuses; the checker names each one. Never write
+a secret — gitignored is not private, and neither is a home directory — and never write an
+overlay for someone else: on a shared account, say so and stop.

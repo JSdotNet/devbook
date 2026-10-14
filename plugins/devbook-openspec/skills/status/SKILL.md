@@ -1,6 +1,6 @@
 ---
 name: status
-description: 'Report where a change under openspec/changes/ stands in one table — OpenSpec''s artifact progress, every step''s state with the scenario pages it delivers, the verify-change verdict for every delta and the run of every delivered scenario page, and both gates, approval and acceptance, each with whether its fingerprint still holds — and name the one next move. With --replan, a chore after the engine''s Scope phase: re-check one change''s deltas, open steps, and related chapters against main and fail on any flag. Writes nothing. Use when: "where is this change", "what is left before I can accept it", "can this change be archived", "is the approval still current", or before devbook-openspec:archive. Triggers on: "devbook-openspec status", "change status", "status of the change", "does the plan still hold", "replan".'
+description: 'Report where a change under openspec/changes/ stands — artifact progress, each step''s state and scenario pages, the verify-change verdict per delta, both gates and whether their fingerprints hold — and name the next move. With --replan, re-check a change''s plan against main. Writes nothing. Use when: "where is this change", what is left before accepting, can it be archived, before devbook-openspec:archive.'
 ---
 
 # devbook-openspec status

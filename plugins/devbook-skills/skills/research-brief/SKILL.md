@@ -1,6 +1,6 @@
 ---
 name: research-brief
-description: 'Answer one question about something outside the repository — an API''s behaviour, a library''s limits, a standard, a platform''s pricing or quota — from primary sources only, every claim cited, with a confidence per claim and a list of what the sources do not answer. Returns the brief and writes nothing: the caller decides where it lands. Use when a fact the repository cannot answer decides a scope, a decision record''s options, or a technology''s rating. Triggers on: "research this", "/research-brief", "look it up in the docs", "what does the spec say", "is this still true", "check the official docs", "find the source for this".'
+description: 'Answer one question about something outside the repository — an API, a library''s limits, a standard, pricing or quota — from primary sources only, every claim cited with a confidence, plus what the sources leave open. Writes nothing. Use when: an outside fact decides a scope, a decision record''s options, or a technology''s rating; "/research-brief", "check the official docs".'
 ---
 
 # Research Brief

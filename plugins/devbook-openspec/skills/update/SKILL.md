@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s change lane forward after upgrading devbook-openspec or the OpenSpec CLI — check the CLI against the stamped range, run openspec update, replace the devbook schema and the change-folder rule wherever they still hash to what this plugin wrote, report the customized ones, and re-stamp components.openspec. Never rewrites openspec/config.yaml. Refused where no components.openspec stamp exists: run devbook-openspec:init. Use when: upgrading devbook-openspec, a new OpenSpec release, the schema or rule is stale. Triggers on: "devbook-openspec update", "update devbook-openspec", "upgrade the change lane", "openspec update".'
+description: 'Move a repository''s change lane forward after upgrading devbook-openspec or the OpenSpec CLI: check the CLI range, run openspec update, replace the schema and rule where unmodified, report customized ones, re-stamp. Never rewrites openspec/config.yaml. Refused where no components.openspec stamp exists: run devbook-openspec:init. Use when: "devbook-openspec update", a new OpenSpec release.'
 ---
 
 # devbook-openspec update
@@ -18,7 +18,7 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
    installed version and the range and stop; never install, and never widen the range yourself.
 2. **Migrate.** Run each script under `../../migrations/` in number order with node, the
    repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
-   its plan, run it without `--check`, and report what moved. `001` removes the Step 0 prototype; `002` the git workflow and a step's `branch:` and `PR:` lines.
+   its plan, run it without `--check`, and report what moved.
 3. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
    stamped hash. Equal is stale-or-current and replaceable; different is customized.
 4. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip

@@ -1,116 +1,48 @@
 ---
 name: schedule-review
-description: 'Run a full automated review cycle on the codebase or a specific scope: collects TODO items, surfaces future-improvement suggestions, and runs a structured code review. Produces a prioritised findings report and optionally opens GitHub issues for the highest-priority items.'
+description: 'Review a codebase or path in three layers — open TODOs, improvement suggestions, the code review checklist — rank every finding in one table, and open one issue per finding at or above a severity. Use when: a review sweep, a health check before a release.'
 ---
 
 # Scheduled: Review
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-## Purpose
-
-Run a layered, automated review of the codebase. Each review layer adds a different
-signal — open TODOs, improvement opportunities, and correctness issues — then combines them
-into a single prioritised findings report. High-priority findings can be converted to GitHub
-issues in one step.
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`. Severity, the key,
+the ranked table, and the issue are `../../resources/findings-contract.md`'s.
 
 ## Inputs
 
-- Scope: `all` (default) or a path glob such as `src/MyService/**`.
-- Review layers: `all` (default), or a comma-separated subset: `todo`, `suggestions`, `code-review`.
-- Severity filter for issue creation: `blocking` (default), `important`, or `all`.
-- Create GitHub issues for high-priority findings: `true` (default) or `false`.
-- Target repository for issues: `owner/repo` (defaults to current repository).
-
-## Layers
-
-Carried here because a scheduled session starts with the two delivery plugins and nothing
-else:
-
-- **TODO review** — every `TODO`, `FIXME`, `HACK`, and `NOTE` comment and every unchecked
-  checklist item in a documentation file, found with `grep`.
-- **Suggestion review** — a scan for structural, quality, coverage, and extensibility
-  improvements, each with an effort and a risk.
-- **Code review** — the checklist in `../schedule-merge-review/SKILL.md`.
-- `gh` for the issues this skill opens.
+- Scope: `all` (default) or a path glob.
+- Layers: `all` (default), or any of `todo`, `suggestions`, `code-review`.
+- Issue threshold: `blocking` (default), `high`, `all`, or `none` to open no issue.
+- Repository for issues: `owner/repo` (default: the current one).
 
 ## Workflow
 
 ### Phase 1 — TODO Review
 
-1. Over the configured scope:
-   - Collect all TODO comments (`// TODO`, `// FIXME`, `// HACK`, `// NOTE`).
-   - Collect open checklist items in documentation files.
-   - Classify each item: **High**, **Medium**, or **Low** priority.
-   - Produce a normalised list of actionable findings.
+1. With `grep` over the scope: every `TODO`, `FIXME`, `HACK`, and `NOTE` comment, and every
+   unchecked checklist item in a documentation file. Kind `todo`; severity by what the comment
+   says is at stake.
 
 ### Phase 2 — Suggestion Review
 
-2. Over the configured scope:
-   - Identify structural, quality, coverage, and extensibility improvements.
-   - Estimate effort (small / medium / large) and risk (low / medium / high) per suggestion.
-   - Rank suggestions by value-to-effort ratio.
-   - Separate into: Quick wins, Next iteration, Longer-term.
+2. Structural, quality, coverage, and extensibility improvements, each with an effort
+   (`small`, `medium`, `large`) and a risk. A small, low-risk one is `medium`; the rest `low`.
 
 ### Phase 3 — Code Review
 
-3. Run the code-review checklist over the configured scope:
-   - Correctness (null guards, logic, return values).
-   - SOLID compliance.
-   - Async/await patterns (no sync-over-async, CancellationToken propagation).
-   - Error handling (specific exceptions, no silent catches).
-   - Security (no secrets, input validation, parameterised queries).
-   - Test coverage (public APIs tested, AAA pattern, `dotnet test` passes).
-   - Naming and readability.
+3. The contract's review checklist over the scope.
 
-4. Classify findings as **Blocking**, **Important**, or **Suggestion**.
+### Phase 4 — Rank
 
-### Phase 4 — Consolidated Report
+4. Merge the layers into the contract's ranked table.
 
-5. Merge findings from all three layers into one ranked list — the *Findings* table of
-   `report.md` beside this file — priority first: `blocking`, `high`, `important`,
-   `quick win`, `low`.
+### Phase 5 — Issues
 
-6. De-duplicate: if the same location appears in multiple layers, merge into one finding
-   with the highest severity and all contributing reasons noted.
-
-### Phase 5 — Issue Creation (Optional)
-
-7. Present the findings that match the configured severity filter.
-8. Unattended, every finding at or above the severity filter becomes an issue, updating an
-   open one with the same title rather than opening a second. Run by hand, ask the person
-   which findings should.
-9. For each, `gh issue create` with:
-   - **Title:** `[Review] <finding summary>`
-   - **Body:** finding detail, file and line, layer (TODO / Suggestion / Code Review),
-     severity, and recommended action.
-   - **Labels:** `review`, `automated`, and a severity label (`blocking`, `important`, or `suggestion`).
+5. **Gate:** the findings at or above the threshold; by hand, the yes may name a subset. Open
+   or update each per the contract, prefix `Review`, label `review`.
 
 ### Phase 6 — Summary
 
-10. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
-    the per-layer counts, then the ranked list from Phase 4 as *Findings*, each linked to the
-    issue Phase 5 opened for it.
-
-## Surface Reporting
-
-Follow the **Reporting Contract** in `surface-contract.md` (`delivery` plugin).
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
-
-- `start_run` with `skillId: "schedule-review"` and these stages: TODO Review, Suggestion
-  Review, Code Review, Consolidated Report, Issue Creation, Summary.
-
-## Output
-
-- Consolidated, prioritised findings report covering TODOs, suggestions, and code review.
-- GitHub issues created for all approved high-priority findings.
-- Summary table per review layer.
-
-## Notes
-
-- Each layer can be run on its own by naming it in the layers input; the default runs all
-  three in sequence and merges the output.
-- Run this skill weekly or before each release to maintain a healthy codebase baseline.
-- For a repository that is not .NET, drop the checklist items that are .NET-specific
-  (`dotnet test`) and keep the rest.
+6. The report in `report.md` beside this file: the per-layer counts, then the ranked table.

@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Put this repository''s schedules from the catalog into the host''s scheduler for the first time — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — asking which to enable, creating each selected one, and stamping the selection under components.schedule in .devbook/config.json. Refused where components.schedule already exists: run delivery-schedule:update. Use when: setting up recurring unattended runs for a repository, scheduling routines or automations. Triggers on: "schedule init", "set up my routines", "set up my automations", "schedule this repository".'
+description: 'Put this repository''s schedules into the host''s scheduler for the first time — Routines in Claude Code, Automations in the Copilot app — asking which to enable and stamping components.schedule. Refused once that stamp exists. Triggers on: "schedule init", "set up my routines", "set up my automations", "schedule this repository".'
 ---
 
 # schedule init

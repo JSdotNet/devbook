@@ -1,6 +1,6 @@
 ---
 name: chapter-handoff
-description: 'Hand a devbook chapter to a named reviewer and produce the brief they start from — what changed, what the reviewer is being asked to judge, and which neighbouring chapters they need. Writes nothing into the chapter: who reviews it lives in the brief, the pull request, or the tracker. Use when: asking someone to review a chapter, passing devbook work to another person or session, or parking a chapter that needs a decision you cannot make. Triggers on: "hand off this chapter", "ask someone to review", "request review of", "who should review this", "park this for review".'
+description: 'Hand a devbook chapter to a named reviewer with the brief they start from — what changed, what to judge, which neighbouring chapters to read. Writes nothing into the chapter. Use when: asking someone to review a chapter, passing devbook work to another person or session, parking a chapter on a decision you cannot make ("hand off this chapter").'
 ---
 
 # chapter handoff
@@ -12,14 +12,8 @@ Open the reply with `devbook-collaboration@<version>`, `version` read from `../.
 Request a review of one chapter and hand back the brief that carries the ask.
 This is the author's half of the pass; `chapter-review` is the reviewer's.
 
-The chapter records no review state — `devbook-chapter-metadata.md` says why.
-What the reviewer is asked lives in the brief, and in the pull request or
-tracker item the user sends it through; what is still open lives in the
-chapter's annotation fences.
-
-This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
-five-row lookup, and a reviewer who is handed four of the five rows starts by
-asking for the fifth.
+The chapter records no review state, per `devbook-chapter-metadata.md`: the ask lives in the
+brief and wherever the user sends it, and what is still open in the chapter's annotation fences.
 
 ## Steps
 
@@ -53,12 +47,5 @@ asking for the fifth.
    anywhere — handing the brief back is the deliverable, and the user chooses
    where it goes.
 
-## Do not
-
-- Do not review the chapter here. Requesting and answering are different moves
-  by different people; doing both in one pass is how a chapter gets approved by
-  the person who wrote it.
-- Do not write `status: approved` from this skill. Approval is
-  `chapter-approve`'s, and only after a review clears.
-- Do not record the brief or the reviewer in the chapter. Who owes the next
-  move is workflow state, and a reassignment is not a change to the content.
+Never review the chapter in the same pass: requesting and answering are moves by different
+people, and doing both is how a chapter gets approved by the person who wrote it.

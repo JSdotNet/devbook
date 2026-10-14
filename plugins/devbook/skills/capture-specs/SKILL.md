@@ -1,6 +1,6 @@
 ---
 name: capture-specs
-description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of seven kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, a user or technical actor in actors.md or context.md with the roles, policies, or client registrations that represent it, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, a role or client in code no actor names, document what we built, capture from code, domain/ is stale. By default delivers a capture plan as a Markdown artifact and writes nothing; in write mode, as a spec-check binding runs it, carries the code-ahead entries into the chapters and runs the devbook check. Never writes a source or test file. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
+description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any chapter kind. Delivers a capture plan and writes nothing, except in write mode under a spec-check binding. Use when: document what we built, capture from code, the code has something the chapter does not, domain/ is stale. DO NOT USE FOR: implementing an agreed chapter (apply-change) or checking drift alone (verify-change).'
 updates: true
 ---
 
@@ -62,14 +62,7 @@ context where the kind has one, and the repository root.
    Write mode: carry in the `code-ahead` entries, run the check, and return the report
    table with every chapter edit listed — file, verdict row, what changed.
 
-## Do not
-
-- Never edit a source or test tree. Outside write mode, write no devbook file:
-  the plan is the result, and carrying it in is a person's move.
-- Do not put a `status` line in the plan, and never write `approved` or another
-  decision rung, in either mode. Code is evidence, not agreement.
-- Do not plan over a chapter someone is still deciding about. Where the target
-  is a `draft`, report what the code has beside what the draft says, per the
-  protocol's status table; where it is `deprecated`, report and stop.
-- Do not write an `annotation` fence: an open question belongs in review.
-- Do not treat a comment, a TODO, a docstring, or a disabled test as evidence.
+Never edit a source or test tree, and outside write mode write no devbook file: carrying the
+plan in is a person's move. The protocol's **Status rules** and **Evidence rules** bind every
+step — no `status` line or decision rung in either mode, no plan over a `draft` or an open
+change — and an open question belongs in review, never in an `annotation` fence written here.

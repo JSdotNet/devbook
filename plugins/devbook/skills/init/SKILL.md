@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring devbook into a repository for the first time — adopt the arc42, domain, tech, design, and ai folders under .devbook/ and the change folder under openspec/changes/, scaffold one starting chapter per adopted folder, seed the repository-owned procedure skills it adopts — run, capture, diagnose, estimate, prototype — each with a managed wrapper per host carrying its fixed goal, install the devbook-meta checker and its CI workflow, and the scenario tools where domain is adopted, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption", "adopt the change folder", "seed the run skill", "generate the run skill", "seed the capture skill", "seed the diagnose skill", "seed the estimate skill", "seed the prototype skill".'
+description: 'Adopt devbook in a repository that has never had it: the .devbook/ folders and openspec/changes/, a starting chapter each, the procedure skills (run, capture, diagnose, estimate, prototype), the checker and its CI workflow, the folder rules, its AGENTS.md section, and the stamp. Refused where components.devbook exists: run devbook:update. Use when: "devbook init", setting up devbook, scaffolding a devbook folder.'
 user-invocable: false
 ---
 
@@ -51,7 +51,3 @@ them in `adoption-map.md`. Do not impose a default flow. Then confirm git tracks
 `git check-ignore -v .devbook/ai/adoption-map.md`. A repo holding Adobe Illustrator files
 often carries a `*.ai` rule; `.devbook/ai/` does not match it, but a file inside named
 `<something>.ai` would — check before adopting.
-
-The notes on rules, the `AGENTS.md` section, root wrappers, `.gitignore`, and routing are
-`../update/SKILL.md` under *Notes*, and hold here unchanged. Report an init that ends on a
-failing check as failing, never as initialized.

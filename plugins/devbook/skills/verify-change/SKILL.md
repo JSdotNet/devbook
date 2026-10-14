@@ -1,6 +1,6 @@
 ---
 name: verify-change
-description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, actor, building-block, design-component, and the click demo a page carries — its screens, states, copy, and walkthroughs against the front end and the e2e tests. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and the tests each chapter names at its level — unit for an invariant, e2e or integration for a requirement; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
+description: 'Check devbook chapters against the code that implements them and report a drift verdict per chapter — aligned, code-ahead, spec-ahead, conflict, or unresolved — for any chapter kind, a page''s click demo included. Writes nothing. Use when: is the chapter still true, did the code drift from the spec, before a review or pull request. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change).'
 ---
 
 # verify-change
@@ -49,9 +49,5 @@ repository root.
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.
 
-## Do not
-
-- Do not write a chapter, a brief, an `annotation` fence, or a `tests` entry.
-- Do not resolve a `conflict` by picking a side, or an `unresolved` by guessing.
-- Do not touch a `status` line. A verdict is a report about drift, never about
-  agreement.
+Write nothing — no chapter, brief, `annotation` fence, `tests` entry, or `status` line — and
+settle no `conflict` by picking a side or `unresolved` by guessing.

@@ -1,6 +1,6 @@
 ---
 name: phase-personal-validation
-description: 'Shared Personal Validation review handoff for every flow-* flow. Brings the application up, publishes the review links as clickable URLs, lists every demo the change implements beside them, says what to check by hand, and presents the ready check''s open items, the code review, the QA review, and the spec-check table with its chapter edits. Runs again on every revise round. It presents and never decides — the mandatory approval gate stays with the flow-runner. Invoked inline by the flow-runner agent, never configured.'
+description: "Personal Validation handoff of flow-code and flow-spec: starts the app, publishes review links and demos, presents the results, never approves. flow-runner only."
 ---
 
 # Phase: Personal Validation — The Review Handoff
@@ -26,15 +26,9 @@ looking for?* The approve / revise / decline gate that follows belongs to the `f
 agent and to **The gate** in `resources/flow-phases.md` — the recorded decision, the commit
 rule, and parking an unattended run live there. Nothing here can approve, skip, or soften it.
 
-## When To Run
-
-- **Both flows**, after the ready check: in `flow-code` after Verify and Spec Check, in
-  `flow-spec` after Check & Review.
-- **Again on every revise round.** A revised change set is a new thing to look at: re-run this
-  whole skill rather than pointing back at the previous handback.
-- **Inline, in the owner session, never configured.** No agent and no model — the links have to
-  be clickable in the conversation the person is reading. A `phase-personal-validation` key in
-  any `phases` map is refused.
+It runs inline in the owner session, so the links are clickable in the conversation the person
+is reading, and again on every revise round: a revised change set is a new thing to look at, so
+re-run the whole skill rather than pointing back at the previous handback.
 
 ## Step 1 — Make Sure It Is Actually Running
 
@@ -127,22 +121,8 @@ in `resources/flow-phases.md`; under `manual`, commit nothing. Then stop and wai
 unattended run there is no one to hand back to: park per **The gate**, `approval` left
 `pending`.
 
-## Outputs
-
-- A running application with confirmed health, a `blocked` result naming the startup failure
-  and the recovery command, or the recorded reason there was nothing to start.
-- The labelled review links, in the stage's `links` and in the conversation, with each demo
-  address and each scenario screenshot beside the app link it is compared with.
-- The what-to-check list and the four results of Step 4.
-
 ## Dashboard Reporting
 
 Report as the `Personal Validation` stage via the **Reporting Contract** in
 `resources/surface-contract.md`, passing `links` for the started application and every review
 target. The flow-runner owns the `approval` values recorded with `set_run_context`.
-
-## Reference
-
-Gate contract and the recorded decision: **The gate** in `resources/flow-phases.md`.
-Runtime facts: the repository's `run` recipe at `.claude/skills/run-<name>/SKILL.md`.
-Refreshing on a repeat pass: `skills/phase-verify/SKILL.md`.

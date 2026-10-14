@@ -24,8 +24,9 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 
 Eighteen skills, each reached by the scheduler on a cadence or by a person by hand, which is how
 a cadence gets proved before it is trusted. The contracts they share are delivery-schedule's:
-the preamble every prompt opens with, the report contract, the change window, the tightening
-standard, the draft pull request contract, and the devbook sweep contract.
+the preamble every prompt opens with, the report contract, the change window, the findings
+contract, the tightening standard, the draft pull request contract, and the devbook sweep
+contract.
 
 ### schedule-devbook-validate
 
@@ -212,7 +213,8 @@ it to minor and patch, because a major version is a decision rather than an upda
 
 Score ten performance findings and implement the best one, landing as a pull request. Ten scored
 and one implemented is the shape: an unattended run that fixed all ten would be ten unreviewed
-changes in one branch.
+changes in one branch. While the previous run's pull request is still open, a run reports and
+implements nothing, so one pull request never carries two findings.
 
 ### schedule-review
 
@@ -273,9 +275,10 @@ draft pull request, one commit per recommendation. Two
 things set it apart from every other entry point. It gates on the plan's credit: it reads the
 plan limits first and stops at or above a threshold, so it spends only what the weekly reset
 would otherwise discard, and its trigger fires on both weekend days because the second firing
-is the retry. And it delegates the review to a model stronger than the week ran on: the model
-the effective configuration gives `flow-code`'s `phase-review`, so a team default or a
-machine's own overlay picks it, and `opus` when neither does. It edits instruction assets, checks, and devbook chapters, each chapter under its
+is the retry. And it delegates the review to a fresh context, on the model the effective
+configuration gives `flow-code`'s `phase-review` — a team default or a machine's own overlay
+picks it, and `opus` when neither does. A week that already ran on that model still gains a
+reader that did not do the work. It edits instruction assets, checks, and devbook chapters, each chapter under its
 folder's own rules; the draft pull request is the approval a chapter would otherwise get from
 `flow-spec`. Product code, or a personal model, effort, or habit, is listed for a person.
 
@@ -294,7 +297,9 @@ narrative. One per week, kept as the record of everything that changed; the
 ```meta
 ```
 
-Report what changed in the tracked repositories since the last run, over a stated window.
+Report the pull requests opened, merged, and still open across the tracked repositories over a
+window, each traced to its ticket. It keeps no state: the window is the checkpoint, per the
+change window contract, so every run reads it fresh.
 
 ## Structure
 
@@ -328,7 +333,7 @@ needs a person, and a person is exactly what an unattended run does not have.
 | It is runnable by hand as well as on a cadence | authoring | untested |
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
 | It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
-| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report lands as a labelled issue | run | untested |
+| A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report is the session's last message, never an issue | run | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ### Schedule Report Published
@@ -435,7 +440,7 @@ the rows below are the ones inside the plugin and the engine it calls.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
+| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `findings-contract.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
 | [delivery](delivery.md#flow-code) | Customer-Supplier, declared by the plugin | An entry point calls a flow, or `resolve-issue.workflow.js` runs a `flow-code` kind's phases | The flow names and the parking rule at a gate | The entry point is the adapter that picks the input a flow would otherwise need a person for. |
 
 ### Inbound

@@ -1,6 +1,6 @@
 ---
 name: schedule-status
-description: 'Show this repository''s schedules and how their recent runs went — cadence, enabled state, the last runs, what each published, and the log of a run that failed or parked. Use when: checking whether a scheduled run fired, why one failed, what a routine or automation produced last night, or listing what is scheduled for this repository.'
+description: 'Show this repository''s schedules and their recent runs — cadence, enabled state, what each published, and the log of one that failed or parked. Use when: did a scheduled run fire, why did one fail, what did a routine or automation produce, what is scheduled here.'
 ---
 
 # schedule status

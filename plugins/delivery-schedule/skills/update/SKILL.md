@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Bring the host''s scheduler level with this repository''s schedule selection — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected schedule, disabling the rest, and rewriting components.schedule in .devbook/config.json. Idempotent by name. Refused where no components.schedule stamp exists: run delivery-schedule:init. Use when: changing a cadence, adding or removing a schedule, or after upgrading this plugin. Triggers on: "schedule update", "update my routines", "update my automations", "change a cadence", "add a schedule", "remove a schedule".'
+description: 'Bring the host''s scheduler level with this repository''s schedule selection — create or update each selected schedule, disable the rest, rewrite components.schedule. Refused without that stamp. Triggers on: "schedule update", "update my routines", "update my automations", "change a cadence", "add a schedule", "remove a schedule".'
 ---
 
 # schedule update

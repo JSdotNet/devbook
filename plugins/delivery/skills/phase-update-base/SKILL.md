@@ -1,6 +1,6 @@
 ---
 name: phase-update-base
-description: 'Shared Update Base phase, the first phase of every flow-* flow. Fetches the base branch and fast-forwards, or rebases the branch''s own unpushed commits onto it, so the run starts from the current base. Invoked inline by the flow-runner agent, never directly.'
+description: "Update Base phase, first in every flow-*: fetches the base and fast-forwards, or rebases the branch's unpushed commits onto it. flow-runner only."
 ---
 
 # Phase: Update Base

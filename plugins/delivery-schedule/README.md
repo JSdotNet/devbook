@@ -46,17 +46,17 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-week-starter` | Digests what the tracked topics published this week | A digest |
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
-| `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — on a stronger model, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
+| `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — in a fresh context, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
-| `schedule-whats-new` | What changed in the tracked repositories since last run | A change report |
+| `schedule-whats-new` | Pull requests across the tracked repositories over a window, each traced to its ticket | A change report |
 
 None of them is a flow, and none may be scheduled as one: a `flow-*` skill ends at Personal
 Validation, and no unattended run can pass a gate.
 
 The two change reports read the same sources over different windows, stated once in
 `resources/change-window-contract.md`: the morning brief is triage for one day, the weekly
-update is the record for one week. `schedule-whats-new` is the third and older one: pull
-requests across several repositories, with a checkpoint and ticket correlation.
+update is the record for one week. `schedule-whats-new` reads the pull request rows alone,
+across several repositories, and traces each to its ticket.
 
 ## The catalog
 
@@ -97,11 +97,9 @@ renamed — are exactly the ones a per-folder split would not see.
 `devbook` is named, not depended on: a schedule whose target plugin the repository has not
 enabled is reported and skipped, never scheduled.
 
-The two report schedules keep one open issue each. While the previous brief or update is
-still open nobody has read it, so the next run extends its window back to that issue's date
-and replaces the body: nothing between two runs is lost, and closing the issue is how it is
-acknowledged. The closed issues are the record. `issue-sweep`'s brief keeps the same one
-open issue without a window: the rows a person has not decided fold into the next run's.
+A report is the run's last message in its own session, never an issue, per
+`resources/report-contract.md`. A report whose earlier runs were skipped reaches its window
+back to the last run that was not, so nothing between two runs is lost.
 
 A run waits for you. Archiving a run's session in the host is how you say you have handled
 it; while an earlier run of the same schedule is still unarchived — a merge review whose

@@ -1,6 +1,6 @@
 ---
 name: phase-implement
-description: 'Shared Implement phase for flow-code: plans the slices — a seam or an area, frontend, backend or both, in order or in parallel — then builds one slice per call, tests first at each backend seam scope recorded and none for a frontend slice, running only compile and the touched tests, with the kind''s own procedure for a dependency move or a project scaffold. Treats the spec as fixed input and returns revise: phase-scope on a spec problem. Runs in tandem with phase-review. Invoked by the flow-runner with a brief file; never by a person.'
+description: "Implement phase of flow-code: plans the slices, then builds one per call, tests first at backend seams, with the spec as fixed input. flow-runner only."
 context: fork
 model: opus
 effort: high

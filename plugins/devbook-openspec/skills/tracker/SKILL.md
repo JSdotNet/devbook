@@ -1,6 +1,6 @@
 ---
 name: tracker
-description: 'Keep a change''s tasks.md as its work items — read a step with the scenario pages it delivers, set its state and tick its tasks, or leave a note on it — for an engine that binds its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over the steps of openspec/changes/<name>/tasks.md: a step''s state — open, in progress, done — read off its ticks, and the close''s off the archive. Use when: a run reads or updates the step it is building, "which steps of this change are done", "mark step 2 done".'
+description: 'Keep a change''s tasks.md as its work items — read a step with its scenario pages, set its state and tick its tasks, or leave a note — for an engine binding its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over openspec/changes/<name>/tasks.md. Use when: a run reads or updates the step it builds, "mark step 2 done".'
 ---
 
 # devbook-openspec tracker

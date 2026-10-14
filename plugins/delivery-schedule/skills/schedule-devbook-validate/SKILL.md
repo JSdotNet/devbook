@@ -1,11 +1,13 @@
 ---
 name: schedule-devbook-validate
-description: 'The unattended devbook validation: run devbook:validate over every adopted folder, fix what it reports in the source Markdown, refresh the committed _meta/ indexes where devbook-derived keeps them, and land the result as one pull request — and report what devbook-config:doctor, where installed, finds that needs a person. The daily devbook-validate schedule''s target.'
+description: 'Run devbook:validate over every adopted folder, fix what it reports in the source Markdown, refresh the committed _meta/ indexes where devbook-derived keeps them, land one pull request, and report what devbook-config:doctor finds for a person. The devbook-validate schedule''s target.'
 ---
 
 # Scheduled: Devbook Validate
 
 Open the reply with `delivery-schedule@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
+Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
 ## Purpose
 

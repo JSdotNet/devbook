@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring the committed devbook index into a repository for the first time — the on-demand refresh script, the nightly refresh and drift-warning workflows, the derived-artifacts rule with a wrapper per host, and its own marker-fenced section of AGENTS.md — and stamp it under components.derived in .devbook/config.json. Refused where components.derived already exists: run devbook-derived:update. Use when: adopting devbook-derived, or the _meta indexes have no refresh path. Triggers on: "devbook-derived init", "install devbook-derived", "commit the devbook index", "set up the index refresh".'
+description: 'Bring the committed devbook index into a repository for the first time — the refresh script, the nightly refresh and drift-warning workflows, the derived-artifacts rule, and its AGENTS.md section — and stamp components.derived. Refused where components.derived exists: run devbook-derived:update. Use when: adopting devbook-derived, the _meta indexes have no refresh path.'
 user-invocable: false
 ---
 

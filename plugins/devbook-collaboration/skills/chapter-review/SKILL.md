@@ -1,6 +1,6 @@
 ---
 name: chapter-review
-description: 'Review one devbook chapter, or one change as a whole, and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about — the open fences are the verdict. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
+description: 'Review one devbook chapter, or one change, against its folder''s rules, its linked neighbours, and the evidence it claims, and write each unresolved finding as an annotation fence beside its passage — the open fences are the verdict. Use when: reviewing a chapter, answering a review request, checking a chapter is still accurate, resolving findings left on one.'
 ---
 
 # chapter review
@@ -13,12 +13,9 @@ Review one chapter and leave the verdict where the next reader will find it: in
 the chapter, as its open annotation fences. Findings are recorded, not merely
 reported, so an unanswered question survives the session that raised it.
 
-A finding is an annotation fence, never a `meta` field, and the chapter
-carries no review state — `devbook-chapter-metadata.md` says why.
-`devbook-annotations.md` has the fence's schema and lifecycle, and
-devbook's `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing that
-writes one. Read
-both first.
+A finding is an annotation fence, never a `meta` field, per `devbook-chapter-metadata.md`.
+Read `devbook-annotations.md` first for the fence's schema and lifecycle; devbook's
+`.devbook/_tools/devbook-meta/annotations.mjs` is the only thing that writes one.
 
 This file exceeds the 40-line body budget on purpose: the lens table in step 3
 is one row per thing a chapter can be wrong about, and a review that skips a
@@ -99,15 +96,6 @@ the neighbours a change leans on. Run `delta.mjs --check <name>`; each error
 is a finding. Write each fence on the file it is about. Cleared hands the whole
 change to `chapter-approve`.
 
-## Do not
-
-- Do not write `status: approved` from here. A review that could approve itself
-  is not a gate, and the rung is `chapter-approve`'s to write.
-- Do not treat a note as chapter content, and do not carry one into a change
-  brief, a specification, or any other chapter. An open question is a reason to
-  stop, not a line item to implement.
-- Do not close a finding you did not settle, and do not sweep a resolved one
-  here — the answer has to survive into the pull request that raised the
-  question. Sweeping is `devbook:annotation-sweep`, before the branch merges.
-- Do not widen the review to the folder. One chapter and its neighbours; a
-  folder-wide sweep is `chapter-review-queue`.
+A review never writes `status: approved` — one that could approve itself is not a gate — and
+never sweeps a resolved note: the answer has to survive into the pull request that raised the
+question, and sweeping is `devbook:annotation-sweep`, before the branch merges.

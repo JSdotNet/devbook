@@ -7,64 +7,27 @@ description: 'Refresh a repository technology graph from deterministic package i
 
 Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-This file exceeds the 40-line body budget on purpose: it is a staged procedure whose inventory, review, and write stages each name the script and the flag a run needs, and a flag stated by half runs nothing.
+Refresh `tech/` from repeatable evidence: package facts from deterministic scripts, the rest
+from targeted repository analysis. The scope defaults to every `tech/` layer that exists; a
+focus — backend, frontend, tooling, deployment — narrows it. With no `tech/` folder, stop and
+adopt it first, through `devbook:update`, or `devbook:init` where devbook has no stamp yet.
 
-## Purpose
+1. **Load context.** `devbook-tech.md`, `devbook-chapter-metadata.md`,
+   `.devbook/tech/technology-graph.md`, and the layer files in scope. Load
+   `.devbook/arc42/04-solution-strategy.md`, `07-deployment-view.md`, and
+   `09-architecture-decisions.md` only when they exist and the refresh touches a decision.
+2. **Scan packages** with the scripts, never an ad hoc pipeline. Their JSON is the only source
+   for package names, versions, target frameworks, package managers, workspaces, and
+   dependency sections:
 
-Update a repository's `tech/` technology graph from repeatable evidence. Package-derived
-facts come from deterministic scripts; non-package technologies come from targeted repository
-analysis and architecture grounding.
+   ```bash
+   node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root . > .devbook/tech/_inventory-dotnet.json
+   node .devbook/_tools/devbook-tech/frontend-packages.mjs --root . > .devbook/tech/_inventory-frontend.json
+   ```
 
-Use this skill before or during the `tech/` flow when the requested change is broad enough
-that the graph should be refreshed from the repository instead of editing one known
-technology chapter by hand.
-
-## Inputs
-
-- Target repository root. Default to the current working directory.
-- Target `tech/` scope. Default to every `tech/` layer that exists.
-- Optional focus, such as backend packages, frontend packages, tooling, deployment, or all.
-
-If the repository has no `tech/` folder, stop and adopt it first — through `devbook:update`,
-or `devbook:init` where devbook has no stamp yet.
-
-## Deterministic package inventories
-
-Run package discovery with scripts, not ad hoc shell pipelines. The scripts sort paths,
-packages, and versions, emit JSON with no timestamps, and ignore build output folders.
-
-From a repository that installed the devbook tools:
-
-```bash
-node .devbook/_tools/devbook-tech/dotnet-packages.mjs --root . > .devbook/tech/_inventory-dotnet.json
-node .devbook/_tools/devbook-tech/frontend-packages.mjs --root . > .devbook/tech/_inventory-frontend.json
-```
-
-When running directly from the plugin source during development, use the plugin paths:
-
-```bash
-node plugins/devbook/tools/devbook-tech/dotnet-packages.mjs --root .
-node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
-```
-
-Treat these JSON files as temporary evidence. Do not commit them unless the repository has
-explicitly adopted inventory evidence files; the durable record remains the `.devbook/tech/*.md`
-chapters and generated `_meta/*.json` indexes.
-
-## Workflow
-
-1. **Load governed context.** Read `devbook-tech.md`,
-   `devbook-chapter-metadata.md`, `.devbook/tech/technology-graph.md`, and only the
-   `tech/` layer files in scope. Load `.devbook/arc42/04-solution-strategy.md`,
-   `.devbook/arc42/07-deployment-view.md`, and `.devbook/arc42/09-architecture-decisions.md` only when they
-   exist and the refresh touches architecture decisions.
-
-2. **Run deterministic package scans.** Run the .NET and frontend inventory scripts above.
-   Use their JSON as the only source for package names, package versions, target frameworks,
-   package managers, workspaces, and dependency sections.
-
-3. **Analyze non-package graph parts.** Inspect the repository for technologies that package
-   manifests do not fully describe:
+   The JSON is temporary evidence: commit it only where the repository documents inventory
+   files as durable evidence.
+3. **Analyze what manifests do not describe:**
 
    | Area | Evidence to inspect | Typical `tech/` type |
    | --- | --- | --- |
@@ -74,44 +37,14 @@ chapters and generated `_meta/*.json` indexes.
    | Containers and hosting | `Dockerfile`, `compose*.yml`, Kubernetes manifests, Aspire AppHost files | `platform`, `service` |
    | Protocols and formats | OpenAPI files, GraphQL schemas, protobuf files, message contracts | `protocol`, `format` |
 
-   Do not infer adoption from a stale file alone. Prefer active manifests, referenced scripts,
-   and architecture documentation. Mark uncertain technologies as `candidate` or leave them
-   out with an open question in `technology-graph.md`.
-
-4. **Map findings to `tech/`.** For each technology, choose exactly one owning layer. Shared
-   technologies used by multiple layers belong in `shared.md`; layer-specific technologies
-   depend on the shared node. Package nodes normally use `type: package`, while frameworks,
-   runtimes, tools, services, platforms, protocols, and formats use the closest specific type
-   from `devbook-tech.md`.
-
-5. **Author through the `tech/` flow.** Route the actual `tech/` edits through the
-   `tech/` flow unless this skill is already being run as part of that flow.
-   Update chapter metadata, the Mermaid graph, and the layer table together.
-
-6. **Run the check.** Never regenerate here — the refresh belongs to the plugin that owns the
-   committed indexes, on its schedule or on demand:
-
-   ```bash
-   node .devbook/_tools/devbook-meta/build.mjs --scope tech --check
-   ```
-
-   If it reports unresolved references or schema violations, fix the source Markdown or
-   run `devbook:validate`. When `.devbook/_tools/devbook-meta/` is absent, run
-   `devbook:update`, or `devbook:init` where devbook has no stamp yet.
-
-## Output expectations
-
-- Deterministic .NET and frontend inventory JSON reviewed for package-derived facts.
-- `tech/` chapters updated through the `tech/` flow with valid metadata blocks.
-- Non-package technologies analyzed from repository evidence and recorded only when grounded.
-- Mermaid graph edges match `depends-on` metadata.
-- The check passes at the `tech` scope; the indexes are refreshed by the scheduled job, never here.
-
-## Do not
-
-- Do not hand-edit `_meta/*.json` files.
-- Do not use one-off shell pipelines as package evidence when the inventory scripts exist.
-- Do not commit temporary `_inventory-*.json` files unless the repository explicitly documents
-  them as durable evidence.
-- Do not record a technology decision in `tech/` before the corresponding ADR or architecture
-  chapter exists when the choice changes system direction.
+   Infer adoption from active manifests, referenced scripts, and architecture documentation,
+   never from a stale file alone. Leave an uncertain technology out, with an open question
+   in `technology-graph.md`.
+4. **Map** each technology to its one owning layer per `devbook-tech.md` under *Authoring
+   guidance* — `type: package` for a package, the closest specific type otherwise. Record a
+   choice that changes system direction only once its decision record or architecture
+   chapter exists.
+5. **Write through the `tech/` flow**, unless this skill already runs inside it, and run
+   `node .devbook/_tools/devbook-meta/build.mjs --scope tech --check`, repairing what it
+   reports per `devbook:validate`. Never refresh `_meta/` here: the committed indexes belong
+   to their scheduled job.

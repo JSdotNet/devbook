@@ -37,7 +37,9 @@
 //                 the folder at all (see "Only a Delivered Rule Lives in rules/")
 //   skills        every plugins/*/skills/<name>/SKILL.md opens with the line that reports
 //                 its plugin name and version from the manifest beside it (see the
-//                 decision "Every Skill Opens With Its Plugin Version")
+//                 decision "Every Skill Opens With Its Plugin Version"), and its
+//                 description stays inside the 1024-character Agent Skills cap; --budgets
+//                 also lists the descriptions over the 500-character target
 //   migrations    every migrations/<NNN>-<slug>/ is a MIGRATION.md beside a migrate.mjs,
 //                 and devbook's are numbered no higher than CONTRACT_VERSION
 //   catalog       delivery-schedule's schedule catalog passes its own checker,
@@ -67,6 +69,9 @@ const COPILOT_RULES = path.join(ROOT, ".github", "instructions");
 const showBudgets = process.argv.includes("--budgets");
 
 const BUDGETS = { "SKILL.md": 40, "rule": 60, ".agent.md": 80 };
+// A skill description: the Agent Skills cap, and the target .agents/rules/skills.md sets.
+const DESCRIPTION_MAX = 1024;
+const DESCRIPTION_TARGET = 500;
 // A wrapper is frontmatter plus one sentence. Three lines is slack, not licence.
 const WRAPPER_BODY_MAX = 3;
 const MODEL_PIN = /^(opus|sonnet|haiku|fable|inherit|claude-[\w.-]+)$/;
@@ -536,6 +541,7 @@ for (const folder of await readdir(PLUGINS)) {
 const VERSION_LINE = (plugin) =>
     "Open the reply with `" + plugin + "@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.";
 
+const longDescriptions = [];
 for (const folder of await readdir(PLUGINS)) {
     const dir = path.join(PLUGINS, folder, "skills");
     if (!(await exists(dir))) continue;
@@ -544,7 +550,17 @@ for (const folder of await readdir(PLUGINS)) {
         const file = path.join(dir, entry.name, "SKILL.md");
         if (!(await exists(file))) continue;
         const where = `plugins/${folder}/skills/${entry.name}/SKILL.md`;
-        const { body } = frontmatter(await readFile(file, "utf8"));
+        const { fm, body } = frontmatter(await readFile(file, "utf8"));
+        // A block scalar (description: > or |) folds its indented lines into one string.
+        const block = /^description:\s*[>|][+-]?\s*\r?\n((?:[ \t]+.*(?:\r?\n|$))+)/m.exec(fm);
+        const description = block
+            ? block[1].split(/\r?\n/).map((l) => l.trim()).filter(Boolean).join(" ")
+            : (scalar(fm, "description") ?? "").replace(/''/g, "'");
+        if (description.length > DESCRIPTION_MAX) {
+            error(`${where}: description is ${description.length} characters, over the ${DESCRIPTION_MAX} cap; a host truncates or drops it`);
+        } else if (description.length > DESCRIPTION_TARGET) {
+            longDescriptions.push({ file: where, chars: description.length });
+        }
         if (!body.split(/\r?\n/).some((l) => l.trim() === VERSION_LINE(folder))) {
             error(`${where}: missing the version line "${VERSION_LINE(folder)}"`);
         }
@@ -682,5 +698,7 @@ for (const n of notes) console.log(`note   ${n}`);
 for (const e of errors) console.log(`error  ${e}`);
 console.log(`\nbudgets: ${over.length} of ${budgeted} budgeted assets exceed their budget (reported, not an error)`);
 if (showBudgets) for (const o of over) console.log(`  ${String(o.lines).padStart(4)} / ${o.budget}  ${o.file}`);
+console.log(`descriptions: ${longDescriptions.length} skill description(s) over the ${DESCRIPTION_TARGET}-character target (reported, not an error)`);
+if (showBudgets) for (const d of longDescriptions.sort((a, b) => b.chars - a.chars)) console.log(`  ${String(d.chars).padStart(4)} chars  ${d.file}`);
 console.log(`\n${errors.length} error(s).`);
 process.exit(errors.length ? 1 : 0);

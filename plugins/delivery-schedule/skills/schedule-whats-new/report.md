@@ -22,15 +22,14 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ### <owner/repo> — open
 | What | Where | Author | State | Ticket |
 | --- | --- | --- | --- | --- |
-| <own words> | [#<n>](<url>) | <login> | `new` or `updated` | [#<n>](<url>) `open`, or — |
+| <own words> | [#<n>](<url>) | <login> | `opened` or `changed` | [#<n>](<url>) `open`, or — |
 
 ### Run
 | Outcome | What | Why |
 | --- | --- | --- |
 
-*`schedule-whats-new@<version>` · since <timestamp, or first run: last <n> days> · <ISO datetime UTC>*
+*`schedule-whats-new@<version>` · <since>..<now> · <ISO datetime UTC>*
 ```
 
 One merged and one open section per repository, in the order given. A repository with
-nothing new is a `skipped` row under *Run*: `nothing since <timestamp>`. The follow-up
-candidates are the *Needs you* rows; unattended, nobody is asked.
+nothing in the window is a `skipped` row under *Run*: `nothing since <since>`.

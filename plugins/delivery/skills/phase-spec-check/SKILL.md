@@ -1,6 +1,6 @@
 ---
 name: phase-spec-check
-description: 'Shared Spec Check phase for flow-code. Runs after Verify and before the ready check and Personal Validation: gives one verdict per item — aligned, spec-ahead, code-ahead, conflict, unresolved — against the scope''s specification and acceptance criteria and the governed devbook chapters the change touches, and, when the bound skill declares updates: true, brings code-ahead chapters in scope level inside the change set. Invoked by the flow-runner agent.'
+description: "Spec Check phase of flow-code: one drift verdict per item against the spec and the chapters in scope; an updating skill brings code-ahead chapters level. flow-runner only."
 ---
 
 # Phase: Spec Check
@@ -63,27 +63,9 @@ Every item in scope gets exactly one row with the evidence that settles it:
 test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
 reports it, `linked` reports it as what will refuse acceptance.
 
-**Check every scenario page Scope listed.** Whatever the bound skill, this phase checks each
-listed page itself — the bound skill reports only the pages a requirement in scope points at, so
-a page referenced directly would otherwise go unchecked — and passes the list in the skill's
-brief so the two agree. The scenario folder is `.devbook/scenarios/` unless
-`playwright.config.ts` sets `scenarioFolder`; pass that folder to every tool below as
-`--scenario-folder <dir>` whenever it is set, because a page's data sets hash from under it.
-
-- **`spec-ahead`** — a referenced part with no proof: no spec's `// scenario:` header names its
-  page, that spec has no `part` titled as the part's heading, or the page's current run records
-  the part `not-run` — a step still held by `test.fixme()`. For a part a requirement's case
-  points at, this is that requirement's row in the verdict table, naming the part, the missing
-  spec or the held step, and `devbook:scenario-derive` or `phase-implement` as the action; a part
-  referenced directly, with no requirement, is a row of its own.
-- **`stale`** — a page whose signature no longer matches its run: the first field
-  `node .devbook/_tools/scenarios/signature.mjs <page>` prints is not the `signature` in
-  `<scenario folder>/<stem>/run.json`, or there is no `run.json`. Never in the verdict table:
-  `stale` qualifies a page's run and is not a sixth verdict. List every listed page after the
-  verdict table, one row each — page, page signature, run signature (`none` without a run),
-  `current` or `stale`, and the action: `devbook:scenario-run`, or `devbook:scenario-derive`
-  first when the spec's own `// signature:` differs too. A stale run is no evidence: the
-  requirements it would prove get none from it.
+**Check every scenario page Scope listed** yourself, whatever skill is bound, per
+`resources/scenario-page-check.md`: a part with no proof is `spec-ahead`, and a page whose
+signature no longer matches its run is `stale`, listed in its own table after the verdicts.
 
 ## Step 3 — Update, Only When the Skill Does
 
@@ -117,9 +99,8 @@ its brief; it is the one that edits.
   it, Create Pull Request puts it in the description, and Report Back carries it to every
   target.
 - The edit list, empty in check-only mode.
-- The ready check reads `spec-ahead`, `conflict`, and `stale` rows as not ready; `code-ahead`
-  and `unresolved` rows go to the gate as questions, and so does a `stale` row for a page
-  Verify recorded as not run at its depth.
+
+What the ready check makes of each row is its own table, in `skills/phase-ready/SKILL.md`.
 
 ## Skip
 
@@ -129,5 +110,5 @@ is the usual case. **`policy.phases.specCheck: false`** turns it off.
 
 ## Dashboard Reporting
 
-Report as the `Spec Check` stage via the **Reporting Contract** in
-`resources/surface-contract.md`. A sub-agent never calls surface tools itself.
+The flow-runner reports the `Spec Check` stage from what you return, per the **Reporting
+Contract** in `resources/surface-contract.md`; a delegated runner makes no surface calls.

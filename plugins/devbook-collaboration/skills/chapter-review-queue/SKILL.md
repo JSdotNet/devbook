@@ -1,6 +1,6 @@
 ---
 name: chapter-review-queue
-description: 'Sweep a repository''s devbook folders and open changes for everything a review pass has left open — chapters and changes carrying unresolved notes, approved work awaiting acceptance, notes answered but not yet swept, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
+description: 'List everything a review pass left open across the devbook folders and open changes — unresolved notes, approved work awaiting acceptance, answered notes not yet swept, approvals stale since the content changed — grouped by who owes the next move. Use when: what is awaiting review or approval, whose turn it is, has an approval lapsed ("review queue").'
 ---
 
 # chapter review queue
@@ -31,9 +31,7 @@ and this queue does not see it.
    `chapter-accept` for work awaiting acceptance, `devbook:annotation-sweep` for notes to
    sweep — and let the user pick one.
 
-## Never
-
-- Change a chapter from here, lift a stale rung, or sweep a note: the queue is a report, and
-  each of those is a decision about one chapter in the skill that owns it.
-- Read chapter prose or `_meta/` to build or explain the queue. The script reads the fences
-  alone, which is the whole question.
+This skill writes nothing. Lifting a stale rung is a decision about one chapter, made in
+`chapter-approve` with the change that caused it in front of the person, and deleting resolved
+notes is `devbook:annotation-sweep`, on the branch that answered them. Build and explain the
+queue from the script's output alone: it reads the fences, never chapter prose or `_meta/`.

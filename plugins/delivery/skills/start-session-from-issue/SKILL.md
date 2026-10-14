@@ -3,8 +3,7 @@ name: start-session-from-issue
 description: >
   Start this session's work from a single tracker work item — a GitHub issue, a Jira ticket, a
   Backlog entry, or a Markdown chapter: fetch the items matching a filter, select one, claim
-  it, route it to the flow-* skill that matches its type, and run that flow here. One item per
-  run, no extra sessions. Use when: picking up an issue for implementation, pulling the next
+  it, route it to the flow-* skill that matches its type, and run that flow here. Use when: picking up an issue for implementation, pulling the next
   item off the backlog, or running a scheduled backlog pickup.
 ---
 
@@ -34,18 +33,12 @@ reach a flow through that plugin's own entry skill, which hands the flow its ori
 
 ## One Item Per Run
 
-This skill starts **this** session's work from one work item. It does not prepare work for other
-sessions, and it never spawns an agent to run the flow.
-
-A `flow-*` run needs its own session: it must be able to ask about what is ambiguous, hold
-the Personal Validation gate, and own its surface run. Asking the user is foreground-only
-and a sub-agent has no user turn to wait for — see **Session Ownership** and **Sub-Agent
-Constraints** in `resources/flow-execution-model.md`. Scoping a run to one
-item is what makes that work: this session is the owner session, so the flow is
-plan-first and gated for real.
-
-To work a second item, run this skill again in another session. Each run claims a different
-item, because the previous one is filtered out as in flight.
+This skill works one item, in this session, and never spawns an agent to run the flow. A
+`flow-*` run must ask about what is ambiguous, hold the Personal Validation gate, and own its
+surface run, and a sub-agent has no user turn to wait for — see **Session Ownership** and
+**Sub-Agent Constraints** in `resources/flow-execution-model.md`. To work several items in
+parallel, run this skill once per session, each in its own worktree: every run claims a
+different item, because the previous one is filtered out as in flight.
 
 ## Inputs
 
@@ -80,8 +73,7 @@ item, because the previous one is filtered out as in flight.
    work or restarts its own:
 
    - Labelled `in-progress`.
-   - A branch or worktree carries its item id — `git --no-pager worktree list`,
-     `git branch --all`.
+   - A branch or worktree carries its item id.
    - An open pull request references it.
    - Assigned to somebody other than the current user.
 
@@ -104,22 +96,12 @@ item, because the previous one is filtered out as in flight.
      confirmation. The scope is one item, the Phase 5 claim prevents a double pickup, and
      the flow still stops at Personal Validation before any pull request.
 
-### Phase 4 — Route to an Flow
+### Phase 4 — Route to a Flow
 
-8. Decide which `flow-*` skill the item's type calls for. Read the item body and labels,
-   not the labels alone — a mislabelled item routes on what it actually asks for:
-
-   | Item is about | Flow |
-   |---|---|
-   | A defect, new or changed behavior, a new module or service, folder moves or layout changes — any change to the code | `flow-code`, which derives the kind |
-   | Dependency or package updates, or a framework upgrade such as an Aspire version move | `flow-code`, dependency kind |
-   | A devbook folder — an architecture chapter, decision or debt record, the domain model, technology graph, design guidelines, or AI adoption record | `flow-spec` |
-   | Tooling, CI, scripting, documentation outside the devbook folders, housekeeping | `flow-code`, config kind |
-
-   This mirrors the routing the plugin's `SessionStart` hook installs; a repository may ship
-   its own `flow-*` skills in the host's repo-native skill folder, and those take precedence for the
-   categories they cover. There is no fallback flow: every change to a repository is one of
-   these, and a matching flow whose preconditions are unmet derives what is missing.
+8. Route the item to a `flow-*` skill by the session-start routing in
+   `hooks/session-start-context.md`, reading the item body and labels, not the labels alone —
+   a mislabelled item routes on what it actually asks for. A repo-native `flow-*` skill takes
+   precedence for the changes it covers.
 
    State the routing decision and its reason before acting on it. When the item is too
    ambiguous to route, ask (interactive) or route to `flow-code` and say so (unattended).
@@ -180,8 +162,8 @@ item, because the previous one is filtered out as in flight.
     was explicitly configured to — for work where implementing on an unreviewed plan is the
     expensive mistake, such as an architecture or migration item.
 
-12. **Never spawn an agent to run the flow**, and never pick up a second item in
-    this run.
+12. Run the flow in this session — never through a spawned agent — and pick up no second
+    item in this run.
 
 ### Phase 6 — Summary
 
@@ -201,11 +183,9 @@ item, because the previous one is filtered out as in flight.
 ## Surface Reporting
 
 Follow the **Reporting Contract** in `resources/surface-contract.md`.
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
 
 - `start_run` with `skillId: "start-session-from-issue"` and these stages: Fetch Matching Items,
-  Filter Out Work Already In Flight, Select One Item, Route to an Flow, Claim and Run,
+  Filter Out Work Already In Flight, Select One Item, Route to a Flow, Claim and Run,
   Summary.
   Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
 - The flow in Phase 5 opens its own run, with this run's `origins` carried into its run
@@ -217,14 +197,9 @@ the source of truth.
 - Exactly one work item selected, claimed, routed, and worked up to Personal Validation.
 - The routing decision and its reason, on the record.
 - The remaining candidates deferred, with the next run's pick named.
-- No extra sessions requested, and no agents spawned.
 
 ## Notes
 
-- To work several items in parallel, launch several sessions yourself and run this skill
-  once in each — every run claims a different item, so they do not collide. A separate
-  worktree per session keeps their change sets apart. Do not try to make one run cover
-  several items.
 - Safe to run on a schedule: a run either starts one item or is a clean no-op. Because the
   claim happens before any code is written, an interrupted run leaves at most one item
   labelled `in-progress` with a branch to resume from.

@@ -20,7 +20,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Secret committed: rotate it, then remove it | `<file>:<line>` | [#<n>](<url>) |
 
 ### Findings
-| Severity | Layers | Where | Finding | Issue |
+| Severity | Layer | Where | Finding | Issue |
 | --- | --- | --- | --- | --- |
 
 ### Run

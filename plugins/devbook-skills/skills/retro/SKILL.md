@@ -1,6 +1,6 @@
 ---
 name: retro
-description: 'Run a retrospective over one session or one delivery run, with the person present: read what happened, then rank what would make the next one get further — a pointer where the agent searched, a check where it made a mistake a check catches, context it loaded and never used or lacked, a tool call that cost too much, an instruction that changes nothing, a model or effort that did not fit. A mechanical violation gets a check, never a written rule. Presents the candidates and writes nothing. Use when a session went badly, a run took several revise rounds, or the person asks what to change. Triggers on: "retro", "/retro", "retrospective", "what went wrong in this session", "why did that take so long", "what should we change for next time".'
+description: 'Run a retrospective over one session or delivery run with the person present, and rank what would make the next one get further — a pointer, a check, context, a tool call, an instruction, a model or effort choice. A mechanical violation gets a check, never a written rule. Presents candidates and writes nothing. Use when: a session went badly, a run took several revise rounds, "/retro".'
 ---
 
 # Retro
