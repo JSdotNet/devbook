@@ -426,7 +426,9 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     implements the page, and its `demo` walkthroughs from the walkthroughs
     linked to the part, so neither is written by hand. A part no case points
     at is reported as an unclaimed journey. Inline Given/When/Then stays valid
-    for a requirement with no journey yet.
+    for a requirement with no journey yet; in a context that already has a
+    scenario page, the check lists each inline case at `info` as a candidate
+    to move into a part, never as a warning.
   - `tests` on a requirement chapter are `e2e`, or `integration` for a policy
     no user triggers.
 - **domain.invariants.md**, **domain.<name>.invariants.md** — What each

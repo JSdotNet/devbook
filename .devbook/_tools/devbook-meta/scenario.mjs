@@ -2,7 +2,8 @@
 // document can check on its own: the stem register, the setup fields resolved
 // against the chapters and the profile file, `scenario:` image references, the
 // `Proved by:` pointers from requirement cases, the parts nothing points at,
-// and the `e2e` test entry each pointer derives.
+// the inline cases a context with pages could move into one, and the `e2e`
+// test entry each pointer derives.
 //
 // The per-document rules — where the type may sit, the status, the step
 // keywords, the field shapes — are validateDocument's, in metadata.mjs. This
@@ -210,6 +211,23 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
             }
         }
     }
+    // An inline case in a context that already writes journeys as pages is a
+    // candidate to move into one. Informational: inline stays valid, so this
+    // never adds to a corpus's warnings.
+    const journeyContexts = new Set([...pages.keys()].map(contextRoot).filter(Boolean));
+    for (const doc of docs) {
+        const context = contextRoot(doc.relPath);
+        if (!context || !journeyContexts.has(context)) continue;
+        for (const scenarioCase of provedByCases(doc.relPath, doc.raw)) {
+            if (!scenarioCase.gwt || scenarioCase.pointers.length) continue;
+            problems.push({
+                severity: "info",
+                path: doc.relPath,
+                message: `${doc.relPath}:${scenarioCase.line} \`#### ${scenarioCase.heading}\` is written inline, and ${context} has scenario pages — a candidate to move into a part and point at with \`Proved by:\`.`,
+            });
+        }
+    }
+
     for (const [relPath, page] of pages) {
         for (const slug of page.parts.keys()) {
             if (claimed.has(`${relPath}#${slug}`)) continue;
