@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring the change lane into a repository for the first time — check the OpenSpec CLI against the supported range, run openspec init at the repository root, write the managed devbook schema and a seeded openspec/config.yaml, remove the specs/ folder the CLI scaffolds, install the change-folder rule with a wrapper per host, and stamp components.openspec in .devbook/config.json. Never installs the CLI. Refused where components.openspec already exists: run devbook-openspec:update. Use when: adopting OpenSpec over a devbook, setting up the change lane. Triggers on: "devbook-openspec init", "install devbook-openspec", "set up OpenSpec here", "adopt the change lane".'
+description: 'Bring the change lane into a repository for the first time: check the OpenSpec CLI range, run openspec init, write the devbook schema and openspec/config.yaml, install the change-folder rule, and stamp components.openspec. Never installs the CLI. Refused where components.openspec exists: run devbook-openspec:update. Use when: adopting OpenSpec over a devbook, "devbook-openspec init".'
 ---
 
 # devbook-openspec init

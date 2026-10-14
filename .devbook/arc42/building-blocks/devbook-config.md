@@ -38,6 +38,7 @@ the one script all seven read through. None of them writes a key another compone
 | `scripts/report.mjs` | script, the read-only report | The seven skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
 | `scripts/model-selection.mjs` | script, the category converter | `local`, which merges what it prints into the user overlay; it writes nothing |
 | `resources/setup-report.md` | template, the setup report | `report`, which `init` and `update` close on; one shape for all three, so a run compares against the last one |
+| `resources/provider-resolution.md` | contract, provider resolution | `doctor`, at its provider step |
 | The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
 | The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md` |
 

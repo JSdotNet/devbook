@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, phases, policy, gates, and the optional areas) — the change lane''s spec, tracker, and grill bindings among them when devbook-openspec is adopted — validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo", "set up the change lane".'
+description: 'Set a repository up for this marketplace for the first time: choose which installed plugins it uses, write .devbook/config.json with its id and, when the delivery engine is adopted, the engine-owned keys, validate them, then hand each adopted component its own init. Refused where .devbook/config.json exists: run devbook-config:update. Use when: adopting the stack, wiring flows for the first time, "devbook-config init".'
 ---
 
 # devbook-config init
@@ -111,22 +111,5 @@ record work this skill did not do.
     deliberately left unbound, not installed and therefore not offered, or failing for
     *Still open*.
 
-This skill is the empty case only. Everything about moving an already-configured repository
-forward — version drift, migrations, the fan-out across components — belongs to
-`devbook-config:update`, which runs the whole stack in one go.
-
-## Do not
-
-- Do not write, edit, or remove a `components.<name>` key. It is not yours.
-- Do not set up, or ask about, a plugin the report shows as not installed. Report it; do not
-  install it on the user's behalf.
-- Do not write an engine key into a repository that is not adopting `delivery`. The grill
-  binding is the change lane's, not the engine's, and is the one exception.
-- Do not run `npm install`, or install the OpenSpec CLI any other way. Print the command.
-- Do not write an overlay, at either of its layers. `devbook-config:local` does, for the
-  person running it.
-- Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
-  rename, or reshape a server somebody declared.
-- Do not invent a policy switch, a phase, or a gate purpose. All three sets are closed and
-  declared by the engine; configuration chooses among behaviour it already has.
-- Do not remove a gate. Configuration may add one anywhere and may never take one away.
+Policy switches, phases, and gate purposes are closed sets the engine declares: choose among
+them and never invent one. Configuration may add a gate anywhere and never removes one.

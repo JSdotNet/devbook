@@ -1,6 +1,6 @@
 ---
 name: apply-change
-description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way capture-specs hands a chapter to the folder flow. Covers seven kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, a user or technical actor in actors.md, the building block view in arc42/, a component guideline in design/, and the click demo an agreed page carries, its screens and walkthroughs as acceptance checks. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs), or checking drift without changing anything (verify-change).'
+description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief and hand it to the code-side flow, touching no source or test file. Any chapter kind, a page''s click demo included. Use when: build what we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs) or checking drift (verify-change).'
 ---
 
 # apply-change
@@ -46,19 +46,10 @@ or group per **The sync unit** in the protocol; the bounded context; the root.
    Quote every invariant row with its `Enforced at`; name an `open` row as a
    decision, never as work. An update brief lists where the current behaviour
    lives.
-7. Hand the brief to the code-side flow, per **Where the code-side write
-   goes** in the protocol: a repo-native flow first, then the engine's flow for
-   the category, and no flow at all when no engine is installed — then stop
-   with the brief, which is the whole result. Name the rung that answered,
-   once. This skill opens no source file for editing and creates no test.
+7. Hand the brief on per **Where the code-side write goes** in the protocol, and name the
+   rung that answered, once.
 8. Close with the protocol's report table, one row per chapter in scope, with
    the brief attached and the flow it went to.
 
-## Do not
-
-- Do not edit the chapter: a wrong chapter is a verdict, not an edit.
-- Do not carry an `annotation` fence into the brief: an open question is a
-  reason to stop at the gate, not a line item to implement.
-- Do not summarize invariants by reference, or drop a row's `Enforced at`.
-- Do not choose a representation, persistence, dispatch, layout, or library —
-  the brief states what must be true, and the flow decides how.
+A wrong chapter is a verdict, never an edit. An open `annotation` is a reason to stop at the
+gate, never a line in the brief, per `rules/devbook-annotations.md`.

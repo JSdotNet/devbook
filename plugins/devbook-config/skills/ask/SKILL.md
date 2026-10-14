@@ -1,6 +1,6 @@
 ---
 name: ask
-description: 'Answer a question about this marketplace and the plugins in it — what devbook, delivery, the surfaces, the change lane, and the unattended lane are and how they fit together, which version of a plugin is installed against the newest one published, which plugins are enabled here, and how this repository has wired its flows, phases, gates, and policy. Reads only; it never installs or reconciles anything. Use when: asking how the stack works, comparing installed against newest, checking what is enabled, or reading a repository''s flow wiring. Triggers on: "what is devbook", "explain the delivery engine", "what is the change lane", "how does OpenSpec fit in", "how do the plugins fit together", "which version am I on", "is there a newer version", "which plugins are enabled", "how are my flows set up", "what does this repo bind", "which gates are on".'
+description: 'Answer a question about this marketplace — what devbook, delivery, the surfaces, the change lane, and the unattended lane are and how they fit, installed against newest versions, what is enabled here, and how this repository wires its flows, phases, gates, and policy. Reads only. Use when: "what is devbook", how the stack works, "which version am I on", "how are my flows set up".'
 ---
 
 # devbook-config ask
@@ -12,9 +12,6 @@ Open the reply with `devbook-config@<version>`, `version` read from `../../.clau
 Answer one question about the stack from what is actually on disk. Every question has a
 state half and a concept half, and most need both: *"is my devbook current"* is a version
 comparison, *"why does devbook not ship flows"* is the layer rule.
-
-Answer nothing from memory. A version, an enablement, and a binding are all facts with a
-file behind them, and that file is the answer.
 
 ## The state half
 
@@ -54,9 +51,9 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 
 ## Answer rules
 
-- Name the file behind every fact. An unsourced version number is a guess.
+- Answer nothing from memory, and name the file behind every fact. An unsourced version
+  number is a guess.
 - Report configuration as declared or defaulted, never as absent-therefore-broken: an
   unset key takes the engine's documented default, and `null` is deliberately unbound.
-- Say when the clone is stale rather than reporting its versions as the newest.
 - Send writing elsewhere: `devbook-config:init` and `devbook-config:update` set a repository up, each
   component's own `init` and `update` materialize it. This skill only reads.

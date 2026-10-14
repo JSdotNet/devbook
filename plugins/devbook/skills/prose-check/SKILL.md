@@ -1,20 +1,16 @@
 ---
 name: prose-check
-description: 'Read every adopted devbook folder and report the prose that does not earn its lines or does not read — a hedge in a sentence stating a fact, a paragraph restating its heading, a closing summary repeating the body, a term defined a second time outside the ubiquitous language, a name in prose that no longer exists in the tree, fragments chained with dashes, an overlong sentence, a coined name nobody defined, a sequence or state machine told in prose with no diagram — beside what devbook:validate reports about structure. Writes nothing: the report is the output, and an edit is a person''s, through the folder''s flow. Use when: tightening chapters before a review, finding what a fold or rename left behind in prose, a chapter is hard to read, or on a cadence. Triggers on: "check the chapters'' prose", "what is stale in the devbook", "tighten the chapters", "prose check", "devbook prose", "is the devbook readable", "where is a diagram missing".'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, overlong sentences, a sequence told without a diagram. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
 
 Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-## Purpose
-
-`devbook:validate` asks whether the Markdown satisfies the schema. This asks whether the prose
-earns its lines and reads as `devbook-writing.md` asks, and answers with a report and
-nothing else. A chapter is content, not
-instruction, so the standard here is narrower than an instruction tightening: a definition,
-an invariant table, a record of a decision as it was taken all stay — only prose that says
-nothing a reader needs, or names something the tree no longer has, is a finding.
+Ask whether the prose earns its lines and reads as `devbook-writing.md` asks; the schema is
+`devbook:validate`'s question and drift against code `verify-change`'s. A chapter is content,
+not instruction: a definition, an invariant table, a decision as it was taken all stay, and
+only prose that says nothing a reader needs, or names what the tree no longer has, is a finding.
 
 This file exceeds the 40-line body budget on purpose: the class table in step 4 is the whole
 standard, and a class stated by half reports the wrong sentence.
@@ -31,7 +27,6 @@ standard, and a class stated by half reports the wrong sentence.
   skill the repository has.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
   every step list on a scenario page: a step is one clause by design, not a fragment.
-  A reader loading a chapter skips annotations; so does this one.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -41,12 +36,10 @@ standard, and a class stated by half reports the wrong sentence.
 ## Steps
 
 1. **Structure first.** Run `devbook:validate` up to its report and take none of its repairs:
-   this skill writes nothing, so every problem it reports is a `structure` finding here and
-   the repair stays with that skill's own run. Exit `2` means the repository has not
+   every problem it reports is a `structure` finding here. Exit `2` means the repository has not
    adopted devbook: say so and stop.
 
-2. **Inventory.** List the chapters in scope from the adopted folders, `adr/` and `tdr/`
-   set aside for step 4, and the names a chapter can point at: every skill folder, plugin,
+2. **Inventory.** List the chapters in scope from the adopted folders, and the names a chapter can point at: every skill folder, plugin,
    rule, and path the repository ships, so step 4 can test a name against the tree.
 
 3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
@@ -66,20 +59,13 @@ standard, and a class stated by half reports the wrong sentence.
    | `long-sentence` | A sentence past about 35 words, or carrying more than one idea | The sentence split |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
-   | `structure` | Whatever step 1 reported | `devbook:validate`'s own fix column |
+   | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |
 
-   A hit inside protected text — a fence, a table, a section the rule requires, `adr/`,
-   `tdr/` — is not a finding. A `stale-name` is tested against the tree, never guessed.
+   A hit inside text the constraints above protect is not a finding. A `stale-name` is tested
+   against the tree, never guessed.
 
 5. **Report.** One table per folder, findings ordered `stale-name`, `second-definition`,
    `structure`, then the prose classes, cut at Limit with the remainder counted per class.
    Close with the totals: chapters read, findings per class, and the standard applied — the
    folder rules and `devbook-writing.md` by name. No findings is a one-line report, and the ordinary case for a
    chapter that settled.
-
-## Notes
-
-- Drift between a chapter and the code it describes is `verify-change`'s question, over the
-  seven chapter kinds it covers and the demo a page carries; this skill reads chapters only.
-- A `stale-name` after a fold or a rename is the finding this skill exists for: the meta
-  references moved with the chapter, the prose did not.

@@ -1,6 +1,6 @@
 ---
 name: chapter-review-queue
-description: 'Sweep a repository''s devbook folders and open changes for everything a review pass has left open — chapters and changes carrying unresolved notes, approved work awaiting acceptance, notes answered but not yet swept, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
+description: 'List everything a review pass left open across the devbook folders and open changes — unresolved notes, approved work awaiting acceptance, answered notes not yet swept, approvals stale since the content changed — grouped by who owes the next move. Use when: what is awaiting review or approval, whose turn it is, has an approval lapsed ("review queue").'
 ---
 
 # chapter review queue
@@ -60,7 +60,8 @@ chapter that never appears in the queue.
    the same table from its proposal's rung and the notes of the whole change,
    plus one row after *Awaiting acceptance*: **Awaiting approval** — a change
    at `proposed` with no open note, owed by whoever approves. *Rung outside
-   `domain/`* never matches a proposal. Its fingerprint is
+   `domain/`* never matches a proposal. A chapter or change matching no row is not in the
+   queue: silence is the normal case. Its fingerprint is
    `chapter-hash.mjs openspec/changes/<name>`.
 
    For the two lapse rows, prefer the chapter's own fingerprint: where it
@@ -85,16 +86,6 @@ chapter that never appears in the queue.
    `devbook:annotation-sweep` for a chapter with notes to sweep — and let the
    user pick one.
 
-## Do not
-
-- Do not change a chapter from here. This skill reads; the queue is a report.
-- Do not fix a stale approval as part of the sweep. Lifting a rung is a decision
-  about one chapter and belongs in `chapter-approve`, with the change that
-  caused it in front of the person.
-- Do not read chapter prose into context while sweeping. The two fence kinds
-  answer the whole question, and loading the corpus is exactly what devbook's
-  task-scoped loading rule forbids.
-- Do not report a chapter with no decision rung and no notes. Silence is the
-  normal case, not a queue entry.
-- Do not sweep from here. The queue reports resolved notes; deleting them is
-  `devbook:annotation-sweep`, on the branch that answered them.
+This skill writes nothing. Lifting a stale rung is a decision about one chapter, made in
+`chapter-approve` with the change that caused it in front of the person, and deleting resolved
+notes is `devbook:annotation-sweep`, on the branch that answered them.

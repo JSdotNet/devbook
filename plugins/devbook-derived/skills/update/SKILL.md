@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s committed devbook index forward after upgrading devbook-derived or changing which devbook folders are adopted — overwrite every materialized file that still hashes to a release this plugin shipped, report the customized ones, re-render its AGENTS.md section, report the workflows an adoption change would re-trim, and re-stamp components.derived. Refused where no components.derived stamp exists: run devbook-derived:init. Use when: upgrading devbook-derived, or devbook''s adopted folders changed. Triggers on: "devbook-derived update", "update devbook-derived", "upgrade devbook-derived", "refresh the index workflows".'
+description: 'Move a repository''s committed devbook index forward after upgrading devbook-derived or changing devbook''s adopted folders: replace unmodified materialized files, report customized ones, re-render its AGENTS.md section, re-stamp components.derived. Refused where no components.derived stamp exists: run devbook-derived:init. Use when: "devbook-derived update", upgrading devbook-derived.'
 user-invocable: false
 ---
 

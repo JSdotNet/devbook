@@ -136,6 +136,7 @@ committed and shared.
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
 | `scripts/model-selection.mjs` | Turns a retired `model-selection.md` into the user-overlay phase entries that replace it, and writes nothing |
 | `resources/setup-report.md` | The setup report `report` fills, and `init` and `update` close on: what is adopted, the procedures, the routines, the versions, and what this run changed |
+| `resources/provider-resolution.md` | How `doctor` resolves every agent and provider id the effective configuration binds, and which unresolved id is hard |
 
 ## Known gap
 

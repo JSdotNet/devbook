@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own update skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json — the phase maps among them — and the overlays over it. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, the config still carries extensions or delivery.roles, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
+description: 'Move a repository''s whole configured stack forward in one run: report which plugins are behind, run every adopted component''s own update so migrations run and stale files are replaced, and re-validate .devbook/config.json and its overlays. Skips what this machine has not installed or enabled, never dropping a stamp. Use when: "update the stack", upgrading plugins, a migration is outstanding, the config stopped validating.'
 ---
 
 # devbook-config update
@@ -68,16 +68,11 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    and rewrite its own stamp. `devbook-collaboration` has no `init` or `update`: enabling it is the
    whole adoption.
 
-   The order is load-bearing at four points: derived's `update` refuses to run until
-   `components.devbook` names an adopted folder; the change lane's `update` needs devbook's
-   change folder current, and stops on an OpenSpec CLI outside its stamped range — print
-   the install command and never run it; `devbook:update` moves a `start` procedure to `run`,
-   moves a `components.devbook-procedures` stamp under `components.devbook`, and asks about a
-   `capture` an older engine seeded before `delivery:update` releases its claim on it; and
-   schedule checks its targets against what the repository enables. `delivery:update` is the
-   one that rewrites a 1.13.0 config's `extensions`, `delivery.roles`, and `delivery.mcp` into
-   the phase maps; show the diff it shows and its notes. Each is **required**: a
-   failure does not abort the rest, and does make the whole run report as failing.
+   The order is load-bearing: each later `update` reads what an earlier one rewrote. Show the
+   diff and the notes each one shows. When the change lane's `update` stops on an OpenSpec CLI
+   outside its stamped range, print the install command and never run it. Each is
+   **required**: a failure does not abort the rest, and does make the whole run report as
+   failing.
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
    against the config; take its checkout root from the report's catalog line, or the plugin's
@@ -104,10 +99,5 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    migrations it ran, what it left customized, and every skipped row with its scope; and
    for *Still open*, the unenabled bindings and whatever is still outstanding.
 
-## Do not
-
-- Do not write, edit, or remove a `components.<name>` key, and do not apply a component's
-  migration yourself. Both belong to that component's own `update`.
-- Do not enable or install a plugin on the user's behalf. Report it and let them decide.
-- Do not edit a generated file to make a check pass. Fix the source it was generated from.
-- Do not silently drop a key an upgrade retired — say it was removed and why.
+Fix a failing check in the source a generated file came from, never in the file, and say so
+when an upgrade retired a key — never drop one silently.

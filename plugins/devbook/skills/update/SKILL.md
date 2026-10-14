@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository that already has devbook forward — refresh the devbook-meta checker, the scenario tools, the folder rules with a wrapper per host, and devbook''s section of AGENTS.md, run outstanding schema migrations, create a folder adopted since or orphan one dropped, refresh the procedure skills — run, capture, diagnose, estimate, prototype — and their wrappers, seed one adopted since or orphan one dropped, and re-stamp. One idempotent operation covering a plugin upgrade, a change in which folders are adopted, and migration-only. Refused where no components.devbook stamp exists: run devbook:init first. Use when: upgrading devbook, adding or dropping a devbook folder or a procedure, a migration is outstanding, a procedure skill is missing, or components.devbook-procedures is still in the stamp. Triggers on: "devbook update", "update devbook", "upgrade devbook", "devbook sync", "run devbook migrations", "adopt another devbook folder", "drop a devbook folder", "adopt the diagnose skill", "adopt the estimate skill", "adopt the prototype skill", "drop the capture skill".'
+description: 'Move a repository that already has devbook forward: refresh the checker, scenario tools, folder rules, procedure skills, and its AGENTS.md section, run outstanding migrations, adopt or drop a folder or a procedure, and re-stamp. Refused where no components.devbook stamp exists: run devbook:init. Use when: "devbook update", upgrading devbook, a devbook migration is outstanding, adding or dropping a folder or procedure.'
 user-invocable: false
 ---
 
@@ -31,25 +31,3 @@ are one operation — the stamp says which.
 5. **Materialize.** Overwrite stale, report customized, never both — the procedures too,
    per `assets/procedures/skill-wrappers.md` under *What lands, and how*.
 6. **Stamp and verify.** Rewrite the entry, run `devbook:validate`, report.
-
-## Notes
-
-- The folder rules land in the repository as a trio per rule — the rule verbatim under
-  `.agents/rules/`, a `paths` wrapper under `.claude/rules/`, and an `applyTo` wrapper under
-  `.github/instructions/` — so both hosts apply them on a matching read. Which rules exist and
-  what each one's `paths` are is `rules/rules.json`, never a hardcoded list. Shape and table:
-  `assets/rule-wrappers.md`.
-- Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
-  never from what is on disk. Then create `CLAUDE.md` and `.github/copilot-instructions.md`
-  from `assets/root-wrappers/` where absent, so both hosts reach that file; one that exists
-  is never touched, whatever it holds.
-- Write nothing to `.gitignore` and create no personal file: `AGENTS.local.md` and the
-  overlay live under the user's devbook config directory, never in the clone, and an empty
-  overlay reads as a setting somebody chose.
-- Offer the routing sections of `assets/routing-snippet.md` only when a flow engine or
-  specialist agents are installed — with neither, they name nothing. Never apply any of
-  it silently, and never put routing inside the `AGENTS.md` markers.
-- The committed `_meta/` index, its refresh script, its nightly and drift workflows, and
-  the `Read(_meta/**)` deny rule are a layered plugin's, not this skill's. It never
-  writes inside another plugin's markers.
-- Report an update that ends on a failing check as failing, never as updated.

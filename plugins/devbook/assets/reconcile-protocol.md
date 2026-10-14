@@ -163,7 +163,8 @@ empty overlay is worse than an absent one — it reads as a setting somebody cho
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and
-it never goes inside the markers.
+it never goes inside the markers. Offer it only when a flow engine or specialist agents
+are installed: with neither, it names nothing.
 
 ## The six phases
 

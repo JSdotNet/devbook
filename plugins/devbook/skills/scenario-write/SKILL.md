@@ -1,6 +1,6 @@
 ---
 name: scenario-write
-description: 'Write or revise a scenario page — one end-to-end journey as a type: scenario page beside the chapter it demonstrates in .devbook/domain/<context>/ — with its setup fields, English Given/When/Then steps, and shot: screenshot labels, and point every requirement it proves at its part with a Proved by: line. Use when: writing an end-to-end journey down, a feature or a requirement needs a journey, revising a page''s steps, parts, or screenshot points. Triggers on: "write a scenario page", "scenario-write", "add a journey", "new e2e scenario", "Proved by". DO NOT USE FOR: the spec that runs the page (scenario-derive), or running it (scenario-run).'
+description: 'Write or revise a scenario page — one end-to-end journey beside the chapter it demonstrates, with setup fields, Given/When/Then steps, and shot: labels — and point each requirement it proves at its part with a Proved by: line. Use when: writing a journey down, a feature or requirement needs one, revising steps, parts, or screenshot points. DO NOT USE FOR: its spec (scenario-derive) or running it (scenario-run).'
 ---
 
 # devbook scenario-write
@@ -35,7 +35,7 @@ setup field changed here turns the last run stale until the spec is re-derived a
    written once, in the page, per `../../rules/devbook-domain.md`. One case, one part. Never
    write the requirement's `e2e` `tests` entry; it is derived.
 7. **Check**: `node .devbook/_tools/devbook-meta/build.mjs --check`, fixing what it reports per
-   `../validate/SKILL.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
+   `../validate/repairs.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
    the flags its README lists for a non-default scenario folder or spec folder: a new page reports
    `page-without-spec`, an edited one `signature-mismatch`, a renamed one `spec-without-page`.
    Each is closed by `scenario-derive`, so name it in the reply. A changed page whose parts a
