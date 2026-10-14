@@ -55,7 +55,7 @@ another block or a repository conforms to.
 | `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `tdd-rules.md`, `implement-kinds.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `scenario-page-check.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `tdd-rules.md`, `implement-kinds.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
 
 Each phase skill is described in [delivery-phases](delivery-phases.md#interfaces), and each
 lane skill in [delivery-pr-lane](delivery-pr-lane.md#interfaces). The rest are below.

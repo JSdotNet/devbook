@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move the delivery engine''s record in a repository forward — run its outstanding config migrations, rewriting extensions, delivery.roles, and delivery.mcp into the phase maps, release any file an earlier engine seeded, so the repository''s own procedure skills are its own, and rewrite components.delivery in .devbook/config.json to the installed pluginVersion. Materializes nothing. Refused where no components.delivery stamp exists: run delivery:init. Use when: upgrading the delivery engine, the stack config still carries extensions or delivery.roles, or components.delivery still claims a seeded start or capture skill. Triggers on: "delivery update", "update delivery", "upgrade delivery", "migrate to phase maps".'
+description: "Move the delivery engine's record in a repository forward: run outstanding config migrations into the phase maps, release files an earlier engine seeded, and re-stamp components.delivery. Refused without a stamp (delivery:init). Use when: upgrading the delivery engine, or the stack config still carries extensions or delivery.roles."
 user-invocable: false
 ---
 

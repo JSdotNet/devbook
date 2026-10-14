@@ -1,6 +1,6 @@
 ---
 name: phase-scope
-description: 'Shared Scope phase for flow-code and flow-spec: restate the request, derive the kind and the acceptance criteria, find the impacted paths and the rules that govern them, select the devbook chapters every later phase loads, and for code write the spec implement builds on. Invoked by the flow-runner with a brief file; never by a person.'
+description: "Scope phase of flow-code and flow-spec: derives the kind and acceptance criteria, finds impacted paths and rules, selects the chapters, writes the spec. flow-runner only."
 context: fork
 ---
 

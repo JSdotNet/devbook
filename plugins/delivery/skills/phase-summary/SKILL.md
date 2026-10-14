@@ -1,6 +1,6 @@
 ---
 name: phase-summary
-description: 'Shared Summary phase, the last phase of every flow-* flow. States what the run produced and where it landed, runs the phase-summary.after chores, and publishes the run''s end to the surface. Invoked inline by the flow-runner agent, never directly.'
+description: "Summary phase, last in every flow-*: states what the run produced and where it landed, runs the after chores, closes the surface run. flow-runner only."
 ---
 
 # Phase: Summary

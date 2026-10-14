@@ -1,6 +1,6 @@
 ---
 name: phase-drafting
-description: 'Shared Drafting phase of flow-spec: writes the devbook chapter, decision record, or debt record the scope settled, through the agent its folder qualifier binds — phase-drafting:arc42, :domain, :tech, :design, :ai — under the repository''s own instruction files for that folder. Delegated by the flow-runner agent with a brief file, never invoked directly.'
+description: "Drafting phase of flow-spec: writes the chapter, decision record, or debt record scope settled, through the folder's agent and instruction files. flow-runner only."
 ---
 
 # Phase: Drafting
@@ -46,7 +46,7 @@ source code.
 
 ## Output
 
-The changed files and one line each on what changed, every status the draft set, and a
-rendered copy through `render_markdown` and `render_diagram` per **Reporting Contract** in
-`resources/surface-contract.md`. Report as the `Drafting` stage. Its place in the order:
+Return the changed files with one line each on what changed, and every status the draft set.
+Make no surface calls: the flow-runner reports the `Drafting` stage and renders the draft, per
+**Reporting Contract** in `resources/surface-contract.md`. Its place in the order:
 `resources/flow-phases.md`.

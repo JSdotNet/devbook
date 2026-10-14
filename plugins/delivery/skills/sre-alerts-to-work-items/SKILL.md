@@ -113,8 +113,6 @@ say that nothing was, because there is nowhere to create it.
 ## Surface Reporting
 
 Follow the **Reporting Contract** in `resources/surface-contract.md`.
-With no surface bound, skip the calls, say so once, and continue — file artifacts remain
-the source of truth.
 
 - `start_run` with `skillId: "sre-alerts-to-work-items"` and these stages: Fetch Active
   Alerts, Deduplicate Against Open Items, Create Work Items, Summary.

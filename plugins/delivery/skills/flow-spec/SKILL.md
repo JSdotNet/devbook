@@ -1,6 +1,6 @@
 ---
 name: flow-spec
-description: 'Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; a domain/ context map or bounded context; the tech/ technology graph; design/ tokens and guidelines; the ai/ adoption record. One flow for the five folders: scope derives the folder and the kind, drafting runs through the agent the folder binds under the repository''s own instruction files, check and review runs the repository''s check, and the ready check and personal approval come before the pull request. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter, or the dependency behind a tech/ entry (flow-code), or wireframes, prototypes, and UI reviews (the ux agent directly).'
+description: "Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; the domain/ model; the tech/ graph; design/ guidelines; the ai/ adoption record — through drafting, the repository's check, and personal approval before the pull request. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter, or the dependency behind a tech/ entry (flow-code), or wireframes, prototypes, and UI reviews (the ux agent directly)."
 ---
 
 # Flow: Devbook Folder (`arc42/`, `domain/`, `tech/`, `design/`, `ai/`)
@@ -44,8 +44,7 @@ The folder qualifies `phase-drafting`, so each folder names its own agent, model
 
 ## Surface Reporting
 
-Per **Reporting Contract** in `resources/surface-contract.md`; with no surface bound, say so
-once and continue on the file artifacts.
+Per **Reporting Contract** in `resources/surface-contract.md`, which also covers no surface bound.
 
 - `start_run` with `skillId: "flow-spec"`, `sessionId: "${CLAUDE_SESSION_ID}"` per the
   `session-id` slot, and one stage per phase above in order, each named by its phase skill's
