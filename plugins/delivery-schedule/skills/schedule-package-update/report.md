@@ -16,7 +16,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ### Packages
 | Package | From | To | Result |
 | --- | --- | --- | --- |
-| `<package>` | `<version>` | `<version>` | `updated`, `skipped: <reason>`, or `behind: plugin` |
+| `<package>` | `<version>` | `<version>` | `updated` or `skipped: <reason>` |
 
 ### Run
 | Outcome | What | Why |
@@ -25,4 +25,4 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 *`schedule-package-update@<version>` · <ecosystems> · <ISO datetime UTC>*
 ```
 
-Updated rows first, then skipped, then behind.
+Updated rows first, then skipped.

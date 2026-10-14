@@ -1,6 +1,6 @@
 ---
 name: change-window-contract
-description: How a report entry point gathers everything that changed in one repository over a window — the sources, the timestamp that places an item in the window, the attention-first order, and what a run never does with what it reads. Read by schedule-morning-brief and schedule-weekly-update.
+description: How a report entry point gathers everything that changed in one repository over a window — the sources, the timestamp that places an item in the window, the attention-first order, and what a run never does with what it reads. Read by schedule-morning-brief, schedule-weekly-update, and schedule-whats-new, which reads its pull request rows.
 ---
 
 # Change Window Contract
