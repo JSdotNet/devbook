@@ -27,8 +27,8 @@ device ([the annotations record](../adr/annotations.md)).
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
-Five skills, and nothing else in the plugin but the gate the two decisions share,
-`resources/decision-gate.md`. They move one chapter through a review to the
+Five skills, the gate the two decisions share, `resources/decision-gate.md`, and the one
+script the queue runs on. They move one chapter through a review to the
 two decisions past it, and one of the five writes nothing at all. There is no install: the state they write is devbook's
 schema, so enabling the plugin is the whole adoption. Deleting the answered notes is
 `devbook:annotation-sweep`, in the plugin that owns the fence.
@@ -40,6 +40,7 @@ schema, so enabling the plugin is the whole adoption. Deleting the answered note
 | `chapter-approve` | skill | A person who chose it in that session — never a schedule, never a cleared review |
 | `chapter-accept` | skill | A person who chose it in that session, over evidence — never a green suite, never a merged pull request |
 | `chapter-review-queue` | skill | A person, or a schedule: it writes nothing |
+| `scripts/review-queue.mjs` | read-only CLI | `chapter-review-queue`, or a person who wants the queue as JSON |
 
 ### chapter-handoff
 
@@ -111,6 +112,10 @@ related: [".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue"
 Sweep the adopted folders and every open change and report the chapters and changes with
 open notes, the work awaiting a decision, and which approvals have gone stale. It writes nothing, which makes it the one skill
 here that is safe to schedule.
+
+The sort itself is `scripts/review-queue.mjs`, not the skill. A table read by a model can sort
+the same chapters differently on two runs, and a script cannot. The skill runs it, groups its
+rows by who owes the next move, and offers that move.
 
 ## Structure
 
@@ -311,8 +316,11 @@ now*.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| It writes nothing at all | `chapter-review-queue()` | untested |
-| It reports what is open, and which approvals have gone stale under content that moved | `chapter-review-queue()` | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs` |
+| It writes nothing at all | `review-queue.mjs` | untested |
+| It reports what is open, and which approvals have gone stale under content that moved | `review-queue.mjs` | `unit:node:plugins/devbook-collaboration/scripts/review-queue.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs` |
+| Each chapter and each open change lands in the first row that matches, and a change is one row over its proposal and every delta | `review-queue.mjs` | `unit:node:plugins/devbook-collaboration/scripts/review-queue.test.mjs` |
+| It reads the `meta` and `annotation` fences of the adopted folders and the open changes, and never `_meta/` or `archive/` | `review-queue.mjs` | `unit:node:plugins/devbook-collaboration/scripts/review-queue.test.mjs` |
+| A lapse is decided by the recorded fingerprint where the rung carries one, and otherwise by git, with the method named | `review-queue.mjs` | `unit:node:plugins/devbook-collaboration/scripts/review-queue.test.mjs` |
 
 ### Acceptance
 
@@ -513,6 +521,7 @@ into.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | Reads a chapter's `status` and its open annotation fences; writes no review field | `devbook-chapter-metadata.md`: a review in progress is the chapter's rung plus its open fences, never a field | It has no store and no vocabulary of its own, and remembers nothing about a review in the chapter — [the annotations record](../adr/annotations.md). |
+| [devbook](devbook.md#interfaces) | Conformist, for the parser | The review queue imports `metadata.mjs`, `delta.mjs`, and `demo.mjs` from the repository's `.devbook/_tools/devbook-meta/` | The fence parsers, and the fingerprint `chapter-hash.mjs` prints | A second parser would be a second reading of the schema, and a fingerprint computed twice can disagree with the check. The repository's own copy keeps the queue on the schema that repository is at. |
 | [devbook](devbook.md#annotation) | Conformist, for the whole device | Writes findings through `.devbook/_tools/devbook-meta/annotations.mjs` | The [annotation](devbook.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this block's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [the annotations record](../adr/annotations.md). |
 | [devbook](devbook.md#chapter) | Conformist, for one field | Writes `status: approved` or `accepted` and the six record fields directly, on `domain/` chapters and a change's `proposal.md` only | The two decision rungs, on `domain/`'s ladder and a change's proposal, and their six record fields | Both rungs are devbook's fields and keep devbook's meaning. This block runs the decisions; it does not own the vocabulary, and a repository with no `domain/` folder and no change gets the review pass and neither decision. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and two manifests | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like every other plugin here, and — alone among them — materializes nothing and stamps nothing. |

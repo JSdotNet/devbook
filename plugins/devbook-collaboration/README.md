@@ -7,10 +7,11 @@ schema and no state. A review in progress is the chapter's `status` and its
 open `annotation` fences — devbook's own device, one finding per fence beside
 the passage it is about — and who owes the next move lives in the pull request
 or the tracker, never in the chapter. The only fields it writes are devbook's
-approval and acceptance rungs. It ships five skills and the decision gate two of them share,
-`resources/decision-gate.md`, and nothing else: no rule,
-no install, no hook, and no entry in the stamp. Enable it and the five skills
-are there; a repository that never enables it reviews the same way by hand.
+approval and acceptance rungs. It ships five skills, the decision gate two of
+them share, `resources/decision-gate.md`, and the one read-only script the
+queue runs on: no rule, no install, no hook, and no entry in the stamp. Enable
+it and the five skills are there; a repository that never enables it reviews
+the same way by hand.
 
 ## Installation
 
@@ -89,3 +90,23 @@ person.
 
 The reason the fence and the rungs are devbook's and not this plugin's is
 `.devbook/arc42/adr/annotations.md`.
+
+## The queue
+
+[`scripts/review-queue.mjs`](scripts/review-queue.mjs) is what `chapter-review-queue`
+runs, so the sort is deterministic rather than a model's reading of a table:
+
+```bash
+node scripts/review-queue.mjs --root <repository> [--json]
+```
+
+It reads `adopted` from devbook's stamp in `.devbook/config.json`, or the folders on
+disk where there is none, and every open `openspec/changes/<name>/` but `archive/`. Of
+each chapter it reads the `meta` and `annotation` fences and nothing else, never
+`_meta/`, and sorts it into the first matching row of its `ROWS` table; a change is one
+row over its proposal and every delta. A lapse is decided against `approved-hash` or
+`accepted-hash` where the rung carries one, exactly, and otherwise against the last
+commit over the chapter's heading range, and each row says which method answered. It
+parses through the repository's own `.devbook/_tools/devbook-meta/` — the copy
+`devbook:update` keeps — so its fingerprint is the value `chapter-hash.mjs` prints and
+the check compares. It writes nothing, and exits `1` where those tools are missing.
