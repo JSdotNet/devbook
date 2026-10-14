@@ -334,6 +334,32 @@ const proved = (target) => ({
     check(problemsAbout(graph, "the stem is ambiguous").length === 1, "a pointer by a duplicated stem is ambiguous", dump(graph.problems));
 }
 
+// An inline case in a context with scenario pages is reported, as info only.
+const INLINE = "\n- **Given** a product with no statuses\n- **When** I create a status\n- **Then** a column appears\n";
+{
+    const graph = await graphOf(base("type: scenario\n", { [REQUIREMENTS]: requirements(INLINE) }));
+    const candidates = problemsAbout(graph, "is written inline");
+    check(
+        candidates.length === 1 && candidates[0].severity === "info" && candidates[0].path === REQUIREMENTS && candidates[0].message.includes("`#### Scenario: Statuses are set up`"),
+        "an inline case in a context with scenario pages is an info candidate",
+        dump(graph.problems)
+    );
+}
+{
+    const files = base("type: scenario\n", { [REQUIREMENTS]: requirements(INLINE) });
+    delete files[NESTED];
+    const graph = await graphOf(files);
+    check(problemsAbout(graph, "is written inline").length === 0, "an inline case in a context with no scenario page is not reported", dump(graph.problems));
+}
+{
+    const graph = await graphOf(base("type: scenario\n", { [REQUIREMENTS.replace("/work/", "/shop/")]: requirements(INLINE) }));
+    check(problemsAbout(graph, "is written inline").length === 0, "a scenario page in another context does not make a case a candidate", dump(graph.problems));
+}
+{
+    const graph = await graphOf(base("type: scenario\n", proved("set-up-and-fill-the-backlog.md#statuses-are-set-up")));
+    check(problemsAbout(graph, "is written inline").length === 0, "a Proved by case is not a candidate", dump(graph.problems));
+}
+
 // ── Linked walkthroughs: a demo walkthrough sharing a part's journey ───────
 
 const DEMO = ".devbook/domain/work/features.demo.html";
