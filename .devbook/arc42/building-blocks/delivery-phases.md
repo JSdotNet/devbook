@@ -194,7 +194,8 @@ the app at the addresses its chapters name, and the what-to-check list compares 
 by screen, per [the demos decision](../adr/demos.md): the demo is the agreed reference the
 built work is accepted against. The screenshots of every scenario page `verify` ran are listed
 the same way, part by part with each part's outcome, beside the app link of the screen each one
-shows.
+shows. The handback ends on one picture from `verify` and the running application's URLs,
+written after everything else in the reply, so the last thing in view is what to open.
 
 **Present, never decide.** The phase produces the review; the approve, revise, or decline
 decision after it belongs to the flow-runner. Nothing in the handoff can approve, skip, or
