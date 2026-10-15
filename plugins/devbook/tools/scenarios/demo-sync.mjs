@@ -229,12 +229,10 @@ export async function syncDemos(repoRoot, { files = [], scenarioFolder = SCENARI
     const results = [];
     for (const given of demos) {
         let relPath = normalizePath(given);
-        let file;
         let html;
         try {
-            file = resolveInside(repoRoot, given);
-            relPath = normalizePath(path.relative(repoRoot, file));
-            html = await readFile(file, "utf8");
+            relPath = normalizePath(path.relative(repoRoot, resolveInside(repoRoot, given)));
+            html = await readFile(resolveInside(repoRoot, given), "utf8");
         } catch (error) {
             const why = error.code === "ENOENT" ? "does not exist" : error.code === OUTSIDE_ROOT ? "resolves outside the repository" : error.message;
             results.push({ path: relPath, changes: [], problems: [`${relPath}: ${why}`] });
@@ -246,7 +244,7 @@ export async function syncDemos(repoRoot, { files = [], scenarioFolder = SCENARI
         } catch (error) {
             synced = { html, changes: [], problems: [`${relPath}: its \`${DEMO_MODEL_ID}\` is not valid JSON — ${error.message}`] };
         }
-        if (!check && synced.html !== html) await writeFile(file, synced.html, "utf8");
+        if (!check && synced.html !== html) await writeFile(resolveInside(repoRoot, given), synced.html, "utf8");
         results.push({ path: relPath, changes: synced.changes, problems: synced.problems });
     }
     return results;

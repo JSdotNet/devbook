@@ -148,9 +148,8 @@ async function main(argv) {
         let relPath = normalizePath(given);
         let page;
         try {
-            const file = resolveInside(repoRoot, given);
-            relPath = normalizePath(path.relative(repoRoot, file));
-            page = parseScenarioPage(await readFile(file, "utf8"), relPath);
+            relPath = normalizePath(path.relative(repoRoot, resolveInside(repoRoot, given)));
+            page = parseScenarioPage(await readFile(resolveInside(repoRoot, given), "utf8"), relPath);
         } catch (error) {
             const why = error.code === "ENOENT" ? "does not exist" : error.code === OUTSIDE_ROOT ? "resolves outside the repository" : error.message;
             console.error(`${relPath}: ${why}`);

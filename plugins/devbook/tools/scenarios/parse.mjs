@@ -408,16 +408,11 @@ export async function listSpecs(repoRoot, roots = [""]) {
  * folder resolves outside the repository.
  */
 export async function readProfiles(repoRoot, scenarioFolder = SCENARIO_FOLDER) {
-    let file;
-    try {
-        file = resolveInside(repoRoot, `${scenarioFolder}/${PROFILES_FILE}`);
-    } catch {
-        return { error: "resolves outside the repository" };
-    }
     let text;
     try {
-        text = await readFile(file, "utf8");
-    } catch {
+        text = await readFile(resolveInside(repoRoot, `${scenarioFolder}/${PROFILES_FILE}`), "utf8");
+    } catch (error) {
+        if (error.code === OUTSIDE_ROOT) return { error: "resolves outside the repository" };
         return { missing: true };
     }
     try {
