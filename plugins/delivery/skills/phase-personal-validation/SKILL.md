@@ -12,8 +12,9 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 - Starts the app, publishes the review links and a short what-to-check list
 - Lists every demo the change implements beside the app, opened where the chapters point
 - Lists the screenshots of every scenario page Verify ran beside the review links
-- Presents the review, QA and spec-check results, then waits
+- Presents the review, QA and spec-check results
 - Commits the change set when `commit.at` is `gate`
+- Closes on one picture from Verify and the running app's URLs, then waits
 
 **Doesn't**
 
@@ -114,12 +115,28 @@ the host offers — reading an image into your own context shows the person noth
 host cannot display images, give each path as a clickable link and say once why. A video, a
 trace, or a log extract stays a clickable path.
 
-## Step 5 — Commit, Then Hand Back
+## Step 5 — Commit
 
 When `policy.commit.at` is `gate`, commit the change set before handing back, per **The gate**
-in `resources/flow-phases.md`; under `manual`, commit nothing. Then stop and wait. In an
+in `resources/flow-phases.md`, and report the result; under `manual`, commit nothing. In an
 unattended run there is no one to hand back to: park per **The gate**, `approval` left
-`pending`.
+`pending`, and skip Step 6.
+
+## Step 6 — Close On The App, Then Hand Back
+
+The person reads the end of the reply first and scrolls least, so the reply ends here. Write
+this block **after everything else** — results, commit report, any wrap-up or status text —
+so nothing pushes it out of view, and repeat it on every revise round.
+
+1. **One picture from Verify**, displayed inline per **Show image evidence**: the screenshot of
+   the screen the change touches most, or a failed part's `failureShot` when one failed. Under
+   it, one line naming the scenario, part, and outcome it shows. When Verify took no
+   screenshot — skipped, startup-only, nothing to start — say so in one line instead.
+2. **The running app's URLs**, as clickable labelled links, each one confirmed in Step 1: the
+   deep link to what changed first, then the dashboard, the health endpoint, and any second
+   surface. Nothing to start: say in one line that no app is running.
+
+Then stop and wait for the gate.
 
 ## Dashboard Reporting
 

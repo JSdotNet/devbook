@@ -160,7 +160,8 @@ those contracts; it does not re-decide them per skill.
     agent and no model — for the review handoff: the application up and healthy, the review
     links published both on the stage and as clickable URLs in the conversation, every demo
     the change implements listed beside them, the what-to-check list, and the code and QA
-    reviews. Then wait for explicit approval. **Run that
+    reviews, closing on a Verify picture and the app's URLs as the reply's last text. Then
+    wait for explicit approval. **Run that
     skill again on every revise round**, before asking again. Never auto-approve. Record every
     decision with `set_run_context`.
 13. **Never complete a gate as a sub-agent.** This gate is why the agent runs as the
