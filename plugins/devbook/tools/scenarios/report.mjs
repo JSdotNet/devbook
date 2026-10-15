@@ -101,9 +101,10 @@ export function failureOf(part, steps = [], error) {
     return { step: found?.number ?? null, message: plainMessage(error?.message ?? found?.step.error?.message ?? "") };
 }
 
-async function readJson(file) {
+/** `rel` under `root` parsed as JSON, or null when it is missing, unreadable, or outside `root`. */
+async function readJson(root, rel) {
     try {
-        return JSON.parse(await readFile(file, "utf8"));
+        return JSON.parse(await readFile(resolveInside(root, rel), "utf8"));
     } catch {
         return null;
     }
@@ -130,9 +131,8 @@ const isImage = (image) => Boolean(image?.body || image?.path);
  */
 export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, page, signature, ranAt, profile, effectiveConfig: config, parts = {}, captured = {}, failures = {} }) {
     const folder = resolveInside(resolveInside(repoRoot, scenarioFolder), page.stem);
-    const runFile = resolveInside(folder, RUN_FILE);
     await mkdir(folder, { recursive: true });
-    const previous = await readJson(runFile);
+    const previous = await readJson(folder, RUN_FILE);
     let existing = [];
     try {
         existing = await readdir(folder);
@@ -182,7 +182,7 @@ export async function writeRun({ repoRoot, scenarioFolder = SCENARIO_FOLDER, pag
     }
 
     const run = { version: RUN_VERSION, page: page.path, signature, ranAt, profile, effectiveConfig: config, parts: runParts, shots };
-    await writeFile(runFile, `${JSON.stringify(run, null, 2)}\n`, "utf8");
+    await writeFile(resolveInside(folder, RUN_FILE), `${JSON.stringify(run, null, 2)}\n`, "utf8");
     written.push(RUN_FILE);
     return { folder, written, pruned };
 }
