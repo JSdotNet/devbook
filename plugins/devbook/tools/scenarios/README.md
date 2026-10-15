@@ -112,6 +112,11 @@ export default defineConfig({
 | `project` | the reporter's options | the first project in the config that ran the spec; one run records one project |
 | `SCENARIO_PROFILE` | environment | the page's `profile`, else `default` |
 
+Keep `scenarioFolder` at its default in a repository the devbook check covers. The check's
+profile rule and its stale-walkthrough rule read `.devbook/scenarios/` and take no option, so
+a run kept elsewhere is invisible to them; `check.mjs --scenario-folder` and `demo-sync.mjs
+--scenario-folder` exist for fixtures and tests.
+
 ## The run
 
 `<scenario folder>/<stem>/run.json`, committed to the target branch with its PNGs:
