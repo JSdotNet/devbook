@@ -151,7 +151,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
 
 The prose half beside `validate`'s structural half: read every adopted folder and report
 the sentence that says nothing a reader needs or names something the tree no longer has — a
-stale name after a fold, a term defined twice, a hedge on a fact. It writes nothing. A chapter
+stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
+a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets. It writes nothing. A chapter
 is content, so the standard is narrower than an instruction tightening and a record stays as
 it was taken: an edit is a person's, through the folder's flow.
 
