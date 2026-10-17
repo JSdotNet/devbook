@@ -1503,7 +1503,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "preview",
           "level": 2,
-          "line": 357,
+          "line": 356,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1522,7 +1522,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "proposal",
           "level": 2,
-          "line": 373,
+          "line": 372,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-28",
@@ -1541,7 +1541,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "prototype",
           "level": 2,
-          "line": 390,
+          "line": 389,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-02",
@@ -1561,7 +1561,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "prototyping",
           "level": 2,
-          "line": 405,
+          "line": 404,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-02",
@@ -1580,7 +1580,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "provider",
           "level": 2,
-          "line": 421,
+          "line": 420,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1600,7 +1600,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "reconcile",
           "level": 2,
-          "line": 438,
+          "line": 437,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1620,7 +1620,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "report",
           "level": 2,
-          "line": 454,
+          "line": 453,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1640,7 +1640,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "requirement",
           "level": 2,
-          "line": 470,
+          "line": 469,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-24",
@@ -1659,7 +1659,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "review-pass",
           "level": 2,
-          "line": 488,
+          "line": 487,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1678,7 +1678,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "scheduler",
           "level": 2,
-          "line": 504,
+          "line": 503,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1698,7 +1698,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "stale-approval",
           "level": 2,
-          "line": 522,
+          "line": 521,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1717,7 +1717,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-direction",
           "level": 2,
-          "line": 537,
+          "line": 536,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-01",
@@ -1737,7 +1737,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-group",
           "level": 2,
-          "line": 554,
+          "line": 553,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-01",
@@ -1756,7 +1756,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-unit",
           "level": 2,
-          "line": 569,
+          "line": 568,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-06",
@@ -1776,7 +1776,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "tier",
           "level": 2,
-          "line": 585,
+          "line": 584,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1795,7 +1795,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "unanswered-group",
           "level": 2,
-          "line": 600,
+          "line": 599,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -2935,7 +2935,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-create-pr",
           "level": 3,
-          "line": 209,
+          "line": 210,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -2952,7 +2952,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-report-back",
           "level": 3,
-          "line": 219,
+          "line": 220,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -2970,7 +2970,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-summary",
           "level": 3,
-          "line": 230,
+          "line": 231,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -2988,7 +2988,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-drafting-and-phase-check-review",
           "level": 3,
-          "line": 241,
+          "line": 242,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3005,7 +3005,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "structure",
           "level": 2,
-          "line": 253,
+          "line": 254,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3023,7 +3023,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase",
           "level": 3,
-          "line": 263,
+          "line": 264,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3042,7 +3042,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "gate",
           "level": 3,
-          "line": 303,
+          "line": 304,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3060,7 +3060,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "gate-decision",
           "level": 3,
-          "line": 331,
+          "line": 332,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3078,7 +3078,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "runtime",
           "level": 2,
-          "line": 346,
+          "line": 347,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3095,7 +3095,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "a-gate-answered",
           "level": 3,
-          "line": 355,
+          "line": 356,
           "status": "active",
           "statusDeclared": false
         }
@@ -3109,7 +3109,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 386,
+          "line": 387,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3126,7 +3126,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "outbound",
           "level": 3,
-          "line": 396,
+          "line": 397,
           "status": "active",
           "statusDeclared": false
         }
@@ -3140,7 +3140,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "inbound",
           "level": 3,
-          "line": 410,
+          "line": 411,
           "status": "active",
           "statusDeclared": false
         }
@@ -3459,7 +3459,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-validate",
           "level": 3,
-          "line": 30,
+          "line": 31,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3478,7 +3478,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-verify",
           "level": 3,
-          "line": 41,
+          "line": 42,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3496,7 +3496,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-sweep",
           "level": 3,
-          "line": 56,
+          "line": 57,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3517,7 +3517,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-update",
           "level": 3,
-          "line": 85,
+          "line": 86,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3536,7 +3536,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-instruction-review",
           "level": 3,
-          "line": 98,
+          "line": 99,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3554,7 +3554,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 112,
+          "line": 113,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3574,7 +3574,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "classify-once-judge-every-sweep",
           "level": 4,
-          "line": 130,
+          "line": 131,
           "status": "active",
           "statusDeclared": false
         }
@@ -3588,7 +3588,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "close-on-evidence-draft-everything-else",
           "level": 4,
-          "line": 141,
+          "line": 142,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3605,7 +3605,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "one-session-one-issue-at-a-time",
           "level": 4,
-          "line": 153,
+          "line": 154,
           "status": "active",
           "statusDeclared": false
         }
@@ -3619,7 +3619,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-merge-review",
           "level": 3,
-          "line": 167,
+          "line": 168,
           "status": "active",
           "statusDeclared": false
         }
@@ -3633,7 +3633,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-morning-brief",
           "level": 3,
-          "line": 189,
+          "line": 190,
           "status": "active",
           "statusDeclared": false
         }
@@ -3647,7 +3647,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-package-update",
           "level": 3,
-          "line": 199,
+          "line": 200,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3664,7 +3664,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-performance-review",
           "level": 3,
-          "line": 208,
+          "line": 209,
           "status": "active",
           "statusDeclared": false
         }
@@ -3678,7 +3678,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-review",
           "level": 3,
-          "line": 217,
+          "line": 219,
           "status": "active",
           "statusDeclared": false
         }
@@ -3692,7 +3692,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-security-review",
           "level": 3,
-          "line": 225,
+          "line": 227,
           "status": "active",
           "statusDeclared": false
         }
@@ -3706,7 +3706,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-tech-update",
           "level": 3,
-          "line": 234,
+          "line": 236,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3724,7 +3724,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-week-starter",
           "level": 3,
-          "line": 244,
+          "line": 246,
           "status": "active",
           "statusDeclared": false
         }
@@ -3738,7 +3738,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-cost-analysis",
           "level": 3,
-          "line": 251,
+          "line": 253,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3755,7 +3755,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-retro",
           "level": 3,
-          "line": 261,
+          "line": 263,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3774,7 +3774,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-update",
           "level": 3,
-          "line": 282,
+          "line": 285,
           "status": "active",
           "statusDeclared": false
         }
@@ -3788,7 +3788,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-whats-new",
           "level": 3,
-          "line": 292,
+          "line": 295,
           "status": "active",
           "statusDeclared": false
         }
@@ -3802,7 +3802,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "structure",
           "level": 2,
-          "line": 299,
+          "line": 304,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3819,7 +3819,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "entry-point",
           "level": 3,
-          "line": 309,
+          "line": 314,
           "status": "active",
           "statusDeclared": false
         }
@@ -3833,7 +3833,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-report-published",
           "level": 3,
-          "line": 334,
+          "line": 339,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3850,7 +3850,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "runtime",
           "level": 2,
-          "line": 370,
+          "line": 375,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3868,7 +3868,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "an-unattended-run",
           "level": 3,
-          "line": 379,
+          "line": 384,
           "status": "active",
           "statusDeclared": false
         }
@@ -3882,7 +3882,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 421,
+          "line": 431,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -3899,7 +3899,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "outbound",
           "level": 3,
-          "line": 431,
+          "line": 441,
           "status": "active",
           "statusDeclared": false
         }
@@ -3913,7 +3913,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "inbound",
           "level": 3,
-          "line": 441,
+          "line": 451,
           "status": "active",
           "statusDeclared": false
         }
@@ -4054,7 +4054,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-selection",
           "level": 3,
-          "line": 237,
+          "line": 238,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -4072,7 +4072,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "scheduler-resolution",
           "level": 3,
-          "line": 264,
+          "line": 265,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -4090,7 +4090,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "catalog-check",
           "level": 3,
-          "line": 289,
+          "line": 290,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -4107,7 +4107,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "runtime",
           "level": 2,
-          "line": 303,
+          "line": 304,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -4124,7 +4124,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "from-catalog-to-scheduler",
           "level": 3,
-          "line": 312,
+          "line": 313,
           "status": "active",
           "statusDeclared": false
         }
@@ -4138,7 +4138,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 349,
+          "line": 350,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -4157,7 +4157,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "outbound",
           "level": 3,
-          "line": 358,
+          "line": 359,
           "status": "active",
           "statusDeclared": false
         }
@@ -4171,7 +4171,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "inbound",
           "level": 3,
-          "line": 374,
+          "line": 375,
           "status": "active",
           "statusDeclared": false
         }
@@ -5983,7 +5983,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-handoff",
           "level": 3,
-          "line": 43,
+          "line": 45,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6001,7 +6001,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-review",
           "level": 3,
-          "line": 53,
+          "line": 55,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6019,7 +6019,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-approve",
           "level": 3,
-          "line": 66,
+          "line": 68,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6037,7 +6037,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-accept",
           "level": 3,
-          "line": 85,
+          "line": 87,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6055,7 +6055,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-review-queue",
           "level": 3,
-          "line": 104,
+          "line": 106,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6072,7 +6072,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "structure",
           "level": 2,
-          "line": 114,
+          "line": 120,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6091,7 +6091,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "model",
           "level": 3,
-          "line": 123,
+          "line": 129,
           "status": "active",
           "statusDeclared": false
         }
@@ -6105,7 +6105,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "review-position",
           "level": 3,
-          "line": 199,
+          "line": 205,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6123,7 +6123,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "finding",
           "level": 3,
-          "line": 233,
+          "line": 239,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6141,7 +6141,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "approval",
           "level": 3,
-          "line": 264,
+          "line": 270,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6159,7 +6159,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "review-queue",
           "level": 3,
-          "line": 296,
+          "line": 302,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6177,7 +6177,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "acceptance",
           "level": 3,
-          "line": 316,
+          "line": 325,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6195,7 +6195,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-approved",
           "level": 3,
-          "line": 340,
+          "line": 349,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6213,7 +6213,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "chapter-accepted",
           "level": 3,
-          "line": 379,
+          "line": 388,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6231,7 +6231,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "runtime",
           "level": 2,
-          "line": 416,
+          "line": 425,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6250,7 +6250,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "the-review-pass",
           "level": 3,
-          "line": 424,
+          "line": 433,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6267,7 +6267,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "who-owes-the-next-move",
           "level": 3,
-          "line": 463,
+          "line": 472,
           "status": "active",
           "statusDeclared": false
         }
@@ -6281,7 +6281,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 498,
+          "line": 507,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6300,7 +6300,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "outbound",
           "level": 3,
-          "line": 507,
+          "line": 516,
           "status": "active",
           "statusDeclared": false
         }
@@ -6314,7 +6314,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
           "slug": "inbound",
           "level": 3,
-          "line": 520,
+          "line": 530,
           "status": "active",
           "statusDeclared": false
         }
@@ -6451,7 +6451,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "init",
           "level": 3,
-          "line": 44,
+          "line": 45,
           "status": "active",
           "statusDeclared": false
         }
@@ -6465,7 +6465,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "update",
           "level": 3,
-          "line": 75,
+          "line": 76,
           "status": "active",
           "statusDeclared": false
         }
@@ -6479,7 +6479,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "doctor",
           "level": 3,
-          "line": 91,
+          "line": 92,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6497,7 +6497,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "report",
           "level": 3,
-          "line": 126,
+          "line": 127,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6515,7 +6515,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "ask",
           "level": 3,
-          "line": 140,
+          "line": 141,
           "status": "active",
           "statusDeclared": false
         }
@@ -6529,7 +6529,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "adoption",
           "level": 3,
-          "line": 152,
+          "line": 153,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6546,7 +6546,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "local",
           "level": 3,
-          "line": 163,
+          "line": 164,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-05",
@@ -6566,7 +6566,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "structure",
           "level": 2,
-          "line": 186,
+          "line": 187,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6585,7 +6585,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "model",
           "level": 3,
-          "line": 195,
+          "line": 196,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6602,7 +6602,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "stack-report",
           "level": 3,
-          "line": 275,
+          "line": 276,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6619,7 +6619,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "engine-configuration",
           "level": 3,
-          "line": 323,
+          "line": 324,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6638,7 +6638,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "init-service",
           "level": 3,
-          "line": 364,
+          "line": 365,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6655,7 +6655,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "update-service",
           "level": 3,
-          "line": 385,
+          "line": 386,
           "status": "active",
           "statusDeclared": false
         }
@@ -6669,7 +6669,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "ask-service",
           "level": 3,
-          "line": 404,
+          "line": 405,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6686,7 +6686,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "adoption-drift",
           "level": 3,
-          "line": 427,
+          "line": 428,
           "status": "active",
           "statusDeclared": false
         }
@@ -6700,7 +6700,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "runtime",
           "level": 2,
-          "line": 450,
+          "line": 451,
           "status": "active",
           "statusDeclared": false
         }
@@ -6714,7 +6714,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "init-then-every-component",
           "level": 3,
-          "line": 457,
+          "line": 458,
           "status": "active",
           "statusDeclared": false
         }
@@ -6728,7 +6728,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "update-by-scope",
           "level": 3,
-          "line": 507,
+          "line": 508,
           "status": "active",
           "statusDeclared": false
         }
@@ -6742,7 +6742,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 543,
+          "line": 544,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6761,7 +6761,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "outbound",
           "level": 3,
-          "line": 552,
+          "line": 553,
           "status": "active",
           "statusDeclared": false
         }
@@ -6775,7 +6775,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-config.md",
           "slug": "inbound",
           "level": 3,
-          "line": 568,
+          "line": 569,
           "status": "active",
           "statusDeclared": false
         }

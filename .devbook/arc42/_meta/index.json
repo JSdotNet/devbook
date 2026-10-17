@@ -216,7 +216,7 @@
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-30",
-          "summary": "Every plugin carries the same version — 1.25.1 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+          "summary": "Every plugin carries the same version — 1.26.1 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
         },
         {
           "type": "file",
