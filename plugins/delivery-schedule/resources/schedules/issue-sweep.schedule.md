@@ -6,6 +6,7 @@ cron: "30 4 * * 1-5"
 target: delivery-schedule:schedule-issue-sweep
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Workflow, Agent]
+result: github
 maxResolve: 10
 ---
 

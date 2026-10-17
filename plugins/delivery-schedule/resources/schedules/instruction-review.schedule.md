@@ -6,6 +6,7 @@ cron: "0 7 * * 0"
 target: delivery-schedule:schedule-instruction-review
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-instruction-review` in the repository `{{repo}}` with scope `all` and rewrites

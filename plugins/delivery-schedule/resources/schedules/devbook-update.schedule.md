@@ -6,6 +6,7 @@ cron: "0 6 * * 6"
 target: delivery-schedule:schedule-devbook-update
 requires: [delivery-schedule, devbook-config, devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-devbook-update` from the repository root: it runs `devbook-config:update` with

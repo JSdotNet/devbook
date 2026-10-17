@@ -8,8 +8,8 @@
 // folder does not exist in this marketplace, is a flow-* skill, or sets
 // disable-model-invocation, a plugin in `requires` the
 // marketplace does not list or that omits the target's plugin, a tool list without `Skill`,
-// an empty body, a placeholder outside the five the contract names — in a body or in the
-// preamble — or a `maxResolve` that is not a whole number or that the body never uses as
+// a `result` that is not `session` or `github`, an empty body, a placeholder outside the
+// five the contract names — in a body, the preamble, or the pickup gate — or a `maxResolve` that is not a whole number or that the body never uses as
 // {{maxResolve}}, the one placeholder a schedule carrying that field may add, or that the
 // plugin README's catalog row or the target skill's `maxResolve` input line does not restate.
 //
@@ -24,9 +24,11 @@ const PLUGIN = path.resolve(HERE, "..", "..");
 const ROOT = path.resolve(PLUGIN, "..", "..");
 const CATALOG = path.join(PLUGIN, "resources", "schedules");
 const PREAMBLE = path.join(PLUGIN, "resources", "schedule-preamble.md");
+const GATE = path.join(PLUGIN, "resources", "schedule-pickup-gate.md");
 const README = path.join(PLUGIN, "README.md");
 
-const REQUIRED = ["name", "title", "cadence", "cron", "target", "requires", "tools"];
+const REQUIRED = ["name", "title", "cadence", "cron", "target", "requires", "tools", "result"];
+const RESULTS = new Set(["session", "github"]);
 const CADENCES = new Set(["daily", "weekdays", "weekly"]);
 const PLACEHOLDER = /\{\{\s*([A-Za-z]+)\s*\}\}/g;
 const ALLOWED_PLACEHOLDERS = new Set(["repo", "base", "name", "title", "checkout"]);
@@ -69,6 +71,8 @@ const plugins = new Set(marketplace.plugins.map((p) => p.name));
 
 if (await exists(PREAMBLE)) checkPlaceholders(PREAMBLE, await readFile(PREAMBLE, "utf8"));
 else error(PREAMBLE, "missing — every prompt starts with it");
+if (await exists(GATE)) checkPlaceholders(GATE, await readFile(GATE, "utf8"));
+else error(GATE, "missing — every result: session prompt carries it");
 
 const readmeRows = (await exists(README)) ? (await readFile(README, "utf8")).split(/\r?\n/).filter((l) => l.startsWith("| `")) : [];
 
@@ -85,6 +89,7 @@ for (const name of files) {
 
     const stem = name.replace(/\.schedule\.md$/, "");
     if (fields.name && fields.name !== stem) error(file, `name ${fields.name} is not the file stem ${stem}`);
+    if (fields.result && !RESULTS.has(fields.result)) error(file, `result ${fields.result} is not session or github`);
     if (fields.cadence && !CADENCES.has(fields.cadence)) error(file, `cadence ${fields.cadence} is not daily, weekdays, or weekly`);
 
     if (typeof fields.cron === "string") {

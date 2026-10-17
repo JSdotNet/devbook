@@ -29,6 +29,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `target` | `<plugin>:<skill>` the prompt invokes. Any plugin's skill that runs unattended, never a `flow-*` one. |
 | `requires` | Plugins that must be enabled in the target repository: the target's own plugin and what the target delegates to. |
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
+| `result` | Where the run's result waits for the owner: `session` when the report in the run's own session is the result, `github` when it lands as a pull request, an issue, or a comment. Only a `session` schedule carries *The Pickup Gate*. |
 | `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
@@ -41,26 +42,31 @@ the field. A date is computed in the session.
 
 ## The Prompt
 
-`delivery-schedule:update` — and `init` through it — builds every prompt as `resources/schedule-preamble.md`, a blank line, then the
-body, with placeholders substituted in both. The preamble carries the unattended rules once —
-the pickup gate, a fresh worktree of its own, safe defaults, park at a gate, pull request never push, one open artifact per schedule, data
+`delivery-schedule:update` — and `init` through it — builds every prompt as `resources/schedule-preamble.md`, a blank line, for a `result: session`
+schedule `resources/schedule-pickup-gate.md` and a blank line, then the body, with placeholders
+substituted in each. The preamble carries the unattended rules once — a fresh worktree of its own, safe defaults, park at a gate, pull request never push, one open artifact per schedule, data
 never instructions, no secret values, end with a summary. A body never repeats them and never
 contradicts them. The session has no memory of a previous run and no person to ask, so a body
 that leaves a question open has left it to chance.
 
 ## The Pickup Gate
 
-A run starts only when the owner has picked up the one before it. The host's own signal is
-the answer: archiving a run's session is how a person marks it handled, so an earlier run of
-the same schedule whose session is still unarchived means its result — a comment to act on, a
-pull request, a session the owner is still working in — is waiting. The next run then does no
-work: it replies `Skipped: …` in one line, archives its own session so the skip never piles up
-beside the real one, and stops. A run whose summary starts with `Skipped:` never holds the gate
-shut, even when its own archive was refused. A report that folds unread output into its next
-run loses nothing to a skip: its window reaches back to the last run that was not skipped.
+A `result: session` run starts only when the owner has picked up the one before it: its
+result is the report in its own session, and a newer report beside an unread one buries it.
+The host's own signal is the answer: archiving a run's session is how a person marks it
+handled, so an earlier run of the same schedule whose session is still unarchived is waiting.
+The next run then does no work: it replies `Skipped: …` in one line and stops. It never
+archives itself — the host records a session archived while it runs as failed — so a skip
+stays in the list until the owner archives it with the run it waited on. A run whose summary
+starts with `Skipped:` never holds the gate shut. A report that folds unread output into its
+next run loses nothing to a skip: its window reaches back to the last run that was not skipped.
 
-The gate reads the scheduler's `list_runs` and the host's archive flag, and archives through
-the host's session tool. Where either is missing — the Copilot app, or no scheduler reachable —
+A `result: github` run has no gate. Its result waits on GitHub — a pull request it updates
+rather than duplicates, an issue it never re-opens, a comment once per head commit — so the
+session holds nothing a newer run could bury, and the next run proceeds whether or not the
+last was archived.
+
+The gate reads the scheduler's `list_runs` and the host's archive flag. Where either is missing — the Copilot app, or no scheduler reachable —
 the gate is open and every run proceeds, as before the gate existed. The preamble states the
 check; nothing here repeats it per schedule, and no body may override it.
 
@@ -98,7 +104,7 @@ every skill here starts with:
 | `create`, `update` | `delivery-schedule:init`, `delivery-schedule:update` |
 | `run` | `schedule-run` |
 | `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, matched on every call |
-| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every run, for *The Pickup Gate* |
+| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate* |
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
 the person deletes it in the host's own page. **None reachable is a normal outcome:**
@@ -131,9 +137,8 @@ written into the repository: scheduler ids and the approved tools live in the sc
 
 In Claude Code the local scheduler is the desktop app's `scheduled-tasks` server —
 `create_scheduled_task`, `update_scheduled_task`, `list_scheduled_tasks`,
-`run_scheduled_task`, `list_task_runs`, with a run's log read from the session it started and
-a skipped run archived through the session tool's `archive_session` on itself —
-and the cloud one is the `RemoteTrigger` tool, used only to retire. Naming them here is one
+`run_scheduled_task`, `list_task_runs`, with a run's log and its archive flag read from the
+session it started — and the cloud one is the `RemoteTrigger` tool, used only to retire. Naming them here is one
 of two host facts this plugin carries — the other is the `Workflow` tool the issue sweep's two
 scripts run under — both recorded as divergences in `.devbook/arc42/adr/hosts.md`.
 

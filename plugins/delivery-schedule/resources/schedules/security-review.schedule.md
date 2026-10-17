@@ -6,6 +6,7 @@ cron: "0 8 * * 6"
 target: delivery-schedule:schedule-security-review
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-security-review` in the repository `{{repo}}` with scope `all`, every layer,

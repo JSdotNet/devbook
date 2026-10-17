@@ -37,7 +37,7 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    `enabled: false` on every enabled entry carrying this repository's name prefix; the report
    names each, and deleting one is done on the host's own page.
 6. **Create or update.** For each selected schedule, build the prompt — preamble, blank line,
-   body, placeholders substituted, `{{maxResolve}}` from the stamp's override when it has
+   the pickup gate and a blank line when its `result` is `session`, body, placeholders substituted, `{{maxResolve}}` from the stamp's override when it has
    one — then `list` and match on `<owner>/<repo> · <title>`: `update` on a match, `create`
    otherwise, with the cron (the stamp's override when it has one) converted to this
    machine's timezone, `enabled: true`, and the worktree option on wherever the scheduler

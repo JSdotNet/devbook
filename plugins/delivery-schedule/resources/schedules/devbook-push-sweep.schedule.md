@@ -6,6 +6,7 @@ cron: "0 4 * * 3"
 target: delivery-schedule:schedule-devbook-sweep
 requires: [delivery-schedule, devbook, delivery]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Workflow]
+result: github
 maxResolve: 1
 ---
 

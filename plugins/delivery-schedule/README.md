@@ -101,11 +101,12 @@ A report is the run's last message in its own session, never an issue, per
 `resources/report-contract.md`. A report whose earlier runs were skipped reaches its window
 back to the last run that was not, so nothing between two runs is lost.
 
-A run waits for you. Archiving a run's session in the host is how you say you have handled
-it; while an earlier run of the same schedule is still unarchived — a merge review whose
-comments you are still working through, a pull request you have not looked at — the next run
-does no work, replies `Skipped: …`, and archives itself. Where the host keeps no archived state,
-every run proceeds. The rule is in `resources/schedule-catalog-contract.md` under
+A report-only run waits for you. Archiving a run's session in the host is how you say you
+have read it; while an earlier run of a `result: session` schedule — the morning brief, the
+weekly update, the change report, the prose check — is still unarchived, the next run does no
+work, replies `Skipped: …`, and stops, left for you to archive with the run it waited on. A
+schedule whose result lands on GitHub — a pull request, an issue, a comment — never waits. Where
+the host keeps no archived state, every run proceeds. The rule is in `resources/schedule-catalog-contract.md` under
 *The Pickup Gate*.
 
 ## The four catalog skills

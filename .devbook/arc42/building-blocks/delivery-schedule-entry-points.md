@@ -391,8 +391,10 @@ the gate is what changes when nobody is in the session.
 
 ```mermaid
 flowchart TD
-    fire(["The scheduler fires: a local routine in the repository's checkout"]) --> pickup{"Is an earlier run still unarchived?"}
-    pickup -->|yes| skip(["Reply Skipped, archive this session, and stop"])
+    fire(["The scheduler fires: a local routine in the repository's checkout"]) --> kind{"Is the result the report in the session?"}
+    kind -->|"no: a pull request, an issue, or a comment"| worktree
+    kind -->|yes| pickup{"Is an earlier run still unarchived?"}
+    pickup -->|yes| skip(["Reply Skipped and stop"])
     pickup -->|no| worktree["A fresh worktree of the base branch"]
     worktree --> preamble["Prompt: preamble, then the task half"]
     preamble --> entry["The schedule-* entry point picks its own input"]
@@ -409,10 +411,13 @@ flowchart TD
     report --> done(["Done. Nothing merged, approved, closed, or deleted"])
 ```
 
-- **A run waits for the owner, not the other way round.** Archiving a run's session is how a
-  person says they handled it. While an earlier run is unarchived, the next one skips and
-  archives itself, so a result nobody has read is never buried under a newer one. A host with
-  no archived state leaves the check open.
+- **A report-only run waits for the owner, not the other way round.** Archiving a run's
+  session is how a person says they read it. While an earlier run of a `result: session`
+  schedule is unarchived, the next one skips, so a report nobody has read is never buried
+  under a newer one. It never archives itself, because the host marks a session archived
+  mid-run as failed. A schedule whose result lands on GitHub has no such check: the pull
+  request, issue, or comment waits there, and the run updates rather than duplicates it. A host
+  with no archived state leaves the check open.
 - **The gate is never passed and never waited at.** It is parked at, with a brief — which is the
   whole reason a schedule may not target a flow, and why the catalog checker enforces it.
 - **Every run ends with a report, even an empty one.** Most weeks the security review finds

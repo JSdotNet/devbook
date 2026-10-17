@@ -6,6 +6,7 @@ cron: "0 4 * * 0"
 target: delivery-schedule:schedule-tech-update
 requires: [delivery-schedule, devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-tech-update` over every `tech/` layer the repository has: it runs
