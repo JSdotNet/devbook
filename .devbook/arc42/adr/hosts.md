@@ -99,6 +99,7 @@ the path of the body is Claude's.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-17 | A skipped run no longer archives itself — the host records a session archived mid-run as failed — so the pickup gate reads `list_task_runs` and the archive flag only, and only a `result: session` schedule carries it. |
 | 2026-09-30 | A scheduled run reads its own schedule's runs and archives itself on a skip: the pickup gate uses the local scheduler's `list_task_runs` and the session tool's `archive_session`, and is open where neither exists. |
 | 2026-09-28 | The `run` procedure's body is Claude Code's `run-<name>` recipe, with a Copilot twin: the fifth divergence. |
 | 2026-09-28 | `delivery-schedule` names the desktop app's local scheduler and keeps `RemoteTrigger` only to disable a cloud copy: every schedule is a local routine ([plugin boundaries](plugin-boundaries.md)). |

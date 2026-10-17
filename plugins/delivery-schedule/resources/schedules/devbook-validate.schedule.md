@@ -6,6 +6,7 @@ cron: "0 3 * * *"
 target: delivery-schedule:schedule-devbook-validate
 requires: [delivery-schedule, devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-devbook-validate` from the repository root over every adopted devbook folder. It

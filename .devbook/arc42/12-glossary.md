@@ -347,8 +347,7 @@ Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 
 Also called: unattended rules.
 
-The unattended rules every prompt starts with, stated once in one file: skip while the previous
-run is unarchived, park rather than pass a
+The unattended rules every prompt starts with, stated once in one file: park rather than pass a
 gate, never merge or approve or close or delete, publish as a pull request or a labelled issue,
 update what the last run left open, carry nothing personal into the repository. One file rather
 than six copies, because this is the most safety-critical prose in the plugin and six copies

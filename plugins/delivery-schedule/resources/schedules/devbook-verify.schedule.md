@@ -6,6 +6,7 @@ cron: "0 5 * * 0"
 target: delivery-schedule:schedule-devbook-verify
 requires: [delivery-schedule, devbook]
 tools: [Bash, Read, Glob, Grep, Skill]
+result: github
 ---
 
 Run `schedule-devbook-verify` from the repository root over every sync unit at `report` — the

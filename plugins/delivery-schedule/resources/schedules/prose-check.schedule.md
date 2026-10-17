@@ -6,6 +6,7 @@ cron: "0 6 * * 0"
 target: devbook:prose-check
 requires: [devbook]
 tools: [Bash, Read, Glob, Grep, Skill]
+result: session
 ---
 
 Run `prose-check` from the repository root over every adopted devbook folder, with the

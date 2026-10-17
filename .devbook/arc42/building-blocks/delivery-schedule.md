@@ -207,7 +207,8 @@ and why a trigger can be created, disabled, and re-created without touching what
 | A cron expression that could fire more than hourly is rejected | `check.mjs` | untested |
 | The `requires` list names the target's own plugin | `check.mjs` | untested |
 | Every prompt begins with the preamble, stated once and not restated per schedule | prompt assembly | untested |
-| A run does no work while an earlier run of the same schedule is unarchived and did not skip | preamble | untested |
+| A `result: session` run does no work while an earlier run of the same schedule is unarchived and did not skip; a `result: github` run never waits | pickup gate, prompt assembly | untested |
+| Every schedule declares `result` as `session` or `github` | `check.mjs` | untested |
 | A trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled | `init`, `update` | untested |
 | Schedules are matched by name, so a second sync updates rather than duplicates | `init`, `update` | untested |
 | No placeholder the contract does not name appears in a prompt | `check.mjs` | untested |

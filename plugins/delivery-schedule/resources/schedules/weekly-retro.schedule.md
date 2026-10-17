@@ -6,6 +6,7 @@ cron: "0 9 * * 0,6"
 target: delivery-schedule:schedule-weekly-retro
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Agent]
+result: github
 ---
 
 Run `schedule-weekly-retro` for `{{repo}}` on `{{base}}` with threshold `75`.
