@@ -59,10 +59,10 @@ standard, and a class stated by half reports the wrong sentence.
    | `repeated-body` | A closing paragraph repeats what the section already said | Cut it |
    | `telegraphic` | Clauses or list items chained with dashes, more than one dash in a paragraph, or a run of fragments such as "no X, no Y, no Z" | The same content as full sentences or a bulleted list |
    | `long-sentence` | A sentence past about 35 words, or carrying more than one idea | The sentence split |
-   | `term-drift` | A synonym stands in for a defined term, or a defined term carries a second meaning | The defined term, or a term of its own for the second meaning |
+   | `term-drift` | A synonym replaces a defined term, or the term carries a second meaning | The defined term, or a new term for the second meaning |
    | `noun-cluster` | Four or more nouns stacked, such as "payment order run retry policy" | Rewritten with a verb or a preposition |
    | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
-   | `procedure-step` | A how-to or numbered step not opening with an imperative verb, a step or scenario step with more than one action, or one past about 20 words | One imperative action per step, split |
+   | `procedure-step` | A how-to step not opening with an imperative verb, or any step with two actions or past about 20 words | One action per step |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |

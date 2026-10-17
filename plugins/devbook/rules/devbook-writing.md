@@ -31,19 +31,15 @@ diagram to about nine nodes, and split a larger one.
 
 ## Sentences
 
-- Write full sentences with a subject and a verb. Give each sentence one idea, and keep it
-  under about 25 words.
-- Keep a paragraph to six sentences at most. Start a new paragraph for the next point.
-- Stack at most three nouns. Rewrite "payment order run retry policy" with a verb or a
-  preposition: "the policy that retries a failed payment order run".
+- Write full sentences with a subject and a verb. Give each sentence one idea in under
+  about 25 words, and each paragraph six sentences at most.
+- Stack at most three nouns: "the policy that retries a payment order run", not "payment
+  order run retry policy".
 - Open a section with its point. Background comes after.
-- Use at most one dash per paragraph. Never chain clauses or list items with dashes: split
-  them into sentences or a bulleted list.
-- Never write a list of fragments such as "no X, no Y, no Z". Say what happens in one sentence.
-- Use the terms the glossary or ubiquitous language defines. Never coin a name, such as a
-  "fill-run", unless the same change defines it there.
-- Give a defined term one meaning. Never swap it for a synonym, and never use it for a
-  second meaning: name the second thing with its own term.
+- Use at most one dash per paragraph. Never chain clauses with dashes or write fragments
+  such as "no X, no Y, no Z": write sentences or a bulleted list.
+- Use each term the glossary or ubiquitous language defines in that one meaning, never a
+  synonym. Never coin a name, such as a "fill-run", unless the same change defines it there.
 - Explain an abbreviation or code name at its first use in a chapter, or link to where it is
   defined.
 - Use the active voice and name who acts: "Finance opens the gate", not "the gate is opened".
@@ -53,15 +49,15 @@ diagram to about nine nodes, and split a larger one.
 
 ## Steps
 
-Write ordered instructions, such as a how-to, as numbered steps. Open each step with a verb in
-the imperative, give it one action, and keep it under about 20 words. A scenario step keeps
-its **Given**, **When**, or **Then** and follows the same limits.
+Write a how-to as numbered steps. Open each with an imperative verb, and give it one action
+in under about 20 words.
 
 ## A scenario page
 
 A scenario page reads as one journey, start to finish, in the order the actor
 lives it. Give each part one `##`, titled as the outcome the actor reaches. Give
-each step one list item: one action or one thing the actor sees. Write the page
+each step one list item: one action or one thing the actor sees, in under about
+20 words. Write the page
 in English whatever language the other chapters use, because its steps are the
 test's steps. The page's shape is `devbook-chapter-metadata.md`'s.
 
