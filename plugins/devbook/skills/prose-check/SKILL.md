@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, overlong sentences, a sequence told without a diagram. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, a sequence told without a diagram. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
@@ -26,7 +26,8 @@ standard, and a class stated by half reports the wrong sentence.
   only when a person makes it through the folder's flow, or a note through whatever review
   skill the repository has.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
-  every step list on a scenario page: a step is one clause by design, not a fragment.
+  every step list on a scenario page from every class but `procedure-step`: a step is one
+  clause by design, not a fragment.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -40,7 +41,8 @@ standard, and a class stated by half reports the wrong sentence.
    adopted devbook: say so and stop.
 
 2. **Inventory.** List the chapters in scope from the adopted folders, and the names a chapter can point at: every skill folder, plugin,
-   rule, and path the repository ships, so step 4 can test a name against the tree.
+   rule, and path the repository ships, so step 4 can test a name against the tree, and the terms
+   the glossary (arc42 chapter 12) and each ubiquitous language section define.
 
 3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
    else; a `related` edge is followed only to test a `second-definition`.
@@ -57,6 +59,10 @@ standard, and a class stated by half reports the wrong sentence.
    | `repeated-body` | A closing paragraph repeats what the section already said | Cut it |
    | `telegraphic` | Clauses or list items chained with dashes, more than one dash in a paragraph, or a run of fragments such as "no X, no Y, no Z" | The same content as full sentences or a bulleted list |
    | `long-sentence` | A sentence past about 35 words, or carrying more than one idea | The sentence split |
+   | `term-drift` | A synonym stands in for a defined term, or a defined term carries a second meaning | The defined term, or a term of its own for the second meaning |
+   | `noun-cluster` | Four or more nouns stacked, such as "payment order run retry policy" | Rewritten with a verb or a preposition |
+   | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
+   | `procedure-step` | A how-to or numbered step not opening with an imperative verb, a step or scenario step with more than one action, or one past about 20 words | One imperative action per step, split |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |

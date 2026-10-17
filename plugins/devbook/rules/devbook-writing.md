@@ -33,18 +33,29 @@ diagram to about nine nodes, and split a larger one.
 
 - Write full sentences with a subject and a verb. Give each sentence one idea, and keep it
   under about 25 words.
+- Keep a paragraph to six sentences at most. Start a new paragraph for the next point.
+- Stack at most three nouns. Rewrite "payment order run retry policy" with a verb or a
+  preposition: "the policy that retries a failed payment order run".
 - Open a section with its point. Background comes after.
 - Use at most one dash per paragraph. Never chain clauses or list items with dashes: split
   them into sentences or a bulleted list.
 - Never write a list of fragments such as "no X, no Y, no Z". Say what happens in one sentence.
 - Use the terms the glossary or ubiquitous language defines. Never coin a name, such as a
   "fill-run", unless the same change defines it there.
+- Give a defined term one meaning. Never swap it for a synonym, and never use it for a
+  second meaning: name the second thing with its own term.
 - Explain an abbreviation or code name at its first use in a chapter, or link to where it is
   defined.
 - Use the active voice and name who acts: "Finance opens the gate", not "the gate is opened".
 - Write in the language the chapter is in, as a native speaker would. Never carry English
   sentence structure into another language.
 - Cut what the reader does not need: a closing summary, "note that", a hedge.
+
+## Steps
+
+Write ordered instructions, such as a how-to, as numbered steps. Open each step with a verb in
+the imperative, give it one action, and keep it under about 20 words. A scenario step keeps
+its **Given**, **When**, or **Then** and follows the same limits.
 
 ## A scenario page
 
