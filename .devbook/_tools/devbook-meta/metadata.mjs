@@ -172,6 +172,46 @@ const RESTING_STATUS_BY_FOLDER = {
     design: "active",
 };
 
+// A debt record under `arc42/tdr/` is not a standing structure: it is debt on
+// its way to being paid, so its top-level block takes a ladder of its own in
+// place of the folder's, and rests at `identified` — logged, nothing planned.
+// The `tdr/` index, a record's own sections, and every other arc42 block keep
+// the folder's ladder. Contract 32.
+const DEBT_STATUSES = ["identified", "planned", "in-progress", "resolved"];
+const DEBT_RESTING_STATUS = "identified";
+const DEBT_FOLDER = `${DEVBOOK_PREFIX}arc42/tdr/`;
+
+// What a debt costs while it stands, on a debt record's top-level block only.
+export const DEBT_SEVERITIES = ["low", "medium", "high", "critical"];
+
+/**
+ * Whether this block is a debt record's top-level block: a file under
+ * `arc42/tdr/` other than the folder's index, at file level.
+ */
+export function isDebtRecord(relPath, blockLevel, fileMeta) {
+    const normalized = String(relPath).replace(/\\/g, "/");
+    return blockLevel === "file" && normalized.startsWith(DEBT_FOLDER) && normalized.endsWith(".md") && fileMeta?.index !== "root";
+}
+
+/**
+ * The built-in ladder and resting value of one block: the debt ladder on a
+ * debt record's top-level block, the folder's everywhere else.
+ */
+export function blockLadder(folder, relPath = null, blockLevel = null, fileMeta = null) {
+    if (folder === "arc42" && relPath && isDebtRecord(relPath, blockLevel, fileMeta)) {
+        return { statuses: [...DEBT_STATUSES], resting: DEBT_RESTING_STATUS, debt: true };
+    }
+    return { statuses: builtInStatuses(folder), resting: restingStatusFor(folder), debt: false };
+}
+
+/** The resting value a `statuses.json` rule's globs imply: the debt ladder's when every one names `tdr/`. */
+export function ruleRestingStatus(folder, files) {
+    if (folder === "arc42" && files.length && files.every((glob) => /^(?:\.\/)?tdr\//.test(String(glob).replace(/\\/g, "/")))) {
+        return DEBT_RESTING_STATUS;
+    }
+    return restingStatusFor(folder);
+}
+
 // Allowed `type` values per folder, split by block level. `type` records *what
 // kind of thing* a chapter or file is — the classification that used to be
 // written as a heading prefix (`## Aggregate: Order`). Heading text now carries
@@ -681,14 +721,22 @@ const REMOVED_FIELDS = {
     ),
 };
 
+// The C4 model's two fields: the workspace elements a chapter is about, and
+// the ones its consequences name. Each entry is a bare identifier of
+// `.devbook/arc42/workspace.dsl`, resolved by the graph build. Contract 32.
+export const C4_FIELDS = ["c4", "c4-touches"];
+const C4_IDENTIFIER = /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/;
+const BUILDING_BLOCK_FILE = /^\.devbook\/arc42\/building-blocks\/[^/]+\.md$/;
+
 const FOLDER_EXTRA_FIELDS = {
     domain: [
         "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
         "deployment",
         "sync",
+        ...C4_FIELDS,
         ...DECISION_FIELDS,
     ],
-    arc42: ["sync"],
+    arc42: ["sync", ...C4_FIELDS, "code", "severity"],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: ["sync"],
     ai: ["depends-on", "stage"],
@@ -975,10 +1023,10 @@ export function restingStatusFor(folder) {
  * `declared: false`, while an omitted status anywhere else stays null — which
  * validateDocument reports as an error, and no viewer should paper over.
  */
-export function resolveStatus(folder, meta) {
+export function resolveStatus(folder, meta, relPath = null, blockLevel = null) {
     const declared = meta?.status ?? null;
     if (declared !== null) return { status: declared, declared: true };
-    return { status: restingStatusFor(folder), declared: false };
+    return { status: blockLadder(folder, relPath, blockLevel, meta).resting, declared: false };
 }
 
 /**
@@ -1215,6 +1263,7 @@ export function documentDigest(markdown) {
 
         // A `shot:` or `scenario:` target is a screenshot point or a reference
         // to one, resolved by the tool that runs the journey — not a diagram.
+        // A `c4:` target is a view of the C4 model, and counts like any image.
         for (const image of line.matchAll(/!\[[^\]]*\]\(([^)]*)\)/g)) {
             if (!/^\s*<?(?:shot|scenario):/i.test(image[1])) diagrams++;
         }
@@ -1780,6 +1829,65 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
 }
 
 /**
+ * Lint the C4 model's fields on one block, per `devbook-chapter-metadata.md`:
+ * `c4` and `c4-touches` hold bare workspace identifiers and never share one;
+ * `code` sits on a building block's top-level block and lists repository
+ * folders; `severity` sits on a debt record's top-level block, from a closed
+ * set, and is reported there when missing. Whether an identifier names an
+ * element, and whether a folder exists, is the graph build's to say.
+ */
+export function c4FieldIssues(relPath, blockLevel, meta, fileMeta) {
+    const issues = [];
+    if (!meta) return issues;
+    const folder = folderKindForPath(relPath);
+    const normalized = String(relPath).replace(/\\/g, "/");
+    const say = (severity, message) => issues.push({ severity, message });
+
+    if (folder === "arc42" || folder === "domain") {
+        for (const field of C4_FIELDS) {
+            for (const entry of toList(meta[field])) {
+                if (!C4_IDENTIFIER.test(entry)) {
+                    say("error", `has \`${field}\` entry "${entry}", which is not a workspace identifier — name an element of .devbook/arc42/workspace.dsl as the DSL spells it, \`system.container.component\`, never a path or an anchor.`);
+                }
+            }
+        }
+        const touched = new Set(toList(meta["c4-touches"]).map((entry) => entry.toLowerCase()));
+        for (const entry of toList(meta.c4)) {
+            if (touched.has(entry.toLowerCase())) {
+                say("error", `names \`${entry}\` in both \`c4\` and \`c4-touches\` — an element is what the chapter is about or one its consequences touch, never both.`);
+            }
+        }
+    }
+
+    if (meta.code != null) {
+        const onBlock = folder === "arc42" && blockLevel === "file" && BUILDING_BLOCK_FILE.test(normalized) && fileMeta?.index !== "root";
+        if (!onBlock) {
+            say("error", "has `code`, which sits on an `arc42/building-blocks/<slug>.md` file's top-level block only — the block names the folders that hold its code. See devbook-chapter-metadata.md.");
+        }
+        for (const entry of toList(meta.code)) {
+            const clean = String(entry).replace(/\\/g, "/");
+            if (clean.startsWith("/") || /^[A-Za-z]:/.test(clean) || clean.split("/").includes("..") || clean.includes("#")) {
+                say("error", `has \`code\` entry "${entry}", which is not a repository-relative folder — write it from the repository root, with no leading \`/\`, no \`..\`, and no anchor.`);
+            }
+        }
+    }
+
+    const debt = isDebtRecord(relPath, blockLevel, fileMeta);
+    if (meta.severity != null) {
+        if (!debt) {
+            say("error", "has `severity`, which sits on an `arc42/tdr/` debt record's top-level block only — the `tdr/` index carries none. See devbook-arc42.md.");
+        } else if (Array.isArray(meta.severity) || !DEBT_SEVERITIES.includes(meta.severity)) {
+            say("error", `has \`severity\` "${toList(meta.severity).join(", ")}", expected one of: ${DEBT_SEVERITIES.join(", ")}.`);
+        }
+    } else if (debt) {
+        // Always stated, per the rule; a warning, so a debt set written before
+        // the field existed keeps validating until each record is ranked.
+        say("warning", `is a debt record without \`severity\` — state what the debt costs while it stands: ${DEBT_SEVERITIES.join(", ")}. See devbook-arc42.md.`);
+    }
+    return issues;
+}
+
+/**
  * Lint the approval record: `status: approved` plus `approved-by` and
  * `approved-at`.
  *
@@ -2098,7 +2206,6 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
         issues.push({ severity: issue.severity, message: issue.message });
     }
-    const resting = restingStatusFor(kind);
     const optionalFields = new Set([
         ...COMMON_OPTIONAL_FIELDS,
         ...FILE_ONLY_FIELDS,
@@ -2223,8 +2330,12 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         // resting value is checked first because a configured ladder never
         // lists it: omission is devbook's mechanism, not a rung to choose.
         const blockLevel = chapter.level === 1 ? "file" : "chapter";
-        const configured = ladder?.statusesFor(relPath, blockLevel) ?? null;
-        const allowedStatus = configured?.statuses ?? STATUS_BY_FOLDER[kind];
+        // A debt record's top-level block is on the debt ladder, resting at
+        // `identified`; only a `statuses.json` rule aimed at `tdr/` replaces it.
+        const builtIn = blockLadder(kind, relPath, blockLevel, fileMeta);
+        const resting = builtIn.resting;
+        const configured = ladder?.statusesFor(relPath, blockLevel, { debt: builtIn.debt }) ?? null;
+        const allowedStatus = configured?.statuses ?? builtIn.statuses;
         const declaresStatus = "status" in chapter.meta;
         const pageBlock = scenarioPage && blockLevel === "file";
         if (pageBlock && declaresStatus && chapter.meta.status !== null) {
@@ -2253,7 +2364,14 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         } else if (chapter.meta.status === resting) {
             issues.push({
                 severity: "warning",
-                message: `${label} states \`status: ${resting}\`, which is the resting value in .${kind} — omit the field instead, per the omit-when-empty rule.`,
+                message: `${label} states \`status: ${resting}\`, which is the resting value ${builtIn.debt ? "of a debt record" : `in .${kind}`} — omit the field instead, per the omit-when-empty rule.`,
+            });
+        } else if (builtIn.debt && !configured && STATUS_BY_FOLDER.arc42.includes(chapter.meta.status)) {
+            // A record written before the debt ladder existed holds a folder
+            // rung; it still reads, and is reported until it is moved over.
+            issues.push({
+                severity: "warning",
+                message: `${label} has status "${chapter.meta.status}", a rung of the arc42/ ladder — a debt record takes its own: ${DEBT_STATUSES.join(", ")}, \`${DEBT_RESTING_STATUS}\` by omission. See devbook-arc42.md.`,
             });
         } else if (!allowedStatus.includes(chapter.meta.status)) {
             const from = configured ? ` (${configured.source})` : "";
@@ -2281,6 +2399,11 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         // Which way the chapter and its code sync, and whether this block is
         // one a direction may be set on.
         for (const issue of syncIssues(relPath, blockLevel, chapter.meta, chapter.level)) {
+            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
+        // The C4 model's fields: their shape and where each may sit.
+        for (const issue of c4FieldIssues(relPath, blockLevel, chapter.meta, fileMeta)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 

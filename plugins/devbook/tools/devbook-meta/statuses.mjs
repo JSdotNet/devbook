@@ -23,6 +23,7 @@ import path from "node:path";
 import {
     builtInStatuses,
     restingStatusFor,
+    ruleRestingStatus,
     folderKindForPath,
     DECISION_STATUSES,
     DEVBOOK_FOLDER_NAMES,
@@ -72,7 +73,7 @@ export function compileStatusLadder(json) {
     const report = (message) =>
         issues.push({ severity: "error", path: STATUSES_FILE, message: `${STATUSES_FILE} ${message}` });
     const rulesByFolder = new Map();
-    const ladder = { statusesFor: (relPath, blockLevel) => statusesFor(rulesByFolder, relPath, blockLevel) };
+    const ladder = { statusesFor: (relPath, blockLevel, options) => statusesFor(rulesByFolder, relPath, blockLevel, options) };
 
     if (!isObject(json)) {
         report("is not a JSON object — the built-in ladders apply.");
@@ -122,7 +123,10 @@ function compileRule(folder, rule, at, report) {
         return null;
     }
 
-    const resting = restingStatusFor(folder);
+    // A rule aimed at `tdr/` alone replaces the debt ladder, which rests at
+    // `identified` rather than the folder's `active`.
+    const debt = ruleRestingStatus(folder, files) !== restingStatusFor(folder);
+    const resting = ruleRestingStatus(folder, files);
     const kept = [];
     for (const value of new Set(statuses)) {
         if (resting !== null && value === resting) {
@@ -151,16 +155,19 @@ function compileRule(folder, rule, at, report) {
         }
         return null;
     }
-    return { at, scope, matchers: files.map(globToRegExp), statuses: kept };
+    return { at, scope, matchers: files.map(globToRegExp), statuses: kept, debt };
 }
 
-function statusesFor(rulesByFolder, relPath, blockLevel) {
+// A debt record's top-level block takes only a rule aimed at `tdr/`: a rule
+// for the whole folder narrows the arc42 ladder, which a debt record is not on.
+function statusesFor(rulesByFolder, relPath, blockLevel, { debt = false } = {}) {
     const folder = folderKindForPath(relPath);
     const rules = folder ? rulesByFolder.get(folder) : null;
     if (!rules?.length) return null;
     const subject = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + folder.length + 1);
     for (const rule of rules) {
         if (rule.scope !== "any" && rule.scope !== blockLevel) continue;
+        if (debt && !rule.debt) continue;
         if (!rule.matchers.some((re) => re.test(subject))) continue;
         const statuses = folder === "domain" ? [...rule.statuses, ...DECISION_STATUSES] : [...rule.statuses];
         return { statuses, source: `${STATUSES_FILE} ${rule.at}` };
