@@ -22,14 +22,14 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 
 | Part | What it is |
 |---|---|
-| `assets/build/Update-DevbookIndex.ps1` | The on-demand refresh: runs devbook's `build.mjs --write` and says which index files moved. `-Scope` narrows it, `-Check` validates without writing |
-| `assets/workflows/devbook-meta-nightly.yml` | The scheduled refresh: one pull request when the indexes moved, nothing when they did not |
+| `assets/build/Update-DevbookIndex.ps1` | The on-demand refresh: runs devbook's `build.mjs --write`, then the view renderer where it is materialized, and says which index and render files moved. `-Scope` narrows it, `-Check` validates without writing and reports a stale render as a warning |
+| `assets/workflows/devbook-meta-nightly.yml` | The scheduled refresh: one pull request when the indexes or the view renders moved, nothing when they did not |
 | `assets/workflows/devbook-meta-drift.yml` | The pull-request drift warning: reports a committed index that no longer matches the Markdown, and never fails on it |
 | `rules/devbook-derived-artifacts.md` | Placement, naming, and envelope rules for everything under `_meta/`, installed as a trio so both hosts apply it |
 | `assets/agents-section.md` | The plugin's own marker-fenced section of `AGENTS.md`: the `_meta/` rule and the refresh paths |
 | `assets/settings-snippet.md` | The `Read(_meta/**)` deny rule for `.claude/settings.json`, offered and never applied |
 | `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rebuilt from disk on open, with a node inspector that lists a chapter's test links; and one chapter beside its parsed `meta` block. It loads devbook's `graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at runtime — or from `plugins/devbook/tools/devbook-meta/` in this marketplace's own checkout — and bundles no copy |
-| `tools/c4-render/` | The C4 view renderer: draws each landscape, context, container, component, dynamic, and deployment view of the model devbook's `c4.mjs` reads as one deterministic SVG, with a dark variant inside it. `node render.mjs <workspace.dsl> <folder>` writes `<view key>.svg`; it loads `c4.mjs` from `.devbook/_tools/devbook-meta/`, or `plugins/devbook/tools/devbook-meta/` here, and bundles no parser |
+| `tools/c4-render/` | The C4 view renderer: draws each landscape, context, container, component, dynamic, and deployment view of the model devbook's `c4.mjs` reads as one deterministic SVG, with a dark variant inside it. `node render.mjs [--check] <workspace.dsl> <folder>` writes each `<view key>.svg` that moved and deletes the render of a view that is gone, or with `--check` reports them and writes nothing. `init` materializes it and its README into `.devbook/_tools/c4-render/` where `arc42/` is adopted, and every refresh path runs it into `.devbook/arc42/_meta/c4/`; it loads `c4.mjs` from `.devbook/_tools/devbook-meta/`, or `plugins/devbook/tools/devbook-meta/` here, and bundles no parser |
 | `hooks/` | A session-start guardrail: `_meta/` is tool input, never regenerated in a session |
 
 ## Skills
@@ -44,7 +44,8 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 
 devbook's `build.mjs` checks by default and writes only on `--write`. Nothing in devbook
 passes that flag; everything here does — the script, both workflows, and `refresh` — at `.devbook/_tools/devbook-meta/build.mjs`, the
-path devbook's `init` materializes. That one option is the whole boundary between the two
+path devbook's `init` materializes. The view renderer is this plugin's own and writes only
+`.devbook/arc42/_meta/c4/`, from the same refresh paths. That one option is the whole boundary between the two
 plugins: `.devbook/arc42/adr/checks-and-indexes.md`.
 
 ## Refresh
