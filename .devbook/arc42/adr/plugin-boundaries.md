@@ -3,6 +3,7 @@
 ```meta
 date: 2026-10-05
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
+c4: ["marketplace"]
 ```
 
 Every plugin is self-contained under `plugins/<name>/` and either works alone or declares

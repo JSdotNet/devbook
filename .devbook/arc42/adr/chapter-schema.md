@@ -3,6 +3,8 @@
 ```meta
 date: 2026-10-08
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
+c4: ["marketplace.devbook.chapter", "marketplace.devbook.meta-block", "marketplace.devbook.devbook-folder"]
+c4-touches: ["marketplace.devbook-collaboration.approval", "marketplace.devbook-collaboration.acceptance"]
 ```
 
 A devbook is five folders of Markdown chapters under one parent — `.devbook/arc42`,

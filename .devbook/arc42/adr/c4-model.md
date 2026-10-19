@@ -3,6 +3,8 @@
 ```meta
 date: 2026-10-20
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/building-blocks/devbook-derived.md#view-renderer", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/checks-and-indexes.md"]
+c4: ["marketplace.devbook.c4-model", "marketplace.devbook-derived.view-renderer"]
+c4-touches: ["marketplace.devbook.reference-graph"]
 ```
 
 An arc42 folder's architecture is one Structurizr DSL workspace, `.devbook/arc42/workspace.dsl`,

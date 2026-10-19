@@ -4,6 +4,8 @@
 date: 2026-09-21
 severity: medium
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/tdr/7-the-decision-set-predates-the-concern-rule.md", ".devbook/arc42/adr/chapter-schema.md"]
+c4: ["marketplace.devbook.devbook-folder"]
+c4-touches: ["marketplace.devbook.reconciler"]
 ```
 
 **Owner:** the maintainer

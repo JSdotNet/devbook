@@ -3,8 +3,9 @@
 ```meta
 date: 2026-10-20
 severity: low
-status: planned
+status: in-progress
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/README.md", ".devbook/arc42/tdr/README.md"]
+c4: ["marketplace.devbook.c4-model"]
 ```
 
 **Owner:** the maintainer
@@ -17,14 +18,14 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c
 `devbook-arc42.md` now states the [C4 model record](../adr/c4-model.md): a `workspace.dsl`,
 views embedded as `c4:<key>`, a three-column History table headed `Date | Change | Why`, and a
 debt record carrying `severity` and a `status` on its own ladder. This repository's own devbook
-keeps only part of that yet:
+follows all of it but the History table: every decision record but the C4 model record keeps
+the two-column `Date | Change` table.
 
-- It has no `workspace.dsl`, so its building blocks and runtime chapters still draw their
-  structure in Mermaid.
-- Every decision record but the C4 model record keeps the two-column `Date | Change` table.
-
-The `032-c4-workspace` migration moved every debt record's severity and remediation state
-into its `meta` block, as the [index](README.md#severity-and-state-live-in-meta) explains.
+The rest landed. `workspace.dsl` models the marketplace as the system and each plugin as a
+container, chapters 3, 5, and 6 and every building block embed its views, and each record
+names the elements it is about in `c4`. The `032-c4-workspace` migration moved every debt
+record's severity and remediation state into its `meta` block, as the
+[index](README.md#severity-and-state-live-in-meta) explains.
 
 ## Origin
 
@@ -58,7 +59,7 @@ blocks and runtime chapters that will embed views.
 ```meta
 ```
 
-Adopt the C4 model in this devbook once the check reads it: run the migration that ships with
-the check, write the workspace, embed the views, and split each History row's reason into its
-own column. The trigger is the check accepting the C4 fields, and the plan that delivers the
-model already carries that step.
+Split each decision record's History rows into `Date | Change | Why`, moving the reason each
+change text carries into its own column. The check accepts the C4 fields now, so nothing waits
+on tooling; the split needs a person's judgment row by row, which is why it did not ride along
+with the migration. Once it lands, this record is resolved.

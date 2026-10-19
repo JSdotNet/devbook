@@ -5,6 +5,8 @@ date: 2026-09-08
 severity: medium
 status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/building-blocks/devbook.md"]
+c4: ["marketplace.devbook-derived.refresh-paths"]
+c4-touches: ["marketplace.devbook", "backlog"]
 ```
 
 **Owner:** the maintainer

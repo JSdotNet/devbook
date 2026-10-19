@@ -3,6 +3,8 @@
 ```meta
 date: 2026-09-25
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
+c4: ["marketplace.delivery-surface-dashboard", "marketplace.delivery-surface-collector", "marketplace.delivery-surface-backlog", "marketplace.delivery-surface-canvas"]
+c4-touches: ["marketplace.delivery", "marketplace.delivery-run-view", "backlog"]
 ```
 
 A surface is a viewer for a run: an MCP server named `delivery-surface-*`, resolved from the
