@@ -75,38 +75,38 @@
     <text class="c4-ink-external" fill="#ffffff" x="766" y="392" font-size="12" text-anchor="middle">Takes card payments</text>
   </g>
   <g data-relationship="shop.api.orders -> shop.api.stock">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M217 150C217 209 110 231 110 290"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="99" y="210" width="130" height="20" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="164" y="225" font-size="11" text-anchor="middle">Reserves stock with</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M210 150C210 220 110 220 110 290"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="95" y="210" width="130" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="160" y="225" font-size="11" text-anchor="middle">Reserves stock with</text>
   </g>
   <g data-relationship="shop.api.orders -> shop.api.notify">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M250 150C250 216 390 224 390 290"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="265" y="210" width="111" height="20" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="320" y="225" font-size="11" text-anchor="middle">Raises events on</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M237 150C237 220 390 220 390 290"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="259" y="210" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="314" y="225" font-size="11" text-anchor="middle">Raises events on</text>
   </g>
   <g data-relationship="shop.api.orders -> shop.db">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M283 150L283 210Q283 220 293 220L568 220Q578 220 578 230L578 500Q578 510 588 510L1084 510Q1094 510 1094 520L1094 580"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M290 150L290 210Q290 220 300 220L568 220Q578 220 578 230L578 500Q578 510 588 510L1106 510Q1116 510 1116 520L1116 580"/>
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="523" y="348" width="111" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="578" y="363" font-size="11" text-anchor="middle">Reads and writes</text>
     <text class="c4-muted" fill="#59636e" x="578" y="377" font-size="11" text-anchor="middle">[EF Core]</text>
   </g>
   <g data-relationship="shop.api.stock -> shop.db">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M220 365C492 365 712 655 984 655"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="547" y="493" width="111" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="602" y="508" font-size="11" text-anchor="middle">Reads and writes</text>
-    <text class="c4-muted" fill="#59636e" x="602" y="522" font-size="11" text-anchor="middle">[EF Core]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M110 440C110 510 1072 510 1072 580"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="536" y="493" width="111" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="591" y="508" font-size="11" text-anchor="middle">Reads and writes</text>
+    <text class="c4-muted" fill="#59636e" x="591" y="522" font-size="11" text-anchor="middle">[EF Core]</text>
   </g>
   <g data-relationship="shop.api.notify -> mail">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M500 365C610 365 546 655 656 655"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M390 440C390 510 766 510 766 580"/>
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="517" y="493" width="123" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="578" y="508" font-size="11" text-anchor="middle">Sends mail through</text>
     <text class="c4-muted" fill="#59636e" x="578" y="522" font-size="11" text-anchor="middle">[SMTP]</text>
   </g>
   <g data-relationship="shop.api.orders -> payments">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M360 75C498 75 518 365 656 365"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="437" y="203" width="142" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="508" y="218" font-size="11" text-anchor="middle">Charges the card with</text>
-    <text class="c4-muted" fill="#59636e" x="508" y="232" font-size="11" text-anchor="middle">[HTTPS]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M263 150C263 220 766 220 766 290"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="444" y="203" width="142" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="515" y="218" font-size="11" text-anchor="middle">Charges the card with</text>
+    <text class="c4-muted" fill="#59636e" x="515" y="232" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
 </g>
 <g class="c4-legend">

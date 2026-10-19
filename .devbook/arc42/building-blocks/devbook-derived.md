@@ -107,12 +107,12 @@ related: [".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devb
 
 Also called: the C4 renderer.
 
-Renders every view of the [C4 model](devbook.md#c4-model) to a committed
-`.devbook/arc42/_meta/c4/<view key>.svg`, on the same scheduled refresh that rewrites the
-index, so a reader on GitHub or any viewer that knows no C4 sees a picture beside each
+Draws every view of the [C4 model](devbook.md#c4-model) as an SVG, for a committed
+`.devbook/arc42/_meta/c4/<view key>.svg` that the same scheduled refresh as the index is to
+write, so a reader on GitHub or any viewer that knows no C4 sees a picture beside each
 `c4:<key>` embed. The embed never points at the SVG: the key is the chapter's, the file is a
-derived copy. The renderer depends on nothing outside the plugin — no Java runtime and no
-package — and reads the workspace through devbook's model, never its own parser. The
+derived copy. The renderer needs no Java runtime and no package — only Node and devbook's
+reader — and reads the workspace through devbook's model, never its own parser. The
 [C4 model record](../adr/c4-model.md) holds the reasons.
 
 The drawing is built: `tools/c4-render/render.mjs` takes the model devbook's `c4.mjs` reads
@@ -122,20 +122,23 @@ give it, and one line per pair of shown elements: the relationships between them
 or the first implied one, dashed, when only elements inside them are related. Elements sit in
 ranks along the relationships, people outside the scope to one side and other outsiders to
 the other; the scope of a container or component view is a labelled boundary, and each group
-a labelled band. A line that skips a rank runs in a lane no box occupies. Shapes come from the
+a labelled band. No line crosses a box: between neighbouring ranks it stays in the gap
+between them, within a rank it goes around any box between its ends, and a line that skips a
+rank runs in a lane no box occupies. Shapes come from the
 kind and the `Database` and `External` tags; a legend lists only what the view uses. Colours
 and fonts are presentation attributes, and a `<style>` inside the SVG overrides them under
 `prefers-color-scheme: dark`.
 
 Not yet built: dynamic and deployment views are listed as skipped, and nothing writes
-`_meta/c4/` — the renderer runs by hand, `node render.mjs <workspace.dsl> <folder>`, until
-the refresh paths call it.
+`_meta/c4/` — the renderer runs by hand,
+`node plugins/devbook-derived/tools/c4-render/render.mjs <workspace.dsl> <folder>` here,
+until the refresh paths call it.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The same model gives the same bytes, and a change outside a view leaves its file alone | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | Each static view kind draws byte for byte as its golden file | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
-| No two boxes overlap in any autolayout direction, and the boundary holds the scope's elements and no other | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| No two boxes overlap and no line crosses a box in any autolayout direction, and the boundary holds the scope's elements and no other | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | It reads devbook's model and bundles no parser | `render.mjs` | untested |
 
 When the refresh paths write `_meta/c4/`, it holds one SVG per view key and nothing else,

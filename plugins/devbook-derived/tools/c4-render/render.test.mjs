@@ -120,11 +120,19 @@ test("groups are labelled bands that hold their members and no other element", (
     assert.match(renderView(model, view("landscape")), />Shop company</);
 });
 
+// Every view of the fixture, laid out in each autolayout direction.
+const DIRECTIONS = ["tb", "bt", "lr", "rl"].map((direction) => {
+    const source = fixture
+        .replace(/\n\s*autolayout \w+/g, "")
+        .replace(/(\n\s*)include \*/g, `$1include *$1autolayout ${direction}`);
+    return [direction, read(source)];
+});
+const STATIC = ["landscape", "context", "containers", "components"];
+
 test("ranks follow relationships, and no two boxes overlap in any direction", () => {
-    for (const direction of ["tb", "bt", "lr", "rl"]) {
-        const source = fixture.replace(/autolayout lr/, `autolayout ${direction}`).replace("systemLandscape landscape \"Everything the shop company runs and uses\" {", `systemLandscape landscape {\n            autolayout ${direction}`);
-        const m = read(source);
-        for (const key of ["landscape", "context", "containers", "components"]) {
+    for (const [direction, m] of DIRECTIONS) {
+        for (const key of STATIC) {
+            assert.equal(view(key, m).autolayout.direction, direction);
             const { nodes } = arrange(m, view(key, m));
             for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
                 const [a, b] = [nodes[i], nodes[j]];
@@ -137,18 +145,39 @@ test("ranks follow relationships, and no two boxes overlap in any direction", ()
     assert.ok(rank("shop.api.orders") < rank("shop.api.stock") && rank("shop.api.stock") < rank("shop.db"), "a relationship's destination ranks below its source");
 });
 
-test("a line that skips a rank runs in a lane no box occupies", () => {
-    const { nodes, lines } = arrange(model, view("landscape"));
-    const routed = lines.filter((l) => l.route);
-    assert.ok(routed.length > 0, "the fixture has a line that skips a rank");
-    for (const line of routed) {
-        const low = Math.min(line.route.gapOut, line.route.gapIn);
-        const high = Math.max(line.route.gapOut, line.route.gapIn);
-        for (const node of nodes) {
-            const crosses = node.x < line.route.lane && node.x + node.w > line.route.lane && node.y < high && node.y + node.h > low;
-            assert.ok(!crosses, `${line.source} -> ${line.destination} crosses ${node.element.id}`);
+// Points along a line: each polyline segment, or the cubic curve, sampled.
+function sample(line) {
+    const out = [];
+    if (line.points) {
+        for (let i = 0; i + 1 < line.points.length; i++) {
+            const [[x0, y0], [x1, y1]] = [line.points[i], line.points[i + 1]];
+            for (let t = 0; t <= 1; t += 0.05) out.push([x0 + (x1 - x0) * t, y0 + (y1 - y0) * t]);
+        }
+        return out;
+    }
+    const [p0, p1, p2, p3] = line.curve;
+    for (let t = 0; t <= 1; t += 0.02) {
+        const u = 1 - t;
+        out.push([0, 1].map((k) => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]));
+    }
+    return out;
+}
+
+test("no line crosses a box, in any direction", () => {
+    let routed = 0;
+    for (const [direction, m] of DIRECTIONS) {
+        for (const key of STATIC) {
+            const { nodes, lines } = arrange(m, view(key, m));
+            for (const line of lines) {
+                if (line.route.kind === "lane") routed++;
+                for (const node of nodes) {
+                    const hit = sample(line).some(([x, y]) => x > node.x + 1 && x < node.x + node.w - 1 && y > node.y + 1 && y < node.y + node.h - 1);
+                    assert.ok(!hit, `${direction} ${key}: ${line.source} -> ${line.destination} crosses ${node.element.id}`);
+                }
+            }
         }
     }
+    assert.ok(routed > 0, "the fixture has a line that skips a rank");
 });
 
 // ── what a view selects ─────────────────────────────────────────────────────
@@ -167,6 +196,22 @@ test("container: the scope's containers and what is related to them, never the s
 
 test("component: the scope's components and the containers, systems, and people related to them", () => {
     assert.deepEqual(ids(selectElements(model, view("components"))), ["shop.api.orders", "shop.api.stock", "shop.api.notify", "shop.db", "mail", "payments"]);
+});
+
+test("component: another system's container is shown as its system, never beside it", () => {
+    const m = read(wrapModel(
+        's = softwareSystem "S" {\nc = container "C" {\nx = component "X"\n}\nd = container "D"\n}\no = softwareSystem "O" {\ne = container "E"\n}\ns.c.x -> o.e "Calls"\ns.c.x -> s.d "Reads"',
+        "component s.c parts {\ninclude *\n}",
+    ));
+    const shown = selectElements(m, view("parts", m));
+    assert.deepEqual(ids(shown), ["s.c.x", "s.d", "o"]);
+    assert.deepEqual(selectRelationships(m, view("parts", m), shown).map((l) => [l.source, l.destination, l.implied]), [["s.c.x", "o", true], ["s.c.x", "s.d", false]]);
+});
+
+test("control characters never reach the SVG", () => {
+    const m = read(wrapModel('a = softwareSystem "A\\u0001"', "systemLandscape all {\ninclude *\n}"));
+    m.elements[0].name = "A\u0001B";
+    assert.doesNotMatch(renderView(m, view("all", m)), /\u0001/);
 });
 
 test("include by identifier, exclude, and an excluded relationship", () => {

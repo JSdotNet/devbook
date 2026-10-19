@@ -84,40 +84,40 @@
     <text class="c4-ink-external" fill="#ffffff" x="1190" y="1182" font-size="12" text-anchor="middle">Takes card payments</text>
   </g>
   <g data-relationship="shop.web -> shop.api">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M580 381C678 381 622 639 720 639"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M580 381C650 381 650 639 720 639"/>
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="607" y="493" width="86" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="650" y="508" font-size="11" text-anchor="middle">Calls</text>
     <text class="c4-muted" fill="#59636e" x="650" y="522" font-size="11" text-anchor="middle">[HTTPS/JSON]</text>
   </g>
   <g data-relationship="shop.api -> shop.db">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M940 624C987 624 1033 639 1080 639"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="955" y="615" width="111" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="1010" y="630" font-size="11" text-anchor="middle">Reads and writes</text>
-    <text class="c4-muted" fill="#59636e" x="1010" y="644" font-size="11" text-anchor="middle">[EF Core]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M940 612C1010 612 1010 639 1080 639"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="955" y="609" width="111" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="624" font-size="11" text-anchor="middle">Reads and writes</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="638" font-size="11" text-anchor="middle">[EF Core]</text>
   </g>
   <g data-relationship="customer -> shop.web">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M220 60C337 60 243 381 360 381"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M220 60C290 60 290 381 360 381"/>
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="219" y="204" width="142" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="290" y="219" font-size="11" text-anchor="middle">Browses and orders on</text>
     <text class="c4-muted" fill="#59636e" x="290" y="233" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
   <g data-relationship="shop.api -> mail">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M940 654C1052 654 968 960 1080 960"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="949" y="790" width="123" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="1010" y="805" font-size="11" text-anchor="middle">Sends mail through</text>
-    <text class="c4-muted" fill="#59636e" x="1010" y="819" font-size="11" text-anchor="middle">[SMTP]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M940 630C1010 630 1010 960 1080 960"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="949" y="778" width="123" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="793" font-size="11" text-anchor="middle">Sends mail through</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="807" font-size="11" text-anchor="middle">[SMTP]</text>
   </g>
   <g data-relationship="shop.api -> payments">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M808 714C808 890 1190 904 1190 1080"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="928" y="880" width="142" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="999" y="895" font-size="11" text-anchor="middle">Charges the card with</text>
-    <text class="c4-muted" fill="#59636e" x="999" y="909" font-size="11" text-anchor="middle">[HTTPS]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-containers-arrow)" d="M940 648C1010 648 1010 1155 1080 1155"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="939" y="885" width="142" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="900" font-size="11" text-anchor="middle">Charges the card with</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="914" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
   <g data-relationship="shop.api -> warehouse">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M852 714C852 951 1190 1101 1190 1338"/>
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="969" y="1009" width="105" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="1021" y="1024" font-size="11" text-anchor="middle">Hands orders to</text>
-    <text class="c4-muted" fill="#59636e" x="1021" y="1038" font-size="11" text-anchor="middle">[AMQP]</text>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M940 666C1010 666 1010 1413 1080 1413"/>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="958" y="1023" width="105" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="1038" font-size="11" text-anchor="middle">Hands orders to</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="1052" font-size="11" text-anchor="middle">[AMQP]</text>
   </g>
   <g data-relationship="mail -> customer">
     <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-containers-arrow)" d="M1080 930L1020 930Q1010 930 1010 920L1010 520Q1010 510 1000 510L300 510Q290 510 290 500L290 100Q290 90 280 90L220 90"/>

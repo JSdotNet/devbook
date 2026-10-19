@@ -60,7 +60,8 @@ const MARGIN = 32;
 
 // ── text ────────────────────────────────────────────────────────────────────
 
-const escape = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+// XML 1.0 forbids most control characters even escaped, so they are dropped.
+const escape = (s) => String(s).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\ufffe\uffff]/g, "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const n = (v) => String(Math.round(v));
 
 // Greedy word wrap to `max` characters, at most `lines` lines; the last line
@@ -125,7 +126,8 @@ class Model {
     }
 }
 
-// The elements a view shows, in model order, by Structurizr's rules for `include *`.
+// The elements a view shows, in model order: Structurizr's rules for `include *`,
+// then each included identifier, less each excluded one.
 export function selectElements(model, view) {
     const m = model instanceof Model ? model : new Model(model);
     const allowed = new Set(ALLOWED[view.kind]);
@@ -143,8 +145,10 @@ export function selectElements(model, view) {
             } else if (scope) {
                 const inside = m.elements.filter((e) => e.parent === scope.id);
                 inside.forEach(add);
+                // A component view's neighbours are its own system's other containers
+                // and the people and systems outside it; never another system's container.
                 const neighbours = view.kind === "component"
-                    ? m.elements.filter((e) => e.kind !== "component" && e.id !== scope.id)
+                    ? [...top, ...m.elements.filter((e) => e.kind === "container" && e.parent === scope.parent && e.id !== scope.id)]
                     : top;
                 for (const e of neighbours) {
                     if (m.within(scope.id, e.id) || m.within(e.id, scope.id)) continue;
@@ -329,26 +333,40 @@ function layout(view, nodes, lines) {
 
 // ── routing ─────────────────────────────────────────────────────────────────
 //
-// A line between neighbouring ranks, or within one, is a curve. A line that
-// skips a rank would cross the boxes between, so it runs in a channel instead:
-// out into the gap after its source, along the gap to a lane no box in the
-// skipped ranks occupies, through the ranks in that lane, and into its
-// destination from the gap before it. All of it is worked in rank and slot
-// coordinates, so every autolayout direction routes the same way.
+// Every line is placed so it crosses no box. Between neighbouring ranks it is a
+// curve that leaves and enters by the sides facing the gap between them, so it
+// stays inside that gap. Within one rank it is a curve between facing sides when
+// no box stands between the two, and otherwise runs out into the gap past the
+// rank and back. A line that skips a rank runs out into the gap after its
+// source, along it to a lane no box in the skipped ranks occupies, through the
+// ranks in that lane, and into its destination from the gap before it. All of
+// it is worked in rank and slot coordinates, so every autolayout direction
+// routes the same way.
+
+const toPoint = (vertical, slot, along) => (vertical ? [slot, along] : [along, slot]);
 
 function route(nodes, lines, geometry) {
     const byId = new Map(nodes.map((node) => [node.element.id, node]));
     const { vertical, rankSep } = geometry;
     const rankOf = (box) => (vertical ? [box.y, box.y + box.h] : [box.x, box.x + box.w]);
     const slotOf = (box) => (vertical ? [box.x, box.x + box.w] : [box.y, box.y + box.h]);
-    const point = (slot, along) => (vertical ? [slot, along] : [along, slot]);
+    const centre = (box) => (slotOf(box)[0] + slotOf(box)[1]) / 2;
     for (const line of lines) {
         const a = byId.get(line.source);
         const b = byId.get(line.destination);
-        if (Math.abs(a.rank - b.rank) < 2) continue;
         const [a0, a1] = rankOf(a);
         const [b0, b1] = rankOf(b);
+        if (a.rank === b.rank) {
+            const lo = Math.min(slotOf(a)[1], slotOf(b)[1]);
+            const hi = Math.max(slotOf(a)[0], slotOf(b)[0]);
+            const between = nodes.some((node) => node.rank === a.rank && node !== a && node !== b && slotOf(node)[0] < hi && slotOf(node)[1] > lo);
+            line.route = between
+                ? { kind: "around", vertical, gap: Math.round(a1 + rankSep / 2) }
+                : { kind: "beside", vertical, onward: centre(b) > centre(a) };
+            continue;
+        }
         const forward = b0 > a1;
+        if (Math.abs(a.rank - b.rank) === 1) { line.route = { kind: "adjacent", vertical, forward }; continue; }
         const leave = forward ? a1 : a0;
         const enter = forward ? b0 : b1;
         const gapOut = forward ? leave + rankSep / 2 : leave - rankSep / 2;
@@ -365,17 +383,23 @@ function route(nodes, lines, geometry) {
             if (last && span[0] <= last[1]) last[1] = Math.max(last[1], span[1]);
             else merged.push([...span]);
         }
+        const want = (centre(a) + centre(b)) / 2;
         const all = nodes.map(slotOf);
-        const candidates = [Math.min(...all.map((s) => s[0])) - 32, Math.max(...all.map((s) => s[1])) + 32];
-        if (!merged.length) candidates.push((slotOf(a)[0] + slotOf(a)[1] + slotOf(b)[0] + slotOf(b)[1]) / 4);
+        const candidates = [Math.min(...all.map((s) => s[0])) - 32, Math.max(...all.map((s) => s[1])) + 32, want];
         for (let i = 0; i + 1 < merged.length; i++) candidates.push((merged[i][1] + merged[i + 1][0]) / 2);
         if (merged.length) candidates.push(merged[0][0] - 16, merged[merged.length - 1][1] + 16);
         const free = (c) => !merged.some(([lo, hi]) => c > lo && c < hi);
-        const want = (slotOf(a)[0] + slotOf(a)[1] + slotOf(b)[0] + slotOf(b)[1]) / 4;
         const lane = Math.round(candidates.filter(free).sort((p, q) => Math.abs(p - want) - Math.abs(q - want) || p - q)[0]);
-        line.route = { forward, gapOut: Math.round(gapOut), gapIn: Math.round(gapIn), lane, point, vertical };
+        line.route = { kind: "lane", vertical, forward, gapOut: Math.round(gapOut), gapIn: Math.round(gapIn), lane };
     }
-    return byId;
+}
+
+// The sides a line leaves and enters by, from how it is routed.
+function sides(r) {
+    const [rankNear, rankFar, slotNear, slotFar] = r.vertical ? ["top", "bottom", "left", "right"] : ["left", "right", "top", "bottom"];
+    if (r.kind === "beside") return r.onward ? [slotFar, slotNear] : [slotNear, slotFar];
+    if (r.kind === "around") return [rankFar, rankFar];
+    return r.forward ? [rankFar, rankNear] : [rankNear, rankFar];
 }
 
 // Points with no repeat and no straight-through corner.
@@ -423,17 +447,20 @@ const fillAttrs = (style) => `class="c4-fill-${style}" fill="${STYLES[style].lig
 const inkAttrs = (style) => `class="c4-ink-${style}" fill="${STYLES[style].light[2]}"`;
 const pageInk = (role) => `class="c4-${role}" fill="${PAGE.light[role]}"`;
 
+const headRadius = (w, h) => Math.round(Math.min(w, h) / 7);
+const rimDepth = (h) => Math.max(4, Math.round(h / 12));
+
 function shape(kind, style, x, y, w, h) {
     const attrs = fillAttrs(style);
     if (kind === "person") {
-        const r = Math.round(Math.min(w, h) / 7);
+        const r = headRadius(w, h);
         return [
             `<circle ${attrs} cx="${n(x + w / 2)}" cy="${n(y + r)}" r="${n(r)}"/>`,
             `<rect ${attrs} x="${n(x)}" y="${n(y + r * 2 - 6)}" width="${n(w)}" height="${n(h - r * 2 + 6)}" rx="${n(r + 6)}"/>`,
         ];
     }
     if (kind === "database") {
-        const ry = Math.max(4, Math.round(h / 12));
+        const ry = rimDepth(h);
         const rx = n(w / 2);
         return [
             `<path ${attrs} d="M${n(x)} ${n(y + ry)}L${n(x)} ${n(y + h - ry)}A${rx} ${ry} 0 0 0 ${n(x + w)} ${n(y + h - ry)}L${n(x + w)} ${n(y + ry)}A${rx} ${ry} 0 0 0 ${n(x)} ${n(y + ry)}Z"/>`,
@@ -448,7 +475,7 @@ function drawNode(node) {
     const style = styleOf(e);
     const kind = shapeOf(e);
     const out = [`<g data-element="${escape(e.id)}">`, ...shape(kind, style, node.x, node.y, node.w, node.h).map((s) => `  ${s}`)];
-    const top = kind === "person" ? node.y + Math.round(Math.min(node.w, node.h) / 7) * 2 - 6 : kind === "database" ? node.y + Math.round(node.h / 12) * 2 : node.y;
+    const top = kind === "person" ? node.y + headRadius(node.w, node.h) * 2 - 6 : kind === "database" ? node.y + rimDepth(node.h) * 2 : node.y;
     const height = node.y + node.h - top;
     const name = wrap(e.name, 24, 2);
     const kindLine = clip(`[${KIND_LABEL[e.kind]}${e.technology ? `: ${e.technology}` : ""}]`, 36);
@@ -464,27 +491,17 @@ function drawNode(node) {
     return out;
 }
 
-// The side of a box a line leaves or enters by, from where the other box lies.
-function side(from, to) {
-    const dx = to.x + to.w / 2 - (from.x + from.w / 2);
-    const dy = to.y + to.h / 2 - (from.y + from.h / 2);
-    if (Math.abs(dy) / (from.h + RANK_SEP) >= Math.abs(dx) / (from.w + NODE_SEP)) return dy >= 0 ? "bottom" : "top";
-    return dx >= 0 ? "right" : "left";
-}
-
 const NORMAL = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] };
 
 // Spreads the ends meeting one side of a box across its middle, ordered by
 // where the other end lies, so parallel lines never share a point.
-function ports(nodes, lines, geometry) {
+function ports(nodes, lines) {
     const byId = new Map(nodes.map((node) => [node.element.id, node]));
     const ends = new Map();
     lines.forEach((line, i) => {
         const a = byId.get(line.source);
         const b = byId.get(line.destination);
-        const [sa, sb] = line.route
-            ? (geometry.vertical ? ["bottom", "top"] : ["right", "left"]).map((s, i, pair) => (line.route.forward ? s : pair[1 - i]))
-            : [side(a, b), side(b, a)];
+        const [sa, sb] = sides(line.route);
         line.ends = [{ node: a, other: b, side: sa }, { node: b, other: a, side: sb }];
         for (const end of line.ends) {
             const key = `${end.node.element.id}\u0000${end.side}`;
@@ -518,31 +535,41 @@ function labelLines(line) {
     return out;
 }
 
-function drawLine(line, marker) {
+// The line's path and the point its label centres on, as `line.points` for a
+// polyline or `line.curve` for a cubic curve, `line.d`, and `line.mid`.
+function shapeLine(line) {
     const [a, b] = line.ends;
     const [x0, y0] = a.point;
     const [x3, y3] = b.point;
-    let d;
-    let mx;
-    let my;
-    if (line.route) {
-        const { gapOut, gapIn, lane, point, vertical } = line.route;
-        const slot = (p) => (vertical ? p[0] : p[1]);
-        line.points = simplify([a.point, point(slot(a.point), gapOut), point(lane, gapOut), point(lane, gapIn), point(slot(b.point), gapIn), b.point]);
-        d = polyline(line.points);
-        [mx, my] = point(lane, Math.round((gapOut + gapIn) / 2));
+    const r = line.route;
+    const slot = (p) => (r.vertical ? p[0] : p[1]);
+    const along = (p) => (r.vertical ? p[1] : p[0]);
+    if (r.kind === "lane" || r.kind === "around") {
+        const [gapOut, gapIn] = r.kind === "lane" ? [r.gapOut, r.gapIn] : [r.gap, r.gap];
+        const [laneFrom, laneTo] = r.kind === "lane" ? [r.lane, r.lane] : [slot(a.point), slot(b.point)];
+        line.points = simplify([a.point, toPoint(r.vertical, slot(a.point), gapOut), toPoint(r.vertical, laneFrom, gapOut), toPoint(r.vertical, laneTo, gapIn), toPoint(r.vertical, slot(b.point), gapIn), b.point]);
+        line.d = polyline(line.points);
+        line.mid = toPoint(r.vertical, Math.round((laneFrom + laneTo) / 2), Math.round((gapOut + gapIn) / 2));
     } else {
-        const k = Math.max(40, Math.round(Math.hypot(x3 - x0, y3 - y0) / 3));
+        // Control points along each side's normal, half the gap deep, keep the
+        // curve inside the gap it crosses.
+        const depth = r.kind === "adjacent" ? Math.abs(along(b.point) - along(a.point)) : Math.abs(slot(b.point) - slot(a.point));
+        const k = Math.max(8, Math.round(depth / 2));
         const [ax, ay] = NORMAL[a.side];
         const [bx, by] = NORMAL[b.side];
         const x1 = x0 + ax * k;
         const y1 = y0 + ay * k;
         const x2 = x3 + bx * k;
         const y2 = y3 + by * k;
-        d = `M${n(x0)} ${n(y0)}C${n(x1)} ${n(y1)} ${n(x2)} ${n(y2)} ${n(x3)} ${n(y3)}`;
-        mx = Math.round((x0 + 3 * x1 + 3 * x2 + x3) / 8);
-        my = Math.round((y0 + 3 * y1 + 3 * y2 + y3) / 8);
+        line.curve = [[x0, y0], [x1, y1], [x2, y2], [x3, y3]];
+        line.d = `M${n(x0)} ${n(y0)}C${n(x1)} ${n(y1)} ${n(x2)} ${n(y2)} ${n(x3)} ${n(y3)}`;
+        line.mid = [Math.round((x0 + 3 * x1 + 3 * x2 + x3) / 8), Math.round((y0 + 3 * y1 + 3 * y2 + y3) / 8)];
     }
+}
+
+function drawLine(line, marker) {
+    const { d } = line;
+    const [mx, my] = line.mid;
     const out = [`<g data-relationship="${escape(line.source)} -> ${escape(line.destination)}">`];
     out.push(`  <path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"${line.implied ? ' stroke-dasharray="6 4"' : ""} marker-end="url(#${marker})" d="${d}"/>`);
     const text = labelLines(line);
@@ -558,7 +585,7 @@ function drawLine(line, marker) {
     return out;
 }
 
-function legend(nodes, layoutResult, lines, x, y) {
+function legend(nodes, layoutResult, lines) {
     const styles = new Set(nodes.map((node) => styleOf(node.element)));
     const items = [];
     for (const style of ["person", "softwareSystem", "container", "component", "external"]) {
@@ -571,14 +598,15 @@ function legend(nodes, layoutResult, lines, x, y) {
     if (layoutResult.groupRects.length) items.push({ label: "Group", draw: (ix, iy) => [`<rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1" stroke-dasharray="2 3" x="${ix}" y="${iy}" width="24" height="16" rx="3"/>`] });
     if (lines.length) items.push({ label: "Relationship", draw: (ix, iy, marker) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" marker-end="url(#${marker})" d="M${ix} ${iy + 8}L${ix + 22} ${iy + 8}"/>`] });
     if (lines.some((l) => l.implied)) items.push({ label: "Implied relationship", draw: (ix, iy, marker) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#${marker})" d="M${ix} ${iy + 8}L${ix + 22} ${iy + 8}"/>`] });
-    return { items, x, y };
+    return items;
 }
 
 const slug = (value) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "view";
 
 /**
- * Places one static view without drawing it: `{ nodes, lines, groupRects,
- * boundary, scope, boundaryOwner }`, every node with its element, rank, and box.
+ * Places one static view without drawing it: `{ m, nodes, lines, groupRects,
+ * boundary, scope, boundaryOwner }`, every node with its element, rank, and
+ * box, and every line with its route and end points.
  */
 export function arrange(model, view) {
     if (!STATIC_KINDS.includes(view.kind)) throw new Error(`c4-render draws ${STATIC_KINDS.join(", ")} views; \`${view.key}\` is a ${view.kind} view.`);
@@ -591,7 +619,8 @@ export function arrange(model, view) {
     const result = nodes.length ? layout(view, nodes, lines) : { groupRects: [], boundary: null };
     if (nodes.length) {
         route(nodes, lines, result);
-        ports(nodes, lines, result);
+        ports(nodes, lines);
+        lines.forEach(shapeLine);
     }
     return { m, nodes, lines, groupRects: result.groupRects, boundary: result.boundary, scope, boundaryOwner };
 }
@@ -617,7 +646,7 @@ export function renderView(model, view) {
 
     // Bounds of everything drawn, so the picture is shifted to sit inside its margin.
     const boxes = [...nodes, ...result.groupRects, ...(result.boundary ? [result.boundary] : []), ...lines.filter((l) => l.label).map((l) => l.label)];
-    for (const line of lines) for (const p of line.points ?? line.ends.map((end) => end.point)) boxes.push({ x: p[0], y: p[1], w: 0, h: 0 });
+    for (const line of lines) for (const p of line.points ?? line.curve) boxes.push({ x: p[0], y: p[1], w: 0, h: 0 });
     const minX = boxes.length ? Math.min(...boxes.map((b) => b.x)) : 0;
     const minY = boxes.length ? Math.min(...boxes.map((b) => b.y)) : 0;
     const maxX = boxes.length ? Math.max(...boxes.map((b) => b.x + b.w)) : 0;
@@ -631,17 +660,17 @@ export function renderView(model, view) {
     const contentHeight = nodes.length ? maxY - minY : 24;
 
     const legendY = MARGIN + headerHeight + contentHeight + 32;
-    const key = legend(nodes, result, lines, MARGIN, legendY);
+    const items = legend(nodes, result, lines);
     let lx = MARGIN;
     const legendParts = [];
-    for (const item of key.items) {
+    for (const item of items) {
         legendParts.push(...item.draw(lx, legendY, marker));
         legendParts.push(`<text ${pageInk("ink")} x="${lx + 32}" y="${legendY + 13}" font-size="12">${escape(item.label)}</text>`);
         lx += 32 + textWidth(item.label, 12) + 24;
     }
 
     const width = Math.max(MARGIN * 2 + (nodes.length ? maxX - minX : 0), lx + MARGIN - 24, MARGIN * 2 + Math.max(...header.map((h, i) => textWidth(h, i ? 13 : 20))));
-    const height = legendY + (key.items.length ? 16 : 0) + MARGIN;
+    const height = legendY + (items.length ? 16 : 0) + MARGIN;
 
     const dark = [
         `.c4-bg{fill:${PAGE.dark.bg}}`,
@@ -677,7 +706,7 @@ export function renderView(model, view) {
         ...(nodes.length
             ? [`<g transform="translate(${n(offsetX)} ${n(offsetY)})">`, ...body.map((line) => `  ${line}`), "</g>"]
             : [`<text ${pageInk("muted")} x="${MARGIN}" y="${MARGIN + headerHeight + 16}" font-size="13">This view shows no elements.</text>`]),
-        ...(key.items.length ? ['<g class="c4-legend">', ...legendParts.map((line) => `  ${line}`), "</g>"] : []),
+        ...(items.length ? ['<g class="c4-legend">', ...legendParts.map((line) => `  ${line}`), "</g>"] : []),
         "</svg>",
         "",
     ];
@@ -702,18 +731,20 @@ export function renderViews(model) {
 // ── command line ────────────────────────────────────────────────────────────
 
 // devbook's reader, never a copy: where devbook's init materializes it, or where
-// this marketplace authors it.
-const READER_CANDIDATES = (root) => [
-    path.join(root, ".devbook", "_tools", "devbook-meta", "c4.mjs"),
-    path.join(root, "plugins", "devbook", "tools", "devbook-meta", "c4.mjs"),
-];
+// this marketplace authors it, looked for from the working folder and from each
+// folder above the workspace; and beside this plugin in the marketplace checkout.
+const READER = [[".devbook", "_tools", "devbook-meta", "c4.mjs"], ["plugins", "devbook", "tools", "devbook-meta", "c4.mjs"]];
 
-export async function loadReader(root = process.cwd()) {
-    for (const file of READER_CANDIDATES(root)) {
+export async function loadReader(workspace = null, root = process.cwd()) {
+    const folders = [root];
+    for (let dir = workspace ? path.dirname(path.resolve(root, workspace)) : null; dir && !folders.includes(dir); dir = path.dirname(dir)) folders.push(dir);
+    const candidates = folders.flatMap((dir) => READER.map((parts) => path.join(dir, ...parts)));
+    candidates.push(fileURLToPath(new URL("../../../devbook/tools/devbook-meta/c4.mjs", import.meta.url)));
+    for (const file of candidates) {
         try { await access(file); } catch { continue; }
         return import(pathToFileURL(file).href);
     }
-    throw new Error(`devbook's C4 reader is not installed — none of ${READER_CANDIDATES(root).map((f) => path.relative(root, f)).join(", ")} exists. Run devbook:update.`);
+    throw new Error("devbook's C4 reader, c4.mjs, is not installed in .devbook/_tools/devbook-meta/ here or above the workspace. Run devbook:update.");
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -722,7 +753,9 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         console.error("usage: node render.mjs <workspace.dsl> <out folder>");
         process.exit(2);
     }
-    const { readWorkspace } = await loadReader();
+    let reader;
+    try { reader = await loadReader(workspace); } catch (error) { console.error(error.message); process.exit(2); }
+    const { readWorkspace } = reader;
     const model = readWorkspace(workspace);
     for (const p of model.problems) console.error(`${p.file}:${p.line}: ${p.message}`);
     const { rendered, skipped } = renderViews(model);
