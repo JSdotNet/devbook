@@ -1,6 +1,7 @@
 name: Devbook metadata nightly refresh
 
-# Reconciles the committed _meta indexes with the Markdown on the default
+# Reconciles the committed _meta indexes, and the C4 view renders under
+# .devbook/arc42/_meta/c4/, with the Markdown and the workspace on the default
 # branch. Installed by the `devbook-derived:init` skill.
 #
 # The pull-request drift check (devbook-meta-drift.yml) only *warns* when an index has
@@ -55,25 +56,34 @@ jobs:
       # The generator writes every artifact before it exits, so a non-zero exit
       # still leaves a complete refresh on disk. Record it and keep going: a
       # broken reference on the default branch is worth reporting, but it is a
-      # separate problem from the indexes being out of date.
-      - name: Regenerate the indexes
+      # separate problem from the indexes being out of date. The view renderer,
+      # where arc42/ is adopted, writes each view that moved and deletes the
+      # render of a view that no longer exists, the same way.
+      - name: Regenerate the indexes and the view renders
         id: generate
         run: |
           set +e
           node .devbook/_tools/devbook-meta/build.mjs --write
-          echo "status=$?" >> "$GITHUB_OUTPUT"
+          status=$?
+          if [ -f .devbook/_tools/c4-render/render.mjs ]; then
+            node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4
+            rendered=$?
+            [ "$status" -eq 0 ] && status=$rendered
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
 
       - name: Detect drift
         id: drift
         run: |
           # git status, not git diff: an index written for the first time is untracked,
-          # and diff would call the tree current while the new file sat unseen.
-          if [ -z "$(git status --porcelain -- '*_meta/*.json')" ]; then
+          # and diff would call the tree current while the new file sat unseen. A
+          # render deleted for a view that is gone shows here too.
+          if [ -z "$(git status --porcelain -- '*_meta/*.json' '*_meta/c4/*.svg')" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Derived indexes are current. Nothing to do."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git status --short -- '*_meta/*.json'
+            git status --short -- '*_meta/*.json' '*_meta/c4/*.svg'
           fi
 
       - name: Push the refresh branch
@@ -82,7 +92,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch --force-create "$REFRESH_BRANCH"
-          git add -- '*_meta/*.json'
+          # A pathspec add stages a deleted render as well as a written one.
+          git add -- '*_meta/*.json' '*_meta/c4/*.svg'
           git commit -m 'chore(devbook): refresh derived _meta indexes'
           git push --force origin "$REFRESH_BRANCH"
 
@@ -95,9 +106,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_TITLE: 'chore(devbook): refresh derived _meta indexes'
           PR_BODY: |
-            Scheduled refresh of the generated `_meta/graph.json` and
-            `_meta/index.json` artifacts, so devbook pull requests do not have
-            to carry them and conflict on merge.
+            Scheduled refresh of the generated `_meta/` indexes and the C4 view
+            renders under `.devbook/arc42/_meta/c4/`, so devbook pull requests do
+            not have to carry them and conflict on merge.
 
             Generated output only — no authored Markdown is touched. Regenerate
             locally with `./build/Update-DevbookIndex.ps1`.
@@ -114,5 +125,5 @@ jobs:
       - name: Fail if the generator reported errors
         if: steps.generate.outputs.status != '0'
         run: |
-          echo "::error::build.mjs exited ${{ steps.generate.outputs.status }} — the default branch has devbook metadata errors. The index refresh above still ran."
+          echo "::error::A generator exited ${{ steps.generate.outputs.status }} — the default branch has devbook metadata or workspace errors. The refresh above still ran."
           exit 1

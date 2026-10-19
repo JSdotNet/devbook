@@ -14,17 +14,25 @@
     the nightly job (`.github/workflows/devbook-meta-nightly.yml`) reconciles
     the default branch on its own.
 
-    Unlike the raw `node` invocation, this reports which index files actually
-    moved, so a refresh that changed nothing is visibly a no-op.
+    Where devbook-derived materialized its C4 view renderer at
+    `.devbook/_tools/c4-render/render.mjs`, it then renders every view of
+    `.devbook/arc42/workspace.dsl` to `.devbook/arc42/_meta/c4/<view key>.svg`
+    and deletes the render of a view that no longer exists.
+
+    Unlike the raw `node` invocation, this reports which index and render files
+    actually moved, so a refresh that changed nothing is visibly a no-op.
 
 .PARAMETER Scope
     Refresh one devbook folder only (for example `tech` or `ai`). Omit to refresh
-    every adopted scope plus the repository-wide rollup.
+    every adopted scope plus the repository-wide rollup. The views render only
+    when the scope is omitted or `arc42`.
 
 .PARAMETER Check
     Validate the authored Markdown without writing anything. Exits
     non-zero when a reference does not resolve or a `meta` block is
-    inconsistent. This is what CI runs as its blocking step.
+    inconsistent. This is what CI runs as its blocking step. Also reports a
+    view render that is missing, stale, or names no view, as a warning that
+    never changes the exit code: a stale render is the scheduled refresh's to fix.
 
 .PARAMETER Root
     Repository root. Defaults to the enclosing git working tree, so the script
@@ -70,9 +78,10 @@ function Resolve-RepositoryRoot {
     return (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 }
 
-# Hash every committed index so we can report what the generator actually
-# changed. Hashing is cheap here: these files number in the dozens, not the
-# thousands, and the alternative is asking git, which fails in a non-git copy.
+# Hash every committed index and view render so we can report what the
+# generators actually changed. Hashing is cheap here: these files number in the
+# dozens, not the thousands, and the alternative is asking git, which fails in a
+# non-git copy.
 function Get-IndexFingerprints {
     param([string] $RepoRoot)
 
@@ -81,7 +90,12 @@ function Get-IndexFingerprints {
         Where-Object { $_.FullName -notmatch '[\\/](node_modules|\.git)[\\/]' }
 
     foreach ($directory in $metaDirectories) {
-        foreach ($file in Get-ChildItem -LiteralPath $directory.FullName -File -Filter '*.json') {
+        $files = @(Get-ChildItem -LiteralPath $directory.FullName -File -Filter '*.json')
+        $renders = Join-Path $directory.FullName 'c4'
+        if (Test-Path -LiteralPath $renders -PathType Container) {
+            $files += @(Get-ChildItem -LiteralPath $renders -File -Filter '*.svg')
+        }
+        foreach ($file in $files) {
             $relative = [IO.Path]::GetRelativePath($RepoRoot, $file.FullName).Replace('\', '/')
             $fingerprints[$relative] = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
         }
@@ -103,18 +117,35 @@ $arguments = @($generator)
 $arguments += $(if ($Check) { '--check' } else { '--write' })
 if ($Scope) { $arguments += @('--scope', $Scope) }
 
+# The view renderer is devbook-derived's, materialized only where arc42/ is
+# adopted. Its paths are relative to the repository root, where it runs.
+$renderer = Join-Path $repoRoot '.devbook/_tools/c4-render/render.mjs'
+$renderViews = (Test-Path -LiteralPath $renderer -PathType Leaf) -and (-not $Scope -or $Scope -eq 'arc42')
+$renderArguments = @('.devbook/_tools/c4-render/render.mjs')
+if ($Check) { $renderArguments += '--check' }
+$renderArguments += @('.devbook/arc42/workspace.dsl', '.devbook/arc42/_meta/c4')
+
 $before = if ($Check) { @{} } else { Get-IndexFingerprints -RepoRoot $repoRoot }
 
+$renderExit = 0
 Push-Location -LiteralPath $repoRoot
 try {
     & node @arguments
     $generatorExit = $LASTEXITCODE
+    if ($renderViews) {
+        & node @renderArguments
+        $renderExit = $LASTEXITCODE
+    }
 }
 finally {
     Pop-Location
 }
 
 if ($Check) {
+    if ($renderExit -ne 0) {
+        Write-Host ''
+        Write-Host 'View renders under .devbook/arc42/_meta/c4/ are not current. This does not fail the check — the scheduled refresh reconciles them, or run this script without -Check.' -ForegroundColor Yellow
+    }
     if ($generatorExit -ne 0) {
         Write-Host ''
         Write-Host 'Devbook metadata has errors. Fix the Markdown above; regenerating will not clear them.' -ForegroundColor Red
@@ -141,7 +172,8 @@ else {
     Write-Host 'Commit these alongside your Markdown, or leave them to the nightly refresh.'
 }
 
-# A non-zero exit here means the generator found errors in the authored
-# Markdown. It still wrote every artifact, so the refresh above is complete;
-# the exit code is about the metadata, not about the write.
-exit $generatorExit
+# A non-zero exit here means a generator found errors in the authored
+# Markdown or the workspace. Each still wrote every artifact, so the refresh
+# above is complete; the exit code is about the sources, not about the write.
+if ($generatorExit -ne 0) { exit $generatorExit }
+exit $renderExit

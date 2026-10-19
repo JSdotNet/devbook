@@ -1,13 +1,14 @@
 ---
 name: refresh
-description: 'Rewrite the committed derived devbook indexes (.devbook/_meta/ and each folder''s _meta/) from this branch''s chapters and say which files moved. Only when a person asks for this branch to be current — never inside a flow or beside a chapter edit. Use when: a release or a local viewer is about to read the indexes, "refresh the devbook index", "regenerate _meta".'
+description: 'Rewrite the committed derived devbook indexes (.devbook/_meta/ and each folder''s _meta/) and the C4 view renders under .devbook/arc42/_meta/c4/ from this branch''s chapters and workspace, and say which files moved. Only when a person asks for this branch to be current — never inside a flow or beside a chapter edit. Use when: a release or a local viewer is about to read the indexes, "refresh the devbook index", "regenerate _meta".'
 ---
 
 # devbook-derived refresh
 
 Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-Run devbook's checker with the one flag nothing in devbook passes, and report what moved.
+Run devbook's checker with the one flag nothing in devbook passes, render the C4 views where
+the renderer is materialized, and report what moved.
 `.devbook/arc42/adr/checks-and-indexes.md` is the rule this skill is the
 deliberate exception to: refresh is the scheduled job's, and a session does it only when a
 person asks for this branch to be current, because two branches that each regenerate beside
@@ -27,7 +28,10 @@ a chapter edit rewrite the same JSON and conflict on merge.
    ./build/Update-DevbookIndex.ps1 -Scope tech    # one folder
    ```
 
-   Without `pwsh`: `node .devbook/_tools/devbook-meta/build.mjs --write [--scope <folder>]`.
+   Without `pwsh`: `node .devbook/_tools/devbook-meta/build.mjs --write [--scope <folder>]`,
+   then, where `.devbook/_tools/c4-render/` exists and the scope is all or `arc42`,
+   `node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4`.
+   The renderer writes each view that moved and deletes the render of a view that is gone.
    Either way the output is deterministic — no timestamps — so "nothing moved" means the
    committed indexes were already current. A missing checker means devbook is not
    materialized: say so, name `devbook:update` — or `devbook:init` where devbook has no
@@ -36,7 +40,7 @@ a chapter edit rewrite the same JSON and conflict on merge.
 3. **Fix what the check reports** in the source Markdown, never under `_meta/`, and refresh
    again. A broken reference is devbook's finding, repaired per the `repairs.md` beside `devbook:validate`'s skill.
 
-4. **Report** which index files moved, and leave the commit to the user. Commit the
+4. **Report** which index and render files moved, and leave the commit to the user. Commit the
    refresh on its own, never folded into a chapter change.
 
 ## Do not

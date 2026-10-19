@@ -19,10 +19,11 @@ Stop too if `.devbook/_tools/devbook-meta/` is absent — run `devbook:update` f
 
 1. **Detect.** Hash every path in `components.derived.materialized` and compare it with the
    release it came from. Read the adopted folders from devbook's stamp, never from disk.
-2. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never
-   skip this, not even when the plan is empty. A path this release no longer ships is an
+2. **Plan.** One table — `create`, `update`, `skip-customized`, `orphan` — and write nothing. Never
+   skip this, not even when the plan is empty. A path *What lands* gives this repository that the
+   stamp lacks — a file this release added, or one an adopted folder now calls for — is `create`. A path this release no longer ships is an
    orphan: reported, never deleted.
-3. **Materialize.** Overwrite only a file whose hash matches a release this plugin shipped.
+3. **Materialize.** Create what is absent; overwrite only a file whose hash matches a release this plugin shipped.
    Both workflows are customized from their first landing, so an adoption change is reported
    for a person to apply to their path filters, never merged in.
 4. **Stamp.** Rewrite `components.derived` — `pluginVersion` and `materialized`.

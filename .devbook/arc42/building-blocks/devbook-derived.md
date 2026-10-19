@@ -90,7 +90,9 @@ The ways a committed index gets rewritten, and the only ways: the `refresh` skil
 person asks for this branch to be current; `build/Update-DevbookIndex.ps1` on demand,
 reporting which files moved; the nightly workflow on the default branch, opening one pull
 request when anything did; and the pull-request drift workflow, which warns and never fails.
-Each passes `--write` to devbook's checker at `.devbook/_tools/devbook-meta/build.mjs`. A
+Each passes `--write` to devbook's checker at `.devbook/_tools/devbook-meta/build.mjs`, and
+then, where the [view renderer](#view-renderer) is materialized, renders the C4 views into
+`.devbook/arc42/_meta/c4/`, so the renders land in the same pull request as the indexes. A
 flow, or a chapter edit, is never one of them.
 
 | Invariant | Enforced at | Evidence |
@@ -98,6 +100,7 @@ flow, or a chapter edit, is never one of them.
 | Nothing writes a derived artifact but `build.mjs --write`, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | A drifted index warns a pull request and never fails it | `devbook-meta-drift.yml` | untested |
 | The nightly refresh opens one pull request when the output moved and nothing when it did not | `devbook-meta-nightly.yml` | untested |
+| A stale view render warns `Update-DevbookIndex.ps1 -Check` and never fails it | `Update-DevbookIndex.ps1` | untested |
 
 ### View Renderer
 
@@ -148,9 +151,15 @@ instance inherits from what it instantiates, in model order, direct as written o
 implied one, dashed. A relationship to or from a deployment node itself is not drawn, and
 deployment groups are not drawn as bands.
 
-Not yet built: nothing writes `_meta/c4/` — the renderer runs by hand,
-`node plugins/devbook-derived/tools/c4-render/render.mjs <workspace.dsl> <folder>` here,
-until the refresh paths call it.
+`init` materializes `render.mjs` and its README into `.devbook/_tools/c4-render/` where
+`arc42/` is adopted, never its tests or fixtures, and every refresh path runs it as
+`node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4`.
+A run brings the folder level with the workspace: it writes each view whose SVG is missing or
+differs, leaves a current file untouched, and deletes every `.svg` no view names — a view
+removed from the workspace takes its render with it, and a workspace that is gone leaves
+none. `--check` writes nothing and lists each render that is missing, stale, or an orphan,
+exiting `1` when there is one. Placed there, it finds devbook's reader beside it in
+`.devbook/_tools/devbook-meta/`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -160,9 +169,11 @@ until the refresh paths call it.
 | A dynamic view draws one arrow per step, numbered, in step order, and two steps between one pair get separate label places | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A deployment node holds every leaf and node inside it, sibling nodes never overlap, and no leaf sits in a node that does not hold it, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | It reads devbook's model and bundles no parser | `render.mjs` | untested |
+| A refresh writes one SVG per view key, rewrites only what changed, and deletes the render of a view that no longer exists | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| `--check` reports a missing, stale, or orphaned render, exits `1`, and writes nothing | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| The vendored `.devbook/_tools/c4-render/` holds `render.mjs` and `README.md` as the plugin ships them, and nothing else | `tools/check-assets.mjs` | untested |
 
-When the refresh paths write `_meta/c4/`, it holds one SVG per view key and nothing else,
-written only by a refresh path.
+`_meta/c4/` holds one SVG per view key and nothing else, written only by a refresh path.
 
 ### Canvas
 
@@ -210,7 +221,7 @@ write.
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its `init` delivers, the `components.derived` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, the `init` and `update` skills, the hook pair, and the rule wrappers `init` writes | Each host's own schemas | The `_meta/` rule has to fire when either host opens a derived file, which only a materialized wrapper achieves. |
 | GitHub Actions | Conformist | The nightly refresh and the drift warning are workflows | The host's workflow schema | Refresh on a schedule needs a scheduler, and a pull-request warning needs a runner; without Actions the on-demand script is the only path. |
-| A consuming repository | Customer-Supplier, this block supplying | `devbook-derived:init` materializes the script, both workflows, the rule trio, and its own marker-fenced section of `AGENTS.md`; the stamp under `components.derived` records it | The materialized paths | The committed index exists only where it was asked for. |
+| A consuming repository | Customer-Supplier, this block supplying | `devbook-derived:init` materializes the script, both workflows, the view renderer where `arc42/` is adopted, the rule trio, and its own marker-fenced section of `AGENTS.md`; the stamp under `components.derived` records it | The materialized paths | The committed index exists only where it was asked for. |
 
 ### Inbound
 
@@ -219,7 +230,7 @@ write.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `schedule-devbook-validate` refreshes the committed indexes where this plugin materialized the refresh path, and skips the step where it did not | The refresh script's path | Nothing but the path: absent, the run fixes Markdown only. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `schedule-devbook-validate` refreshes the committed indexes and view renders where this plugin materialized the refresh path, and skips the step where it did not | The refresh script's path and the renderer's | Nothing but the path: absent, the run fixes Markdown only. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.derived` and invokes `devbook-derived:init` or `devbook-derived:update` during a fan-out, after devbook's | The stamp shape and the two skill names | That the stamp exists and keeps its shape; it writes none of it. |
 | The Backlog desktop app, outside this repository | Conformist | Reads `.devbook/_meta/index.json` and `graph.json` off disk, and `scenarios.json` for the scenario parts an item references | The derived-artifacts envelope, `schemaVersion`, and the scenario register's own | That the files are committed and current on the default branch — which is what the nightly refresh is for. |
 | spec-manager, outside this repository | Conformist | Reads `_meta/naming.json` beside `index.json` in each folder it shows, and `_meta/scenarios.json` for its scenario tree and the "Used on" of a part | Each register's shape and its own `schemaVersion: 1` | That the files are committed; one missing is read as no register, and one at another version is read as nothing. |

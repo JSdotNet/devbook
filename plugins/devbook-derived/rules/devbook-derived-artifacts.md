@@ -185,6 +185,7 @@ repository actually adopts, plus a repository-wide rollup:
 | `.devbook/tech/_meta/*.json` | `tech/` | all five of the above, scoped | same |
 | `.devbook/design/_meta/*.json` | `design/` | all five of the above, scoped | same |
 | `.devbook/ai/_meta/*.json` | `ai/` | all five of the above, scoped | same |
+| `.devbook/arc42/_meta/c4/<view key>.svg` | `arc42/` | one picture per view of `workspace.dsl` | devbook-derived's `.devbook/_tools/c4-render/render.mjs` |
 
 `annotations.json` is derived like the others: the notes themselves are
 authored Markdown in the chapters, so deleting this file loses nothing. Write a
@@ -194,6 +195,14 @@ note with `annotations.mjs`, never into this index.
 parts, their screenshot labels, their setup fields, and the requirements each part proves
 from it instead of parsing the pages. Like `naming.json` it carries its own `schemaVersion`,
 and a folder with no scenario page writes an empty list.
+
+`_meta/c4/` holds the rendered C4 views, one `<view key>.svg` per view with a key, and
+nothing else: the one folder inside a `_meta/`, and the one artifact named for what it
+draws, because a view key is the name a chapter's `c4:<view key>` embed already gives it.
+An SVG carries no envelope; the file is the picture. The refresh writes a view that moved
+and deletes the render of a view that no longer exists, so a render never outlives its
+view. The renderer's `--check` reports a render that is missing, stale, or an orphan and
+writes nothing.
 
 `index.json` carries the **reading order** of an area, which a viewer uses
 instead of sorting filenames alphabetically. It is generated from the folder
