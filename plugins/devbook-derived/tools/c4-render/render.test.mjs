@@ -4,17 +4,21 @@
 // a change outside a view leaves its file alone, the dark variant sits inside
 // the SVG, the view selects the elements and relationships Structurizr's rules
 // give it, a dynamic view numbers its steps in order, and a deployment view
-// nests its nodes around what they hold.
+// nests its nodes around what they hold. Against a fixture repository: a
+// refresh writes one SVG per view key, moves only what changed, deletes the
+// render of a view that is gone, and `--check` reports drift and writes nothing.
 //
 // Run: `node --test render.test.mjs`. `UPDATE_GOLDEN=1` rewrites the goldens
 // from the fixture; review the diff before committing it.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseWorkspace } from "../../../devbook/tools/devbook-meta/c4.mjs";
-import { arrange, renderView, renderViews, selectDeployment, selectElements, selectRelationships, selectSteps, wrap } from "./render.mjs";
+import { arrange, main, renderView, renderViews, selectDeployment, selectElements, selectRelationships, selectSteps, wrap } from "./render.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = readFileSync(path.join(here, "fixtures", "workspace.dsl"), "utf8").replace(/\r\n/g, "\n");
@@ -379,3 +383,107 @@ test("deployment: include and exclude by node, and one SVG per environment's vie
     assert.deepEqual(ids(selectDeployment(m, view("test", m)).shown), ["test.box.one"]);
     assert.deepEqual(renderViews(m).rendered.filter((r) => r.kind === "deployment").map((r) => r.key), ["test", "live"]);
 });
+
+// ── refresh, against a fixture repository ───────────────────────────────────
+//
+// The refresh paths run the renderer over `.devbook/arc42/workspace.dsl` into
+// `.devbook/arc42/_meta/c4/`. A session never writes this repository's `_meta/`,
+// so each test builds a throwaway repository under the system temp folder.
+
+const goldenKeys = ["checkout", "components", "containers", "context", "landscape", "live"];
+const workspacePath = ".devbook/arc42/workspace.dsl";
+const rendersPath = ".devbook/arc42/_meta/c4";
+const golden = (key) => readFileSync(path.join(here, "fixtures", "golden", `${key}.svg`), "utf8").replace(/\r\n/g, "\n");
+
+const withRepo = async (body) => {
+    const root = mkdtempSync(path.join(tmpdir(), "c4-refresh-"));
+    try {
+        mkdirSync(path.join(root, ".devbook", "arc42"), { recursive: true });
+        writeFileSync(path.join(root, workspacePath), fixture);
+        await body(root);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+};
+const renders = (root) => (existsSync(path.join(root, rendersPath)) ? readdirSync(path.join(root, rendersPath)).filter((f) => f.endsWith(".svg")).sort() : []);
+const named = (keys) => keys.map((k) => `${k}.svg`);
+const refresh = async (root, ...flags) => {
+    const lines = [];
+    const code = await main([...flags, workspacePath, rendersPath], { root, log: (l) => lines.push(l), warn: (l) => lines.push(l) });
+    return { code, lines };
+};
+
+test("refresh: writes one SVG per view key, byte for byte as its golden file", () => withRepo(async (root) => {
+    const { code, lines } = await refresh(root);
+    assert.equal(code, 0);
+    assert.deepEqual(renders(root), named(goldenKeys));
+    for (const key of goldenKeys) assert.equal(readFileSync(path.join(root, rendersPath, `${key}.svg`), "utf8"), golden(key), key);
+    assert.ok(lines.includes(`added    ${rendersPath}/context.svg`), lines.join("\n"));
+}));
+
+test("refresh: a second run moves nothing, and --check then passes", () => withRepo(async (root) => {
+    await refresh(root);
+    const file = path.join(root, rendersPath, "context.svg");
+    const before = statSync(file).mtimeMs;
+    const again = await refresh(root);
+    assert.equal(again.code, 0);
+    assert.deepEqual(again.lines, [`${rendersPath}: 6 renders already current`]);
+    assert.equal(statSync(file).mtimeMs, before, "a current file is not rewritten");
+    const checked = await refresh(root, "--check");
+    assert.equal(checked.code, 0);
+    assert.deepEqual(checked.lines, [`checked ${rendersPath}: 6 renders current`]);
+}));
+
+test("refresh: deletes the render of a view that no longer exists, and only .svg files", () => withRepo(async (root) => {
+    await refresh(root);
+    writeFileSync(path.join(root, rendersPath, "retired.svg"), "<svg/>");
+    writeFileSync(path.join(root, rendersPath, "notes.txt"), "kept");
+    const without = fixture.replace(/\n {8}systemLandscape landscape [^\n]*\{\n {12}include \*\n {8}\}/, "");
+    assert.notEqual(without, fixture, "the fixture edit removes the landscape view");
+    writeFileSync(path.join(root, workspacePath), without);
+    const { code, lines } = await refresh(root);
+    assert.equal(code, 0, lines.join("\n"));
+    assert.deepEqual(renders(root), named(goldenKeys.filter((k) => k !== "landscape")));
+    assert.ok(lines.includes(`removed  ${rendersPath}/landscape.svg`) && lines.includes(`removed  ${rendersPath}/retired.svg`), lines.join("\n"));
+    assert.equal(readFileSync(path.join(root, rendersPath, "notes.txt"), "utf8"), "kept");
+}));
+
+test("refresh: --check reports a missing, stale, or orphaned render, exits 1, and writes nothing", () => withRepo(async (root) => {
+    const fresh = await refresh(root, "--check");
+    assert.equal(fresh.code, 1);
+    assert.equal(fresh.lines.filter((l) => l.startsWith("missing  ")).length, 6);
+    assert.deepEqual(renders(root), [], "--check created nothing");
+    await refresh(root);
+    writeFileSync(path.join(root, rendersPath, "context.svg"), "<svg>old</svg>");
+    rmSync(path.join(root, rendersPath, "live.svg"));
+    writeFileSync(path.join(root, rendersPath, "retired.svg"), "<svg/>");
+    const { code, lines } = await refresh(root, "--check");
+    assert.equal(code, 1);
+    assert.deepEqual(lines, [`missing  ${rendersPath}/live.svg`, `stale    ${rendersPath}/context.svg`, `orphan   ${rendersPath}/retired.svg`]);
+    assert.equal(readFileSync(path.join(root, rendersPath, "context.svg"), "utf8"), "<svg>old</svg>", "--check rewrote nothing");
+    assert.ok(existsSync(path.join(root, rendersPath, "retired.svg")), "--check deleted nothing");
+}));
+
+test("refresh: with the workspace gone every render is an orphan; with no renders either, nothing is created", () => withRepo(async (root) => {
+    await refresh(root);
+    rmSync(path.join(root, workspacePath));
+    assert.equal((await refresh(root, "--check")).lines.filter((l) => l.startsWith("orphan   ")).length, 6);
+    assert.equal((await refresh(root)).code, 0);
+    assert.deepEqual(renders(root), []);
+    rmSync(path.join(root, rendersPath), { recursive: true });
+    assert.equal((await refresh(root)).code, 0);
+    assert.ok(!existsSync(path.join(root, rendersPath)), "no folder is created for no views");
+}));
+
+test("refresh: materialized under .devbook/_tools/c4-render/, it runs from the root on devbook's vendored reader", () => withRepo(async (root) => {
+    const devbookMeta = path.join(here, "..", "..", "..", "devbook", "tools", "devbook-meta");
+    for (const [from, to] of [[path.join(here, "render.mjs"), "c4-render/render.mjs"], [path.join(devbookMeta, "c4.mjs"), "devbook-meta/c4.mjs"]]) {
+        mkdirSync(path.join(root, ".devbook", "_tools", path.dirname(to)), { recursive: true });
+        copyFileSync(from, path.join(root, ".devbook", "_tools", to));
+    }
+    const cli = (...flags) => spawnSync(process.execPath, [".devbook/_tools/c4-render/render.mjs", ...flags, workspacePath, rendersPath], { cwd: root, encoding: "utf8" });
+    assert.equal(cli("--check").status, 1);
+    const written = cli();
+    assert.equal(written.status, 0, written.stderr);
+    assert.deepEqual(renders(root), named(goldenKeys));
+    assert.equal(cli("--check").status, 0);
+    assert.equal(cli("--bogus").status, 2);
+}));

@@ -22,10 +22,14 @@
 //
 // Zero dependencies beyond Node.
 //
-// Run: `node render.mjs <workspace.dsl> <out folder>` writes `<view key>.svg`
-// per drawable view and exits 1 when the workspace has a problem.
+// Run: `node render.mjs <workspace.dsl> <out folder>` brings the folder level
+// with the workspace — `<view key>.svg` per drawable view, written only when it
+// changed, and every other `.svg` deleted — and exits 1 when the workspace has a
+// problem. `--check` writes nothing and exits 1 on a render that is missing,
+// stale, or names no view. devbook-derived's refresh paths run it as
+// `node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4`.
 
-import { access, mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -1000,17 +1004,61 @@ export function renderViews(model) {
     return { rendered, skipped };
 }
 
+// ── refresh ─────────────────────────────────────────────────────────────────
+
+/**
+ * Compares the SVGs in `folder` with what `rendered` holds, file by file:
+ * `current` matches, `missing` has no file, `stale` has one with other bytes, and
+ * `orphan` is an `.svg` no rendered view names. Every list is sorted by file name.
+ * Only `.svg` files count: the folder holds one per view key and nothing else.
+ */
+export async function compareRenders(rendered, folder) {
+    let present = [];
+    try { present = (await readdir(folder, { withFileTypes: true })).filter((e) => e.isFile() && e.name.endsWith(".svg")).map((e) => e.name); } catch { /* no folder yet */ }
+    const byName = new Map(rendered.map((r) => [`${r.key}.svg`, r.svg]));
+    const result = { current: [], missing: [], stale: [], orphan: [] };
+    for (const [name, svg] of byName) {
+        if (!present.includes(name)) { result.missing.push(name); continue; }
+        const onDisk = (await readFile(path.join(folder, name), "utf8")).replace(/\r\n/g, "\n");
+        (onDisk === svg ? result.current : result.stale).push(name);
+    }
+    for (const name of present) if (!byName.has(name)) result.orphan.push(name);
+    for (const list of Object.values(result)) list.sort();
+    return result;
+}
+
+/**
+ * Brings `folder` level with `model`: writes each missing or stale view, deletes
+ * each `.svg` no view names, and leaves a current file untouched, so a refresh
+ * moves a file only when its view changed. `check: true` writes and deletes
+ * nothing and only reports. Returns the comparison taken before any write.
+ */
+export async function refreshRenders(model, folder, { check = false } = {}) {
+    const { rendered, skipped } = renderViews(model);
+    const before = await compareRenders(rendered, folder);
+    if (!check) {
+        const write = new Set([...before.missing, ...before.stale]);
+        if (write.size) await mkdir(folder, { recursive: true });
+        for (const { key, svg } of rendered) if (write.has(`${key}.svg`)) await writeFile(path.join(folder, `${key}.svg`), svg);
+        for (const name of before.orphan) await unlink(path.join(folder, name));
+    }
+    return { ...before, skipped };
+}
+
 // ── command line ────────────────────────────────────────────────────────────
 
 // devbook's reader, never a copy: where devbook's init materializes it, or where
 // this marketplace authors it, looked for from the working folder and from each
-// folder above the workspace; and beside this plugin in the marketplace checkout.
+// folder above the workspace; beside this file where devbook-derived's init
+// materializes it, in `.devbook/_tools/c4-render/`; and beside this plugin in
+// the marketplace checkout.
 const READER = [[".devbook", "_tools", "devbook-meta", "c4.mjs"], ["plugins", "devbook", "tools", "devbook-meta", "c4.mjs"]];
 
 export async function loadReader(workspace = null, root = process.cwd()) {
     const folders = [root];
     for (let dir = workspace ? path.dirname(path.resolve(root, workspace)) : null; dir && !folders.includes(dir); dir = path.dirname(dir)) folders.push(dir);
     const candidates = folders.flatMap((dir) => READER.map((parts) => path.join(dir, ...parts)));
+    candidates.push(fileURLToPath(new URL("../devbook-meta/c4.mjs", import.meta.url)));
     candidates.push(fileURLToPath(new URL("../../../devbook/tools/devbook-meta/c4.mjs", import.meta.url)));
     for (const file of candidates) {
         try { await access(file); } catch { continue; }
@@ -1019,23 +1067,44 @@ export async function loadReader(workspace = null, root = process.cwd()) {
     throw new Error("devbook's C4 reader, c4.mjs, is not installed in .devbook/_tools/devbook-meta/ here or above the workspace. Run devbook:update.");
 }
 
+const USAGE = "usage: node render.mjs [--check] <workspace.dsl> <out folder>";
+
+// Exit codes: 0 the folder is current (or now is), 1 a workspace problem, or under
+// --check a render that is missing, stale, or orphaned; 2 a usage or install error.
+// A workspace that does not exist has no views, so its renders are orphans.
+export async function main(argv, { root = process.cwd(), log = console.log, warn = console.error } = {}) {
+    const check = argv.includes("--check");
+    const unknown = argv.filter((a) => a.startsWith("--") && a !== "--check");
+    const [workspace, folder] = argv.filter((a) => !a.startsWith("--"));
+    if (unknown.length || !workspace || !folder) { warn(USAGE); return 2; }
+    let model = { views: [], problems: [] };
+    try {
+        await access(path.resolve(root, workspace));
+        const { readWorkspace } = await loadReader(workspace, root);
+        model = readWorkspace(workspace, { root });
+    } catch (error) {
+        if (error.code !== "ENOENT") { warn(error.message); return 2; }
+    }
+    for (const p of model.problems) warn(`${p.file}:${p.line}: ${p.message}`);
+    const out = path.resolve(root, folder);
+    const label = (name) => path.join(folder, name).split(path.sep).join("/");
+    const result = await refreshRenders(model, out, { check });
+    for (const s of result.skipped) log(`skipped ${s.key ?? `(${s.kind})`}: ${s.reason}`);
+    if (check) {
+        for (const name of result.missing) log(`missing  ${label(name)}`);
+        for (const name of result.stale) log(`stale    ${label(name)}`);
+        for (const name of result.orphan) log(`orphan   ${label(name)}`);
+        const drifted = result.missing.length + result.stale.length + result.orphan.length;
+        if (!drifted) log(`checked ${folder}: ${result.current.length} renders current`);
+        return model.problems.length || drifted ? 1 : 0;
+    }
+    for (const name of result.missing) log(`added    ${label(name)}`);
+    for (const name of result.stale) log(`updated  ${label(name)}`);
+    for (const name of result.orphan) log(`removed  ${label(name)}`);
+    if (!result.missing.length && !result.stale.length && !result.orphan.length) log(`${folder}: ${result.current.length} renders already current`);
+    return model.problems.length ? 1 : 0;
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-    const [workspace, folder] = process.argv.slice(2);
-    if (!workspace || !folder) {
-        console.error("usage: node render.mjs <workspace.dsl> <out folder>");
-        process.exit(2);
-    }
-    let reader;
-    try { reader = await loadReader(workspace); } catch (error) { console.error(error.message); process.exit(2); }
-    const { readWorkspace } = reader;
-    const model = readWorkspace(workspace);
-    for (const p of model.problems) console.error(`${p.file}:${p.line}: ${p.message}`);
-    const { rendered, skipped } = renderViews(model);
-    await mkdir(folder, { recursive: true });
-    for (const { key, svg } of rendered) {
-        await writeFile(path.join(folder, `${key}.svg`), svg);
-        console.log(`wrote ${path.join(folder, `${key}.svg`)}`);
-    }
-    for (const s of skipped) console.log(`skipped ${s.key ?? `(${s.kind})`}: ${s.reason}`);
-    process.exit(model.problems.length ? 1 : 0);
+    process.exit(await main(process.argv.slice(2)));
 }
