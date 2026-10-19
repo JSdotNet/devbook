@@ -7,8 +7,7 @@ description: 'Rewrite the committed derived devbook indexes (.devbook/_meta/ and
 
 Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-Run devbook's checker with the one flag nothing in devbook passes, render the C4 views where
-the renderer is materialized, and report what moved.
+Run devbook's checker with the one flag nothing in devbook passes, then the view renderer, and report what moved.
 `.devbook/arc42/adr/checks-and-indexes.md` is the rule this skill is the
 deliberate exception to: refresh is the scheduled job's, and a session does it only when a
 person asks for this branch to be current, because two branches that each regenerate beside
@@ -28,10 +27,8 @@ a chapter edit rewrite the same JSON and conflict on merge.
    ./build/Update-DevbookIndex.ps1 -Scope tech    # one folder
    ```
 
-   Without `pwsh`: `node .devbook/_tools/devbook-meta/build.mjs --write [--scope <folder>]`,
-   then, where `.devbook/_tools/c4-render/` exists and the scope is all or `arc42`,
-   `node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4`.
-   The renderer writes each view that moved and deletes the render of a view that is gone.
+   Without `pwsh`: `node .devbook/_tools/devbook-meta/build.mjs --write [--scope <folder>]`, then,
+   for all scopes or `arc42`, the renderer as `.devbook/_tools/c4-render/README.md` gives it.
    Either way the output is deterministic — no timestamps — so "nothing moved" means the
    committed indexes were already current. A missing checker means devbook is not
    materialized: say so, name `devbook:update` — or `devbook:init` where devbook has no

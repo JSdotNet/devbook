@@ -446,6 +446,25 @@ test("refresh: deletes the render of a view that no longer exists, and only .svg
     assert.equal(readFileSync(path.join(root, rendersPath, "notes.txt"), "utf8"), "kept");
 }));
 
+test("refresh: a workspace with a problem still writes what reads and deletes nothing", () => withRepo(async (root) => {
+    await refresh(root);
+    writeFileSync(path.join(root, rendersPath, "retired.svg"), "<svg/>");
+    writeFileSync(path.join(root, workspacePath), fixture.replace("model {", "!include ../outside.dsl\n    model {"));
+    const { code, lines } = await refresh(root);
+    assert.equal(code, 1);
+    assert.ok(lines.some((l) => l.includes("outside.dsl")), lines.join("\n"));
+    assert.ok(lines.includes(`kept     ${rendersPath}/retired.svg: names no view, but the workspace has a problem`), lines.join("\n"));
+    assert.ok(existsSync(path.join(root, rendersPath, "retired.svg")));
+    assert.ok((await refresh(root, "--check")).lines.includes(`orphan   ${rendersPath}/retired.svg`));
+}));
+
+test("refresh: a usage error exits 2 and touches nothing", () => withRepo(async (root) => {
+    for (const argv of [[workspacePath], [workspacePath, rendersPath, "extra"], ["--write", workspacePath, rendersPath]]) {
+        assert.equal(await main(argv, { root, log: () => {}, warn: () => {} }), 2, argv.join(" "));
+    }
+    assert.deepEqual(renders(root), []);
+}));
+
 test("refresh: --check reports a missing, stale, or orphaned render, exits 1, and writes nothing", () => withRepo(async (root) => {
     const fresh = await refresh(root, "--check");
     assert.equal(fresh.code, 1);

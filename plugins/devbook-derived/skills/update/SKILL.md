@@ -19,12 +19,15 @@ Stop too if `.devbook/_tools/devbook-meta/` is absent — run `devbook:update` f
 
 1. **Detect.** Hash every path in `components.derived.materialized` and compare it with the
    release it came from. Read the adopted folders from devbook's stamp, never from disk.
-2. **Plan.** One table — `create`, `update`, `skip-customized`, `orphan` — and write nothing. Never
-   skip this, not even when the plan is empty. A path *What lands* gives this repository that the
-   stamp lacks — a file this release added, or one an adopted folder now calls for — is `create`. A path this release no longer ships is an
+2. **Plan.** One table — `create`, `update`, `skip-customized`, `orphan` — and write nothing.
+   Never skip this, not even when the plan is empty. A path *What lands* gives this repository
+   that the stamp lacks — a file this release added, or one an adopted folder now calls for —
+   is `create` when absent; present, it is stamped when it hashes to this release's file and
+   `skip-customized` when it does not. A path this release no longer ships is an
    orphan: reported, never deleted.
 3. **Materialize.** Create what is absent; overwrite only a file whose hash matches a release this plugin shipped.
    Both workflows are customized from their first landing, so an adoption change is reported
-   for a person to apply to their path filters, never merged in.
+   for a person to apply to their path filters, never merged in — and so is a release that
+   changed a workflow's steps: report the shipped diff for a person to merge.
 4. **Stamp.** Rewrite `components.derived` — `pluginVersion` and `materialized`.
 5. **Verify and report** exactly as `init` does, and leave the commit to the user.

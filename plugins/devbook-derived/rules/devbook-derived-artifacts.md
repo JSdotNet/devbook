@@ -85,7 +85,7 @@ payload:
 ## Rules
 
 - **Derived artifacts are generated, never hand-edited.** Treat any manual edit
-  as a bug; the generator is the only writer.
+  as a bug; the generators are the only writers.
 - **Committed to source control.** They are checked in so they can be read
   without a build step, reviewed in diffs, and consumed by tooling that has no
   Node.js available.

@@ -92,8 +92,11 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch --force-create "$REFRESH_BRANCH"
-          # A pathspec add stages a deleted render as well as a written one.
-          git add -- '*_meta/*.json' '*_meta/c4/*.svg'
+          # A pathspec add stages a deleted render as well as a written one, and fails on a
+          # pathspec nothing matches, so each is added only when it has a change.
+          for spec in '*_meta/*.json' '*_meta/c4/*.svg'; do
+            if [ -n "$(git status --porcelain -- "$spec")" ]; then git add -A -- "$spec"; fi
+          done
           git commit -m 'chore(devbook): refresh derived _meta indexes'
           git push --force origin "$REFRESH_BRANCH"
 

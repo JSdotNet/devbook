@@ -33,6 +33,7 @@
     inconsistent. This is what CI runs as its blocking step. Also reports a
     view render that is missing, stale, or names no view, as a warning that
     never changes the exit code: a stale render is the scheduled refresh's to fix.
+    A renderer that cannot run at all exits 2.
 
 .PARAMETER Root
     Repository root. Defaults to the enclosing git working tree, so the script
@@ -142,14 +143,19 @@ finally {
 }
 
 if ($Check) {
-    if ($renderExit -ne 0) {
+    if ($renderExit -eq 2) {
         Write-Host ''
-        Write-Host 'View renders under .devbook/arc42/_meta/c4/ are not current. This does not fail the check — the scheduled refresh reconciles them, or run this script without -Check.' -ForegroundColor Yellow
+        Write-Host 'The view renderer could not run — see its message above. Run devbook:update or devbook-derived:update.' -ForegroundColor Red
+    }
+    elseif ($renderExit -ne 0) {
+        Write-Host ''
+        Write-Host 'View renders under .devbook/arc42/_meta/c4/ are not current, or the workspace has a problem listed above. A stale render does not fail the check — the scheduled refresh reconciles it, or run this script without -Check.' -ForegroundColor Yellow
     }
     if ($generatorExit -ne 0) {
         Write-Host ''
         Write-Host 'Devbook metadata has errors. Fix the Markdown above; regenerating will not clear them.' -ForegroundColor Red
     }
+    if ($generatorExit -eq 0 -and $renderExit -eq 2) { exit 2 }
     exit $generatorExit
 }
 

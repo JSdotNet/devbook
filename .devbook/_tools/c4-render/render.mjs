@@ -1028,21 +1028,25 @@ export async function compareRenders(rendered, folder) {
 }
 
 /**
- * Brings `folder` level with `model`: writes each missing or stale view, deletes
- * each `.svg` no view names, and leaves a current file untouched, so a refresh
- * moves a file only when its view changed. `check: true` writes and deletes
- * nothing and only reports. Returns the comparison taken before any write.
+ * Brings `folder` level with `model`: deletes each `.svg` no view names, writes
+ * each missing or stale view, and leaves a current file untouched, so a refresh
+ * moves a file only when its view changed. Deleting first keeps a key renamed
+ * only in case on a case-insensitive disk. A model with problems deletes nothing,
+ * because a view the problem hid would lose its render: `kept` lists those
+ * orphans. `check: true` writes and deletes nothing and only reports. Returns the
+ * comparison taken before any write.
  */
 export async function refreshRenders(model, folder, { check = false } = {}) {
     const { rendered, skipped } = renderViews(model);
     const before = await compareRenders(rendered, folder);
+    const prune = !model.problems?.length;
     if (!check) {
+        if (prune) for (const name of before.orphan) await unlink(path.join(folder, name));
         const write = new Set([...before.missing, ...before.stale]);
         if (write.size) await mkdir(folder, { recursive: true });
         for (const { key, svg } of rendered) if (write.has(`${key}.svg`)) await writeFile(path.join(folder, `${key}.svg`), svg);
-        for (const name of before.orphan) await unlink(path.join(folder, name));
     }
-    return { ...before, skipped };
+    return { ...before, kept: check || prune ? [] : before.orphan, skipped };
 }
 
 // ── command line ────────────────────────────────────────────────────────────
@@ -1075,8 +1079,9 @@ const USAGE = "usage: node render.mjs [--check] <workspace.dsl> <out folder>";
 export async function main(argv, { root = process.cwd(), log = console.log, warn = console.error } = {}) {
     const check = argv.includes("--check");
     const unknown = argv.filter((a) => a.startsWith("--") && a !== "--check");
-    const [workspace, folder] = argv.filter((a) => !a.startsWith("--"));
-    if (unknown.length || !workspace || !folder) { warn(USAGE); return 2; }
+    const positional = argv.filter((a) => !a.startsWith("--"));
+    const [workspace, folder] = positional;
+    if (unknown.length || positional.length !== 2) { warn(USAGE); return 2; }
     let model = { views: [], problems: [] };
     try {
         await access(path.resolve(root, workspace));
@@ -1100,7 +1105,8 @@ export async function main(argv, { root = process.cwd(), log = console.log, warn
     }
     for (const name of result.missing) log(`added    ${label(name)}`);
     for (const name of result.stale) log(`updated  ${label(name)}`);
-    for (const name of result.orphan) log(`removed  ${label(name)}`);
+    for (const name of result.kept) log(`kept     ${label(name)}: names no view, but the workspace has a problem`);
+    for (const name of result.orphan) if (!result.kept.includes(name)) log(`removed  ${label(name)}`);
     if (!result.missing.length && !result.stale.length && !result.orphan.length) log(`${folder}: ${result.current.length} renders already current`);
     return model.problems.length ? 1 : 0;
 }

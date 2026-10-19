@@ -97,7 +97,7 @@ flow, or a chapter edit, is never one of them.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Nothing writes a derived artifact but `build.mjs --write`, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
+| Nothing writes a derived artifact but `build.mjs --write` and the view renderer, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | A drifted index warns a pull request and never fails it | `devbook-meta-drift.yml` | untested |
 | The nightly refresh opens one pull request when the output moved and nothing when it did not | `devbook-meta-nightly.yml` | untested |
 | A stale view render warns `Update-DevbookIndex.ps1 -Check` and never fails it | `Update-DevbookIndex.ps1` | untested |
@@ -158,7 +158,8 @@ A run brings the folder level with the workspace: it writes each view whose SVG 
 differs, leaves a current file untouched, and deletes every `.svg` no view names — a view
 removed from the workspace takes its render with it, and a workspace that is gone leaves
 none. `--check` writes nothing and lists each render that is missing, stale, or an orphan,
-exiting `1` when there is one. Placed there, it finds devbook's reader beside it in
+exiting `1` when there is one. A workspace with a problem deletes no render, so a view the
+problem hid keeps its picture until the workspace reads clean. Placed there, it finds devbook's reader beside it in
 `.devbook/_tools/devbook-meta/`.
 
 | Invariant | Enforced at | Evidence |

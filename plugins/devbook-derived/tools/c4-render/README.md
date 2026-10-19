@@ -27,8 +27,11 @@ writes nothing and lists each render that is `missing`, `stale`, or an `orphan`.
 
 A workspace that does not exist has no views, so every render left in the folder is an orphan,
 and with no render either the folder is never created. The refresh paths call this — the
-`Update-DevbookIndex.ps1` script and the nightly and drift workflows — never a session beside
-a chapter edit.
+`Update-DevbookIndex.ps1` script, the nightly and drift workflows, and `devbook-derived:refresh`
+when a person asks for a branch to be current — never a session beside a chapter edit.
+
+A workspace with a problem still writes every view that reads, and deletes nothing: a view
+the problem hid would otherwise lose its render. `--check` still lists the orphans.
 
 ## Output
 
