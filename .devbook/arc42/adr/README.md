@@ -11,6 +11,10 @@ always describing the standing choice, with a `## History` table carrying every 
 shaped it. A naming, layout, or process choice is not a record: the rule or chapter that states
 it carries the reason.
 
+`devbook-arc42.md` fixes the History header as `Date | Change | Why`, per the
+[C4 model record](c4-model.md). So far only that record uses it: the others keep the
+two-column table, a gap [TDR 10](../tdr/10-the-c4-rules-run-ahead-of-this-devbook.md) records.
+
 A record belongs here rather than in [chapter 11](../11-risks-and-technical-debt.md) when
 **something was decided**. A debt record names a gap somebody found and left open. The test is
 whether the document can end in an answer; if it ends in two options and no pick, it is

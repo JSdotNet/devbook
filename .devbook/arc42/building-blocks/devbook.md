@@ -571,8 +571,12 @@ block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer
 C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
 the reasons, and the TDR `severity` field and status ladder decided with it.
 
-Decided and not yet built: no rule, field, or check reads the workspace in this release, so
-the invariants it will carry are stated here without enforcement:
+Written and not yet checked: `devbook-arc42.md` names the workspace, the embed, the chapter
+map, the debt ladder, and the History header, `devbook-chapter-metadata.md` defines `c4`,
+`c4-touches`, `code`, and `severity`, and `devbook-writing.md` keeps Mermaid inside one
+element. No check reads the workspace or those fields in this release: the four fields are
+reported as unrecognized, and a debt rung in `status` is refused. The invariants the check
+will carry are stated here without enforcement:
 
 - every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to,
   and every view is embedded in exactly one section;
