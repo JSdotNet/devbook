@@ -506,7 +506,11 @@ the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios
 added the path without one; the eleventh is `030-linked-walkthroughs`, which rewrites a demo's
 free walkthrough under a `Proved by:` case's slug to a linked one, `step` by position and text
 copied by `demo-sync.mjs`, and lists one whose step count differs from its part's
-`not-applicable`.
+`not-applicable`; the twelfth is `032-c4-workspace`, which creates `arc42/workspace.dsl` or
+moves it from `arc42/_c4/`, turns each Mermaid C4 fence, each sequence whose participants are
+all workspace elements, and each Archify `architecture` or `sequence` spec into elements, a
+view, and the `c4:` embed that replaces the fence, ranks each debt record from its
+`## Severity` and `## Status` sections, and reports every diagram it cannot move.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -546,7 +550,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **30**, covering the metadata schema a repository authors
+One number, currently **32**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -631,7 +635,11 @@ and the `Proved by:` line a requirement's scenario may carry instead of its own 
 added with a safe default, so none of the three owes a migration. `030-scenario-tools` and
 `030-linked-walkthroughs` ship later under 30 without moving it: one materializes a path 1.21.0
 added, the other rewrites free walkthroughs to the linked form a free one still validates
-beside, and the ledger, not the number, decides that a repository on 30 runs both.
+beside, and the ledger, not the number, decides that a repository on 30 runs both. 31 takes the
+change folder out of the graph and moves no chapter shape. 32 reads the C4 workspace and adds
+`c4`, `c4-touches`, `code`, `severity`, and the debt ladder, each with a safe default, and
+`032-c4-workspace` ships under it to move the diagrams a repository drew before the
+workspace into it.
 
 ## Folder structure
 
