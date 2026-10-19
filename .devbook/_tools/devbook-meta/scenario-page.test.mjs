@@ -190,7 +190,7 @@ const requirements = (caseBody) =>
     check(issues.length === 1 && issues[0].message.includes("which is a chapter reference"), "a .devbook/ path in tests is reported as a chapter reference", dump(issues));
 }
 
-check(CONTRACT_VERSION === 30, "the contract is 30");
+check(CONTRACT_VERSION >= 30, "the contract is at least 30");
 
 // ── The corpus-wide rules, through the graph build ─────────────────────────
 

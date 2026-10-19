@@ -62,7 +62,7 @@ change belongs to the engine.
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
-| `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, the graph build through `checkDelta` for every indexed delta, and `devbook-collaboration`'s review queue through `readChange` |
+| `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, the graph build through `checkDelta` for every open delta, and `devbook-collaboration`'s review queue through `readChange` |
 | `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, `delta.mjs` through `demoFileIssues` for every demo a change carries, and `devbook-collaboration`'s review queue through `demoReader` |
 | `scenario.mjs` | scenario page rules, in-process | The graph build through `scenarioProblems`: the stem register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, and the parts no requirement claims |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
@@ -442,9 +442,11 @@ related: [".devbook/arc42/12-glossary.md#change", ".devbook/arc42/12-glossary.md
 
 A proposed change to the devbook, in `openspec/changes/<name>/`: the one folder kind outside
 `.devbook/`, because OpenSpec's CLI resolves `changes/` only under `openspec/`. Its
-`proposal.md` and every delta under `devbook-delta/` are chapters the check indexes into the
-rollup; `solution.md` and `tasks.md` are the change's own and never indexed, and `archive/` is
-history and never read. `delta.mjs --apply` is the only way a change lands, and only once
+`proposal.md` and every delta under `devbook-delta/` are chapters the check lints, though none
+is a node in the graph; `solution.md` and `tasks.md` are the change's own and never checked, and
+`archive/` is history and never read. A change references the devbook and never the reverse: a
+devbook chapter whose `related`, `depends-on`, or prose link points into `openspec/changes/`
+fails the check, and a delta may name a chapter only its own change adds. `delta.mjs --apply` is the only way a change lands, and only once
 both gates have passed on `proposal.md`: the change is decided as one, so `approved` and
 `accepted` are recorded once there, with a hash over the proposal and every delta, and never
 on the chapters it lands in — their `change` points at the archived proposal. Chapter rungs
@@ -465,6 +467,8 @@ corpus already had is not the change's.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | `archive/` is never indexed and never a folder kind | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| Nothing in the change folder is a node or an edge in the graph, and a delta may name a chapter only its own change adds | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A devbook chapter's `related`, `depends-on`, or prose link into `openspec/changes/` is an error | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A delta's target is its path under `devbook-delta/`, re-rooted at `.devbook/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A delta opens with `change`, naming its own folder, and `delta`, and carries no other field | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | Every chapter and section a delta names resolves in its target, or the merge writes nothing | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
