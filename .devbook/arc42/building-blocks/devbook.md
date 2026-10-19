@@ -588,8 +588,12 @@ file and line, and reading goes on past it.
 | Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 
-Decided and not yet built: no rule, field, or check calls the reader in this release, so the
-invariants the chapters will carry are stated here without enforcement:
+Written and not yet checked: `devbook-arc42.md` names the workspace, the embed, the chapter
+map, the debt ladder, and the History header, `devbook-chapter-metadata.md` defines `c4`,
+`c4-touches`, `code`, and `severity`, and `devbook-writing.md` keeps Mermaid inside one
+element. No check calls the reader or reads those fields in this release: the four fields are
+reported as unrecognized, and a debt rung in `status` is refused. The invariants the check
+will carry are stated here without enforcement:
 
 - every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to,
   and every view is embedded in exactly one section;
