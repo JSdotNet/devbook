@@ -607,6 +607,19 @@ debt set written before the fields keeps validating until each record is ranked.
 does not open a Mermaid fence, so a fence that draws between elements is
 [prose-check](#prose-check)'s finding, never a check failure.
 
+Migration `032-c4-workspace` moves a repository that drew its architecture before the
+workspace into it: it creates `workspace.dsl` or moves it from `arc42/_c4/`, turns each
+Mermaid C4 fence, each sequence whose participants all match elements, and each Archify
+`architecture` or `sequence` spec into elements and a view, replaces the fence with the view's
+embed, and fills a debt record's `severity` and `status` from its `## Severity` and `## Status`
+sections. What it cannot place it reports and leaves.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The migration writes nothing when its workspace would read with a problem the original did not have | `032-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/032-c4-workspace/migrate.test.mjs` |
+| A diagram whose view belongs in another chapter, a sequence with an unmatched participant, and a lifecycle or workflow spec are reported and left, never counted as work | `032-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/032-c4-workspace/migrate.test.mjs` |
+| A second run changes nothing, and `--check` writes nothing | `032-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/032-c4-workspace/migrate.test.mjs` |
+
 ### Reference Graph
 
 ```meta
