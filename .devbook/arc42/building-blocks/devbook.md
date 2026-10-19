@@ -1,7 +1,7 @@
 # devbook
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
 The convention itself. Responsible for three things: that a chapter can be addressed, that
@@ -17,7 +17,8 @@ fixes and a body the repository owns. Two of those are blocks of their own one l
 each with its own file: the two directions between a chapter and its code are
 [devbook-code-sync](devbook-code-sync.md), and the five procedures are
 [devbook-procedures](devbook-procedures.md). This file is the convention's white box around
-them: the chapter, the folder, the check, and the reconcile.
+them: the chapter, the folder, the check, and the reconcile — and the
+[C4 model](#c4-model) an `arc42/` folder's chapters embed and point at.
 
 ```mermaid
 flowchart LR
@@ -546,6 +547,37 @@ so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
 | A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | `devbook-delta/` holds Markdown deltas and demos directly in a `domain/<context>/` folder, and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+
+### C4 Model
+
+```meta
+related: [".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook/arc42/building-blocks/devbook-derived.md#view-renderer"]
+```
+
+Also called: the workspace, `workspace.dsl`.
+
+The architecture model of an `arc42/` folder: one Structurizr DSL workspace at
+`.devbook/arc42/workspace.dsl`, with `!identifiers hierarchical`, which may `!include` files
+under `.devbook/arc42/c4/`. It is the one non-Markdown file `arc42/` holds and the only place
+an element or a view is defined. It holds people, systems, containers, components, deployment
+nodes, relationships, and views; prose, decisions, and debt stay in chapters and records.
+
+This block owns the contract around it: the rule that names the file, the `c4:<view key>`
+image embed and the chapter each view kind belongs to, the `c4` and `c4-touches` fields in
+`arc42/` and `domain/` and a building block's `code`, the limit that keeps Mermaid inside one
+element, and the checker that resolves every embed and identifier against the workspace and
+adds elements and views to the [Reference Graph](#reference-graph). Drawing a view is not this
+block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer)'s, and a
+C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
+the reasons, and the TDR `severity` field and status ladder decided with it.
+
+Decided and not yet built: no rule, field, or check reads the workspace in this release, so
+the invariants it will carry are stated here without enforcement:
+
+- every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to,
+  and every view is embedded in exactly one section;
+- every `c4` and `c4-touches` identifier resolves to an element;
+- a Mermaid fence draws nothing between elements.
 
 ### Reference Graph
 
