@@ -108,17 +108,21 @@ direction, any verdict in a set-aside group — goes to a person.
 ## Counterpart resolution
 
 Neither direction can start until the chapter and its code counterpart are
-paired. There is deliberately **no metadata field linking a chapter to a code
-path** — a path in a `meta` block rots on the first refactor and gives no signal
-when it does. Resolution goes through naming instead, in this order. Stop at the
+paired. Outside a building block there is deliberately **no metadata field
+linking a chapter to a code path** — a path in a `meta` block rots on the first
+refactor and gives no signal when it does. Resolution goes through naming instead, in this order. Stop at the
 first rung that produces a single unambiguous match.
 
-The one link this schema does carry is `tests`, and the difference is the whole
+One link this schema does carry is `tests`, and the difference is the whole
 reason it is allowed: a test identifier is *executable*, so an entry that stops
 resolving fails a run instead of quietly pointing at nothing. It is a record of
 what asserts a chapter, not a shortcut through the ladder below — a `tests`
 entry names a test, and the counterpart still has to be resolved by naming. See
 "Linking test cases" in `devbook-chapter-metadata.md`.
+
+A building block's `code` is the other: the folders a `building-blocks/<slug>.md` file lists
+are read before rung 2, and the checker warns on one that no longer exists, so the rot this
+section guards against is reported. The building-block kind's file says how.
 
 1. **Aliases.** Read the chapter's own `aliases` field — a modelled concept
    carries its surface names on its own chapter — and, for a word that is not a
@@ -133,8 +137,9 @@ entry names a test, and the counterpart still has to be resolved by naming. See
    `.devbook/arc42/05-building-block-view.md`, the block's own file under
    `.devbook/arc42/building-blocks/` where the view keeps one (and
    `07-deployment-view.md` for runtime and hosting units). Those chapters name the modules, containers, and
-   deployable units the code is organized into, which narrows the search to one
-   project or folder even when the type name itself differs.
+   deployable units the code is organized into, and `workspace.dsl` names their
+   elements, which narrows the search to one project or folder even when the
+   type name itself differs.
 3. **Observed naming convention.** Only when both rungs above come up empty,
    infer from the convention the repository visibly follows — the folder layout
    of the bounded context's sibling concepts, the suffix conventions on
@@ -441,6 +446,8 @@ The plan has three parts.
 
    By heading, against a named target file, so the plan is legible against the chapter
    it is about and stays legible when the chapter moves on before anyone reads it.
+   The workspace is the one target not keyed by heading: its delta is by element
+   identifier or view key, per the building-block kind's file.
 3. **The report table**, as below, one row per chapter in scope, `aligned` rows
    included.
 

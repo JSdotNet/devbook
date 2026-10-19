@@ -36,10 +36,10 @@ init would ask again what the stamp already answers.
 ## Creating a folder
 
 Each adopted folder gets its directory under `.devbook/` — `.devbook/domain/`, never a
-root-level `.domain/` — and one starting chapter with a valid `meta` block, written to the
-shape its rule states: `devbook-arc42.md`, `devbook-domain.md`, `devbook-tech.md`,
-`devbook-design.md`, `devbook-ai.md`. Required block fields are in
-`devbook-chapter-metadata.md`. `devbook:update` creates a folder adopted later the same way.
+root-level `.domain/` — and one starting chapter with a valid `meta` block per
+`devbook-chapter-metadata.md`, written to the shape its folder rule states. `arc42/`'s is
+`assets/seeds/arc42/`: the workspace and the chapter 03 that embeds its context view, each
+`<…>` filled from the README. `devbook:update` creates a folder adopted later the same way.
 
 The change folder, stamped as `changes`, is `openspec/changes/` at the repository root — the
 one place OpenSpec resolves it — and starts empty: write `openspec/changes/archive/.gitkeep`

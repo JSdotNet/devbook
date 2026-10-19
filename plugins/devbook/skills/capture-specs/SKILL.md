@@ -19,7 +19,7 @@ raises itself), `feature` and `sub-feature`, `feature-flag` and `setting` (one
 kind, `setting`, for both levels), `user` and `technical` (one kind, `actor`; an
 `organisation` is no unit) — and the file decides it where the
 folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file under
-`.devbook/arc42/building-blocks/` are `building-block`,
+`.devbook/arc42/building-blocks/` are `building-block`, read with `workspace.dsl`,
 `.devbook/design/component-libraries.md` is `design-component`, and a `*.demo.html` is
 `demo`, which capture reports and never writes — `/prototype` revises a demo. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape
@@ -49,7 +49,7 @@ context where the kind has one, and the repository root.
    `aligned`: report and stop. `spec-ahead`: stop and hand the scope to
    `apply-change`. `conflict` or `unresolved`: stop and ask.
 5. Draft the content to the folder rule's template, as the kind's file says, in the
-   prose and diagrams `devbook-writing.md` asks for:
+   prose and diagrams `devbook-writing.md` asks for — a building block's DSL too:
    the invariants as claims with the `Enforced at:` line, the requirements as SHALL
    sentences with their `#### Scenario:` cases, each with the evidence behind it.
    Put the tests that assert each one in `tests`. Where a counterpart resolved
