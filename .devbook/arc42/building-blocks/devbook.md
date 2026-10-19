@@ -571,8 +571,25 @@ block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer
 C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
 the reasons, and the TDR `severity` field and status ladder decided with it.
 
-Decided and not yet built: no rule, field, or check reads the workspace in this release, so
-the invariants it will carry are stated here without enforcement:
+The reader is built: `devbook-meta/c4.mjs` reads the workspace, with no dependency outside
+Node, into its elements — each with its hierarchical identifier, kind, name, description,
+technology, tags, parent, group, and deployment environment — its relationships, its views
+with key, scope, title, include, exclude, autolayout, and a dynamic view's steps, and its
+problems. It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
+`!identifiers hierarchical`, `!include`, the static and deployment elements, `group`, `tags`,
+relationships, and the six view kinds. A construct outside that subset is a problem naming its
+file and line, and reading goes on past it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every construct outside the supported subset is reported with its file and line, never dropped silently, and reading continues past it | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| A workspace without `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| An `!include` is a relative path to a file under the workspace's `c4/` folder; anything else is a problem and is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+
+Decided and not yet built: no rule, field, or check calls the reader in this release, so the
+invariants the chapters will carry are stated here without enforcement:
 
 - every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to,
   and every view is embedded in exactly one section;
