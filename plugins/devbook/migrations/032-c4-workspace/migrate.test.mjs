@@ -348,7 +348,8 @@ test("a model left in _c4/ that cannot move strands nothing: no skeleton, no con
         try {
             setup(root);
             const r = migrate(root);
-            assert.equal(r.status, 0, r.stdout + r.stderr);
+            assert.equal(r.status, 1, "a stranded model stops the run, so the ledger never records it");
+            assert.equal(migrate(root, "--check").status, 1);
             assert.match(r.stdout, /no diagram converted/);
             assert.ok(!existsSync(path.join(root, A, "workspace.dsl")));
             assert.ok(existsSync(path.join(root, A, "_c4/shop.dsl")));
@@ -367,6 +368,8 @@ test("what it will not guess: an unnamed twin, a stray artifact path, a sequence
         const index = JSON.parse(read(root, `${A}/_archify/index.json`));
         index.entries[fenceHash(bodyOf(FLOW))].artifact = "../../config.json";
         writeFileSync(path.join(root, A, "_archify/index.json"), JSON.stringify(index));
+        // The workers flowchart edited since its spec was drawn: the spec no longer re-draws it.
+        writeFileSync(path.join(root, A, "05-building-block-view.md"), read(root, `${A}/05-building-block-view.md`).replace("worker --> queue", "worker --> retries"));
         writeFileSync(path.join(root, ".devbook/statuses.json"), JSON.stringify({ folders: { arc42: { rules: [{ files: ["tdr/**"], scope: "file", statuses: ["open", "closed"] }] } } }));
         const r = migrate(root);
         assert.equal(r.status, 0, r.stdout + r.stderr);
@@ -374,6 +377,9 @@ test("what it will not guess: an unnamed twin, a stray artifact path, a sequence
         assert.match(read(root, `${A}/03-context-and-scope.md`), /C4Context/, "the fence naming the unnamed system stays");
         assert.match(r.stdout, /Timer match no workspace element, so it draws inside one element and may stay/);
         assert.ok(existsSync(path.join(root, ".devbook/config.json")), "an artifact path outside _archify/ is never deleted");
+        assert.match(r.stdout, /05-building-block-view\.3\.architecture\.json: its fence in .* changed since it was drawn/);
+        assert.match(read(root, `${A}/05-building-block-view.md`), /worker --> retries/, "an edited fence is not replaced by a stale spec");
+        assert.ok(existsSync(path.join(root, A, "_archify/05-building-block-view.3.architecture.json")));
         assert.match(r.stdout, /statuses\.json` gives `tdr\/` a ladder of its own/);
         assert.match(read(root, `${A}/tdr/1-no-retry.md`), /```meta\ndate: 2026-10-01\nseverity: high\n```/);
     } finally { rmSync(root, { recursive: true, force: true }); }

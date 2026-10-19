@@ -27,7 +27,8 @@ and created only where nothing matches. A boundary that matches nothing is the s
 container its matched children share. A relationship is added only where none joins the two
 elements already, and every dynamic step gets one to rest on. A view's key is its section
 heading's slug. An Archify spec is tied to its fence by the hash its index files it under,
-else by its ordinal, and it draws the level its chapter documents: context in 03, containers
+and by its ordinal only where it has no index entry; a hash that matches no fence means the
+fence changed since the spec was drawn, and the spec is reported and left. It draws the level its chapter documents: context in 03, containers
 or components in 05 and a building block. A debt record's `identified` is the resting value, so
 it is written by removing the folder's rung, never as a line.
 
@@ -42,7 +43,9 @@ reported on every run; the last two once, by the run that made the change they a
 - a diagram with a statement the migration does not read, an element it cannot place, or a
   name that matches two elements, or one with no identifier;
 - a `_c4/` that holds no single workspace, or whose files would land on ones already in `c4/`:
-  then nothing moves and no diagram converts, so no model is left stranded beside a new one;
+  then nothing moves and no diagram converts, so no model is left stranded beside a new one,
+  and the run exits `1`, with and without `--check`, so the ledger never records it until a
+  person has merged the two;
 - a file left in `_c4/` that is no workspace, such as a `references.json`;
 - a debt record whose section opens with a word off the scale or the ladder, and every
   debt `status` when `.devbook/statuses.json` gives `tdr/` a ladder of its own;

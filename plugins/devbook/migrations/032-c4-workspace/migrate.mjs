@@ -509,9 +509,11 @@ export async function run(root, { check = false, log = console.log } = {}) {
         if (mains.length !== 1) {
             report(`${oldDsl.join(", ")}: ${mains.length ? "more than one" : "none"} of them opens a \`workspace\`, so nothing was moved and no diagram converted; move the workspace to ${WORKSPACE} by hand and run this again.`);
             stranded = true;
+            out.failed = true; // the ledger must not record a run that moved nothing it was owed
         } else if (taken.length) {
             report(`${taken.join(", ")} already exist, so ${oldDsl.join(", ")} were not moved over them and no diagram converted; merge the two by hand and run this again.`);
             stranded = true;
+            out.failed = true; // the ledger must not record a run that moved nothing it was owed
         } else {
             // Every `!include` that pointed into `_c4/` follows its file into `c4/`.
             const follow = (from, text) => text.replace(/^(\s*!include\s+)(?:"([^"]+)"|(\S+))/gim, (all, head, quoted, bare) => {
@@ -565,12 +567,14 @@ export async function run(root, { check = false, log = console.log } = {}) {
                 continue;
             }
             const chapter = chapters.get(spec.chapter);
-            const fence = chapter && ((spec.hash && chapter.fences.find((f) => fenceHash(f.body) === spec.hash)) || chapter.fences.find((f) => f.ordinal === spec.ordinal));
-            if (!fence) { report(`${spec.file}: no Mermaid fence in ${spec.chapter} matches it, so there is no place to embed its view; draw it in the workspace by hand and delete the spec.`); continue; }
+            // The hash the index files it under decides; the ordinal only where there is none to read.
+            // A hash that matches no fence means the fence moved on since the spec was drawn.
+            const fence = chapter && (spec.hash ? chapter.fences.find((f) => fenceHash(f.body) === spec.hash) : chapter.fences.find((f) => f.ordinal === spec.ordinal));
+            if (!fence) { report(`${spec.file}: ${spec.hash ? "its fence in " + spec.chapter + " changed since it was drawn, or is gone" : "no Mermaid fence in " + spec.chapter + " matches it"}, so there is no place to embed its view; draw it in the workspace by hand and delete the spec.`); continue; }
             spec.fence = fence;
             const twin = specFor.get(`${spec.chapter}#${fence.start}`);
             if (twin) { report(`${spec.file} and ${twin.file} both re-draw ${spec.chapter}:${fence.start + 1}; neither was read — delete the one that is stale and run this again.`); twin.fence = null; spec.fence = null; specFor.set(`${spec.chapter}#${fence.start}`, null); continue; }
-            if (specFor.has(`${spec.chapter}#${fence.start}`)) continue;
+            if (specFor.has(`${spec.chapter}#${fence.start}`)) { report(`${spec.file} also re-draws ${spec.chapter}:${fence.start + 1}, which more than one spec claims; it was not read.`); continue; }
             if (spec.indexUnread) report(`${spec.dir}/index.json could not be read, so ${spec.file} was tied to its fence by its ordinal alone and its index entry stays.`);
             specFor.set(`${spec.chapter}#${fence.start}`, spec);
         }
@@ -688,7 +692,7 @@ export async function run(root, { check = false, log = console.log } = {}) {
     let ownLadder = false;
     try {
         const statuses = JSON.parse((await readFile(path.join(root, ".devbook/statuses.json"), "utf8")).replace(/^﻿/, ""));
-        ownLadder = (statuses?.folders?.arc42?.rules ?? []).some((rule) => (rule?.files ?? []).some((glob) => /^(?:\.\/)?tdr\//.test(String(glob).replace(/\\/g, "/"))));
+        ownLadder = (statuses?.folders?.arc42?.rules ?? []).some((rule) => (rule?.files ?? []).length > 0 && rule.files.every((glob) => /^(?:\.\/)?tdr\//.test(String(glob).replace(/\\/g, "/"))));
     } catch { /* no file, or one the checker reports */ }
     if (ownLadder) report("`.devbook/statuses.json` gives `tdr/` a ladder of its own, so no debt record's `status` was set; set each by hand.");
     for (const file of (await walk(root, DEBT_FOLDER.slice(0, -1))).filter((f) => f.endsWith(".md"))) {
