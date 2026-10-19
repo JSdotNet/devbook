@@ -137,7 +137,8 @@ It holds the elements, their relationships, and the views:
 Give every element a `description` of one line saying what it is. The workspace
 never holds prose, decisions, debt, or code paths: the chapter that embeds a view
 explains it, `adr/` and `tdr/` hold the reasons, and a building block's `code`
-field holds its folders. Never record code folders as DSL `properties`.
+field holds its folders. No element carries a DSL `properties` block, so a code folder
+has nowhere to go but `code`.
 
 A chapter shows a view with an image embed addressed by the view's key,
 `![Containers](c4:containers)` — the same form as `shot:` and `scenario:`. Embed

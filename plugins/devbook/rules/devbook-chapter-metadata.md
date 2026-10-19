@@ -521,7 +521,8 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
   `code: [plugins/devbook/tools/devbook-meta]`. Folders, never files. The block
   names its element in `c4` beside it, per `devbook-arc42.md`.
 - **severity** (required on an `arc42/tdr/` debt record, and nowhere else) — `low`, `medium`, `high`, or
-  `critical`: what the debt costs while it stands. The record's `status` takes
+  `critical`: what the debt costs while it stands. A record without it is reported as a
+  warning, so a debt set written before the field keeps validating until each is ranked. The record's `status` takes
   the debt ladder there, per `devbook-arc42.md`.
 
 - **ext** (optional) — the extension namespace: state owned by a plugin layered

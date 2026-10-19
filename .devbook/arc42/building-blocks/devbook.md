@@ -583,22 +583,23 @@ file and line, and reading goes on past it.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Every construct outside the supported subset is reported with its file and line, never dropped silently, and reading continues past it | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
-| A workspace without `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| A workspace that does not start with `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | An `!include` is a relative path to a file under the workspace's `c4/` folder; anything else is a problem and is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every element has a description of one line | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| Every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to, and every view is embedded in exactly one section; a view no chapter embeds is a warning | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| Every `c4` and `c4-touches` identifier resolves to an element, and no element is in both | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| `code` sits on a building block's top-level block and lists folders; a missing folder is a warning | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| A debt record's `status` is on the debt ladder, resting at `identified`, and its `severity` is one of four values | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 
-Written and not yet checked: `devbook-arc42.md` names the workspace, the embed, the chapter
-map, the debt ladder, and the History header, `devbook-chapter-metadata.md` defines `c4`,
-`c4-touches`, `code`, and `severity`, and `devbook-writing.md` keeps Mermaid inside one
-element. No check calls the reader or reads those fields in this release: the four fields are
-reported as unrecognized, and a debt rung in `status` is refused. The invariants the check
-will carry are stated here without enforcement:
-
-- every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to,
-  and every view is embedded in exactly one section;
-- every `c4` and `c4-touches` identifier resolves to an element;
-- a Mermaid fence draws nothing between elements.
+The check reads the model in contract 32: `devbook-meta/c4-graph.mjs` runs the reader over
+the workspace when it exists and adds each element and view to the
+[Reference Graph](#reference-graph), with `contains`, `relationship`, `embeds`, `c4`, and
+`c4-touches` edges, and a building block's `code` carried on its node. A debt record without
+`severity`, and one still holding an `arc42/` rung, is a warning rather than an error, so a
+debt set written before the fields keeps validating until each record is ranked. One rule is
+still written and not checked: a Mermaid fence draws nothing between elements.
 
 ### Reference Graph
 

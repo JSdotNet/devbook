@@ -286,13 +286,15 @@ class Parser {
             this.report(first, "`workspace` has no block, so it defines nothing.");
             return;
         }
+        let position = 0;
         for (const s of this.block(first)) {
             const head = s.parts[0];
             const word = lower(head);
-            if (word === "!identifiers") this.identifiers(s.parts);
+            if (word === "!identifiers") this.identifiers(s.parts, position === 0);
             else if (word === "model" && s.block) { this.model(head, null, null); this.modelSeen = true; }
             else if (word === "views" && s.block) this.viewsBlock(head);
             else this.unknown(head, s.block, "workspace");
+            position++;
         }
         if (!this.identifiersSeen) this.report(first, "The workspace does not declare `!identifiers hierarchical`; identifiers were read flat.");
     }
@@ -303,12 +305,15 @@ class Parser {
         if (t) this.report(t, `\`${t.text}\` stands after the workspace closed; it and everything after it were not read.`);
     }
 
-    identifiers(parts) {
+    // The rule starts the workspace with `!identifiers hierarchical`. Anywhere
+    // else before the first element it is still honoured, and reported.
+    identifiers(parts, first) {
         const [mode] = this.values(parts, 1, 1, "!identifiers");
         if (this.modelSeen) {
             this.report(parts[0], "`!identifiers` comes after the model began, so the elements before it were read flat; move it first.");
             return;
         }
+        if (!first) this.report(parts[0], "`!identifiers` is not the workspace's first statement; the workspace starts with it, so move it first.");
         this.identifiersSeen = true;
         this.hierarchical = String(mode).toLowerCase() === "hierarchical";
         if (!this.hierarchical) this.report(parts[0], `\`!identifiers ${mode ?? ""}\`: only \`hierarchical\` is supported; identifiers were read flat.`);
@@ -322,7 +327,7 @@ class Parser {
             const head = s.parts[0];
             const word = lower(head);
             const where = parent ? parent.kind : "model";
-            if (word === "!identifiers" && !parent) { this.identifiers(s.parts); continue; }
+            if (word === "!identifiers" && !parent) { this.identifiers(s.parts, false); continue; }
             if (word === "tags" && parent && !s.block) { parent.tags.push(...splitTags(this.values(s.parts, 1, 1, "tags")[0])); continue; }
             if (word === "group" && [null, "softwareSystem", "container"].includes(parent?.kind ?? null)) { this.group(s, parent, group, (g) => this.model(head, parent, g)); continue; }
             if (this.relationship(s, parent, null)) continue;

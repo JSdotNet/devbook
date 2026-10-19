@@ -167,7 +167,32 @@ const FULL = `workspace "Shop" "An online shop" {
 }
 {
     const r = parseWorkspace(`workspace {\nmodel {\n!identifiers hierarchical\na = softwareSystem "A" {\nb = container "B"\n}\n}\n}\n`);
-    check(r.problems.length === 0 && !!el(r, "a.b"), "`!identifiers` inside `model` is read too", show(r.problems));
+    check(!!el(r, "a.b"), "`!identifiers` inside `model` is still honoured", show(r.elements));
+    check(reports(r, /not the workspace's first statement/, 3), "`!identifiers` inside `model` is reported: the workspace starts with it", show(r.problems));
+}
+{
+    const r = parseWorkspace(`workspace {
+views {
+}
+!identifiers hierarchical
+model {
+a = softwareSystem "A" {
+b = container "B"
+}
+}
+}
+`);
+    check(!!el(r, "a.b") && reports(r, /not the workspace's first statement/, 4), "`!identifiers` after another statement is honoured and reported", show(r.problems));
+}
+{
+    const r = parseWorkspace(`workspace {
+# a comment first
+!identifiers hierarchical
+model {
+}
+}
+`);
+    check(!reports(r, /first statement/), "a comment before `!identifiers` is no statement", show(r.problems));
 }
 
 {
