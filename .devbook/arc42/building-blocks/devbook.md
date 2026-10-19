@@ -571,10 +571,27 @@ block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer
 C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
 the reasons, and the TDR `severity` field and status ladder decided with it.
 
+The reader is built: `devbook-meta/c4.mjs` reads the workspace, with no dependency outside
+Node, into its elements — each with its hierarchical identifier, kind, name, description,
+technology, tags, parent, group, and deployment environment — its relationships, its views
+with key, scope, title, include, exclude, autolayout, and a dynamic view's steps, and its
+problems. It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
+`!identifiers hierarchical`, `!include`, the static and deployment elements, `group`, `tags`,
+relationships, and the six view kinds. A construct outside that subset is a problem naming its
+file and line, and reading goes on past it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every construct outside the supported subset is reported with its file and line, never dropped silently, and reading continues past it | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| A workspace without `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| An `!include` is a relative path to a file under the workspace's `c4/` folder; anything else is a problem and is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+
 Written and not yet checked: `devbook-arc42.md` names the workspace, the embed, the chapter
 map, the debt ladder, and the History header, `devbook-chapter-metadata.md` defines `c4`,
 `c4-touches`, `code`, and `severity`, and `devbook-writing.md` keeps Mermaid inside one
-element. No check reads the workspace or those fields in this release: the four fields are
+element. No check calls the reader or reads those fields in this release: the four fields are
 reported as unrecognized, and a debt rung in `status` is refused. The invariants the check
 will carry are stated here without enforcement:
 
