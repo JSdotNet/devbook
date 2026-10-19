@@ -17,6 +17,11 @@ Render it from devbook's stamp, never from disk:
       Refresh them with `./build/Update-DevbookIndex.ps1`, or let the scheduled job
       reconcile the default branch.
 
+- Replace `<renders>`, where `arc42` is adopted, with the clause below, and elsewhere with
+  nothing:
+
+      , and the C4 view renders under `.devbook/arc42/_meta/c4/` by `.devbook/_tools/c4-render/render.mjs`
+
 - Change nothing else. A wording change belongs in this template.
 
 ```markdown
@@ -26,8 +31,7 @@ Render it from devbook's stamp, never from disk:
 Written by `devbook-derived:init` and kept by `devbook-derived:update`. Edit outside these markers.
 
 Files under any `_meta/` folder — `.devbook/_meta/` and one per adopted folder — are
-generated tool input, written by `<generator> --write`, and the C4 view renders under
-`.devbook/arc42/_meta/c4/` by `.devbook/_tools/c4-render/render.mjs`. Never read one as a
+generated tool input, written by `<generator> --write`<renders>. Never read one as a
 source of fact and never hand-edit one. <refresh> Fix what devbook's check reports in the source
 Markdown; the check itself is in devbook's section above.
 <!-- devbook-derived:end -->
