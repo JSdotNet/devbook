@@ -39,7 +39,7 @@ Each adopted folder gets its directory under `.devbook/` — `.devbook/domain/`,
 root-level `.domain/` — and one starting chapter with a valid `meta` block per
 `devbook-chapter-metadata.md`, written to the shape its folder rule states. `arc42/`'s is
 `assets/seeds/arc42/`: the workspace and the chapter 03 that embeds its context view, each
-`<…>` filled from the README. `devbook:update` creates a folder adopted later the same way.
+`<…>` filled from the README or asked. `devbook:update` creates a folder adopted later the same way.
 
 The change folder, stamped as `changes`, is `openspec/changes/` at the repository root — the
 one place OpenSpec resolves it — and starts empty: write `openspec/changes/archive/.gitkeep`

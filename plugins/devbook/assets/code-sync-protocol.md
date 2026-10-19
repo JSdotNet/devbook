@@ -120,9 +120,10 @@ what asserts a chapter, not a shortcut through the ladder below — a `tests`
 entry names a test, and the counterpart still has to be resolved by naming. See
 "Linking test cases" in `devbook-chapter-metadata.md`.
 
-A building block's `code` is the other: the folders a `building-blocks/<slug>.md` file lists
-are read before rung 2, and the checker warns on one that no longer exists, so the rot this
-section guards against is reported. The building-block kind's file says how.
+A building block's `code` is the other: the folders a `building-blocks/<slug>.md` file
+lists are read before the building-block view, rung 2, and the checker warns on one that no
+longer exists, so the rot this section guards against is reported. The building-block kind's
+file says how.
 
 1. **Aliases.** Read the chapter's own `aliases` field — a modelled concept
    carries its surface names on its own chapter — and, for a word that is not a
@@ -483,6 +484,10 @@ This section owns what the carried chapters may say.
 - **`REMOVED` is never carried.** It stays a finding for a person.
 - **Only the chapters the plan lists.** Nothing outside its headings, and no
   `annotation` fence.
+- **The workspace carries no status.** A building block's DSL statements land with the
+  chapters that embed or name them, and only the identifiers and view keys the plan lists;
+  each new block's file arrives at `draft`, which is what says nobody has agreed its element.
+  A `REMOVED` statement is never carried.
 - **Each carried chapter with its `meta` block, written in the same edit**, per the folder
   rule and `devbook-chapter-metadata.md`, then [the check](#the-check), run by the carrier
   and passing. A failing check is fixed in the source Markdown or the run stops with its

@@ -41,9 +41,8 @@ standard, and a class stated by half reports the wrong sentence.
    adopted devbook: say so and stop.
 
 2. **Inventory.** List the chapters in scope from the adopted folders, and the names a chapter can point at: every skill folder, plugin,
-   rule, and path the repository ships, so step 4 can test a name against the tree, the terms
-   the glossary (arc42 chapter 12) and each ubiquitous language section define, and the
-   identifiers and names of `arc42/workspace.dsl`'s elements.
+   rule, path, and `workspace.dsl` element the repository has, so step 4 can test a name against
+   the tree, and the terms the glossary (arc42 chapter 12) and each ubiquitous language section define.
 
 3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
    else; a `related` edge is followed only to test a `second-definition`.
@@ -65,7 +64,7 @@ standard, and a class stated by half reports the wrong sentence.
    | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
    | `procedure-step` | A how-to step not opening with an imperative verb, or any step with two actions or past about 20 words | One action per step |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
-   | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram` whose participants are workspace elements | The view to use: `systemContext` in 03 for `C4Context`, `container` or `component` in 05 or the block's file, `dynamic` in 06 for `C4Dynamic` or the sequence, `deployment` in 07 — or "add it to the workspace" when no view has it |
+   | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram` with two or more participants naming workspace elements, by identifier or name | The view to use: `systemContext` in 03 for `C4Context`, `container` or `component` in 05 or the block's file, `dynamic` in 06 or the block's `## Runtime` for `C4Dynamic` or the sequence, `deployment` in 07 — or "add it to the workspace" when no view has it |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |
 

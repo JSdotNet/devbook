@@ -43,32 +43,41 @@ alias, so keeping it current has value beyond the chapter itself.
 its views are defined, per **C4 model** in `devbook-arc42.md`, so every building-block run
 reads it beside the chapters and reaches its verdicts over both. A chapter and the workspace
 that disagree are drift like any other: the chapter's row names the workspace identifier or
-view key it disagrees with.
+view key it disagrees with. A finding no chapter owns gets a row of its own against
+`.devbook/arc42/workspace.dsl`.
 
-- **`code` is the first rung.** A block file's `code` folders are the one link from a chapter
-  to a code path the schema carries, and the checker warns when one is gone. Read them before
-  rung 2 of the protocol's ladder; fall through to it only when the block has none.
+A `person`, a `softwareSystem` other than this one, and an element tagged `External` have no
+code here: none of the drift below is reported for them or for a relationship that ends at one.
+
+- **`code` comes before the view.** A block file's `code` folders are the one link from a
+  chapter to a code path the schema carries, and the checker warns when one is gone. Read them
+  before the building-block view, rung 2 of the protocol's ladder, and fall through to it only
+  when the block has none.
 - **A `code` folder that does not exist is drift.** `code-ahead` when the block's code
-  resolves elsewhere by the ladder — the plan moves the entry; `spec-ahead` when nothing
-  implements the element and the block is agreed; `unresolved` otherwise.
+  resolves elsewhere by the ladder, and the plan moves the entry. `code-ahead` with a `REMOVED`
+  entry when the code was there and is gone, since whether it was abandoned or regressed is a
+  person's question. `spec-ahead` only when the block was never built. `unresolved` otherwise.
 - **A code project no element covers is drift.** A level 1 or level 2 unit from the mapping
   below that sits under no block's `code` folder and matches no element is `code-ahead`
-  against the workspace, whatever the chapters say. A `person`, a `softwareSystem` other than
-  this one, and an element tagged `External` have no code here and are never reported.
+  against the workspace, whatever the chapters say.
 - **A dependency the workspace does not draw is drift.** An observed edge with no
-  relationship is `code-ahead`; a relationship with no edge is `spec-ahead` where the
-  element is agreed, and a relationship drawn in the opposite direction is a `conflict`.
-- **No workspace yet.** With `arc42/` adopted and no `workspace.dsl`, the run's one finding
-  is `code-ahead` against the file: the plan drafts it whole, and `devbook:update` runs the
-  migration that converts Mermaid architecture fences.
+  relationship is `code-ahead`, a relationship with no edge is `spec-ahead`, and a
+  relationship drawn in the opposite direction is a `conflict`.
+- **No workspace yet.** With `arc42/` adopted and no `workspace.dsl`, the workspace row is
+  `code-ahead` and the plan drafts the file whole; the chapters are verdicted against the code
+  alone until it exists.
+
+The protocol's status rules apply unchanged: a block at `draft` or `proposed` keeps its
+verdict and is marked `unagreed`.
 
 A capture plan drafts DSL as well as chapters. Its delta for the workspace is keyed by element
 identifier or view key instead of heading — `ADDED`, `MODIFIED` with the current statement
 beside the drafted one, or `REMOVED` — in the hierarchical form, each element with its
-one-line `description` and no `properties`. A drafted view names the chapter section that
-embeds it, per the rule's view-kind table, and a drafted block file names its element in `c4`
-and its folders in `code`. Write mode carries the `ADDED` and `MODIFIED` statements into the
-workspace with the chapters, and the check resolves every identifier and embed after them.
+one-line `description` and no `properties`. The plan entry for a drafted view names the
+chapter section that embeds it, per the rule's view-kind table, and a drafted block file names
+its element in `c4` and its folders in `code`. Write mode carries the workspace in per
+**Carrying a plan in** in the protocol, and the check resolves every identifier and embed after
+it.
 
 ## Mapping
 
