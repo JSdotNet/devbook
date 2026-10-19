@@ -1,9 +1,10 @@
-// The C4 view renderer, `render.mjs`, draws the static views of the model
-// devbook's `c4.mjs` reads. One golden SVG per view kind pins the bytes; the
-// rest pins what the goldens cannot say on their own: the same model gives the
-// same bytes, a change outside a view leaves its file alone, the dark variant
-// sits inside the SVG, and the view selects the elements and relationships
-// Structurizr's rules give it.
+// The C4 view renderer, `render.mjs`, draws every view of the model devbook's
+// `c4.mjs` reads. One golden SVG per view kind pins the bytes; the rest pins
+// what the goldens cannot say on their own: the same model gives the same bytes,
+// a change outside a view leaves its file alone, the dark variant sits inside
+// the SVG, the view selects the elements and relationships Structurizr's rules
+// give it, a dynamic view numbers its steps in order, and a deployment view
+// nests its nodes around what they hold.
 //
 // Run: `node --test render.test.mjs`. `UPDATE_GOLDEN=1` rewrites the goldens
 // from the fixture; review the diff before committing it.
@@ -13,7 +14,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseWorkspace } from "../../../devbook/tools/devbook-meta/c4.mjs";
-import { arrange, renderView, renderViews, selectElements, selectRelationships, wrap } from "./render.mjs";
+import { arrange, renderView, renderViews, selectDeployment, selectElements, selectRelationships, selectSteps, wrap } from "./render.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = readFileSync(path.join(here, "fixtures", "workspace.dsl"), "utf8").replace(/\r\n/g, "\n");
@@ -29,7 +30,7 @@ const wrapModel = (body, views) => `workspace "W" {\n!identifiers hierarchical\n
 
 // ── golden files, one per view kind ─────────────────────────────────────────
 
-for (const [key, kind] of [["landscape", "systemLandscape"], ["context", "systemContext"], ["containers", "container"], ["components", "component"]]) {
+for (const [key, kind] of [["landscape", "systemLandscape"], ["context", "systemContext"], ["containers", "container"], ["components", "component"], ["checkout", "dynamic"], ["live", "deployment"]]) {
     test(`golden: the ${kind} view draws byte for byte as ${key}.svg`, () => {
         assert.equal(view(key).kind, kind);
         const svg = renderView(model, view(key));
@@ -51,7 +52,7 @@ test("the same model gives the same bytes, read twice and rendered twice", () =>
 test("a change outside a view leaves its bytes alone", () => {
     const added = fixture.replace('payments = softwareSystem', 'ledger = softwareSystem "Ledger" "Books money" "External"\n        payments = softwareSystem');
     const changed = read(added);
-    for (const key of ["context", "containers", "components"]) {
+    for (const key of ["context", "containers", "components", "checkout", "live"]) {
         assert.equal(renderView(changed, view(key, changed)), renderView(model, view(key)), key);
     }
     assert.notEqual(renderView(changed, view("landscape", changed)), renderView(model, view("landscape")), "the landscape shows the new system");
@@ -93,6 +94,8 @@ test("the legend names each style, shape, and line the view uses, and nothing el
     const legend = (svg) => [...svg.slice(svg.indexOf('<g class="c4-legend">')).matchAll(/font-size="12">([^<]+)</g)].map((m) => m[1]);
     assert.deepEqual(legend(renderView(model, view("containers"))), ["Person", "Software System", "Container", "External", "Database", "Boundary", "Group", "Relationship", "Implied relationship"]);
     assert.deepEqual(legend(renderView(model, view("context"))), ["Person", "Software System", "External", "Group", "Relationship", "Implied relationship"]);
+    assert.deepEqual(legend(renderView(model, view("checkout"))), ["Person", "Container", "External", "Database", "Boundary", "Group", "Numbered step"]);
+    assert.deepEqual(legend(renderView(model, view("live"))), ["Deployment Node", "Infrastructure Node", "Software System", "Container", "Database", "Relationship", "Implied relationship"]);
 });
 
 // ── boundaries, groups, and layout ──────────────────────────────────────────
@@ -124,14 +127,16 @@ test("groups are labelled bands that hold their members and no other element", (
 const DIRECTIONS = ["tb", "bt", "lr", "rl"].map((direction) => {
     const source = fixture
         .replace(/\n\s*autolayout \w+/g, "")
-        .replace(/(\n\s*)include \*/g, `$1include *$1autolayout ${direction}`);
+        .replace(/(\n\s*)include \*/g, `$1include *$1autolayout ${direction}`)
+        .replace(/(\n\s*)(dynamic shop checkout [^{]*\{)/, `$1$2$1    autolayout ${direction}`);
     return [direction, read(source)];
 });
 const STATIC = ["landscape", "context", "containers", "components"];
+const ALL = [...STATIC, "checkout", "live"];
 
 test("ranks follow relationships, and no two boxes overlap in any direction", () => {
     for (const [direction, m] of DIRECTIONS) {
-        for (const key of STATIC) {
+        for (const key of ALL) {
             assert.equal(view(key, m).autolayout.direction, direction);
             const { nodes } = arrange(m, view(key, m));
             for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
@@ -166,7 +171,7 @@ function sample(line) {
 test("no line crosses a box, in any direction", () => {
     let routed = 0;
     for (const [direction, m] of DIRECTIONS) {
-        for (const key of STATIC) {
+        for (const key of ALL) {
             const { nodes, lines } = arrange(m, view(key, m));
             for (const line of lines) {
                 if (line.route.kind === "lane") routed++;
@@ -248,9 +253,129 @@ test("names are escaped and long text wraps with an ellipsis", () => {
     assert.deepEqual(wrap("short", 10, 2), ["short"]);
 });
 
-test("dynamic and deployment views are skipped by name, never drawn", () => {
+test("every keyed view is drawn, and a view with no key is skipped, having no file name", () => {
     const { rendered, skipped } = renderViews(model);
-    assert.deepEqual(rendered.map((r) => r.key), ["landscape", "context", "containers", "components"]);
-    assert.deepEqual(skipped.map((s) => [s.key, s.kind]), [["checkout", "dynamic"]]);
-    assert.throws(() => renderView(model, view("checkout")), /dynamic view/);
+    assert.deepEqual(rendered.map((r) => r.key), ["landscape", "context", "containers", "components", "checkout", "live"]);
+    assert.deepEqual(skipped, []);
+    const m = read(wrapModel('a = softwareSystem "A"', "systemLandscape all {\ninclude *\n}"));
+    m.views.push({ ...m.views[0], key: null });
+    assert.deepEqual(renderViews(m).skipped.map((s) => [s.key, s.kind]), [[null, "systemLandscape"]]);
+});
+
+test("a view kind outside the six is refused by name", () => {
+    const m = read(wrapModel('a = softwareSystem "A"', "systemLandscape all {\ninclude *\n}"));
+    assert.throws(() => renderView(m, { ...m.views[0], kind: "filtered" }), /filtered view/);
+});
+
+// ── dynamic views ───────────────────────────────────────────────────────────
+
+test("dynamic: one arrow per step, numbered, in step order, a response its own arrow", () => {
+    const { shown, lines } = selectSteps(model, view("checkout"));
+    assert.deepEqual(ids(shown), ["customer", "shop.web", "shop.api", "shop.db", "payments"]);
+    assert.deepEqual(lines.map((l) => [l.step, l.source, l.destination]), [
+        [1, "customer", "shop.web"], [2, "shop.web", "shop.api"], [3, "shop.api", "payments"],
+        [4, "shop.api", "shop.db"], [5, "shop.api", "shop.web"], [6, "shop.web", "customer"],
+    ]);
+    const svg = renderView(model, view("checkout"));
+    const arrows = [...svg.matchAll(/<g data-relationship="[^"]+" data-step="(\d+)">/g)].map((m) => Number(m[1]));
+    assert.deepEqual(arrows, [1, 2, 3, 4, 5, 6], "every step is an arrow, drawn in step order");
+    const labels = [...svg.matchAll(/text-anchor="middle">(\d+\. [^<]+)</g)].map((m) => m[1]);
+    assert.deepEqual(labels, ["1. Places an order", "2. Submits the order", "3. Charges the card", "4. Saves the order", "5. Confirms the order", "6. Shows the confirmation"]);
+    assert.match(svg, /<title>\[Dynamic\] Shop<\/title>/);
+});
+
+test("dynamic: two steps between one pair never share a label's place", () => {
+    const { lines } = arrange(model, view("checkout"));
+    const svg = renderView(model, view("checkout"));
+    const boxes = [...svg.matchAll(/<g class="c4-label"[^\n]*\n\s*<rect[^>]* x="(-?\d+)" y="(-?\d+)" width="(\d+)" height="(\d+)"/g)].map((m) => m.slice(1).map(Number));
+    assert.equal(boxes.length, lines.length);
+    for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+        const [[ax, ay, aw, ah], [bx, by, bw, bh]] = [boxes[i], boxes[j]];
+        assert.ok(ax + aw <= bx || bx + bw <= ax || ay + ah <= by || by + bh <= ay, `labels of steps ${i + 1} and ${j + 1} overlap`);
+    }
+});
+
+test("dynamic: scoped to a system, the scope is the boundary; unscoped, there is none", () => {
+    assert.ok(arrange(model, view("checkout")).boundary, "scoped to shop");
+    const m = read(wrapModel('a = softwareSystem "A"\nb = softwareSystem "B"\na -> b "Calls"', 'dynamic * flow {\na -> b "Asks"\nb -> a "Answers"\n}'));
+    const { boundary, lines } = arrange(m, view("flow", m));
+    assert.equal(boundary, null);
+    assert.deepEqual(lines.map((l) => l.step), [1, 2]);
+    assert.match(renderView(m, view("flow", m)), /<title>Dynamic<\/title>/);
+});
+
+// ── deployment views ────────────────────────────────────────────────────────
+
+const holds = (outer, inner) => inner.x >= outer.x && inner.y >= outer.y && inner.x + inner.w <= outer.x + outer.w && inner.y + inner.h <= outer.y + outer.h;
+const apart = (a, b) => a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y;
+const LIVE = 'deployment * live live "The shop as it runs in production" {';
+
+test("deployment: every instance and infrastructure node of the environment, drawn as what it is", () => {
+    const { shown, nodes, lines } = selectDeployment(model, view("live"));
+    assert.deepEqual(ids(shown), ["live.cloud.gateway", "live.cloud.app.web", "live.cloud.app.api", "live.cloud.data.db", "live.site.planner"]);
+    assert.deepEqual(shown.map((e) => e.kind), ["infrastructureNode", "container", "container", "container", "softwareSystem"]);
+    assert.ok(shown.find((e) => e.id === "live.cloud.data.db").tags.includes("Database"), "an instance takes its container's tags");
+    assert.deepEqual(ids(nodes), ["live.cloud", "live.cloud.app", "live.cloud.data", "live.site"]);
+    assert.deepEqual(lines.map((l) => [l.source, l.destination, l.implied]), [
+        ["live.cloud.app.web", "live.cloud.app.api", false],
+        ["live.cloud.app.api", "live.cloud.data.db", true],
+        ["live.cloud.app.api", "live.site.planner", false],
+        ["live.cloud.gateway", "live.cloud.app.web", false],
+    ]);
+    const svg = renderView(model, view("live"));
+    assert.match(svg, /<title>\[Deployment\] Live<\/title>/);
+    assert.match(svg, />App Service</);
+    assert.match(svg, />x2</);
+    assert.match(svg, /\[Deployment Node: Linux\]/);
+    assert.match(svg, /data-element="live.cloud.gateway">\n\s*<rect class="c4-fill-infrastructureNode"/);
+    assert.match(svg, /data-element="live.cloud.data.db" data-instance-of="shop.db">\n\s*<path class="c4-fill-container"/);
+    assert.doesNotMatch(renderView(model, view("containers")), /infrastructureNode/, "a view with no infrastructure node carries none of its rules");
+});
+
+test("deployment: nodes nest around what they hold, siblings apart, in every direction", () => {
+    for (const [direction, m] of DIRECTIONS) {
+        const { nodes, nodeRects } = arrange(m, view("live", m));
+        assert.equal(nodeRects.length, 4);
+        const rect = (id) => nodeRects.find((d) => d.element.id === id);
+        for (const node of nodes) assert.ok(holds(rect(node.element.parent), node), `${direction}: ${node.element.id} sits in its node`);
+        for (const d of nodeRects) {
+            if (d.element.parent) assert.ok(holds(rect(d.element.parent), d), `${direction}: ${d.element.id} sits in its parent`);
+            for (const other of nodeRects) {
+                if (other !== d && other.element.parent === d.element.parent) assert.ok(apart(d, other), `${direction}: ${d.element.id} and ${other.element.id} overlap`);
+            }
+            for (const node of nodes) {
+                const inside = node.element.parent === d.element.id || node.element.parent.startsWith(`${d.element.id}.`);
+                if (!inside) assert.ok(apart(d, node), `${direction}: ${node.element.id} is drawn inside ${d.element.id}`);
+            }
+        }
+    }
+});
+
+test("deployment: a system scope keeps its own containers' instances and the infrastructure", () => {
+    const m = read(fixture.replace(LIVE, LIVE.replace("deployment *", "deployment shop")));
+    const { shown, nodes } = selectDeployment(m, view("live", m));
+    assert.deepEqual(ids(shown), ["live.cloud.gateway", "live.cloud.app.web", "live.cloud.app.api", "live.cloud.data.db"]);
+    assert.deepEqual(ids(nodes), ["live.cloud", "live.cloud.app", "live.cloud.data"], "a node holding nothing shown is not drawn");
+    assert.match(renderView(m, view("live", m)), /<title>\[Deployment\] Shop - Live<\/title>/);
+    const byNode = read(fixture.replace(`${LIVE}\n            include *`, `${LIVE.replace("deployment *", "deployment shop")}\n            include live.site live.cloud.data`));
+    assert.deepEqual(ids(selectDeployment(byNode, view("live", byNode)).shown), ["live.cloud.data.db"], "a node brings in only what is in scope");
+    const byLeaf = read(fixture.replace(`${LIVE}\n            include *`, `${LIVE.replace("deployment *", "deployment shop")}\n            include live.site.planner`));
+    assert.deepEqual(ids(selectDeployment(byLeaf, view("live", byLeaf)).shown), ["live.site.planner"], "a leaf named outright is shown");
+});
+
+test("deployment: a relationship to or from a deployment node is not drawn", () => {
+    const m = read(fixture.replace('gateway -> app.web "Forwards requests to" "HTTPS"', 'gateway -> app.web "Forwards requests to" "HTTPS"\n                gateway -> data "Watches"'));
+    assert.ok(m.relationships.some((r) => r.destination === "live.cloud.data"));
+    assert.ok(!selectDeployment(m, view("live", m)).lines.some((l) => l.destination === "live.cloud.data"));
+});
+
+test("deployment: include and exclude by node, and one SVG per environment's view", () => {
+    const source = fixture
+        .replace(`${LIVE}\n            include *`, `${LIVE}\n            include live.cloud\n            exclude live.cloud.data`)
+        .replace(/(\n {8}live = deploymentEnvironment)/, '\n        test = deploymentEnvironment "Test" {\n            box = deploymentNode "Box" {\n                one = containerInstance shop.web\n            }\n        }$1')
+        .replace(/(\n {4}views \{)/, "$1\n        deployment * test test {\n            include *\n        }");
+    const m = read(source);
+    assert.deepEqual(ids(selectDeployment(m, view("live", m)).shown), ["live.cloud.gateway", "live.cloud.app.web", "live.cloud.app.api"]);
+    assert.deepEqual(ids(selectDeployment(m, view("test", m)).shown), ["test.box.one"]);
+    assert.deepEqual(renderViews(m).rendered.filter((r) => r.kind === "deployment").map((r) => r.key), ["test", "live"]);
 });

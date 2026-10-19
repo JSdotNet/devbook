@@ -77,35 +77,47 @@
   </g>
   <g data-relationship="customer -> shop">
     <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M132 150C132 220 718 220 718 290"/>
+  </g>
+  <g data-relationship="clerk -> warehouse">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M390 150L390 210Q390 220 400 220L544 220Q554 220 554 230L554 500Q554 510 564 510L686 510Q696 510 696 520L696 580"/>
+  </g>
+  <g data-relationship="shop -> mail">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M685 440C685 510 132 510 132 580"/>
+  </g>
+  <g data-relationship="shop -> payments">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M718 440C718 510 390 510 390 580"/>
+  </g>
+  <g data-relationship="shop -> warehouse">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M751 440C751 510 740 510 740 580"/>
+  </g>
+  <g data-relationship="mail -> customer">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M88 580L88 520Q88 510 98 510L100 510Q110 510 110 500L110 230Q110 220 100 220L98 220Q88 220 88 210L88 150"/>
+  </g>
+  <g class="c4-label" data-relationship="customer -> shop">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="354" y="203" width="142" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="425" y="218" font-size="11" text-anchor="middle">Browses and orders on</text>
     <text class="c4-muted" fill="#59636e" x="425" y="232" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
-  <g data-relationship="clerk -> warehouse">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M390 150L390 210Q390 220 400 220L544 220Q554 220 554 230L554 500Q554 510 564 510L686 510Q696 510 696 520L696 580"/>
+  <g class="c4-label" data-relationship="clerk -> warehouse">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="480" y="355" width="148" height="20" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="554" y="370" font-size="11" text-anchor="middle">Works the pick list in</text>
   </g>
-  <g data-relationship="shop -> mail">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M685 440C685 510 132 510 132 580"/>
+  <g class="c4-label" data-relationship="shop -> mail">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="348" y="493" width="123" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="409" y="508" font-size="11" text-anchor="middle">Sends mail through</text>
     <text class="c4-muted" fill="#59636e" x="409" y="522" font-size="11" text-anchor="middle">[SMTP]</text>
   </g>
-  <g data-relationship="shop -> payments">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M718 440C718 510 390 510 390 580"/>
+  <g class="c4-label" data-relationship="shop -> payments">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="483" y="493" width="142" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="554" y="508" font-size="11" text-anchor="middle">Charges the card with</text>
     <text class="c4-muted" fill="#59636e" x="554" y="522" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
-  <g data-relationship="shop -> warehouse">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M751 440C751 510 740 510 740 580"/>
+  <g class="c4-label" data-relationship="shop -> warehouse">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="694" y="493" width="105" height="34" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="746" y="508" font-size="11" text-anchor="middle">Hands orders to</text>
     <text class="c4-muted" fill="#59636e" x="746" y="522" font-size="11" text-anchor="middle">[AMQP]</text>
   </g>
-  <g data-relationship="mail -> customer">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M88 580L88 520Q88 510 98 510L100 510Q110 510 110 500L110 230Q110 220 100 220L98 220Q88 220 88 210L88 150"/>
+  <g class="c4-label" data-relationship="mail -> customer">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="55" y="355" width="111" height="20" rx="3"/>
     <text class="c4-ink" fill="#1f2328" x="110" y="370" font-size="11" text-anchor="middle">Delivers mail to</text>
   </g>
