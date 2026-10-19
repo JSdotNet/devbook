@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/12-glossary.md#idleness"]
+c4: ["marketplace.delivery-surface-dashboard"]
+code: ["plugins/delivery-surface-dashboard"]
 ```
 
 The live view of a run, measured by hooks rather than told. Responsible for three things: that
@@ -104,6 +106,8 @@ related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/
 
 Two aggregates and two domain services: what a run record holds, what the pages read, and
 where the one host-specific part sits.
+
+![delivery-surface-dashboard's components](c4:delivery-surface-dashboard)
 
 ### Model
 

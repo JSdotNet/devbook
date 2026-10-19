@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
+c4: ["marketplace.devbook"]
+code: ["plugins/devbook"]
 ```
 
 The convention itself. Responsible for three things: that a chapter can be addressed, that
@@ -184,6 +186,8 @@ Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md
 and the Procedure, its Goal, and the Demo Template are
 [devbook-procedures](devbook-procedures.md#structure)'s; the five services left are below. The chapter is the
 consistency boundary everything else is expressed in terms of.
+
+![devbook's components](c4:devbook)
 
 ### Model
 

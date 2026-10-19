@@ -26,62 +26,13 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscu
 Fourteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
-```mermaid
-flowchart TB
-    subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.26.1"]
-        DEL["delivery 1.26.1"]
-        CFG["devbook-config 1.26.1"]
-        SKL["devbook-skills 1.26.1"]
-    end
-
-    subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.26.1"]
-        DBC["devbook-collaboration 1.26.1"]
-        DOS["devbook-openspec 1.26.1"]
-        SCH["delivery-schedule 1.26.1"]
-    end
-
-    subgraph SURF["Surface - declared by nothing, resolved at run time"]
-        SD["delivery-surface-dashboard<br/>lifecycle, render, export"]
-        SL["delivery-surface-collector<br/>lifecycle, export"]
-        SB["delivery-surface-backlog<br/>lifecycle, forwarded to the Backlog app"]
-        SC["delivery-surface-canvas<br/>render, one host, no marketplace entry"]
-    end
-
-    subgraph VIEW["Viewer - declared by nothing, reads what others write"]
-        RV["delivery-run-view<br/>one host, reads run files"]
-        CV["devbook-config-view<br/>one host, reads every repository's config"]
-    end
-
-    DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
-    DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
-    DOS ==>|"devbook >=1.13.0 &lt;2.0.0"| DEV
-    SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
-
-    SD -->|"delivery.surface.*@1"| DEL
-    SL -->|"delivery.surface.*@1"| DEL
-    SB -->|"delivery.surface.*@1"| DEL
-    SC -->|"delivery.surface.render@1"| DEL
-    RV -.->|"reads their run files"| SD
-    RV -.->|"reads their run files"| SB
-    CV -.->|"repeats its stamp and retired-key tables"| CFG
-
-    SCH -.->|"names prose-check as a target"| DEV
-    DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
-    DEL -.->|"names the procedures run and capture, never the plugin"| DEV
-    CFG -.->|"reads every plugin, declares none"| DEV
-    CFG -.->|"reads every plugin, declares none"| DEL
-    DEL -.->|"flow-code's project kind runs devbook-config:init"| CFG
-    DOS -.->|"spec and tracker providers, bound by name"| DEL
-    DEV -.->|"names the skill show-me, never the plugin"| SKL
-    DEL -.->|"names the skills show-me, research-brief, pr-body, and retro, never the plugin"| SKL
-    SCH -.->|"names the skills pr-body and retro, never the plugin"| SKL
-```
+![The plugin landscape](c4:plugins)
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is
 the manifest's own direction — `devbook-collaboration` declares `devbook`, so the arrow leaves
-`devbook-collaboration`. The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks)
+`devbook-collaboration`. The engine is the one exception the picture shows: it calls whichever
+surface answers, so its arrows leave `delivery` for each surface, while the surface is the side
+that conforms to the published language. The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks)
 in chapter 8 lists the same relationships the other way round, upstream to downstream, because
 that is DDD's convention for model influence. Neither is wrong and they are not
 interchangeable: read this one for what a host enforces, and that one for who has to live with
@@ -91,18 +42,20 @@ A plugin too large for one file opens its level 2 there as well: delivery's phas
 pull-request lane, delivery-schedule's entry points, and devbook's code sync and procedures
 each have a file beside their plugin's.
 
-| Style | Means | Where a missing target lands |
-| --- | --- | --- |
-| Thick, labelled with a range | Declared in `dependencies`, enforced by the host | Unreachable: the host installs the lower layer or the plugin is demoted |
-| Plain, labelled with a capability | Conformance to a published language neither side declares | The caller resolves the group unanswered and continues |
-| Dashed | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
+Each arrow's technology says which kind of coupling it is:
 
-The dashed `delivery → devbook` edge is the one to read twice. `flow-code`, the engine's flow
+| Technology | Means | Where a missing target lands |
+| --- | --- | --- |
+| `dependencies:` and a range | Declared in `dependencies`, enforced by the host | Unreachable: the host installs the lower layer or the plugin is demoted |
+| A capability, `delivery.surface.*@1` | A published language neither side declares | The caller resolves the group unanswered and continues |
+| `undeclared`, `skill name`, `binding` | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
+
+The undeclared `delivery → devbook` arrow is the one to read twice. `flow-code`, the engine's flow
 for every code change, works with devbook absent, so it is not an L1 extension; it is one stack
 rather than two, so it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
 
-The second dashed `delivery → devbook` edge is a different kind: the engine names two
+The second `delivery → devbook` arrow, labelled `skill name`, is a different kind: the engine names two
 procedures, `run` and `capture`, and the paths they live at — `.claude/skills/run-<name>/SKILL.md`
 for the recipe Claude Code's `run` follows, `.agents/skills/capture.md` — and never the plugin
 that seeds them. A repository may write both by hand and the engine is none
@@ -110,7 +63,7 @@ the wiser; absent, a flow does without and says so. The seam is the skill name, 
 the procedures can ship inside `devbook` and the engine can stay capability-free — see
 [the plugin boundaries record](adr/plugin-boundaries.md).
 
-The dashed `devbook-openspec → delivery` edge runs the same way as the procedures one: the
+The `devbook-openspec → delivery` binding runs the same way as the procedures one: the
 bridge ships a `spec` and a `tracker` provider an engine binds by name in `.devbook/config.json`,
 and names the engine nowhere else. Unbound, OpenSpec's own `/opsx:apply` builds each step.
 

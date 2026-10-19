@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery-phases.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+c4: ["marketplace.delivery"]
+code: ["plugins/delivery"]
 ```
 
 The delivery engine. Responsible for three things: that one unit of work reaches a review-ready
@@ -175,6 +177,8 @@ kernel vocabulary is defined once in [chapter 8](../08-crosscutting-concepts.md)
 layer, tracker, surface, host slot, phase, and gate. The terms this block owns and no part
 below names are in the [glossary](../12-glossary.md): tier, Personal Validation, PR lane, and
 provider.
+
+![delivery's components](c4:delivery)
 
 ### Model
 

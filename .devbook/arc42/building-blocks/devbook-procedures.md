@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#prototype"]
+c4: ["marketplace.devbook.procedure", "marketplace.devbook.goal", "marketplace.devbook.demo-template"]
+code: ["plugins/devbook/assets/procedures"]
 ```
 
 The procedures part of [devbook](devbook.md), a block inside it. Responsible for one thing:
@@ -39,6 +41,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure"]
 ```
 
 The procedure, the goal that is its seam, and the template a demo starts from.
+
+![devbook-procedures' components](c4:devbook-procedures)
 
 ### Procedure
 

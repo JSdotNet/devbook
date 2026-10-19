@@ -22,6 +22,10 @@ A file is written once and read by two hosts, so the lifecycle has one authoring
 independent load paths. Nothing is assembled in between — there is no build — which is why the
 only place a mistake can be caught before a consumer's install is the authoring host itself.
 
+![Authoring an asset](c4:authoring-an-asset)
+
+The steps on the authoring side, and where a rejected shape loops back:
+
 ```mermaid
 flowchart LR
     write["Write the asset"] --> manifests["Declare the manifests"]
@@ -61,6 +65,10 @@ and [delivery-schedule](building-blocks/delivery-schedule.md) — and
 [devbook-config](building-blocks/devbook-config.md) invokes each one's install in turn without
 writing a stamp of its own.
 
+![Materializing a component](c4:materializing-a-component)
+
+What the stamp records as a component moves through it:
+
 ```mermaid
 stateDiagram-v2
     [*] --> NotAdopted
@@ -96,6 +104,10 @@ What a [flow skill](08-crosscutting-concepts.md#flow-skill) does with its
 ([delivery](building-blocks/delivery.md)) owns the order, the repository's `phases` map says who
 runs each phase and how, and whichever [surface](08-crosscutting-concepts.md#surface) answers
 renders it. The picture is `flow-code`'s.
+
+![A flow run](c4:a-flow-run)
+
+Inside the engine, the phases run in this order:
 
 ```mermaid
 flowchart TD

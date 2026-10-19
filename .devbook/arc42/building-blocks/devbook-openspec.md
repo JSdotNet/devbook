@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
+c4: ["marketplace.devbook-openspec"]
+code: ["plugins/devbook-openspec"]
 ```
 
 The change lane: the plugin that installs and configures the OpenSpec CLI so a change to a
@@ -39,6 +41,8 @@ configured here, never copied.
 
 ```meta
 ```
+
+![devbook-openspec's components](c4:devbook-openspec)
 
 ### Schema
 

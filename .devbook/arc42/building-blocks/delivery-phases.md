@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md"]
+c4: ["marketplace.delivery.phase", "marketplace.delivery.gate"]
+code: ["plugins/delivery/skills/phase-build-test", "plugins/delivery/skills/phase-check-review", "plugins/delivery/skills/phase-create-pr", "plugins/delivery/skills/phase-drafting", "plugins/delivery/skills/phase-implement", "plugins/delivery/skills/phase-personal-validation", "plugins/delivery/skills/phase-plan", "plugins/delivery/skills/phase-ready", "plugins/delivery/skills/phase-report-back", "plugins/delivery/skills/phase-review", "plugins/delivery/skills/phase-scope", "plugins/delivery/skills/phase-spec-check", "plugins/delivery/skills/phase-summary", "plugins/delivery/skills/phase-update-base", "plugins/delivery/skills/phase-verify"]
 ```
 
 The phases of the [delivery](delivery.md) engine, a block inside it. Responsible for two
@@ -260,6 +262,8 @@ related: [".devbook/arc42/building-blocks/delivery.md#model", ".devbook/arc42/ad
 Two aggregates and the value object both share with a [run](delivery.md#run): the phase a
 repository configures, the gate a person answers, and the decision that answer leaves behind.
 All three are drawn in the engine's [model](delivery.md#model), beside the run they shape.
+
+![delivery-phases' components](c4:delivery-phases)
 
 ### Phase
 
