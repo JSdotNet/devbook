@@ -127,8 +127,32 @@ check(resolveStatus("arc42", {}, ".devbook/arc42/05-building-block-view.md", "fi
     const narrowed = validateDocument(TDR, doc("severity: low\nstatus: resolved\n"), { ladder });
     check(has(errors(narrowed), "expected one of: planned"), "a tdr/ rule replaces the debt ladder, and a folder-wide rule does not", dump(narrowed));
     check(errors(validateDocument(TDR, doc("severity: low\nstatus: planned\n"), { ladder })).length === 0, "the tdr/ rule's rung is accepted");
-    const { issues: restingIssues } = compileStatusLadder({ folders: { arc42: { rules: [{ files: ["tdr/**"], statuses: ["identified"] }] } } });
-    check(has(restingIssues, "lists `identified`, the resting value"), "a tdr/ rule listing identified is reported", dump(restingIssues));
+    const { issues: restingIssues } = compileStatusLadder({ folders: { arc42: { rules: [{ files: ["tdr/**"], statuses: ["identified", "planned"] }] } } });
+    check(has(warnings(restingIssues), "lists `identified`, the resting value of a debt record") && errors(restingIssues).length === 0, "a tdr/ rule listing identified is a warning, as it was a rung under 31", dump(restingIssues));
+}
+
+// ── what validated under contract 31 still does ────────────────────────────
+
+{
+    const { ladder } = compileStatusLadder({ folders: { arc42: { rules: [{ files: ["**/*.md"], statuses: ["draft", "superseded"] }] } } });
+    const issues = validateDocument(TDR, doc("severity: low\nstatus: superseded\n"), { ladder });
+    check(errors(issues).length === 0 && has(warnings(issues), "a rung of the arc42/ ladder"), "a folder-wide rule's rung on a debt record is a warning", dump(issues));
+}
+{
+    const { ladder } = compileStatusLadder({ folders: { arc42: { rules: [{ files: ["tdr/*.md"], statuses: ["planned"] }] } } });
+    const issues = validateDocument(TDR, doc("severity: low\nstatus: active\n"), { ladder });
+    check(errors(issues).length === 0 && warnings(issues).length === 1, "status: active on a debt record under a tdr/ rule is a warning", dump(issues));
+    const index = validateDocument(".devbook/arc42/tdr/README.md", doc("index: root\nstatus: proposed\n"), { ladder });
+    check(errors(index).length === 0, "a tdr/ rule does not narrow the tdr/ index", dump(index));
+}
+for (const [relPath, meta] of [[".devbook/design/x.md", "severity: low\n"], [".devbook/tech/x.md", "status: trial\ncode: [src]\n"], [".devbook/domain/orders/domain.md", "type: domain\nseverity: low\n"]]) {
+    const issues = validateDocument(relPath, doc(meta));
+    check(errors(issues).length === 0 && has(warnings(issues), "unrecognized field"), `${meta.trim().split("\n").pop()} in ${relPath} stays an unrecognized-field warning`, dump(issues));
+}
+check(has(errors(validateDocument(BLOCK, doc("code: [.]\n"))), "is not a repository-relative folder"), "code entry \".\" is an error");
+{
+    const embeds = c4Embeds("# T\n\n<!-- ![x](c4:a) -->\n<!--\n![y](c4:b)\n-->\n![z](c4:c)\n", [{ level: 1, line: 1, slug: "t", text: "T" }]);
+    check(embeds.map((e) => e.key).join() === "c", "an embed in an HTML comment is not an embed", dump(embeds));
 }
 
 // ── metadata: a c4: embed is a diagram ────────────────────────────────────
@@ -241,6 +265,7 @@ for (const [name, overrides, needle, severity = "error"] of [
     ["a container view in a domain/ chapter", { ".devbook/domain/orders/domain.md": `# Domain\n\n${fence("type: domain\n")}\n![Containers](c4:containers)\n` }, "embeds the `container` view `containers`, which belongs in"],
     ["a dynamic view in a building block outside `## Runtime`", { ".devbook/arc42/building-blocks/shop.md": `# Shop\n\n${fence()}\nThe shop.\n\n## Structure\n\n${fence()}\n![Checkout](c4:checkout)\n` }, "embeds the `dynamic` view `checkout`, which belongs in `06-runtime-view.md` or a building block's `## Runtime`"],
     ["a deployment view in chapter 6", { ".devbook/arc42/07-deployment-view.md": null, ".devbook/arc42/06-runtime-view.md": `# 06. Runtime View\n\n${fence()}\n![Live](c4:live-deployment)\n` }, "embeds the `deployment` view `live-deployment`, which belongs in `07-deployment-view.md`"],
+    ["a container view in the building-blocks index", { ".devbook/arc42/building-blocks/README.md": `# Building Blocks\n\n${fence("index: root\n")}\n![Containers](c4:containers)\n` }, "embeds the `container` view `containers`, which belongs in"],
     ["an embed with no workspace", { ".devbook/arc42/workspace.dsl": null }, "embeds `c4:context`, but there is no .devbook/arc42/workspace.dsl"],
     ["a code entry that is a file", { "src/shop.txt": "x", ".devbook/arc42/building-blocks/shop.md": CLEAN[".devbook/arc42/building-blocks/shop.md"].replace("code: [src/shop]", "code: [src/shop.txt]") }, "which is a file — `code` lists folders"],
     ["a view no chapter embeds", { ".devbook/arc42/07-deployment-view.md": null }, "view `live-deployment` is embedded in no chapter", "warning"],
@@ -249,6 +274,11 @@ for (const [name, overrides, needle, severity = "error"] of [
     const graph = await graphOf(overrides);
     const hit = graph.problems.find((p) => p.message.includes(needle));
     check(hit?.severity === severity, `${name} is ${severity === "error" ? "an error" : "a warning"}`, dump(hit ?? c4Problems(graph)));
+}
+{
+    const graph = await graphOf({ ".devbook/domain/orders/domain.md": `# Domain\n\n${fence("type: domain\nc4: [shop.web, shop.web]\n")}\nOrders.\n` });
+    const ids = graph.edges.filter((e) => e.type === "c4" && e.source === ".devbook/domain/orders/domain.md").map((e) => e.id);
+    check(ids.length === 1, "an entry written twice draws one edge", dump(ids));
 }
 {
     const graph = await graphOf({ ".devbook/arc42/workspace.dsl": WORKSPACE.replace("    model {\n", "    model {\n        !include c4/people.dsl\n").replace('customer = person "Customer" "Buys things."\n', ""), ".devbook/arc42/c4/people.dsl": 'customer = person "Customer" "Buys things."\n' });

@@ -23,7 +23,7 @@ import path from "node:path";
 import {
     builtInStatuses,
     restingStatusFor,
-    ruleRestingStatus,
+    ruleLadder,
     folderKindForPath,
     DECISION_STATUSES,
     DEVBOOK_FOLDER_NAMES,
@@ -70,8 +70,8 @@ export function globToRegExp(glob) {
  */
 export function compileStatusLadder(json) {
     const issues = [];
-    const report = (message) =>
-        issues.push({ severity: "error", path: STATUSES_FILE, message: `${STATUSES_FILE} ${message}` });
+    const report = (message, severity = "error") =>
+        issues.push({ severity, path: STATUSES_FILE, message: `${STATUSES_FILE} ${message}` });
     const rulesByFolder = new Map();
     const ladder = { statusesFor: (relPath, blockLevel, options) => statusesFor(rulesByFolder, relPath, blockLevel, options) };
 
@@ -124,14 +124,16 @@ function compileRule(folder, rule, at, report) {
     }
 
     // A rule aimed at `tdr/` alone replaces the debt ladder, which rests at
-    // `identified` rather than the folder's `active`.
-    const debt = ruleRestingStatus(folder, files) !== restingStatusFor(folder);
-    const resting = ruleRestingStatus(folder, files);
+    // `identified` rather than the folder's `active`. One written before the
+    // debt ladder existed may list `identified` as a rung: it is dropped and
+    // reported as a warning, not refused.
+    const { debt, resting } = ruleLadder(folder, files);
     const kept = [];
     for (const value of new Set(statuses)) {
         if (resting !== null && value === resting) {
             report(
-                `${at} lists \`${resting}\`, the resting value in ${folder}/, which is written by omitting the field and is never a rung to choose. Take it out of the list.`
+                `${at} lists \`${resting}\`, the resting value ${debt ? "of a debt record" : `in ${folder}/`}, which is written by omitting the field and is never a rung to choose. Take it out of the list.`,
+                debt ? "warning" : "error"
             );
         } else if (DECISION_STATUSES.includes(value)) {
             report(
@@ -158,8 +160,9 @@ function compileRule(folder, rule, at, report) {
     return { at, scope, matchers: files.map(globToRegExp), statuses: kept, debt };
 }
 
-// A debt record's top-level block takes only a rule aimed at `tdr/`: a rule
-// for the whole folder narrows the arc42 ladder, which a debt record is not on.
+// A debt record's top-level block takes only a rule aimed at `tdr/`, and only
+// it takes one: a rule for the whole folder narrows the arc42 ladder, which a
+// debt record is not on, and the debt ladder applies nowhere else in arc42/.
 function statusesFor(rulesByFolder, relPath, blockLevel, { debt = false } = {}) {
     const folder = folderKindForPath(relPath);
     const rules = folder ? rulesByFolder.get(folder) : null;
@@ -167,7 +170,7 @@ function statusesFor(rulesByFolder, relPath, blockLevel, { debt = false } = {}) 
     const subject = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + folder.length + 1);
     for (const rule of rules) {
         if (rule.scope !== "any" && rule.scope !== blockLevel) continue;
-        if (debt && !rule.debt) continue;
+        if (debt !== Boolean(rule.debt)) continue;
         if (!rule.matchers.some((re) => re.test(subject))) continue;
         const statuses = folder === "domain" ? [...rule.statuses, ...DECISION_STATUSES] : [...rule.statuses];
         return { statuses, source: `${STATUSES_FILE} ${rule.at}` };

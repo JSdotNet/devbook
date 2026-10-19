@@ -204,12 +204,20 @@ export function blockLadder(folder, relPath = null, blockLevel = null, fileMeta 
     return { statuses: builtInStatuses(folder), resting: restingStatusFor(folder), debt: false };
 }
 
-/** The resting value a `statuses.json` rule's globs imply: the debt ladder's when every one names `tdr/`. */
-export function ruleRestingStatus(folder, files) {
-    if (folder === "arc42" && files.length && files.every((glob) => /^(?:\.\/)?tdr\//.test(String(glob).replace(/\\/g, "/")))) {
-        return DEBT_RESTING_STATUS;
-    }
-    return restingStatusFor(folder);
+/**
+ * What a `statuses.json` rule's globs aim at: `debt` when every one names
+ * `tdr/`, so the rule replaces the debt ladder, with that ladder's resting value.
+ */
+export function ruleLadder(folder, files) {
+    const debt = folder === "arc42" && files.length > 0 && files.every((glob) => /^(?:\.\/)?tdr\//.test(String(glob).replace(/\\/g, "/")));
+    return { debt, resting: debt ? DEBT_RESTING_STATUS : restingStatusFor(folder) };
+}
+
+/** Whether a `code` entry is a folder written from the repository root: no leading `/`, drive, `.`, `..`, or anchor. */
+export function isRepoFolder(entry) {
+    const clean = String(entry ?? "").replace(/\\/g, "/").replace(/\/+$/, "");
+    if (!clean || clean.startsWith("/") || /^[A-Za-z]:/.test(clean) || clean.includes("#")) return false;
+    return !clean.split("/").some((part) => part === ".." || part === ".");
 }
 
 // Allowed `type` values per folder, split by block level. `type` records *what
@@ -1859,15 +1867,18 @@ export function c4FieldIssues(relPath, blockLevel, meta, fileMeta) {
         }
     }
 
+    // `code` and `severity` are arc42/ fields; anywhere else the sweep for
+    // unrecognized fields reports them, as it did before they existed.
+    if (folder !== "arc42") return issues;
+
     if (meta.code != null) {
-        const onBlock = folder === "arc42" && blockLevel === "file" && BUILDING_BLOCK_FILE.test(normalized) && fileMeta?.index !== "root";
+        const onBlock = blockLevel === "file" && BUILDING_BLOCK_FILE.test(normalized) && fileMeta?.index !== "root";
         if (!onBlock) {
             say("error", "has `code`, which sits on an `arc42/building-blocks/<slug>.md` file's top-level block only — the block names the folders that hold its code. See devbook-chapter-metadata.md.");
         }
         for (const entry of toList(meta.code)) {
-            const clean = String(entry).replace(/\\/g, "/");
-            if (clean.startsWith("/") || /^[A-Za-z]:/.test(clean) || clean.split("/").includes("..") || clean.includes("#")) {
-                say("error", `has \`code\` entry "${entry}", which is not a repository-relative folder — write it from the repository root, with no leading \`/\`, no \`..\`, and no anchor.`);
+            if (!isRepoFolder(entry)) {
+                say("error", `has \`code\` entry "${entry}", which is not a repository-relative folder — write it from the repository root, with no leading \`/\`, no \`.\` or \`..\`, and no anchor.`);
             }
         }
     }
@@ -2336,6 +2347,11 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         const resting = builtIn.resting;
         const configured = ladder?.statusesFor(relPath, blockLevel, { debt: builtIn.debt }) ?? null;
         const allowedStatus = configured?.statuses ?? builtIn.statuses;
+        // The rungs a debt record could hold before it had a ladder of its
+        // own: the folder's, as the repository's rules narrowed them.
+        const folderRungs = builtIn.debt
+            ? [...(ladder?.statusesFor(relPath, blockLevel)?.statuses ?? STATUS_BY_FOLDER.arc42), restingStatusFor(kind)]
+            : [];
         const declaresStatus = "status" in chapter.meta;
         const pageBlock = scenarioPage && blockLevel === "file";
         if (pageBlock && declaresStatus && chapter.meta.status !== null) {
@@ -2366,7 +2382,7 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
                 severity: "warning",
                 message: `${label} states \`status: ${resting}\`, which is the resting value ${builtIn.debt ? "of a debt record" : `in .${kind}`} — omit the field instead, per the omit-when-empty rule.`,
             });
-        } else if (builtIn.debt && !configured && STATUS_BY_FOLDER.arc42.includes(chapter.meta.status)) {
+        } else if (builtIn.debt && !allowedStatus.includes(chapter.meta.status) && folderRungs.includes(chapter.meta.status)) {
             // A record written before the debt ladder existed holds a folder
             // rung; it still reads, and is reported until it is moved over.
             issues.push({

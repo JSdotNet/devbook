@@ -20,7 +20,7 @@
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import { readWorkspace } from "./c4.mjs";
-import { C4_FIELDS, DEVBOOK_PREFIX } from "./metadata.mjs";
+import { C4_FIELDS, DEVBOOK_PREFIX, isRepoFolder } from "./metadata.mjs";
 
 export const WORKSPACE = `${DEVBOOK_PREFIX}arc42/workspace.dsl`;
 
@@ -56,8 +56,16 @@ export function c4Embeds(raw, chapters) {
     const lines = raw.split(/\r?\n/);
     const headings = [...chapters].sort((a, b) => a.line - b.line);
     let fence = null;
+    let comment = false;
     for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+        let line = lines[i];
+        // An HTML comment hides what it holds, across lines too.
+        if (comment) {
+            const close = line.indexOf("-->");
+            if (close < 0) continue;
+            line = line.slice(close + 3);
+            comment = false;
+        }
         const marker = /^\s*(`{3,}|~{3,})/.exec(line);
         if (fence) {
             if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length) fence = null;
@@ -65,7 +73,12 @@ export function c4Embeds(raw, chapters) {
         }
         if (marker) { fence = marker[1]; continue; }
         // An embed inside an inline code span is an example, not an embed.
-        const prose = line.replace(/(`+)[\s\S]*?\1/g, "");
+        let prose = line.replace(/(`+)[\s\S]*?\1/g, "").replace(/<!--[\s\S]*?-->/g, "");
+        const open = prose.indexOf("<!--");
+        if (open >= 0) {
+            prose = prose.slice(0, open);
+            comment = true;
+        }
         for (const match of prose.matchAll(C4_EMBED)) {
             const lineNumber = i + 1;
             const trail = [];
@@ -179,7 +192,7 @@ export async function c4Graph(repoRoot, docs, nodes) {
 
     // ── embeds ──
     const embedded = new Map(); // view key → [{ at, source }]
-    for (const { relPath, raw, chapters } of docs) {
+    for (const { relPath, raw, chapters, fileMeta } of docs) {
         for (const embed of c4Embeds(raw, chapters)) {
             const at = `${relPath}:${embed.line}`;
             if (!workspace) {
@@ -206,7 +219,8 @@ export async function c4Graph(repoRoot, docs, nodes) {
 
             const place = VIEW_PLACES[view.kind];
             const subject = relPath.startsWith(ARC42) ? relPath.slice(ARC42.length) : null;
-            const inBlock = subject !== null && BUILDING_BLOCK.test(subject);
+            // The building-blocks index lists the blocks; it is none of them.
+            const inBlock = subject !== null && BUILDING_BLOCK.test(subject) && fileMeta?.index !== "root";
             const underRuntime = embed.trail.some((h) => h.level === 2 && h.slug === "runtime");
             const fits =
                 subject !== null &&
@@ -229,7 +243,7 @@ export async function c4Graph(repoRoot, docs, nodes) {
     for (const node of nodes.values()) {
         if (node.folder !== "arc42" && node.folder !== "domain") continue;
         for (const field of C4_FIELDS) {
-            for (const entry of node[field] ?? []) {
+            for (const entry of new Set(node[field] ?? [])) {
                 if (typeof entry !== "string") continue;
                 if (!workspace) {
                     report("error", node.path, `${node.id} has \`${field}\` entry "${entry}", but there is no ${WORKSPACE} to define it.`);
@@ -244,9 +258,8 @@ export async function c4Graph(repoRoot, docs, nodes) {
             }
         }
         for (const entry of node.code ?? []) {
-            const clean = String(entry).replace(/\\/g, "/");
-            if (clean.startsWith("/") || /^[A-Za-z]:/.test(clean) || clean.split("/").includes("..")) continue; // the lint reported it
-            const found = await kindOf(path.join(repoRoot, clean));
+            if (!isRepoFolder(entry)) continue; // the lint reported it
+            const found = await kindOf(path.join(repoRoot, String(entry).replace(/\\/g, "/")));
             if (found === "file") {
                 report("error", node.path, `${node.id} has \`code\` entry "${entry}", which is a file — \`code\` lists folders, never files.`);
             } else if (found === null) {
