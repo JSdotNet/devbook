@@ -193,7 +193,7 @@ move and does not index it. Derived `_meta/` folders are written beside the
 chapters they index, and the repository-wide rollup under `.devbook/_meta/`.
 
 A proposed change lives outside the parent, in `openspec/changes/<name>/`; its
-`proposal.md` and deltas are chapters too, indexed into the rollup alone. Their
+`proposal.md` and deltas are checked but are no part of the graph. Their
 shape is `devbook-changes.md`'s.
 
 ### Chapter and file references
@@ -212,6 +212,10 @@ way but without a heading slug: `<path>`, e.g.
 
 Use the `<path>#<heading-slug>` (chapter) or `<path>` (file) form as the
 entries in `related` and in any folder-specific relation field (`depends-on`).
+
+A reference runs from a change to the devbook, never the reverse: a devbook
+chapter's `related`, `depends-on`, or prose link into `openspec/changes/` is an
+error. A delta may name a chapter its own change adds, by the path it lands at.
 
 ### Fields
 

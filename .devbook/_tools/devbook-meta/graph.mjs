@@ -24,7 +24,6 @@ import {
     parseAnnotations,
     proseLinks,
     resolveAnnotation,
-    parseDeltaHeader,
     changePathParts,
     changeHash,
     syncLevel,
@@ -234,7 +233,15 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // unrecognized-field warning under 29 — is one too: neither has a meaning a
 // corpus could have relied on, so it is an added value with a safe default and
 // no migration is owed.
-export const CONTRACT_VERSION = 30;
+//
+// Version 31 takes the change folder out of the graph: a proposal and its
+// deltas are still checked — the proposal's lint, rungs, and fingerprint, each
+// delta through `checkDelta` — but none is a node, so a delta may name a
+// chapter only its own change adds. A devbook chapter's `related`,
+// `depends-on`, or prose link into `openspec/changes/` is an error: a change
+// points at the devbook, never the reverse. No chapter shape moves, and no
+// migration is owed.
+export const CONTRACT_VERSION = 31;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -488,6 +495,26 @@ function composeFileLabel(title, type) {
     return `${title} (${type})`;
 }
 
+/** Every block in one file that carries a `demo` field, for `demoProblems`. */
+function demoHoldersOf(relPath, raw, chapters) {
+    const holders = [];
+    const scenarios = requirementScenarios(relPath, raw);
+    for (const chapter of chapters) {
+        if (chapter.meta?.demo == null) continue;
+        const id = chapter.level === 1 ? relPath : `${relPath}#${chapter.slug}`;
+        const refs = Array.isArray(chapter.meta.demo) ? chapter.meta.demo : [chapter.meta.demo];
+        const cases = scenarios.get(id);
+        holders.push({ id, path: relPath, refs, scenarios: cases?.inline ?? null, provedBy: cases?.proved ?? null });
+    }
+    return holders;
+}
+
+/** Whether a repo-relative path is in the change folder, `archive/` included. */
+function inChangeFolder(relPath) {
+    const normalized = path.posix.normalize(String(relPath).replace(/\\/g, "/"));
+    return normalized === CHANGES_ROOT || normalized.startsWith(`${CHANGES_ROOT}/`);
+}
+
 /**
  * Build the graph from every devbook document.
  *
@@ -540,13 +567,34 @@ export async function buildGraph(repoRoot, folders = null) {
     const { ladder, issues: ladderIssues } = await loadStatusLadder(repoRoot);
     problems.push(...ladderIssues);
 
-    // The change folder is indexed beside the folders whenever it exists: its
-    // proposals and deltas are chapters, and a delta's references resolve like
-    // any other. Its `archive/` is history and is never read.
-    const files = [
-        ...(await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))).flat(),
-        ...(await changeFiles(repoRoot)),
-    ];
+    // The change folder is checked beside the folders whenever it exists, but
+    // it is no part of the graph: a change points at the devbook, never the
+    // reverse, and a delta may name a chapter only its own change adds. Its
+    // proposals and deltas are linted here; nothing in them becomes a node.
+    // Its `archive/` is history and is never read.
+    for (const relPath of await changeFiles(repoRoot)) {
+        const raw = await readFile(path.join(repoRoot, relPath), "utf8");
+        const parts = changePathParts(relPath);
+        // A delta is checked by the merge that would apply it: its header, its
+        // shape, every chapter it names resolved in its target, and the merged
+        // target through the schema lint. A proposal's rungs decide the whole
+        // change, so its fingerprint and its open questions are read across
+        // the proposal and every delta.
+        const proposalOf = parts.part === "proposal" ? await readChange(repoRoot, parts.name) : null;
+        const fileIssues =
+            parts.part === "delta"
+                ? (await checkDelta(repoRoot, relPath, raw, { ladder, demoText })).issues
+                : [
+                      ...validateDocument(relPath, raw, { ladder, changeHash: changeHash(proposalOf.proposal, proposalOf.deltas) }),
+                      ...changeDecisionIssues(proposalOf),
+                  ];
+        for (const issue of fileIssues) {
+            problems.push({ severity: issue.severity, path: relPath, message: `${relPath} ${issue.message}` });
+        }
+        demoHolders.push(...demoHoldersOf(relPath, raw, parseDocument(raw).chapters));
+    }
+
+    const files = (await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))).flat();
 
     for (const relPath of files) {
         const folder = folderKindForPath(relPath);
@@ -569,7 +617,6 @@ export async function buildGraph(repoRoot, folders = null) {
 
         const fileMeta = chapters.find((c) => c.level === 1)?.meta ?? null;
         docs.push({ relPath, raw, chapters, fileMeta });
-        const delta = changePathParts(relPath)?.part === "delta" ? parseDeltaHeader(raw)?.meta ?? {} : null;
         const fileNode = {
             id: relPath,
             label: composeFileLabel(
@@ -592,13 +639,6 @@ export async function buildGraph(repoRoot, folders = null) {
         if (number !== null) fileNode.number = number;
         // Omitted rather than emitted as 0, so adding this did not churn every
         // node of every existing index.
-        // A delta's own header says which change it belongs to and what it
-        // does; where it lands is its path, re-rooted at the devbook.
-        if (delta) {
-            if (delta.change) fileNode.change = delta.change;
-            if (delta.delta) fileNode.delta = delta.delta;
-            fileNode.target = changePathParts(relPath).target;
-        }
         const fileOpenNotes = [...openNotes.values()].reduce((a, b) => a + b, 0);
         if (fileOpenNotes) fileNode.openNotes = fileOpenNotes;
         nodes.set(fileNode.id, fileNode);
@@ -610,21 +650,7 @@ export async function buildGraph(repoRoot, folders = null) {
         // editor extension, which not every author has open. Each issue keeps
         // its own severity: a warning stays a warning, and only an error fails
         // the run.
-        // A delta is checked by the merge that would apply it: its header, its
-        // shape, every chapter it names resolved in its target, and the merged
-        // target through this same lint.
-        // A proposal's rungs decide the whole change, so its fingerprint and its
-        // open questions are read across the proposal and every delta.
-        const proposalOf = changePathParts(relPath)?.part === "proposal" ? await readChange(repoRoot, changePathParts(relPath).name) : null;
-        const fileIssues = delta
-            ? (await checkDelta(repoRoot, relPath, raw, { ladder, demoText })).issues
-            : proposalOf
-              ? [
-                    ...validateDocument(relPath, raw, { ladder, changeHash: changeHash(proposalOf.proposal, proposalOf.deltas) }),
-                    ...changeDecisionIssues(proposalOf),
-                ]
-              : validateDocument(relPath, raw, { ladder, demoText });
-        for (const issue of fileIssues) {
+        for (const issue of validateDocument(relPath, raw, { ladder, demoText })) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,
@@ -632,14 +658,7 @@ export async function buildGraph(repoRoot, folders = null) {
             });
         }
 
-        const scenarios = requirementScenarios(relPath, raw);
-        for (const chapter of chapters) {
-            if (chapter.meta?.demo == null) continue;
-            const id = chapter.level === 1 ? relPath : `${relPath}#${chapter.slug}`;
-            const refs = Array.isArray(chapter.meta.demo) ? chapter.meta.demo : [chapter.meta.demo];
-            const cases = scenarios.get(id);
-            demoHolders.push({ id, path: relPath, refs, scenarios: cases?.inline ?? null, provedBy: cases?.proved ?? null });
-        }
+        demoHolders.push(...demoHoldersOf(relPath, raw, chapters));
 
         // Track the nearest enclosing addressable heading per level so
         // sub-chapters attach to their parent rather than to the file.
@@ -752,6 +771,17 @@ export async function buildGraph(repoRoot, folders = null) {
         for (const [field, edgeType] of Object.entries(REFERENCE_FIELDS)) {
             for (const ref of asList(node[field])) {
                 const targetPath = ref.split("#")[0];
+                // A change points at the devbook, never the reverse: what a
+                // change holds is not agreed yet, and it moves to `archive/`
+                // the day it lands.
+                if (inChangeFolder(targetPath)) {
+                    problems.push({
+                        severity: "error",
+                        path: node.path,
+                        message: `${node.id} has \`${field}\` reference "${ref}" into ${CHANGES_ROOT}/ — a devbook chapter never references a change. Point at the devbook chapter the change lands in, once it has landed.`,
+                    });
+                    continue;
+                }
                 if (!nodes.has(ref)) {
                     // A structural heading is a legal target — materialize it
                     // (with its containment edge) the first time it is cited.
@@ -937,7 +967,8 @@ function fileAnchors(chapters) {
  * `depends-on` are checked above; nothing else reads prose, which is how a
  * link to a deleted chapter outlives it.
  *
- * Warnings only — a chapter may link ahead to one not written yet. An absolute
+ * Warnings only — a chapter may link ahead to one not written yet — except a
+ * link into the change folder, which is an error. An absolute
  * URL is never fetched, and a file outside the indexed corpus is checked for
  * existence alone: its anchors are not this tool's to know.
  */
@@ -955,6 +986,14 @@ async function brokenLinkIssues(repoRoot, links, anchors) {
               ? path.posix.normalize(decoded.slice(1))
               : path.posix.join(path.posix.dirname(from), decoded);
         const at = `${from}:${line}`;
+        if (inChangeFolder(resolved)) {
+            issues.push({
+                severity: "error",
+                path: from,
+                message: `${at} links to "${target}" in ${CHANGES_ROOT}/ — a devbook chapter never references a change. Link the devbook chapter the change lands in, once it has landed.`,
+            });
+            continue;
+        }
         if (decoded && !(await exists(path.join(repoRoot, resolved)))) {
             issues.push({
                 severity: "warning",

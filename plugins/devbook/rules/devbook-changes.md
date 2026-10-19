@@ -8,9 +8,13 @@ description: The change folder under openspec/changes/ — a proposed change to 
 A proposed change to the devbook lives in `openspec/changes/<name>/`, a kebab-case name, until
 `delta.mjs --apply` merges it and moves it to `openspec/changes/archive/<date>-<name>/`. The
 path is OpenSpec's and fixed: its CLI resolves `changes/` only under a folder named
-`openspec/`. Never read `archive/` as context — it is history, and the check never indexes it.
+`openspec/`. Never read `archive/` as context — it is history, and the check never reads it.
 
-| File | Holds | Indexed |
+Nothing in the change folder is part of the devbook graph. A change references the devbook; a
+devbook chapter never references a change — `related`, `depends-on`, or a prose link into
+`openspec/changes/` is an error.
+
+| File | Holds | Checked |
 |---|---|---|
 | `proposal.md` | Why, scope, the chapters touched, one category | yes |
 | `devbook-delta/<path>` | One delta per devbook file the change touches | yes |
