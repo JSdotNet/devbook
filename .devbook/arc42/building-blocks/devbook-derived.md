@@ -115,11 +115,31 @@ derived copy. The renderer depends on nothing outside the plugin — no Java run
 package — and reads the workspace through devbook's model, never its own parser. The
 [C4 model record](../adr/c4-model.md) holds the reasons.
 
-Decided and not yet built: no renderer ships in this release, and `_meta/c4/` does not exist.
-When it lands it holds these invariants:
+The drawing is built: `tools/c4-render/render.mjs` takes the model devbook's `c4.mjs` reads
+and draws each `systemLandscape`, `systemContext`, `container`, and `component` view as one
+SVG. A view shows the elements Structurizr's `include *`, `include <id>`, and `exclude` rules
+give it, and one line per pair of shown elements: the relationships between them as written,
+or the first implied one, dashed, when only elements inside them are related. Elements sit in
+ranks along the relationships, people outside the scope to one side and other outsiders to
+the other; the scope of a container or component view is a labelled boundary, and each group
+a labelled band. A line that skips a rank runs in a lane no box occupies. Shapes come from the
+kind and the `Database` and `External` tags; a legend lists only what the view uses. Colours
+and fonts are presentation attributes, and a `<style>` inside the SVG overrides them under
+`prefers-color-scheme: dark`.
 
-- one SVG per view key and nothing else under `_meta/c4/`, written only by a refresh path;
-- output deterministic, so a clean `git diff` proves the pictures are current.
+Not yet built: dynamic and deployment views are listed as skipped, and nothing writes
+`_meta/c4/` — the renderer runs by hand, `node render.mjs <workspace.dsl> <folder>`, until
+the refresh paths call it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The same model gives the same bytes, and a change outside a view leaves its file alone | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| Each static view kind draws byte for byte as its golden file | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| No two boxes overlap in any autolayout direction, and the boundary holds the scope's elements and no other | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| It reads devbook's model and bundles no parser | `render.mjs` | untested |
+
+When the refresh paths write `_meta/c4/`, it holds one SVG per view key and nothing else,
+written only by a refresh path.
 
 ### Canvas
 
@@ -162,7 +182,7 @@ write.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.1.0 <2.0.0` | Passes `--write` to `.devbook/_tools/devbook-meta/build.mjs` from `refresh`, its script, and both workflows; the canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from the same folder at runtime; reads `adopted` from devbook's stamp | The checker's CLI, its three module exports, and the derived-artifacts envelope | It computes nothing itself. Every byte under `_meta/` and every node the canvas draws is devbook's checker's output. |
+| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.1.0 <2.0.0` | Passes `--write` to `.devbook/_tools/devbook-meta/build.mjs` from `refresh`, its script, and both workflows; the canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from the same folder at runtime, and the view renderer `c4.mjs`; reads `adopted` from devbook's stamp | The checker's CLI, its module exports, the C4 model's shape, and the derived-artifacts envelope | It computes nothing itself. Every byte under `_meta/` and every node the canvas draws is devbook's checker's output. |
 | Copilot Extension SDK | Conformist | `extensions/devbook-graph/`, registering two canvases | `copilot-extension.json` | The graph canvas is a host capability this block uses and does not define. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its `init` delivers, the `components.derived` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, the `init` and `update` skills, the hook pair, and the rule wrappers `init` writes | Each host's own schemas | The `_meta/` rule has to fire when either host opens a derived file, which only a materialized wrapper achieves. |

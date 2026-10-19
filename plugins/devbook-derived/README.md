@@ -29,6 +29,7 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 | `assets/agents-section.md` | The plugin's own marker-fenced section of `AGENTS.md`: the `_meta/` rule and the refresh paths |
 | `assets/settings-snippet.md` | The `Read(_meta/**)` deny rule for `.claude/settings.json`, offered and never applied |
 | `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rebuilt from disk on open, with a node inspector that lists a chapter's test links; and one chapter beside its parsed `meta` block. It loads devbook's `graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at runtime — or from `plugins/devbook/tools/devbook-meta/` in this marketplace's own checkout — and bundles no copy |
+| `tools/c4-render/` | The C4 view renderer: draws each landscape, context, container, and component view of the model devbook's `c4.mjs` reads as one deterministic SVG, with a dark variant inside it. `node render.mjs <workspace.dsl> <folder>` writes `<view key>.svg`; it loads `c4.mjs` from `.devbook/_tools/devbook-meta/`, or `plugins/devbook/tools/devbook-meta/` here, and bundles no parser |
 | `hooks/` | A session-start guardrail: `_meta/` is tool input, never regenerated in a session |
 
 ## Skills
