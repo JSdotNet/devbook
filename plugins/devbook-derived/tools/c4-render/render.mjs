@@ -1,4 +1,4 @@
-// render.mjs — draws the static views of a C4 workspace as SVG.
+// render.mjs — draws the views of a C4 workspace as SVG.
 //
 // The C4 model decision commits one SVG per view beside the `c4:<key>` embed, for
 // a reader on GitHub or any viewer that knows no C4. This module takes the
@@ -6,8 +6,11 @@
 // systemLandscape, systemContext, container, and component view: a layered
 // layout along the relationships, the scope as a boundary, groups as labelled
 // bands, a shape per element kind and tag, relationship labels, and a legend.
-// Dynamic and deployment views are not drawn here yet; `renderViews` lists them
-// as skipped.
+// A dynamic view is laid out the same way along its steps, one arrow per step
+// labelled with its number, in step order. A deployment view draws one
+// environment: its deployment nodes as nested boxes, each holding the
+// infrastructure nodes and instances deployed on it, and the relationships the
+// instances inherit from what they instantiate.
 //
 // Deterministic: the same model gives the same bytes. Every coordinate is a
 // whole number, every order comes from the model's own order, and nothing reads
@@ -27,6 +30,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const STATIC_KINDS = ["systemLandscape", "systemContext", "container", "component"];
+export const KINDS = [...STATIC_KINDS, "dynamic", "deployment"];
 
 // ── palette ─────────────────────────────────────────────────────────────────
 
@@ -37,6 +41,7 @@ const STYLES = {
     container: { label: "Container", light: ["#438dd5", "#2e6295", "#ffffff"], dark: ["#2f73b5", "#8dbbea", "#ffffff"] },
     component: { label: "Component", light: ["#85bbf0", "#5d82a8", "#0b2540"], dark: ["#2a5d8f", "#9cc4ee", "#ffffff"] },
     external: { label: "External", light: ["#8c959f", "#6e7781", "#ffffff"], dark: ["#484f58", "#8b949e", "#ffffff"] },
+    infrastructureNode: { label: "Infrastructure Node", light: ["#ffffff", "#6e7781", "#1f2328"], dark: ["#161b22", "#8b949e", "#e6edf3"] },
 };
 const PAGE = {
     light: { bg: "#ffffff", ink: "#1f2328", muted: "#59636e", line: "#57606a" },
@@ -57,6 +62,10 @@ const BAND_TOP = 28;
 const BOUNDARY_PAD = 20;
 const BOUNDARY_TOP = 32;
 const MARGIN = 32;
+// A deployment node's own room around what it holds: a header strip for its
+// name and technology, and padding on every other side.
+const NEST_TOP = 48;
+const NEST_PAD = 16;
 
 // ── text ────────────────────────────────────────────────────────────────────
 
@@ -91,13 +100,14 @@ const textWidth = (text, size) => Math.ceil(text.length * size * 0.56);
 // ── selection ───────────────────────────────────────────────────────────────
 
 const KIND_LABEL = { person: "Person", softwareSystem: "Software System", container: "Container", component: "Component" };
+const NODE_LABEL = { infrastructureNode: "Infrastructure Node", deploymentNode: "Deployment Node" };
 const ALLOWED = {
     systemLandscape: ["person", "softwareSystem"],
     systemContext: ["person", "softwareSystem"],
     container: ["person", "softwareSystem", "container"],
     component: ["person", "softwareSystem", "container", "component"],
 };
-const DEFAULT_TITLE = { systemLandscape: "System Landscape", systemContext: "System Context", container: "Container", component: "Component" };
+const DEFAULT_TITLE = { systemLandscape: "System Landscape", systemContext: "System Context", container: "Container", component: "Component", dynamic: "Dynamic", deployment: "Deployment" };
 
 const hasTag = (element, tag) => element.tags.some((t) => t.toLowerCase() === tag);
 
@@ -168,6 +178,25 @@ export function selectElements(model, view) {
     return [...chosen].sort((a, b) => m.order.get(a) - m.order.get(b)).map((id) => m.byId.get(id));
 }
 
+// Collects relationships into one line per ordered pair of shown elements, in
+// the order each pair's first relationship appears in the model: the direct ones
+// as written, otherwise the first implied one.
+class Pairs {
+    constructor() { this.pairs = new Map(); }
+
+    add(source, destination, relationship, index, direct) {
+        const key = `${source}\u0000${destination}`;
+        if (!this.pairs.has(key)) this.pairs.set(key, { source, destination, index, direct: [], implied: [] });
+        (direct ? this.pairs.get(key).direct : this.pairs.get(key).implied).push(relationship);
+    }
+
+    lines() {
+        return [...this.pairs.values()]
+            .sort((x, y) => x.index - y.index)
+            .map((p) => ({ source: p.source, destination: p.destination, relationships: p.direct.length ? p.direct : p.implied.slice(0, 1), implied: !p.direct.length }));
+    }
+}
+
 // One line per pair of shown elements: the relationships drawn between them,
 // direct ones as written, otherwise the first implied one.
 export function selectRelationships(model, view, shown) {
@@ -175,20 +204,84 @@ export function selectRelationships(model, view, shown) {
     const visible = new Set(shown.map((e) => e.id));
     const excluded = new Set(view.exclude);
     const nearest = (id) => m.chain(id).find((x) => visible.has(x)) ?? null;
-    const pairs = new Map();
+    const pairs = new Pairs();
     m.model.relationships.forEach((r, index) => {
         if (r.id && excluded.has(r.id)) return;
         const a = nearest(r.source);
         const b = nearest(r.destination);
         if (!a || !b || a === b || m.within(a, b) || m.within(b, a)) return;
-        const key = `${a}\u0000${b}`;
-        if (!pairs.has(key)) pairs.set(key, { source: a, destination: b, index, direct: [], implied: [] });
-        const pair = pairs.get(key);
-        (r.source === a && r.destination === b ? pair.direct : pair.implied).push(r);
+        pairs.add(a, b, r, index, r.source === a && r.destination === b);
     });
-    return [...pairs.values()]
-        .sort((x, y) => x.index - y.index)
-        .map((p) => ({ source: p.source, destination: p.destination, relationships: p.direct.length ? p.direct : p.implied.slice(0, 1), implied: !p.direct.length }));
+    return pairs.lines();
+}
+
+// A dynamic view: the elements its steps name, in model order, and one line per
+// step in step order, numbered. A step whose end the reader could not resolve,
+// or that runs from an element to itself, is not drawn.
+export function selectSteps(model, view) {
+    const m = model instanceof Model ? model : new Model(model);
+    const drawn = view.steps.filter((s) => m.byId.has(s.source) && m.byId.has(s.destination) && s.source !== s.destination);
+    const ids = new Set(drawn.flatMap((s) => [s.source, s.destination]));
+    const shown = [...ids].sort((a, b) => m.order.get(a) - m.order.get(b)).map((id) => m.byId.get(id));
+    const lines = drawn.map((s) => ({ source: s.source, destination: s.destination, relationships: [{ description: s.description, technology: s.technology }], implied: false, step: s.order }));
+    return { shown, lines };
+}
+
+const LEAF_KINDS = new Set(["infrastructureNode", "softwareSystemInstance", "containerInstance"]);
+
+// A deployment view: the infrastructure nodes and instances of its environment
+// that `include *`, `include <id>`, and `exclude` give it, the deployment nodes
+// that hold them, and one line per pair of shown leaves. An instance is drawn as
+// what it instantiates, with that element's tags; a deployment node shows only
+// when it holds a shown leaf. Lines are the relationships declared between the
+// leaves themselves and the ones each instance inherits from the element it
+// instantiates, in model order — direct as written, otherwise the first implied
+// one. A relationship to or from a deployment node is not drawn.
+export function selectDeployment(model, view) {
+    const m = model instanceof Model ? model : new Model(model);
+    const env = m.model.elements.filter((e) => e.environment && e.environment === view.environment);
+    const byId = new Map(env.map((e) => [e.id, e]));
+    const scope = view.scope && view.scope !== "*" ? m.byId.get(view.scope) ?? null : null;
+    const leaves = env.filter((e) => LEAF_KINDS.has(e.kind) && (e.kind === "infrastructureNode" || m.byId.has(e.instanceOf)));
+    const below = (id) => leaves.filter((e) => { for (let p = e; p; p = p.parent ? byId.get(p.parent) : null) if (p.id === id) return true; return false; });
+    const inScope = (e) => !scope || e.kind === "infrastructureNode" || (e.kind === "containerInstance" && m.byId.get(e.instanceOf).parent === scope.id);
+    const chosen = new Set();
+    for (const item of view.include) {
+        if (item === "*") { leaves.filter(inScope).forEach((e) => chosen.add(e.id)); continue; }
+        // A leaf named outright is shown whatever the scope; a node brings what it holds in scope.
+        if (leaves.some((e) => e.id === item)) chosen.add(item);
+        else below(item).filter(inScope).forEach((e) => chosen.add(e.id));
+    }
+    for (const item of view.exclude) below(item).forEach((e) => chosen.delete(e.id));
+    const shownLeaves = leaves.filter((e) => chosen.has(e.id));
+
+    const shown = shownLeaves.map((e) => {
+        if (e.kind === "infrastructureNode") return e;
+        const target = m.byId.get(e.instanceOf);
+        return { ...e, kind: target.kind, name: e.name ?? target.name, tags: [...target.tags, ...e.tags.filter((t) => !target.tags.includes(t))] };
+    });
+    const holders = new Set();
+    for (const e of shownLeaves) for (let p = e.parent ? byId.get(e.parent) : null; p; p = p.parent ? byId.get(p.parent) : null) holders.add(p.id);
+    const nodes = env.filter((e) => e.kind === "deploymentNode" && holders.has(e.id));
+
+    const excluded = new Set(view.exclude);
+    const visible = new Set(shownLeaves.map((e) => e.id));
+    const instances = shownLeaves.filter((e) => e.kind !== "infrastructureNode");
+    const pairs = new Pairs();
+    m.model.relationships.forEach((r, index) => {
+        if (r.id && excluded.has(r.id)) return;
+        if (visible.has(r.source) && visible.has(r.destination)) { if (r.source !== r.destination) pairs.add(r.source, r.destination, r, index, true); return; }
+        if (!m.byId.has(r.source) || !m.byId.has(r.destination)) return;
+        for (const a of instances) {
+            if (!m.within(r.source, a.instanceOf)) continue;
+            for (const b of instances) {
+                if (a === b || !m.within(r.destination, b.instanceOf)) continue;
+                if (m.within(a.instanceOf, b.instanceOf) || m.within(b.instanceOf, a.instanceOf)) continue;
+                pairs.add(a.id, b.id, r, index, r.source === a.instanceOf && r.destination === b.instanceOf);
+            }
+        }
+    });
+    return { shown, nodes, lines: pairs.lines() };
 }
 
 // ── layout ──────────────────────────────────────────────────────────────────
@@ -246,23 +339,31 @@ function order(ranks, edges) {
     return layers;
 }
 
-// Positions every node, band, and the boundary. Regions run along the slot axis
-// — people outside the scope, the scope, everything else outside it — and each
-// region splits into one band per group, so bands and the boundary never overlap.
-function layout(view, nodes, lines) {
+// What every layout starts from: each node's rank and its order within the
+// rank, along the view's direction and spacing.
+function ranked(view, nodes, lines) {
     const index = new Map(nodes.map((node, i) => [node.element.id, i]));
     const edges = lines.map((l) => [index.get(l.source), index.get(l.destination)]);
     const ranks = rank(nodes.length, edges);
-    const layers = order(ranks, edges);
-
     const direction = view.autolayout?.direction ?? "tb";
     const vertical = direction === "tb" || direction === "bt";
-    const slotSize = vertical ? NODE_W : NODE_H;
-    const rankSize = vertical ? NODE_H : NODE_W;
-    const rankSep = view.autolayout?.rankSeparation ?? RANK_SEP;
-    const nodeSep = view.autolayout?.nodeSeparation ?? NODE_SEP;
+    return {
+        index, ranks, layers: order(ranks, edges), direction, vertical,
+        slotSize: vertical ? NODE_W : NODE_H,
+        rankSize: vertical ? NODE_H : NODE_W,
+        nodeSep: view.autolayout?.nodeSeparation ?? NODE_SEP,
+    };
+}
 
-    const regionOf = (node) => (!node.inside && view.kind !== "systemLandscape" && view.kind !== "systemContext" ? (node.element.kind === "person" ? 0 : 2) : 1);
+// Positions every node, band, and the boundary. Regions run along the slot axis
+// — people outside the scope, the scope, everything else outside it — and each
+// region splits into one band per group, so bands and the boundary never overlap.
+// `regions` is false where nothing is a boundary's, and everything is one region.
+function layout(view, nodes, lines, regions) {
+    const { index, ranks, layers, direction, vertical, slotSize, rankSize, nodeSep } = ranked(view, nodes, lines);
+    const rankSep = view.autolayout?.rankSeparation ?? RANK_SEP;
+
+    const regionOf = (node) => (regions && !node.inside ? (node.element.kind === "person" ? 0 : 2) : 1);
     const bandNames = [];
     for (const node of nodes) if (node.element.group && !bandNames.includes(node.element.group)) bandNames.push(node.element.group);
     const bandOf = (node) => (node.element.group ? bandNames.indexOf(node.element.group) + 1 : 0);
@@ -329,6 +430,90 @@ function layout(view, nodes, lines) {
         boundary = { x: b.x - BOUNDARY_PAD, y: b.y - BOUNDARY_TOP, w: b.r - b.x + 2 * BOUNDARY_PAD, h: b.b - b.y + BOUNDARY_TOP + BOUNDARY_PAD };
     }
     return { groupRects, boundary, vertical, rankSep };
+}
+
+// Positions a deployment view: leaves in ranks along their lines, as above, and
+// each deployment node as a stretch of the slot axis — its own leaves first, then
+// each node it holds, in model order — so sibling nodes never overlap and a node
+// always holds its children. Along the rank axis a node spans its leaves' ranks,
+// widened by its own room once per level it nests, so it clears every node
+// inside it; the gap between ranks grows by that room too.
+function layoutDeployment(view, nodes, lines, deploymentNodes) {
+    const { index, ranks, layers, direction, vertical, slotSize, rankSize, nodeSep } = ranked(view, nodes, lines);
+
+    const tree = new Map(deploymentNodes.map((e) => [e.id, { element: e, children: [], leaves: [] }]));
+    const roots = [];
+    for (const t of tree.values()) (t.element.parent && tree.has(t.element.parent) ? tree.get(t.element.parent).children : roots).push(t);
+    for (const node of nodes) tree.get(node.element.parent)?.leaves.push(node);
+    const height = (t) => (t.height ??= 1 + Math.max(0, ...t.children.map(height)));
+    roots.forEach(height);
+    const deepest = Math.max(0, ...roots.map((t) => t.height));
+    // Rank-axis room per level: the header strip before and the padding after
+    // when ranks run down the page, padding on both sides when they run across.
+    const [before, after] = vertical ? [NEST_TOP, NEST_PAD] : [NEST_PAD, NEST_PAD];
+    const rankSep = (view.autolayout?.rankSeparation ?? RANK_SEP) + deepest * (before + after);
+    // Slot-axis room per level: the header strip when ranks run across.
+    const [slotBefore, slotAfter] = vertical ? [NEST_PAD, NEST_PAD] : [NEST_TOP, NEST_PAD];
+
+    const perRank = (members) => {
+        const counts = new Map();
+        for (const node of members) counts.set(ranks[index.get(node.element.id)], (counts.get(ranks[index.get(node.element.id)]) ?? 0) + 1);
+        return Math.max(0, ...counts.values());
+    };
+    const allocate = (t, cursor) => {
+        t.start = cursor;
+        cursor += slotBefore;
+        let first = true;
+        if (t.leaves.length) {
+            const slots = perRank(t.leaves);
+            t.band = { start: cursor, span: slots * slotSize + (slots - 1) * nodeSep };
+            cursor += t.band.span;
+            first = false;
+        }
+        for (const child of t.children) {
+            if (!first) cursor += nodeSep;
+            cursor = allocate(child, cursor);
+            first = false;
+        }
+        t.end = cursor + slotAfter;
+        return t.end;
+    };
+    let cursor = 0;
+    roots.forEach((t, i) => { cursor = allocate(t, i ? cursor + nodeSep : cursor); });
+
+    const maxRank = Math.max(0, ...ranks);
+    const holder = new Map(nodes.map((node) => [node, tree.get(node.element.parent)]));
+    for (let r = 0; r < layers.length; r++) {
+        for (const t of tree.values()) {
+            if (!t.band) continue;
+            const members = layers[r].filter((v) => holder.get(nodes[v]) === t);
+            const used = members.length * slotSize + (members.length - 1) * nodeSep;
+            members.forEach((v, i) => {
+                const slot = t.band.start + (t.band.span - used) / 2 + i * (slotSize + nodeSep);
+                const along = (direction === "bt" || direction === "rl" ? maxRank - r : r) * (rankSize + rankSep);
+                const node = nodes[v];
+                node.rank = r;
+                node.x = Math.round(vertical ? slot : along);
+                node.y = Math.round(vertical ? along : slot);
+                node.w = NODE_W;
+                node.h = NODE_H;
+            });
+        }
+    }
+
+    const rankOf = (node) => (vertical ? [node.y, node.y + node.h] : [node.x, node.x + node.w]);
+    const held = (t) => [...t.leaves, ...t.children.flatMap(held)];
+    const nodeRects = [];
+    const place = (t, depth) => {
+        const spans = held(t).map(rankOf);
+        const lo = Math.min(...spans.map((s) => s[0])) - t.height * before;
+        const hi = Math.max(...spans.map((s) => s[1])) + t.height * after;
+        const [s0, s1] = [t.start, t.end];
+        nodeRects.push({ element: t.element, depth, x: Math.round(vertical ? s0 : lo), y: Math.round(vertical ? lo : s0), w: Math.round(vertical ? s1 - s0 : hi - lo), h: Math.round(vertical ? hi - lo : s1 - s0) });
+        t.children.forEach((c) => place(c, depth + 1));
+    };
+    roots.forEach((t) => place(t, 0));
+    return { groupRects: [], boundary: null, nodeRects, vertical, rankSep };
 }
 
 // ── routing ─────────────────────────────────────────────────────────────────
@@ -474,11 +659,11 @@ function drawNode(node) {
     const e = node.element;
     const style = styleOf(e);
     const kind = shapeOf(e);
-    const out = [`<g data-element="${escape(e.id)}">`, ...shape(kind, style, node.x, node.y, node.w, node.h).map((s) => `  ${s}`)];
+    const out = [`<g data-element="${escape(e.id)}"${e.instanceOf ? ` data-instance-of="${escape(e.instanceOf)}"` : ""}>`, ...shape(kind, style, node.x, node.y, node.w, node.h).map((s) => `  ${s}`)];
     const top = kind === "person" ? node.y + headRadius(node.w, node.h) * 2 - 6 : kind === "database" ? node.y + rimDepth(node.h) * 2 : node.y;
     const height = node.y + node.h - top;
     const name = wrap(e.name, 24, 2);
-    const kindLine = clip(`[${KIND_LABEL[e.kind]}${e.technology ? `: ${e.technology}` : ""}]`, 36);
+    const kindLine = clip(`[${KIND_LABEL[e.kind] ?? NODE_LABEL[e.kind]}${e.technology ? `: ${e.technology}` : ""}]`, 36);
     const description = wrap(e.description, 32, kind === "person" ? 2 : 3);
     const block = name.length * 18 + 16 + (description.length ? 6 + description.length * 15 : 0);
     let y = top + Math.round((height - block) / 2) + 14;
@@ -529,7 +714,9 @@ function ports(nodes, lines) {
 function labelLines(line) {
     const out = [];
     for (const r of line.relationships) {
-        for (const text of wrap(r.description ?? (line.implied ? "Uses" : ""), 28, 2)) out.push({ text, role: "ink" });
+        const said = r.description ?? (line.implied ? "Uses" : "");
+        const text = line.step == null ? said : said ? `${line.step}. ${said}` : `${line.step}.`;
+        for (const piece of wrap(text, 28, 2)) out.push({ text: piece, role: "ink" });
         if (r.technology) out.push({ text: clip(`[${r.technology}]`, 30), role: "muted" });
     }
     return out;
@@ -567,28 +754,58 @@ function shapeLine(line) {
     }
 }
 
-function drawLine(line, marker) {
-    const { d } = line;
-    const [mx, my] = line.mid;
-    const out = [`<g data-relationship="${escape(line.source)} -> ${escape(line.destination)}">`];
-    out.push(`  <path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"${line.implied ? ' stroke-dasharray="6 4"' : ""} marker-end="url(#${marker})" d="${d}"/>`);
-    const text = labelLines(line);
-    if (text.length) {
-        const width = Math.max(...text.map((t) => textWidth(t.text, 11))) + 12;
-        const height = text.length * 14 + 6;
-        const top = my - Math.round(height / 2);
-        out.push(`  <rect class="c4-bg" fill="${PAGE.light.bg}" fill-opacity="0.9" x="${n(mx - width / 2)}" y="${n(top)}" width="${n(width)}" height="${n(height)}" rx="3"/>`);
-        text.forEach((t, i) => out.push(`  <text ${pageInk(t.role)} x="${n(mx)}" y="${n(top + 15 + i * 14)}" font-size="11" text-anchor="middle">${escape(t.text)}</text>`));
-        line.label = { x: mx - width / 2, y: top, w: width, h: height };
+const overlaps = (p, q) => p.x < q.x + q.w && q.x < p.x + p.w && p.y < q.y + q.h && q.y < p.y + p.h;
+
+// A point on a cubic curve at `t`, rounded.
+const bezier = ([p0, p1, p2, p3], t) => [0, 1].map((k) => Math.round((1 - t) ** 3 * p0[k] + 3 * (1 - t) ** 2 * t * p1[k] + 3 * (1 - t) * t * t * p2[k] + t ** 3 * p3[k]));
+
+// Where a line's label centres: its middle, unless a label already placed lies
+// there — two steps between the same pair, say — and then the first point
+// further along the curve that is clear of every placed label and every box.
+function labelAt(line, size, placed, boxes) {
+    const at = ([x, y]) => ({ x: x - size.w / 2, y: y - Math.round(size.h / 2), w: size.w, h: size.h });
+    if (!placed.some((p) => overlaps(p, at(line.mid))) || !line.curve) return line.mid;
+    for (const t of [0.35, 0.65, 0.25, 0.75, 0.2, 0.8]) {
+        const point = bezier(line.curve, t);
+        const box = at(point);
+        if (!placed.some((p) => overlaps(p, box)) && !boxes.some((b) => overlaps(b, box))) return point;
     }
-    out.push("</g>");
-    return out;
+    return line.mid;
 }
 
-function legend(nodes, layoutResult, lines) {
+const lineAttrs = (line) => `data-relationship="${escape(line.source)} -> ${escape(line.destination)}"${line.step == null ? "" : ` data-step="${line.step}"`}`;
+
+function drawLine(line, marker) {
+    return [
+        `<g ${lineAttrs(line)}>`,
+        `  <path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"${line.implied ? ' stroke-dasharray="6 4"' : ""} marker-end="url(#${marker})" d="${line.d}"/>`,
+        "</g>",
+    ];
+}
+
+// Labels are drawn after every line, so no line runs across a label's text.
+function drawLabel(line, placed, boxes) {
+    const text = labelLines(line);
+    if (!text.length) return [];
+    const width = Math.max(...text.map((t) => textWidth(t.text, 11))) + 12;
+    const height = text.length * 14 + 6;
+    const [mx, my] = labelAt(line, { w: width, h: height }, placed, boxes);
+    const top = my - Math.round(height / 2);
+    line.label = { x: mx - width / 2, y: top, w: width, h: height };
+    placed.push(line.label);
+    return [
+        `<g class="c4-label" ${lineAttrs(line)}>`,
+        `  <rect class="c4-bg" fill="${PAGE.light.bg}" fill-opacity="0.9" x="${n(mx - width / 2)}" y="${n(top)}" width="${n(width)}" height="${n(height)}" rx="3"/>`,
+        ...text.map((t, i) => `  <text ${pageInk(t.role)} x="${n(mx)}" y="${n(top + 15 + i * 14)}" font-size="11" text-anchor="middle">${escape(t.text)}</text>`),
+        "</g>",
+    ];
+}
+
+function legend(nodes, layoutResult, lines, kind) {
     const styles = new Set(nodes.map((node) => styleOf(node.element)));
     const items = [];
-    for (const style of ["person", "softwareSystem", "container", "component", "external"]) {
+    if (layoutResult.nodeRects?.length) items.push({ label: "Deployment Node", draw: (ix, iy) => [`<rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" x="${ix}" y="${iy}" width="24" height="16" rx="3"/>`] });
+    for (const style of ["infrastructureNode", "person", "softwareSystem", "container", "component", "external"]) {
         if (styles.has(style)) items.push({ label: STYLES[style].label, draw: (ix, iy) => [`<rect ${fillAttrs(style)} x="${ix}" y="${iy}" width="24" height="16" rx="3"/>`] });
     }
     if (nodes.some((node) => shapeOf(node.element) === "database")) {
@@ -596,7 +813,7 @@ function legend(nodes, layoutResult, lines) {
     }
     if (layoutResult.boundary) items.push({ label: "Boundary", draw: (ix, iy) => [`<rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" stroke-dasharray="8 4" x="${ix}" y="${iy}" width="24" height="16" rx="3"/>`] });
     if (layoutResult.groupRects.length) items.push({ label: "Group", draw: (ix, iy) => [`<rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1" stroke-dasharray="2 3" x="${ix}" y="${iy}" width="24" height="16" rx="3"/>`] });
-    if (lines.length) items.push({ label: "Relationship", draw: (ix, iy, marker) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" marker-end="url(#${marker})" d="M${ix} ${iy + 8}L${ix + 22} ${iy + 8}"/>`] });
+    if (lines.length) items.push({ label: kind === "dynamic" ? "Numbered step" : "Relationship", draw: (ix, iy, marker) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" marker-end="url(#${marker})" d="M${ix} ${iy + 8}L${ix + 22} ${iy + 8}"/>`] });
     if (lines.some((l) => l.implied)) items.push({ label: "Implied relationship", draw: (ix, iy, marker) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#${marker})" d="M${ix} ${iy + 8}L${ix + 22} ${iy + 8}"/>`] });
     return items;
 }
@@ -604,33 +821,83 @@ function legend(nodes, layoutResult, lines) {
 const slug = (value) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "view";
 
 /**
- * Places one static view without drawing it: `{ m, nodes, lines, groupRects,
- * boundary, scope, boundaryOwner }`, every node with its element, rank, and
- * box, and every line with its route and end points.
+ * Places one view without drawing it: `{ m, nodes, lines, groupRects,
+ * boundary, nodeRects, scope, boundaryOwner }`, every node with its element,
+ * rank, and box, every line with its route and end points, and in a deployment
+ * view every deployment node's box with its nesting depth.
  */
 export function arrange(model, view) {
-    if (!STATIC_KINDS.includes(view.kind)) throw new Error(`c4-render draws ${STATIC_KINDS.join(", ")} views; \`${view.key}\` is a ${view.kind} view.`);
+    if (!KINDS.includes(view.kind)) throw new Error(`c4-render draws ${KINDS.join(", ")} views; \`${view.key}\` is a ${view.kind} view.`);
     const m = new Model(model);
     const scope = view.scope ? m.byId.get(view.scope) ?? null : null;
-    const shown = selectElements(m, view);
-    const boundaryOwner = view.kind === "container" || view.kind === "component" ? scope : null;
+    let shown;
+    let lines;
+    let deploymentNodes = [];
+    if (view.kind === "dynamic") ({ shown, lines } = selectSteps(m, view));
+    else if (view.kind === "deployment") ({ shown, lines, nodes: deploymentNodes } = selectDeployment(m, view));
+    else { shown = selectElements(m, view); lines = selectRelationships(m, view, shown); }
+    // A dynamic view scoped to a system or container draws that scope as a
+    // boundary, the way the matching static view does.
+    const boundaryOwner = view.kind === "container" || view.kind === "component" || view.kind === "dynamic" ? scope : null;
     const nodes = shown.map((element) => ({ element, inside: !!boundaryOwner && element.parent === boundaryOwner.id }));
-    const lines = selectRelationships(m, view, shown);
-    const result = nodes.length ? layout(view, nodes, lines) : { groupRects: [], boundary: null };
+    const regions = view.kind === "container" || view.kind === "component" || (view.kind === "dynamic" && !!scope);
+    const result = !nodes.length
+        ? { groupRects: [], boundary: null, nodeRects: [] }
+        : view.kind === "deployment" ? layoutDeployment(view, nodes, lines, deploymentNodes) : layout(view, nodes, lines, regions);
     if (nodes.length) {
         route(nodes, lines, result);
         ports(nodes, lines);
         lines.forEach(shapeLine);
     }
-    return { m, nodes, lines, groupRects: result.groupRects, boundary: result.boundary, scope, boundaryOwner };
+    return { m, nodes, lines, groupRects: result.groupRects, boundary: result.boundary, nodeRects: result.nodeRects ?? [], scope, boundaryOwner };
 }
 
-/** Draws one static view of a model `c4.mjs` read; returns the SVG text. */
+// Structurizr's titles: the kind in brackets, then what the view is of — a
+// component or dynamic container scope after its system, an environment after
+// a deployment view's scope.
+function defaultTitle(m, view, scope) {
+    const kind = `[${DEFAULT_TITLE[view.kind]}]`;
+    const owner = scope && (view.kind === "component" || view.kind === "dynamic") && scope.parent ? `${m.byId.get(scope.parent)?.name ?? ""} - ` : "";
+    const of = scope ? `${owner}${scope.name}` : null;
+    if (view.kind === "deployment") return `${kind} ${of ? `${of} - ` : ""}${view.environment ?? ""}`.trim();
+    return of ? `${kind} ${of}` : DEFAULT_TITLE[view.kind];
+}
+
+// A deployment node is drawn in two parts: its frame under everything, and its
+// label over the lines, on a backing that keeps it legible where a line into a
+// leaf it holds crosses its header strip. The label ends above the strip's
+// last few pixels, so an arrowhead entering a leaf below it stays in view.
+function drawDeploymentFrame(d) {
+    return [
+        `<g data-deployment-node="${escape(d.element.id)}">`,
+        `  <rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5" x="${n(d.x)}" y="${n(d.y)}" width="${n(d.w)}" height="${n(d.h)}" rx="6"/>`,
+        "</g>",
+    ];
+}
+
+function drawDeploymentLabel(d) {
+    const e = d.element;
+    const room = Math.max(8, Math.floor((d.w - 24) / 6.5));
+    const count = e.instances ? `x${e.instances}` : "";
+    const name = clip(e.name, count ? room - count.length - 2 : room);
+    const kind = clip(`[${NODE_LABEL.deploymentNode}${e.technology ? `: ${e.technology}` : ""}]`, room);
+    const width = Math.max(textWidth(name, 13), textWidth(kind, 11)) + 8;
+    const out = [`<g data-deployment-label="${escape(e.id)}">`];
+    out.push(`  <rect class="c4-bg" fill="${PAGE.light.bg}" fill-opacity="0.9" x="${n(d.x + 8)}" y="${n(d.y + 5)}" width="${n(width)}" height="31" rx="3"/>`);
+    out.push(`  <text ${pageInk("ink")} x="${n(d.x + 12)}" y="${n(d.y + 19)}" font-size="13" font-weight="600">${escape(name)}</text>`);
+    out.push(`  <text ${pageInk("muted")} x="${n(d.x + 12)}" y="${n(d.y + 32)}" font-size="11">${escape(kind)}</text>`);
+    if (count) out.push(`  <text ${pageInk("ink")} x="${n(d.x + d.w - 12)}" y="${n(d.y + 19)}" font-size="13" font-weight="600" text-anchor="end">${escape(count)}</text>`);
+    out.push("</g>");
+    return out;
+}
+
+/** Draws one view of a model `c4.mjs` read; returns the SVG text. */
 export function renderView(model, view) {
     const { m, nodes, lines, scope, boundaryOwner, ...result } = arrange(model, view);
     const marker = `c4-${slug(view.key ?? view.kind)}-arrow`;
 
     const body = [];
+    for (const d of result.nodeRects) body.push(...drawDeploymentFrame(d));
     for (const g of result.groupRects) {
         body.push(`<rect class="c4-edge" fill="none" stroke="${PAGE.light.line}" stroke-width="1" stroke-dasharray="2 3" x="${n(g.x)}" y="${n(g.y)}" width="${n(g.w)}" height="${n(g.h)}" rx="6"/>`);
         body.push(`<text ${pageInk("muted")} x="${n(g.x + 10)}" y="${n(g.y + 18)}" font-size="12" font-weight="600">${escape(clip(g.name, Math.max(8, Math.floor(g.w / 7))))}</text>`);
@@ -643,16 +910,19 @@ export function renderView(model, view) {
     }
     for (const node of nodes) body.push(...drawNode(node));
     for (const line of lines) body.push(...drawLine(line, marker));
+    const placed = [];
+    for (const line of lines) body.push(...drawLabel(line, placed, nodes));
+    for (const d of result.nodeRects) body.push(...drawDeploymentLabel(d));
 
     // Bounds of everything drawn, so the picture is shifted to sit inside its margin.
-    const boxes = [...nodes, ...result.groupRects, ...(result.boundary ? [result.boundary] : []), ...lines.filter((l) => l.label).map((l) => l.label)];
+    const boxes = [...nodes, ...result.nodeRects, ...result.groupRects, ...(result.boundary ? [result.boundary] : []), ...lines.filter((l) => l.label).map((l) => l.label)];
     for (const line of lines) for (const p of line.points ?? line.curve) boxes.push({ x: p[0], y: p[1], w: 0, h: 0 });
     const minX = boxes.length ? Math.min(...boxes.map((b) => b.x)) : 0;
     const minY = boxes.length ? Math.min(...boxes.map((b) => b.y)) : 0;
     const maxX = boxes.length ? Math.max(...boxes.map((b) => b.x + b.w)) : 0;
     const maxY = boxes.length ? Math.max(...boxes.map((b) => b.y + b.h)) : 0;
 
-    const title = view.title ?? (scope ? `[${DEFAULT_TITLE[view.kind]}] ${view.kind === "component" && scope.parent ? `${m.byId.get(scope.parent)?.name ?? ""} - ` : ""}${scope.name}` : DEFAULT_TITLE[view.kind]);
+    const title = view.title ?? defaultTitle(m, view, scope);
     const header = [title, ...(view.description ? [view.description] : [])];
     const headerHeight = view.description ? 64 : 44;
     const offsetX = MARGIN - minX;
@@ -660,7 +930,7 @@ export function renderView(model, view) {
     const contentHeight = nodes.length ? maxY - minY : 24;
 
     const legendY = MARGIN + headerHeight + contentHeight + 32;
-    const items = legend(nodes, result, lines);
+    const items = legend(nodes, result, lines, view.kind);
     let lx = MARGIN;
     const legendParts = [];
     for (const item of items) {
@@ -679,7 +949,9 @@ export function renderView(model, view) {
         `.c4-line{stroke:${PAGE.dark.line}}`,
         `.c4-head{fill:${PAGE.dark.line}}`,
         `.c4-edge{stroke:${PAGE.dark.line}}`,
-        ...Object.entries(STYLES).flatMap(([name, s]) => [
+        // Only a deployment view can hold an infrastructure node, so only a view
+        // that draws one carries its rules; every other view's bytes stay as they were.
+        ...Object.entries(STYLES).filter(([name]) => name !== "infrastructureNode" || nodes.some((node) => styleOf(node.element) === name)).flatMap(([name, s]) => [
             `.c4-fill-${name}{fill:${s.dark[0]};stroke:${s.dark[1]}}`,
             `.c4-rim-${name}{stroke:${s.dark[1]}}`,
             `.c4-ink-${name}{fill:${s.dark[2]}}`,
@@ -714,7 +986,7 @@ export function renderView(model, view) {
 }
 
 /**
- * Draws every static view with a key. Returns `{ rendered: [{ key, kind, svg }],
+ * Draws every view with a key. Returns `{ rendered: [{ key, kind, svg }],
  * skipped: [{ key, kind, reason }] }`, both in the workspace's view order.
  */
 export function renderViews(model) {
@@ -722,7 +994,7 @@ export function renderViews(model) {
     const skipped = [];
     for (const view of model.views) {
         if (!view.key) { skipped.push({ key: null, kind: view.kind, reason: "the view has no key, so it has no file name" }); continue; }
-        if (!STATIC_KINDS.includes(view.kind)) { skipped.push({ key: view.key, kind: view.kind, reason: `${view.kind} views are not drawn yet` }); continue; }
+        if (!KINDS.includes(view.kind)) { skipped.push({ key: view.key, kind: view.kind, reason: `${view.kind} views are not drawn` }); continue; }
         rendered.push({ key: view.key, kind: view.kind, svg: renderView(model, view) });
     }
     return { rendered, skipped };

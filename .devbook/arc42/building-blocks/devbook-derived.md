@@ -127,18 +127,38 @@ between them, within a rank it goes around any box between its ends, and a line 
 rank runs in a lane no box occupies. Shapes come from the
 kind and the `Database` and `External` tags; a legend lists only what the view uses. Colours
 and fonts are presentation attributes, and a `<style>` inside the SVG overrides them under
-`prefers-color-scheme: dark`.
+`prefers-color-scheme: dark`. Labels are drawn after every line, so no line runs across a
+label's text, and a label that would land on one already placed moves along its curve to the
+first place clear of every label and box, where the curve has one.
 
-Not yet built: dynamic and deployment views are listed as skipped, and nothing writes
-`_meta/c4/` — the renderer runs by hand,
+A dynamic view is laid out the same way along its steps: the elements its steps name, the
+scope as a boundary when it is a system or a container, and one arrow per step, labelled with
+its number and description and drawn in step order. A response step is its own arrow, never
+folded into the request it answers.
+
+A deployment view draws one environment, so each environment's view is its own SVG. Its
+leaves are the infrastructure nodes and the instances of that environment that `include *`,
+`include <id>`, and `exclude` give it — under a system scope, `include *` and an included
+node keep only that system's container instances and the infrastructure, while a leaf named
+outright is always shown — each instance drawn as the element it instantiates, with that
+element's tags. Every deployment node holding a shown leaf is a labelled box around what it
+holds, nested as the model nests them, with its instance count; a node holding nothing shown
+is not drawn. Lines are the relationships declared between the leaves and the ones each
+instance inherits from what it instantiates, in model order, direct as written or the first
+implied one, dashed. A relationship to or from a deployment node itself is not drawn, and
+deployment groups are not drawn as bands.
+
+Not yet built: nothing writes `_meta/c4/` — the renderer runs by hand,
 `node plugins/devbook-derived/tools/c4-render/render.mjs <workspace.dsl> <folder>` here,
 until the refresh paths call it.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The same model gives the same bytes, and a change outside a view leaves its file alone | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
-| Each static view kind draws byte for byte as its golden file | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| Each view kind draws byte for byte as its golden file | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | No two boxes overlap and no line crosses a box in any autolayout direction, and the boundary holds the scope's elements and no other | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| A dynamic view draws one arrow per step, numbered, in step order, and two steps between one pair get separate label places | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| A deployment node holds every leaf and node inside it, sibling nodes never overlap, and no leaf sits in a node that does not hold it, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | It reads devbook's model and bundles no parser | `render.mjs` | untested |
 
 When the refresh paths write `_meta/c4/`, it holds one SVG per view key and nothing else,

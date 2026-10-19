@@ -1,4 +1,4 @@
-workspace "Shop" "An online shop, one fixture for every static view kind" {
+workspace "Shop" "An online shop, one fixture for every view kind" {
     !identifiers hierarchical
 
     model {
@@ -32,6 +32,23 @@ workspace "Shop" "An online shop, one fixture for every static view kind" {
         shop.api.orders -> payments "Charges the card with" "HTTPS"
         shop.api -> warehouse "Hands orders to" "AMQP"
         mail -> customer "Delivers mail to"
+
+        live = deploymentEnvironment "Live" {
+            cloud = deploymentNode "Cloud" "" "Azure" {
+                gateway = infrastructureNode "Gateway" "Routes HTTPS traffic" "Application Gateway"
+                app = deploymentNode "App Service" "" "Linux" "" "2" {
+                    web = containerInstance shop.web
+                    api = containerInstance shop.api
+                }
+                data = deploymentNode "Database server" "" "Azure Database for PostgreSQL" {
+                    db = containerInstance shop.db
+                }
+                gateway -> app.web "Forwards requests to" "HTTPS"
+            }
+            site = deploymentNode "Warehouse site" "" "On premises" {
+                planner = softwareSystemInstance warehouse
+            }
+        }
     }
 
     views {
@@ -48,8 +65,16 @@ workspace "Shop" "An online shop, one fixture for every static view kind" {
         component shop.api components {
             include *
         }
-        dynamic shop checkout {
-            customer -> shop.web "Places an order"
+        dynamic shop checkout "How an order is placed" {
+            customer -> shop.web "Places an order" "HTTPS"
+            shop.web -> shop.api "Submits the order" "HTTPS/JSON"
+            shop.api -> payments "Charges the card"
+            shop.api -> shop.db "Saves the order"
+            shop.api -> shop.web "Confirms the order"
+            shop.web -> customer "Shows the confirmation"
+        }
+        deployment * live live "The shop as it runs in production" {
+            include *
         }
     }
 }
