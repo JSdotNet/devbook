@@ -277,6 +277,10 @@
         {
           "id": "030-scenario-tools",
           "result": "not-applicable"
+        },
+        {
+          "id": "032-c4-workspace",
+          "applied": "2026-10-20"
         }
       ]
     },

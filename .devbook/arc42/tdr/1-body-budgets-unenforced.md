@@ -2,10 +2,12 @@
 
 ```meta
 date: 2026-09-04
+severity: low
+status: in-progress
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
 ```
 
-**Remediation state:** in-progress · **Severity:** low · **Owner:** the maintainer
+**Owner:** the maintainer
 
 **2026-09-05.** The first option below was taken: the root instruction file carries the
 disclosure rule again and points at [AUTHORING.md](../../../AUTHORING.md) — that file is

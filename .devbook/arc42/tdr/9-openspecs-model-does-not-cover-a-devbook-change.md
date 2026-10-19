@@ -2,10 +2,12 @@
 
 ```meta
 date: 2026-09-27
+severity: medium
+status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook-openspec.md#constraints", ".devbook/arc42/building-blocks/devbook.md#dependencies"]
 ```
 
-**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## The debt
 

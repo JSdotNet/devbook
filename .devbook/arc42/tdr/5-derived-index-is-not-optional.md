@@ -2,10 +2,12 @@
 
 ```meta
 date: 2026-09-08
+severity: medium
+status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/building-blocks/devbook.md"]
 ```
 
-**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 **Resolved on 2026-09-17 by [the checks and indexes record](../adr/checks-and-indexes.md),
 by the first option below exactly as written** — after [the checks and indexes record](../adr/checks-and-indexes.md)

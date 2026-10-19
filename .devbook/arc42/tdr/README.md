@@ -15,26 +15,21 @@ choice somebody made and can defend; a debt record names a gap somebody found an
 with what it costs and what would close it. The test is whether the document can end in an
 answer. If it ends in two options and no pick, it is debt.
 
-## Remediation state is not `status`
+## Severity and state live in `meta`
 
 ```meta
 ```
 
-Every record states its remediation state — `identified`, `planned`, `in-progress`, or
-`resolved` — as a line in its own body, never in the `meta` block's `status` field.
+Every record carries `severity` — `low`, `medium`, `high`, or `critical` — and its remediation
+state as `status` on the debt ladder, `identified`, `planned`, `in-progress`, `resolved`, in its
+top-level `meta` block, per the [C4 model record](../adr/c4-model.md). `identified` is the
+resting value, so a record that is only identified carries no `status` at all. The body keeps
+the owner, which no field holds.
 
-Those two vocabularies belong to different owners and only one of them governs this folder.
-The lifecycle above is the `arc42` plugin's model for a debt record. The `status` field is
-devbook's, and under `arc42/` it admits only `draft`, `proposed`, `active`, and `deprecated` —
-the two decision rungs are `domain/`'s, and a record claiming `status: identified` would be rejected by the
-generator, which is the mistake `status: divergence` already made here once. So `status` stays
-at this folder's resting value, written by omitting it, and the debt's own lifecycle is
-content.
-
-The [C4 model record](../adr/c4-model.md) reverses this: `devbook-arc42.md` now gives a debt
-record that ladder as its `status`, resting at `identified`, and a `severity` field beside it.
-The check does not accept either yet, so these records keep the body line until it does, a
-gap [TDR 10](10-the-c4-rules-run-ahead-of-this-devbook.md) records.
+Until the check accepted the ladder, these records held both as a bold line in the body,
+because under `arc42/` a `status` admitted only the folder's own rungs. The
+`032-c4-workspace` migration moved them, and [TDR 10](10-the-c4-rules-run-ahead-of-this-devbook.md)
+records what of that gap is still open.
 
 ## The set
 

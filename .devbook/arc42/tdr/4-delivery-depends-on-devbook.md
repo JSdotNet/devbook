@@ -2,10 +2,12 @@
 
 ```meta
 date: 2026-09-07
+severity: medium
+status: in-progress
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-**Remediation state:** in-progress · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## The debt
 

@@ -2,10 +2,11 @@
 
 ```meta
 date: 2026-09-05
+severity: medium
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## The debt
 

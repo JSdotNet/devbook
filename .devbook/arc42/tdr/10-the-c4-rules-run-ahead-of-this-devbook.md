@@ -2,10 +2,12 @@
 
 ```meta
 date: 2026-10-20
+severity: low
+status: planned
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/README.md", ".devbook/arc42/tdr/README.md"]
 ```
 
-**Remediation state:** planned · **Severity:** low · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## The debt
 
@@ -15,13 +17,14 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c
 `devbook-arc42.md` now states the [C4 model record](../adr/c4-model.md): a `workspace.dsl`,
 views embedded as `c4:<key>`, a three-column History table headed `Date | Change | Why`, and a
 debt record carrying `severity` and a `status` on its own ladder. This repository's own devbook
-keeps none of that yet:
+keeps only part of that yet:
 
 - It has no `workspace.dsl`, so its building blocks and runtime chapters still draw their
   structure in Mermaid.
 - Every decision record but the C4 model record keeps the two-column `Date | Change` table.
-- Every debt record states its severity and remediation state as a bold line in its body,
-  as the [index](README.md#remediation-state-is-not-status) explains.
+
+The `032-c4-workspace` migration moved every debt record's severity and remediation state
+into its `meta` block, as the [index](README.md#severity-and-state-live-in-meta) explains.
 
 ## Origin
 
