@@ -231,9 +231,9 @@ export function parseArchifyArchitecture(spec) {
         const card = described.get(String(label).toLowerCase());
         const tags = type === "database" ? ["Database"] : [];
         if (!parent && PERSON_TYPES.has(type)) {
-            diagram.nodes.set(c.id, { alias: c.id, kind: "person", name: label, description: blank(c.sublabel) ?? card ?? null, technology: null, tags, external: true, parent: null });
+            diagram.nodes.set(c.id, { alias: c.id, kind: "person", name: label, description: blank(c.sublabel) ?? card ?? null, technology: null, tags, external: false, parent: null });
         } else if (!parent && type === "external") {
-            diagram.nodes.set(c.id, { alias: c.id, kind: "softwareSystem", name: label, description: blank(c.sublabel) ?? card ?? null, technology: null, tags: ["External"], external: true, parent: null, maybePerson: true });
+            diagram.nodes.set(c.id, { alias: c.id, kind: "softwareSystem", name: label, description: blank(c.sublabel) ?? card ?? null, technology: null, tags: ["External"], external: true, parent: null });
         } else {
             diagram.nodes.set(c.id, { alias: c.id, kind: parent ? "container" : "softwareSystem", name: label, description: card ?? null, technology: parent ? blank(c.sublabel) : null, tags, external: false, parent, fromArchify: !parent });
         }

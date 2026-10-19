@@ -31,16 +31,26 @@ else by its ordinal, and it draws the level its chapter documents: context in 03
 or components in 05 and a building block. A debt record's `identified` is the resting value, so
 it is written by removing the folder's rung, never as a line.
 
-Each of these is reported on every run, left as it is, and never counted as work:
+Each of these is reported and left as it is, and never counts as work. The first eight are
+reported on every run; the last two once, by the run that made the change they are about:
 
 - a diagram whose view kind belongs in another chapter, per `devbook-arc42.md`;
-- a sequence with a participant no element matches;
-- an Archify `lifecycle` or `workflow` spec, and any spec with no fence to replace;
-- a diagram with a statement the migration does not read, or an element it cannot place;
-- a debt record whose section opens with a word off the scale or the ladder;
+- a sequence with a participant no element matches — outside 06 and a block's `## Runtime`
+  it draws inside one element and may stay;
+- an Archify `lifecycle` or `workflow` spec, a spec with no fence to replace, and two specs
+  re-drawing one fence;
+- a diagram with a statement the migration does not read, an element it cannot place, or a
+  name that matches two elements, or one with no identifier;
+- a `_c4/` that holds no single workspace, or whose files would land on ones already in `c4/`:
+  then nothing moves and no diagram converts, so no model is left stranded beside a new one;
 - a file left in `_c4/` that is no workspace, such as a `references.json`;
+- a debt record whose section opens with a word off the scale or the ladder, and every
+  debt `status` when `.devbook/statuses.json` gives `tdr/` a ladder of its own;
+- a debt record with no `## Severity` section;
 - an element described by its name because its diagram gave it no description;
 - a view whose twin of the same kind and scope the moved workspace already held.
+
+Every element a conversion created is listed by the run that created it.
 
 ## Why
 
@@ -55,8 +65,7 @@ Nothing the check reads. The migration reads its own result with the plugin's re
 writes, and a conversion that would add a problem to the workspace writes nothing and exits
 `1`. A repository without `arc42/` adopted records `not-applicable` in the ledger, per
 `assets/reconcile-protocol.md`, and adopting it later re-evaluates the migration. A person
-still reads the result: every element it created is named in its run, and a matched name can
-be the wrong element.
+still reads the result: a matched name can be the wrong element.
 
 ## Run it
 

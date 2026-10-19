@@ -63,7 +63,8 @@ function closeOf(tokens, start) {
         else if (tokens[k].kind === "close" && --depth === 0) {
             let p = k - 1;
             while (p > i && tokens[p].kind === "end") p--;
-            return { block: true, closeLine: tokens[k].line, shared: p > i && tokens[p].line === tokens[k].line };
+            // Shared: the `}` stands on a line with another statement, or with its own `{`.
+            return { block: true, closeLine: tokens[k].line, shared: (p > i && tokens[p].line === tokens[k].line) || tokens[i].line === tokens[k].line };
         }
     }
     return null;
@@ -125,6 +126,11 @@ export class Model {
         if (byName.length > 1) return null;
         const byAlias = pool.filter((e) => lower(e.id.split(".").at(-1)) === n);
         return byAlias.length === 1 ? byAlias[0] : null;
+    }
+
+    /** Whether an element of `kind` called `name` already sits under `parent` — one `find` could not pick. */
+    named(name, kind, parent = null) {
+        return this.elements.some((e) => e.kind === kind && e.name !== null && lower(e.name).trim() === lower(name).trim() && (e.parent ?? null) === parent);
     }
 
     ancestors(id) {
@@ -260,6 +266,8 @@ export class Model {
             const s = statementAt(files.get(file), declLine);
             if (!s) { problems.push(`${file}:${declLine} — ${what}'s statement could not be found to write into.`); return; }
             if (s.block && s.shared) { problems.push(`${file}:${s.closeLine} — ${what}'s block closes on a line with other statements; nothing can be added to it here.`); return; }
+            // A `{` appended after text the DSL reads as a comment or stray text would not open a block.
+            if (!s.block && /\/\/|\/\*|\s#/.test(files.get(file).split(/\r?\n/)[s.lastLine - 1].replace(/"(?:[^"\\]|\\.)*"/g, '""'))) { problems.push(`${file}:${s.lastLine} — ${what}'s line ends in a comment, so no block can be opened on it.`); return; }
             push(file, s.block ? { line: s.closeLine, mode: "before", lines } : { line: s.lastLine, mode: "open", lines });
         };
 

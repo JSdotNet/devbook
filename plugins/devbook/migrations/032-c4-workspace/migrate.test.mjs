@@ -339,6 +339,46 @@ test("a repository with no workspace gets one, and the diagrams go into it", () 
     } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
+test("a model left in _c4/ that cannot move strands nothing: no skeleton, no conversion", () => {
+    for (const setup of [
+        (root) => { mkdirSync(path.join(root, A, "c4")); writeFileSync(path.join(root, A, "c4/people.dsl"), "keep me\n"); },
+        (root) => writeFileSync(path.join(root, A, "_c4/other.dsl"), 'workspace "Other" {\n}\n'),
+    ]) {
+        const root = fixture();
+        try {
+            setup(root);
+            const r = migrate(root);
+            assert.equal(r.status, 0, r.stdout + r.stderr);
+            assert.match(r.stdout, /no diagram converted/);
+            assert.ok(!existsSync(path.join(root, A, "workspace.dsl")));
+            assert.ok(existsSync(path.join(root, A, "_c4/shop.dsl")));
+            if (existsSync(path.join(root, A, "c4/people.dsl"))) assert.equal(read(root, `${A}/c4/people.dsl`), "keep me\n");
+            assert.match(read(root, `${A}/03-context-and-scope.md`), /C4Context/);
+            assert.match(read(root, `${A}/tdr/1-no-retry.md`), /severity: high/, "debt records are still ranked");
+        } finally { rmSync(root, { recursive: true, force: true }); }
+    }
+});
+
+test("what it will not guess: an unnamed twin, a stray artifact path, a sequence outside 06, a ladder of the repository's own", () => {
+    const root = fixture();
+    try {
+        writeFileSync(path.join(root, A, "_c4/people.dsl"), `${PEOPLE}softwareSystem "Mail" "Sends mail, with no identifier."\n`);
+        writeFileSync(path.join(root, A, "08-crosscutting-concepts.md"), chapter("8. Crosscutting Concepts", `## Retries\n\n${F}meta\n${F}\n\n${F}mermaid\nsequenceDiagram\n    Worker->>Timer: Waits\n${F}\n`));
+        const index = JSON.parse(read(root, `${A}/_archify/index.json`));
+        index.entries[fenceHash(bodyOf(FLOW))].artifact = "../../config.json";
+        writeFileSync(path.join(root, A, "_archify/index.json"), JSON.stringify(index));
+        writeFileSync(path.join(root, ".devbook/statuses.json"), JSON.stringify({ folders: { arc42: { rules: [{ files: ["tdr/**"], scope: "file", statuses: ["open", "closed"] }] } } }));
+        const r = migrate(root);
+        assert.equal(r.status, 0, r.stdout + r.stderr);
+        assert.match(r.stdout, /"Mail" names more than one softwareSystem/);
+        assert.match(read(root, `${A}/03-context-and-scope.md`), /C4Context/, "the fence naming the unnamed system stays");
+        assert.match(r.stdout, /Timer match no workspace element, so it draws inside one element and may stay/);
+        assert.ok(existsSync(path.join(root, ".devbook/config.json")), "an artifact path outside _archify/ is never deleted");
+        assert.match(r.stdout, /statuses\.json` gives `tdr\/` a ladder of its own/);
+        assert.match(read(root, `${A}/tdr/1-no-retry.md`), /```meta\ndate: 2026-10-01\nseverity: high\n```/);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
 test("a repository without arc42/ is not-applicable", () => {
     const root = mkdtempSync(path.join(tmpdir(), "devbook-032-"));
     try {
