@@ -1,6 +1,6 @@
 ---
 name: scenario-write
-description: 'Write or revise a scenario page — one end-to-end journey beside the chapter it demonstrates, with setup fields, Given/When/Then steps, and shot: labels — and point each requirement it proves at its part with a Proved by: line. Use when: writing a journey down, a feature or requirement needs one, revising steps, parts, or screenshot points. DO NOT USE FOR: its spec (scenario-derive) or running it (scenario-run).'
+description: 'Write or revise a scenario page — one end-to-end journey in the context of the requirements it proves, with setup fields, Given/When/Then steps, and shot: labels — and point each requirement it proves at its part with a Proved by: line. Use when: writing a journey down, a feature or requirement needs one, revising steps, parts, or screenshot points. DO NOT USE FOR: its spec (scenario-derive) or running it (scenario-run).'
 ---
 
 # devbook scenario-write
@@ -13,12 +13,13 @@ setup field changed here turns the last run stale until the spec is re-derived a
 
 ## Steps
 
-1. **Place it** beside the chapter the journey demonstrates — a feature, a requirement — at
-   `.devbook/domain/<context>/<stem>.md`. The stem names the journey in kebab-case and is unique
+1. **Place it** in the context of the requirements it proves, at
+   `.devbook/domain/<context>/<stem>.md`; a journey across contexts goes to the one holding most
+   of them. The stem names the journey in kebab-case and is unique
    across every bounded context, per `../../rules/devbook-naming.md`. A revision keeps its stem;
    a rename moves every `Proved by:`, `related`, and `scenario:` reference and the run folder
    `<scenario folder>/<old-stem>/` in the same change, and leaves the spec to `scenario-derive`.
-2. **Write the block** under `#`: `type: scenario`, `related` to that chapter, and only the setup
+2. **Write the block** under `#`: `type: scenario`, `related` to the feature it walks through, and only the setup
    fields the journey needs, per "Scenario pages" in `../../rules/devbook-chapter-metadata.md`.
    A flag or a setting goes on the page only when this journey depends on it; one that describes
    the environment stays in the profile. Never a URL, a secret, or `tests`.

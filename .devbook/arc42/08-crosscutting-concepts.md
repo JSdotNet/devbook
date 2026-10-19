@@ -146,7 +146,8 @@ reason: the old prefix said only which plugin used to own the folder. What `_met
 derives from their `meta` blocks is the **reference graph**.
 
 A **scenario page** is one end-to-end journey written as a `domain/` page of its own, typed
-`scenario`, beside the chapter it demonstrates; its `##` headings are its **parts**. A
+`scenario`, in the bounded context of the requirements it proves; its `##` headings are its
+**parts**. A journey across contexts lives in the context holding most of its requirements. A
 **scenario case** is the `#### Scenario:` under a requirement, which may point at a part with
 `Proved by:` instead of spelling out its own steps. The two words stay apart: the page is the
 journey, the case is one thing a requirement promises. Runs, profiles, and data sets live in

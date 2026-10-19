@@ -153,7 +153,10 @@ await withCorpus(corpus, async (root, graph) => {
         dump(document.stats)
     );
     check(
-        document.problems.length === 2 && document.problems.every((problem) => problem.message.includes("unclaimed journey")),
+        // move-an-item.md proves only a work requirement from shop, so it is also misplaced.
+        document.problems.length === 3 &&
+            document.problems.filter((problem) => problem.message.includes("unclaimed journey")).length === 2 &&
+            document.problems.some((problem) => problem.path.endsWith("/shop/move-an-item.md") && problem.message.includes("requirements it proves are in .devbook/domain/work")),
         "problems carry the graph's problems on the listed pages only",
         dump(document.problems)
     );

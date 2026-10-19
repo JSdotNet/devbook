@@ -334,6 +334,40 @@ const proved = (target) => ({
     check(problemsAbout(graph, "the stem is ambiguous").length === 1, "a pointer by a duplicated stem is ambiguous", dump(graph.problems));
 }
 
+// A page lives in the context holding most of the requirements it proves.
+const SHOP_REQUIREMENTS = ".devbook/domain/shop/requirements.md";
+const shopRequirements = (cases) =>
+    `# Requirements\n\n${fence("type: requirements\n")}\n## Checkout\n\n${fence("type: requirements\n")}\n` +
+    cases.map((part, i) => `### Requirement: Rule ${i + 1}\n\n${fence("type: requirement\n")}\nThe shop SHALL keep rule ${i + 1}.\n\n#### Scenario: Case ${i + 1}\nProved by: set-up-and-fill-the-backlog.md#${part}\n\n`).join("");
+const MISPLACED = "a scenario page lives in the context holding most of the requirements it proves";
+{
+    const graph = await graphOf(base("type: scenario\n", proved("set-up-and-fill-the-backlog.md#statuses-are-set-up")));
+    check(problemsAbout(graph, MISPLACED).length === 0, "a page in the context of the requirements it proves is not reported", dump(graph.problems));
+}
+{
+    const graph = await graphOf(base("type: scenario\n", { [SHOP_REQUIREMENTS]: shopRequirements(["statuses-are-set-up"]) }));
+    const found = problemsAbout(graph, MISPLACED);
+    check(
+        found.length === 1 && found[0].severity === "warning" && found[0].path === NESTED && found[0].message.includes("1 of the 1 requirements it proves are in .devbook/domain/shop"),
+        "a page proving only another context's requirements is a warning naming that context",
+        dump(graph.problems)
+    );
+}
+{
+    const graph = await graphOf(base("type: scenario\n", {
+        ...proved("set-up-and-fill-the-backlog.md#statuses-are-set-up"),
+        [SHOP_REQUIREMENTS]: shopRequirements(["statuses-are-set-up", "an-item-is-moved"]),
+    }));
+    check(problemsAbout(graph, "2 of the 3 requirements it proves are in .devbook/domain/shop").length === 1, "a journey across contexts belongs where most of its requirements are", dump(graph.problems));
+}
+{
+    const graph = await graphOf(base("type: scenario\n", {
+        ...proved("set-up-and-fill-the-backlog.md#statuses-are-set-up"),
+        [SHOP_REQUIREMENTS]: shopRequirements(["an-item-is-moved"]),
+    }));
+    check(problemsAbout(graph, MISPLACED).length === 0, "a tie keeps the page where it is", dump(graph.problems));
+}
+
 // An inline case in a context with scenario pages is reported, as info only.
 const INLINE = "\n- **Given** a product with no statuses\n- **When** I create a status\n- **Then** a column appears\n";
 {

@@ -2,6 +2,7 @@
 // document can check on its own: the stem register, the setup fields resolved
 // against the chapters and the profile file, `scenario:` image references, the
 // `Proved by:` pointers from requirement cases, the parts nothing points at,
+// the page that sits outside the context of the requirements it proves,
 // the inline cases a context with pages could move into one, and the `e2e`
 // test entry each pointer derives.
 //
@@ -82,7 +83,7 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
         }
         const stem = scenarioStem(doc.relPath);
         const title = doc.chapters.find((chapter) => chapter.level === 1)?.text ?? stem;
-        pages.set(doc.relPath, { stem, title, parts, shots, labels, meta: doc.fileMeta ?? {}, provedBy: new Map() });
+        pages.set(doc.relPath, { stem, title, parts, shots, labels, meta: doc.fileMeta ?? {}, provedBy: new Map(), contexts: new Map() });
         byStem.set(stem, [...(byStem.get(stem) ?? []), doc.relPath]);
     }
     for (const [stem, paths] of byStem) {
@@ -193,6 +194,12 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
                     continue;
                 }
                 claimed.add(`${resolved.path}#${part}`);
+                const requirementContext = contextRoot(doc.relPath);
+                if (requirementContext) {
+                    const proven = page.contexts.get(requirementContext) ?? new Set();
+                    proven.add(scenarioCase.requirement);
+                    page.contexts.set(requirementContext, proven);
+                }
                 // The case by its own name, without the `Scenario:` keyword.
                 const caseName = scenarioCase.heading.replace(/^\s*Scenario:\s*/i, "");
                 const cases = page.provedBy.get(part) ?? [];
@@ -226,6 +233,23 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
                 message: `${doc.relPath}:${scenarioCase.line} \`#### ${scenarioCase.heading}\` is written inline, and ${context} has scenario pages — a candidate to move into a part and point at with \`Proved by:\`.`,
             });
         }
+    }
+
+    // A page lives in the context of the requirements it proves; a journey
+    // across contexts in the one holding most of them, a tie in any of those.
+    for (const [relPath, page] of pages) {
+        if (!page.contexts.size) continue;
+        const counts = [...page.contexts].map(([context, proven]) => [context, proven.size]);
+        const most = Math.max(...counts.map(([, count]) => count));
+        const home = contextRoot(relPath);
+        if ((page.contexts.get(home)?.size ?? 0) === most) continue;
+        const total = counts.reduce((sum, [, count]) => sum + count, 0);
+        const leaders = counts.filter(([, count]) => count === most).map(([context]) => context).sort();
+        report(
+            "warning",
+            relPath,
+            `sits in ${home}, but ${most} of the ${total} requirements it proves are in ${leaders.join(" or ")} — a scenario page lives in the context holding most of the requirements it proves; move it there.`
+        );
     }
 
     for (const [relPath, page] of pages) {

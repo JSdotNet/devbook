@@ -472,8 +472,8 @@ const BEHAVIOUR_TEST_LEVELS = {
 // the rule's own, so they are found by their text rather than by a block.
 const SCENARIO_HEADING = /^Scenario:/i;
 
-// A scenario page: one end-to-end journey, written as a page of its own in a
-// bounded context beside the chapter it demonstrates. Only its file-level
+// A scenario page: one end-to-end journey, written as a page of its own in the
+// bounded context holding most of the requirements it proves. Only its file-level
 // `type` makes it one, so the word is a file type of `.domain` and of no other
 // folder, and never a chapter's: the page is the journey, and its `##` parts
 // are the steps of it, not chapters. Two words stay apart in every rule — a
@@ -1282,7 +1282,7 @@ export function typeIssues(folder, blockLevel, meta, fileBase = null) {
         } else if (folder !== "domain") {
             issues.push({
                 severity: "error",
-                message: `has type "${SCENARIO_TYPE}" in .${folder} — a scenario page lives only in .devbook/domain/, inside the bounded context whose chapter it demonstrates.`,
+                message: `has type "${SCENARIO_TYPE}" in .${folder} — a scenario page lives only in .devbook/domain/, inside the bounded context of the requirements it proves.`,
             });
         }
         return issues;
@@ -2164,7 +2164,7 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         if (subject.split("/").length < 2) {
             issues.push({
                 severity: "error",
-                message: `${relPath} is a scenario page outside a bounded context — a page sits in the context folder whose chapter it demonstrates, at any depth inside it.`,
+                message: `${relPath} is a scenario page outside a bounded context — a page sits in the context folder of the requirements it proves, at any depth inside it.`,
             });
         }
         for (const issue of scenarioStepIssues(markdown)) issues.push(issue);

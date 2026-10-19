@@ -779,7 +779,7 @@ chapter.
 ## Scenario pages
 
 A **scenario page** is one end-to-end journey written as a `domain/` page of its
-own, beside the chapter it demonstrates. Its `##` headings are the journey's
+own, in the context of the requirements it proves. Its `##` headings are the journey's
 **parts**, and its steps are list items under them. Keep two words apart in every
 rule: the page is the journey; a **scenario case** is a `#### Scenario:` under a
 requirement, which points at one part with `Proved by:` per `devbook-domain.md`.
@@ -787,7 +787,7 @@ requirement, which points at one part with `Proved by:` per `devbook-domain.md`.
 | Element | Convention | Checked |
 |---|---|---|
 | Recognition | File-level `type: scenario` in the block under `#`. A chapter-level `type: scenario` is an error. | Yes |
-| Location | Only in `.devbook/domain/`, inside a bounded context folder at any depth, beside the chapter it demonstrates. Anywhere in `arc42/`, `design/`, `tech/`, or `ai/` it is an error. Never in `.devbook/scenarios/`, which holds runs, profiles, and data sets and no page. | Yes |
+| Location | Only in `.devbook/domain/`, inside a bounded context folder at any depth: the context holding most of the requirements whose cases point at its parts, any of them on a tie. Elsewhere in `domain/` it is a warning; anywhere in `arc42/`, `design/`, `tech/`, or `ai/` it is an error. Never in `.devbook/scenarios/`, which holds runs, profiles, and data sets and no page. | Yes |
 | Stem | The file name without `.md`, kebab-case, unique across every bounded context, per `devbook-naming.md`. It is the scenario's identity for every tool. | Yes, a duplicate is an error |
 | Language | English only: headings, steps, captions, labels, and every keyword. | The keywords only |
 | Lead | One paragraph under the file-level block: who does what, and why it matters. | No |

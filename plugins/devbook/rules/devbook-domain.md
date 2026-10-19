@@ -84,8 +84,10 @@ the listed files, and nothing here has to be changed to allow it.
 
 **A scenario page is the one additional page with a type of its own.** It is
 one end-to-end journey, typed `scenario` on its file-level block rather than by
-its filename, and it sits beside the chapter it demonstrates, at any depth inside
-the context folder. Its `##` parts carry no blocks, like any additional page's
+its filename, and it sits in the context of the requirements it proves, at any
+depth inside the context folder. A journey across contexts belongs in the context
+holding most of its requirements; on a tie, in any of them. The check warns on a
+page placed elsewhere. Its `##` parts carry no blocks, like any additional page's
 sections, and stay addressable. Its shape, its setup fields, and its status are
 `devbook-chapter-metadata.md`'s under "Scenario pages"; its stem is
 `devbook-naming.md`'s. Runs, profiles, and data sets live in
