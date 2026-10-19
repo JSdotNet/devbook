@@ -1,15 +1,16 @@
 # devbook-derived
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/12-glossary.md#derived-index"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/12-glossary.md#derived-index"]
 ```
 
-The committed index and the canvas that draws it. Responsible for one thing: that a
-repository which keeps the derived `_meta/` indexes in its tree has them current on the
-default branch and never regenerated in a session.
+The committed index, the rendered C4 views, and the canvas that draws the graph. Responsible
+for one thing: that a repository which keeps the derived `_meta/` files in its tree has them
+current on the default branch and never regenerated in a session.
 
 Inside the block: the refresh paths — the `refresh` skill, the on-demand script, the nightly
-workflow, the drift warning — the canvas that draws the graph live, the rule that says where a
+workflow, the drift warning — the view renderer that turns each C4 view into a committed SVG,
+the canvas that draws the graph live, the rule that says where a
 derived artifact lives and what its envelope is, and the `init` that puts them in a
 repository.
 
@@ -76,7 +77,7 @@ a flow, never beside a chapter edit, and committed on its own.
 related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Two parts, neither of which parses a chapter.
+Three parts, none of which parses a chapter.
 
 ### Refresh Paths
 
@@ -97,6 +98,28 @@ flow, or a chapter edit, is never one of them.
 | Nothing writes a derived artifact but `build.mjs --write`, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | A drifted index warns a pull request and never fails it | `devbook-meta-drift.yml` | untested |
 | The nightly refresh opens one pull request when the output moved and nothing when it did not | `devbook-meta-nightly.yml` | untested |
+
+### View Renderer
+
+```meta
+related: [".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model"]
+```
+
+Also called: the C4 renderer.
+
+Renders every view of the [C4 model](devbook.md#c4-model) to a committed
+`.devbook/arc42/_meta/c4/<view key>.svg`, on the same scheduled refresh that rewrites the
+index, so a reader on GitHub or any viewer that knows no C4 sees a picture beside each
+`c4:<key>` embed. The embed never points at the SVG: the key is the chapter's, the file is a
+derived copy. The renderer depends on nothing outside the plugin — no Java runtime and no
+package — and reads the workspace through devbook's model, never its own parser. The
+[C4 model record](../adr/c4-model.md) holds the reasons.
+
+Decided and not yet built: no renderer ships in this release, and `_meta/c4/` does not exist.
+When it lands it holds these invariants:
+
+- one SVG per view key and nothing else under `_meta/c4/`, written only by a refresh path;
+- output deterministic, so a clean `git diff` proves the pictures are current.
 
 ### Canvas
 
