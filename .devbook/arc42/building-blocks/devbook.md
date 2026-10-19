@@ -92,7 +92,10 @@ related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc4
 ```
 
 Bring devbook into a repository that has none: ask which folders and which procedures to
-adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. It refuses where `components.devbook` already exists —
+adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. An
+`arc42/` folder starts from `assets/seeds/arc42/`: a workspace holding the system, its person,
+and a context view, and the chapter 03 that embeds that view, each placeholder filled from the
+README. It refuses where `components.devbook` already exists —
 "already initialized, run update" — because the stamp is what the next run reads, and a second
 init would ask again what it already answers.
 
@@ -153,7 +156,9 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
 The prose half beside `validate`'s structural half: read every adopted folder and report
 the sentence that says nothing a reader needs or names something the tree no longer has — a
 stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
-a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets. It writes nothing. A chapter
+a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets, and, where
+`arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence
+between workspace elements — with the view to draw instead. It writes nothing. A chapter
 is content, so the standard is narrower than an instruction tightening and a record stays as
 it was taken: an edit is a person's, through the folder's flow.
 
@@ -598,8 +603,9 @@ the workspace when it exists and adds each element and view to the
 [Reference Graph](#reference-graph), with `contains`, `relationship`, `embeds`, `c4`, and
 `c4-touches` edges, and a building block's `code` carried on its node. A debt record without
 `severity`, and one still holding an `arc42/` rung, is a warning rather than an error, so a
-debt set written before the fields keeps validating until each record is ranked. One rule is
-still written and not checked: a Mermaid fence draws nothing between elements.
+debt set written before the fields keeps validating until each record is ranked. The checker
+does not open a Mermaid fence, so a fence that draws between elements is
+[prose-check](#prose-check)'s finding, never a check failure.
 
 ### Reference Graph
 
