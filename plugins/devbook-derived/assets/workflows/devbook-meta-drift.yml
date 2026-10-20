@@ -23,6 +23,7 @@ on:
       - '.devbook/design/**'
       - '.devbook/ai/**'
       - '.devbook/_tools/devbook-meta/**'
+      - '.devbook/_tools/c4-render/**'
   workflow_dispatch:
 
 permissions:
@@ -44,8 +45,11 @@ jobs:
         run: |
           # devbook-meta.yml already fails on a broken reference; this job only warns.
           node .devbook/_tools/devbook-meta/build.mjs --write || true
+          if [ -f .devbook/_tools/c4-render/render.mjs ]; then
+            node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4 || true
+          fi
           # git status, not git diff: an index written for the first time is untracked.
-          if [ -n "$(git status --porcelain -- '*_meta/*.json')" ]; then
-            echo "::warning::Derived _meta indexes have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"
-            git status --short -- '*_meta/*.json'
+          if [ -n "$(git status --porcelain -- '*_meta/*.json' '*_meta/c4/*.svg')" ]; then
+            echo "::warning::Derived _meta indexes or view renders have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"
+            git status --short -- '*_meta/*.json' '*_meta/c4/*.svg'
           fi

@@ -463,6 +463,7 @@ only where `domain/` is adopted. The contract and the wiring are
 | `assets/procedures/skill-wrappers.md` | How a procedure lands: one editable copy, a managed wrapper per host, where the goal sits, and `run`'s exception |
 | `assets/procedures/demo-template.html` | The starting demo template, seeded at `.devbook/design/demo-template.html` when `prototype` and `design/` are adopted: the managed region between `template:begin hash=…` and `template:end`, and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
 | `assets/procedures/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against, its region kept equal to the template's by `tools/devbook-meta/demo-template.test.mjs` |
+| `assets/seeds/arc42/` | The starting `arc42/` folder `devbook:init` and `devbook:update` scaffold: a `workspace.dsl` holding the system, its person, and a context view, and the `03-context-and-scope.md` that embeds it, each `<…>` filled from the README or asked |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `actor`, `building-block`, `design-component`, `demo`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
@@ -507,7 +508,13 @@ the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios
 added the path without one; the eleventh is `030-linked-walkthroughs`, which rewrites a demo's
 free walkthrough under a `Proved by:` case's slug to a linked one, `step` by position and text
 copied by `demo-sync.mjs`, and lists one whose step count differs from its part's
-`not-applicable`.
+`not-applicable`; the twelfth is `032-scenarios-md`, which folds each journey page into its
+bounded context's `scenarios.md` and moves every reference, run folder, and spec header with it;
+the thirteenth is `033-c4-workspace`, which creates `arc42/workspace.dsl` or
+moves it from `arc42/_c4/`, turns each Mermaid C4 fence, each sequence whose participants are
+all workspace elements, and each Archify `architecture` or `sequence` spec into elements, a
+view, and the `c4:` embed that replaces the fence, ranks each debt record from its
+`## Severity` and `## Status` sections, and reports every diagram it cannot move.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -547,7 +554,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **30**, covering the metadata schema a repository authors
+One number, currently **32**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -638,7 +645,9 @@ its context: a `##` typed `scenario` in `scenarios.md` or `scenarios.<name>.md`,
 headings the parts, addressed as `<scenarios file>#<journey>`, its runs beside the file. A
 whole file typed `scenario` is an error from then on, so it ships `032-scenarios-md`, which
 folds each page into `scenarios.md` and moves every reference, run folder, and spec header
-with it.
+with it. 33 reads the C4 workspace and adds `c4`, `c4-touches`, `code`, `severity`, and the
+debt ladder, each with a safe default, and `033-c4-workspace` ships under it to move the
+diagrams a repository drew before the workspace into it.
 
 ## Folder structure
 

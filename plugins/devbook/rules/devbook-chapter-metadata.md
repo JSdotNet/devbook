@@ -227,11 +227,14 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
   written by *omitting the field*. A chapter states its status only while it is
   in transition (`draft`, `proposed`) or carries a standing warning
   (`deprecated`); once it settles, the line comes out. Writing `active`
-  explicitly is reported, so one state does not end up with two spellings.
+  explicitly is reported, so one state does not end up with two spellings. A
+  debt record under `arc42/tdr/` rests at `identified` instead, on its own
+  ladder, per `devbook-arc42.md`.
 
   | Folder | `status` | Absence means |
   |---|---|---|
   | `domain/`, `arc42/`, `design/` | optional | `active` — settled content |
+  | `arc42/tdr/` debt records | optional | `identified` — the debt's own ladder, per `devbook-arc42.md` |
   | `tech/`, `ai/` | **required** | nothing; the value is a *rating* on an adoption ladder, and an unrated technology is not the same as a `candidate` one |
 
   Spell the absence by leaving the field out, never as `status: null` — same
@@ -505,6 +508,23 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
   Set only at the four levels in
   "[Sync direction](#sync-direction)", which also says how a unit resolves it.
   Omit it to inherit.
+- **c4** (optional, `arc42/`, `domain/`) — the C4 model elements this chapter or
+  file is about, as bare identifiers of `.devbook/arc42/workspace.dsl`:
+  `c4: [backlog.cloud.api]`. Each must name an element the workspace defines.
+  Like `tests`, the entries are not `<path>#<heading-slug>` references; each one
+  is an edge to an element, and an element's chapters, records, and code are
+  read back along those edges, never stored on it.
+- **c4-touches** (optional, `arc42/`, `domain/`) — the elements this chapter's
+  consequences name but its decision is not about, in the form of `c4`. An
+  element belongs in one of the two fields, never both.
+- **code** (optional, an `arc42/building-blocks/<slug>.md` file only) — the
+  repository-relative folders that hold the block's code:
+  `code: [plugins/devbook/tools/devbook-meta]`. Folders, never files. The block
+  names its element in `c4` beside it, per `devbook-arc42.md`.
+- **severity** (required on an `arc42/tdr/` debt record, and nowhere else) — `low`, `medium`, `high`, or
+  `critical`: what the debt costs while it stands. A record without it is reported as a
+  warning, never an error, so a debt set written before the field keeps validating until each is ranked. The record's `status` takes
+  the debt ladder there, per `devbook-arc42.md`.
 
 - **ext** (optional) — the extension namespace: state owned by a plugin layered
   on top of devbook, not by devbook itself. Keys are dotted and namespaced by
@@ -540,7 +560,9 @@ domain `bounded-context` chapters and on a domain `context.md`,
 `version`/`alternatives` on tech chapters, `stage` on ai chapters and never on an ai file) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
-to every folder.
+to every folder. The C4 fields above are the exception: `c4` and `c4-touches`
+span two folders, and `code` and `severity` sit beside them so the model's
+fields are read in one place.
 
 A chapter that is estimated and carried by a roadmap item therefore reads:
 
@@ -615,12 +637,15 @@ capability is covered end to end, and a viewer can offer to run the thing.
 
 ### Why a test link and not a code link
 
-This schema deliberately has **no field linking a chapter to a source path** —
+This schema deliberately has **no field linking a chapter to a source file** —
 see "Counterpart resolution" in the devbook plugin's `assets/code-sync-protocol.md` — never
 materialized into a repository — shared by
 `capture-specs`, `apply-change`, and `verify-change`. A path in a metadata block rots on the first refactor
 and gives no signal when it does, so a chapter and its implementation are paired
-through naming instead.
+through naming instead. The one exception is a building block's `code`: a
+folder outlives the files in it, the block is already the chapter that
+documents its element's code, and a listed folder that no longer exists is
+reported as drift.
 
 A test link is admissible for exactly the reason a code link is not: **it is
 executable**. An entry that stops resolving fails a run, out loud, in the same CI

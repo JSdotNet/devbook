@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/08-crosscutting-concepts.md#surface"]
+c4: ["marketplace.delivery-surface-backlog"]
+code: ["plugins/delivery-surface-backlog"]
 ```
 
 A run shown in the application where its work item already lives. Responsible for one thing:
@@ -62,6 +64,8 @@ related: [".devbook/arc42/05-building-block-view.md#surface-plugins"]
 ```
 
 A value and a session, and nothing stored.
+
+![delivery-surface-backlog's components](c4:delivery-surface-backlog)
 
 ### Endpoint
 

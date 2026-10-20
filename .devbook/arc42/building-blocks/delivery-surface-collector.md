@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/12-glossary.md#headless", ".devbook/arc42/12-glossary.md#unanswered-group"]
+c4: ["marketplace.delivery-surface-collector"]
+code: ["plugins/delivery-surface-collector"]
 ```
 
 A run recorded to disk rather than watched, for unattended sessions. Responsible for one thing:
@@ -87,6 +89,8 @@ related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#structur
 
 The [dashboard](delivery-surface-dashboard.md#structure)'s model with two things removed, and
 the removals are the content: no viewer, and no telemetry.
+
+![delivery-surface-collector's components](c4:delivery-surface-collector)
 
 ### Model
 

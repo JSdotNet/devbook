@@ -11,6 +11,11 @@ always describing the standing choice, with a `## History` table carrying every 
 shaped it. A naming, layout, or process choice is not a record: the rule or chapter that states
 it carries the reason.
 
+`devbook-arc42.md` fixes the History header as `Date | Change | Why`, per the
+[C4 model record](c4-model.md), and every record here uses it. The older records were split
+row by row when [TDR 10](../tdr/10-the-c4-rules-run-ahead-of-this-devbook.md) was resolved;
+a row whose reason was never written down reads an em dash in the Why column.
+
 A record belongs here rather than in [chapter 11](../11-risks-and-technical-debt.md) when
 **something was decided**. A debt record names a gap somebody found and left open. The test is
 whether the document can end in an answer; if it ends in two options and no pick, it is
@@ -29,6 +34,7 @@ whether the document can end in an answer; if it ends in two options and no pick
 | [Checks and Indexes](checks-and-indexes.md) | Three checks on every pull request and the validator on the `--check` path, all `devbook`'s; the committed `_meta/` index, its refresh, and the canvas are `devbook-derived`'s, enabled only where the index is wanted. | 2026-09-23 |
 | [Chapter Schema](chapter-schema.md) | One layout under `.devbook/`; `approved` and `accepted` are rungs on `domain/`'s ladder and on a change's `proposal.md` — once per change, never on the chapters it lands in — each with a signature and a content fingerprint; three folders rest at `active`, and a repository may declare its own transitional rungs in `.devbook/statuses.json`; a context opens with `context.md` — boundary, flags and settings, small actors and dependencies — describes its skills, and a term is a chapter or an alias in `domain.md`; `model.md` and `flow.md` are context, never a sync unit. | 2026-10-06 |
 | [Demos](demos.md) | One self-contained `*.demo.html` per bounded context or page under `domain/`, named for the page it belongs to or placed by a chapter's `demo` field; written only by `/prototype` as a standalone file that knows its question and not its lifecycle, and carried into `domain/` by a `flow-spec` pull request or an OpenSpec proposal, its author's choice; the template lives in `design/`. | 2026-10-02 |
+| [C4 Model](c4-model.md) | One Structurizr DSL workspace per repository at `arc42/workspace.dsl`, the only place an element or view is defined; chapters embed a view as `c4:<key>` in the chapter its kind belongs to; `c4`, `c4-touches`, and a block's `code` name elements in `meta`; Mermaid only inside one element; `devbook-derived` commits an SVG per view; a TDR carries `severity` and its own status ladder. | 2026-10-20 |
 | [Annotations](annotations.md) | The fence and its lifecycle are `devbook`'s schema and reach the five folders only; a review in progress is `status` plus the open fences, never a field; the chapter gate is the review plugin's and reads the chapter; only an open question blocks. | 2026-09-30 |
 | [Surfaces](surfaces.md) | A viewer is a `delivery-surface-*` server or canvas, bound per capability group in the order `delivery.surface` gives, skipped when it answers `unavailable` at open; the engine ships and names none, four plugins implement the contract — Backlog through a proxy — each exposing only its names; the graph canvas is not one and lives with the committed index. | 2026-09-24 |
 | [Hooks](hooks.md) | A session-start hook speaks only where the repository adopted the plugin; a tool matcher names its tools. | 2026-09-07 |

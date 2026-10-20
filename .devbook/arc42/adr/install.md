@@ -1,8 +1,10 @@
 # Install
 
 ```meta
-date: 2026-10-06
+date: 2026-10-20
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
+c4: ["marketplace.devbook.reconciler", "marketplace.devbook-config.init-service", "marketplace.devbook-config.update-service"]
+c4-touches: ["repository"]
 ```
 
 A plugin reaches a repository through its `init` skill, is kept current by its `update`, and
@@ -50,6 +52,21 @@ keeps only what GitHub reads: the workflows and the Copilot wrappers.
 move it and only a ledger says whether the script ran. A payload-only component copies files it
 owns whole, and hash-matching is then the whole migration mechanism. A change that must reach an
 already-edited copy has no mechanism by design; the seed is meant to be edited.
+
+**A workflow edited on the way in owes no migration for a step it gains.** `devbook-derived:init`
+writes the nightly's `cron` and refresh branch and the drift workflow's branch and path filters
+into its two workflows as they land. So each is customized from its first run, and `update`
+leaves it alone. When a release changes their steps — `1.28.0` added the C4 render — `update`
+reports the shipped diff for a person to merge, and no migration is owed. A script cannot tell
+the install's edit from a person's later one in a CI file the repository owns. A wrong insertion
+breaks the pipeline; a missing step only leaves an output unwritten. The render step adds output
+and removes nothing: a stale workflow still refreshes the indexes, and
+`build/Update-DevbookIndex.ps1`, which reconcile replaces on its shipped hash, renders the views
+on demand until the step is merged. The exemption stops there. A change that leaves a stale copy
+failing — a tool path it calls that is gone — owes a migration, shipped without a ledger the way
+`delivery-schedule`'s `001-weekend-cadence` is. devbook's own `devbook-meta.yml` stays under
+`AGENTS.md`'s *When a change ships a migration*: it is the repository's gate, and a step missing
+from a gate is a check that silently stops running.
 
 **A procedure is the rule trio with the ownership reversed.** A rule body is the plugin's
 and is refreshed while it hashes to a release; a procedure body under `.agents/skills/` is
@@ -157,35 +174,39 @@ LF-normalized text, because the working tree is CRLF and the index LF.
   puts the adoption interview in front of an operation people run to change nothing.
 - Removing the component pairs in favour of `devbook-config`: every plugin installs alone, and
   a repository without `devbook-config` would have no way in.
+- A `devbook-derived` migration that inserts the C4 render step into an installed repository's
+  two workflows: it would edit CI the repository owns, guessing which lines the install wrote,
+  to restore an output the refresh script already produces on demand.
 
 ## History
 
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-13 | A newly materialized path ships its migration, per `AGENTS.md` under *When a change ships a migration*: the 2026-10-08 reasoning that `update` creates a new path and so owes none is withdrawn, since without one the ledger never records the path and `doctor` has no `--check` to report it missing. `030-scenario-tools` materializes `.devbook/_tools/scenarios/` where `domain` is adopted and the folder is missing or still an older release's copy, and reports a customized copy. |
-| 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. Shipped without a migration; corrected on 2026-10-13. |
-| 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`; it wrote `delivery:phase-validation`, a phase skill retired since. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. |
-| 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. |
-| 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |
-| 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. |
-| 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches, so `update` re-times it and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. |
-| 2026-09-30 | `show` is removed: no flow invoked it, and `/verify` answers a person on Claude Code; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. |
-| 2026-09-30 | `debug` becomes `diagnose`, since a project skill named `debug` replaces Claude Code's bundled `/debug`; `devbook-procedures` ships `002-debug-is-diagnose`. |
-| 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`, which had stopped every scheduled run at the Skill call; the catalog checker now fails a target that sets it. |
-| 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |
-| 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. |
-| 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. |
-| 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. |
-| 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. |
-| 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. |
-| 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. |
-| 2026-09-15 | `tools/devbook-meta/` and `tools/devbook-tech/` materialize into `.devbook/_tools/`, not `.github/tools/`. |
-| 2026-09-15 | The install creates `CLAUDE.md` and `.github/copilot-instructions.md` where absent, `managed: false`. |
-| 2026-09-09 | This repository stamps itself — engine keys and three components — and materializes nothing. |
-| 2026-09-09 | `contractVersion`, `adopted`, and `migrations` are `devbook`'s alone; the other components are payload-only. |
-| 2026-09-07 | Plugin rules ship as a trio through the install; `applyTo` refused in a rule; every install skill is `install`. |
-| 2026-09-07 | `<component>-sync` becomes `<component>-install`: nothing here reconciles two peers. |
-| 2026-09-07 | `devbook:install` writes and reconciles one marker-fenced section of `AGENTS.md`. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-20 | A workflow `devbook-derived:init` edits on the way in owes no migration for a step a release adds, and `AGENTS.md` and the plugin's README say so. The C4 render step `1.28.0` added to both workflows ships that way; a change that leaves a stale copy failing still owes one. | `update` reports the shipped diff. |
+| 2026-10-13 | A newly materialized path ships its migration, per `AGENTS.md` under *When a change ships a migration*: the 2026-10-08 reasoning that `update` creates a new path and so owes none is withdrawn. `030-scenario-tools` materializes `.devbook/_tools/scenarios/` where `domain` is adopted and the folder is missing or still an older release's copy, and reports a customized copy. | Without one the ledger never records the path and `doctor` has no `--check` to report it missing. |
+| 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. Shipped without a migration; corrected on 2026-10-13. | — |
+| 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. | It wrote `delivery:phase-validation`, a phase skill retired since. |
+| 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. | — |
+| 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. | — |
+| 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. | — |
+| 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. `update` re-times the routine and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. | What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches. |
+| 2026-09-30 | `show` is removed; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. | No flow invoked it, and `/verify` answers a person on Claude Code. |
+| 2026-09-30 | `debug` becomes `diagnose`; `devbook-procedures` ships `002-debug-is-diagnose`. | A project skill named `debug` replaces Claude Code's bundled `/debug`. |
+| 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`; the catalog checker now fails a target that sets it. | It had stopped every scheduled run at the Skill call. |
+| 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed. | The procedures are the product here and the plugin's seeds are their only copy. |
+| 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. | — |
+| 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. | — |
+| 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. | — |
+| 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. | — |
+| 2026-09-23 | `init` and `update` replace `install` and `setup`; `validate` and `doctor` replace `check`. Migration 015 renames the bound ids. | — |
+| 2026-09-21 | Procedure skills land as a trio whose wrapper carries the goal; `devbook-procedures:install` writes them, `delivery:install` stamps `pluginVersion` alone. | — |
+| 2026-09-15 | `tools/devbook-meta/` and `tools/devbook-tech/` materialize into `.devbook/_tools/`, not `.github/tools/`. | — |
+| 2026-09-15 | The install creates `CLAUDE.md` and `.github/copilot-instructions.md` where absent, `managed: false`. | — |
+| 2026-09-09 | This repository stamps itself — engine keys and three components — and materializes nothing. | — |
+| 2026-09-09 | `contractVersion`, `adopted`, and `migrations` are `devbook`'s alone; the other components are payload-only. | — |
+| 2026-09-07 | Plugin rules ship as a trio through the install; `applyTo` refused in a rule; every install skill is `install`. | — |
+| 2026-09-07 | `<component>-sync` becomes `<component>-install`. | Nothing here reconciles two peers. |
+| 2026-09-07 | `devbook:install` writes and reconciles one marker-fenced section of `AGENTS.md`. | — |

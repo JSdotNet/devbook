@@ -22,6 +22,11 @@ A file is written once and read by two hosts, so the lifecycle has one authoring
 independent load paths. Nothing is assembled in between — there is no build — which is why the
 only place a mistake can be caught before a consumer's install is the authoring host itself.
 
+![Authoring an asset](c4:authoring-an-asset)
+
+The view's first step, inside the marketplace, and where a rejected shape loops back before
+either host installs anything:
+
 ```mermaid
 flowchart LR
     write["Write the asset"] --> manifests["Declare the manifests"]
@@ -31,9 +36,7 @@ flowchart LR
     declare --> list["List in marketplace.json"]
     list --> check["Validate the shape"]
     check -->|shape rejected| write
-    check -->|clean| install["Host installs by plugin@jsdotnet-devbook"]
-    install --> claude["Claude Code loads it"]
-    install --> copilot["Copilot loads it"]
+    check -->|clean| done["Ready for plugin@jsdotnet-devbook"]
 ```
 
 - A plugin folder that never reaches `marketplace.json` does not exist to a host, so the list
@@ -60,6 +63,10 @@ Four blocks run it, one stamp each — [devbook](building-blocks/devbook.md),
 and [delivery-schedule](building-blocks/delivery-schedule.md) — and
 [devbook-config](building-blocks/devbook-config.md) invokes each one's install in turn without
 writing a stamp of its own.
+
+![Materializing a component](c4:materializing-a-component)
+
+The states a component's stamp records:
 
 ```mermaid
 stateDiagram-v2
@@ -96,6 +103,10 @@ What a [flow skill](08-crosscutting-concepts.md#flow-skill) does with its
 ([delivery](building-blocks/delivery.md)) owns the order, the repository's `phases` map says who
 runs each phase and how, and whichever [surface](08-crosscutting-concepts.md#surface) answers
 renders it. The picture is `flow-code`'s.
+
+![A flow run](c4:a-flow-run)
+
+Inside the engine, the phases run in this order:
 
 ```mermaid
 flowchart TD

@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="908" height="922" viewBox="0 0 908 922" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="System Landscape">
+<title>System Landscape</title>
+<desc>Everything the shop company runs and uses</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-landscape-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="908" height="922"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">System Landscape</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">Everything the shop company runs and uses</text>
+<g transform="translate(32 96)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="592" y="262" width="252" height="484" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="602" y="280" font-size="12" font-weight="600">Shop company</text>
+  <g data-element="customer">
+    <circle class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" cx="110" cy="21" r="21"/>
+    <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="0" y="36" width="220" height="114" rx="27"/>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="80" font-size="15" font-weight="600" text-anchor="middle">Customer</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="98" font-size="11" text-anchor="middle" opacity="0.85">[Person]</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="120" font-size="12" text-anchor="middle">Buys things from the shop</text>
+  </g>
+  <g data-element="clerk">
+    <circle class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" cx="390" cy="21" r="21"/>
+    <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="280" y="36" width="220" height="114" rx="27"/>
+    <text class="c4-ink-person" fill="#ffffff" x="390" y="80" font-size="15" font-weight="600" text-anchor="middle">Clerk</text>
+    <text class="c4-ink-person" fill="#ffffff" x="390" y="98" font-size="11" text-anchor="middle" opacity="0.85">[Person]</text>
+    <text class="c4-ink-person" fill="#ffffff" x="390" y="120" font-size="12" text-anchor="middle">Packs and ships orders</text>
+  </g>
+  <g data-element="shop">
+    <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="608" y="290" width="220" height="150" rx="8"/>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="352" font-size="15" font-weight="600" text-anchor="middle">Shop</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="370" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="392" font-size="12" text-anchor="middle">Sells things online</text>
+  </g>
+  <g data-element="warehouse">
+    <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="608" y="580" width="220" height="150" rx="8"/>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="642" font-size="15" font-weight="600" text-anchor="middle">Warehouse</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="660" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="718" y="682" font-size="12" text-anchor="middle">Plans picking and shipping</text>
+  </g>
+  <g data-element="mail">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="0" y="580" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="642" font-size="15" font-weight="600" text-anchor="middle">Mail</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="660" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="682" font-size="12" text-anchor="middle">Sends e-mail</text>
+  </g>
+  <g data-element="payments">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="280" y="580" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="642" font-size="15" font-weight="600" text-anchor="middle">Payments</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="660" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="682" font-size="12" text-anchor="middle">Takes card payments</text>
+  </g>
+  <g data-relationship="customer -> shop">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M132 150C132 220 718 220 718 290"/>
+  </g>
+  <g data-relationship="clerk -> warehouse">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M390 150L390 210Q390 220 400 220L544 220Q554 220 554 230L554 500Q554 510 564 510L686 510Q696 510 696 520L696 580"/>
+  </g>
+  <g data-relationship="shop -> mail">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M685 440C685 510 132 510 132 580"/>
+  </g>
+  <g data-relationship="shop -> payments">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M718 440C718 510 390 510 390 580"/>
+  </g>
+  <g data-relationship="shop -> warehouse">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M751 440C751 510 740 510 740 580"/>
+  </g>
+  <g data-relationship="mail -> customer">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M88 580L88 520Q88 510 98 510L100 510Q110 510 110 500L110 230Q110 220 100 220L98 220Q88 220 88 210L88 150"/>
+  </g>
+  <g class="c4-label" data-relationship="customer -> shop">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="354" y="203" width="142" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="425" y="218" font-size="11" text-anchor="middle">Browses and orders on</text>
+    <text class="c4-muted" fill="#59636e" x="425" y="232" font-size="11" text-anchor="middle">[HTTPS]</text>
+  </g>
+  <g class="c4-label" data-relationship="clerk -> warehouse">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="480" y="355" width="148" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="554" y="370" font-size="11" text-anchor="middle">Works the pick list in</text>
+  </g>
+  <g class="c4-label" data-relationship="shop -> mail">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="348" y="493" width="123" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="409" y="508" font-size="11" text-anchor="middle">Sends mail through</text>
+    <text class="c4-muted" fill="#59636e" x="409" y="522" font-size="11" text-anchor="middle">[SMTP]</text>
+  </g>
+  <g class="c4-label" data-relationship="shop -> payments">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="483" y="493" width="142" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="554" y="508" font-size="11" text-anchor="middle">Charges the card with</text>
+    <text class="c4-muted" fill="#59636e" x="554" y="522" font-size="11" text-anchor="middle">[HTTPS]</text>
+  </g>
+  <g class="c4-label" data-relationship="shop -> warehouse">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="694" y="493" width="105" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="746" y="508" font-size="11" text-anchor="middle">Hands orders to</text>
+    <text class="c4-muted" fill="#59636e" x="746" y="522" font-size="11" text-anchor="middle">[AMQP]</text>
+  </g>
+  <g class="c4-label" data-relationship="mail -> customer">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="55" y="355" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="110" y="370" font-size="11" text-anchor="middle">Delivers mail to</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="32" y="874" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="887" font-size="12">Person</text>
+  <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="129" y="874" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="161" y="887" font-size="12">Software System</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="286" y="874" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="318" y="887" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="396" y="874" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="428" y="887" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-landscape-arrow)" d="M486 882L508 882"/>
+  <text class="c4-ink" fill="#1f2328" x="518" y="887" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-landscape-arrow)" d="M623 882L645 882"/>
+  <text class="c4-ink" fill="#1f2328" x="655" y="887" font-size="12">Implied relationship</text>
+</g>
+</svg>

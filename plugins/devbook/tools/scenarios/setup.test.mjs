@@ -7,8 +7,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { parseScenariosFile } from "./parse.mjs";
-import { effectiveConfig, recordedConfig, resolveEnv, runSetup } from "./setup.mjs";
+import { effectiveConfig, recordedConfig, resolveEnv, runSetup, specFile } from "./setup.mjs";
 
 const F = "```";
 const journey = (meta) => parseScenariosFile(`# Scenarios
@@ -117,4 +118,13 @@ test("runSetup declares dataFolder as taking the data set's name", async () => {
     const folders = [];
     await runSetup({ hook: { importData: async (_name, _tenant, folder) => folders.push(folder) }, config: { tenant: null, data: ["a"], flags: {}, settings: {}, actors: {} }, open: async () => null });
     assert.deepEqual(folders, [null], "the default still answers null");
+});
+
+// A spec built by scenario() declares its tests and hooks inside setup.ts, so
+// Playwright's info.file names setup.ts and the spec header is never found.
+test("the spec file comes from the title path, never from info.file", () => {
+    const testDir = path.resolve("repo", "e2e");
+    const info = { file: path.resolve("repo", ".devbook", "_tools", "scenarios", "setup.ts"), titlePath: [path.join("work", "journey.spec.ts"), "journey", "part"], project: { testDir } };
+    assert.equal(specFile(info), path.join(testDir, "work", "journey.spec.ts"));
+    assert.throws(() => specFile({ titlePath: [], project: { testDir } }), /no title path/);
 });

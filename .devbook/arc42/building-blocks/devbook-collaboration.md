@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/12-glossary.md#review-pass", ".devbook/arc42/12-glossary.md#stale-approval"]
+c4: ["marketplace.devbook-collaboration"]
+code: ["plugins/devbook-collaboration"]
 ```
 
 How a chapter is reviewed and decided. Responsible for two things: that every objection to a
@@ -125,6 +127,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42
 
 No aggregate and no storage of its own: a review position read off the chapter, three domain
 services, and two domain events stated in devbook's language.
+
+![devbook-collaboration's components](c4:devbook-collaboration)
 
 ### Model
 

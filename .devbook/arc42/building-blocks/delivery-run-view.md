@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md", ".devbook/arc42/building-blocks/delivery-surface-backlog.md"]
+c4: ["marketplace.delivery-run-view"]
+code: ["plugins/delivery-run-view"]
 ```
 
 A delivery run drawn inside Claude Code itself. Responsible for one thing: that the person in
@@ -45,6 +47,8 @@ surface, not only the two whose files this block reads.
 
 One module, `hooks/register.tsx`, the state contract it keeps, `types/index.d.ts`, and the clip
 the gate alert plays, `sounds/gate.wav`.
+
+![delivery-run-view's components](c4:delivery-run-view)
 
 ```mermaid
 flowchart LR

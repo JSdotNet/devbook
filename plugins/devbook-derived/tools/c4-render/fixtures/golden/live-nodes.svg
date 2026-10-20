@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1252" height="1708" viewBox="0 0 1252 1708" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Deployment] Live">
+<title>[Deployment] Live</title>
+<desc>The shop as it runs in production</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+  .c4-fill-infrastructureNode{fill:#161b22;stroke:#8b949e}
+  .c4-rim-infrastructureNode{stroke:#8b949e}
+  .c4-ink-infrastructureNode{fill:#e6edf3}
+}
+</style>
+<defs>
+  <marker id="c4-live-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1252" height="1708"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Deployment] Live</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The shop as it runs in production</text>
+<g transform="translate(32 192)">
+  <g data-deployment-node="live.cloud">
+    <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" x="0" y="-96" width="876" height="1532" rx="6"/>
+  </g>
+  <g data-deployment-node="live.cloud.app">
+    <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" x="296" y="370" width="252" height="632" rx="6"/>
+  </g>
+  <g data-deployment-node="live.cloud.data">
+    <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" x="608" y="1206" width="252" height="214" rx="6"/>
+  </g>
+  <g data-deployment-node="live.site">
+    <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" x="936" y="1206" width="252" height="214" rx="6"/>
+  </g>
+  <g data-element="live.cloud.gateway">
+    <rect class="c4-fill-infrastructureNode" fill="#ffffff" stroke="#6e7781" stroke-width="1.5" x="16" y="0" width="220" height="150" rx="8"/>
+    <text class="c4-ink-infrastructureNode" fill="#1f2328" x="126" y="62" font-size="15" font-weight="600" text-anchor="middle">Gateway</text>
+    <text class="c4-ink-infrastructureNode" fill="#1f2328" x="126" y="80" font-size="11" text-anchor="middle" opacity="0.85">[Infrastructure Node: Application G…</text>
+    <text class="c4-ink-infrastructureNode" fill="#1f2328" x="126" y="102" font-size="12" text-anchor="middle">Routes HTTPS traffic</text>
+  </g>
+  <g data-element="live.cloud.app.web" data-instance-of="shop.web">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="312" y="418" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="480" font-size="15" font-weight="600" text-anchor="middle">Web</text>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="498" font-size="11" text-anchor="middle" opacity="0.85">[Container: ASP.NET Core]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="520" font-size="12" text-anchor="middle">Serves the storefront</text>
+  </g>
+  <g data-element="live.cloud.app.api" data-instance-of="shop.api">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="312" y="836" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="898" font-size="15" font-weight="600" text-anchor="middle">API</text>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="916" font-size="11" text-anchor="middle" opacity="0.85">[Container: C#]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="422" y="938" font-size="12" text-anchor="middle">Takes and tracks orders</text>
+  </g>
+  <g data-element="live.cloud.data.db" data-instance-of="shop.db">
+    <path class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" d="M624 1267L624 1391A110 13 0 0 0 844 1391L844 1267A110 13 0 0 0 624 1267Z"/>
+    <path class="c4-rim-container" fill="none" stroke="#2e6295" stroke-width="1.5" d="M624 1267A110 13 0 0 0 844 1267"/>
+    <text class="c4-ink-container" fill="#ffffff" x="734" y="1329" font-size="15" font-weight="600" text-anchor="middle">Database</text>
+    <text class="c4-ink-container" fill="#ffffff" x="734" y="1347" font-size="11" text-anchor="middle" opacity="0.85">[Container: PostgreSQL]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="734" y="1369" font-size="12" text-anchor="middle">Holds orders and stock</text>
+  </g>
+  <g data-element="live.site.planner" data-instance-of="warehouse">
+    <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="952" y="1254" width="220" height="150" rx="8"/>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="1062" y="1316" font-size="15" font-weight="600" text-anchor="middle">Warehouse</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="1062" y="1334" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="1062" y="1356" font-size="12" text-anchor="middle">Plans picking and shipping</text>
+  </g>
+  <g data-relationship="live.cloud.app.web -> live.cloud.app.api">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M422 568C422 702 422 702 422 836"/>
+  </g>
+  <g data-relationship="live.cloud.app.api -> live.cloud.data.db">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-live-arrow)" d="M400 986C400 1120 734 1120 734 1254"/>
+  </g>
+  <g data-relationship="live.cloud.app.api -> live.site.planner">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M444 986C444 1120 1062 1120 1062 1254"/>
+  </g>
+  <g data-relationship="live.cloud.gateway -> live.cloud.app.web">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M93 150C93 284 422 284 422 418"/>
+  </g>
+  <g data-relationship="live.cloud.gateway -> live.cloud.data">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M126 150L126 250Q126 260 136 260L606 260Q616 260 616 270L616 1206"/>
+  </g>
+  <g data-relationship="live.cloud.data -> live.cloud.gateway">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M628 1206L628 258Q628 248 618 248L169 248Q159 248 159 238L159 150"/>
+  </g>
+  <g data-relationship="live.site -> live.cloud">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M944 1206L944 1106Q944 1096 934 1096L876 1096"/>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.app.web -> live.cloud.app.api">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="379" y="685" width="86" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="422" y="700" font-size="11" text-anchor="middle">Calls</text>
+    <text class="c4-muted" fill="#59636e" x="422" y="714" font-size="11" text-anchor="middle">[HTTPS/JSON]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.app.api -> live.cloud.data.db">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="512" y="1103" width="111" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="567" y="1118" font-size="11" text-anchor="middle">Reads and writes</text>
+    <text class="c4-muted" fill="#59636e" x="567" y="1132" font-size="11" text-anchor="middle">[EF Core]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.app.api -> live.site.planner">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="701" y="1103" width="105" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="753" y="1118" font-size="11" text-anchor="middle">Hands orders to</text>
+    <text class="c4-muted" fill="#59636e" x="753" y="1132" font-size="11" text-anchor="middle">[AMQP]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.gateway -> live.cloud.app.web">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="190" y="267" width="136" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="258" y="282" font-size="11" text-anchor="middle">Forwards requests to</text>
+    <text class="c4-muted" fill="#59636e" x="258" y="296" font-size="11" text-anchor="middle">[HTTPS]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.gateway -> live.cloud.data">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="343" y="243" width="56" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="371" y="258" font-size="11" text-anchor="middle">Watches</text>
+    <text class="c4-muted" fill="#59636e" x="371" y="272" font-size="11" text-anchor="middle">[TCP]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.data -> live.cloud.gateway">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="427" y="238" width="74" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="464" y="253" font-size="11" text-anchor="middle">Reports to</text>
+  </g>
+  <g class="c4-label" data-relationship="live.site -> live.cloud">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="864" y="1079" width="93" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="910" y="1094" font-size="11" text-anchor="middle">Replicates to</text>
+    <text class="c4-muted" fill="#59636e" x="910" y="1108" font-size="11" text-anchor="middle">[VPN]</text>
+  </g>
+  <g data-deployment-label="live.cloud">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="8" y="-91" width="156" height="31" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="12" y="-77" font-size="13" font-weight="600">Cloud</text>
+    <text class="c4-muted" fill="#59636e" x="12" y="-64" font-size="11">[Deployment Node: Azure]</text>
+  </g>
+  <g data-deployment-label="live.cloud.app">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="304" y="375" width="156" height="31" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="308" y="389" font-size="13" font-weight="600">App Service</text>
+    <text class="c4-muted" fill="#59636e" x="308" y="402" font-size="11">[Deployment Node: Linux]</text>
+    <text class="c4-ink" fill="#1f2328" x="536" y="389" font-size="13" font-weight="600" text-anchor="end">x2</text>
+  </g>
+  <g data-deployment-label="live.cloud.data">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="616" y="1211" width="224" height="31" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="620" y="1225" font-size="13" font-weight="600">Database server</text>
+    <text class="c4-muted" fill="#59636e" x="620" y="1238" font-size="11">[Deployment Node: Azure Database f…</text>
+  </g>
+  <g data-deployment-label="live.site">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="944" y="1211" width="193" height="31" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="948" y="1225" font-size="13" font-weight="600">Warehouse site</text>
+    <text class="c4-muted" fill="#59636e" x="948" y="1238" font-size="11">[Deployment Node: On premises]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" x="32" y="1660" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="1673" font-size="12">Deployment Node</text>
+  <rect class="c4-fill-infrastructureNode" fill="#ffffff" stroke="#6e7781" stroke-width="1.5" x="189" y="1660" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="221" y="1673" font-size="12">Infrastructure Node</text>
+  <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="373" y="1660" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="405" y="1673" font-size="12">Software System</text>
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="530" y="1660" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="562" y="1673" font-size="12">Container</text>
+  <path class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" d="M647 1662L647 1674A12 4 0 0 0 671 1674L671 1662A12 4 0 0 0 647 1662Z"/>
+  <path class="c4-rim-container" fill="none" stroke="#2e6295" stroke-width="1.5" d="M647 1662A12 4 0 0 0 671 1662"/>
+  <text class="c4-ink" fill="#1f2328" x="679" y="1673" font-size="12">Database</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M757 1668L779 1668"/>
+  <text class="c4-ink" fill="#1f2328" x="789" y="1673" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-live-arrow)" d="M894 1668L916 1668"/>
+  <text class="c4-ink" fill="#1f2328" x="926" y="1673" font-size="12">Implied relationship</text>
+</g>
+</svg>

@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery-phases.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+c4: ["marketplace.delivery"]
+code: ["plugins/delivery"]
 ```
 
 The delivery engine. Responsible for three things: that one unit of work reaches a review-ready
@@ -14,18 +16,8 @@ config, and the pull-request lane at the end. Two of those are blocks of their o
 in, each with its own file: the phases and their gates are
 [delivery-phases](delivery-phases.md), and the lane is [delivery-pr-lane](delivery-pr-lane.md).
 This file is the engine's white box around them: the flows, the run, the runner, and the
-configuration.
-
-```mermaid
-flowchart LR
-  subgraph delivery
-    F["flows, run, flow-runner, stack config"]
-    P["delivery-phases"]
-    L["delivery-pr-lane"]
-  end
-  F -->|"sequences, resolves, gates"| P
-  P -->|"create-pr, update-base hand a branch under review over"| L
-```
+configuration. The component view under [Structure](#structure) draws
+these parts and the two nested blocks together.
 
 Outside it: deploy, which is where "delivery" stops here; expertise, which is an agent a
 repository binds to a phase; visibility, which is a [surface](delivery-surface-dashboard.md)
@@ -175,6 +167,8 @@ kernel vocabulary is defined once in [chapter 8](../08-crosscutting-concepts.md)
 layer, tracker, surface, host slot, phase, and gate. The terms this block owns and no part
 below names are in the [glossary](../12-glossary.md): tier, Personal Validation, PR lane, and
 provider.
+
+![delivery's components](c4:delivery)
 
 ### Model
 

@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1304" height="934" viewBox="0 0 1304 934" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] Shop - API">
+<title>[Component] Shop - API</title>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-components-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1304" height="934"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] Shop - API</text>
+<g transform="translate(52 108)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="968" y="552" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="978" y="570" font-size="12" font-weight="600">Backend</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="540" height="492" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">API [Container]</text>
+  <g data-element="shop.api.orders">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="140" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="250" y="62" font-size="15" font-weight="600" text-anchor="middle">Orders</text>
+    <text class="c4-ink-component" fill="#0b2540" x="250" y="80" font-size="11" text-anchor="middle" opacity="0.85">[Component: C# class]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="250" y="102" font-size="12" text-anchor="middle">Places and changes orders</text>
+  </g>
+  <g data-element="shop.api.stock">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="290" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="352" font-size="15" font-weight="600" text-anchor="middle">Stock</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="370" font-size="11" text-anchor="middle" opacity="0.85">[Component: C# class]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="392" font-size="12" text-anchor="middle">Reserves stock for an order</text>
+  </g>
+  <g data-element="shop.api.notify">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="280" y="290" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="390" y="352" font-size="15" font-weight="600" text-anchor="middle">Notifier</text>
+    <text class="c4-ink-component" fill="#0b2540" x="390" y="370" font-size="11" text-anchor="middle" opacity="0.85">[Component: C# class]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="390" y="392" font-size="12" text-anchor="middle">Tells the customer what happened</text>
+  </g>
+  <g data-element="shop.db">
+    <path class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" d="M984 593L984 717A110 13 0 0 0 1204 717L1204 593A110 13 0 0 0 984 593Z"/>
+    <path class="c4-rim-container" fill="none" stroke="#2e6295" stroke-width="1.5" d="M984 593A110 13 0 0 0 1204 593"/>
+    <text class="c4-ink-container" fill="#ffffff" x="1094" y="655" font-size="15" font-weight="600" text-anchor="middle">Database</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1094" y="673" font-size="11" text-anchor="middle" opacity="0.85">[Container: PostgreSQL]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1094" y="695" font-size="12" text-anchor="middle">Holds orders and stock</text>
+  </g>
+  <g data-element="mail">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="656" y="580" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="642" font-size="15" font-weight="600" text-anchor="middle">Mail</text>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="660" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="682" font-size="12" text-anchor="middle">Sends e-mail</text>
+  </g>
+  <g data-element="payments">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="656" y="290" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="352" font-size="15" font-weight="600" text-anchor="middle">Payments</text>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="370" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="766" y="392" font-size="12" text-anchor="middle">Takes card payments</text>
+  </g>
+  <g data-relationship="shop.api.orders -> shop.api.stock">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M210 150C210 220 110 220 110 290"/>
+  </g>
+  <g data-relationship="shop.api.orders -> shop.api.notify">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M237 150C237 220 390 220 390 290"/>
+  </g>
+  <g data-relationship="shop.api.orders -> shop.db">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M290 150L290 210Q290 220 300 220L568 220Q578 220 578 230L578 500Q578 510 588 510L1106 510Q1116 510 1116 520L1116 580"/>
+  </g>
+  <g data-relationship="shop.api.stock -> shop.db">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M110 440C110 510 1072 510 1072 580"/>
+  </g>
+  <g data-relationship="shop.api.notify -> mail">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M390 440C390 510 766 510 766 580"/>
+  </g>
+  <g data-relationship="shop.api.orders -> payments">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M263 150C263 220 766 220 766 290"/>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.orders -> shop.api.stock">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="95" y="210" width="130" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="160" y="225" font-size="11" text-anchor="middle">Reserves stock with</text>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.orders -> shop.api.notify">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="259" y="210" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="314" y="225" font-size="11" text-anchor="middle">Raises events on</text>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.orders -> shop.db">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="523" y="348" width="111" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="578" y="363" font-size="11" text-anchor="middle">Reads and writes</text>
+    <text class="c4-muted" fill="#59636e" x="578" y="377" font-size="11" text-anchor="middle">[EF Core]</text>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.stock -> shop.db">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="536" y="493" width="111" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="591" y="508" font-size="11" text-anchor="middle">Reads and writes</text>
+    <text class="c4-muted" fill="#59636e" x="591" y="522" font-size="11" text-anchor="middle">[EF Core]</text>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.notify -> mail">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="388" y="465" width="123" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="449" y="480" font-size="11" text-anchor="middle">Sends mail through</text>
+    <text class="c4-muted" fill="#59636e" x="449" y="494" font-size="11" text-anchor="middle">[SMTP]</text>
+  </g>
+  <g class="c4-label" data-relationship="shop.api.orders -> payments">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="444" y="203" width="142" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="515" y="218" font-size="11" text-anchor="middle">Charges the card with</text>
+    <text class="c4-muted" fill="#59636e" x="515" y="232" font-size="11" text-anchor="middle">[HTTPS]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="886" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="899" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="886" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="899" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="266" y="886" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="899" font-size="12">External</text>
+  <path class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" d="M376 888L376 900A12 4 0 0 0 400 900L400 888A12 4 0 0 0 376 888Z"/>
+  <path class="c4-rim-container" fill="none" stroke="#2e6295" stroke-width="1.5" d="M376 888A12 4 0 0 0 400 888"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="899" font-size="12">Database</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="486" y="886" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="518" y="899" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="596" y="886" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="628" y="899" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-components-arrow)" d="M686 894L708 894"/>
+  <text class="c4-ink" fill="#1f2328" x="718" y="899" font-size="12">Relationship</text>
+</g>
+</svg>

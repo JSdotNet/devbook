@@ -26,7 +26,7 @@ import { pathToFileURL } from 'node:url';
 import type { Browser, BrowserContext, BrowserContextOptions, Page } from '@playwright/test';
 import { dataFolder, listJourneys, parseSpecHeader, readProfiles, resolveInside, SCENARIO_FOLDER, splitAddress } from './parse.mjs';
 import { playwrightTest } from './playwright.mjs';
-import { effectiveConfig, findRepoRoot, resolveEnv, runSetup } from './setup.mjs';
+import { effectiveConfig, findRepoRoot, resolveEnv, runSetup, specFile } from './setup.mjs';
 import { failureShot, shot } from './shot';
 
 export { shot };
@@ -92,7 +92,7 @@ export function scenario(name: string, body: (api: { part: Part }) => void): voi
       contextOptions = contextOptionsOf(info.project.use as Record<string, unknown>);
       const root = findRepoRoot(process.cwd());
       // The journey the spec header names, as `<scenarios file>#<journey>`.
-      const header = parseSpecHeader(await readFile(info.file, 'utf8'));
+      const header = parseSpecHeader(await readFile(specFile(info), 'utf8'));
       if (!header.page) throw new Error('the spec has no `// scenario: <scenarios file>#<journey>` header');
       const { path: file, anchor } = splitAddress(header.page);
       const journey = (await listJourneys(root)).find((candidate) => candidate.path === file && candidate.slug === anchor);

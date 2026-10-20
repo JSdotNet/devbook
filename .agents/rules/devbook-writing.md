@@ -25,6 +25,12 @@ a Mermaid diagram when a passage describes one of these:
 | Three or more parts and how they connect | `flowchart` or `classDiagram` |
 | Options or items compared on the same points | a table |
 
+A Mermaid diagram stays inside one architecture element: its states and its flow. A
+diagram whose boxes are people, systems, containers, components, or deployment nodes, and the
+relationships between them, is a view of the C4 model, embedded as `devbook-arc42.md` says,
+whichever skill or row above asked for it. A chapter outside `arc42/` links to the section
+that embeds the view. Only a repository without an `arc42/` folder draws one in Mermaid.
+
 Put the diagram before the prose. The prose then says only what the diagram cannot show: why
 it works this way, the exceptions, and the limits. Never narrate a diagram box by box. Keep a
 diagram to about nine nodes, and split a larger one.

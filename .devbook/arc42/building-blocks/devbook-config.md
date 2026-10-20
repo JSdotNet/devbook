@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/05-building-block-view.md#config-plugin"]
+c4: ["marketplace.devbook-config"]
+code: ["plugins/devbook-config"]
 ```
 
 What this stack is, what this machine has, and how this repository is wired. Responsible for
@@ -192,6 +194,8 @@ related: [".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/ar
 
 Two aggregates and four services: what the report reads, what the engine keys are, and where the
 line runs between what this block writes and what it only looks at.
+
+![devbook-config's components](c4:devbook-config)
 
 ### Model
 

@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, a sequence told without a diagram. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
@@ -27,7 +27,7 @@ standard, and a class stated by half reports the wrong sentence.
   skill the repository has.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
   every step list in a journey from every class but `procedure-step`: a step is one
-  clause by design, not a fragment.
+  clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -41,8 +41,8 @@ standard, and a class stated by half reports the wrong sentence.
    adopted devbook: say so and stop.
 
 2. **Inventory.** List the chapters in scope from the adopted folders, and the names a chapter can point at: every skill folder, plugin,
-   rule, and path the repository ships, so step 4 can test a name against the tree, and the terms
-   the glossary (arc42 chapter 12) and each ubiquitous language section define.
+   rule, path, and `workspace.dsl` element the repository has, so step 4 can test a name against
+   the tree, and the terms the glossary (arc42 chapter 12) and each ubiquitous language section define.
 
 3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
    else; a `related` edge is followed only to test a `second-definition`.
@@ -64,6 +64,7 @@ standard, and a class stated by half reports the wrong sentence.
    | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
    | `procedure-step` | A how-to step not opening with an imperative verb, or any step with two actions or past about 20 words | One action per step |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
+   | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram`, `flowchart`, or `graph` with two or more participants or nodes naming workspace elements, by identifier or name | The view to use: `systemContext` in 03 for `C4Context` or a diagram of people and systems, `container` or `component` in 05 or the block's file for a `flowchart` or `graph` of parts, `dynamic` in 06 or the block's `## Runtime` for `C4Dynamic`, the sequence, or a `flowchart` of steps, `deployment` in 07 — or "add it to the workspace" when no view has it |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |
 
