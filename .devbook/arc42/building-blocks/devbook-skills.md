@@ -192,8 +192,10 @@ alone, and each keeps its own short rule for when the skill is absent.
 
 ![devbook-skills' dependencies](c4:devbook-skills-dependencies)
 
-The view also draws the couplings between the three callers themselves; those belong to
+The view also draws the couplings between the three callers themselves, and the pull
+requests delivery and delivery-schedule open on GitHub; those belong to
 [delivery](delivery.md#dependencies) and [delivery-schedule](delivery-schedule.md#dependencies).
+Only the arrow from devbook-skills to GitHub is this block's: `wayfinder` writing its map.
 Which phase or contract names which skill is in the Inbound table below.
 
 ### Outbound

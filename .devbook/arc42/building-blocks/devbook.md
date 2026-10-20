@@ -21,7 +21,7 @@ each with its own file: the two directions between a chapter and its code are
 [devbook-procedures](devbook-procedures.md). This file is the convention's white box around
 them: the chapter, the folder, the check, and the reconcile — and the
 [C4 model](#c4-model) an `arc42/` folder's chapters embed and point at. The component view
-under [Structure](#structure) draws all three together.
+under [Structure](#structure) draws this file's parts and the two nested blocks together.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter

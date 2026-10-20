@@ -79,15 +79,17 @@ is resolved.
 ```
 
 Resolved 2026-10-20 by the remediation the record named. Every decision record under
-[`adr/`](../adr/README.md) now heads its History `Date | Change | Why`: the reason each change
-cell carried moved into the Why column word for word, and a row whose cell gave no reason
-reads an em dash rather than one written after the fact. No decision was reworded, and the
-check reports no History header.
+[`adr/`](../adr/README.md) now heads its History `Date | Change | Why`: a reason a change cell
+stated as a clause of its own moved into the Why column with only its connective dropped, and
+a row whose cell gave no reason reads an em dash rather than one written after the fact. A
+reason woven into the decision, such as why a release is a patch, stays in Change. No decision was
+reworded, and the check no longer warns about any History header.
 
-Of the four flowcharts, two are gone and two became views. The opening pictures of
+Of the four flowcharts, two are gone, one became a view, and one was cut down. The opening pictures of
 [devbook](../building-blocks/devbook.md) and [delivery](../building-blocks/delivery.md) drew
 nothing their component views under *Structure* do not, so each now points there. The
 [devbook-skills](../building-blocks/devbook-skills.md#dependencies) dependency picture is the
 `devbook-skills-dependencies` container view. In [chapter 6](../06-runtime-view.md#authoring-an-asset)
 the `authoring-an-asset` dynamic view already drew the two hosts, so the Mermaid there keeps
-only the authoring steps and their loop, which happen inside the marketplace.
+only the authoring steps and their loop. Those happen inside the marketplace, so the
+Mermaid now stays inside one element, as `devbook-writing.md` asks.
