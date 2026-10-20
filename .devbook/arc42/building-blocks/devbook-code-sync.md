@@ -171,7 +171,9 @@ aggregate, and a term by the one unit its name or alias resolves into. Shared va
 enums form one shared-types unit per context. A `user` or `technical` actor is a unit of its
 one chapter, in `actors.md` or `context.md`; an `organisation` is modelled and never
 authenticated, so it roots none and stays context, and a direction set on an `actors.md` of
-organisations only is one no unit inherits.
+organisations only is one no unit inherits. A building block's files are its own file and the
+building-block view, and, where `arc42/` has a workspace, `workspace.dsl` and the `c4/` files
+it includes, since the workspace is part of the building-block kind.
 
 With `--groups` it joins units into the groups a sweep claims. A requirement that names two
 aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
@@ -190,6 +192,7 @@ prints the result for the sweep to read.
 | A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `syncLevel` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
 | Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A building block lists `workspace.dsl` and its included files among its files exactly when `arc42/` has a workspace | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 
 ### Spec Converter

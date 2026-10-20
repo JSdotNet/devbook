@@ -159,8 +159,8 @@ The prose half beside `validate`'s structural half: read every adopted folder an
 the sentence that says nothing a reader needs or names something the tree no longer has — a
 stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
 a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets, and, where
-`arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence
-between workspace elements — with the view to draw instead. It writes nothing. A chapter
+`arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence,
+flowchart, or graph between workspace elements — with the view to draw instead. It writes nothing. A chapter
 is content, so the standard is narrower than an instruction tightening and a record stays as
 it was taken: an edit is a person's, through the folder's flow.
 
