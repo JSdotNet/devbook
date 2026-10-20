@@ -70,6 +70,31 @@ writes, and a conversion that would add a problem to the workspace writes nothin
 `assets/reconcile-protocol.md`, and adopting it later re-evaluates the migration. A person
 still reads the result: a matched name can be the wrong element.
 
+## Released in 1.27.0
+
+Every plugin is `1.27.0`; contracts 31 and 32 ship in it, and this is the one migration. The
+names a consuming repository's plan writes against, exactly as the check reads them:
+
+| Name | Where | What it is |
+| --- | --- | --- |
+| `.devbook/arc42/workspace.dsl` | arc42/ | The one Structurizr DSL workspace, `!identifiers hierarchical` required |
+| `.devbook/arc42/c4/` | arc42/ | The only folder the workspace may `!include` from |
+| `![<alt>](c4:<view key>)` | any arc42/ section | Embeds one view, once, in the chapter its kind belongs to per `devbook-arc42.md` |
+| `c4` | `meta`, arc42/ and domain/ | The workspace elements a chapter or file is about, as bare identifiers |
+| `c4-touches` | `meta`, arc42/ and domain/ | The elements its consequences name but it is not about; never both fields |
+| `code` | `meta`, top level of `arc42/building-blocks/<slug>.md` | Repository-relative folders holding the block's code, never files |
+| `severity` | `meta`, top level of an `arc42/tdr/` record | `low`, `medium`, `high`, `critical`; missing is a warning |
+| `status` on a debt record | `meta`, `arc42/tdr/` | Its own ladder: `identified`, `planned`, `in-progress`, `resolved`, resting at `identified`; a folder rung there is a warning |
+| `\| Date \| Change \| Why \|` | a decision record's `## History` | The fixed table header, newest row first |
+| `.devbook/arc42/_meta/c4/<view key>.svg` | devbook-derived | The committed render of each view, written only by the scheduled refresh; never an embed target |
+| `.devbook/_tools/c4-render/` | devbook-derived | The renderer `init` materializes where arc42/ is adopted |
+
+Contract 31 takes `openspec/changes/` out of the graph: a chapter's `related`, `depends-on`,
+or prose link into it is an error. `devbook-derived` now needs `devbook` `>=1.27.0`, whose
+`c4.mjs` its renderer reads. Its nightly and drift workflows gained the render step, and both
+are customized on every install, so `devbook-derived:update` reports the shipped diff for a
+person to merge rather than replacing them.
+
 ## Run it
 
 ```bash

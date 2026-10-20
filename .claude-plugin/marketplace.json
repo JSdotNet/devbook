@@ -10,79 +10,79 @@
       "name": "delivery",
       "source": "./plugins/delivery",
       "description": "The host-neutral delivery engine: two flow-* staged procedures named for what changes — flow-code for every change to the code, flow-spec for the devbook folders — run over a closed list of phase-* skills, and the pull-request lane, sequenced by the flow-runner agent, which resolves each phase's agent, skill, model and effort, with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, phases, policy, and gates are declared per repository in .devbook/config.json.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "delivery-surface-collector",
       "source": "./plugins/delivery-surface-collector",
       "description": "A headless run surface: where a run becomes recorded rather than watched. An MCP server implementing two surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) and export (export_report) — keeping stage status, output, gate decisions, QA scenarios and the handoff marker on disk so a resumed session picks the run up where it stopped, and writing the run's Markdown report at the end. No page, no port, nothing rendered: the right surface for scheduled and unattended runs. Declares no dependency and names no engine.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "delivery-surface-dashboard",
       "source": "./plugins/delivery-surface-dashboard",
       "description": "A run surface: the live dashboard a run is watched in. An MCP server implementing all three surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run), render (render_diagram, render_markdown), and export (export_report) — with a run timeline carrying stage output, QA scenarios and their evidence, a Mermaid diagram viewer and a Markdown document viewer, and hook-captured tool and token telemetry. Rendered inline as an MCP App where the host supports it, served on 127.0.0.1 where it does not. Declares no dependency and names no engine.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "delivery-surface-backlog",
       "source": "./plugins/delivery-surface-backlog",
       "description": "A run surface that is an application: the Backlog desktop app. A stdio MCP server that forwards the lifecycle operations of the surface capability (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run) to the MCP endpoint inside the running app, with the bearer token from the app's own settings, and passes Backlog's answers and refusals through unchanged; export_report only while Backlog lists it, render never. With Backlog closed or its MCP server off, open_dashboard answers unavailable so a caller moves on to the next surface. Registering Backlog's own backlog server, the tracker, never makes it a surface; installing this plugin does. Declares no dependency and names no engine.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "delivery-run-view",
       "source": "./plugins/delivery-run-view",
       "description": "A read-only view of delivery runs inside Claude Code, drawn from the run files the surfaces already write: a /flows pane with one row per phase — how it ran (inline, delegate, fork, gate; inferred and marked ? where the run does not record it), agent, model and effort, duration, repeated passes, the sub-agents it delegated to, and the focused phase's output, QA scenarios, links, tokens and tool calls — a Personal Validation review card with the stage's links, the Ready stage's open items, and Approve, Revise, and Reject buttons that submit the gate's reply to the session — a band above the prompt while this session's run is open, surface start_run and update_stage calls drawn as one-line phase transitions, a toast and a sound once whenever any checkout's run turns waiting at a gate or blocked, the status line set to the waiting gate or else the flow and its stage, and /flows-demo playing a simulated flow-code run in memory. Function-hook modules, so Claude Code only. Not a surface: it answers no operation, writes no run file, and declares no dependency.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "delivery-schedule",
       "source": "./plugins/delivery-schedule",
       "description": "The unattended lane, stacked on delivery: the twenty schedule-* skills that run with nobody watching, plus init and update, plus the catalog of triggers that fires them. Eighteen schedulable entry points that pick their own input and run a flow, a review, a check, a sweep, or a report — devbook validate, devbook sweep, devbook verify, devbook update, instruction review, issue sweep, merge review, morning brief, package update, performance review, review, security review, tech update, week starter, weekly cost analysis, weekly retro, weekly update, and what's new — and fifteen trigger definitions naming a target, a cadence, the plugins that target needs, and the prompt for a local routine that runs unattended on this machine, never a cloud session. delivery-schedule:init creates them through whatever scheduler the live session exposes and stamps the selection under components.schedule, and delivery-schedule:update keeps them level with it; schedule-status reads their runs and logs; schedule-run fires one now. One capability, two host names: Routines in Claude Code, Automations in the GitHub Copilot app. Depends on delivery and names devbook: a trigger whose target is not enabled is reported and skipped, never scheduled.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-config",
       "source": "./plugins/devbook-config",
       "description": "Owns a repository's .devbook/config.json and explains the stack that reads it. `init` decides which installed plugins a repository adopts, writes .devbook/config.json — its id, plus the engine-owned keys (bindings, phases, areas, policy, gates) when delivery is among them — before anything is installed, then hands every adopted component its own init skill; `update` moves the whole configured stack forward in one run, fanning out to every adopted component’s own update skill and skipping what this machine has not installed or this checkout has not enabled, migrations included; `doctor` diagnoses the installation without writing — every stamp against disk, outstanding migrations, a stale AGENTS.md section, a bound provider id that resolves to no skill, installed against newest — and names the update that fixes each finding; `report` prints the setup report — versions and scopes, what is adopted and bound, procedures, routines, overlays, and what is still open — after init and update or at any time, writing nothing; `ask` answers a question about this marketplace from what is on disk — what devbook, the delivery engine, the surfaces, and the unattended lane are and how they fit, which version of each plugin is installed against the newest published, and which are enabled; `adoption` reports where the ai/ adoption record no longer matches what is installed and hands the write to flow-spec; `local` writes what is true of one machine — the stack-config overlay at the user or repository layer and AGENTS.local.md, converting a retired model-selection file into it — and never the committed config. All seven are backed by a read-only report that names the file behind every fact. Declares no dependency, devbook included: it is named for the folder it writes into, not for a plugin it needs, and one it names but cannot find is reported as not installed.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-config-view",
       "source": "./plugins/devbook-config-view",
       "description": "A read-only view of how this machine's repositories are set up for the devbook stack, inside Claude Code: /rollout opens a pane whose matrix has one row per repository carrying .devbook/config.json under the configured roots — the parent folder of this repository's main checkout by default, worktrees skipped — and one column per components.<name> stamp, its pluginVersion coloured current, minor behind, or major behind against the installed marketplace's newest, the adopted devbook folders and procedures as dots, and every retired key the config still carries in red; its config map draws one repository's phase maps as a chain per flow — each phase's mode, inline, delegate, or fork, its agent, model, effort, skill, MCP servers and chores, with its gates where they sit — then its policy and bindings. A row's buttons put the devbook-config:doctor or devbook-config:update prompt for that repository in the prompt box and never send it. Reads on open and on refresh only. Function-hook modules, so Claude Code only. Writes nothing to any repository and declares no dependency.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook",
       "source": "./plugins/devbook",
       "description": "The devbook convention: arc42/, domain/, tech/, design/, and ai/ folders of addressed Markdown chapters and the change folder under openspec/changes/, behaviour captured one rule per chapter into requirements.md and the domain.invariants.md subpages, each chapter carrying a parseable meta block with status ladders and two decision rungs — approved, then accepted — on a domain/ chapter or a whole change, with their signatures and content fingerprints, runnable test-case links, a reserved ext namespace, and annotation fences that keep a review note in the chapter beside the passage it is about. Ships the checker — build.mjs, which validates every meta block and reference and writes nothing unless a layered plugin asks it to — the delta merge, delta.mjs, which lands only an accepted change in its chapters, the fence writer, the tech/ inventory scripts, the scenario tools that tie an e2e suite to its scenario pages — parser, signature, setup runner, run reporter, and coverage check — three converters between chapters and code (capture-specs, apply-change, verify-change, each over seven chapter kinds and the demo a page carries), three scenario skills that write a scenario page, derive its spec, and run it (scenario-write, scenario-derive, scenario-run), validate, prose-check, annotation-sweep, tech-update, a versioned contract with runnable migrations, and init and update, which put the rules, the tools, its AGENTS.md section, and the procedures a repository adopts into it and keep them current — run, capture, diagnose, estimate, and prototype, each one editable copy under .agents/skills/ with a managed wrapper per host carrying the goal devbook fixes, run as Claude Code's run-<name> recipe with a Copilot twin, and the demo template prototype builds on. Ships the shape and the check, never a flow: the delivery engine carries a chapter change, and devbook-derived keeps the committed _meta/ index fresh.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-derived",
       "source": "./plugins/devbook-derived",
       "description": "The committed devbook index, and the canvas that draws it: keeps the derived _meta/ artifacts — the reference graph, the reading outline, and the open-note index, one set per adopted folder and a rollup under .devbook/_meta/ — in a repository's tree for a reader that cannot run devbook's checker itself, and ships the devbook-graph Copilot canvas that renders the graph live from devbook's modules at their materialized path. Ships the refresh paths that pass --write to devbook's build.mjs: the refresh skill and the on-demand Update-DevbookIndex.ps1, the nightly refresh workflow that opens one pull request when the indexes moved, and the pull-request drift warning; the derived-artifacts rule with a wrapper per host; its own AGENTS.md section; and the .claude/settings.json deny snippet. Three skills, init, update, and refresh. An L1 extension over devbook: enable it to commit the index, disable it to stop, and the check is devbook's either way.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-collaboration",
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Hands a chapter to a reviewer with a brief, reviews one — or a whole change, its proposal and every delta — against its folder's rules and its evidence, records each finding as a devbook annotation fence beside the passage it is about, runs the approval decision that writes devbook's own approved rung, runs the acceptance decision that writes the accepted rung above it — on a change, once on its proposal — and sweeps the adopted folders and open changes for open notes, work awaiting a decision, and approvals gone stale. Five skills and the read-only script the queue runs on, over devbook: a review in progress is the chapter's status and its open annotation fences, who owes the next move stays in the pull request or the tracker, and the only fields it writes are devbook's approval and acceptance rungs, all validated by the check, so it owns no schema, materializes nothing into a repository, and stamps nothing.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-skills",
       "source": "./plugins/devbook-skills",
       "description": "Reusable guidance any plugin can name and none has to depend on. Ships show-me: put a picture before the prose whenever the content has a shape — a Mermaid sequence, state, or flow diagram, a file tree labelled with what each entry is for, a type signature, a diff, a call stack, pseudocode, or a table — and keep the prose after it to the reasons, the exceptions, and the limits. Ships research-brief: answer one question about something outside the repository from primary sources only, every claim cited with a confidence, and say what the sources leave open; it returns the brief and writes nothing, so the caller decides where it lands. Ships pr-body: write a pull request description as Summary, Evidence, and Merge Danger — one picture of the change, a tiered before and after, and a one-way or two-way door with its blast radius, a one-way door linking its decision record — inside the repository's own template. Ships retro: run a retrospective over one session or one delivery run with the person present, through lenses from navigation and automated checks to unused context, tool economy, and model and effort, ranking what would make the next run get further — a mechanical violation gets a check, never a written rule — and presents the candidates without writing anything. Ships wayfinder, invoked by the person alone: plan an effort too big for one session as a wayfinder:map issue on the repository's own tracker — destination, notes, decisions so far, fog, and what is out of scope — with research, prototype, grilling, and task tickets as child issues linked by native blocking, and resolve one frontier ticket per session until nothing is left to decide; it writes issues and nothing in the repository. Named by skill, never declared: devbook's devbook-writing rule names show-me for every chapter but domain.md, the delivery engine names it for pull request descriptions and its report back to the person, the engine's scope and arc42 and tech drafting name research-brief, the engine's pull request phase and the schedule sweeps' draft pull requests name pr-body, and the engine's Summary and the weekly retro schedule name retro, each keeping its own rule when the skill is absent. Materializes nothing into a repository and stamps nothing.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     },
     {
       "name": "devbook-openspec",
       "source": "./plugins/devbook-openspec",
       "description": "The change lane: installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as deltas against its devbook chapters — never a copy of OpenSpec's skills. init checks the CLI against the stamped range, runs openspec init at the repository root, writes the managed devbook schema (proposal → devbook-delta → solution → tasks) and a seeded config.yaml, removes the specs/ folder the CLI scaffolds, installs the change-folder rule with a wrapper per host, and stamps components.openspec; update runs openspec update and refreshes what it manages. Four providers an engine can bind by name: spec returns an approved change's specification unchanged, tracker keeps tasks.md as the work items with read_item, update_item, and comment, status reports steps, verdicts, and both gates, and archive checks the gates, merges every delta through devbook's delta.mjs, and lets openspec archive move the folder. onboard walks a first change through. An L1 extension over devbook.",
-      "version": "1.26.1"
+      "version": "1.27.0"
     }
   ]
 }
