@@ -50,7 +50,7 @@ still work there; the file that restores the nudge is the one `devbook-config:in
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-09-07 | The dashboard's tool matcher names its tools and drops the read-only ones. |
-| 2026-09-07 | Every session-start hook fires only where the repository adopted the plugin. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-09-07 | The dashboard's tool matcher names its tools and drops the read-only ones. | — |
+| 2026-09-07 | Every session-start hook fires only where the repository adopted the plugin. | — |

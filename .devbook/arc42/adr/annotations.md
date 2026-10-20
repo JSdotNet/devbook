@@ -96,16 +96,16 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-09-30 | Accepting a change owes an `aligned` verdict only for a delta whose target `verify-change` covers. A delta against a decision or debt record or a prose chapter has no code to be measured against, and requiring one made such a change impossible to accept. A step is `done` per its workflow, not only by a merge. |
-| 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. |
-| 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 21, migration `021-no-review-triad`. |
-| 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |
-| 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. |
-| 2026-09-14 | The chapter gate is `devbook-collaboration:chapter-approve` and reads the chapter, not the index. |
-| 2026-09-09 | The sweep is `devbook:annotation-sweep`, chapter-scoped; promotion to a work item is unbuilt on purpose. |
-| 2026-09-09 | A fence outside the five folders is inert; a fence after a `mermaid` block annotates the diagram. |
-| 2026-09-09 | The review plugin's `ext` findings migrate to fences; the `ext` namespace keeps three keys. |
-| 2026-09-04 | `devbook` ships the fence: schema, parse, lint, `_meta/annotations.json`, one writer. |
-| 2026-09-04 | A comment is one single-line `ext` finding until L0 builds the fence. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-09-30 | Accepting a change owes an `aligned` verdict only for a delta whose target `verify-change` covers. A step is `done` per its workflow, not only by a merge. | A delta against a decision or debt record or a prose chapter has no code to be measured against, and requiring one made such a change impossible to accept. |
+| 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. | — |
+| 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema. Contract 21, migration `021-no-review-triad`. | A review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. |
+| 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. | — |
+| 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. | — |
+| 2026-09-14 | The chapter gate is `devbook-collaboration:chapter-approve` and reads the chapter, not the index. | — |
+| 2026-09-09 | The sweep is `devbook:annotation-sweep`, chapter-scoped; promotion to a work item is unbuilt on purpose. | — |
+| 2026-09-09 | A fence outside the five folders is inert; a fence after a `mermaid` block annotates the diagram. | — |
+| 2026-09-09 | The review plugin's `ext` findings migrate to fences; the `ext` namespace keeps three keys. | — |
+| 2026-09-04 | `devbook` ships the fence: schema, parse, lint, `_meta/annotations.json`, one writer. | — |
+| 2026-09-04 | A comment is one single-line `ext` finding until L0 builds the fence. | — |
