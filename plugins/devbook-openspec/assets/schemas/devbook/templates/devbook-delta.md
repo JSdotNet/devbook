@@ -7,7 +7,7 @@ delta: modified
 
 ### MODIFIED
 
-#### <!-- a section replaced whole, with its meta block; a scenario page's part is replaced whole too, never step by step -->
+#### <!-- a section replaced whole, with its meta block; a journey's part is replaced whole too, never step by step -->
 
 ### ADDED
 

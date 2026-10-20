@@ -31,9 +31,9 @@ the procedure and none of the rules: what a chapter must look like comes from th
 instruction files the repository keeps for the folder and the check it ships, which the
 `devbook` plugin materializes and this plugin never names. In a repository that has not
 adopted the folder it stops and says so. `flow-code`'s phases do name devbook's skills: Spec
-Check binds `devbook:verify-change` by default, and the phases carry the scenario pages an item
-references through `devbook:scenario-derive` and `devbook:scenario-run`, recording the pages as
-not derived or not run where devbook is absent. That coupling is undeclared on purpose, and
+Check binds `devbook:verify-change` by default, and the phases carry the journeys an item
+references through `devbook:scenario-derive` and `devbook:scenario-run`, recording the journeys
+as not derived or not run where devbook is absent. That coupling is undeclared on purpose, and
 this repository's devbook tracks it as a debt.
 
 [FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws both flows: phase order, the two loops, where the

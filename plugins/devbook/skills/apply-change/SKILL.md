@@ -16,7 +16,7 @@ repeated here.
 has none. An aggregate is briefed whole, with everything it owns and the events
 it raises. A chapter that does not exist is a modelling task for the folder's
 flow, or a `capture-specs` pass if the thing is already in code.
-A `type: scenario` page is no kind: it is evidence for the requirements whose cases point at it, per **A scenario page is evidence, not a kind** in the protocol.
+A journey is no kind: it is evidence for the requirements whose cases point at its parts, per **A journey is evidence, not a kind** in the protocol.
 
 **Inputs.** The chapter as `<path>#<heading-slug>` or by heading, or a sync unit
 or group per **The sync unit** in the protocol; the bounded context; the root.

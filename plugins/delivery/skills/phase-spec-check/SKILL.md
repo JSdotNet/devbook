@@ -29,7 +29,7 @@ Verify and before the ready check, so the approval sees the drift. Its place in 
   `phase-scope` — and its acceptance criteria.
 - **The chapter list** Scope recorded, plus every governed chapter the change set touches, in
   the adopted devbook folders. That union is **in scope**; nothing else is.
-- **The scenario pages** Scope listed, with the parts the item references, and what Verify
+- **The journeys** Scope listed, with the parts the item references, and what Verify
   recorded for each.
 - **The change set**: the diff against the merge base, untracked files included.
 - **The bound skill**: `phases.<flow>.phase-spec-check.skill` in the effective configuration.
@@ -63,8 +63,8 @@ Every item in scope gets exactly one row with the evidence that settles it:
 test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
 reports it, `linked` reports it as what will refuse acceptance.
 
-**Check every scenario page Scope listed** yourself, whatever skill is bound, per
-`resources/scenario-page-check.md`: a part with no proof is `spec-ahead`, and a page whose
+**Check every journey Scope listed** yourself, whatever skill is bound, per
+`resources/scenario-page-check.md`: a part with no proof is `spec-ahead`, and a journey whose
 signature no longer matches its run is `stale`, listed in its own table after the verdicts.
 
 ## Step 3 — Update, Only When the Skill Does
@@ -75,7 +75,7 @@ its brief; it is the one that edits.
 - **Only `code-ahead` rows, and only chapters in scope.** The code is the truth there. A
   drifted chapter outside scope is reported, not fixed in this run.
 - **`spec-ahead`, `conflict`, `unresolved`, and `stale` rows are always reported, never
-  edited.** A scenario page, its spec, and its run are never this phase's to write. Each
+  edited.** A journey, its spec, and its run are never this phase's to write. Each
   needs a decision or more code, not a chapter rewrite.
 - **Follow the folder's own rules** — its instruction files and the chapter's `meta` block,
   written in the same edit — then run the repository's devbook check. A failing check marks the
@@ -94,7 +94,7 @@ its brief; it is the one that edits.
 
 ## Outputs
 
-- The verdict table, with the mode and the bound skill named, and the scenario-page table after
+- The verdict table, with the mode and the bound skill named, and the journey table after
   it. Personal Validation presents
   it, Create Pull Request puts it in the description, and Report Back carries it to every
   target.

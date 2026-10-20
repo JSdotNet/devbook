@@ -44,7 +44,7 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 
 Twelve skills — six that own the convention in a repository, three that cross the boundary
 between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries, and three that
-carry a scenario page from its text to its run — plus the rules
+carry a journey from its text to its run — plus the rules
 `init` delivers, the tools it materializes, one workflow, one hook, one contract that other
 plugins follow, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
@@ -64,13 +64,13 @@ change belongs to the engine.
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, the graph build through `checkDelta` for every open delta, and `devbook-collaboration`'s review queue through `readChange` |
 | `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, `delta.mjs` through `demoFileIssues` for every demo a change carries, and `devbook-collaboration`'s review queue through `demoReader` |
-| `scenario.mjs` | scenario page rules, in-process | The graph build through `scenarioProblems`: the stem register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, and the parts no requirement claims |
+| `scenario.mjs` | journey rules, in-process | The graph build through `scenarioProblems`: the journey register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, the parts no requirement claims, and the journey outside the context of the requirements it proves |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
-| `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
+| `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
-| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a page a walkthrough links, and migration `030-linked-walkthroughs` for the walkthroughs it links: each linked walkthrough's step `text` and `signature` re-copied from its page; `--check` exits 1 while one is stale or drifted |
+| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links: each linked walkthrough's step `text` and `signature` re-copied from its journey; `--check` exits 1 while one is stale or drifted |
 | `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
@@ -309,11 +309,11 @@ top-level heading carries a block of its own describing the document as a whole.
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
-| A scenario page is a `domain/` file typed `scenario`, inside a bounded context at any depth; the type in another folder or on a chapter is an error, and its `##` parts owe no block and stay addressable | parse | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
-| A scenario page's `status` is absent, `draft`, or `proposed`; it carries no `tests`; its steps open with a bold Given, When, Then, or And; its stem is unique across the corpus | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
-| `start`, `actor`, `data`, `profile`, `flags`, and `settings` sit on a scenario page's file-level block alone; `actor`, `flags`, and `settings` resolve to an actor, a `feature-flag`, and a `setting` chapter, and `profile` and every portal named resolve in `.devbook/scenarios/profiles.json` when it exists | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| A `#### Scenario:` holding `Proved by: <page>.md#<part>` holds nothing else and names a part of a scenario page, whose spec derives the requirement's `e2e` entry; a part no case names is reported as an unclaimed journey, a page outside the context holding most of the requirements it proves is a warning, and an inline case in a context with a scenario page is listed at `info` as a candidate to move into one | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
-| A `scenario:<stem>#<label>` image names an existing scenario page, and neither it nor a `shot:` image counts as a diagram | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
+| A journey is a `##` typed `scenario` in a bounded context's `scenarios.md` or `scenarios.<name>.md`, and every `##` there is one; the type on a file-level block, on a chapter of any other file, or in another folder is an error; its `###` parts owe no block and stay addressable, and every journey and part anchor is unique in its file | parse | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
+| A journey's `status` is absent, `draft`, or `proposed`; it carries no `tests`; its steps open with a bold Given, When, Then, or And | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| `start`, `actor`, `data`, `profile`, `flags`, and `settings` sit on a journey's block alone; `actor`, `flags`, and `settings` resolve to an actor, a `feature-flag`, and a `setting` chapter, and `profile` and every portal named resolve in `.devbook/scenarios/profiles.json` when it exists | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| A `#### Scenario:` holding `Proved by: <scenarios file>#<part>` holds nothing else and names a part of a journey, from the requirement's folder, whose spec derives the requirement's `e2e` entry; a part no case names is reported as unclaimed, a journey outside the context holding most of the requirements it proves is a warning, and an inline case in a context with a journey is listed at `info` as a candidate to move into one | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
+| A `scenario:<context>/<scenarios file>#<label>` image names an existing scenarios file and a label in it, and neither it nor a `shot:` image counts as a diagram | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
@@ -455,13 +455,13 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 `--no-move` merges and leaves the folder for a caller whose own tool moves it —
 [devbook-openspec](devbook-openspec.md#landing-a-change) lets `openspec archive` do it.
 
-A scenario page changes through a delta like any `domain/` file: a new page is `delta: added`
-with its parts as `ADDED` entries, and a part of an existing one is replaced whole. The rules
-no single file can check — a stem unique across contexts, setup fields that resolve, a
+A journey changes through a delta of its scenarios file like any `domain/` chapter: a new
+journey is an `ADDED` entry with its parts one level down, and a part of an existing one is
+replaced whole. The rules no single file can check — setup fields that resolve, a
 `Proved by:` that names a part — would otherwise surface only at archive, after both gates.
 So once every delta merges, `--check` lays the whole change over the corpus in memory, runs
 `scenario.mjs`'s pass over the result, and reports each problem the change introduces against
-the delta that causes it: a pointer may name a page the same change adds, and a problem the
+the delta that causes it: a pointer may name a journey the same change adds, and a problem the
 corpus already had is not the change's.
 
 | Invariant | Enforced at | Evidence |
@@ -479,7 +479,7 @@ corpus already had is not the change's.
 | A proposal's hash covers the proposal and every delta, and an open question anywhere in the change stands against its rung | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `--apply` merges only an `accepted` change, signed, over its current hash | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
-| `--check` resolves a `Proved by:`, a stem, and a scenario page's setup fields over the corpus with every delta of the change merged, and reports each new problem against the delta that causes it | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-scenarios.test.mjs` |
+| `--check` resolves a `Proved by:` and a journey's setup fields over the corpus with every delta of the change merged, and reports each new problem against the delta that causes it | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-scenarios.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
 ### Demo
@@ -493,7 +493,7 @@ what a person sees in a bounded context. It belongs to the Devbook Folder aggreg
 chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
 `context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
 the chapters whose `demo` field names it. Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
-scenario page part it plays. The file
+journey part it plays. The file
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
@@ -511,8 +511,8 @@ The folder rules state it: `devbook-domain.md` the naming, the pairing, one vari
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
 `demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta, one of the two routes a demo has into `domain/`.
 `demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address. It
-resolves a linked walkthrough's `part` to its scenario page part, reports a `step` past the
-part's steps as an error, a `signature` that is not the page's as stale, and embedded `text`
+resolves a linked walkthrough's `part` to its journey part, reports a `step` past the
+part's steps as an error, a `signature` that is not the journey's as stale, and embedded `text`
 unlike its part step as drifted, and derives a `Proved by:` requirement's `demo` entries from
 the walkthroughs linked to its part, beside its derived `tests`. It computes the signature with
 the scenario tools' `signature.mjs`, loaded only when a demo links a walkthrough, and
@@ -621,9 +621,8 @@ The register is `domain/`'s ubiquitous language as a list: every `term` chapter 
 other `domain/` chapter carrying `aliases` but a `requirement` or `invariant`, whose `aliases`
 are the codes a rule is cited by, each with its lede as its definition. It is built
 from the graph and the ledes the same walk kept, never a second read. It carries its own
-`schemaVersion`, because its first reader is outside this repository. The scenario register
-is the fifth: every `type: scenario` page with its stem, path, setup fields, screenshot
-labels, and parts, each part with the requirement cases whose `Proved by:` names it — built
+`schemaVersion`, because its first reader is outside this repository. The journey register
+is the fifth: every journey with its address, setup fields, screenshot labels, and parts, each part with the requirement cases whose `Proved by:` names it — built
 by the scenario pass, kept beside the nodes, with its own `schemaVersion` for the same
 reason. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
@@ -648,7 +647,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | A prose link whose file does not exist, or whose anchor no indexed heading renders, is a warning; absolute URLs, code, and fences are not read | `graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/prose-links.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The term register lists `domain/`'s `term` and aliased chapters only, never a `requirement`, an `invariant`, or `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
-| The scenario register lists every scenario page by stem, its parts in page order with the labels under each and every requirement case pointing at it, writes an empty list outside `domain/`, and leaves `graph.json` unchanged | `scenarios-index.mjs`, `scenario.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/scenarios-index.test.mjs` |
+| The journey register lists every journey by address, by file and then in file order, its parts in order with the labels under each and every requirement case pointing at it, writes an empty list outside `domain/`, and leaves `graph.json` unchanged | `scenarios-index.mjs`, `scenario.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/scenarios-index.test.mjs` |
 
 ### Fence Writer
 
@@ -696,50 +695,51 @@ related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc4
 
 Also called: the scenario tooling, `.devbook/_tools/scenarios/`.
 
-Connects a repository's e2e suite to its scenario pages through files, not a runtime. A
-derived spec opens with the page it implements and the page's signature; the runner it
-imports resolves the effective configuration — the profile in
-`.devbook/scenarios/profiles.json`, then the page's `flags` and `settings` — calls the
+Connects a repository's e2e suite to its journeys through files, not a runtime. A derived
+spec opens with the address of the journey it implements and the journey's signature; the
+runner it imports resolves the effective configuration — the profile in
+`.devbook/scenarios/profiles.json`, then the journey's `flags` and `settings` — calls the
 repository's own setup hook, keeps one browser context per portal, and opens `start`; the
-reporter writes `run.json` version 2 and one screenshot per `shot:` label into
-`.devbook/scenarios/<stem>/`, in the working tree, so the run is committed with the change.
-The coverage check reads files only and reports a page with no spec, a signature mismatch,
-label drift, an image inside a step list, a duplicate stem, a dangling `scenario:`
-reference, and an unknown profile. The demo sync re-copies each linked walkthrough's step
-`text` from the part it names and its `signature` from the page, replacing those values in the
+reporter writes `run.json` version 3 and one screenshot per `shot:` label into the journey's
+run folder beside its scenarios file, `scenarios/<journey>/`, in the working tree, so the run
+is committed with the change. The coverage check reads files only and reports a journey with
+no spec, a signature mismatch, label drift, an image inside a step list, a repeated anchor,
+a dangling `scenario:` reference, an unknown profile, and a page of the shape before
+contract 32. The demo sync re-copies each linked walkthrough's step `text` from the part it
+names and its `signature` from the journey, replacing those values in the
 demo's `demo-model` and no other byte; it reads the demo and resolves the part through
 devbook-meta's `demo.mjs`, so it and the checker agree on what is stale or drifted. Materialized
-by `init` or `update` only where `domain/` is adopted, because scenario pages live there.
+by `init` or `update` only where `domain/` is adopted, because journeys live there.
 
 The signature is sha256 over the normalized setup fields — a data set by its name and the
 hash of its folder — the part headings, the steps, and the labels, in document order, first 8
 hex. Every reader recomputes it, so a stale run is computed and never stored, and
 `scenario-page.vector.json` is the one vector every implementation is tested against.
 
-Three skills carry a page through the tools, one step each, and the page is the source in
-all three: `scenario-write` writes the page and the `Proved by:` lines that point at its
-parts; `scenario-derive` brings a spec to the page — the header from `signature.mjs`, one
-test per part, one step per step, the `shot` calls — and leaves what the page cannot say to
-the implementer, never touching the setup hook; `scenario-run` runs whole pages, so the
-reporter writes, and reports each part's outcome. `scenario-derive` builds on
+Three skills carry a journey through the tools, one step each, and the journey is the source
+in all three: `scenario-write` writes the journey in its context's `scenarios.md` and the
+`Proved by:` lines that point at its parts; `scenario-derive` brings a spec to the journey —
+the header from `signature.mjs`, one test per part, one step per step, the `shot` calls — and
+leaves what the journey cannot say to the implementer, never touching the setup hook;
+`scenario-run` runs whole journeys, so the reporter writes, and reports each part's outcome. `scenario-derive` builds on
 `qa:playwright-e2e-authoring` by name, which is a plugin of another marketplace: where it is
 not installed, the repository's own specs are the model.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The signature agrees with the shared vector, and a caption, the lead, or whitespace does not change it | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
-| The signature CLI prints one `<signature>  <path>` line per scenario page and exits 1 on a path that is not one | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
-| A filtered run writes nothing; a label the run did not reach keeps its file; a label the page dropped is pruned | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| The signature CLI prints one `<signature>  <address>` line per journey of a scenarios file, or the one an address names, and exits 1 on a path that is not a scenarios file or an address that names no journey | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
+| A filtered run writes nothing; a label the run did not reach keeps its file; a label the journey dropped is pruned; the run lands beside the scenarios file | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | A part is grouped under the spec of its file suite, not the `setup.ts` that declares it | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
-| A run that executed none of a page's parts, such as a listing, writes nothing | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
-| A failed part records the page step that threw, numbered across the part, and its message | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| A run that executed none of a journey's parts, such as a listing, writes nothing | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| A failed part records the journey step that threw, numbered across the part, and its message | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | Each shot records the signature of the run that took it, and a kept shot keeps its own | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | The runner takes `@playwright/test` from the running Playwright before its own folder, and loads as an ES module | `playwright.mjs`, `package.json` | `unit:node:plugins/devbook/tools/scenarios/playwright.test.mjs` |
 | `runSetup` declares `dataFolder` as taking a name, so a consumer's `tsc` passes through `setup.ts` | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
-| The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
+| The effective configuration is the profile, then the journey's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
 | The demo sync replaces only a stale `signature` and drifted step `text`, keeps a copy's keyword style, leaves a current demo byte for byte, and with `--check` writes nothing and exits 1 while either remains | `demo-sync.mjs` | `unit:node:plugins/devbook/tools/scenarios/demo-sync.test.mjs` |
-| A path taken from an argument, a page, a spec header, or a profile that resolves outside the repository is reported the way that tool reports a bad path, and is never read or written | `resolveInside` in `parse.mjs`, and in devbook-meta's `paths.mjs` | `unit:node:plugins/devbook/tools/scenarios/parse.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/paths.test.mjs` |
+| A path taken from an argument, a scenarios file, a spec header, or a profile that resolves outside the repository is reported the way that tool reports a bad path, and is never read or written | `resolveInside` in `parse.mjs`, and in devbook-meta's `paths.mjs` | `unit:node:plugins/devbook/tools/scenarios/parse.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/paths.test.mjs` |
 | Materialized only where `domain/` is adopted | `init`, `update` | untested |
 
 ### Shared Value Objects

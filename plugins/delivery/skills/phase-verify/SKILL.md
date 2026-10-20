@@ -11,7 +11,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 - Starts the app through the repository's run recipe
 - Drives the scenarios at the kind's depth, captures evidence, watches the logs
-- Runs exactly the scenario pages Scope listed, through `devbook:scenario-run`
+- Runs exactly the journeys Scope listed, through `devbook:scenario-run`
 
 **Doesn't**
 
@@ -98,21 +98,21 @@ The `changeKind` Scope persisted selects the depth, unless `policy.qa.depth` set
 Record the depth that actually ran. A shallower depth is reported as the depth it was, never
 as verification that did not happen.
 
-## Scenario Pages
+## Journeys
 
-When `scope.md` lists scenario pages, they run at the full and the targeted depth alike,
+When `scope.md` lists journeys, they run at the full and the targeted depth alike,
 beside the scenarios drawn from the acceptance criteria:
 
-1. **Exactly those pages.** Invoke `devbook:scenario-run` once with all of them, against the
-   instance this phase started. Never every page in the repository, and never a part on its
+1. **Exactly those journeys.** Invoke `devbook:scenario-run` once with all of them, against the
+   instance this phase started. Never every journey in the repository, and never a part on its
    own: a filtered run writes no `run.json`.
-2. **Preflight is the skill's.** A page its coverage check leaves out is reported as not run
+2. **Preflight is the skill's.** A journey its coverage check leaves out is reported as not run
    with the finding and `scenario-derive` named, as an open item for the ready check; never
    run it anyway.
-3. **Report what the reporter wrote.** From each page's `run.json`: per part its `outcome`,
+3. **Report what the reporter wrote.** From each journey's `run.json`: per part its `outcome`,
    and for a failed part the step, the message, and the `failureShot`. A failed part is a
    failed scenario; a `not-run` part is unfinished, not a defect.
-4. **Return it as `evidence`**: one `{ stem, part, outcome, runAt }` per part — `part` is the
+4. **Return it as `evidence`**: one `{ journey, stem, part, outcome, runAt }` per part — `part` is the
    part's `anchor`, `runAt` the file's `ranAt`. A `passed` or `failed` part also appears in
    `scenarios` as `pass` or `fail` with its labels' PNGs as evidence; a `not-run` part appears
    in `evidence` and the output alone, named unfinished.
@@ -137,9 +137,9 @@ endpoint URLs. Record which happened. Never ask the user to restart the app as t
   reason; or `blocked`, naming the missing tooling and the user action needed.
 - The depth that actually ran.
 - Monitoring findings — Aspire log and trace anomalies — when monitoring ran.
-- Per listed scenario page, each part's outcome as `evidence` per
+- Per listed journey, each part's outcome as `evidence` per
   `resources/surface-contract.md`, or the page recorded as not run with the reason.
-- `execution.defectsFound`: distinct failed scenarios and failed scenario-page parts, each
+- `execution.defectsFound`: distinct failed scenarios and failed journey parts, each
   once, `0` when all passed — omitted at startup-only, `skipped`, or `blocked`, per **Stage
   Counts** in `resources/surface-contract.md`.
 

@@ -14,9 +14,9 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { linkedWalkthroughs } from "../../tools/devbook-meta/demo.mjs";
-import { parseScenarioPage } from "../../tools/scenarios/parse.mjs";
+import { parseDemo } from "../../tools/devbook-meta/demo.mjs";
 import { signatureOf } from "../../tools/scenarios/signature.mjs";
+import { parseScenarioPage, scenarioPages, syncDemo } from "../032-scenarios-md/legacy-page.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPT = path.join(HERE, "migrate.mjs");
@@ -111,11 +111,18 @@ const run = (root, ...flags) => spawnSync(process.execPath, [SCRIPT, "--root", r
 const read = (root, rel) => readFileSync(path.join(root, rel), "utf8");
 const board = (demoHtml, cases = PROVED) => ({ [PAGE_PATH]: PAGE, [REQUIREMENTS_PATH]: requirements(cases), [DEMO_PATH]: demoHtml });
 
-/** What devbook-meta's checker says about the linked walkthroughs in `root`. */
+/**
+ * What the checker of contract 31 said about the linked walkthroughs in `root`, read
+ * through the frozen page code: every linked walkthrough resolves, and none is stale or
+ * drifted. The checker of 32 reads journeys in scenarios files, a shape this repository
+ * reaches only after 032.
+ */
 async function checker(root) {
-    const page = parseScenarioPage(PAGE, PAGE_PATH);
-    const register = [{ path: PAGE_PATH, stem: page.stem, parts: page.parts.map((p) => ({ anchor: p.anchor })) }];
-    return linkedWalkthroughs(root, [".devbook/domain"], register);
+    const html = read(root, DEMO_PATH);
+    const synced = syncDemo(html, DEMO_PATH, await scenarioPages(root));
+    const problems = [...synced.problems, ...synced.changes.map((change) => `${change.id} ${change.kind}`)];
+    const links = [...parseDemo(html).model.linked.keys()].map((id) => ({ id }));
+    return { problems, links };
 }
 
 test("a free walkthrough of its part's step count is linked, its text copied, and nothing else moves", () =>
