@@ -56,7 +56,7 @@ already-edited copy has no mechanism by design; the seed is meant to be edited.
 **A workflow edited on the way in owes no migration for a step it gains.** `devbook-derived:init`
 writes the nightly's `cron` and refresh branch and the drift workflow's branch and path filters
 into its two workflows as they land. So each is customized from its first run, and `update`
-leaves it alone. When a release changes their steps — `1.27.0` added the C4 render — `update`
+leaves it alone. When a release changes their steps — `1.28.0` added the C4 render — `update`
 reports the shipped diff for a person to merge, and no migration is owed. A script cannot tell
 the install's edit from a person's later one in a CI file the repository owns. A wrong insertion
 breaks the pipeline; a missing step only leaves an output unwritten. The render step adds output
@@ -185,7 +185,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change | Why |
 | --- | --- | --- |
-| 2026-10-20 | A workflow `devbook-derived:init` edits on the way in owes no migration for a step a release adds, and `AGENTS.md` and the plugin's README say so. The C4 render step `1.27.0` added to both workflows ships that way; a change that leaves a stale copy failing still owes one. | `update` reports the shipped diff. |
+| 2026-10-20 | A workflow `devbook-derived:init` edits on the way in owes no migration for a step a release adds, and `AGENTS.md` and the plugin's README say so. The C4 render step `1.28.0` added to both workflows ships that way; a change that leaves a stale copy failing still owes one. | `update` reports the shipped diff. |
 | 2026-10-13 | A newly materialized path ships its migration, per `AGENTS.md` under *When a change ships a migration*: the 2026-10-08 reasoning that `update` creates a new path and so owes none is withdrawn. `030-scenario-tools` materializes `.devbook/_tools/scenarios/` where `domain` is adopted and the folder is missing or still an older release's copy, and reports a customized copy. | Without one the ledger never records the path and `doctor` has no `--check` to report it missing. |
 | 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. Shipped without a migration; corrected on 2026-10-13. | — |
 | 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. | It wrote `delivery:phase-validation`, a phase skill retired since. |

@@ -26,7 +26,7 @@ standard, and a class stated by half reports the wrong sentence.
   only when a person makes it through the folder's flow, or a note through whatever review
   skill the repository has.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
-  every step list on a scenario page from every class but `procedure-step`: a step is one
+  every step list in a journey from every class but `procedure-step`: a step is one
   clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read

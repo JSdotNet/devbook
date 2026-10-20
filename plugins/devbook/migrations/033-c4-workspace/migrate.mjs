@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 032-c4-workspace — see MIGRATION.md.
+// 033-c4-workspace — see MIGRATION.md.
 //
 //   node migrate.mjs --check   list what would change; write nothing; exit 1 while work remains
 //   node migrate.mjs           apply; a second run changes nothing
@@ -24,7 +24,7 @@ import { DEBT_SEVERITIES, blockLadder, builtInStatuses } from "../../tools/devbo
 import { C4_KEYWORDS, mermaidKeyword, parseArchifyArchitecture, parseArchifySequence, parseMermaidC4, parseSequence } from "./diagrams.mjs";
 import { INCLUDE_FOLDER, Model, WORKSPACE, readFromFiles, skeleton } from "./workspace.mjs";
 
-const ID = "032-c4-workspace";
+const ID = "033-c4-workspace";
 const STAMP = ".devbook/config.json";
 const ARC42 = ".devbook/arc42/";
 const OLD_FOLDER = ".devbook/arc42/_c4/";

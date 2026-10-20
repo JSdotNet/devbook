@@ -1,14 +1,14 @@
-# 032 — architecture diagrams move into the C4 workspace
+# 033 — architecture diagrams move into the C4 workspace
 
 ```meta
-contractVersion: 32
+contractVersion: 33
 appliesTo: [arc42]
 breaking: no
 ```
 
 ## What
 
-Contract 32 makes `.devbook/arc42/workspace.dsl` the one place an architecture element or view
+Contract 33 makes `.devbook/arc42/workspace.dsl` the one place an architecture element or view
 is defined, and a chapter shows a view by embedding `![…](c4:<view key>)`. This migration moves
 what a repository drew before that into the workspace, in this order:
 
@@ -70,9 +70,9 @@ writes, and a conversion that would add a problem to the workspace writes nothin
 `assets/reconcile-protocol.md`, and adopting it later re-evaluates the migration. A person
 still reads the result: a matched name can be the wrong element.
 
-## Released in 1.27.0
+## Released in 1.28.0
 
-Every plugin is `1.27.0`; contracts 31 and 32 ship in it, and this is the one migration. The
+Every plugin is `1.28.0`; contract 33 ships in it, and this is the one migration. The
 names a consuming repository's plan writes against, exactly as the check reads them:
 
 | Name | Where | What it is |
@@ -89,8 +89,7 @@ names a consuming repository's plan writes against, exactly as the check reads t
 | `.devbook/arc42/_meta/c4/<view key>.svg` | devbook-derived | The committed render of each view, written only by the scheduled refresh; never an embed target |
 | `.devbook/_tools/c4-render/` | devbook-derived | The renderer `init` materializes where arc42/ is adopted |
 
-Contract 31 takes `openspec/changes/` out of the graph: a chapter's `related`, `depends-on`,
-or prose link into it is an error. `devbook-derived` now needs `devbook` `>=1.27.0`, whose
+`devbook-derived` now needs `devbook` `>=1.28.0`, whose
 `c4.mjs` its renderer reads. Its nightly and drift workflows gained the render step, and both
 are customized on every install, so `devbook-derived:update` reports the shipped diff for a
 person to merge rather than replacing them.

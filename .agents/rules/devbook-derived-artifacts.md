@@ -191,10 +191,10 @@ repository actually adopts, plus a repository-wide rollup:
 authored Markdown in the chapters, so deleting this file loses nothing. Write a
 note with `annotations.mjs`, never into this index.
 
-`scenarios.json` is the one register of scenario pages: a reader lists the journeys, their
-parts, their screenshot labels, their setup fields, and the requirements each part proves
-from it instead of parsing the pages. Like `naming.json` it carries its own `schemaVersion`,
-and a folder with no scenario page writes an empty list.
+`scenarios.json` is the one register of journeys: a reader lists them by address, with their
+parts, their screenshot labels, their setup fields, and the requirements each part proves,
+from it instead of parsing every `scenarios.md`. Like `naming.json` it carries its own
+`schemaVersion`, and a folder with no journey writes an empty list.
 
 `_meta/c4/` holds the rendered C4 views, one `<view key>.svg` per view with a key, and
 nothing else: the one folder inside a `_meta/`, and the one artifact named for what it

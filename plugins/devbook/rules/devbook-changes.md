@@ -1,6 +1,6 @@
 ---
 name: devbook-changes
-description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records, the delta shape the merge in delta.mjs applies, and how a scenario page and its Proved by pointers change through it.
+description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records, the delta shape the merge in delta.mjs applies, and how a journey and its Proved by pointers change through it.
 ---
 
 # The change folder
@@ -61,19 +61,20 @@ Run `node .devbook/_tools/devbook-meta/delta.mjs --check <name>` after every edi
 resolves each one to its target file and heading, lints the merged result, and then runs the
 corpus-wide scenario rules over the devbook as the whole change would leave it.
 
-## A scenario page
+## A journey
 
-A scenario page is a delta like any `domain/` file, at its path:
-`devbook-delta/domain/<context>/<journey>.md`. A new page is `delta: added` — its `#` title,
-the file-level block with `type: scenario` and the setup fields, the lead, and each part as an
-`ADDED` entry. A page that exists is `delta: modified` under its `#` title: a part is replaced
-whole as a `MODIFIED` entry, never step by step, added under `ADDED`, or dropped under
-`REMOVED`; a setup field changes in the block opening `MODIFIED`. A requirement the page
-proves changes in its `requirements.md` delta, its `#### Scenario:` holding the one line
-`Proved by: <page>.md#<part>` and no steps: behaviour is written once, in the page. The check
-merges every delta of the change before it resolves a pointer, so one may name a page the same
-change adds; a pointer naming no part, a stem another page holds, or a setup field that does
-not resolve is reported against the delta that causes it.
+A journey changes in a delta of its scenarios file, at its path:
+`devbook-delta/domain/<context>/scenarios.md`. A new journey is an `ADDED` entry under the
+file's `#` title — a `delta: added` file when the context has no `scenarios.md` yet — its
+`###` heading with its block carrying `type: scenario` and the setup fields, its lead, and each
+part one level down. A journey that exists is changed under its `##` heading: a part is
+replaced whole as a `MODIFIED` entry, never step by step, added under `ADDED`, or dropped
+under `REMOVED`; a setup field changes in the block opening `MODIFIED`. A requirement the
+journey proves changes in its `requirements.md` delta, its `#### Scenario:` holding the one
+line `Proved by: scenarios.md#<part>` and no steps: behaviour is written once, in the journey.
+The check merges every delta of the change before it resolves a pointer, so one may name a
+journey the same change adds; a pointer naming no part or a setup field that does not resolve
+is reported against the delta that causes it.
 
 ## A demo
 
@@ -95,6 +96,6 @@ why each matters, then the approach. Nothing in it lands in the devbook: a decis
 a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 
 `tasks.md` is `## Step N — title` blocks, in dependency order. Each names the deltas it
-delivers on a `delivers:` line by address — a scenario page by its delta's path, or one part
-of it as `<path>#<part>` — and `owner: me` when a person does it. A prototype
+delivers on a `delivers:` line by address — a journey as `<scenarios file>#<journey>`, or
+one part of it as `<scenarios file>#<part>` — and `owner: me` when a person does it. A prototype
 is no step: it needs no change and no task, and enters a change only as a demo delta.

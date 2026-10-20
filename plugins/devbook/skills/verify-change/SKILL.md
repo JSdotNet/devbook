@@ -13,7 +13,7 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 **Kind.** Decided as `capture-specs` decides it: the chapter's `type`, or the file where the
 folder has none; a `building-block` run checks `workspace.dsl` with its chapters. One kind per
 run, however wide the scope — a sync unit or group excepted, per **The sync unit** in the protocol.
-A `type: scenario` page is no kind: it is evidence for the requirements whose cases point at it, per **A scenario page is evidence, not a kind** in the protocol — which also says when a page is reported `stale` and when a part a case points at makes its requirement `spec-ahead`.
+A journey is no kind: it is evidence for the requirements whose cases point at its parts, per **A journey is evidence, not a kind** in the protocol — which also says when a journey is reported `stale` and when a part a case points at makes its requirement `spec-ahead`.
 
 **Scope.** Any of: one chapter as `<path>#<heading-slug>` or by heading, a sync
 unit or group, one file, a bounded context, or a whole devbook folder. A scope wider

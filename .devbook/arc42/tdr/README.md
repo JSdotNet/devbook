@@ -28,7 +28,7 @@ the owner, which no field holds.
 
 Until the check accepted the ladder, these records held both as a bold line in the body,
 because under `arc42/` a `status` admitted only the folder's own rungs. The
-`032-c4-workspace` migration moved them, and [TDR 10](10-the-c4-rules-run-ahead-of-this-devbook.md)
+`033-c4-workspace` migration moved them, and [TDR 10](10-the-c4-rules-run-ahead-of-this-devbook.md)
 records how the rest of that gap was closed.
 
 ## The set

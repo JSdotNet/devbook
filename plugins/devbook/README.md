@@ -154,21 +154,22 @@ go before it does.
 
 ### Skills: `scenario-write`, `scenario-derive`, `scenario-run`
 
-Three skills over a scenario page — one end-to-end journey written as a `type: scenario` page
-in a bounded context — each one step of the way from the page to its proof:
+Three skills over a journey — one end-to-end walk written as a `##` typed `scenario` in the
+`scenarios.md` of the bounded context whose requirements it proves — each one step of the way
+from the journey to its proof:
 
 | Skill | Does |
 | --- | --- |
-| `scenario-write` | Writes or revises the page beside its chapter — setup fields, English steps, screenshot labels — and the `Proved by:` line in every requirement case it proves |
-| `scenario-derive` | Writes or re-derives the spec from the page: the header and signature, the setup call, one test per part titled as its `##`, one step per step, the `shot` calls. Leaves a step body the page cannot say to the implementer, never edits the setup hook, and builds on `qa:playwright-e2e-authoring` when it is installed |
-| `scenario-run` | Runs one page or all of them, each under its own profile, so the reporter writes `run.json` and the screenshots |
+| `scenario-write` | Writes or revises the journey in its context's `scenarios.md` — setup fields, English steps, screenshot labels — and the `Proved by:` line in every requirement case it proves |
+| `scenario-derive` | Writes or re-derives the spec from the journey: the header and signature, the setup call, one test per part titled as its `###`, one step per step, the `shot` calls. Leaves a step body the journey cannot say to the implementer, never edits the setup hook, and builds on `qa:playwright-e2e-authoring` when it is installed |
+| `scenario-run` | Runs one journey or all of them, each under its own profile, so the reporter writes `run.json` and the screenshots beside the scenarios file |
 
-The page is the source throughout: a finding is fixed by bringing the spec to the page. All
-three work on the [scenario tools](#tooling-scenarios), so they need `domain/` adopted.
+The journey is the source throughout: a finding is fixed by bringing the spec to the journey.
+All three work on the [scenario tools](#tooling-scenarios), so they need `domain/` adopted.
 
-**Trigger keywords:** `write a scenario page`, `add a journey` for `scenario-write`;
-`derive the spec`, `signature mismatch`, `page without spec` for `scenario-derive`;
-`run the scenario pages`, `refresh the scenario screenshots` for `scenario-run`
+**Trigger keywords:** `write a journey`, `add a scenario` for `scenario-write`;
+`derive the spec`, `signature mismatch`, `journey without spec` for `scenario-derive`;
+`run the journeys`, `refresh the scenario screenshots` for `scenario-run`
 
 ### No flows
 
@@ -438,11 +439,11 @@ for technologies that do not appear in package manifests.
 ### Tooling: `scenarios`
 
 ```bash
-node .devbook/_tools/scenarios/check.mjs          # coverage: every scenario page against its spec
-node .devbook/_tools/scenarios/signature.mjs <page.md>   # the signature a spec's header takes
+node .devbook/_tools/scenarios/check.mjs          # coverage: every journey against its spec
+node .devbook/_tools/scenarios/signature.mjs <scenarios.md>#<journey>   # the signature a spec's header takes
 ```
 
-The scenario tools connect a repository's e2e suite to its scenario pages: the parser, the
+The scenario tools connect a repository's e2e suite to its journeys: the parser, the
 signature and its shared vector, the setup runner and `shot` helper a derived spec imports,
 the reporter that writes `run.json` and the screenshots, and the coverage check. Materialized
 only where `domain/` is adopted. The contract and the wiring are
@@ -507,7 +508,9 @@ the tenth is `030-scenario-tools`, which materializes `.devbook/_tools/scenarios
 added the path without one; the eleventh is `030-linked-walkthroughs`, which rewrites a demo's
 free walkthrough under a `Proved by:` case's slug to a linked one, `step` by position and text
 copied by `demo-sync.mjs`, and lists one whose step count differs from its part's
-`not-applicable`; the twelfth is `032-c4-workspace`, which creates `arc42/workspace.dsl` or
+`not-applicable`; the twelfth is `032-scenarios-md`, which folds each journey page into its
+bounded context's `scenarios.md` and moves every reference, run folder, and spec header with it;
+the thirteenth is `033-c4-workspace`, which creates `arc42/workspace.dsl` or
 moves it from `arc42/_c4/`, turns each Mermaid C4 fence, each sequence whose participants are
 all workspace elements, and each Archify `architecture` or `sequence` spec into elements, a
 view, and the `c4:` embed that replaces the fence, ranks each debt record from its
@@ -637,10 +640,14 @@ added with a safe default, so none of the three owes a migration. `030-scenario-
 `030-linked-walkthroughs` ship later under 30 without moving it: one materializes a path 1.21.0
 added, the other rewrites free walkthroughs to the linked form a free one still validates
 beside, and the ledger, not the number, decides that a repository on 30 runs both. 31 takes the
-change folder out of the graph and moves no chapter shape. 32 reads the C4 workspace and adds
-`c4`, `c4-touches`, `code`, `severity`, and the debt ladder, each with a safe default, and
-`032-c4-workspace` ships under it to move the diagrams a repository drew before the
-workspace into it.
+change folder out of the graph and moves no chapter shape. 32 moves the journey into a file of
+its context: a `##` typed `scenario` in `scenarios.md` or `scenarios.<name>.md`, its `###`
+headings the parts, addressed as `<scenarios file>#<journey>`, its runs beside the file. A
+whole file typed `scenario` is an error from then on, so it ships `032-scenarios-md`, which
+folds each page into `scenarios.md` and moves every reference, run folder, and spec header
+with it. 33 reads the C4 workspace and adds `c4`, `c4-touches`, `code`, `severity`, and the
+debt ladder, each with a safe default, and `033-c4-workspace` ships under it to move the
+diagrams a repository drew before the workspace into it.
 
 ## Folder structure
 
@@ -671,7 +678,7 @@ After running `devbook:init`, a repository that adopted everything has:
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
     ├── devbook-tech/                # deterministic package inventory scripts
-    └── scenarios/                   # scenario page parser, signature, runner, reporter, coverage check
+    └── scenarios/                   # journey parser, signature, runner, reporter, coverage check
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .github/
 └── workflows/devbook-meta.yml       # the CI check

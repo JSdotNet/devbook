@@ -36,14 +36,14 @@ new work — it reads what the earlier phases recorded and decides.
    | The build or a suite is red | `phase-build-test` |
    | A Verify scenario failed, or required tooling was missing | `phase-verify` |
    | An acceptance criterion or seam in scope has no passing test, or Spec Check reports it `spec-ahead` or `conflict` | `phase-scope`, `phase-spec-check` |
-   | A scenario page Scope listed has a failed part, or Spec Check reports its run `stale` | `phase-verify`, `phase-spec-check` |
+   | A journey Scope listed has a failed part, or Spec Check reports its run `stale` | `phase-verify`, `phase-spec-check` |
    | `flow-spec`: the devbook check fails, or a chapter in scope lacks its `meta` block | `phase-check-review` |
 
    A phase that ended `skipped` for a recorded reason is not an open item. A phase that ended
    `blocked` is.
 3. **Set aside what needs a person.** `code-ahead` and `unresolved` Spec Check rows never send
    the run back — the chapter is a person's call, and Spec Check may already have brought it
-   level. Carry them to the gate as questions, with every `stale` row for a page Verify recorded
+   level. Carry them to the gate as questions, with every `stale` row for a journey Verify recorded
    as not run at its depth — startup-only, or `skipped` with nothing to run — since another
    round cannot run it either.
 4. **Decide.** The round count is persisted as `readyRounds` in the run's `runContext` with

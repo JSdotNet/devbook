@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.27.0",
-      "contractVersion": 32,
+      "pluginVersion": "1.28.0",
+      "contractVersion": 33,
       "adopted": [
         "arc42",
         "tech",
@@ -279,7 +279,11 @@
           "result": "not-applicable"
         },
         {
-          "id": "032-c4-workspace",
+          "id": "032-scenarios-md",
+          "result": "not-applicable"
+        },
+        {
+          "id": "033-c4-workspace",
           "applied": "2026-10-20"
         }
       ]

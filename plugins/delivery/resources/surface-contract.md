@@ -151,11 +151,12 @@ that surface's own `runId`:
   as **unverified**; under `policy["openspec.scenarios"]: "linked"` it also marks the row as
   what refuses acceptance (`engine-contract.md`, **Policy**). A surface that ignores the key
   stays conformant.
-- **For Verify, pass the scenario pages it ran as `evidence`**: one
-  `{ stem, part, outcome, runAt }` per part, read from `<scenario folder>/<stem>/run.json` —
-  the page's stem, the part's `anchor`, its `outcome` (`passed`, `failed`, or `not-run`), and
-  the file's `ranAt`.
-  Optional and additive: the capability stays `@1`, a run that ran no page sends none, and a
+- **For Verify, pass the journeys it ran as `evidence`**: one
+  `{ journey, stem, part, outcome, runAt }` per part, read from the journey's `run.json` —
+  `journey` its address, `<scenarios file>#<journey>`; `stem` its anchor, the name a reader of
+  `@1` keys a journey by; the part's `anchor`, its `outcome` (`passed`, `failed`, or
+  `not-run`), and the file's `ranAt`.
+  Optional and additive: the capability stays `@1`, a run that ran no journey sends none, and a
   surface that ignores the key stays conformant and loses nothing `scenarios` carries.
 - **Report the quality facts as `quality`**, per **Quality Facts** below: on every closing
   `update_stage` of the Review stage, and on `finish_run` as the run's totals.
@@ -210,7 +211,7 @@ run is priced.
   counted.
 - **`escapedDefects`** — a defect found later than review, one item per distinct defect: a
   failing build target or test from Build & Test; a failed scenario from Verify, a failed
-  scenario-page part once and never again as its `scenarios` row; a ready-check item neither
+  journey part once and never again as its `scenarios` row; a ready-check item neither
   of those recorded, such as a Spec Check `spec-ahead` or `conflict` or a criterion in scope
   with no passing test; and a Personal Validation `revise`, whose note names what the person
   found. A `decline` is a call on the change, not a defect, and an open review blocker is
@@ -235,7 +236,7 @@ pass a stage call reports, and they come from the same counts.
 | --- | --- | --- |
 | `round` | Implement, Review | The implement ⇄ review round of the slice in progress, counting from 1; a fix round is the next one |
 | `blockers` | Review | The `rule` and `bug` blockers this round's `review.md` section lists `open`; `0` for a clean round |
-| `defectsFound` | Verify | The distinct defects this pass found that review had passed — its failed scenarios and failed scenario-page parts, each once; `0` when all passed |
+| `defectsFound` | Verify | The distinct defects this pass found that review had passed — its failed scenarios and failed journey parts, each once; `0` when all passed |
 
 - **Send them on the closing call**; `round` also on `in_progress`. A stage that did not run
   the work sends none, and a field is never `null` in place of omitted.

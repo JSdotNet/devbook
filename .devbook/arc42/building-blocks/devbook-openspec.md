@@ -61,10 +61,10 @@ under *Chapters touched* and records its verdict under *Why*, `solution.md` name
 in a file-level `demo` block, and a step names it on `delivers:`, per
 [the demos decision](../adr/demos.md). `spec` hands a run a demo delta by path, never inlined.
 
-The instruction covers a scenario page too: a delta under `devbook-delta/domain/<context>/`,
-a new page `delta: added` with its parts as `ADDED` entries, a part replaced whole and never
-step by step, and a requirement it proves holding only `Proved by: <page>.md#<part>` in its
-`#### Scenario:`, so behaviour is written once, in the page. `delta.mjs --check` resolves those
+The instruction covers a journey too: an `ADDED` entry in a delta of its context's
+`scenarios.md`, a part replaced whole and never step by step, and a requirement it proves
+holding only `Proved by: scenarios.md#<part>` in its `#### Scenario:`, so behaviour is written
+once, in the journey. `delta.mjs --check` resolves those
 pointers with every delta of the change merged, per [devbook](devbook.md#change), so one may
 name a page the same change adds. A step's `delivers:` may name the page, or one part as
 `<path>#<part>`.
@@ -109,7 +109,7 @@ the close is `done` once the change is archived. Nothing is ever `in review`, wh
 lets a run accept and archive before its pull request opens. `update_item` only ticks. Its
 items are the proposal, each step, and the close, and `read_item` reports each one's `change`
 and `part`. For a step it
-also lists the scenario pages `delivers:` names, each with its run as `verify-change` reports
+also lists the journeys `delivers:` names, each with its run as `verify-change` reports
 it — `current`, `stale`, or `missing` — and `status` gives each a row with `scenario-run` as
 the action when the run is not current, which stands before acceptance.
 

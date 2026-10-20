@@ -1,4 +1,4 @@
-// diagrams.mjs — 032-c4-workspace's readers: a Mermaid fence or an Archify spec, read
+// diagrams.mjs — 033-c4-workspace's readers: a Mermaid fence or an Archify spec, read
 // into one neutral diagram the migration resolves against the workspace.
 //
 // A diagram is `{ keyword, title, nodes, rels, steps, participants, problems }`:

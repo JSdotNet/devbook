@@ -1,4 +1,4 @@
-// workspace.mjs — 032-c4-workspace's model of the workspace it writes into.
+// workspace.mjs — 033-c4-workspace's model of the workspace it writes into.
 //
 // The workspace is read with the plugin's own reader, `tools/devbook-meta/c4.mjs`, and
 // never rewritten whole: a person's file keeps every byte this migration does not add.

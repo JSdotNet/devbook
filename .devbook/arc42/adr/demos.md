@@ -44,7 +44,7 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 
 Links run from Markdown to HTML. A chapter points at a screen, a state, or a
 walkthrough through an optional `demo` field in its `meta` block, and the demo names no page.
-The one exception is a linked walkthrough, whose `part` names the scenario page part it
+The one exception is a linked walkthrough, whose `part` names the journey part it
 plays and embeds that part's step text, so a requirement the part proves derives its
 walkthroughs instead of naming them.
 That keeps every link where the checker and the indexes read, because they read Markdown.

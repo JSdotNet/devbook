@@ -1,4 +1,4 @@
-// c4-graph.test.mjs — the C4 model in the graph and the check, contract 32.
+// c4-graph.test.mjs — the C4 model in the graph and the check, contract 33.
 //
 // The per-block rules are validateDocument's: `c4` and `c4-touches` on
 // arc42/ and domain/ blocks, `code` on a building block's top-level block,
@@ -28,7 +28,7 @@ const errors = (issues) => issues.filter((i) => i.severity === "error");
 const warnings = (issues) => issues.filter((i) => i.severity === "warning");
 const has = (issues, needle) => issues.some((i) => i.message.includes(needle));
 
-check(CONTRACT_VERSION >= 32, "the contract is at least 32");
+check(CONTRACT_VERSION >= 33, "the contract is at least 33");
 
 // ── metadata: the four fields ──────────────────────────────────────────────
 
@@ -131,7 +131,7 @@ check(resolveStatus("arc42", {}, ".devbook/arc42/05-building-block-view.md", "fi
     check(has(warnings(restingIssues), "lists `identified`, the resting value of a debt record") && errors(restingIssues).length === 0, "a tdr/ rule listing identified is a warning, as it was a rung under 31", dump(restingIssues));
 }
 
-// ── what validated under contract 31 still does ────────────────────────────
+// ── what validated under contract 32 still does ────────────────────────────
 
 {
     const { ladder } = compileStatusLadder({ folders: { arc42: { rules: [{ files: ["**/*.md"], statuses: ["draft", "superseded"] }] } } });

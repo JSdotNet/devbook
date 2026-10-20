@@ -102,7 +102,7 @@ rename wave for a coupling nothing has broken yet. This record is what was writt
 ```meta
 ```
 
-`delivery`, in `flow-spec`, in the four `flow-code` phases that carry scenario pages —
+`delivery`, in `flow-spec`, in the four `flow-code` phases that carry journeys —
 `phase-scope`, `phase-implement`, `phase-verify`, `phase-spec-check` — and in
 `phase-spec-check`'s default binding of `verify-change`. `devbook`, which cannot move a payload
 path or rename a folder without a coordinated `delivery` release it has no way to require.

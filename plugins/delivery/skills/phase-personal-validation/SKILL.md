@@ -11,7 +11,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 - Starts the app, publishes the review links and a short what-to-check list
 - Lists every demo the change implements beside the app, opened where the chapters point
-- Lists the screenshots of every scenario page Verify ran beside the review links
+- Lists the screenshots of every journey Verify ran beside the review links
 - Presents the review, QA and spec-check results
 - Commits the change set when `commit.at` is `gate`
 - Closes on one picture from Verify and the running app's URLs, then waits
@@ -65,10 +65,10 @@ A link to a process that is not listening is worse than no link.
   name, walkthroughs included, each a `file:` URL ending in `#<id>` — the demo opens at that
   screen, state, or walkthrough. It opens from disk, so it needs no health check; report an
   address whose file is missing instead of publishing it.
-- **The scenario screenshots beside the links.** For each page Verify ran, under the page's
-  title and path, list each part with its outcome and the PNGs its `run.json` `shots` name for
+- **The scenario screenshots beside the links.** For each journey Verify ran, under the
+  journey's title and address, list each part with its outcome and the PNGs its `run.json` `shots` name for
   that part — a failed part adds its `failureShot` — each beside the app link of the screen it
-  shows, so the person can hold the run against the live page. Name a page Verify recorded as
+  shows, so the person can hold the run against the live page. Name a journey Verify recorded as
   not run, with its reason, instead of reusing an older run's images. They are files on disk,
   so they need no health check: link each as a `file:` URL, report one whose file is missing
   instead of linking it, and display them as **Show image evidence** in Step 4 says.

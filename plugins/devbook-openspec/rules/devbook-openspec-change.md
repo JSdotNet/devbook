@@ -19,11 +19,11 @@ rule is what they do differently from OpenSpec's defaults.
   delta after a gate lapses that gate, so decide before you change what was decided.
 - **A delta is checked by devbook.** `openspec validate` accepts zero deltas for this schema
   and reads nothing in `devbook-delta/`. After every edit to a delta, run
-  `node .devbook/_tools/devbook-meta/delta.mjs --check <name>`; it checks scenario pages and
+  `node .devbook/_tools/devbook-meta/delta.mjs --check <name>`; it checks journeys and
   their `Proved by:` pointers across the corpus with every delta merged.
-- **A scenario page is a delta.** A new page goes under `devbook-delta/domain/<context>/` as
-  `delta: added`, its parts as `ADDED` entries; on a page that exists, replace a part whole,
-  never step by step. A requirement it proves holds `Proved by: <page>.md#<part>` in its
+- **A journey is a delta of its scenarios file.** A new journey is an `ADDED` entry in
+  `devbook-delta/domain/<context>/scenarios.md`; in one that exists, replace a part whole,
+  never step by step. A requirement it proves holds `Proved by: scenarios.md#<part>` in its
   `#### Scenario:` and no steps of its own — the shape is `devbook-changes.md`'s.
 - **A demo is copied in, never written.** A change carries a demo as the standalone prototype
   `/prototype` wrote, copied whole under `devbook-delta/` at the path where it lands and

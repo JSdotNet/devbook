@@ -152,6 +152,21 @@ menu that lists pages by title showed the context three times with nothing to te
 `018-behaviour-titles` retitles them. Both came from a consumer's pilot, which ran them first
 as local deviations.
 
+**A journey is a chapter of `scenarios.md`, not a page of its own.** Contract 30 wrote each
+end-to-end journey as a file typed `scenario`, named after it, beside the chapter it showed. A
+journey proves requirements, often of several features at once, so it belongs with them: since
+contract 32 it is a `##` chapter typed `scenario` in its bounded context's `scenarios.md`, or a
+split `scenarios.<name>.md` holding one subject's journeys, its `###` headings the parts. As a
+chapter it is addressed like any other, `<scenarios file>#<journey>`, so any number of features
+and requirements point at it through `related`, and `Proved by:` names a part from the
+requirement's folder. Every journey and part anchor is unique in its file, which retires the
+stem register: the address is the identity. A journey sits in the context holding most of the
+requirements it proves, and its runs sit beside the file in `scenarios/<journey>/`, so the walk
+and its evidence read together; profiles and data sets stay in `.devbook/scenarios/`, because
+every context shares them. `032-scenarios-md` folds the pages of 31 into `scenarios.md` and
+moves every reference, run, and spec header with them, and the signature's canonical text did
+not move, so no spec needs re-deriving.
+
 **A title names what the page holds.** Contract 18 fixed the menu for two files and left the
 cause in place for every other: `domain.md`, `actors.md`, each split, each flow still carried
 the context name, so a context of seventy files listed the same word seventy times, and a
@@ -377,7 +392,11 @@ a kind.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
-- A scenario page's `flags` accepting a boolean `setting` chapter: the setup hook sets a flag
+- A journey per file kept beside `requirements.md` — `requirements.<name>.scenarios.md` — or
+  in a `scenarios/` subfolder: the first ties a journey to one feature's requirements when it
+  walks through several, and the second is a layout rung no other kind has. One base file with
+  splits is the shape every other behaviour file already has.
+- A journey's `flags` accepting a boolean `setting` chapter: the setup hook sets a flag
   and a setting through different methods, and a `setting`'s `default` is free-form, so no
   check could tell a boolean one apart without splitting settings by the shape of their value.
 
@@ -388,6 +407,8 @@ a kind.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-20 | A journey is a `##` chapter typed `scenario` in its bounded context's `scenarios.md` or a split `scenarios.<name>.md`, its `###` parts owing no block; a whole file typed `scenario` is an error. Addressed `<scenarios file>#<journey>`, so features and requirements point at it through `related`; every journey and part anchor is unique in its file, retiring the stem register; `Proved by:` names `<scenarios file>#<part>` from the requirement's folder, `scenario:` images name the file from `.devbook/domain/`, and runs sit beside the file. Contract 32, `032-scenarios-md`; the signature's canonical text is unchanged. | — |
+| 2026-10-19 | A scenario page lives in the bounded context of the requirements it proves, no longer beside the chapter it demonstrates: a page is evidence for requirements, so it belongs with them, and a journey across contexts goes to the context holding most of the requirements whose cases point at its parts, any of them on a tie. The check warns on a page placed elsewhere. No contract, no migration: nothing narrows, and a misplaced page moves by hand on the warning, its stem and run folder unchanged. | A warning, not an error, because a page with no `Proved by:` yet has no home to compute. |
 | 2026-10-19 | The change folder is checked but no longer graphed: no proposal or delta is a node, so a delta may name a chapter only its own change adds. A devbook chapter's `related`, `depends-on`, or prose link into `openspec/changes/` is an error. Contract 31, no migration: no chapter shape moves. | A change points at the devbook, never the reverse. |
 | 2026-10-14 | An inline Given/When/Then case under a requirement, in a bounded context that already has a scenario page, is listed at `info` as a candidate to move into a part — the report the scenario page's plan named and its first release left out. Not a warning. No contract, no migration: nothing narrows and no shape changes. | Inline stays valid for a requirement with no journey yet, and a corpus already carrying hundreds of warnings would only grow. |
 | 2026-10-12 | A scenario page's `flags` stays limited to `feature-flag` chapters. A switch a product models as a `setting` goes under `settings` as `<chapter>=true` or `=false`, and the check names that entry when `flags` points at a `setting`. No contract change: only a message and the rule's text move. | — |

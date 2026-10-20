@@ -562,8 +562,9 @@ Payload:
 - `stage`, `status`: which phase, and where it now stands
 - `output`, `links`: what it produced, and where the artifacts are
 - `qaScenarios`: scenarios with their status and evidence paths, where `verify` ran
-- `evidence`: optional; one `{ stem, part, outcome, runAt }` per part of each scenario page
-  `verify` ran, `outcome` being `passed`, `failed`, or `not-run`
+- `evidence`: optional; one `{ journey, stem, part, outcome, runAt }` per part of each journey
+  `verify` ran — `journey` its address, `stem` its anchor for a reader of the first shape —
+  `outcome` being `passed`, `failed`, or `not-run`
 - `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
   entry per sub-agent call — beside what the run resolved for it; and, optionally, what the
   pass found: `round` on Implement and Review, `blockers` on Review, `defectsFound` on Verify
@@ -581,7 +582,7 @@ Published language rules:
 - **Evidence is a path into the worktree, and anything resolving outside it is refused.** A
   report cites the screenshot; the screenshot stays where it was produced.
 - **Scenario evidence is additive.** `evidence` joins the lifecycle group without raising it
-  past `@1`: a run that ran no scenario page sends none, and a surface that does not read it
+  past `@1`: a run that ran no journey sends none, and a surface that does not read it
   keeps everything else the stage carries.
 - **Quality is reported, never derived.** Only the phase that reviews or verifies the work knows
   how many rounds it took, what review blocked, and what got past it, so the engine sends
@@ -832,12 +833,13 @@ sequenceDiagram
 - **Areas are the skill's call.** `phase-implement` runs frontend and backend in order when
   one side consumes the other's new contracts or they share a file, and in parallel only when
   neither holds.
-- **A referenced scenario page travels the whole run.** `scope` lists every
-  [scenario page](devbook.md#scenario-tools) the item references, directly or through a
-  requirement whose case points at one of its parts. `implement` derives each page's spec,
-  `verify` runs exactly those pages, `spec-check` reports a page whose run no longer matches it
-  as `stale` and a referenced part with no spec as `spec-ahead`, and Personal Validation shows
-  their screenshots beside the app. The page is written before the run and never during it.
+- **A referenced journey travels the whole run.** `scope` lists every
+  [journey](devbook.md#scenario-tools) the item references, directly or through a
+  requirement whose case points at one of its parts. `implement` derives each journey's spec,
+  `verify` runs exactly those journeys, `spec-check` reports a journey whose run no longer
+  matches it as `stale` and a referenced part with no spec as `spec-ahead`, and Personal
+  Validation shows their screenshots beside the app. The journey is written before the run and
+  never during it.
 - **Behaviour is held still on purpose in a refactor.** `scope` lists every move and the
   reference each one forces before a file is touched, so the diff stays reviewable as a move.
 - **A defect's fix has a test in front of it.** The failing test that reproduces it is

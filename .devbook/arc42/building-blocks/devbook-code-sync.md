@@ -26,7 +26,7 @@ related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 
 Three skills, each over the seven kinds — aggregate, domain service, feature, setting, actor,
 building block, and design component — plus the click demo a page carries, read as the `demo`
-kind inside its page's unit, and one CLI. A scenario page is not a kind. It is evidence for the
+kind inside its page's unit, and one CLI. A journey is not a kind. It is evidence for the
 requirements whose cases point at its parts: its derived spec and its last run prove them the
 way an `e2e` test does, and it gets no verdict row of its own.
 
@@ -124,11 +124,11 @@ its type calls for: `unit` for an invariant, `e2e` or `integration` for a requir
 reads them as files and runs none of them, nor the application — a requirement proven only
 end to end would otherwise go unchecked, and running the product belongs to `capture-specs`.
 
-A requirement whose case points at a part of a scenario page takes the page's spec and last run
-as its end-to-end evidence. A run whose signature no longer matches the page's is no evidence
-and is listed as `stale` after the report; a part a case points at with no spec makes the
-requirement `spec-ahead`. Delivery's `phase-spec-check` reports both the same way, for the pages
-a run's scope listed.
+A requirement whose case points at a part of a journey takes the journey's spec and last run
+as its end-to-end evidence. A run whose signature no longer matches the journey's is no
+evidence and is listed as `stale` after the report; a part a case points at with no spec makes
+the requirement `spec-ahead`. Delivery's `phase-spec-check` reports both the same way, for the
+journeys a run's scope listed.
 
 Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
 still one kind per run outside a sync group, and still one table for all of it. Reading is cheap when nothing is

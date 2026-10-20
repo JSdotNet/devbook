@@ -37,7 +37,7 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 | Skill | What it does |
 |---|---|
 | `init` | Materializes the table above and stamps `components.derived` in `.devbook/config.json`. Refused where that stamp exists. Payload-only: no contract version and no migration ledger, per devbook's `assets/reconcile-protocol.md` |
-| `update` | Replaces every materialized file that still hashes to a release this plugin shipped, reports the customized ones, and re-stamps. Refused where no stamp exists. Idempotent. Both workflows are edited on the way in, so a release that adds a step to them — `1.27.0`'s C4 render — ships no migration: `update` reports the shipped diff for a person to merge, per this repository's `.devbook/arc42/adr/install.md` |
+| `update` | Replaces every materialized file that still hashes to a release this plugin shipped, reports the customized ones, and re-stamps. Refused where no stamp exists. Idempotent. Both workflows are edited on the way in, so a release that adds a step to them — `1.28.0`'s C4 render — ships no migration: `update` reports the shipped diff for a person to merge, per this repository's `.devbook/arc42/adr/install.md` |
 | `refresh` | Rewrites the committed indexes from this branch's chapters and says which files moved — the one session-time way to write a derived file, and only when a person asks for this branch to be current, never inside a flow or beside a chapter edit |
 
 ## The line

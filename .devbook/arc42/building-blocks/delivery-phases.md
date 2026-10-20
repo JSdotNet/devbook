@@ -57,12 +57,12 @@ to `flow-spec`. It implements nothing and writes no chapter. It reads chapters f
 the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
 a folder whole or an annotation fence.
 
-It also lists the [scenario pages](devbook.md#scenario-tools) the item references, the list
-`implement`, `verify`, and `spec-check` work from. A page comes in directly, when the request,
-its origin, or a selected chapter names the page, one of its parts, or one of its screenshots,
-or through a selected requirement whose case's `Proved by:` line names a part. It reads them
-from the scenario register in the same printed corpus. A page is listed whole, with the parts
-the item references marked, because a page only ever runs whole.
+It also lists the [journeys](devbook.md#scenario-tools) the item references, the list
+`implement`, `verify`, and `spec-check` work from. A journey comes in directly, when the
+request, its origin, or a selected chapter names the journey, one of its parts, or one of its
+screenshots, or through a selected requirement whose case's `Proved by:` line names a part. It
+reads them from the journey register in the same printed corpus. A journey is listed whole,
+with the parts the item references marked, because a journey only ever runs whole.
 
 ### phase-plan
 
@@ -91,10 +91,10 @@ test-first rules ported from Matt Pocock's `/tdd` are in `tdd-rules.md`. The spe
 fixed input: a spec problem returns `revise: phase-scope` rather than a redesign inline. It never
 runs the full suite, commits, or reviews its own work.
 
-For each scenario page `scope` listed, it invokes devbook's `scenario-derive` in the first slice
+For each journey `scope` listed, it invokes devbook's `scenario-derive` in the first slice
 the journey crosses, before that slice's code, and fills the step bodies the change builds. It
-never edits the page, the setup hook, or the profiles: the page is the source, and a page that
-cannot be derived is a spec problem returned to `scope`.
+never edits the journey, the setup hook, or the profiles: the journey is the source, and a
+journey that cannot be derived is a spec problem returned to `scope`.
 
 ### phase-review
 
@@ -135,13 +135,13 @@ nothing to start.
 verification that did not happen. This is the one guarantee that makes the other depths usable
 at all.
 
-**Run exactly the referenced scenario pages.** At the full and the targeted depth, the pages
+**Run exactly the referenced journeys.** At the full and the targeted depth, the journeys
 `scope` listed run through devbook's `scenario-run`, all of them in one run against the
-instance this phase started, and no other page. A page always runs whole, because a filtered
-run writes no `run.json`. Each part's outcome is reported as the stage's
+instance this phase started, and no other journey. A journey always runs whole, because a
+filtered run writes no `run.json`. Each part's outcome is reported as the stage's
 [scenario evidence](delivery.md#stage-updated), and the run file and its screenshots stay in the
-change set. A page that is not run, for its depth or because its spec no longer matches, is
-recorded with the reason rather than run some other way.
+change set. A journey that is not run, for its depth or because its spec no longer matches,
+is recorded with the reason rather than run some other way.
 
 **Capture evidence without a QA plugin.** The evidence rules are the engine's own contract, so
 they hold with no QA plugin, no agent bound on `verify`, and no capture skill. Capture resolves
@@ -161,13 +161,13 @@ sets `approved`, and runs the devbook check after it, and its edits are part of 
 approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
 `capture-specs` does, and `verify-change`, the default binding, does not.
 
-Every scenario page `scope` listed is checked by the phase itself, whichever skill is bound, and
-never edited. A page whose signature no longer matches the signature its run recorded, or that
-has no run, is reported `stale` in a table of its own after the verdicts, because it qualifies
+Every journey `scope` listed is checked by the phase itself, whichever skill is bound, and
+never edited. A journey whose signature no longer matches the signature its run recorded, or
+that has no run, is reported `stale` in a table of its own after the verdicts, because it qualifies
 the run and is not a sixth verdict. A referenced part that nothing proves — no spec implements
 it, or its run left it `not-run` behind a held step — makes the requirement pointing at it
 `spec-ahead`. The ready check reads both as not ready, except a
-`stale` page that `verify` could not run at its depth, which goes to the gate as a question.
+`stale` journey that `verify` could not run at its depth, which goes to the gate as a question.
 
 ### phase-ready
 
@@ -194,7 +194,7 @@ table, and any open items. It runs again on every revise round, because a revise
 a new thing to look at. When the change implements a click demo, the demo is published beside
 the app at the addresses its chapters name, and the what-to-check list compares the two screen
 by screen, per [the demos decision](../adr/demos.md): the demo is the agreed reference the
-built work is accepted against. The screenshots of every scenario page `verify` ran are listed
+built work is accepted against. The screenshots of every journey `verify` ran are listed
 the same way, part by part with each part's outcome, beside the app link of the screen each one
 shows. The handback ends on one picture from `verify` and the running application's URLs,
 written after everything else in the reply, so the last thing in view is what to open.

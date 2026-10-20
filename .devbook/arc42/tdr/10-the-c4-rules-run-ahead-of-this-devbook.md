@@ -30,7 +30,7 @@ still breaks it in two places:
 
 The rest landed. `workspace.dsl` models the marketplace as the system and each plugin as a
 container, chapters 3, 5, and 6 and every building block embed its views, and each record
-names the elements it is about in `c4`. The `032-c4-workspace` migration moved every debt
+names the elements it is about in `c4`. The `033-c4-workspace` migration moved every debt
 record's severity and remediation state into its `meta` block, as the
 [index](README.md#severity-and-state-live-in-meta) explains.
 

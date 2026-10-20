@@ -1,4 +1,4 @@
-// 032-c4-workspace against a fixture repository holding every source form it meets: a
+// 033-c4-workspace against a fixture repository holding every source form it meets: a
 // workspace under `_c4/` with an include; Mermaid C4Context, C4Container, C4Component,
 // C4Dynamic and C4Deployment fences; a sequence whose participants match, one whose do
 // not, and one an Archify sequence spec re-draws; an Archify architecture spec over a
@@ -7,7 +7,7 @@
 // writes nothing, a second run changes nothing, the result passes the devbook check, a
 // repository with no workspace gets one, and one without `arc42/` is not-applicable.
 //
-//   node --test plugins/devbook/migrations/032-c4-workspace/migrate.test.mjs
+//   node --test plugins/devbook/migrations/033-c4-workspace/migrate.test.mjs
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -157,7 +157,7 @@ const LIFECYCLE = { schema_version: 1, diagram_type: "lifecycle", meta: { title:
 const bodyOf = (fence) => fence.split("\n").slice(1, -1).join("\n");
 
 function fixture({ workspace = true } = {}) {
-    const root = mkdtempSync(path.join(tmpdir(), "devbook-032-"));
+    const root = mkdtempSync(path.join(tmpdir(), "devbook-033-"));
     const write = (rel, text) => {
         mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
         writeFileSync(path.join(root, rel), typeof text === "string" ? text : `${JSON.stringify(text, null, 2)}\n`);
@@ -386,7 +386,7 @@ test("what it will not guess: an unnamed twin, a stray artifact path, a sequence
 });
 
 test("a repository without arc42/ is not-applicable", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "devbook-032-"));
+    const root = mkdtempSync(path.join(tmpdir(), "devbook-033-"));
     try {
         mkdirSync(path.join(root, ".devbook"));
         writeFileSync(path.join(root, ".devbook/config.json"), JSON.stringify({ components: { devbook: { adopted: ["domain"] } } }));

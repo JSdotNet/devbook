@@ -24,7 +24,7 @@ folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file unde
 `demo`, which capture reports and never writes — `/prototype` revises a demo. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape
 and say so. Any other chapter is out of scope: say which flow owns it.
-A `type: scenario` page is no kind: it is evidence for the requirements whose cases point at it, per **A scenario page is evidence, not a kind** in the protocol.
+A journey is no kind: it is evidence for the requirements whose cases point at its parts, per **A journey is evidence, not a kind** in the protocol.
 
 **Mode.** Plan, the default, writes nothing. Write, when the caller asks for it — a
 `phase-spec-check` binding does — carries the plan in per **Carrying a plan in** in the

@@ -80,16 +80,18 @@ own register is empty until a `domain/` is adopted. The register carries its own
 repository and pins it; a contract bump that leaves the register alone must not break that
 reader. Adding a derived file changes no chapter schema, so no migration ships with it.
 
-**The scenario register is devbook's too, and carries what a page's parts cannot.** `build.mjs`
-writes a fifth document per scope, `_meta/scenarios.json`: every `type: scenario` page with its
-stem, path, title, and declared status, its six setup fields as written, its screenshot labels
+**The journey register is devbook's too, and carries what a journey's parts cannot.**
+`build.mjs` writes a fifth document per scope, `_meta/scenarios.json`: every journey — a `##`
+typed `scenario` in a scenarios file — with its address, file, anchor, title, and declared
+status, its six setup fields as written, its screenshot labels
 with the part each sits in, and its parts — title and anchor — each with the requirement cases
 whose `Proved by:` names it. A part owes no block, so it is no node in the graph, and the
 pointers at it sit in requirement prose rather than a field, so spec-manager and Backlog each
 had only the corpus to parse. It is built by the scenario pass the check already runs, kept
 beside the nodes like the ledes so `graph.json` does not change shape, and it carries its own
-`schemaVersion`, starting at 1, for the reason the term register does. Run state stays out:
-a run is a file the suite writes, and a reader compares its signature with the page's. A new
+`schemaVersion` for the reason the term register does: 1 listed pages by stem, 2 lists journeys
+by address. Run state stays out: a run is a file the suite writes, and a reader compares its
+signature with the journey's. A new
 derived file changes no chapter schema, so no migration ships and the contract stays at 30.
 
 **A rule is not a term, so the register leaves requirements and invariants out.** A
@@ -137,6 +139,7 @@ separate call.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-20 | `_meta/scenarios.json` is `schemaVersion: 2`: one entry per journey, keyed by its address `<scenarios file>#<journey>` with its file and anchor, sorted by file and then file order, its stats counting `journeys`. Version 1's `stem` and page entries are gone with the pages, at contract 32. | — |
 | 2026-10-19 | The change folder leaves the graph: its proposals and deltas are still checked — `checkDelta` for each delta, the proposal's lint, rungs, and fingerprint — but none is a node. References run one way: a devbook chapter's `related`, `depends-on`, or prose link into `openspec/changes/` is an error. Supersedes the 2026-09-28 row. | A delta naming a chapter only its own change adds failed as an unresolved reference, so moving chapters into a change broke the check. A change is not agreed and moves to `archive/` when it lands. |
 | 2026-10-08 | `build.mjs` writes `_meta/scenarios.json`, the scenario register, per scope beside the other four: every scenario page with its stem, setup fields, labels, and parts, each part with the requirement cases that point at it; its own `schemaVersion: 1`, and `graph.json` unchanged. | — |
 | 2026-10-02 | All three converters also take a sync unit or group as scope, its chapters exactly as `units.mjs` lists them; `capture-specs` and `apply-change` widen this far and no further. Any `conflict` stops the group, and an unattended run lands a draft pull request with added chapters at `draft`. `verify-change`'s table gains each chapter's effective `sync` and the sweep that will act. | A unit is what one pull request changes and the tool, not the pass, decides what it holds. |

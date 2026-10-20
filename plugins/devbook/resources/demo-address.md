@@ -29,7 +29,7 @@ version, and every message carries it as `v`. Why a demo exists and where it liv
   parameter means the panel's default.
 - **`walkthrough/<id>`** names a walkthrough by its own `id` in `demo-model`. A free
   walkthrough playing an inline `#### Scenario:` takes the scenario's slug as its id; a linked
-  one keeps its own id, and its `part` names the scenario page part it shows. `<step>` is a
+  one keeps its own id, and its `part` names the journey part it shows. `<step>` is a
   1-based step number of the walkthrough, never the part's `step` index; omitted, the
   walkthrough opens at its first step. `walkthrough` is therefore never a screen id.
 
