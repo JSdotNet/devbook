@@ -48,7 +48,9 @@ Each arrow's technology says which kind of coupling it is:
 | --- | --- | --- |
 | `dependencies:` and a range | Declared in `dependencies`, enforced by the host | Unreachable: the host installs the lower layer or the plugin is demoted |
 | A capability, `delivery.surface.*@1` | A published language neither side declares | The caller resolves the group unanswered and continues |
-| `undeclared`, `skill name`, `binding` | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
+| `undeclared`, `undeclared, TDR 4`, `skill name`, `binding` | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
+| `file`, `copied tables` | A viewer reading what another plugin writes, or repeating its tables | The viewer draws stale or nothing, and nothing warns |
+| None, drawn dashed | Implied: only components inside the two plugins are related, such as `delivery-schedule`'s entry point recording its run into `delivery-surface-collector` | As for the component relationship it stands for |
 
 The undeclared `delivery → devbook` arrow is the one to read twice. `flow-code`, the engine's flow
 for every code change, works with devbook absent, so it is not an L1 extension; it is one stack

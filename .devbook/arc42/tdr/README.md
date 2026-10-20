@@ -36,6 +36,9 @@ records what of that gap is still open.
 ```meta
 ```
 
+The Severity and State columns copy each record's `severity` and `status` by hand; the
+record's `meta` is the source.
+
 | Record | Logged | Severity | State |
 | --- | --- | --- | --- |
 | [1. The body budgets are unenforced](1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress |

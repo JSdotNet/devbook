@@ -148,7 +148,9 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42
 ```
 
 Two of devbook's domain services: the unit lister decides the scope, and the spec converter
-is the three skills read as one service.
+is the three skills read as one service. The block's `code` leaves out the unit lister's folder,
+`plugins/devbook/tools/devbook-meta`, because that folder is the checker's and
+[devbook](devbook.md) already names it.
 
 ![devbook-code-sync's components](c4:devbook-code-sync)
 

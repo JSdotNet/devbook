@@ -18,8 +18,14 @@ c4: ["marketplace.devbook.c4-model"]
 `devbook-arc42.md` now states the [C4 model record](../adr/c4-model.md): a `workspace.dsl`,
 views embedded as `c4:<key>`, a three-column History table headed `Date | Change | Why`, and a
 debt record carrying `severity` and a `status` on its own ladder. This repository's own devbook
-follows all of it but the History table: every decision record but the C4 model record keeps
-the two-column `Date | Change` table.
+still breaks it in two places:
+
+- Every decision record but the C4 model record keeps the two-column `Date | Change` table.
+- Four Mermaid flowcharts still draw between elements the workspace defines: the opening
+  pictures of [devbook](../building-blocks/devbook.md) and [delivery](../building-blocks/delivery.md),
+  which draw their nested blocks, the [devbook-skills](../building-blocks/devbook-skills.md#dependencies)
+  dependency picture, and the authoring flowchart in
+  [chapter 6](../06-runtime-view.md#authoring-an-asset).
 
 The rest landed. `workspace.dsl` models the marketplace as the system and each plugin as a
 container, chapters 3, 5, and 6 and every building block embed its views, and each record
@@ -62,4 +68,6 @@ blocks and runtime chapters that will embed views.
 Split each decision record's History rows into `Date | Change | Why`, moving the reason each
 change text carries into its own column. The check accepts the C4 fields now, so nothing waits
 on tooling; the split needs a person's judgment row by row, which is why it did not ride along
-with the migration. Once it lands, this record is resolved.
+with the migration. Replace each of the four flowcharts with a view of the workspace, or drop
+it where the block's component view already shows the same thing. Once both land, this record
+is resolved.

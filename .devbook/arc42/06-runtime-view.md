@@ -67,7 +67,7 @@ writing a stamp of its own.
 
 ![Materializing a component](c4:materializing-a-component)
 
-What the stamp records as a component moves through it:
+The states a component's stamp records:
 
 ```mermaid
 stateDiagram-v2

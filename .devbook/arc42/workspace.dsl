@@ -194,8 +194,11 @@ workspace "jsdotnet-devbook" {
         marketplace.delivery -> marketplace.delivery-surface-backlog "Reports a run" "delivery.surface.lifecycle@1"
         marketplace.delivery -> marketplace.delivery-surface-canvas "Renders a diagram or a document" "delivery.surface.render@1"
         marketplace.delivery-run-view -> marketplace.delivery-surface-dashboard "Reads its run files" "file"
-        marketplace.delivery-run-view -> marketplace.delivery-surface-backlog "Reads its run files" "file"
+        marketplace.delivery-run-view -> backlog "Reads the run files the app writes" "file"
         marketplace.devbook-config-view -> marketplace.devbook-config "Repeats its stamp and retired-key tables" "copied tables"
+        marketplace.devbook-config-view -> marketplace.delivery "Repeats its default runs and resolution rules" "copied tables"
+        marketplace.devbook-config -> marketplace.devbook-openspec "Runs its init and writes its spec and tracker bindings" "undeclared"
+        marketplace.delivery-schedule -> marketplace.devbook-config "Runs its update from schedule-devbook-update" "skill name"
 
         # Out of the marketplace
         marketplace.devbook -> repository "Copies its payload, runs its migrations, and writes components.devbook" "devbook:init and update"
@@ -203,7 +206,8 @@ workspace "jsdotnet-devbook" {
         marketplace.delivery -> repository "Writes components.delivery" "delivery:init and update"
         marketplace.devbook-config -> repository "Writes the engine keys of .devbook/config.json" "devbook-config:init and update"
         marketplace.delivery -> github "Opens the pull request and reports back to the tracker" "gh"
-        marketplace.delivery-schedule.scheduler-resolution -> claude-code "Creates, updates, and fires a routine per selected schedule" "scheduled-tasks"
+        marketplace.delivery-schedule.scheduler-resolution -> claude-code "Creates, updates, and fires a routine per selected schedule" "the live session's scheduler"
+        marketplace.delivery-schedule.scheduler-resolution -> copilot "Creates, updates, and fires an automation per selected schedule" "the live session's scheduler"
         marketplace.delivery-surface-backlog.proxy-server -> backlog "Forwards each call to /mcp inside the app" "streamable HTTP, loopback"
         marketplace.devbook-config-view.register-module -> repository "Reads .devbook/config.json of every repository on the machine" "file"
 
@@ -213,9 +217,8 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook.chapter -> marketplace.devbook.meta-block "Carries"
         marketplace.devbook.chapter -> marketplace.devbook.annotation "Anchors"
         marketplace.devbook.change -> marketplace.devbook.chapter "Merges its deltas into"
-        marketplace.devbook.index-generator -> marketplace.devbook.reference-graph "Builds"
+        marketplace.devbook.index-generator -> marketplace.devbook.reference-graph "Builds, with the workspace's elements and views in it"
         marketplace.devbook.index-generator -> marketplace.devbook.c4-model "Reads, and checks every embed and identifier against"
-        marketplace.devbook.c4-model -> marketplace.devbook.reference-graph "Adds its elements and views to"
         marketplace.devbook.fence-writer -> marketplace.devbook.annotation "Writes and resolves"
         marketplace.devbook.reconciler -> marketplace.devbook.devbook-folder "Adopts and drops"
         marketplace.devbook.reconciler -> marketplace.devbook.scenario-tools "Materializes"
@@ -264,7 +267,7 @@ workspace "jsdotnet-devbook" {
         # devbook-skills
         marketplace.devbook-skills.pr-body -> marketplace.devbook-skills.show-me "Picks its Summary view from"
         marketplace.devbook-skills.wayfinder -> marketplace.devbook-skills.research-brief "Resolves a research ticket through"
-        marketplace.devbook-skills.wayfinder -> github "Writes the map and its tickets" "issue tracker"
+        marketplace.devbook-skills.wayfinder -> github "Writes the map and its tickets" "the repository's tracker"
 
         # delivery
         marketplace.delivery.flow-runner -> marketplace.delivery.flow "Sequences"
@@ -305,6 +308,7 @@ workspace "jsdotnet-devbook" {
         marketplace.delivery-run-view.register-module -> marketplace.delivery-run-view.state-contract "Keeps its state in the shape of"
         marketplace.delivery-run-view.register-module -> marketplace.delivery-run-view.gate-sound "Plays on a gate alert"
         marketplace.delivery-run-view.register-module -> marketplace.delivery-surface-dashboard.run-record "Polls" "file"
+        marketplace.delivery-run-view.register-module -> backlog "Polls the run files the app writes" "file"
         marketplace.devbook-config-view.register-module -> marketplace.devbook-config-view.state-contract "Keeps its rollout state in the shape of"
     }
 
