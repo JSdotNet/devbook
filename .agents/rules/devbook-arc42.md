@@ -193,7 +193,10 @@ Each record, in this order:
 - `## History` — a table headed `| Date | Change | Why |`, newest first, one
   row per decision: the date, what changed, and why in a clause. The bottom row
   is the concern's first choice. The header is fixed, so a reader can list one
-  concern's decisions across every record.
+  concern's decisions across every record. The check reports a record with
+  another header, or no History table, as a warning, never an error: a record
+  written before the header was fixed keeps validating until a person splits
+  each row's reason into its own column.
   The `date` field carries the newest row's date; it is content, not a
   modification timestamp.
 
@@ -276,8 +279,9 @@ responsibility in one line.
 A debt record carries two fields beyond `number` and `date`, in its top-level
 block:
 
-- `severity` — always stated, per `devbook-chapter-metadata.md`. It ranks the
-  set by cost; the number still orders the folder.
+- `severity` — always stated, per `devbook-chapter-metadata.md`; a record
+  without it is reported as a warning, never an error. It ranks the set by cost;
+  the number still orders the folder.
 - `status` — the debt's own ladder, `identified`, `planned`, `in-progress`,
   `resolved`, in place of the folder's. `identified` is the resting value, written
   by omitting the field. A resolved record stays, and says what resolved it. A

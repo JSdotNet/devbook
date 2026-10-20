@@ -601,13 +601,16 @@ file and line, and reading goes on past it.
 | Every `c4` and `c4-touches` identifier resolves to an element, and no element is in both | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 | `code` sits on a building block's top-level block and lists folders; a missing folder is a warning | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 | A debt record's `status` is on the debt ladder, resting at `identified`, and its `severity` is one of four values | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| A decision record's `## History` table is headed `Date \| Change \| Why`; another header, or no table, is a warning | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/history-header.test.mjs` |
 
 The check reads the model in contract 32: `devbook-meta/c4-graph.mjs` runs the reader over
 the workspace when it exists and adds each element and view to the
 [Reference Graph](#reference-graph), with `contains`, `relationship`, `embeds`, `c4`, and
 `c4-touches` edges, and a building block's `code` carried on its node. A debt record without
 `severity`, and one still holding an `arc42/` rung, is a warning rather than an error, so a
-debt set written before the fields keeps validating until each record is ranked. The checker
+debt set written before the fields keeps validating until each record is ranked. A decision
+record whose History table is not headed `Date | Change | Why` is a warning for the same reason:
+splitting each row's reason into its own column needs a person. The checker
 does not open a Mermaid fence, so a fence that draws between elements is
 [prose-check](#prose-check)'s finding, never a check failure.
 
