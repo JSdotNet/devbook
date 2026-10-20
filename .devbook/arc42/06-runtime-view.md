@@ -24,7 +24,8 @@ only place a mistake can be caught before a consumer's install is the authoring 
 
 ![Authoring an asset](c4:authoring-an-asset)
 
-The steps on the authoring side, and where a rejected shape loops back:
+The view's first step, inside the marketplace, and where a rejected shape loops back before
+either host installs anything:
 
 ```mermaid
 flowchart LR
@@ -35,9 +36,7 @@ flowchart LR
     declare --> list["List in marketplace.json"]
     list --> check["Validate the shape"]
     check -->|shape rejected| write
-    check -->|clean| install["Host installs by plugin@jsdotnet-devbook"]
-    install --> claude["Claude Code loads it"]
-    install --> copilot["Copilot loads it"]
+    check -->|clean| done["Ready for plugin@jsdotnet-devbook"]
 ```
 
 - A plugin folder that never reaches `marketplace.json` does not exist to a host, so the list
