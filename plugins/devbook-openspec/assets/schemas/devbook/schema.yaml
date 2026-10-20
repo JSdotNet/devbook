@@ -4,19 +4,18 @@ description: A change to the devbook, proposed as deltas against its chapters �
 artifacts:
   - id: proposal
     generates: proposal.md
-    description: Why the change, its scope, the chapters it touches, and one category
+    description: Why the change, its scope, and one category
     template: proposal.md
     instruction: |
       Write the proposal per devbook-changes.md. Its file-level meta block is
       `type: change`, `status: proposed`, and `category` — one of `feature`,
       `behaviour-change`, `defect` — because the category picks the flow that
-      applies a step. Then three sections, each without a meta block: `## Why`,
-      `## Scope`, and `## Chapters touched`, every chapter by address.
+      applies a step. Then two sections, each without a meta block: `## Why` and
+      `## Scope`. The deltas name the chapters the change touches.
 
-      When the change carries a demo, `## Chapters touched` lists it by its path
-      below `.devbook/`, `## Why` records the prototype's verdict — the question
-      it was made to answer and the answer — and the block may name the screens
-      or walkthroughs the change is about in `demo`, per
+      When the change carries a demo, `## Why` records the prototype's verdict —
+      the question it was made to answer and the answer — and the block may name
+      the screens or walkthroughs the change is about in `demo`, per
       devbook-chapter-metadata.md. The demo file itself never records a verdict.
 
       Read the chapters it touches and walk their `related` links first; never

@@ -16,7 +16,7 @@ devbook chapter never references a change — `related`, `depends-on`, or a pros
 
 | File | Holds | Checked |
 |---|---|---|
-| `proposal.md` | Why, scope, the chapters touched, one category | yes |
+| `proposal.md` | Why, scope, one category | yes |
 | `devbook-delta/<path>` | One delta per devbook file the change touches | yes |
 | `devbook-delta/domain/<context>/*.demo.html` | A demo the change lands, replaced whole | no |
 | `solution.md` | The chapters to load beyond the delta, then the approach | no |
@@ -26,9 +26,10 @@ devbook chapter never references a change — `related`, `depends-on`, or a pros
 
 The file-level block is `type: change`, `status: proposed`, and `category` — one of `feature`,
 `behaviour-change`, `defect`, because the category picks the flow that applies a step. Its
-`##` sections — `Why`, `Scope`, `Chapters touched` by address — are sections and carry no
-block. The change is decided as one, so both gates are recorded once, here: `approved`, then
-`accepted`, with the six fields of `devbook-chapter-metadata.md` and both hashes always written.
+`##` sections — `Why` and `Scope` — are sections and carry no block; the deltas name the
+chapters the change touches. The change is decided as one, so both gates are recorded once,
+here: `approved`, then `accepted`, with the six fields of `devbook-chapter-metadata.md` and
+both hashes always written.
 The hash covers the proposal and every delta — `chapter-hash.mjs openspec/changes/<name>` — and
 an open `kind: question` anywhere in the change is an error under either rung. The block may
 also carry `demo`, per `devbook-chapter-metadata.md`, naming the screens the change is about.
