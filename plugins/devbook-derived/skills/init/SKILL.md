@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring the committed devbook index into a repository for the first time — the refresh script, the nightly refresh and drift-warning workflows, the derived-artifacts rule, and its AGENTS.md section — and stamp components.derived. Refused where components.derived exists: run devbook-derived:update. Use when: adopting devbook-derived, the _meta indexes have no refresh path.'
+description: 'Bring the committed devbook index into a repository for the first time — the refresh script, the C4 view renderer, the nightly refresh and drift-warning workflows, the derived-artifacts rule, and its AGENTS.md section — and stamp components.derived. Refused where components.derived exists: run devbook-derived:update. Use when: adopting devbook-derived, the _meta indexes have no refresh path.'
 user-invocable: false
 ---
 
@@ -29,6 +29,7 @@ derive with — run `devbook:init` first.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/workflows/devbook-meta-drift.yml` | `.github/workflows/devbook-meta-drift.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
+| `tools/c4-render/render.mjs`, `tools/c4-render/README.md` — never its tests or fixtures | `.devbook/_tools/c4-render/` | `arc42` adopted |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook-derived:begin -->` and `<!-- devbook-derived:end -->` | always |
 | `rules/devbook-derived-artifacts.md` and its `paths` | `.agents/rules/`, `.claude/rules/`, `.github/instructions/` — the trio devbook's `assets/rule-wrappers.md` describes | always |
 

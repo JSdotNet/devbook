@@ -3,6 +3,8 @@
 ```meta
 date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/adr/releases.md"]
+c4: ["marketplace.delivery.stack-config", "marketplace.devbook-config.engine-configuration"]
+c4-touches: ["repository"]
 ```
 
 A repository's wiring is one committed file, `.devbook/config.json`: the engine's four keys —
@@ -153,20 +155,20 @@ makes two developers' session lists readable to each other.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-06 | The config templates leave `phase-scope`, `phase-implement`, and `phase-review` empty: a model set there delegated the three fork phases, so copying a template as shipped changed how they ran. A model on a fork phase still delegates it. An unconfigured phase runs as the engine contract's *Runs by default* says, not inline. |
-| 2026-10-06 | `policy.validate.retryBudget` retired: nothing read it once the review and ready budgets bounded the only loops. `policy.phases.verification` and `phases.workItemUpdate` become `phases.specCheck` and `phases.reportBack`, after the phase each switches, and a gate's `unattended: skip-point` becomes `skip-phase`. Each old spelling is refused by name and rewritten by delivery's `001-phase-maps`. A `phases` map under a flow the engine does not declare is accepted only when the repository ships that `flow-*` skill, so a misspelt flow is refused rather than read as one nobody runs; `check.mjs` looks in `.claude/skills/`, `.agents/skills/`, and `.github/skills/` beside `.devbook/`. |
-| 2026-10-05 | The engine keys become `bindings`, `phases`, `policy`, `gates`, and the optional `areas`. `phases` holds one complete map per flow, keyed by skill name; `extensions`, `bindings["delivery.roles"]`, `bindings["delivery.mcp"]`, and the personal `model-selection.md` fold into it, with no aliases. Model and effort are legal in the committed file as team defaults the overlay overrides, replacing the rule that a model is personal only. Gates attach to phase ids. `policy.review.retryBudget`, `policy.ready.retryBudget`, and `policy.phases.review` join the policy enums. Per [Flow Engine](flow-engine.md). |
-| 2026-09-29 | `bindings["openspec.grill"]` names the change lane's grill skill, or `null`. The engine carries it and never reads it; `devbook-config:init` writes it with the lane's `spec` and tracker bindings, and `devbook-config:local` may bind one per machine in an overlay. |
-| 2026-09-29 | `policy["openspec.scenarios"]`: `advisory` by default, `linked` refusing a change's acceptance while a scenario names no test. Locked against overlays, beside `pr.required` and `qa.ceiling`: what acceptance requires is the repository's. A chore's `run` may carry `--flag` arguments; a service's provider may not. |
-| 2026-09-27 | `devbook-config:doctor` resolves every provider id in the effective configuration against the installed skills and the repository's own skill folder: an id migration 015 retired is hard drift naming its successor, any other unresolved id a warning, and an unbound point nothing. The checker still validates shape only. |
-| 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. |
-| 2026-09-21 | The checkout layer retired: an overlay lives in the user's devbook config directory and never in a clone. `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. |
-| 2026-09-17 | Session-naming labels configured in the dashboard's hand-edited component entry; `null` means no prefix. |
-| 2026-09-15 | Overlay gains two layers under the devbook config directory, keyed by a committed `id`. |
-| 2026-09-15 | The flow context file and the `repo-flow-context` slot retired; the `start` skill holds the runtime facts, and nothing to start is `app.start: null`. |
-| 2026-09-15 | The flow context file moved from `.claude/` to `.devbook/` — superseded the same day by its retirement. |
-| 2026-09-07 | `config.local.json` overlay: gates append, three policy keys and `components` refused. |
-| 2026-09-07 | The file moves from `.github/ai-agent-stack.json` to `.devbook/config.json`, no fallback. |
-| 2026-09-03 | One committed file holds the engine's four keys and every component's stamp. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-06 | The config templates leave `phase-scope`, `phase-implement`, and `phase-review` empty. A model on a fork phase still delegates it. An unconfigured phase runs as the engine contract's *Runs by default* says, not inline. | A model set there delegated the three fork phases, so copying a template as shipped changed how they ran. |
+| 2026-10-06 | `policy.validate.retryBudget` retired. `policy.phases.verification` and `phases.workItemUpdate` become `phases.specCheck` and `phases.reportBack`, after the phase each switches, and a gate's `unattended: skip-point` becomes `skip-phase`. Each old spelling is refused by name and rewritten by delivery's `001-phase-maps`. A `phases` map under a flow the engine does not declare is accepted only when the repository ships that `flow-*` skill; `check.mjs` looks in `.claude/skills/`, `.agents/skills/`, and `.github/skills/` beside `.devbook/`. | Nothing read it once the review and ready budgets bounded the only loops. A misspelt flow is refused rather than read as one nobody runs. |
+| 2026-10-05 | The engine keys become `bindings`, `phases`, `policy`, `gates`, and the optional `areas`. `phases` holds one complete map per flow, keyed by skill name; `extensions`, `bindings["delivery.roles"]`, `bindings["delivery.mcp"]`, and the personal `model-selection.md` fold into it, with no aliases. Model and effort are legal in the committed file as team defaults the overlay overrides, replacing the rule that a model is personal only. Gates attach to phase ids. `policy.review.retryBudget`, `policy.ready.retryBudget`, and `policy.phases.review` join the policy enums. Per [Flow Engine](flow-engine.md). | — |
+| 2026-09-29 | `bindings["openspec.grill"]` names the change lane's grill skill, or `null`. The engine carries it and never reads it; `devbook-config:init` writes it with the lane's `spec` and tracker bindings, and `devbook-config:local` may bind one per machine in an overlay. | — |
+| 2026-09-29 | `policy["openspec.scenarios"]`: `advisory` by default, `linked` refusing a change's acceptance while a scenario names no test. Locked against overlays, beside `pr.required` and `qa.ceiling`. A chore's `run` may carry `--flag` arguments; a service's provider may not. | What acceptance requires is the repository's. |
+| 2026-09-27 | `devbook-config:doctor` resolves every provider id in the effective configuration against the installed skills and the repository's own skill folder: an id migration 015 retired is hard drift naming its successor, any other unresolved id a warning, and an unbound point nothing. The checker still validates shape only. | — |
+| 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. | — |
+| 2026-09-21 | The checkout layer retired: an overlay lives in the user's devbook config directory and never in a clone. `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. | — |
+| 2026-09-17 | Session-naming labels configured in the dashboard's hand-edited component entry; `null` means no prefix. | — |
+| 2026-09-15 | Overlay gains two layers under the devbook config directory, keyed by a committed `id`. | — |
+| 2026-09-15 | The flow context file and the `repo-flow-context` slot retired; the `start` skill holds the runtime facts, and nothing to start is `app.start: null`. | — |
+| 2026-09-15 | The flow context file moved from `.claude/` to `.devbook/` — superseded the same day by its retirement. | — |
+| 2026-09-07 | `config.local.json` overlay: gates append, three policy keys and `components` refused. | — |
+| 2026-09-07 | The file moves from `.github/ai-agent-stack.json` to `.devbook/config.json`, no fallback. | — |
+| 2026-09-03 | One committed file holds the engine's four keys and every component's stamp. | — |

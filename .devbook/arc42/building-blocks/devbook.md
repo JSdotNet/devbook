@@ -1,7 +1,9 @@
 # devbook
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
+c4: ["marketplace.devbook"]
+code: ["plugins/devbook"]
 ```
 
 The convention itself. Responsible for three things: that a chapter can be addressed, that
@@ -17,18 +19,9 @@ fixes and a body the repository owns. Two of those are blocks of their own one l
 each with its own file: the two directions between a chapter and its code are
 [devbook-code-sync](devbook-code-sync.md), and the five procedures are
 [devbook-procedures](devbook-procedures.md). This file is the convention's white box around
-them: the chapter, the folder, the check, and the reconcile.
-
-```mermaid
-flowchart LR
-  subgraph devbook
-    C["chapter, folder, check, reconcile"]
-    S["devbook-code-sync"]
-    P["devbook-procedures"]
-  end
-  S -->|"reads the graph, writes chapters in their shape"| C
-  C -->|"materializes and stamps the seeds"| P
-```
+them: the chapter, the folder, the check, and the reconcile — and the
+[C4 model](#c4-model) an `arc42/` folder's chapters embed and point at. The component view
+under [Structure](#structure) draws this file's parts and the two nested blocks together.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter
@@ -91,7 +84,10 @@ related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc4
 ```
 
 Bring devbook into a repository that has none: ask which folders and which procedures to
-adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. It refuses where `components.devbook` already exists —
+adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. An
+`arc42/` folder starts from `assets/seeds/arc42/`: a workspace holding the system, its person,
+and a context view, and the chapter 03 that embeds that view, each placeholder filled from the
+README. It refuses where `components.devbook` already exists —
 "already initialized, run update" — because the stamp is what the next run reads, and a second
 init would ask again what it already answers.
 
@@ -152,9 +148,11 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
 The prose half beside `validate`'s structural half: read every adopted folder and report
 the sentence that says nothing a reader needs or names something the tree no longer has — a
 stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
-a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets. It writes nothing. A chapter
-is content, so the standard is narrower than an instruction tightening and a record stays as
-it was taken: an edit is a person's, through the folder's flow.
+a stack of nouns, a paragraph or a step past the length `devbook-writing.md` sets, and, where
+`arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence,
+flowchart, or graph between workspace elements — with the view to draw instead. It writes
+nothing. A chapter is content, so the standard is narrower than an instruction tightening and
+a record stays as it was taken: an edit is a person's, through the folder's flow.
 
 ### annotation-sweep
 
@@ -178,6 +176,8 @@ Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md
 and the Procedure, its Goal, and the Demo Template are
 [devbook-procedures](devbook-procedures.md#structure)'s; the five services left are below. The chapter is the
 consistency boundary everything else is expressed in terms of.
+
+![devbook's components](c4:devbook)
 
 ### Model
 
@@ -546,6 +546,76 @@ so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
 | A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | `devbook-delta/` holds Markdown deltas and demos directly in a `domain/<context>/` folder, and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+
+### C4 Model
+
+```meta
+related: [".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook/arc42/building-blocks/devbook-derived.md#view-renderer"]
+```
+
+Also called: the workspace, `workspace.dsl`.
+
+The architecture model of an `arc42/` folder: one Structurizr DSL workspace at
+`.devbook/arc42/workspace.dsl`, with `!identifiers hierarchical`, which may `!include` files
+under `.devbook/arc42/c4/`. It is the one non-Markdown file `arc42/` holds and the only place
+an element or a view is defined. It holds people, systems, containers, components, deployment
+nodes, relationships, and views; prose, decisions, and debt stay in chapters and records.
+
+This block owns the contract around it: the rule that names the file, the `c4:<view key>`
+image embed and the chapter each view kind belongs to, the `c4` and `c4-touches` fields in
+`arc42/` and `domain/` and a building block's `code`, the limit that keeps Mermaid inside one
+element, and the checker that resolves every embed and identifier against the workspace and
+adds elements and views to the [Reference Graph](#reference-graph). Drawing a view is not this
+block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer)'s, and a
+C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
+the reasons, and the TDR `severity` field and status ladder decided with it.
+
+The reader is built: `devbook-meta/c4.mjs` reads the workspace, with no dependency outside
+Node, into its elements — each with its hierarchical identifier, kind, name, description,
+technology, tags, parent, group, and deployment environment — its relationships, its views
+with key, scope, title, include, exclude, autolayout, and a dynamic view's steps, and its
+problems. It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
+`!identifiers hierarchical`, `!include`, the static and deployment elements, `group`, `tags`,
+relationships, and the six view kinds. A construct outside that subset is a problem naming its
+file and line, and reading goes on past it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every construct outside the supported subset is reported with its file and line, never dropped silently, and reading continues past it | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| A workspace that does not start with `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| An `!include` is a relative path to a file under the workspace's `c4/` folder; anything else is a problem and is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| Every element has a description of one line | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| Every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to, and every view is embedded in exactly one section; a view no chapter embeds is a warning | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| Every `c4` and `c4-touches` identifier resolves to an element, and no element is in both | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| `code` sits on a building block's top-level block and lists folders; a missing folder is a warning | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| A debt record's `status` is on the debt ladder, resting at `identified`, and its `severity` is one of four values | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| A decision record's `## History` table is headed `Date \| Change \| Why`; another header, or no table, is a warning | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/history-header.test.mjs` |
+
+The check reads the model in contract 33: `devbook-meta/c4-graph.mjs` runs the reader over
+the workspace when it exists and adds each element and view to the
+[Reference Graph](#reference-graph), with `contains`, `relationship`, `embeds`, `c4`, and
+`c4-touches` edges, and a building block's `code` carried on its node. A debt record without
+`severity`, and one still holding an `arc42/` rung, is a warning rather than an error, so a
+debt set written before the fields keeps validating until each record is ranked. A decision
+record whose History table is not headed `Date | Change | Why` is a warning for the same reason:
+splitting each row's reason into its own column needs a person. The checker
+does not open a Mermaid fence, so a fence that draws between elements is
+[prose-check](#prose-check)'s finding, never a check failure.
+
+Migration `033-c4-workspace` moves a repository that drew its architecture before the
+workspace into it: it creates `workspace.dsl` or moves it from `arc42/_c4/`, turns each
+Mermaid C4 fence, each sequence whose participants all match elements, and each Archify
+`architecture` or `sequence` spec into elements and a view, replaces the fence with the view's
+embed, and fills a debt record's `severity` and `status` from its `## Severity` and `## Status`
+sections. What it cannot place it reports and leaves.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The migration writes nothing when its workspace would read with a problem the original did not have | `033-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/033-c4-workspace/migrate.test.mjs` |
+| A diagram whose view belongs in another chapter, a sequence with an unmatched participant, and a lifecycle or workflow spec are reported and left, never counted as work | `033-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/033-c4-workspace/migrate.test.mjs` |
+| A second run changes nothing, and `--check` writes nothing | `033-c4-workspace/migrate.mjs` | `unit:node:plugins/devbook/migrations/033-c4-workspace/migrate.test.mjs` |
 
 ### Reference Graph
 

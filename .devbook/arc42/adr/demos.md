@@ -3,6 +3,7 @@
 ```meta
 date: 2026-10-02
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
+c4: ["marketplace.devbook.demo", "marketplace.devbook.demo-template"]
 ```
 
 A demo is the agreed, clickable picture of what a person sees in a bounded context. It is one
@@ -187,15 +188,15 @@ and `archive` skills carry a demo delta from proposal to archive.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-13 | Migration `030-linked-walkthroughs` rewrites a free walkthrough whose id is a `Proved by:` case's slug to a linked one — `part` from the line, `signature` from the page, `step` by position, and the text copied by `demo-sync.mjs` — and leaves one whose step count differs from its part's free, listed `not-applicable` with the reason. |
-| 2026-10-13 | A walkthrough is free or linked. A linked one keeps its own id, names a scenario page part with `part`, embeds that part's English step text with the `signature` it was copied at, and is stale when the page moves; a requirement proved by the part gets it as a derived `demo` entry, and `verify-change` compares it with the part rather than a test file. The one link out of a demo is that `part`, naming a journey and no chapter. |
-| 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. |
-| 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
-| 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
-| 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
-| 2026-10-02 | The starting demo template and a sample demo built on it, shipped by devbook-procedures. |
-| 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. |
-| 2026-10-02 | A durable demo per bounded context in `domain/`, written only by `/prototype` and promoted only by an OpenSpec proposal; the file knows its question and not its lifecycle; no product-level demo, a 500 KB target, and the template in `design/`, independent of Storybook. |
-| 2026-09-30 | devbook-procedures 1.14.0 builds the `prototype` seed on the demo template and design system, removes `show`, and renames `debug` to `diagnose`. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-13 | Migration `030-linked-walkthroughs` rewrites a free walkthrough whose id is a `Proved by:` case's slug to a linked one — `part` from the line, `signature` from the page, `step` by position, and the text copied by `demo-sync.mjs` — and leaves one whose step count differs from its part's free, listed `not-applicable` with the reason. | — |
+| 2026-10-13 | A walkthrough is free or linked. A linked one keeps its own id, names a scenario page part with `part`, embeds that part's English step text with the `signature` it was copied at, and is stale when the page moves; a requirement proved by the part gets it as a derived `demo` entry, and `verify-change` compares it with the part rather than a test file. The one link out of a demo is that `part`, naming a journey and no chapter. | — |
+| 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. | — |
+| 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. | — |
+| 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. | — |
+| 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. | — |
+| 2026-10-02 | The starting demo template and a sample demo built on it, shipped by devbook-procedures. | — |
+| 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. | — |
+| 2026-10-02 | A durable demo per bounded context in `domain/`, written only by `/prototype` and promoted only by an OpenSpec proposal; the file knows its question and not its lifecycle; no product-level demo, a 500 KB target, and the template in `design/`, independent of Storybook. | — |
+| 2026-09-30 | devbook-procedures 1.14.0 builds the `prototype` seed on the demo template and design system, removes `show`, and renames `debug` to `diagnose`. | — |

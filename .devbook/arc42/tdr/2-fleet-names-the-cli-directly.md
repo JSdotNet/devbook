@@ -2,10 +2,14 @@
 
 ```meta
 date: 2026-09-03
+severity: medium
+status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/tech/hosts.md#claude-code-cli"]
+c4: ["marketplace.delivery-schedule.entry-point"]
+c4-touches: ["claude-code"]
 ```
 
-**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## Resolution
 

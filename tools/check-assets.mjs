@@ -49,7 +49,8 @@
 //                 character but a newline, because the host's Workflow tool refuses one
 //   vendored     .devbook/_tools/devbook-meta/, devbook-tech/, and scenarios/, where present, are
 //                 byte-identical over LF to plugins/devbook/tools/ (see the decision
-//                 "Install")
+//                 "Install"); .devbook/_tools/c4-render/, where present, holds exactly
+//                 render.mjs and README.md from plugins/devbook-derived/tools/c4-render/
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1-body-budgets-unenforced)
@@ -592,6 +593,26 @@ for (const tool of ["devbook-meta", "devbook-tech", "scenarios"]) {
         }
     }
     for (const f of vendored) if (!shipped.has(f)) error(`${label}/${f}: not in plugins/devbook/tools/${tool}/; the vendored copy carries nothing of its own`);
+}
+
+// devbook-derived's init copies the view renderer and its README, never its tests or
+// fixtures, into .devbook/_tools/c4-render/.
+{
+    const copy = path.join(ROOT, ".devbook", "_tools", "c4-render");
+    const source = path.join(PLUGINS, "devbook-derived", "tools", "c4-render");
+    const shipped = ["README.md", "render.mjs"];
+    if (await exists(copy)) {
+        for (const f of shipped) {
+            const label = `.devbook/_tools/c4-render/${f}`;
+            if (!(await exists(path.join(copy, f)))) error(`${label}: missing; the vendored copy must equal plugins/devbook-derived/tools/c4-render/${f} — refresh it with devbook-derived:update`);
+            else if (lf(await readFile(path.join(copy, f), "utf8")) !== lf(await readFile(path.join(source, f), "utf8"))) {
+                error(`${label}: differs from plugins/devbook-derived/tools/c4-render/${f}; edit the plugin and refresh the copy in the same commit`);
+            }
+        }
+        for (const f of (await walk(copy)).map((p) => path.relative(copy, p).replace(/\\/g, "/"))) {
+            if (!shipped.includes(f)) error(`.devbook/_tools/c4-render/${f}: not materialized by devbook-derived:init; the vendored copy carries render.mjs and README.md only`);
+        }
+    }
 }
 
 // ── workflow scripts ────────────────────────────────────────────────────────

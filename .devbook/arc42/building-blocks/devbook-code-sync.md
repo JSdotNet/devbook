@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group"]
+c4: ["marketplace.devbook.unit-lister", "marketplace.devbook.spec-converter"]
+code: ["plugins/devbook/skills/capture-specs", "plugins/devbook/skills/apply-change", "plugins/devbook/skills/verify-change", "plugins/devbook/assets/spec-kinds"]
 ```
 
 The code-sync part of [devbook](devbook.md), a block inside it. Responsible for one thing:
@@ -146,7 +148,11 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42
 ```
 
 Two of devbook's domain services: the unit lister decides the scope, and the spec converter
-is the three skills read as one service.
+is the three skills read as one service. The block's `code` leaves out the unit lister's folder,
+`plugins/devbook/tools/devbook-meta`, because that folder is the checker's and
+[devbook](devbook.md) already names it.
+
+![devbook-code-sync's components](c4:devbook-code-sync)
 
 ### Unit Lister
 
@@ -165,7 +171,9 @@ aggregate, and a term by the one unit its name or alias resolves into. Shared va
 enums form one shared-types unit per context. A `user` or `technical` actor is a unit of its
 one chapter, in `actors.md` or `context.md`; an `organisation` is modelled and never
 authenticated, so it roots none and stays context, and a direction set on an `actors.md` of
-organisations only is one no unit inherits.
+organisations only is one no unit inherits. A building block's files are its own file and the
+building-block view, and, where `arc42/` has a workspace, `workspace.dsl` and the `c4/` files
+it includes, since the workspace is part of the building-block kind.
 
 With `--groups` it joins units into the groups a sweep claims. A requirement that names two
 aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
@@ -184,6 +192,7 @@ prints the result for the sweep to read.
 | A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `syncLevel` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
 | Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A building block lists `workspace.dsl`, and each included file that declares an element or a view, among its files whenever the workspace declares one | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 
 ### Spec Converter
@@ -228,7 +237,9 @@ ask.
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
 the chapter's `aliases`, then the building-block view, then the observed naming convention, and
-reports `unresolved` rather than guessing. An actor climbs its own rungs first — the `role`
+reports `unresolved` rather than guessing. A building block is the one exception: its `code`
+folders are read before the view, because the checker warns on a folder that is gone, so the
+rot the rule guards against is reported rather than silent. An actor climbs its own rungs first — the `role`
 at its declaration, the policies that admit it, the client registration a `technical` actor
 authenticates with — because its counterparts sit in the authorization layer rather than under
 a type name, and a guard admitting more than the chapter grants is a `conflict`, never a
@@ -249,7 +260,8 @@ an identifier search that knows no language would be noisy and slow.
 | `capture-specs` writes a chapter only in write mode, carries only `code-ahead` entries in scope, and never writes a decision rung | the code-sync protocol | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | A grant in code wider than an actor's chapter is a `conflict`, never captured | the actor kind file | untested |
-| No metadata field links a chapter to a code path | counterpart resolution | untested |
+| No metadata field links a chapter to a code path, except a building block's `code`, which is read before the building-block view | counterpart resolution | untested |
+| A building-block run reads `workspace.dsl` with its chapters: a `code` folder that does not exist, a code project no element covers, and a dependency the workspace does not draw are drift, and a capture plan drafts DSL keyed by identifier or view key | the building-block kind file | untested |
 | Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
 | `verify-change` reports every alias outside a `requirement` or `invariant` that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
 

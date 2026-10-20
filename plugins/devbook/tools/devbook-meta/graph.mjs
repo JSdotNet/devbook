@@ -37,6 +37,7 @@ import { loadStatusLadder } from "./statuses.mjs";
 import { changeDecisionIssues, changeFiles, checkDelta, readChange } from "./delta.mjs";
 import { demoProblems, demoReader, linkedWalkthroughs, requirementScenarios } from "./demo.mjs";
 import { scenarioProblems } from "./scenario.mjs";
+import { c4Graph } from "./c4-graph.mjs";
 
 /**
  * Every devbook folder this convention recognizes, as the repository path it
@@ -254,7 +255,23 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // whole file typed `scenario` is an error; `032-scenarios-md` folds each one
 // into its context's `scenarios.md` and moves its references, runs, and spec
 // header with it.
-export const CONTRACT_VERSION = 32;
+//
+// Version 33 reads the C4 model. `.devbook/arc42/workspace.dsl`, when it
+// exists, is read by c4.mjs into `element` and `view` nodes with `contains`
+// and `relationship` edges, and a section embedding `![…](c4:<key>)` gets an
+// `embeds` edge to the view. Four fields join: `c4` and `c4-touches` on any
+// arc42/ or domain/ block, each entry an element of the workspace and an edge
+// of its name; `code` on a building block's top-level block, the folders that
+// hold its code; and `severity` on a debt record's top-level block. A debt
+// record's `status` takes its own ladder — identified, planned, in-progress,
+// resolved, resting at `identified` — and a folder rung there is a warning. The
+// errors are a workspace that does not read clean, an element without a
+// one-line description, an embed or a field naming nothing the workspace
+// defines, a view embedded twice or in a chapter its kind does not belong to;
+// a view no chapter embeds and a debt record without `severity` are warnings.
+// A corpus with no workspace and none of the fields validates as under 32, so
+// no migration is owed.
+export const CONTRACT_VERSION = 33;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -374,6 +391,8 @@ const ATTRIBUTE_FIELDS = [
     // change whose merge last touched it.
     "category",
     "change",
+    // What a debt record costs while it stands, on its top-level block.
+    "severity",
 ];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,
@@ -387,7 +406,11 @@ const ATTRIBUTE_FIELDS = [
 //
 // `demo` is here for the same reason: it names a place in a click demo, which
 // is HTML and no node. demo.mjs resolves each address against the demo itself.
-const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests", "demo"];
+//
+// `code` names a building block's folders, which are no nodes; `c4` and
+// `c4-touches` are carried as written too, beside the edges c4-graph.mjs draws
+// from them to the workspace's elements.
+const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests", "demo", "code", "c4", "c4-touches"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.
@@ -420,7 +443,7 @@ function asList(value) {
     return Array.isArray(value) ? value : [value];
 }
 
-function applyMeta(node, meta, folder) {
+function applyMeta(node, meta, folder, relPath = null, blockLevel = null) {
     if (!meta) return;
     // An omitted status in an editorial folder means that folder's resting
     // value, so the node carries the resolved word — a viewer that read
@@ -429,7 +452,8 @@ function applyMeta(node, meta, folder) {
     // written only when it is false, both to keep the distinction between "at
     // rest" and "nobody said" available and to leave every already-declared
     // node byte-identical to what earlier versions emitted.
-    const { status, declared } = resolveStatus(folder, meta);
+    // A debt record's top-level block rests at `identified`, not `active`.
+    const { status, declared } = resolveStatus(folder, meta, relPath, blockLevel);
     node.status = status;
     if (!declared && status !== null) node.statusDeclared = false;
     const declaredType = resolveType(folder, meta);
@@ -643,7 +667,7 @@ export async function buildGraph(repoRoot, folders = null) {
 
         // An .arc42 file is exactly one top-level chapter, so its level-1 block
         // serves as the file-level block; other folders follow the same shape.
-        applyMeta(fileNode, fileMeta, folder);
+        applyMeta(fileNode, fileMeta, folder, relPath, "file");
         const fileSync = syncLevel(relPath, "file", fileMeta, 1);
         if (fileSync.level) syncLevels.set(fileNode.id, fileSync.level);
         // Set outside applyMeta because it also comes from the filename, which
@@ -948,6 +972,14 @@ export async function buildGraph(repoRoot, folders = null) {
             message: `${id} has \`sync: ${node.sync}\`, which no unit inherits — every unit under it states its own direction, or none sits under it. Remove it, or set it where a unit reads it.`,
         });
     }
+
+    // The C4 model: the workspace's elements and views as nodes, its
+    // containment and relationships as edges, and the `embeds`, `c4`, and
+    // `c4-touches` edges from the chapters, each checked against the rule.
+    const c4 = await c4Graph(repoRoot, docs, nodes);
+    for (const node of c4.nodes) nodes.set(node.id, node);
+    edges.push(...c4.edges);
+    problems.push(...c4.problems);
 
     problems.push(...(await brokenLinkIssues(repoRoot, links, anchors)));
     problems.push(...(await demoProblems(repoRoot, scanned, demoHolders)));

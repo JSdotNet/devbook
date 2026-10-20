@@ -3,6 +3,8 @@
 ```meta
 date: 2026-09-25
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/tech/hosts.md#copilot-extension-sdk", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/hosts.md"]
+c4: ["marketplace.delivery-surface-dashboard", "marketplace.delivery-surface-collector", "marketplace.delivery-surface-backlog", "marketplace.delivery-surface-canvas"]
+c4-touches: ["marketplace.delivery", "marketplace.delivery-run-view", "backlog"]
 ```
 
 A surface is a viewer for a run: an MCP server named `delivery-surface-*`, resolved from the
@@ -123,20 +125,20 @@ index in `devbook-derived` and `devbook` ships no surface at all.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-20 | Verify's `evidence` entries add `journey`, the journey's address `<scenarios file>#<journey>`, beside `stem`, now its anchor, since a journey is a chapter of `scenarios.md` at devbook's contract 32. Additive, so the lifecycle group stays `@1`; a surface keyed by `stem` keeps working, and should move to `journey`, which is unique where an anchor is not. |
-| 2026-10-13 | A stage's `execution` takes three optional counts: `round`, the implement ⇄ review round from 1, on Implement and Review; `blockers`, the round's open `rule` and `bug` blockers, on Review; and `defectsFound`, the defects Verify found that review had passed. They are one pass's share of the run's `quality` facts, shown on the stage they belong to. `execution` is stored verbatim, so no surface changes and one that predates them ignores them; `delivery-run-view` draws them on the phase row. |
-| 2026-10-13 | `update_stage` on the Review stage and `finish_run` take an optional `quality`: `reviewRounds` per slice and in total, `blockers` — `rule` and `bug`, open and fixed, per round and in total — and on `finish_run` `escapedDefects`, each tagged `foundAt` with the stage that found it. Every value names the stage that reported it. Additive, so the lifecycle group stays `@1`; the engine reports the facts and no surface derives them, and pricing is unchanged. |
-| 2026-10-08 | `update_stage` takes an optional `evidence` for Verify: one `{ stem, part, outcome, runAt }` per scenario-page part, `outcome` `passed`, `failed`, or `not-run`. Additive, so the lifecycle group stays `@1`; `delivery-surface-backlog` forwards it unchanged, and a surface that ignores it loses nothing. |
-| 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. A surface call the host's permission layer refuses is retried once and then reported, never dropped. |
-| 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. |
-| 2026-09-24 | Supersedes 2026-09-22: a surface is a `delivery-surface-*` server, the order is `bindings["delivery.surface"]` with an alphabetical default, `unavailable` at open skips to the next surface, and Backlog is reached through `delivery-surface-backlog`. The contract names no implementation. |
-| 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. |
-| 2026-09-17 | `devbook-graph` moves to `devbook-derived`, loading devbook's modules from the materialized path. |
-| 2026-09-09 | The runner's allowlist names the two shipped servers' four ids, the one sanctioned exception to matching by operation name. |
-| 2026-09-05 | `delivery-surface-canvas` drops its MCP half; the render group has one implementation per host. |
-| 2026-09-03 | Each surface exposes exactly the contract's tool names; `workItem` and `approval.state` in the run schema. |
-| 2026-09-03 | Three plugins implement `delivery.surface.*@1`; the collector is written here rather than ported. |
-| 2026-09-03 | `delivery` ships no surface and no-ops when none answers. |
-| 2026-09-03 | `devbook` keeps the graph canvas, blocked from lifting by its imports into the generator. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-20 | Verify's `evidence` entries add `journey`, the journey's address `<scenarios file>#<journey>`, beside `stem`, now its anchor, since a journey is a chapter of `scenarios.md` at devbook's contract 32. A surface keyed by `stem` keeps working, and should move to `journey`, which is unique where an anchor is not. | Additive, so the lifecycle group stays `@1`. |
+| 2026-10-13 | A stage's `execution` takes three optional counts: `round`, the implement ⇄ review round from 1, on Implement and Review; `blockers`, the round's open `rule` and `bug` blockers, on Review; and `defectsFound`, the defects Verify found that review had passed. They are one pass's share of the run's `quality` facts, shown on the stage they belong to. `delivery-run-view` draws them on the phase row. | `execution` is stored verbatim, so no surface changes and one that predates them ignores them. |
+| 2026-10-13 | `update_stage` on the Review stage and `finish_run` take an optional `quality`: `reviewRounds` per slice and in total, `blockers` — `rule` and `bug`, open and fixed, per round and in total — and on `finish_run` `escapedDefects`, each tagged `foundAt` with the stage that found it. Every value names the stage that reported it. The engine reports the facts and no surface derives them, and pricing is unchanged. | Additive, so the lifecycle group stays `@1`. |
+| 2026-10-08 | `update_stage` takes an optional `evidence` for Verify: one `{ stem, part, outcome, runAt }` per scenario-page part, `outcome` `passed`, `failed`, or `not-run`. `delivery-surface-backlog` forwards it unchanged, and a surface that ignores it loses nothing. | Additive, so the lifecycle group stays `@1`. |
+| 2026-09-25 | The lifecycle group fans out to every surface that opens, each keeping its own `runId`; `bindings["delivery.surface"]` restricts and orders that set. Render and export stay first-wins. A surface call the host's permission layer refuses is retried once and then reported, never dropped. | — |
+| 2026-09-24 | The surface capability and its reporting contract move into their own `surface-contract.md`; the extension points, gates, policy, stack config, bindings, and host slots it shared a file with become `engine-contract.md`. Both stay in `delivery`, the only reader. | — |
+| 2026-09-24 | Supersedes 2026-09-22: a surface is a `delivery-surface-*` server, the order is `bindings["delivery.surface"]` with an alphabetical default, `unavailable` at open skips to the next surface, and Backlog is reached through `delivery-surface-backlog`. The contract names no implementation. | — |
+| 2026-09-22 | `backlog` joins the contract: a lifecycle surface inside a running application, first in the priority order, and a tracker provider. | — |
+| 2026-09-17 | `devbook-graph` moves to `devbook-derived`, loading devbook's modules from the materialized path. | — |
+| 2026-09-09 | The runner's allowlist names the two shipped servers' four ids, the one sanctioned exception to matching by operation name. | — |
+| 2026-09-05 | `delivery-surface-canvas` drops its MCP half; the render group has one implementation per host. | — |
+| 2026-09-03 | Each surface exposes exactly the contract's tool names; `workItem` and `approval.state` in the run schema. | — |
+| 2026-09-03 | Three plugins implement `delivery.surface.*@1`; the collector is written here rather than ported. | — |
+| 2026-09-03 | `delivery` ships no surface and no-ops when none answers. | — |
+| 2026-09-03 | `devbook` keeps the graph canvas. | Blocked from lifting by its imports into the generator. |

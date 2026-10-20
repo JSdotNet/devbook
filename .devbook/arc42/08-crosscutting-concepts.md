@@ -641,7 +641,7 @@ supporting.
 | Upstream | Downstream | Pattern | Declared |
 | --- | --- | --- | --- |
 | This chapter | every block | Shared Kernel | No — it is the vocabulary, not a plugin |
-| [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
+| [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.28.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-openspec](building-blocks/devbook-openspec.md) | Customer/Supplier | Yes, `devbook >=1.13.0 <2.0.0` |
 | [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `/opsx:apply` builds the step |

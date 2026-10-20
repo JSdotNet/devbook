@@ -26,8 +26,11 @@ a scheduled run, never a session beside a chapter edit.
   repository has not adopted devbook.
 - **`devbook-derived`'s refresh**, where that plugin is installed: `node <generator> --write`,
   `<generator>` being the checker path the repository's `AGENTS.md` devbook section names,
-  or `./build/Update-DevbookIndex.ps1` where that wrapper is materialized. Absent, there is
-  no index to refresh and this run fixes Markdown only.
+  or `./build/Update-DevbookIndex.ps1` where that wrapper is materialized. Where
+  `.devbook/_tools/c4-render/render.mjs` exists, the wrapper also renders every C4 view to
+  `.devbook/arc42/_meta/c4/` and deletes the render of a view that is gone; without the
+  wrapper, run `node .devbook/_tools/c4-render/render.mjs .devbook/arc42/workspace.dsl .devbook/arc42/_meta/c4`
+  after the generator. Absent, there is no index to refresh and this run fixes Markdown only.
 - **`devbook-config:doctor`**, where that plugin is installed: whether the installation —
   the stamps, the migration ledger, the `AGENTS.md` sections — is current. Absent, this run
   asks only about the chapters.
@@ -40,10 +43,11 @@ a scheduled run, never a session beside a chapter edit.
 3. **Diagnose** with `devbook-config:doctor` where it is installed. Hard drift is not
    repaired here — each component's `update` owns it and needs a person: a *Needs you* row
    in the report.
-4. **Refresh** the committed indexes where `devbook-derived` materialized the refresh path.
+4. **Refresh** the committed indexes and view renders where `devbook-derived` materialized the
+   refresh path.
 5. **Land.** If anything changed, open the pull request titled
    `chore(devbook): daily validate <YYYY-MM-DD>` with the findings, the fixes, and the moved
-   index files in its body.
+   index and render files in its body.
 6. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`.
 
 ## Do not

@@ -2,10 +2,13 @@
 
 ```meta
 date: 2026-09-15
+severity: low
+status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
+c4: ["marketplace.devbook.spec-converter"]
 ```
 
-**Remediation state:** resolved · **Severity:** low · **Owner:** the maintainer
+**Owner:** the maintainer
 
 ## The debt
 

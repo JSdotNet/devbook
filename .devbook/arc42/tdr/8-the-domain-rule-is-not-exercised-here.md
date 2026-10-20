@@ -2,10 +2,13 @@
 
 ```meta
 date: 2026-09-21
+severity: medium
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/tdr/7-the-decision-set-predates-the-concern-rule.md", ".devbook/arc42/adr/chapter-schema.md"]
+c4: ["marketplace.devbook.devbook-folder"]
+c4-touches: ["marketplace.devbook.reconciler"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Owner:** the maintainer
 
 **2026-09-22.** The trigger fired and the debt was re-accepted rather than remediated.
 Contract 14 gave a bounded context `requirements.md` and `invariants.md` — two chapter kinds

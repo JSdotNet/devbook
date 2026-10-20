@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/building-blocks/devbook-config.md", ".devbook/arc42/building-blocks/delivery-run-view.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+c4: ["marketplace.devbook-config-view"]
+code: ["plugins/devbook-config-view"]
 ```
 
 The stack's rollout across one machine, drawn inside Claude Code itself. Responsible for one
@@ -42,6 +44,8 @@ decision.
 ```
 
 One module, `hooks/register.tsx`, and the state contract it keeps, `types/index.d.ts`.
+
+![devbook-config-view's components](c4:devbook-config-view)
 
 ```mermaid
 flowchart LR

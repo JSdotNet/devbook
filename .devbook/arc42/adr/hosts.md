@@ -3,6 +3,8 @@
 ```meta
 date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/tech/hosts.md#copilot-plugin-api", ".devbook/arc42/adr/install.md"]
+c4: ["claude-code", "copilot"]
+c4-touches: ["marketplace"]
 ```
 
 Every asset is authored once and read by both Claude Code and GitHub Copilot. Where the two
@@ -97,18 +99,18 @@ the path of the body is Claude's.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-17 | A skipped run no longer archives itself — the host records a session archived mid-run as failed — so the pickup gate reads `list_task_runs` and the archive flag only, and only a `result: session` schedule carries it. |
-| 2026-09-30 | A scheduled run reads its own schedule's runs and archives itself on a skip: the pickup gate uses the local scheduler's `list_task_runs` and the session tool's `archive_session`, and is open where neither exists. |
-| 2026-09-28 | The `run` procedure's body is Claude Code's `run-<name>` recipe, with a Copilot twin: the fifth divergence. |
-| 2026-09-28 | `delivery-schedule` names the desktop app's local scheduler and keeps `RemoteTrigger` only to disable a cloud copy: every schedule is a local routine ([plugin boundaries](plugin-boundaries.md)). |
-| 2026-09-25 | `flow-runner` names `mcp__Claude_Browser__preview_start` and opens the dashboard in the pane: the fourth divergence, reversing 2026-09-09. |
-| 2026-09-23 | The `session-id` slot: `delivery`'s `start_run` callers carry `${CLAUDE_SESSION_ID}`, the lane's third recorded divergence. |
-| 2026-09-21 | `fleet` deleted: no asset names the Claude CLI. `delivery-schedule`'s issue sweep names the workflow tool, the lane's second recorded divergence. |
-| 2026-09-09 | The runner's three browser-pane ids removed: a host capability, not a shipped server. |
-| 2026-09-07 | Repository rules move to `.agents/rules/` with a wrapper per host; `CLAUDE.md` goes from 154 lines to an import. |
-| 2026-09-05 | The checker `tools/check-assets.mjs` returns what the dropped generator used to lint, without owning the files. |
-| 2026-09-05 | `claude-desktop` and `copilot-app` deleted; every slot resolves unbound unless a repository binds it. |
-| 2026-09-02 | The generator deriving Claude files from Copilot ones dropped; both manifests hand-authored. |
-| 2026-09-02 | One authored copy per asset, relying on both hosts ignoring unknown keys. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-17 | A skipped run no longer archives itself; the pickup gate reads `list_task_runs` and the archive flag only, and only a `result: session` schedule carries it. | The host records a session archived mid-run as failed. |
+| 2026-09-30 | A scheduled run reads its own schedule's runs and archives itself on a skip: the pickup gate uses the local scheduler's `list_task_runs` and the session tool's `archive_session`, and is open where neither exists. | — |
+| 2026-09-28 | The `run` procedure's body is Claude Code's `run-<name>` recipe, with a Copilot twin: the fifth divergence. | — |
+| 2026-09-28 | `delivery-schedule` names the desktop app's local scheduler and keeps `RemoteTrigger` only to disable a cloud copy. | Every schedule is a local routine ([plugin boundaries](plugin-boundaries.md)). |
+| 2026-09-25 | `flow-runner` names `mcp__Claude_Browser__preview_start` and opens the dashboard in the pane: the fourth divergence, reversing 2026-09-09. | — |
+| 2026-09-23 | The `session-id` slot: `delivery`'s `start_run` callers carry `${CLAUDE_SESSION_ID}`, the lane's third recorded divergence. | — |
+| 2026-09-21 | `fleet` deleted: no asset names the Claude CLI. `delivery-schedule`'s issue sweep names the workflow tool, the lane's second recorded divergence. | — |
+| 2026-09-09 | The runner's three browser-pane ids removed. | A host capability, not a shipped server. |
+| 2026-09-07 | Repository rules move to `.agents/rules/` with a wrapper per host; `CLAUDE.md` goes from 154 lines to an import. | — |
+| 2026-09-05 | The checker `tools/check-assets.mjs` returns what the dropped generator used to lint, without owning the files. | — |
+| 2026-09-05 | `claude-desktop` and `copilot-app` deleted; every slot resolves unbound unless a repository binds it. | — |
+| 2026-09-02 | The generator deriving Claude files from Copilot ones dropped; both manifests hand-authored. | — |
+| 2026-09-02 | One authored copy per asset. | Relying on both hosts ignoring unknown keys. |
