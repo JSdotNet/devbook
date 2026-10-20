@@ -3,6 +3,8 @@
 ```meta
 date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
+c4: ["marketplace.devbook.reconciler", "marketplace.devbook-config.init-service", "marketplace.devbook-config.update-service"]
+c4-touches: ["repository"]
 ```
 
 A plugin reaches a repository through its `init` skill, is kept current by its `update`, and

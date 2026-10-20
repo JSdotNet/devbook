@@ -3,6 +3,8 @@
 ```meta
 date: 2026-09-30
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#annotation", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+c4: ["marketplace.devbook.annotation", "marketplace.devbook.fence-writer"]
+c4-touches: ["marketplace.devbook-collaboration.finding"]
 ```
 
 A review note is a fenced `annotation` block in the chapter, beside the passage it comments

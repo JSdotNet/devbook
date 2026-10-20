@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/12-glossary.md#pr-lane"]
+c4: ["marketplace.delivery.pull-request-lane"]
+code: ["plugins/delivery/skills/push-branch", "plugins/delivery/skills/update-pr-branch", "plugins/delivery/skills/fix-pr-checks", "plugins/delivery/skills/pr-merge-ready"]
 ```
 
 The pull-request lane of the [delivery](delivery.md) engine, a block inside it. Responsible for
@@ -68,6 +70,8 @@ related: [".devbook/arc42/building-blocks/delivery.md#model"]
 
 One domain service and the enum it holds. The lane takes no part in a run's model: it acts on
 the pull request a run leaves behind, or on one no run produced.
+
+![delivery-pr-lane's component](c4:delivery-pr-lane)
 
 ### Pull Request Lane
 

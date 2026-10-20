@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/12-glossary.md#derived-index"]
+c4: ["marketplace.devbook-derived"]
+code: ["plugins/devbook-derived"]
 ```
 
 The committed index, the rendered C4 views, and the canvas that draws the graph. Responsible
@@ -78,6 +80,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42
 ```
 
 Three parts, none of which parses a chapter.
+
+![devbook-derived's components](c4:devbook-derived)
 
 ### Refresh Paths
 

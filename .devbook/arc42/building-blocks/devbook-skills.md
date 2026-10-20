@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/delivery-schedule.md#dependencies"]
+c4: ["marketplace.devbook-skills"]
+code: ["plugins/devbook-skills"]
 ```
 
 This block makes sure output reads well, and that a large effort is planned before it is
@@ -139,8 +141,12 @@ resolves grilling through two named skills with no fallback.
 ```meta
 ```
 
-Five parts. The first is `show-me`'s catalog: each row pairs a kind of content with the
-picture that shows it.
+Five parts, two of which lean on another:
+
+![devbook-skills' components](c4:devbook-skills)
+
+The first is `show-me`'s catalog: each row pairs a kind of content with the picture that
+shows it.
 
 | The content describes | Picture |
 | --- | --- |

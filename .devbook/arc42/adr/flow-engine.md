@@ -3,6 +3,8 @@
 ```meta
 date: 2026-10-13
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
+c4: ["marketplace.delivery.flow", "marketplace.delivery.flow-runner", "marketplace.delivery.phase", "marketplace.delivery.gate"]
+c4-touches: ["marketplace.delivery.stack-config", "marketplace.delivery.pull-request-lane"]
 ```
 
 `delivery` is a flow engine: two flows named for what changes — `flow-code` for every change to

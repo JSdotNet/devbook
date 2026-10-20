@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/12-glossary.md#canvas", ".devbook/arc42/12-glossary.md#preview"]
+c4: ["marketplace.delivery-surface-canvas"]
+code: ["plugins/delivery-surface-canvas"]
 ```
 
 Mermaid and Markdown rendered live beside the files they came from. Responsible for one thing:
@@ -91,6 +93,8 @@ related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#structur
 
 The smallest model in this repository, and the size is the statement: one aggregate, no store,
 and a transport that knows the host.
+
+![delivery-surface-canvas' components](c4:delivery-surface-canvas)
 
 ### Model
 

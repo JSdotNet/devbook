@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+c4: ["marketplace.delivery-schedule.entry-point"]
+code: ["plugins/delivery-schedule/skills/schedule-devbook-sweep", "plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-morning-brief", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-review", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-week-starter", "plugins/delivery-schedule/skills/schedule-weekly-cost-analysis", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
 ```
 
 The entry points of [delivery-schedule](delivery-schedule.md), a block inside it. Responsible
@@ -310,6 +312,8 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#model"]
 One aggregate and the event it publishes. Both are drawn in delivery-schedule's
 [model](delivery-schedule.md#model), where a schedule's target may name an entry point and may
 never name a flow.
+
+![delivery-schedule-entry-points' component](c4:delivery-schedule-entry-points)
 
 ### Entry Point
 

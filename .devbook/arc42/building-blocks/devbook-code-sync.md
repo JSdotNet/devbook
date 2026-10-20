@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group"]
+c4: ["marketplace.devbook.unit-lister", "marketplace.devbook.spec-converter"]
+code: ["plugins/devbook/skills/capture-specs", "plugins/devbook/skills/apply-change", "plugins/devbook/skills/verify-change", "plugins/devbook/assets/spec-kinds"]
 ```
 
 The code-sync part of [devbook](devbook.md), a block inside it. Responsible for one thing:
@@ -146,7 +148,11 @@ related: [".devbook/arc42/building-blocks/devbook.md#structure", ".devbook/arc42
 ```
 
 Two of devbook's domain services: the unit lister decides the scope, and the spec converter
-is the three skills read as one service.
+is the three skills read as one service. The block's `code` leaves out the unit lister's folder,
+`plugins/devbook/tools/devbook-meta`, because that folder is the checker's and
+[devbook](devbook.md) already names it.
+
+![devbook-code-sync's components](c4:devbook-code-sync)
 
 ### Unit Lister
 

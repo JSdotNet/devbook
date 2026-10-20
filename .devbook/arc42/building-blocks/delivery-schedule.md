@@ -2,6 +2,8 @@
 
 ```meta
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md", ".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
+c4: ["marketplace.delivery-schedule"]
+code: ["plugins/delivery-schedule"]
 ```
 
 Work that runs with nobody watching, and the catalog of triggers that fires it. Responsible for
@@ -104,6 +106,8 @@ the things they fire — and the line between what a repository commits and what
 scheduler. The model draws all of it; the Entry Point aggregate and the Schedule Report
 Published event are described in
 [delivery-schedule-entry-points](delivery-schedule-entry-points.md#structure).
+
+![delivery-schedule's components](c4:delivery-schedule)
 
 ### Model
 

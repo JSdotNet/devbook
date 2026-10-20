@@ -15,6 +15,8 @@ What this repository owes, and what it is exposed to. Records live in
 related: [".devbook/arc42/tdr/README.md"]
 ```
 
+The Severity and State columns copy each record's `meta` by hand.
+
 | Record | Logged | Severity | State | In one line |
 | --- | --- | --- | --- | --- |
 | [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress | AGENTS.md states three body budgets and `check-assets --budgets` reports against them; 22 of 77 budgeted assets meet them, and the kinds that are long by nature are exempted by decision rather than trimmed. |
@@ -26,7 +28,7 @@ related: [".devbook/arc42/tdr/README.md"]
 | [7. The decision set predates the concern rule](tdr/7-the-decision-set-predates-the-concern-rule.md) | 2026-09-17 | Medium | resolved | `devbook-arc42.md` now keeps one record per technical concern, updated in place; this repository's own `adr/` is seventy-six numbered per-decision files, a fifth of them about a name or a word, folded into eleven concern records the same day. |
 | [8. The domain rule is not exercised here](tdr/8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Medium | identified | `devbook-domain.md` is the largest rule devbook ships and the four `type`-driven converter kinds run on it; this repository dropped `domain/` for one building block per plugin under `arc42/`, so its own devbook no longer keeps that rule and only a consumer's does. Contract 14 has since added `requirements.md` and `invariants.md`, two chapter kinds with a template each that nothing here has ever written, and contract 17 moved invariants into a subpage of each domain page. Re-accepted 2026-09-29: this repository adopts the change lane and runs its first change against `arc42/`, which exercises the lane here but not the behaviour files. |
 | [9. OpenSpec's model does not cover a devbook change](tdr/9-openspecs-model-does-not-cover-a-devbook-change.md) | 2026-09-27 | Medium | resolved | The OpenSpec spike (CLI 1.13.2) found the root is always a folder named `openspec/` with fixed `changes/`, `specs/`, and `schemas/` names, an empty glob artifact incomplete, and `archive` a move that merges no devbook delta; the bridge carries the layout exception, the merge, and delta validation itself. Resolved 2026-09-28 by accepting the fixed layout: `devbook-openspec` compensates, and an OpenSpec release that moves that behaviour is a bridge release.
-| [10. The C4 rules run ahead of this devbook](tdr/10-the-c4-rules-run-ahead-of-this-devbook.md) | 2026-10-20 | Low | planned | `devbook-arc42.md` states the C4 model, the three-column History table, and the debt ladder; this devbook keeps the old shapes until the check accepts the new fields. |
+| [10. The C4 rules run ahead of this devbook](tdr/10-the-c4-rules-run-ahead-of-this-devbook.md) | 2026-10-20 | Low | in-progress | `devbook-arc42.md` states the C4 model, the three-column History table, and the debt ladder; this devbook has the workspace, the views, and the debt fields, and keeps the two-column History table and four flowcharts between elements. |
 
 Records 1 and 2 were carried out of chapter 9, where they had been written as decisions. Neither is one:
 each ends in options rather than a choice, which is the test for whether a record belongs

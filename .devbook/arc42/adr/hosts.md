@@ -3,6 +3,8 @@
 ```meta
 date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/tech/hosts.md#copilot-plugin-api", ".devbook/arc42/adr/install.md"]
+c4: ["claude-code", "copilot"]
+c4-touches: ["marketplace"]
 ```
 
 Every asset is authored once and read by both Claude Code and GitHub Copilot. Where the two
