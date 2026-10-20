@@ -87,13 +87,13 @@
           "managed": true
         },
         ".agents/rules/devbook-arc42.md": {
-          "from": "1.13.0",
-          "hash": "sha256:028e6835f14e1cd14aa803699c2e4132eeb9c8e5b430d80465d8ebf196d64287",
+          "from": "1.28.0",
+          "hash": "sha256:5486898958ba18a337790c97fbb9dff2778d71e41860f1489969969008ba9b12",
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.26.0",
-          "hash": "sha256:207f5c8ded2e8f880a9c7ceee4b7b5dff99fae8ee05b640f621943b60059e40f",
+          "from": "1.28.0",
+          "hash": "sha256:c72f2bad1cfaa3ed9fba5edab26b39db42296b23db0436011035a75c74d48efa",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
@@ -102,8 +102,8 @@
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
-          "from": "1.26.0",
-          "hash": "sha256:f2a8522e16b2fbe8c58fd7d5205387544006824a6dfefb97a7dbc3f21eed6cd0",
+          "from": "1.28.0",
+          "hash": "sha256:bca2c6f51c2fc62b8e0085ac0a680262fa41bf65038e4490bdd8486ea64958b9",
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
@@ -112,8 +112,8 @@
           "managed": true
         },
         ".agents/rules/devbook-writing.md": {
-          "from": "1.26.0",
-          "hash": "sha256:6986c7fbb380f2cad557f2dd95505246c835f7ba0ce787938420500ff35a4bdf",
+          "from": "1.28.0",
+          "hash": "sha256:76261974360205ca6acbd5f611fdeae0e1391514b0366bfd13ae6a335d56f6fd",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
@@ -157,8 +157,8 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.20.1",
-          "hash": "sha256:00f68472e5c6680b3ff2982d36921c7f1ac6645e1df02515721b7e90997bd5b7",
+          "from": "1.28.0",
+          "hash": "sha256:6e06efceb183aeee1c88cf99bfc0811adac3a07c826d061f981ad843bd6e90ce",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
