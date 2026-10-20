@@ -73,6 +73,8 @@ const NEST_TOP = 48;
 const NEST_PAD = 16;
 // How far from a gap's middle, toward the leaf, a line to a deployment node runs.
 const GAP_SHIFT = 24;
+// How far apart lines to a deployment node run where they would share a segment.
+const SPREAD = 12;
 
 // ── text ────────────────────────────────────────────────────────────────────
 
@@ -600,11 +602,14 @@ function route(nodes, lines, geometry) {
 // no leaf occupies. A deployment node holds a stretch of the slot axis no box
 // outside it shares, so the gap meets the node's side facing the other end
 // wherever the gap lies within the node's rank span; elsewhere the line turns
-// from the gap into the node's facing rank side down a column of the node's own
-// padding, which no other line enters by. A leaf end leaves by its rank side
-// into a gap beside its own rank. Of the candidate gaps, the one inside the
-// most node ends wins, then the one nearest the middle of the two ends, then
-// the lowest.
+// from the gap into the node's facing rank side, in a column of the node's
+// stretch just inside its side facing the other end, through room nothing
+// outside the node occupies. A leaf end leaves by its rank side into a gap
+// beside its own rank. Of the candidate gaps, the one inside the most node
+// ends wins, then the one nearest the middle of the two ends, then the lowest.
+// Lines that pick one gap are spread across it toward their leaf, and lines
+// that turn into one side of a node take columns further in, so no two share
+// a segment.
 function routeToNodes(nodes, lines, rects, geometry) {
     const { vertical, rankSep } = geometry;
     const byId = new Map([...nodes, ...rects].map((box) => [box.element.id, box]));
@@ -618,25 +623,32 @@ function routeToNodes(nodes, lines, rects, geometry) {
     const beside = (box) => [rankOf(box)[0] - rankSep / 2 + GAP_SHIFT, rankOf(box)[1] + rankSep / 2 - GAP_SHIFT].map(Math.round);
     const gaps = [...new Set(nodes.flatMap(beside))].sort((p, q) => p - q);
     const within = (box, g) => g > rankOf(box)[0] + 8 && g < rankOf(box)[1] - 8;
+    const spans = (box, g) => g >= rankOf(box)[0] && g <= rankOf(box)[1];
+    const room = Math.max(0, Math.floor((rankSep / 2 - GAP_SHIFT - 8) / SPREAD));
+    const taken = new Map();
+    const next = (key) => { const k = taken.get(key) ?? 0; taken.set(key, k + 1); return k; };
     for (const line of lines) {
         const ends = [byId.get(line.source), byId.get(line.destination)];
         const leaf = ends.find((box) => !framed.has(box));
         const candidates = leaf ? beside(leaf) : gaps;
         const want = (mid(rankOf(ends[0])) + mid(rankOf(ends[1]))) / 2;
         const inside = (g) => ends.filter((box) => framed.has(box) && within(box, g)).length;
-        const gap = [...candidates].sort((p, q) => inside(q) - inside(p) || Math.abs(p - want) - Math.abs(q - want) || p - q)[0];
+        const chosen = [...candidates].sort((p, q) => inside(q) - inside(p) || Math.abs(p - want) - Math.abs(q - want) || p - q)[0];
+        const toward = leaf && mid(rankOf(leaf)) > chosen ? 1 : -1;
+        const gap = chosen + toward * SPREAD * (next(chosen) % (room + 1));
         // Each end, from its box out to the gap: a leaf's is worked out once its port is placed.
         const legs = ends.map((box, i) => {
             if (!framed.has(box)) return { side: gap > rankOf(box)[1] ? rankFar : rankNear, points: null };
             const other = ends[1 - i];
-            if (within(box, gap)) {
+            if (spans(box, gap)) {
                 const onward = mid(slotOf(other)) > mid(slotOf(box));
                 return { side: onward ? slotFar : slotNear, points: [toPoint(vertical, onward ? slotOf(box)[1] : slotOf(box)[0], gap)] };
             }
             const [lo, hi] = rankOf(box);
             const before = gap <= lo || (gap < hi && gap - lo < hi - gap);
-            // In the padding on the side facing the other end, clear of every column a leaf it holds is entered by.
-            const column = mid(slotOf(other)) > mid(slotOf(box)) ? slotOf(box)[1] - NEST_PAD / 2 : slotOf(box)[0] + NEST_PAD / 2;
+            const onward = mid(slotOf(other)) > mid(slotOf(box));
+            const inset = Math.min(NEST_PAD / 2 + SPREAD * next(`${box.element.id}:${before}:${onward}`), Math.floor((slotOf(box)[1] - slotOf(box)[0]) / 2));
+            const column = onward ? slotOf(box)[1] - inset : slotOf(box)[0] + inset;
             return { side: before ? rankNear : rankFar, points: [toPoint(vertical, column, before ? lo : hi), toPoint(vertical, column, gap)] };
         });
         line.route = { kind: "node", vertical, gap, sides: legs.map((l) => l.side), legs: legs.map((l) => l.points) };
@@ -803,7 +815,8 @@ function shapeLine(line) {
         const [from, to] = r.legs.map((leg, k) => leg ?? [line.ends[k].point, toPoint(r.vertical, slot(line.ends[k].point), r.gap)]);
         line.points = simplify([...from, ...[...to].reverse()]);
         line.d = polyline(line.points);
-        line.mid = toPoint(r.vertical, Math.round((slot(from[from.length - 1]) + slot(to[to.length - 1])) / 2), r.gap);
+        line.span = [from[from.length - 1], to[to.length - 1]];
+        line.mid = toPoint(r.vertical, Math.round((slot(line.span[0]) + slot(line.span[1])) / 2), r.gap);
     } else if (r.kind === "lane" || r.kind === "around") {
         const [gapOut, gapIn] = r.kind === "lane" ? [r.gapOut, r.gapIn] : [r.gap, r.gap];
         const [laneFrom, laneTo] = r.kind === "lane" ? [r.lane, r.lane] : [slot(a.point), slot(b.point)];
@@ -834,12 +847,14 @@ const bezier = ([p0, p1, p2, p3], t) => [0, 1].map((k) => Math.round((1 - t) ** 
 
 // Where a line's label centres: its middle, unless a label already placed lies
 // there — two steps between the same pair, say — and then the first point
-// further along the curve that is clear of every placed label and every box.
+// further along the curve, or along the gap a line to a deployment node runs
+// in, that is clear of every placed label and every box.
 function labelAt(line, size, placed, boxes) {
     const at = ([x, y]) => ({ x: x - size.w / 2, y: y - Math.round(size.h / 2), w: size.w, h: size.h });
-    if (!placed.some((p) => overlaps(p, at(line.mid))) || !line.curve) return line.mid;
+    if (!placed.some((p) => overlaps(p, at(line.mid))) || !(line.curve || line.span)) return line.mid;
+    const [s0, s1] = line.span ?? [];
     for (const t of [0.35, 0.65, 0.25, 0.75, 0.2, 0.8]) {
-        const point = bezier(line.curve, t);
+        const point = line.curve ? bezier(line.curve, t) : [0, 1].map((k) => Math.round(s0[k] + (s1[k] - s0[k]) * t));
         const box = at(point);
         if (!placed.some((p) => overlaps(p, box)) && !boxes.some((b) => overlaps(b, box))) return point;
     }

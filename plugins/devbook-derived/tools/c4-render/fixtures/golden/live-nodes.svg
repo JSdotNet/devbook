@@ -91,10 +91,13 @@
     <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M444 986C444 1120 1062 1120 1062 1254"/>
   </g>
   <g data-relationship="live.cloud.gateway -> live.cloud.app.web">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M104 150C104 284 422 284 422 418"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M93 150C93 284 422 284 422 418"/>
   </g>
   <g data-relationship="live.cloud.gateway -> live.cloud.data">
-    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M148 150L148 250Q148 260 158 260L606 260Q616 260 616 270L616 1206"/>
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M126 150L126 250Q126 260 136 260L606 260Q616 260 616 270L616 1206"/>
+  </g>
+  <g data-relationship="live.cloud.data -> live.cloud.gateway">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M628 1206L628 258Q628 248 618 248L169 248Q159 248 159 238L159 150"/>
   </g>
   <g data-relationship="live.site -> live.cloud">
     <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-live-arrow)" d="M944 1206L944 1106Q944 1096 934 1096L876 1096"/>
@@ -115,14 +118,18 @@
     <text class="c4-muted" fill="#59636e" x="753" y="1132" font-size="11" text-anchor="middle">[AMQP]</text>
   </g>
   <g class="c4-label" data-relationship="live.cloud.gateway -> live.cloud.app.web">
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="195" y="267" width="136" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="263" y="282" font-size="11" text-anchor="middle">Forwards requests to</text>
-    <text class="c4-muted" fill="#59636e" x="263" y="296" font-size="11" text-anchor="middle">[HTTPS]</text>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="190" y="267" width="136" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="258" y="282" font-size="11" text-anchor="middle">Forwards requests to</text>
+    <text class="c4-muted" fill="#59636e" x="258" y="296" font-size="11" text-anchor="middle">[HTTPS]</text>
   </g>
   <g class="c4-label" data-relationship="live.cloud.gateway -> live.cloud.data">
-    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="354" y="243" width="56" height="34" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="382" y="258" font-size="11" text-anchor="middle">Watches</text>
-    <text class="c4-muted" fill="#59636e" x="382" y="272" font-size="11" text-anchor="middle">[TCP]</text>
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="343" y="243" width="56" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="371" y="258" font-size="11" text-anchor="middle">Watches</text>
+    <text class="c4-muted" fill="#59636e" x="371" y="272" font-size="11" text-anchor="middle">[TCP]</text>
+  </g>
+  <g class="c4-label" data-relationship="live.cloud.data -> live.cloud.gateway">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="427" y="238" width="74" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="464" y="253" font-size="11" text-anchor="middle">Reports to</text>
   </g>
   <g class="c4-label" data-relationship="live.site -> live.cloud">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="864" y="1079" width="93" height="34" rx="3"/>

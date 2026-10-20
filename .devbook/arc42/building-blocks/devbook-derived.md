@@ -158,8 +158,10 @@ instance inherits from what it instantiates, in model order, direct as written o
 implied one, dashed. A relationship declared to or from a deployment node runs between the
 node's box and its other end, labelled like any other, whenever that end is shown and
 neither holds the other. It runs along a gap between ranks, which no leaf occupies, and
-meets the node's side, or turns into it through the node's own padding, so it crosses no
-leaf either. Deployment groups are outside the reader's DSL subset and are not drawn.
+meets the node's side where the gap crosses the node; otherwise it turns from the gap into
+the node's top or bottom through room no box outside the node occupies, so it crosses no
+leaf. Lines that would share a gap or a turn are spread apart, and so are their labels.
+Deployment groups are outside the reader's DSL subset and are not drawn.
 
 `init` materializes `render.mjs` and its README into `.devbook/_tools/c4-render/` where
 `arc42/` is adopted, never its tests or fixtures, and every refresh path runs it as

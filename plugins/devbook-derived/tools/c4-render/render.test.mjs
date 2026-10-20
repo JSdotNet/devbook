@@ -369,10 +369,11 @@ test("deployment: a system scope keeps its own containers' instances and the inf
     assert.deepEqual(ids(selectDeployment(byLeaf, view("live", byLeaf)).shown), ["live.site.planner"], "a leaf named outright is shown");
 });
 
-// The fixture with a relationship from a leaf to a deployment node, one between
-// two deployment nodes, and one from a node to a leaf it holds, which is not drawn.
+// The fixture with a relationship from a leaf to a deployment node and one back,
+// one between two deployment nodes, and one from a node to a leaf it holds,
+// which is not drawn.
 const NODE_LINES = fixture
-    .replace('gateway -> app.web "Forwards requests to" "HTTPS"', 'gateway -> app.web "Forwards requests to" "HTTPS"\n                gateway -> data "Watches" "TCP"\n                app -> app.web "Hosts"')
+    .replace('gateway -> app.web "Forwards requests to" "HTTPS"', 'gateway -> app.web "Forwards requests to" "HTTPS"\n                gateway -> data "Watches" "TCP"\n                data -> gateway "Reports to"\n                app -> app.web "Hosts"')
     .replace(/(\n {12}site = deploymentNode[^\n]*\n[^\n]*\n {12}\})/, '$1\n            site -> cloud "Replicates to" "VPN"');
 
 test("golden: relationships to and from a deployment node draw byte for byte as live-nodes.svg", () => {
@@ -387,14 +388,25 @@ test("deployment: a relationship to or from a deployment node runs between its b
     const direct = read(NODE_LINES);
     assert.deepEqual(selectDeployment(direct, view("live", direct)).lines.filter((l) => l.toNode).map((l) => [l.source, l.destination, l.relationships[0].description]), [
         ["live.cloud.gateway", "live.cloud.data", "Watches"],
+        ["live.cloud.data", "live.cloud.gateway", "Reports to"],
         ["live.site", "live.cloud", "Replicates to"],
     ], "a node's relationship with what it holds is not drawn");
+    const overlap = (p, q) => p.x < q.x + q.w && q.x < p.x + p.w && p.y < q.y + q.h && q.y < p.y + p.h;
     const onBorder = ([x, y], d) => ((x === d.x || x === d.x + d.w) && y >= d.y && y <= d.y + d.h) || ((y === d.y || y === d.y + d.h) && x >= d.x && x <= d.x + d.w);
     for (const direction of ["tb", "bt", "lr", "rl"]) {
         const m = read(NODE_LINES.replace(/\n\s*autolayout \w+/g, "").replace(/(\n\s*)include \*/g, `$1include *$1autolayout ${direction}`));
         const { nodes, lines, nodeRects } = arrange(m, view("live", m));
         assert.equal(view("live", m).autolayout.direction, direction);
         const rect = (id) => nodeRects.find((d) => d.element.id === id);
+        const [there, back] = lines.filter((l) => l.toNode && [l.source, l.destination].includes("live.cloud.gateway"));
+        const segments = (l) => l.points.slice(1).map((p, i) => JSON.stringify([l.points[i], p].sort()));
+        assert.ok(!segments(there).some((s) => segments(back).includes(s)), `${direction}: a relationship and its reverse share no segment`);
+        const svg = renderView(m, view("live", m));
+        const label = (l) => {
+            const [, x, y, w, h] = svg.match(new RegExp(`class="c4-label" data-relationship="${l.source} -> ${l.destination}">\\n\\s*<rect [^>]*x="(\\d+)" y="(\\d+)" width="(\\d+)" height="(\\d+)"`)).map(Number);
+            return { x, y, w, h };
+        };
+        assert.ok(!overlap(label(there), label(back)),`${direction}: a relationship and its reverse keep their labels apart`);
         for (const line of lines.filter((l) => l.toNode)) {
             const [first, last] = [line.points[0], line.points[line.points.length - 1]];
             for (const [point, id] of [[first, line.source], [last, line.destination]]) {
