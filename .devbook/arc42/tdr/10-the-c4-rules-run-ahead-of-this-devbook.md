@@ -3,8 +3,8 @@
 ```meta
 date: 2026-10-20
 severity: low
-status: in-progress
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/README.md", ".devbook/arc42/tdr/README.md"]
+status: resolved
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/README.md", ".devbook/arc42/tdr/README.md", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/devbook-skills.md#dependencies", ".devbook/arc42/06-runtime-view.md#authoring-an-asset"]
 c4: ["marketplace.devbook.c4-model"]
 ```
 
@@ -72,3 +72,22 @@ on tooling; the split needs a person's judgment row by row, which is why it did 
 with the migration. Replace each of the four flowcharts with a view of the workspace, or drop
 it where the block's component view already shows the same thing. Once both land, this record
 is resolved.
+
+## Resolution
+
+```meta
+```
+
+Resolved 2026-10-20 by the remediation the record named. Every decision record under
+[`adr/`](../adr/README.md) now heads its History `Date | Change | Why`: the reason each change
+cell carried moved into the Why column word for word, and a row whose cell gave no reason
+reads an em dash rather than one written after the fact. No decision was reworded, and the
+check reports no History header.
+
+Of the four flowcharts, two are gone and two became views. The opening pictures of
+[devbook](../building-blocks/devbook.md) and [delivery](../building-blocks/delivery.md) drew
+nothing their component views under *Structure* do not, so each now points there. The
+[devbook-skills](../building-blocks/devbook-skills.md#dependencies) dependency picture is the
+`devbook-skills-dependencies` container view. In [chapter 6](../06-runtime-view.md#authoring-an-asset)
+the `authoring-an-asset` dynamic view already drew the two hosts, so the Mermaid there keeps
+only the authoring steps and their loop, which happen inside the marketplace.
