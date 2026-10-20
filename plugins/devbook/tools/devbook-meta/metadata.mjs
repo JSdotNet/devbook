@@ -184,6 +184,55 @@ const DEBT_FOLDER = `${DEVBOOK_PREFIX}arc42/tdr/`;
 // What a debt costs while it stands, on a debt record's top-level block only.
 export const DEBT_SEVERITIES = ["low", "medium", "high", "critical"];
 
+// A decision record's `## History` table header, fixed so a reader can list
+// one concern's decisions across every record.
+const DECISION_FOLDER = `${DEVBOOK_PREFIX}arc42/adr/`;
+export const HISTORY_HEADER = ["Date", "Change", "Why"];
+
+/**
+ * Lint a decision record's `## History` section, per `devbook-arc42.md`: an
+ * `arc42/adr/` file other than the folder's index holds the section, and its
+ * table is headed `Date | Change | Why`. Every finding is a warning: a record
+ * written before the header was fixed needs a person to split each row's
+ * reason into its own column, and keeps validating until one does.
+ */
+export function historyHeaderIssues(relPath, markdown, fileMeta) {
+    const normalized = String(relPath).replace(/\\/g, "/");
+    if (!normalized.startsWith(DECISION_FOLDER) || !normalized.endsWith(".md") || fileMeta?.index === "root") return [];
+    const expected = HISTORY_HEADER.join(" | ");
+    const warn = (message) => [{ severity: "warning", message }];
+
+    // A table is a header row with a pipe, then a delimiter row; a leading
+    // pipe is optional in GFM, and `\|` is a pipe inside a cell.
+    const DELIMITER_ROW = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
+    const lines = String(markdown).split(/\r?\n/);
+    let fence = null;
+    let inHistory = false;
+    for (let index = 0; index < lines.length; index++) {
+        const text = lines[index];
+        const marker = /^\s{0,3}(`{3,}|~{3,})/.exec(text);
+        if (marker) {
+            const run = marker[1];
+            if (!fence) fence = run;
+            else if (run[0] === fence[0] && run.length >= fence.length && !text.slice(text.indexOf(run) + run.length).trim()) fence = null;
+            continue;
+        }
+        if (fence) continue;
+        if (/^\s{0,3}#{1,2}\s/.test(text)) {
+            if (inHistory) break;
+            inHistory = /^\s{0,3}##\s+History\s*#*\s*$/.test(text);
+            continue;
+        }
+        if (!inHistory || !text.includes("|") || !DELIMITER_ROW.test(lines[index + 1] ?? "") || !lines[index + 1].includes("-")) continue;
+        const header = text.trim().replace(/^\|/, "").replace(/(?<!\\)\|\s*$/, "").split(/(?<!\\)\|/).map((cell) => cell.trim());
+        if (header.join(" | ") === expected) return [];
+        return warn(`has a \`## History\` table headed \`${header.join(" | ")}\` on line ${index + 1} — a decision record's History is headed \`${expected}\`, so a reader can list a concern's decisions in order. Move each row's reason into the Why column. See devbook-arc42.md.`);
+    }
+    return inHistory
+        ? warn(`has a \`## History\` section with no table — head one \`${expected}\`, newest row first. See devbook-arc42.md.`)
+        : warn(`has no \`## History\` section — a decision record ends on a table headed \`${expected}\`, newest row first. See devbook-arc42.md.`);
+}
+
 /**
  * Whether this block is a debt record's top-level block: a file under
  * `arc42/tdr/` other than the folder's index, at file level.
@@ -2217,6 +2266,7 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
         issues.push({ severity: issue.severity, message: issue.message });
     }
+    for (const issue of historyHeaderIssues(relPath, markdown, fileMeta)) issues.push(issue);
     const optionalFields = new Set([
         ...COMMON_OPTIONAL_FIELDS,
         ...FILE_ONLY_FIELDS,
