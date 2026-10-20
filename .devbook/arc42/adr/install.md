@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-10-06
+date: 2026-10-20
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.devbook.reconciler", "marketplace.devbook-config.init-service", "marketplace.devbook-config.update-service"]
 c4-touches: ["repository"]
@@ -52,6 +52,21 @@ keeps only what GitHub reads: the workflows and the Copilot wrappers.
 move it and only a ledger says whether the script ran. A payload-only component copies files it
 owns whole, and hash-matching is then the whole migration mechanism. A change that must reach an
 already-edited copy has no mechanism by design; the seed is meant to be edited.
+
+**A workflow edited on the way in owes no migration for a step it gains.** `devbook-derived:init`
+writes the nightly's `cron` and refresh branch and the drift workflow's branch and path filters
+into its two workflows as they land. So each is customized from its first run, and `update`
+leaves it alone. When a release changes their steps — `1.27.0` added the C4 render — `update`
+reports the shipped diff for a person to merge, and no migration is owed. A script cannot tell
+the install's edit from a person's later one in a CI file the repository owns. A wrong insertion
+breaks the pipeline; a missing step only leaves an output unwritten. The render step adds output
+and removes nothing: a stale workflow still refreshes the indexes, and
+`build/Update-DevbookIndex.ps1`, which reconcile replaces on its shipped hash, renders the views
+on demand until the step is merged. The exemption stops there. A change that leaves a stale copy
+failing — a tool path it calls that is gone — owes a migration, shipped without a ledger the way
+`delivery-schedule`'s `001-weekend-cadence` is. devbook's own `devbook-meta.yml` stays under
+`AGENTS.md`'s *When a change ships a migration*: it is the repository's gate, and a step missing
+from a gate is a check that silently stops running.
 
 **A procedure is the rule trio with the ownership reversed.** A rule body is the plugin's
 and is refreshed while it hashes to a release; a procedure body under `.agents/skills/` is
@@ -159,6 +174,9 @@ LF-normalized text, because the working tree is CRLF and the index LF.
   puts the adoption interview in front of an operation people run to change nothing.
 - Removing the component pairs in favour of `devbook-config`: every plugin installs alone, and
   a repository without `devbook-config` would have no way in.
+- A `devbook-derived` migration that inserts the C4 render step into an installed repository's
+  two workflows: it would edit CI the repository owns, guessing which lines the install wrote,
+  to restore an output the refresh script already produces on demand.
 
 ## History
 
@@ -167,6 +185,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-20 | A workflow `devbook-derived:init` edits on the way in owes no migration for a step a release adds: `update` reports the shipped diff, and `AGENTS.md` and the plugin's README say so. The C4 render step `1.27.0` added to both workflows ships that way; a change that leaves a stale copy failing still owes one. |
 | 2026-10-13 | A newly materialized path ships its migration, per `AGENTS.md` under *When a change ships a migration*: the 2026-10-08 reasoning that `update` creates a new path and so owes none is withdrawn, since without one the ledger never records the path and `doctor` has no `--check` to report it missing. `030-scenario-tools` materializes `.devbook/_tools/scenarios/` where `domain` is adopted and the folder is missing or still an older release's copy, and reports a customized copy. |
 | 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. Shipped without a migration; corrected on 2026-10-13. |
 | 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`; it wrote `delivery:phase-validation`, a phase skill retired since. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. |

@@ -62,6 +62,9 @@ as failing, never as initialized.
 Replace every file `init` materialized that still hashes to a release this plugin shipped,
 report the customized ones, and re-stamp `components.derived`. Payload-only: hash-matching is
 its whole migration mechanism, per devbook's reconcile protocol. Refuses where no stamp exists.
+Both workflows are edited on the way in, so `update` leaves them alone and a step a release adds to them
+reaches a repository as the shipped diff `update` reports, with no migration, per
+[install](../adr/install.md).
 
 ### refresh
 
