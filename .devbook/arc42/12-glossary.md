@@ -202,8 +202,8 @@ Where a chapter and its implementation stand relative to each other, in five val
 reports and stops, `code-ahead` and `spec-ahead` say which side moves, and `conflict` and
 `unresolved` both stop and ask — never guess. A verdict reached against a chapter nobody has
 agreed to yet is flagged `unagreed`, which is a qualifier on one of the five and not a sixth.
-A scenario page's run whose signature no longer matches the page is `stale`, a qualifier on the
-run rather than a verdict: it is no evidence for the requirements that point at the page.
+A journey's run whose signature no longer matches the journey is `stale`, a qualifier on the
+run rather than a verdict: it is no evidence for the requirements that point at its parts.
 The verdict is what makes the two converter directions one subject rather than two; it is
 established before anything leaves the run, from source and tests alone.
 

@@ -46,7 +46,7 @@ A question that is both is two prototypes.
 | --- | --- | --- |
 | Domain model | `.devbook/domain/<context>/` — `domain.md`, its `domain.invariants.md`, `flow.md`, the ubiquitous language | states, events, and invariants, named as the chapter names them (logic); the actors, flags, and settings `demo-model` keys by (UI) |
 | Requirements | `.devbook/domain/<context>/requirements.md` | the `#### Scenario:` a free walkthrough plays, and its slug |
-| Scenario pages | `.devbook/domain/<context>/*.md` with `type: scenario`; `node .devbook/_tools/scenarios/signature.mjs <page>` | the part a linked walkthrough shows, its steps' English text, and the page signature |
+| Journeys | `.devbook/domain/<context>/scenarios.md`, each `##` typed `scenario`; `node .devbook/_tools/scenarios/signature.mjs <scenarios.md>#<journey>` | the part a linked walkthrough shows, its steps' English text, and the journey signature |
 | Demo template | `.devbook/design/demo-template.html` | the managed region, copied byte for byte; the comment opening it is the authoring reference (UI) |
 | Existing demo | `.devbook/domain/<context>/demo.html`, `<page>.demo.html` | the file a revision starts from, read and never written (UI) |
 | Design system | `.devbook/design/` — principles, tokens, component guidelines; `src/Orders.Web/theme/tokens.css` | colour, type, spacing, and radius tokens; component anatomy and states; the do/don't rules |
@@ -98,8 +98,8 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
   settings, and viewports the panel switches, each by the same `key` as the repository's actors,
   flags, and settings.
 - **Walkthroughs** are listed in `demo-model` by `id`, the happy path first, then each edge case.
-  Where a scenario page part tells the journey, the walkthrough is **linked**: its own `id`,
-  `part: "<page>.md#<part>"`, `signature` as the first field `signature.mjs` prints, and per step
+  Where a journey's part tells it, the walkthrough is **linked**: its own `id`,
+  `part: "scenarios.md#<part>"`, `signature` as the first field `signature.mjs` prints, and per step
   `step`, the part step's 1-based index, with that step's English text copied into `text`.
   Otherwise it is **free**: its id the slug of the `#### Scenario:` it plays —
   `a-declined-card-keeps-the-basket` — each step's `text` the scenario line it shows.
@@ -107,9 +107,9 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
   variant's markup and `demo-model` entries, keep the chosen one's ids and anchors, and list what
   went. Until then every variant stays.
 - **Revising a demo:** keep every id and anchor that still exists; rename none without cause.
-  Re-copy every linked walkthrough's `text` and `signature` from its page as it is now with
+  Re-copy every linked walkthrough's `text` and `signature` from its journey as it is now with
   `node .devbook/_tools/scenarios/demo-sync.mjs <demo>`, and link
-  a free walkthrough to the part of a scenario page that now tells its journey, keeping its id —
+  a free walkthrough to the journey part that now tells it, keeping its id —
   the requirement's hand-written `demo` entry for it then goes, since the link derives it.
 - Semantic HTML, labelled controls, visible focus, the contrast the design system requires.
 

@@ -11,10 +11,10 @@ the kind.
 | Chapters | None of its own: a `*.demo.html` file, addressed by screen and walkthrough per `resources/demo-address.md` |
 | File | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or any other `*.demo.html` a chapter's `demo` field names |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` for the `demo` field |
-| Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; the scenario page part every linked walkthrough's `part` names; `domain.md`'s ubiquitous language for the copy |
+| Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; the journey part every linked walkthrough's `part` names; `domain.md`'s ubiquitous language for the copy |
 | Plan target | None. Only `/prototype` writes a demo; it reaches `domain/` directly in a `flow-spec` pull request or as a demo delta of a change, per `devbook-domain.md` |
 | Index scope | `--scope domain` |
-| Extra input | The front end that renders the screens, the e2e tests the requirements' `tests` name beside their free walkthroughs, and the page signature `.devbook/_tools/scenarios/signature.mjs` prints for each linked walkthrough's page, with `--scenario-folder` per `assets/code-sync-protocol.md` |
+| Extra input | The front end that renders the screens, the e2e tests the requirements' `tests` name beside their free walkthroughs, and the journey signature `.devbook/_tools/scenarios/signature.mjs` prints for each linked walkthrough's journey, with `--scenario-folder` per `assets/code-sync-protocol.md` |
 
 ## It rides with its page
 
@@ -48,8 +48,8 @@ that code that renders it. Then try the screen's `id` and its `title` in
 `demo-model` against route names and component names. A screen with no single
 match is `unresolved`. A free walkthrough pairs with the e2e test its
 requirement's `tests` names; one with none pairs only through its screens. A
-linked walkthrough pairs with the scenario page part its `part` names, never
-with a test file: the page is the test, and its run proves it.
+linked walkthrough pairs with the journey part its `part` names, never with a
+test file: the journey is the test, and its run proves it.
 
 ## Mapping
 

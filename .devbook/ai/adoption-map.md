@@ -20,7 +20,7 @@ file is a reading unit and places nothing — each chapter says its own stages o
 | --- | --- |
 | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
 | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, the fan-out lane nothing here has used, and scheduling. |
-| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation, and the scenario pages the devbook skills write, derive, and run. |
+| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation, and the journeys the devbook skills write, derive, and run. |
 
 **Adoption Picture**
 
@@ -43,7 +43,7 @@ graph LR
   schedule[Scheduling] --- operate
   schedule --- monitor
   eval[Plugin Evaluation] --- test
-  scenarios[Scenario Pages] --- test
+  scenarios[Journeys] --- test
   flows -. never yet .-> fanout
   schedule -. never yet .-> fanout
   classDef stage fill:#fff,stroke:#333,color:#333;
@@ -63,7 +63,7 @@ rates a way of working, not a tool. One chapter is `adopted` because it is how e
 here has been made. Two are `trial`: the flow skills because everything they need has landed
 and nothing has used them, and scheduling because its first local runs have published here.
 Three are `candidate` because the honest first use is somewhere else, or has not happened —
-scenario pages among them, since this repository adopts no `domain/` and runs no application.
+journeys among them, since this repository adopts no `domain/` and runs no application.
 Each chapter's `date` is the day its current rating was set.
 
 The picture above is the hand-drawn form of the loop a tool draws from the same fields: the

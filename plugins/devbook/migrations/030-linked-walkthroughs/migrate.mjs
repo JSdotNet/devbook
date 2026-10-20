@@ -12,17 +12,20 @@
 // than one part — is listed `not-applicable` with its reason on every run and never counts
 // as work, so `--check` exits 0 once only those are left.
 //
-// The demo and its parts are read by the plugin's own tools, beside this folder: the part
-// resolved and the text copied by the same code devbook-meta's checker and demo-sync use.
+// The demo is read by the plugin's own tools. The pages and their parts are the shape of
+// contracts 30 and 31, which the tools stopped reading at 32: they are read, resolved, and
+// synced through the frozen copy in `../032-scenarios-md/legacy-page.mjs`, the code the
+// checker and demo-sync ran when this migration shipped.
 
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DEMO_MODEL_ID, parseDemo, resolveLinkedPage } from "../../tools/devbook-meta/demo.mjs";
+import { DEMO_MODEL_ID, parseDemo } from "../../tools/devbook-meta/demo.mjs";
 import { DEVBOOK_PREFIX, provedByCases } from "../../tools/devbook-meta/metadata.mjs";
-import { parseWithSpans, scenarioPages, syncDemo } from "../../tools/scenarios/demo-sync.mjs";
+import { parseWithSpans } from "../../tools/scenarios/demo-sync.mjs";
 import { DOMAIN_FOLDER, SCENARIO_FOLDER, slugify } from "../../tools/scenarios/parse.mjs";
+import { resolveLinkedPage, scenarioPages, syncDemo } from "../032-scenarios-md/legacy-page.mjs";
 
 const ID = "030-linked-walkthroughs";
 const STAMP = ".devbook/config.json";

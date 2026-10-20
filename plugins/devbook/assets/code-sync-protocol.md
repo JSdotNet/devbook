@@ -266,39 +266,41 @@ Its acceptance checks are what those entries will name once someone has written
 them, which is a reason to phrase each check as something a single test can
 assert.
 
-### A scenario page is evidence, not a kind
+### A journey is evidence, not a kind
 
-A `type: scenario` page has no file under `assets/spec-kinds/`, roots no sync
-unit, and gets no verdict row of its own among the five. It rides with the requirements whose
-`#### Scenario:` cases point at its parts with `Proved by:`, the way a demo rides
-with its page.
+A journey — a `##` typed `scenario` in a scenarios file — has no file under
+`assets/spec-kinds/`, roots no sync unit, and gets no verdict row of its own among the five.
+It rides with the requirements whose `#### Scenario:` cases point at its parts with
+`Proved by:`, the way a demo rides with its page.
 
 - **What it adds.** A part's steps are the case's Given/When/Then, read through
-  the pointer. The spec whose header line `// scenario: <page path>` names the page
-  is the requirement's `e2e` test, and the entry the check derives from the
-  pointer is the one to read. A part's last run under `.devbook/scenarios/<stem>/`
-  counts only when its signature matches the page: a stale run, like a disabled
-  test, is no evidence of behaviour.
+  the pointer. The spec whose header line `// scenario: <scenarios file>#<journey>`
+  names the journey is the requirement's `e2e` test, and the entry the check
+  derives from the pointer is the one to read. A part's last run, in
+  `<scenarios file without .md>/<journey>/run.json`, counts only when its signature
+  matches the journey: a stale run, like a disabled test, is no evidence of
+  behaviour.
 - **Capture** drafts a case as `Proved by:` when a part already proves it, and
-  inline Given/When/Then otherwise. It never drafts a scenario page and never
-  writes `tests` on a requirement whose cases all point at parts.
+  inline Given/When/Then otherwise. It never drafts a journey and never writes
+  `tests` on a requirement whose cases all point at parts.
 - **Apply** quotes the part's steps as the case's acceptance check and names the
-  derived spec as the test to make pass. It never edits the page.
+  derived spec as the test to make pass. It never edits the journey.
 - **Verify** reads the derived spec and the last run as the requirement's `e2e`
   evidence. A part that fails is evidence against the requirement; a part no case
-  points at is reported beside the table as an unclaimed journey. Two findings
-  more, for every page a requirement in scope points at:
-  - **`stale`** — the page's signature no longer matches its run: the first field
-    `.devbook/_tools/scenarios/signature.mjs <page>` prints, a read that runs
-    nothing, is not the `signature` in `<scenario folder>/<stem>/run.json`, or
-    there is no `run.json`. The scenario folder is `.devbook/scenarios/` unless
-    `playwright.config.ts` sets `scenarioFolder`; pass it as `--scenario-folder`
-    whenever it is set, because a page's data sets hash from under it. Listed after the report table, one row per page with
-    both signatures and `scenario-run` as the action, per [Report table](#report-table) — `scenario-derive` first when the
-    spec's `// signature:` differs too. `stale` qualifies a run the way `unagreed`
+  points at is reported beside the table as unclaimed. Two findings more, for
+  every journey a requirement in scope points at:
+  - **`stale`** — the journey's signature no longer matches its run: the first
+    field `.devbook/_tools/scenarios/signature.mjs <scenarios file>#<journey>`
+    prints, a read that runs nothing, is not the `signature` in its `run.json`,
+    or there is no `run.json`. Data sets hash from `.devbook/scenarios/data/`
+    unless `playwright.config.ts` sets `scenarioFolder`; pass it as
+    `--scenario-folder` whenever it is set. Listed after the report table, one row
+    per journey with both signatures and `scenario-run` as the action, per
+    [Report table](#report-table) — `scenario-derive` first when the spec's
+    `// signature:` differs too. `stale` qualifies a run the way `unagreed`
     qualifies a verdict; it is not a sixth verdict.
   - **`spec-ahead`** — a part a case points at has no proof: no spec's
-    `// scenario:` header names its page, that spec has no `part` titled as the
+    `// scenario:` header names its journey, that spec has no `part` titled as the
     part's heading, or the current run records the part `not-run`, a step still
     held by `test.fixme()`. The requirement's row is `spec-ahead` — agreed and not
     proved — with `scenario-derive` as the action, or the held step to fill, then
@@ -645,12 +647,12 @@ the same ground gets re-covered next time.
 |---|---|---|
 | `.devbook/arc42/building-blocks/ordering.md#order` | `Bestelling` | No identifier matches; the class is now `Order`. Remove the alias, or correct it if a Dutch name is still meant to pair |
 
-Where a requirement in scope points at a scenario page, `verify-change` then lists
-each such page's run, or the line "No scenario pages." when none is pointed at:
+Where a requirement in scope points at a journey, `verify-change` then lists each
+such journey's run, or the line "No journeys." when none is pointed at:
 
-| Page | Page signature | Run signature | Run | Action |
+| Journey | Journey signature | Run signature | Run | Action |
 |---|---|---|---|---|
-| `.devbook/domain/work/set-up-and-fill-the-backlog.md` | `9c41e2a0` | `51d0b7e3` | `stale` | `scenario-run`; the spec's header still reads `51d0b7e3`, so `scenario-derive` first |
+| `.devbook/domain/work/scenarios.md#set-up-and-fill-the-backlog` | `9c41e2a0` | `51d0b7e3` | `stale` | `scenario-run`; the spec's header still reads `51d0b7e3`, so `scenario-derive` first |
 
 **Run** is `current` when the two signatures match and `stale` otherwise, and
-**Run signature** is `none` when the page has no `run.json`.
+**Run signature** is `none` when the journey has no `run.json`.

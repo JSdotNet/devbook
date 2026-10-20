@@ -241,7 +241,20 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // `depends-on`, or prose link into `openspec/changes/` is an error: a change
 // points at the devbook, never the reverse. No chapter shape moves, and no
 // migration is owed.
-export const CONTRACT_VERSION = 31;
+//
+// Version 32 moves the journey into a file of its context: `scenarios.md`, or
+// a split `scenarios.<name>.md`, holds one journey per `##` chapter typed
+// `scenario`, carrying the setup fields, and its `###` headings are the
+// parts. A journey is addressed `<scenarios file>#<journey>`, so any number
+// of features and requirements point at it through `related`; every journey
+// and part anchor is unique in its file, `Proved by:` names `<scenarios
+// file>#<part>` resolved from the requirement's folder, `scenario:` images
+// name the file from `.devbook/domain/`, and the stem register is gone. A
+// journey's runs live beside its file, in `<file without .md>/<journey>/`. A
+// whole file typed `scenario` is an error; `032-scenarios-md` folds each one
+// into its context's `scenarios.md` and moves its references, runs, and spec
+// header with it.
+export const CONTRACT_VERSION = 32;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -738,10 +751,10 @@ export async function buildGraph(repoRoot, folders = null) {
         }
     }
 
-    // Scenario pages are checked across the corpus once every chapter exists:
-    // the stem register, the setup fields, `scenario:` images, and the
-    // `Proved by:` pointers — whose part, where a spec implements its page,
-    // derives the requirement's `e2e` entry, so nobody writes it by hand.
+    // Journeys are checked across the corpus once every chapter exists: the
+    // setup fields, `scenario:` images, and the `Proved by:` pointers — whose
+    // part, where a spec implements its journey, derives the requirement's
+    // `e2e` entry, so nobody writes it by hand.
     const scenarios = await scenarioProblems(repoRoot, docs, nodes);
     problems.push(...scenarios.problems);
     for (const [id, entries] of scenarios.derivedTests) {
@@ -754,8 +767,8 @@ export async function buildGraph(repoRoot, folders = null) {
     // case names.
     const linked = await linkedWalkthroughs(repoRoot, scanned, scenarios.register);
     problems.push(...linked.problems);
-    for (const page of scenarios.register) {
-        for (const part of page.parts) {
+    for (const journey of scenarios.register) {
+        for (const part of journey.parts) {
             const entries = linked.links.filter((link) => link.part === part.id).map((link) => `${link.demo}#walkthrough/${link.id}`);
             if (!entries.length) continue;
             for (const { requirement } of part.provedBy) {

@@ -52,14 +52,13 @@ diagram to about nine nodes, and split a larger one.
 Write a how-to as numbered steps. Open each with an imperative verb, and give it one action
 in under about 20 words.
 
-## A scenario page
+## A journey
 
-A scenario page reads as one journey, start to finish, in the order the actor
-lives it. Give each part one `##`, titled as the outcome the actor reaches. Give
-each step one list item: one action or one thing the actor sees, in under about
-20 words. Write the page
+A journey reads start to finish, in the order the actor lives it. Give each part
+one `###`, titled as the outcome the actor reaches. Give each step one list item:
+one action or one thing the actor sees, in under about 20 words. Write a journey
 in English whatever language the other chapters use, because its steps are the
-test's steps. The page's shape is `devbook-chapter-metadata.md`'s.
+test's steps. Its shape is `devbook-chapter-metadata.md`'s.
 
 ## Example
 

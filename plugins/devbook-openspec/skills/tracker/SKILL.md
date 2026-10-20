@@ -1,6 +1,6 @@
 ---
 name: tracker
-description: 'Keep a change''s tasks.md as its work items — read a step with its scenario pages, set its state and tick its tasks, or leave a note — for an engine binding its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over openspec/changes/<name>/tasks.md. Use when: a run reads or updates the step it builds, "mark step 2 done".'
+description: 'Keep a change''s tasks.md as its work items — read a step with its journeys, set its state and tick its tasks, or leave a note — for an engine binding its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over openspec/changes/<name>/tasks.md. Use when: a run reads or updates the step it builds, "mark step 2 done".'
 ---
 
 # devbook-openspec tracker
@@ -22,10 +22,10 @@ change sits under `openspec/changes/archive/`, `open` before. Nothing here is ev
 
 - **`read_item`** — for every item, `change` and `part` (`proposal`, `step` with its number,
   or `close`). For a step, also its title, `delivers:` and `owner`, its tasks with their
-  ticks, its state, and the proposal's status. Also its `scenarios`: every scenario page
-  `delivers:` names — a delta under `devbook-delta/domain/<context>/` whose page is
-  `type: scenario`, whole or as `#<part>` — each with its run as `devbook:verify-change`
-  reports it, `current`, `stale`, or `missing` where the page has no `run.json`. A run is
+  ticks, its state, and the proposal's status. Also its `scenarios`: every journey
+  `delivers:` names — a `##` typed `scenario` in a scenarios file or its delta, as
+  `<scenarios file>#<journey>` or `#<part>` — each with its run as `devbook:verify-change`
+  reports it, `current`, `stale`, or `missing` where the journey has no `run.json`. A run is
   read, never started. An item that does not exist is an error, named.
 - **`update_item`** — given the tasks the run completed: tick them, on the branch the run
   works on, and edit no other line. Never untick a task a person ticked.

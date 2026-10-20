@@ -145,14 +145,17 @@ that the two named one thing. Everything the plugin ships is named `devbook-` fo
 reason: the old prefix said only which plugin used to own the folder. What `_meta/graph.json`
 derives from their `meta` blocks is the **reference graph**.
 
-A **scenario page** is one end-to-end journey written as a `domain/` page of its own, typed
-`scenario`, beside the chapter it demonstrates; its `##` headings are its **parts**. A
-**scenario case** is the `#### Scenario:` under a requirement, which may point at a part with
-`Proved by:` instead of spelling out its own steps. The two words stay apart: the page is the
-journey, the case is one thing a requirement promises. Runs, profiles, and data sets live in
-`.devbook/scenarios/`, which holds no page. The writing convention for a page lives in
-`devbook-chapter-metadata.md` under *Scenario pages*, and a page is written in English whatever
-language the other chapters use, because its steps are the test's steps.
+A **journey** is one end-to-end walk through the product, written as a `##` chapter typed
+`scenario` in its bounded context's `scenarios.md`; its `###` headings are its **parts**. It
+sits in the context holding most of the requirements it proves, and it is addressed like any
+chapter, `<scenarios file>#<journey>`, so any number of features and requirements point at it.
+A **scenario case** is the `#### Scenario:` under a requirement, which may point at a part
+with `Proved by:` instead of spelling out its own steps. The two words stay apart: the journey
+is the walk, the case is one thing a requirement promises. A journey's runs sit beside its
+file, in `scenarios/<journey>/`; profiles and data sets live in `.devbook/scenarios/`, which
+holds no journey. The writing convention lives in `devbook-chapter-metadata.md` under
+*Journeys*, and a journey is written in English whatever language the other chapters use,
+because its steps are the test's steps.
 
 A demo's **walkthrough** plays a journey through its screens, and is one of two kinds. A **free
 walkthrough** carries its own step text and takes the slug of the inline scenario case it plays
