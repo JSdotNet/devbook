@@ -44,7 +44,7 @@ const provedBy = (target) =>
     `${header("modified")}\n### Requirement: Columns follow the status order\n\n#### MODIFIED\n\n##### Scenario: Statuses are set up\n\nProved by: ${target}\n`;
 const proposal =
     `# Add journey\n\n${fence("type: change\nstatus: proposed\ncategory: feature\n")}\n` +
-    `## Why\n\nThe board's setup is one journey.\n\n## Scope\n\nThe journey and its requirement.\n\n## Chapters touched\n\n- ${REQUIREMENTS}\n- ${PAGE}\n`;
+    `## Why\n\nThe board's setup is one journey.\n\n## Scope\n\nThe journey and its requirement.\n`;
 
 async function fixture(extra = {}) {
     const root = await mkdtemp(path.join(tmpdir(), "devbook-change-scenarios-"));

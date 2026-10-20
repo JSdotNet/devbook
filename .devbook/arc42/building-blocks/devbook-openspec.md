@@ -52,8 +52,8 @@ A project schema named `devbook` at `openspec/schemas/devbook/`, whose artifacts
 carries a `description`, and every `instruction` is a block scalar, because a plain YAML scalar
 cannot hold the `: ` in `` `owner: me` ``; `openspec schema validate devbook` passes on 1.13.2.
 The `devbook-delta` instruction also covers a demo: the standalone prototype copied whole to
-the path where it lands, one variant, never edited in the change. The proposal lists the demo
-under *Chapters touched* and records its verdict under *Why*, `solution.md` names its screens
+the path where it lands, one variant, never edited in the change. The proposal records its
+verdict under *Why*, `solution.md` names its screens
 in a file-level `demo` block, and a step names it on `delivers:`, per
 [the demos decision](../adr/demos.md). `spec` hands a run a demo delta by path, never inlined.
 

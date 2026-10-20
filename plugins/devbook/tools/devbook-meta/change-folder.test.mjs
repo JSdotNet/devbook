@@ -47,7 +47,7 @@ const decisions =
 
 const proposal =
     `# Add a cache\n\n${fence("type: change\nstatus: proposed\ncategory: feature\n")}\n` +
-    `## Why\n\nReads are slow.\n\n## Scope\n\nThe read path.\n\n## Chapters touched\n\n- ${DECISIONS}#caching\n`;
+    `## Why\n\nReads are slow.\n\n## Scope\n\nThe read path.\n`;
 
 const modified =
     fence("change: add-cache\ndelta: modified\n") +

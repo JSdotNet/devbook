@@ -103,7 +103,7 @@ const dump = (problems) => problems.map((p) => `[${p.severity}] ${p.message}`).j
     const problems = await demoProblemsOf({
         [`${other}/proposal.md`]:
             `# Rename orders\n\n${fence("type: change\nstatus: proposed\ncategory: behaviour-change\n")}\n` +
-            `## Why\n\nNames.\n\n## Scope\n\nNames.\n\n## Chapters touched\n\n- ${CONTEXT}/context.md\n`,
+            `## Why\n\nNames.\n\n## Scope\n\nNames.\n`,
         [`${other}/devbook-delta/domain/ordering/context.md`]: fence("change: rename-orders\ndelta: modified\n"),
     });
     check(problems.length === 0, "a demo landed directly, with no change carrying it, reports nothing", dump(problems));
@@ -397,7 +397,7 @@ for (const [head, needle, name] of [
 const CHANGE = "openspec/changes/add-express";
 const proposalMd = (demo) =>
     `# Add express checkout\n\n${fence(`type: change\nstatus: proposed\ncategory: feature\ndemo: [${demo}]\n`)}\n` +
-    `## Why\n\nFaster.\n\n## Scope\n\nCheckout.\n\n## Chapters touched\n\n- ${CONTEXT}/features.md#checkout\n`;
+    `## Why\n\nFaster.\n\n## Scope\n\nCheckout.\n`;
 const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow express on the checkout screen.\n`;
 
 {

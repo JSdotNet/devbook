@@ -13,7 +13,3 @@ category: feature
 ## Scope
 
 <!-- What changes and what does not. -->
-
-## Chapters touched
-
-<!-- One line per chapter, by address: .devbook/<folder>/<file>.md#<slug>; a demo by its path: .devbook/domain/<context>/<name>.demo.html -->
