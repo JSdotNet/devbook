@@ -5,7 +5,7 @@
 // a problem with its line, never dropped silently.
 //
 // Run: `node c4.test.mjs`
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, writeFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseWorkspace, readWorkspace, tokenize } from "./c4.mjs";
@@ -258,6 +258,35 @@ model {
         check(eq(files(/is not a file/), [".devbook/arc42/workspace.dsl:8"]), "including a folder is a problem");
         check(eq(files(/only a relative path/), [".devbook/arc42/workspace.dsl:9", ".devbook/arc42/workspace.dsl:10"]), "a URL or an absolute include is a problem", show(r.problems));
         check(eq(files(/a cycle/), [".devbook/arc42/c4/loop.dsl:1"]), "an include cycle is a problem, read once", show(r.problems));
+    } finally {
+        await rm(root, { recursive: true, force: true });
+    }
+}
+// A link under `c4/` passes the path check, so only the realpath comparison
+// stands between it and a file outside the folder.
+{
+    const root = await mkdtemp(path.join(tmpdir(), "c4-link-"));
+    try {
+        const arc = path.join(root, ".devbook", "arc42");
+        await mkdir(path.join(arc, "c4"), { recursive: true });
+        await writeFile(path.join(arc, "workspace.dsl"), "workspace {\n!identifiers hierarchical\nmodel {\n!include c4/escape.dsl\n!include c4/inner.dsl\n}\n}\n");
+        await writeFile(path.join(arc, "outside.dsl"), "x = person \"X\"\n");
+        await writeFile(path.join(arc, "c4", "real.dsl"), "y = person \"Y\"\n");
+        let linked = true;
+        try {
+            await symlink(path.join(arc, "outside.dsl"), path.join(arc, "c4", "escape.dsl"), "file");
+            await symlink(path.join(arc, "c4", "real.dsl"), path.join(arc, "c4", "inner.dsl"), "file");
+        } catch (e) {
+            if (!["EPERM", "EACCES", "ENOTSUP", "ENOSYS"].includes(e.code)) throw e;
+            linked = false;
+            console.log(`SKIP  an include through a link to a file outside \`c4/\` is refused — this platform refused to create a symlink (${e.code}); on Windows that takes developer mode or an elevated shell`);
+        }
+        if (linked) {
+            const r = readWorkspace(".devbook/arc42/workspace.dsl", { root });
+            const at = r.problems.filter((x) => /is a link to a file outside/.test(x.message)).map((x) => `${x.file}:${x.line}`);
+            check(eq(at, [".devbook/arc42/workspace.dsl:4"]) && !el(r, "x"), "an include through a link to a file outside `c4/` is a problem and is not read", show(r.problems));
+            check(!!el(r, "y") && !r.problems.some((x) => x.line === 5), "an include through a link that stays inside `c4/` is read", show(r.problems));
+        }
     } finally {
         await rm(root, { recursive: true, force: true });
     }
