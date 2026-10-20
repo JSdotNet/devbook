@@ -122,7 +122,11 @@ Three cases decide whether one is owed:
   file. Reconcile replaces only a copy that still hashes to a release devbook shipped, and
   never deletes: a moved path leaves the old copy behind as an orphan, and a copy edited since
   it landed is reported as customized and left alone. Either way the file is stale until a
-  script moves it. A file reconcile would replace on its own needs none.
+  script moves it. A file reconcile would replace on its own needs none. A workflow
+  `devbook-derived:init` edits on the way in is the repository's from its first landing: a
+  release that adds a step to it owes none, and `update` reports the shipped diff for a person
+  to merge; one that leaves a stale copy failing still owes one. devbook's `devbook-meta.yml`
+  is not exempt. The reason is `.devbook/arc42/adr/install.md`.
 
 The reason this obligation starts at 1.0.0 and not before is
 `.devbook/arc42/adr/releases.md`. A migration lives for the major
