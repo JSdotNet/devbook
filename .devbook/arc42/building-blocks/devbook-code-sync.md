@@ -192,7 +192,7 @@ prints the result for the sweep to read.
 | A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `syncLevel` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
 | Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| A building block lists `workspace.dsl` and its included files among its files exactly when `arc42/` has a workspace | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A building block lists `workspace.dsl`, and each included file that declares an element or a view, among its files whenever the workspace declares one | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 
 ### Spec Converter
