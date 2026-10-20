@@ -29,7 +29,7 @@ the owner, which no field holds.
 Until the check accepted the ladder, these records held both as a bold line in the body,
 because under `arc42/` a `status` admitted only the folder's own rungs. The
 `032-c4-workspace` migration moved them, and [TDR 10](10-the-c4-rules-run-ahead-of-this-devbook.md)
-records what of that gap is still open.
+records how the rest of that gap was closed.
 
 ## The set
 
@@ -50,7 +50,7 @@ record's `meta` is the source.
 | [7. The decision set predates the concern rule](7-the-decision-set-predates-the-concern-rule.md) | 2026-09-17 | Medium | resolved |
 | [8. The domain rule is not exercised here](8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Medium | identified |
 | [9. OpenSpec's model does not cover a devbook change](9-openspecs-model-does-not-cover-a-devbook-change.md) | 2026-09-27 | Medium | resolved |
-| [10. The C4 rules run ahead of this devbook](10-the-c4-rules-run-ahead-of-this-devbook.md) | 2026-10-20 | Low | in-progress |
+| [10. The C4 rules run ahead of this devbook](10-the-c4-rules-run-ahead-of-this-devbook.md) | 2026-10-20 | Low | resolved |
 
 None carries a target date. This repository has one maintainer and no release commitment to
 schedule against, so a date would be invented rather than agreed. Each record states the

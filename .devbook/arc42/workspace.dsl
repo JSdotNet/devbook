@@ -368,6 +368,11 @@ workspace "jsdotnet-devbook" {
             autolayout lr
         }
 
+        container marketplace "devbook-skills-dependencies" "The three plugins that name a devbook-skills skill, and the tracker wayfinder writes to." {
+            include marketplace.devbook-skills marketplace.devbook marketplace.delivery marketplace.delivery-schedule github
+            autolayout lr
+        }
+
         component marketplace.delivery "delivery" "The run, the flow, the stack config, and the flow runner, with the phases and the pull-request lane inside." {
             include *
             autolayout lr

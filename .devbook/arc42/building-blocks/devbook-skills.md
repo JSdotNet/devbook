@@ -190,15 +190,13 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/ad
 An L0 foundation that declares nothing and is declared by nothing. Callers name the skill
 alone, and each keeps its own short rule for when the skill is absent.
 
-```mermaid
-flowchart LR
-    DEV["devbook<br/>devbook-writing.md"] -.->|"names show-me"| SK["devbook-skills<br/>show-me, research-brief, pr-body, retro"]
-    DEL["delivery<br/>pull request, report-back"] -.->|"names show-me"| SK
-    DELS["delivery<br/>scope, arc42 and tech drafting"] -.->|"names research-brief"| SK
-    DEL -.->|"names pr-body and retro"| SK
-    SCH["delivery-schedule<br/>draft pull requests, merge review, weekly retro"] -.->|"names pr-body and retro"| SK
-    SK -->|"wayfinder writes the map and its tickets"| TR["The repository's issue tracker"]
-```
+![devbook-skills' dependencies](c4:devbook-skills-dependencies)
+
+The view also draws the couplings between the three callers themselves, and the pull
+requests delivery and delivery-schedule open on GitHub; those belong to
+[delivery](delivery.md#dependencies) and [delivery-schedule](delivery-schedule.md#dependencies).
+Only the arrow from devbook-skills to GitHub is this block's: `wayfinder` writing its map.
+Which phase or contract names which skill is in the Inbound table below.
 
 ### Outbound
 

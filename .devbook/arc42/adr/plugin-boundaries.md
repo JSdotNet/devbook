@@ -250,28 +250,28 @@ belongs to a person's map.
 ```meta
 ```
 
-| Date | Change |
-| --- | --- |
-| 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. |
-| 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. |
-| 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. |
-| 2026-10-05 | The fold lands: the seeds, the wrapper shape, and the demo template and sample move under `devbook`'s `assets/procedures/`, `devbook:init` and `devbook:update` adopt and reconcile the procedures, the session-start paragraph joins devbook's hook, and `devbook-procedures` leaves the marketplace. |
-| 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. |
-| 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
-| 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |
-| 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |
-| 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. |
-| 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. |
-| 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. |
-| 2026-09-26 | The weekly `devbook-update` schedule runs `devbook-config:update` unattended and lands a draft pull request; it installs no plugin and never runs `delivery-schedule:update`. |
-| 2026-09-26 | `devbook-procedures` seeds a fifth procedure, `estimate`: story points sized against the repository's own finished work, so a pace measured in points means the same across plans. Nothing depends on it; a caller that finds it absent sizes by its own rule and says so. |
-| 2026-09-21 | `fleet` is deleted: the issue sweep is a `delivery-schedule` entry point, sequential in one session, and nothing in the marketplace spawns a session. An unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request the sweep opens is a draft. |
-| 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. |
-| 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. |
-| 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. |
-| 2026-09-07 | `delivery-schedule` holds every unattended entry point and its triggers; a schedule is never a procedure. |
-| 2026-09-07 | Seven specialist plugins leave; every stage names a point, and no plugin names one published elsewhere. |
-| 2026-09-07 | `devbook-config` is a plugin of its own with no dependencies. |
-| 2026-09-04 | A role plugin holds no gate, no sequencing, no spawning, no delegation. |
-| 2026-09-03 | The sweep skills land in `fleet`, an L1 extension over `delivery`. |
-| 2026-09-02 | One folder per plugin; dependency, bridge, and surface are the three ways to couple. |
+| Date | Change | Why |
+| --- | --- | --- |
+| 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. | — |
+| 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. | — |
+| 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. | — |
+| 2026-10-05 | The fold lands: the seeds, the wrapper shape, and the demo template and sample move under `devbook`'s `assets/procedures/`, `devbook:init` and `devbook:update` adopt and reconcile the procedures, the session-start paragraph joins devbook's hook, and `devbook-procedures` leaves the marketplace. | — |
+| 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. | — |
+| 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp. Decided here; the fold lands as its own change. | `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. |
+| 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. | — |
+| 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. | — |
+| 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. | — |
+| 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. | — |
+| 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. | — |
+| 2026-09-26 | The weekly `devbook-update` schedule runs `devbook-config:update` unattended and lands a draft pull request; it installs no plugin and never runs `delivery-schedule:update`. | — |
+| 2026-09-26 | `devbook-procedures` seeds a fifth procedure, `estimate`: story points sized against the repository's own finished work. Nothing depends on it; a caller that finds it absent sizes by its own rule and says so. | A pace measured in points means the same across plans. |
+| 2026-09-21 | `fleet` is deleted: the issue sweep is a `delivery-schedule` entry point, sequential in one session, and nothing in the marketplace spawns a session. An unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request the sweep opens is a draft. | — |
+| 2026-09-21 | `devbook-procedures` seeds `start`, `show`, `capture`, and `debug` with a fixed goal per wrapper; `delivery` seeds nothing and names the skills alone. | — |
+| 2026-09-17 | `devbook-derived` is the committed index's plugin; the review plugin ships skills only. | — |
+| 2026-09-07 | The five folder flows move into `delivery`; the `devbook-flows` bridge is removed. | — |
+| 2026-09-07 | `delivery-schedule` holds every unattended entry point and its triggers; a schedule is never a procedure. | — |
+| 2026-09-07 | Seven specialist plugins leave; every stage names a point, and no plugin names one published elsewhere. | — |
+| 2026-09-07 | `devbook-config` is a plugin of its own with no dependencies. | — |
+| 2026-09-04 | A role plugin holds no gate, no sequencing, no spawning, no delegation. | — |
+| 2026-09-03 | The sweep skills land in `fleet`, an L1 extension over `delivery`. | — |
+| 2026-09-02 | One folder per plugin; dependency, bridge, and surface are the three ways to couple. | — |

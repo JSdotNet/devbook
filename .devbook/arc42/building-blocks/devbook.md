@@ -20,18 +20,8 @@ each with its own file: the two directions between a chapter and its code are
 [devbook-code-sync](devbook-code-sync.md), and the five procedures are
 [devbook-procedures](devbook-procedures.md). This file is the convention's white box around
 them: the chapter, the folder, the check, and the reconcile — and the
-[C4 model](#c4-model) an `arc42/` folder's chapters embed and point at.
-
-```mermaid
-flowchart LR
-  subgraph devbook
-    C["chapter, folder, check, reconcile"]
-    S["devbook-code-sync"]
-    P["devbook-procedures"]
-  end
-  S -->|"reads the graph, writes chapters in their shape"| C
-  C -->|"materializes and stamps the seeds"| P
-```
+[C4 model](#c4-model) an `arc42/` folder's chapters embed and point at. The component view
+under [Structure](#structure) draws this file's parts and the two nested blocks together.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter
