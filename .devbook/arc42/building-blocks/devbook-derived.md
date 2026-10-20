@@ -155,8 +155,11 @@ element's tags. Every deployment node holding a shown leaf is a labelled box aro
 holds, nested as the model nests them, with its instance count; a node holding nothing shown
 is not drawn. Lines are the relationships declared between the leaves and the ones each
 instance inherits from what it instantiates, in model order, direct as written or the first
-implied one, dashed. A relationship to or from a deployment node itself is not drawn, and
-deployment groups are not drawn as bands.
+implied one, dashed. A relationship declared to or from a deployment node runs between the
+node's box and its other end, labelled like any other, whenever that end is shown and
+neither holds the other. It runs along a gap between ranks, which no leaf occupies, and
+meets the node's side, or turns into it through the node's own padding, so it crosses no
+leaf either. Deployment groups are outside the reader's DSL subset and are not drawn.
 
 `init` materializes `render.mjs` and its README into `.devbook/_tools/c4-render/` where
 `arc42/` is adopted, never its tests or fixtures, and every refresh path runs it as
@@ -176,6 +179,7 @@ problem hid keeps its picture until the workspace reads clean. Placed there, it 
 | No two boxes overlap and no line crosses a box in any autolayout direction, and the boundary holds the scope's elements and no other | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A dynamic view draws one arrow per step, numbered, in step order, and two steps between one pair get separate label places | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A deployment node holds every leaf and node inside it, sibling nodes never overlap, and no leaf sits in a node that does not hold it, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
+| A relationship to or from a deployment node ends on the node's border and its other end's, crosses no leaf, and is not drawn to what the node holds, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | It reads devbook's model and bundles no parser | `render.mjs` | untested |
 | A refresh writes one SVG per view key, rewrites only what changed, and deletes the render of a view that no longer exists | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | `--check` reports a missing, stale, or orphaned render, exits `1`, and writes nothing | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |

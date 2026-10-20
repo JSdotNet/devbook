@@ -9,8 +9,9 @@
 // A dynamic view is laid out the same way along its steps, one arrow per step
 // labelled with its number, in step order. A deployment view draws one
 // environment: its deployment nodes as nested boxes, each holding the
-// infrastructure nodes and instances deployed on it, and the relationships the
-// instances inherit from what they instantiate.
+// infrastructure nodes and instances deployed on it, the relationships the
+// instances inherit from what they instantiate, and the relationships declared
+// to or from a deployment node, drawn to the node's box.
 //
 // Deterministic: the same model gives the same bytes. Every coordinate is a
 // whole number, every order comes from the model's own order, and nothing reads
@@ -70,6 +71,8 @@ const MARGIN = 32;
 // name and technology, and padding on every other side.
 const NEST_TOP = 48;
 const NEST_PAD = 16;
+// How far from a gap's middle, toward the leaf, a line to a deployment node runs.
+const GAP_SHIFT = 24;
 
 // ── text ────────────────────────────────────────────────────────────────────
 
@@ -240,7 +243,8 @@ const LEAF_KINDS = new Set(["infrastructureNode", "softwareSystemInstance", "con
 // when it holds a shown leaf. Lines are the relationships declared between the
 // leaves themselves and the ones each instance inherits from the element it
 // instantiates, in model order — direct as written, otherwise the first implied
-// one. A relationship to or from a deployment node is not drawn.
+// one — and each relationship declared to or from a shown deployment node whose
+// other end is shown and neither holds the other, marked `toNode`.
 export function selectDeployment(model, view) {
     const m = model instanceof Model ? model : new Model(model);
     const env = m.model.elements.filter((e) => e.environment && e.environment === view.environment);
@@ -270,11 +274,18 @@ export function selectDeployment(model, view) {
 
     const excluded = new Set(view.exclude);
     const visible = new Set(shownLeaves.map((e) => e.id));
+    const framed = new Set(nodes.map((e) => e.id));
+    const holds = (outer, inner) => { for (let p = byId.get(inner)?.parent; p; p = byId.get(p)?.parent) if (p === outer) return true; return false; };
     const instances = shownLeaves.filter((e) => e.kind !== "infrastructureNode");
     const pairs = new Pairs();
     m.model.relationships.forEach((r, index) => {
         if (r.id && excluded.has(r.id)) return;
         if (visible.has(r.source) && visible.has(r.destination)) { if (r.source !== r.destination) pairs.add(r.source, r.destination, r, index, true); return; }
+        if (framed.has(r.source) || framed.has(r.destination)) {
+            const shownEnd = (id) => visible.has(id) || framed.has(id);
+            if (shownEnd(r.source) && shownEnd(r.destination) && r.source !== r.destination && !holds(r.source, r.destination) && !holds(r.destination, r.source)) pairs.add(r.source, r.destination, r, index, true);
+            return;
+        }
         if (!m.byId.has(r.source) || !m.byId.has(r.destination)) return;
         for (const a of instances) {
             if (!m.within(r.source, a.instanceOf)) continue;
@@ -285,7 +296,9 @@ export function selectDeployment(model, view) {
             }
         }
     });
-    return { shown, nodes, lines: pairs.lines() };
+    const lines = pairs.lines();
+    for (const line of lines) if (framed.has(line.source) || framed.has(line.destination)) line.toNode = true;
+    return { shown, nodes, lines };
 }
 
 // ── layout ──────────────────────────────────────────────────────────────────
@@ -583,8 +596,56 @@ function route(nodes, lines, geometry) {
     }
 }
 
+// A line to or from a deployment node runs along one gap between ranks, which
+// no leaf occupies. A deployment node holds a stretch of the slot axis no box
+// outside it shares, so the gap meets the node's side facing the other end
+// wherever the gap lies within the node's rank span; elsewhere the line turns
+// from the gap into the node's facing rank side down a column of the node's own
+// padding, which no other line enters by. A leaf end leaves by its rank side
+// into a gap beside its own rank. Of the candidate gaps, the one inside the
+// most node ends wins, then the one nearest the middle of the two ends, then
+// the lowest.
+function routeToNodes(nodes, lines, rects, geometry) {
+    const { vertical, rankSep } = geometry;
+    const byId = new Map([...nodes, ...rects].map((box) => [box.element.id, box]));
+    const framed = new Set(rects);
+    const rankOf = (box) => (vertical ? [box.y, box.y + box.h] : [box.x, box.x + box.w]);
+    const slotOf = (box) => (vertical ? [box.x, box.x + box.w] : [box.y, box.y + box.h]);
+    const mid = ([lo, hi]) => (lo + hi) / 2;
+    const [rankNear, rankFar, slotNear, slotFar] = vertical ? ["top", "bottom", "left", "right"] : ["left", "right", "top", "bottom"];
+    // A gap's middle is where a curve between neighbouring ranks runs level and
+    // puts its label, so each leaf's line runs a little nearer the leaf.
+    const beside = (box) => [rankOf(box)[0] - rankSep / 2 + GAP_SHIFT, rankOf(box)[1] + rankSep / 2 - GAP_SHIFT].map(Math.round);
+    const gaps = [...new Set(nodes.flatMap(beside))].sort((p, q) => p - q);
+    const within = (box, g) => g > rankOf(box)[0] + 8 && g < rankOf(box)[1] - 8;
+    for (const line of lines) {
+        const ends = [byId.get(line.source), byId.get(line.destination)];
+        const leaf = ends.find((box) => !framed.has(box));
+        const candidates = leaf ? beside(leaf) : gaps;
+        const want = (mid(rankOf(ends[0])) + mid(rankOf(ends[1]))) / 2;
+        const inside = (g) => ends.filter((box) => framed.has(box) && within(box, g)).length;
+        const gap = [...candidates].sort((p, q) => inside(q) - inside(p) || Math.abs(p - want) - Math.abs(q - want) || p - q)[0];
+        // Each end, from its box out to the gap: a leaf's is worked out once its port is placed.
+        const legs = ends.map((box, i) => {
+            if (!framed.has(box)) return { side: gap > rankOf(box)[1] ? rankFar : rankNear, points: null };
+            const other = ends[1 - i];
+            if (within(box, gap)) {
+                const onward = mid(slotOf(other)) > mid(slotOf(box));
+                return { side: onward ? slotFar : slotNear, points: [toPoint(vertical, onward ? slotOf(box)[1] : slotOf(box)[0], gap)] };
+            }
+            const [lo, hi] = rankOf(box);
+            const before = gap <= lo || (gap < hi && gap - lo < hi - gap);
+            // In the padding on the side facing the other end, clear of every column a leaf it holds is entered by.
+            const column = mid(slotOf(other)) > mid(slotOf(box)) ? slotOf(box)[1] - NEST_PAD / 2 : slotOf(box)[0] + NEST_PAD / 2;
+            return { side: before ? rankNear : rankFar, points: [toPoint(vertical, column, before ? lo : hi), toPoint(vertical, column, gap)] };
+        });
+        line.route = { kind: "node", vertical, gap, sides: legs.map((l) => l.side), legs: legs.map((l) => l.points) };
+    }
+}
+
 // The sides a line leaves and enters by, from how it is routed.
 function sides(r) {
+    if (r.kind === "node") return r.sides;
     const [rankNear, rankFar, slotNear, slotFar] = r.vertical ? ["top", "bottom", "left", "right"] : ["left", "right", "top", "bottom"];
     if (r.kind === "beside") return r.onward ? [slotFar, slotNear] : [slotNear, slotFar];
     if (r.kind === "around") return [rankFar, rankFar];
@@ -683,16 +744,19 @@ function drawNode(node) {
 const NORMAL = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] };
 
 // Spreads the ends meeting one side of a box across its middle, ordered by
-// where the other end lies, so parallel lines never share a point.
-function ports(nodes, lines) {
-    const byId = new Map(nodes.map((node) => [node.element.id, node]));
+// where the other end lies, so parallel lines never share a point. A deployment
+// node's end is where its route meets the node, never spread.
+function ports(nodes, lines, rects = []) {
+    const byId = new Map([...nodes, ...rects].map((box) => [box.element.id, box]));
     const ends = new Map();
     lines.forEach((line, i) => {
         const a = byId.get(line.source);
         const b = byId.get(line.destination);
         const [sa, sb] = sides(line.route);
         line.ends = [{ node: a, other: b, side: sa }, { node: b, other: a, side: sb }];
+        line.ends.forEach((end, k) => { if (line.route.legs?.[k]) end.point = line.route.legs[k][0]; });
         for (const end of line.ends) {
+            if (end.point) continue;
             const key = `${end.node.element.id}\u0000${end.side}`;
             if (!ends.has(key)) ends.set(key, []);
             ends.get(key).push({ end, i });
@@ -735,7 +799,12 @@ function shapeLine(line) {
     const r = line.route;
     const slot = (p) => (r.vertical ? p[0] : p[1]);
     const along = (p) => (r.vertical ? p[1] : p[0]);
-    if (r.kind === "lane" || r.kind === "around") {
+    if (r.kind === "node") {
+        const [from, to] = r.legs.map((leg, k) => leg ?? [line.ends[k].point, toPoint(r.vertical, slot(line.ends[k].point), r.gap)]);
+        line.points = simplify([...from, ...[...to].reverse()]);
+        line.d = polyline(line.points);
+        line.mid = toPoint(r.vertical, Math.round((slot(from[from.length - 1]) + slot(to[to.length - 1])) / 2), r.gap);
+    } else if (r.kind === "lane" || r.kind === "around") {
         const [gapOut, gapIn] = r.kind === "lane" ? [r.gapOut, r.gapIn] : [r.gap, r.gap];
         const [laneFrom, laneTo] = r.kind === "lane" ? [r.lane, r.lane] : [slot(a.point), slot(b.point)];
         line.points = simplify([a.point, toPoint(r.vertical, slot(a.point), gapOut), toPoint(r.vertical, laneFrom, gapOut), toPoint(r.vertical, laneTo, gapIn), toPoint(r.vertical, slot(b.point), gapIn), b.point]);
@@ -845,12 +914,15 @@ export function arrange(model, view) {
     const boundaryOwner = view.kind === "container" || view.kind === "component" || view.kind === "dynamic" ? scope : null;
     const nodes = shown.map((element) => ({ element, inside: !!boundaryOwner && element.parent === boundaryOwner.id }));
     const regions = view.kind === "container" || view.kind === "component" || (view.kind === "dynamic" && !!scope);
+    // A line to or from a deployment node ranks nothing: it is routed once the nodes are placed.
+    const ranking = lines.filter((l) => !l.toNode);
     const result = !nodes.length
         ? { groupRects: [], boundary: null, nodeRects: [] }
-        : view.kind === "deployment" ? layoutDeployment(view, nodes, lines, deploymentNodes) : layout(view, nodes, lines, regions);
+        : view.kind === "deployment" ? layoutDeployment(view, nodes, ranking, deploymentNodes) : layout(view, nodes, ranking, regions);
     if (nodes.length) {
-        route(nodes, lines, result);
-        ports(nodes, lines);
+        route(nodes, ranking, result);
+        routeToNodes(nodes, lines.filter((l) => l.toNode), result.nodeRects ?? [], result);
+        ports(nodes, lines, result.nodeRects ?? []);
         lines.forEach(shapeLine);
     }
     return { m, nodes, lines, groupRects: result.groupRects, boundary: result.boundary, nodeRects: result.nodeRects ?? [], scope, boundaryOwner };
