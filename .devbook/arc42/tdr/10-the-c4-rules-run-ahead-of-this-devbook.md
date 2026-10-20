@@ -20,7 +20,8 @@ views embedded as `c4:<key>`, a three-column History table headed `Date | Change
 debt record carrying `severity` and a `status` on its own ladder. This repository's own devbook
 still breaks it in two places:
 
-- Every decision record but the C4 model record keeps the two-column `Date | Change` table.
+- Every decision record but the C4 model record keeps the two-column `Date | Change` table,
+  and the check reports each one as a warning.
 - Four Mermaid flowcharts still draw between elements the workspace defines: the opening
   pictures of [devbook](../building-blocks/devbook.md) and [delivery](../building-blocks/delivery.md),
   which draw their nested blocks, the [devbook-skills](../building-blocks/devbook-skills.md#dependencies)
