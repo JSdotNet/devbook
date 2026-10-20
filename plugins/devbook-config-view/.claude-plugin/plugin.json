@@ -1,6 +1,6 @@
 {
   "name": "devbook-config-view",
-  "version": "1.26.1",
+  "version": "1.27.0",
   "description": "A read-only view of how this machine's repositories are set up for the devbook stack, inside Claude Code: /rollout opens a pane whose matrix has one row per repository carrying .devbook/config.json under the configured roots — the parent folder of this repository's main checkout by default, worktrees skipped — and one column per components.<name> stamp, its pluginVersion coloured current, minor behind, or major behind against the installed marketplace's newest, the adopted devbook folders and procedures as dots, and every retired key the config still carries in red; its config map draws one repository's phase maps as a chain per flow — each phase's mode, inline, delegate, or fork, its agent, model, effort, skill, MCP servers and chores, with its gates where they sit — then its policy and bindings. A row's buttons put the devbook-config:doctor or devbook-config:update prompt for that repository in the prompt box and never send it. Reads on open and on refresh only. Function-hook modules, so Claude Code only. Writes nothing to any repository and declares no dependency.",
   "author": {
     "name": "Job Schepers"
