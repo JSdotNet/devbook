@@ -1,12 +1,12 @@
 # Releases
 
 ```meta
-date: 2026-10-20
+date: 2026-10-21
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 c4: ["marketplace"]
 ```
 
-Every plugin carries the same version — `1.28.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.28.1` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -81,6 +81,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-21 | Every plugin is `1.28.1`. It carries the fix to `devbook`'s scenario runner raised reviewing a consumer's update to `1.28.0`: `specFile()` in `setup.mjs` resolves a spec's title path against Playwright's `config.rootDir` — the top-level `testDir`, else the config's folder — instead of the project's `testDir`, so a suite with no top-level `testDir` and a project `testDir` below the config no longer doubles the folder and fails reading the spec header. A suite where the two coincide behaves as before, so this is a patch: no contract moves and no migration is owed, and reconcile replaces `setup.mjs` on a shipped hash. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-10-20 | Every plugin is `1.28.0`, the release of the C4 workspace. Contract 33 ships in it with `033-c4-workspace`, the one migration. 33 reads `.devbook/arc42/workspace.dsl`, which may `!include` only from `.devbook/arc42/c4/`; a section shows a view by `![…](c4:<view key>)`; `meta` gains `c4` and `c4-touches` in `arc42/` and `domain/`, `code` on a building block, and `severity` on a debt record, whose `status` takes the ladder `identified`, `planned`, `in-progress`, `resolved`; and a decision record's `## History` is headed `Date \| Change \| Why`. Each is added with a safe default, so the contract bump alone owes nothing; the migration moves the Mermaid and Archify diagrams a repository drew before the workspace into it, and writes each debt record's `severity` and `status`. `devbook-derived` renders every view to `.devbook/arc42/_meta/c4/<view key>.svg` with the renderer it materializes at `.devbook/_tools/c4-render/`, and its `devbook` range rises to `>=1.28.0` because the renderer reads devbook's `c4.mjs`. The names a consuming repository's plan writes against are listed in the migration's `MIGRATION.md`. It follows `1.27.1`, the patch in which the scenario runner finds its spec through the title path. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-10-20 | Every plugin is `1.27.0`, the release of contract 32. A journey is a `##` typed `scenario` in its bounded context's `scenarios.md`, addressed `<scenarios file>#<journey>`, its runs beside the file; `devbook` ships `032-scenarios-md`, which folds every page of 31 into `scenarios.md` and moves its references, runs, and spec headers. `_meta/scenarios.json` is `schemaVersion: 2`, a run's `run.json` version 3, and Verify's `evidence` adds `journey` beside `stem`, which stays `@1`. Contract 31, the change folder out of the graph, shipped without a release and is carried here. | — |
 | 2026-10-15 | Every plugin is `1.26.1`. It carries the follow-up to `1.25.1`'s file-inclusion fix that a consumer's Aikido scan still flagged: `devbook`'s `signature.mjs`, `demo-sync.mjs`, `report.mjs`, and `parse.mjs` call `resolveInside` in the argument of each read instead of holding its result in a variable or a parameter, which the scanner did not follow. It also carries `devbook-meta`'s listing of inline Given/When/Then cases as scenario-page candidates, a report line that changes no schema. A path inside the repository behaves as before, so this is a patch: no contract moves and no migration is owed, and reconcile replaces each changed file on a shipped hash. The other plugins move unchanged. | Every plugin moves together. |
