@@ -326,6 +326,12 @@ top-level heading carries a block of its own describing the document as a whole.
 | `ai/`'s `stage` and `layer` are a chapter's own, from the delivery path's seven words and the three layer words; each `substage` sits under a listed stage, each `feeds` entry carries a label and resolves, `evidence` is one of four words, and a `trial` or `candidate` chapter says what moves it up; a file-level placement field is an error and a usage with neither `stage` nor `layer` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
 
+Migration `034-delivery-path-stages` moves an `ai/` folder written in the DevOps loop's eight
+stage words onto the path: it maps every `stage` list, de-duplicates it, and writes it in path
+order, and the checker's error on a loop word names it. It places nothing on a layer and writes
+no `substage`, `feeds`, or `evidence`, because those are a reading of the repository, not a
+rename.
+
 Two enums are the chapter's own. **Chapter Status** is where the content stands: each folder
 defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
 `domain/`'s alone sit two decision rungs: `approved`, the chapter is right, and `accepted`
