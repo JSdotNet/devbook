@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.28.0",
-      "contractVersion": 33,
+      "pluginVersion": "1.29.0",
+      "contractVersion": 34,
       "adopted": [
         "arc42",
         "tech",
