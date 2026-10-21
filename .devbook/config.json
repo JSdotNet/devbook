@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.28.0",
-      "contractVersion": 33,
+      "pluginVersion": "1.29.0",
+      "contractVersion": 34,
       "adopted": [
         "arc42",
         "tech",
@@ -77,8 +77,8 @@
       ],
       "materialized": {
         ".agents/rules/devbook-ai.md": {
-          "from": "1.13.0",
-          "hash": "sha256:64a72409b2570648e9aa4654511d33e86014edcc950033a171a143dc7b81595d",
+          "from": "1.29.0",
+          "hash": "sha256:7b681ec6eefbb5f26775043e359b3460d94624e313742b30fa88beb31117235e",
           "managed": true
         },
         ".agents/rules/devbook-annotations.md": {
@@ -92,8 +92,8 @@
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.28.0",
-          "hash": "sha256:c72f2bad1cfaa3ed9fba5edab26b39db42296b23db0436011035a75c74d48efa",
+          "from": "1.29.0",
+          "hash": "sha256:b45426efdb20124158af01f23e50fcc416fc2e3373d965eafb35c82da24ca307",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
@@ -157,8 +157,8 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.28.0",
-          "hash": "sha256:6e06efceb183aeee1c88cf99bfc0811adac3a07c826d061f981ad843bd6e90ce",
+          "from": "1.29.0",
+          "hash": "sha256:1c024307a9a313a90dbf5626c6fbc51ad0670483a76342fe65904b8257f21e63",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
@@ -167,8 +167,8 @@
           "managed": true
         },
         ".github/instructions/devbook-ai.instructions.md": {
-          "from": "1.13.0",
-          "hash": "sha256:f9ba3ab598b46ea959fed6fe2ae2a7438fa63ce18cd0210cd61fb5c6131d6265",
+          "from": "1.29.0",
+          "hash": "sha256:2b4060d4b8b3eb5a32783993eccb566f14ffa9fe08a3f4ed397584317a052664",
           "managed": true
         },
         ".github/instructions/devbook-annotations.instructions.md": {
@@ -285,6 +285,10 @@
         {
           "id": "033-c4-workspace",
           "applied": "2026-10-20"
+        },
+        {
+          "id": "034-delivery-path-stages",
+          "applied": "2026-10-22"
         }
       ]
     },

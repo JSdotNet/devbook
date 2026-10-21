@@ -514,7 +514,10 @@ the thirteenth is `033-c4-workspace`, which creates `arc42/workspace.dsl` or
 moves it from `arc42/_c4/`, turns each Mermaid C4 fence, each sequence whose participants are
 all workspace elements, and each Archify `architecture` or `sequence` spec into elements, a
 view, and the `c4:` embed that replaces the fence, ranks each debt record from its
-`## Severity` and `## Status` sections, and reports every diagram it cannot move.
+`## Severity` and `## Status` sections, and reports every diagram it cannot move; the
+fourteenth is `034-delivery-path-stages`, which maps every `ai/` `stage` list from the DevOps
+loop's eight words onto the delivery path's seven, de-duplicated and in path order, and adds no
+`substage`, `layer`, `feeds`, or `evidence`, which are the repository's to place.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -647,7 +650,10 @@ whole file typed `scenario` is an error from then on, so it ships `032-scenarios
 folds each page into `scenarios.md` and moves every reference, run folder, and spec header
 with it. 33 reads the C4 workspace and adds `c4`, `c4-touches`, `code`, `severity`, and the
 debt ladder, each with a safe default, and `033-c4-workspace` ships under it to move the
-diagrams a repository drew before the workspace into it.
+diagrams a repository drew before the workspace into it. 34 places an `ai/` chapter on the
+seven-stage delivery path or a layer beneath it, with `substage`, `feeds`, `evidence`, and a
+**Moves up when** bullet; the loop's eight stage words are errors from then on, so it ships
+`034-delivery-path-stages`, which maps each onto the path.
 
 ## Folder structure
 

@@ -807,6 +807,9 @@ const FOLDER_EXTRA_FIELDS = {
     [CHANGES_FOLDER]: ["category", ...DECISION_FIELDS],
 };
 
+// The DevOps loop's words, retired by contract 34; named only to point at the migration.
+const LOOP_WORDS = ["plan", "build", "test", "deploy", "monitor"];
+
 /**
  * The seven stages of the delivery path, in path order: the first four sit
  * before the pull request, the last three after it, and `operate` feeds
@@ -875,7 +878,7 @@ export function aiChapterIssues(meta, type, body) {
         if (!AI_STAGES.includes(word)) {
             issues.push({
                 severity: "error",
-                message: `has \`stage\` entry "${word}", expected one of: ${AI_STAGES.join(", ")} — the stages are the delivery path's own, so every repository draws the same path.`,
+                message: `has \`stage\` entry "${word}", expected one of: ${AI_STAGES.join(", ")} — the stages are the delivery path's own, so every repository draws the same path.${LOOP_WORDS.includes(word) ? " A DevOps loop word: migration `034-delivery-path-stages` maps it onto the path." : ""}`,
             });
         }
     }

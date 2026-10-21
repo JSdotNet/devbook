@@ -78,6 +78,16 @@ check(AI_EVIDENCE.join(" ") === "recorded partial fired none", "the four evidenc
 }
 
 {
+    const issues = one("status: trial\ntype: agent\nstage: [monitor, custom]\n");
+    check(
+        Boolean(find(issues, "error", "migration `034-delivery-path-stages` maps it onto the path")) &&
+            !issues.some((i) => i.message.includes('"custom"') && i.message.includes("034-delivery-path-stages")),
+        "an old loop word names the migration that moves it; any other word does not",
+        dump(issues)
+    );
+}
+
+{
     const issues = one("status: trial\ntype: agent\n");
     check(
         Boolean(find(issues, "warning", "has no `stage` and no `layer`")),
