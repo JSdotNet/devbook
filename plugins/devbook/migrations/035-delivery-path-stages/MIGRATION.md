@@ -1,14 +1,14 @@
-# 034 — ai/ stages move onto the delivery path
+# 035 — ai/ stages move onto the delivery path
 
 ```meta
-contractVersion: 34
+contractVersion: 35
 appliesTo: [ai]
 breaking: yes
 ```
 
 ## What
 
-Contract 34 places an `ai/` chapter on the seven-stage delivery path — `decide`, `specify`,
+Contract 35 places an `ai/` chapter on the seven-stage delivery path — `decide`, `specify`,
 `code`, `verify`, `integrate`, `release`, `operate` — and the DevOps loop's eight words are
 errors. This migration rewrites every `stage` list in a `meta` block under `.devbook/ai/` by
 this mapping, de-duplicates the result, and writes it in path order:
@@ -61,9 +61,9 @@ the stage its old word mapped to and likely belongs on a layer; the check does n
 and the folder's next edit through `flow-spec` is where it moves. A repository without `ai/`
 adopted records `not-applicable` in the ledger, per `assets/reconcile-protocol.md`.
 
-## Released in 1.29.0
+## Released in 1.30.0
 
-Every plugin is `1.29.0`; contract 34 ships in it, and this is the one migration. The names a
+Every plugin is `1.30.0`; contract 35 ships in it, and this is the one migration. The names a
 consuming repository's plan writes against are the fields `devbook-ai.md` defines — `stage`,
 `substage`, `layer`, `feeds`, `evidence` — and the **Moves up when** bullet.
 

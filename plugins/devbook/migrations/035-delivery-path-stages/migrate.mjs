@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 034-delivery-path-stages — see MIGRATION.md.
+// 035-delivery-path-stages — see MIGRATION.md.
 //
 //   node migrate.mjs --check   verify only; exit 1 while work remains
 //   node migrate.mjs           apply; a second run changes nothing
@@ -25,7 +25,7 @@ import { fileURLToPath } from "node:url";
 
 import { AI_STAGES } from "../../tools/devbook-meta/metadata.mjs";
 
-const ID = "034-delivery-path-stages";
+const ID = "035-delivery-path-stages";
 const STAMP = ".devbook/config.json";
 const AI = ".devbook/ai";
 

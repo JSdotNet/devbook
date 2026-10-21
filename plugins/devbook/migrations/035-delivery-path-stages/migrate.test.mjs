@@ -1,11 +1,11 @@
-// 034-delivery-path-stages against an `ai/` folder written in the DevOps
+// 035-delivery-path-stages against an `ai/` folder written in the DevOps
 // loop's words: every `stage` list moves onto the delivery path, de-duplicated
 // and in path order, and the result validates against the checker. A shared
 // `release` moves only where the folder is the loop's, a block already on the
 // path is left, a second run changes nothing, and a repository without `ai/`
 // adopted is not applicable.
 //
-//   node --test plugins/devbook/migrations/034-delivery-path-stages/migrate.test.mjs
+//   node --test plugins/devbook/migrations/035-delivery-path-stages/migrate.test.mjs
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -51,7 +51,7 @@ ${F}
 `;
 
 function repo(files, adopted = ["ai"]) {
-    const root = mkdtempSync(path.join(tmpdir(), "devbook-034-"));
+    const root = mkdtempSync(path.join(tmpdir(), "devbook-035-"));
     const stamp = { components: { devbook: { adopted } } };
     for (const [rel, content] of Object.entries({ ".devbook/config.json": JSON.stringify(stamp, null, 2) + "\n", ...files })) {
         mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });

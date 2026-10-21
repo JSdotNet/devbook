@@ -367,6 +367,12 @@ const TYPE_BY_FOLDER = {
             "platform",
             "protocol",
             "format",
+            // The `.ai` words, meaning the same thing: a technology that is a
+            // Claude Code plugin, skill, or agent. `.ai` records how it is
+            // used; `.tech` registers and rates the thing itself.
+            "plugin",
+            "skill",
+            "agent",
         ],
         file: [],
     },
@@ -807,7 +813,7 @@ const FOLDER_EXTRA_FIELDS = {
     [CHANGES_FOLDER]: ["category", ...DECISION_FIELDS],
 };
 
-// The DevOps loop's words, retired by contract 34; named only to point at the migration.
+// The DevOps loop's words, retired by contract 35; named only to point at the migration.
 const LOOP_WORDS = ["plan", "build", "test", "deploy", "monitor"];
 
 /**
@@ -878,7 +884,7 @@ export function aiChapterIssues(meta, type, body) {
         if (!AI_STAGES.includes(word)) {
             issues.push({
                 severity: "error",
-                message: `has \`stage\` entry "${word}", expected one of: ${AI_STAGES.join(", ")} — the stages are the delivery path's own, so every repository draws the same path.${LOOP_WORDS.includes(word) ? " A DevOps loop word: migration `034-delivery-path-stages` maps it onto the path." : ""}`,
+                message: `has \`stage\` entry "${word}", expected one of: ${AI_STAGES.join(", ")} — the stages are the delivery path's own, so every repository draws the same path.${LOOP_WORDS.includes(word) ? " A DevOps loop word: migration `035-delivery-path-stages` maps it onto the path." : ""}`,
             });
         }
     }

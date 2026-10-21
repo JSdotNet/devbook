@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.29.0",
-      "contractVersion": 34,
+      "pluginVersion": "1.30.0",
+      "contractVersion": 35,
       "adopted": [
         "arc42",
         "tech",
@@ -77,7 +77,7 @@
       ],
       "materialized": {
         ".agents/rules/devbook-ai.md": {
-          "from": "1.29.0",
+          "from": "1.30.0",
           "hash": "sha256:7b681ec6eefbb5f26775043e359b3460d94624e313742b30fa88beb31117235e",
           "managed": true
         },
@@ -92,8 +92,8 @@
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.29.0",
-          "hash": "sha256:b45426efdb20124158af01f23e50fcc416fc2e3373d965eafb35c82da24ca307",
+          "from": "1.30.0",
+          "hash": "sha256:ba11fc7f786e6c6864759bdb7596443fb789d71e6bc903693dcb2592c9b0f9cc",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
@@ -107,8 +107,8 @@
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
-          "from": "1.13.0",
-          "hash": "sha256:8dcf5b411350ef9ebf0f3a280cd8ad483ad3c8611bd7a952a26ed650aec048df",
+          "from": "1.30.0",
+          "hash": "sha256:a17ff7ce54180dd5930c10a3f27a79e8f9d57f06e48338a05e3527cf47bbc1d2",
           "managed": true
         },
         ".agents/rules/devbook-writing.md": {
@@ -157,8 +157,8 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.29.0",
-          "hash": "sha256:1c024307a9a313a90dbf5626c6fbc51ad0670483a76342fe65904b8257f21e63",
+          "from": "1.30.0",
+          "hash": "sha256:3780082fc6c171f1182352f6e6e284ef8ae91870a9ad06ddf9411073db5b5808",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
@@ -167,7 +167,7 @@
           "managed": true
         },
         ".github/instructions/devbook-ai.instructions.md": {
-          "from": "1.29.0",
+          "from": "1.30.0",
           "hash": "sha256:2b4060d4b8b3eb5a32783993eccb566f14ffa9fe08a3f4ed397584317a052664",
           "managed": true
         },
@@ -287,7 +287,7 @@
           "applied": "2026-10-20"
         },
         {
-          "id": "034-delivery-path-stages",
+          "id": "035-delivery-path-stages",
           "applied": "2026-10-22"
         }
       ]

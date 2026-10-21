@@ -273,14 +273,19 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // A corpus with no workspace and none of the fields validates as under 32, so
 // no migration is owed.
 //
-// Version 34 places an `.ai` chapter on the seven-stage delivery path —
+// Version 34 lets a `.tech` chapter be typed `plugin`, `skill`, or `agent`,
+// the `.ai` words meaning the same thing: a technology that is a Claude Code
+// plugin, skill, or agent. Each is an added value, so a corpus written under
+// 33 validates unchanged and no migration is owed.
+//
+// Version 35 places an `.ai` chapter on the seven-stage delivery path —
 // decide, specify, code, verify, integrate, release, operate — or on the
 // thread, upkeep, or harness layer beneath it, with `substage`, `feeds`,
 // `evidence`, and a **Moves up when** bullet on a trial or candidate chapter.
 // The DevOps loop's eight stage words are errors, so it ships
-// `034-delivery-path-stages`, which maps each onto the path and adds none of
+// `035-delivery-path-stages`, which maps each onto the path and adds none of
 // the new fields: placing a chapter on a layer is the repository's to do.
-export const CONTRACT_VERSION = 34;
+export const CONTRACT_VERSION = 35;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
