@@ -31,13 +31,14 @@ this mapping, de-duplicates the result, and writes it in path order:
 `release` is a word of both vocabularies. A block is read as the loop's when it names `plan`,
 `build`, `test`, `deploy`, or `monitor`, and a block naming only `code`, `release`, or
 `operate` is read as the loop's when another block in the same folder is. Each of these is
-reported and left as it is, and never counts as work:
+reported on every run it is met:
 
-- a block whose only path word is a shared `release` in a folder with no loop word — it reads
-  the same under both vocabularies, so a person says whether it meant `integrate`;
-- a block mixing both vocabularies, written half by hand: its loop-only words move, and a
-  `release` in it is kept as the path's Release & deploy;
-- a word off both vocabularies, kept after the path's words for the checker to report.
+- a block naming `release` beside only `code` or `operate`, in a folder with no loop-only
+  word, is left as it is and never counts as work — it reads the same under both vocabularies,
+  so a person says whether it meant `integrate`;
+- a block mixing both vocabularies, written half by hand, is partly moved: its loop-only words
+  move, and a `release` in it is kept as the path's Release & deploy;
+- a word of neither vocabulary is kept, after the path's words, for the checker to report.
 
 It adds no `substage`, `layer`, `feeds`, or `evidence`, and writes no **Moves up when** bullet.
 Those are the repository's to place: where a stage splits, which usages run underneath every

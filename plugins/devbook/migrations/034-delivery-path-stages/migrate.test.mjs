@@ -116,7 +116,7 @@ test("a folder already on the path is left; a lone shared release there is repor
     withRepo({ [D]: `# Deliver\n\n${usage("Path", "[specify, verify]")}\n${usage("Shared", "[release]")}` }, (root) => {
         const check = run(root, "--check");
         assert.equal(check.status, 0, check.stdout);
-        assert.match(check.stdout, /left .*\(Shared\): reads the same under both vocabularies/);
+        assert.match(check.stdout, /\(Shared\): left — it reads the same under both vocabularies/);
     }));
 
 test("a block mixing both vocabularies moves its loop-only words and keeps the rest", () => {
@@ -126,6 +126,14 @@ test("a block mixing both vocabularies moves its loop-only words and keeps the r
     assert.equal(rewriteWords(["code", "operate"], false).words, null);
     assert.deepEqual(rewriteWords(["deploy", "custom"], false).words, ["release", "custom"], "a word off both vocabularies is kept, last");
 });
+
+test("a word of neither vocabulary is reported; a quoted entry is read", () =>
+    withRepo({ [D]: `# Deliver\n\n${usage("Odd", '["deploy", custom]')}` }, (root) => {
+        const apply = run(root);
+        assert.equal(apply.status, 0);
+        assert.match(apply.stdout, /\(Odd\): kept "custom", a word of neither vocabulary/);
+        assert.match(read(root, D), /stage: \[release, custom\]\n/);
+    }));
 
 test("a repository that never adopted ai/ is not applicable", () =>
     withRepo({ [D]: DELIVER }, (root) => {

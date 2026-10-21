@@ -29,7 +29,7 @@ const ID = "034-delivery-path-stages";
 const STAMP = ".devbook/config.json";
 const AI = ".devbook/ai";
 
-/** The loop's eight words onto the path's seven, per devbook-ai.md. */
+/** The loop's eight words onto the path's seven; the path itself is devbook-ai.md's. */
 export const STAGE_MAP = {
     plan: "specify",
     code: "code",
@@ -105,14 +105,14 @@ export function rewriteWords(words, folderIsLoop) {
     if (loop && pathWords) {
         // Half moved by hand: move the loop-only words, keep the rest as written.
         const moved = ordered(words.map((word) => (LOOP_ONLY.includes(word) ? STAGE_MAP[word] : word)));
-        const note = words.includes("release") ? "mixes both vocabularies; `release` was kept as the path's Release & deploy — check it" : null;
+        const note = words.includes("release") ? "partly moved — it mixes both vocabularies, and `release` was kept as the path's Release & deploy; check it" : null;
         return { words: moved, note };
     }
     if (loop || (!pathWords && folderIsLoop)) {
         return { words: ordered(words.map((word) => STAGE_MAP[word] ?? word)), note: null };
     }
     if (!pathWords && words.includes("release")) {
-        return { words: null, note: "reads the same under both vocabularies; `release` was left as the path's Release & deploy — if it meant the loop's release, it is `integrate`" };
+        return { words: null, note: "left — it reads the same under both vocabularies, so `release` stays the path's Release & deploy; if it meant the loop's release, it is `integrate`" };
     }
     return { words: null, note: null };
 }
@@ -158,6 +158,9 @@ export function planFolder(files) {
             const { words, note } = rewriteWords(s.words, folderIsLoop);
             const where = `${file.rel}:${s.index + 1} (${s.heading ?? "no heading"})`;
             if (note) notes.push(`${where}: ${note}.`);
+            for (const word of s.words.filter((w) => !(w in STAGE_MAP) && !AI_STAGES.includes(w))) {
+                notes.push(`${where}: kept "${word}", a word of neither vocabulary, for the checker to report.`);
+            }
             if (!words || words.join(",") === s.words.join(",")) continue;
             lines[s.index] = format(s.prefix, lines[s.index], words);
             moved.push(`${where}: stage [${s.words.join(", ")}] → [${words.join(", ")}]`);
@@ -194,7 +197,7 @@ async function main(argv) {
     for (const rel of await chapterFiles(ROOT)) files.push({ rel, text: await readFile(path.join(ROOT, rel), "utf8") });
     const { changes, notes } = planFolder(files);
 
-    for (const note of notes) console.log(`- left ${note}`);
+    for (const note of notes) console.log(`- ${note}`);
     for (const change of changes) for (const line of change.moved) console.log(`- ${checkOnly ? "would move" : "moved"} ${line}`);
     if (!changes.length) done("nothing to do — no `stage` entry names a loop word.");
     if (checkOnly) done(`${changes.length} file(s) to rewrite.`, 1);
