@@ -302,6 +302,25 @@ highest rung among the chapters at it — and authored nowhere. The tools a stag
 AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a `stage` on a
 `tech/` chapter would cross the one-way boundary between the two folders from the wrong side.
 
+**The eight loop words became a seven-stage delivery path with three layers beneath it.** The
+DevOps loop's eight words placed a usage by the tool's lifecycle, not by the question the work
+answers, so `build` and `test` split one session's check in two and `monitor` repeated
+`operate`; and the usages that run under every stage — the worktree, the rules, the run limits,
+the scheduled upkeep — had no stage to sit at and were filed at whichever one was nearest. The
+path is `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate`: the first four
+before the pull request, in the author's session, the last three after it, and `operate` feeding
+`decide`. Beneath it sit `thread` (spec ↔ code), `upkeep`, and `harness`, written in a `layer`
+field; a chapter carries `stage`, `layer`, or both. Both vocabularies stay fixed for the reason
+the eight were. Four fields came with them because the three views read them: `substage`, a
+`<stage>/<word>` entry in the repository's own words under a stage the chapter lists, since
+where a stage splits is the repository's to say; `feeds`, a labelled reference to the chapter
+this one hands work to, resolved like `related` and drawn as an arrow, since a hand-off is a
+different edge from a support link; `evidence`, one of `recorded`, `partial`, `fired`, `none`;
+and the **Moves up when** bullet on every `trial` or `candidate` chapter, so a rating below
+`adopted` names the event that would move it. A missing **Moves up when** warns, like a missing
+placement, so a folder keeps validating while it is filled in. Unlike the first placement, the
+old words map onto the new ones, so the rename ships its own migration.
+
 **The sync direction is chapter metadata, at four levels, nearest wins.** The sweeps that keep
 chapters and code aligned need to know, per unit, which side is the truth: the agreed chapter
 (`push`), the code (`pull`), whichever the verdict says (`sync`), neither but report (`report`),
@@ -407,6 +426,7 @@ a kind.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-22 | An `ai/` chapter is placed on the seven-stage delivery path — `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate` — or on the `thread`, `upkeep`, or `harness` layer beneath it, with `substage`, `feeds`, `evidence`, and a **Moves up when** bullet on a `trial` or `candidate` chapter. The eight loop words are errors. The contract and the stage migration ship in the release that follows. | The loop's words placed a usage by tool lifecycle; the path places it by the question the work answers, and the layers hold what runs under every stage. |
 | 2026-10-20 | A journey is a `##` chapter typed `scenario` in its bounded context's `scenarios.md` or a split `scenarios.<name>.md`, its `###` parts owing no block; a whole file typed `scenario` is an error. Addressed `<scenarios file>#<journey>`, so features and requirements point at it through `related`; every journey and part anchor is unique in its file, retiring the stem register; `Proved by:` names `<scenarios file>#<part>` from the requirement's folder, `scenario:` images name the file from `.devbook/domain/`, and runs sit beside the file. Contract 32, `032-scenarios-md`; the signature's canonical text is unchanged. | — |
 | 2026-10-19 | A scenario page lives in the bounded context of the requirements it proves, no longer beside the chapter it demonstrates: a page is evidence for requirements, so it belongs with them, and a journey across contexts goes to the context holding most of the requirements whose cases point at its parts, any of them on a tie. The check warns on a page placed elsewhere. No contract, no migration: nothing narrows, and a misplaced page moves by hand on the warning, its stem and run folder unchanged. | A warning, not an error, because a page with no `Proved by:` yet has no home to compute. |
 | 2026-10-19 | The change folder is checked but no longer graphed: no proposal or delta is a node, so a delta may name a chapter only its own change adds. A devbook chapter's `related`, `depends-on`, or prose link into `openspec/changes/` is an error. Contract 31, no migration: no chapter shape moves. | A change points at the devbook, never the reverse. |

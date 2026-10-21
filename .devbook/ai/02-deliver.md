@@ -13,7 +13,8 @@ several.
 ```meta
 status: trial
 type: skill
-stage: [plan, code, test]
+stage: [specify, code, verify]
+evidence: none
 related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill"]
 date: 2026-09-02
 ```
@@ -45,8 +46,9 @@ A change routes to the flow named for what it changes, which runs it end to end.
   specialists that once ran `scope`, `implement`, `verify`, and the drafting of each folder
   [left the marketplace](../arc42/adr/plugin-boundaries.md).
   A flow run here therefore runs every phase inline unless the specialist marketplace is
-  installed and a phase names one of its agents. What is untested is the routing itself. Promote to `adopted` once a change
-  here has been carried by a flow end to end, reporting into one of those surfaces.
+  installed and a phase names one of its agents. What is untested is the routing itself.
+- **Moves up when** — a change here has been carried by a flow end to end, reporting into one
+  of those surfaces.
 - **Limits** — a session loads the released `jsdotnet-devbook` marketplace from its GitHub
   clone, so a flow changed on a branch is not the one that runs here until it is released or
   the working copy is enabled by path — `claude plugin marketplace add . --scope local`, per
@@ -57,7 +59,8 @@ A change routes to the flow named for what it changes, which runs it end to end.
 ```meta
 status: candidate
 type: skill
-stage: [plan, code]
+stage: [decide, code]
+evidence: none
 depends-on: [".devbook/tech/hosts.md#claude-code-cli"]
 related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-09-21
@@ -75,6 +78,8 @@ replaced `fleet`, which did the working part five sessions at a time, on 2026-09
   somebody else's repository. The thing to watch when it is tried is what the pull request
   bodies say could not be proved: a sweep whose every draft names something to validate is the
   design working, and reading that as a failure is how the bar gets lowered.
+- **Moves up when** — the sweep runs against another repository and a person keeps one of its
+  draft pull requests.
 - **Limits** — the resolution runs through the host's workflow tool, which is the same
   host-capability divergence the schedule plugin already records.
 
@@ -83,7 +88,8 @@ replaced `fleet`, which did the working part five sessions at a time, on 2026-09
 ```meta
 status: trial
 type: skill
-stage: [operate, monitor]
+layer: [upkeep]
+evidence: partial
 related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-10-06
 ```
@@ -104,10 +110,11 @@ routine on the maintainer's machine with nobody watching, and lands a change as 
   local routine since, running with the plugins installed on the machine. The first local runs
   of `devbook-validate` ran their target and published here: one pull request a day on
   2026-09-30, 2026-10-01, and 2026-10-02 (#187, #199, #210), each merged the day it opened.
-  Promote to `adopted` once the other selected schedules have published here too, and keep
-  watching two things: whether the idempotence rule holds — one open pull request per
+  Keep watching two things: whether the idempotence rule holds — one open pull request per
   schedule, updated rather than doubled — and whether a parked run's draft carries enough
   brief to resume by hand.
+- **Moves up when** — the other selected schedules, `tech-update` and `merge-review`, have
+  published here too.
 - **Limits** — one platform: the scheduler is resolved from the live tool list and only one
   host has one, so on the other the prompts print and a person pastes them. No schedule fires
   a flow; see [the decision](../arc42/adr/plugin-boundaries.md).

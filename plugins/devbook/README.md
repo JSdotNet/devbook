@@ -37,7 +37,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows, and the requirements and invariants they guarantee |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
-| `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
+| `ai/` | How the team develops with AI: usage per stage of the seven-stage delivery path and the layers beneath it, concepts, adoption status |
 | `openspec/changes/` | Proposed changes to the folders above, as a proposal and deltas that `delta.mjs` merges; history under `archive/` |
 
 Adoption is partial by design — a repository may take only `domain/` and
@@ -322,7 +322,7 @@ skills exist.
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the DevOps loop, the adoption ladder, and the `tech/` boundary |
+| `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the delivery path and layer beneath it, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
 | `devbook-writing.md` | all five folders | How a chapter reads: full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, and a Mermaid diagram wherever a sequence, state, or structure is described |
