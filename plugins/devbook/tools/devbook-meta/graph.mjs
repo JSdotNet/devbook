@@ -28,6 +28,7 @@ import {
     changeHash,
     syncLevel,
     syncSources,
+    parseFeed,
     SYNC_DIRECTIONS,
     DEVBOOK_FOLDER_NAMES,
     DEVBOOK_ROOT,
@@ -276,7 +277,15 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // the `.ai` words meaning the same thing: a technology that is a Claude Code
 // plugin, skill, or agent. Each is an added value, so a corpus written under
 // 33 validates unchanged and no migration is owed.
-export const CONTRACT_VERSION = 34;
+//
+// Version 35 places an `.ai` chapter on the seven-stage delivery path —
+// decide, specify, code, verify, integrate, release, operate — or on the
+// thread, upkeep, or harness layer beneath it, with `substage`, `feeds`,
+// `evidence`, and a **Moves up when** bullet on a trial or candidate chapter.
+// The DevOps loop's eight stage words are errors, so it ships
+// `035-delivery-path-stages`, which maps each onto the path and adds none of
+// the new fields: placing a chapter on a layer is the repository's to do.
+export const CONTRACT_VERSION = 35;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -333,7 +342,21 @@ const REFERENCE_FIELDS = {
     "feature-flag": "gated-by",
     setting: "configured-by",
     related: "related",
+    // `.ai`'s hand-off: each entry is `<path>#<anchor>: <label>`, and only the
+    // part before the colon is a reference — the label rides on the edge.
+    feeds: "feeds",
 };
+
+/**
+ * The references one field of a node holds, each with the label its edge
+ * carries. Only `feeds` has labels; an entry `parseFeed` rejects is the lint's
+ * to report and draws no edge.
+ */
+function fieldReferences(node, field) {
+    const entries = asList(node[field]);
+    if (field !== "feeds") return entries.map((ref) => ({ ref, label: null }));
+    return entries.map(parseFeed).filter(Boolean);
+}
 
 // The chapter `kind` each switch field must resolve to.
 const SWITCH_TARGET_KIND = { "feature-flag": "feature-flag", setting: "setting" };
@@ -382,6 +405,8 @@ const ATTRIBUTE_FIELDS = [
     // effective direction of a unit is resolved from `syncSources`.
     "sync",
     "date",
+    // `.ai`: how much the chapter's rating rests on.
+    "evidence",
     "approved-by",
     "approved-at",
     // Carried so a consumer can tell "approved, and the content has not moved"
@@ -415,7 +440,7 @@ const ATTRIBUTE_FIELDS = [
 // `code` names a building block's folders, which are no nodes; `c4` and
 // `c4-touches` are carried as written too, beside the edges c4-graph.mjs draws
 // from them to the workspace's elements.
-const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests", "demo", "code", "c4", "c4-touches"];
+const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "substage", "layer", "tests", "demo", "code", "c4", "c4-touches"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.
@@ -811,7 +836,7 @@ export async function buildGraph(repoRoot, folders = null) {
     // references across files are valid.
     for (const node of nodes.values()) {
         for (const [field, edgeType] of Object.entries(REFERENCE_FIELDS)) {
-            for (const ref of asList(node[field])) {
+            for (const { ref, label } of fieldReferences(node, field)) {
                 const targetPath = ref.split("#")[0];
                 // A change points at the devbook, never the reverse: what a
                 // change holds is not agreed yet, and it moves to `archive/`
@@ -879,6 +904,7 @@ export async function buildGraph(repoRoot, folders = null) {
                     source: node.id,
                     target: ref,
                     type: edgeType,
+                    ...(label ? { label } : {}),
                 });
             }
         }

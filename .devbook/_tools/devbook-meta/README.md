@@ -243,14 +243,15 @@ fallback does not render as `Context Map (context-map)`.
 | `contains` | Document structure (file → chapter, chapter → sub-chapter). |
 | `depends-on` | The `depends-on` metadata field. |
 | `related` | The `related` metadata field. |
+| `feeds` | `ai/`'s `feeds` field: from the chapter to the reference before each entry's colon, with the text after it as the edge's `label`. |
 | `relationship` | A `->` relationship between two elements of the workspace, with its `description` and `technology`. `contains` also runs from an element to the elements declared inside it. |
 | `embeds` | A `![…](c4:<key>)` image: from the section that holds it to the view. |
 | `c4`, `c4-touches` | The `c4` and `c4-touches` metadata fields: from the chapter to each element it names. |
 
 `aliases` (`domain/`), `alternatives` (`tech/`), `feature-flag` and `role` (`domain/`),
-`stage` (`ai/`), `code` (a building block), and `roadmap` and `tests` (every folder) are plain-string
+`stage`, `substage`, `layer`, and `evidence` (`ai/`), `code` (a building block), and `roadmap` and `tests` (every folder) are plain-string
 fields, not references, so they stay node attributes and produce no edges.
-`feature-flag`, `role`, `roadmap`, `stage`, and `tests` accept a scalar or a list but
+`feature-flag`, `role`, `roadmap`, `stage`, `substage`, `layer`, and `tests` accept a scalar or a list but
 are always emitted as a list, so a consumer never has to branch on shape. `effort` is emitted as a number rather than the authored
 string, so a viewer can total or threshold it directly; a value that is not a
 non-negative integer is left off the node and reported as a lint error instead.
@@ -334,10 +335,15 @@ each expects, without building a command.
 | A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) on the file-level block | error |
 | `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
 | An `approved` chapter carrying an open `kind: question` annotation | error |
-| `ai/` `stage` entry outside the DevOps loop's eight — `plan`, `code`, `build`, `test`, `release`, `deploy`, `operate`, `monitor` | error |
-| `ai/` chapter with no `stage`, other than a `concept` applied throughout — a usage off the loop | warning |
-| `ai/` `stage` on a file-level block — a file groups chapters and places none of them | error |
-| `ai/` `related` entry reaching into `tech/` — the tool a usage rests on goes in `depends-on`, which is what the loop picture draws | warning |
+| `ai/` `stage` entry outside the delivery path's seven — `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate` | error |
+| `ai/` `layer` entry outside `thread`, `upkeep`, `harness` | error |
+| `ai/` chapter with neither `stage` nor `layer`, other than a `concept` applied throughout — a usage off the picture | warning |
+| `ai/` `substage` entry not `<stage>/<kebab-word>`, or under a stage the chapter's `stage` does not list | error |
+| `ai/` `feeds` entry without its `: <label>`, or whose reference does not resolve | error |
+| `ai/` `evidence` outside `recorded`, `partial`, `fired`, `none` | error |
+| `ai/` `trial` or `candidate` chapter without a `- **Moves up when** —` bullet, or any other chapter with one | warning |
+| `ai/` `stage`, `substage`, `layer`, `feeds`, or `evidence` on a file-level block — a file groups chapters and places none of them | error |
+| `ai/` `related` entry reaching into `tech/` — the tool a usage rests on goes in `depends-on`, which is what the picture's platforms row draws | warning |
 | A directory missing the root document its folder convention names | warning |
 | A change's `proposal.md` without `category`, or with one outside `feature`, `behaviour-change`, `defect` | error |
 | A delta whose opening `meta` block is missing, names another change, lacks `delta`, or carries any other field | error |

@@ -13,7 +13,8 @@ loads, that a chapter parses.
 ```meta
 status: candidate
 type: practice
-stage: [test]
+stage: [verify]
+evidence: none
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 date: 2026-09-02
 ```
@@ -30,6 +31,7 @@ date: 2026-09-02
 - **Evidence** — none yet. The first plugin to get a suite is the first thing to evaluate; the
   candidates are the `flow-*` and `devbook-*` skills, whose descriptions are the triggers a
   session routes on.
+- **Moves up when** — the first plugin gets a suite and it runs on a pull request here.
 - **Limits** — an eval exercises a skill's trigger and output, not the load-time shape both
   hosts reject; those stay with the validator, the checker, and the review rules in
   `AGENTS.md` and `.agents/rules/`.
@@ -39,7 +41,8 @@ date: 2026-09-02
 ```meta
 status: candidate
 type: practice
-stage: [test]
+stage: [verify]
+evidence: none
 related: [".devbook/arc42/building-blocks/devbook.md#scenario-tools"]
 date: 2026-10-08
 ```
@@ -56,6 +59,8 @@ and `scenario-run`.
 - **Evidence** — none yet. The tools' own suites under `plugins/devbook/tools/scenarios/` prove
   the parser, the signature, the reporter, and the coverage check, not that a model derives a
   spec a person keeps.
+- **Moves up when** — a repository with an application writes, derives, and runs a journey and
+  commits its run.
 - **Limits** — a derived spec leaves every step body the journey cannot say to the implementer, so
   the skill produces a shape, not a passing test; and the journey is only as good as its steps,
   which no tool here judges.

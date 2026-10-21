@@ -14,6 +14,7 @@ change here starts in.
 status: adopted
 type: practice
 stage: [code]
+evidence: recorded
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 date: 2026-09-02
 ```

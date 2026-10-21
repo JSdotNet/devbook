@@ -147,7 +147,7 @@ or optional by folder, exactly as above; `type` required where the folder
 defines a file-level value set; `related`, `issue`, `effort`, and `roadmap`
 optional) and the same omit-when-empty rule. Folder-specific fields defined for chapters
 (`depends-on`, `aliases`, `feature-flag`, `setting`, `role`, `key`, `default`,
-`scope`, `deployment`, `version`, `alternatives`) are chapter-scoped and are not used at file level — a file's
+`scope`, `deployment`, `version`, `alternatives`, and `ai/`'s `stage`, `substage`, `layer`, `feeds`, and `evidence`) are chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only. The one exception is
 `deployment` on a domain `context.md`, which is the bounded context itself.
 
@@ -170,9 +170,11 @@ feature flag or a setting as the code spells it, none of them
 feature chapter *are* references, to the switch chapters that carry `key` —
 in `tech/`, `alternatives` (defined in
 `devbook-tech.md`) is likewise a
-plain-string list, and in `ai/`, `stage` (defined in
-`devbook-ai.md`) is a list of the DevOps
-loop's eight stage words. The universal `roadmap` and `tests` fields below
+plain-string list, and in `ai/` (defined in `devbook-ai.md`), `stage` is a list of
+the delivery path's seven stage words, `layer` a list of its three layer words,
+`substage` a list of `<stage>/<word>` entries in the repository's own words, and
+`evidence` one word — while `feeds` *is* a reference field, each entry a
+`<path>#<heading-slug>` reference, a colon, and the arrow's label. The universal `roadmap` and `tests` fields below
 behave the same way.
 
 ### Where the folders live
@@ -557,7 +559,8 @@ Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
 `feature-flag` and `setting` on domain feature chapters, `key`/`default`/`scope`
 on domain switch chapters, `role` on domain actor chapters, `deployment` on
 domain `bounded-context` chapters and on a domain `context.md`,
-`version`/`alternatives` on tech chapters, `stage` on ai chapters and never on an ai file) are
+`version`/`alternatives` on tech chapters, `stage`, `substage`, `layer`, `feeds`, and
+`evidence` on ai chapters and never on an ai file) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
 to every folder. The C4 fields above are the exception: `c4` and `c4-touches`
