@@ -1,6 +1,6 @@
 ---
 name: demo-address
-description: The versioned contract for pointing into a click demo and talking to one — the screen and walkthrough address a chapter's demo field and a note carry, and the four postMessage messages between a demo and the frame that hosts it. Owned by devbook; followed by the demo template, spec-manager, and Backlog.
+description: The versioned contract for pointing into a click demo and talking to one — the screen and walkthrough address a chapter's demo and playthrough fields and a note carry, and the five postMessage messages between a demo and the frame that hosts it. Owned by devbook; followed by the demo template, spec-manager, and Backlog.
 ---
 
 # Demo Address
@@ -29,8 +29,9 @@ version, and every message carries it as `v`. Why a demo exists and where it liv
   parameter means the panel's default.
 - **`walkthrough/<id>`** names a walkthrough by its own `id` in `demo-model`. A free
   walkthrough playing an inline `#### Scenario:` takes the scenario's slug as its id; a linked
-  one keeps its own id, and its `part` names the journey part it shows. `<step>` is a
-  1-based step number of the walkthrough, never the part's `step` index; omitted, the
+  one keeps its own id, and its `part` names the journey part it shows; a playthrough keeps
+  its own id, and its `journey` names the whole journey it plays end to end. `<step>` is a
+  1-based step number of the walkthrough, never a part's `step` index; omitted, the
   walkthrough opens at its first step. `walkthrough` is therefore never a screen id.
 
 Every part resolves against `demo-model`, the `application/json` script with that id: an
@@ -44,14 +45,31 @@ A host frame and the demo exchange plain objects through `postMessage`, each
 
 | Message | Direction | Payload |
 | --- | --- | --- |
-| `demo:ready` | demo → host | `template`: the template version; `screens`, `anchors`, `walkthroughs`: the lists from `demo-model`, each walkthrough with its `id` and `steps` |
-| `demo:location` | demo → host | `address`: the current address; in annotate mode also `element`, the address of the clicked `data-anchor` |
+| `demo:ready` | demo → host | `template`: the template version; `screens`, `anchors`, `walkthroughs`: the lists from `demo-model`, each walkthrough with its `id` and `steps`, and a playthrough also with its `journey` |
+| `demo:location` | demo → host | `address`: the current address; `playing: true` while a walkthrough advances on its own; in annotate mode also `element`, the address of the clicked `data-anchor` |
 | `demo:goto` | host → demo | `address`: the address to open — screen and panel state set, anchor highlighted, walkthrough at its step |
+| `demo:play` | host → demo | `address`: a walkthrough address, opened as `demo:goto` opens it, then advanced one step at a time to its last |
 | `demo:pins` | host → demo | `addresses`: every address that carries a note, shown as pins; an empty list clears them |
 
-The demo sends `demo:ready` once its panel is built and `demo:location` on every navigation.
-A host compares `demo:ready` with the addresses it stores to find the ones that no longer
-resolve. A `demo:goto` whose address does not resolve changes nothing.
+The demo sends `demo:ready` once its panel is built and `demo:location` on every navigation,
+and again when playing starts or stops. A host compares `demo:ready` with the addresses it
+stores to find the ones that no longer resolve. A `demo:goto` or `demo:play` whose address
+does not resolve changes nothing, and so does a `demo:play` naming a screen. Any navigation —
+a `demo:goto`, a click in the demo, a step chosen in its panel — stops a walkthrough that is
+playing. `demo:play` joined `@1` without raising it: a demo on an earlier template ignores the
+unknown type, so a host that gets no `playing` back falls back to `demo:goto`.
+
+## Activation
+
+Who does what when a page shows a playthrough, so the three never overlap:
+
+| Part | Owns |
+| --- | --- |
+| devbook | The convention: a `feature` or `sub-feature` chapter's `playthrough` field, per `rules/devbook-chapter-metadata.md`, and this contract |
+| The host — spec-manager, Backlog | Activation: reading the field from the chapter or the index, framing the demo on the feature's page, and when to send `demo:play` — on opening the page, on a person's click, or never |
+| The repository's template, `.devbook/design/demo-template.html` | The look: the caption over the product, the steps grouped by part, the pace, and the controls a person takes over with |
+
+A host never styles the playthrough and a template never decides when one starts.
 
 ## The Frame
 

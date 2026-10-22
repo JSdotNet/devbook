@@ -319,6 +319,20 @@ It is the thing an unattended run [parks](12-glossary.md#park) at — or, in the
 moves onto a draft pull request. Wherever a run cannot reach it, something else has to guarantee that nothing merges
 unread.
 
+## Playthrough
+
+```meta
+date: 2026-10-22
+related: [".devbook/arc42/adr/demos.md#playing-a-journey-end-to-end", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/12-glossary.md#demo"]
+```
+
+Owned by [devbook](building-blocks/devbook.md#demo).
+
+A [demo](#demo) walkthrough that plays a whole journey end to end, every part in the journey's
+order, with each step's text copied from the part step it shows. A feature names the one its
+page shows in its `playthrough` field; the tool showing the page decides when it plays, and the
+repository's demo template decides how it looks.
+
 ## PR Lane
 
 ```meta
