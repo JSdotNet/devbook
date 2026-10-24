@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 35,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/design",
   "sources": [
@@ -91,10 +91,11 @@
           "status": "trial",
           "kind": "skill",
           "date": "2026-09-02",
+          "evidence": "none",
           "stage": [
-            "plan",
+            "specify",
             "code",
-            "test"
+            "verify"
           ],
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#flow-skill"
@@ -111,7 +112,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "surface",
           "level": 2,
-          "line": 299,
+          "line": 302,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -134,7 +135,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 121,
+          "line": 76,
           "status": "active",
           "statusDeclared": false,
           "related": [

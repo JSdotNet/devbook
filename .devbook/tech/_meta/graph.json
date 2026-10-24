@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 35,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
@@ -27,7 +27,8 @@
     "nodesByStatus": {
       "adopted": 10,
       "trial": 4,
-      "active": 8
+      "active": 7,
+      "resolved": 1
     },
     "edgesByType": {
       "contains": 10,
@@ -292,9 +293,15 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
-          "status": "active",
-          "statusDeclared": false,
+          "status": "resolved",
           "date": "2026-09-03",
+          "severity": "medium",
+          "c4": [
+            "marketplace.delivery-schedule.entry-point"
+          ],
+          "c4-touches": [
+            "claude-code"
+          ],
           "related": [
             ".devbook/arc42/11-risks-and-technical-debt.md",
             ".devbook/arc42/08-crosscutting-concepts.md#host-slot",
@@ -316,6 +323,13 @@
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-28",
+          "c4": [
+            "claude-code",
+            "copilot"
+          ],
+          "c4-touches": [
+            "marketplace"
+          ],
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#host-slots",
@@ -336,7 +350,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 121,
+          "line": 76,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -358,6 +372,9 @@
           "status": "active",
           "statusDeclared": false,
           "date": "2026-10-05",
+          "c4": [
+            "marketplace"
+          ],
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
@@ -385,7 +402,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "schedule-plugin",
           "level": 2,
-          "line": 513,
+          "line": 468,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -406,7 +423,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 439,
+          "line": 442,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -426,7 +443,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 352,
+          "line": 307,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",

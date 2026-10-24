@@ -1,0 +1,297 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2104" height="2552" viewBox="0 0 2104 2552" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - delivery">
+<title>[Component] jsdotnet-devbook marketplace - delivery</title>
+<desc>The run, the flow, the stack config, and the flow runner, with the phases and the pull-request lane inside.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-delivery-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="2104" height="2552"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - delivery</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The run, the flow, the stack config, and the flow runner, with the phases and the pull-request lane inside.</text>
+<g transform="translate(52 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="704" y="650" width="612" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="714" y="668" font-size="12" font-weight="600">delivery-phases</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="1424" y="908" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="1434" y="926" font-size="12" font-weight="600">delivery-pr-lane</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="-16" y="1472" width="1692" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="-6" y="1490" font-size="12" font-weight="600">L0 foundation</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="704" y="1730" width="252" height="614" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="714" y="1748" font-size="12" font-weight="600">Surface</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="1716" height="1154" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">delivery [Container]</text>
+  <g data-element="marketplace.devbook">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="1440" y="1500" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="1547" font-size="15" font-weight="600" text-anchor="middle">devbook</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="1565" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="1587" font-size="12" text-anchor="middle">Addressed Markdown chapters,</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="1602" font-size="12" text-anchor="middle">their meta block, the check, and</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="1617" font-size="12" text-anchor="middle">the reconcile that puts the…</text>
+  </g>
+  <g data-element="marketplace.delivery.run">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="47" font-size="15" font-weight="600" text-anchor="middle">Run</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="87" font-size="12" text-anchor="middle">One execution of one flow over</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="102" font-size="12" text-anchor="middle">one unit of work, with its</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="117" font-size="12" text-anchor="middle">stages, gate decisions, and…</text>
+  </g>
+  <g data-element="marketplace.delivery.flow">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="257" font-size="15" font-weight="600" text-anchor="middle">Flow</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="297" font-size="12" text-anchor="middle">A staged procedure named for</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="312" font-size="12" text-anchor="middle">what it changes, running a fixed</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="327" font-size="12" text-anchor="middle">phase order in one session.</text>
+  </g>
+  <g data-element="marketplace.delivery.stack-config">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="420" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="467" font-size="15" font-weight="600" text-anchor="middle">Stack Config</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="485" font-size="11" text-anchor="middle" opacity="0.85">[Component: JSON]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="507" font-size="12" text-anchor="middle">The engine-owned keys of the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="522" font-size="12" text-anchor="middle">repository&#39;s config: bindings,</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="537" font-size="12" text-anchor="middle">phases, policy, gates, and…</text>
+  </g>
+  <g data-element="marketplace.delivery.flow-runner">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="257" font-size="15" font-weight="600" text-anchor="middle">Flow Runner</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: Agent]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="297" font-size="12" text-anchor="middle">The agent that sequences a</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="312" font-size="12" text-anchor="middle">flow&#39;s phases, resolves each</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="327" font-size="12" text-anchor="middle">phase entry, tracks the run, an…</text>
+  </g>
+  <g data-element="marketplace.delivery.phase">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="1080" y="678" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="725" font-size="15" font-weight="600" text-anchor="middle">Phase</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="743" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="765" font-size="12" text-anchor="middle">The unit a repository</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="780" font-size="12" text-anchor="middle">configures: one stable id, one</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="795" font-size="12" text-anchor="middle">phase skill, and one entry per…</text>
+  </g>
+  <g data-element="marketplace.delivery.gate">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="678" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="725" font-size="15" font-weight="600" text-anchor="middle">Gate</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="743" font-size="11" text-anchor="middle" opacity="0.85">[Component]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="765" font-size="12" text-anchor="middle">A human checkpoint on a phase</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="780" font-size="12" text-anchor="middle">that a person answers with</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="795" font-size="12" text-anchor="middle">approve, revise, or decline.</text>
+  </g>
+  <g data-element="marketplace.delivery.pull-request-lane">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="1440" y="936" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="1550" y="983" font-size="15" font-weight="600" text-anchor="middle">Pull Request Lane</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1550" y="1001" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1550" y="1023" font-size="12" text-anchor="middle">Pushes, updates, fixes the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1550" y="1038" font-size="12" text-anchor="middle">checks of, and scores a finished</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1550" y="1053" font-size="12" text-anchor="middle">pull request until it is…</text>
+  </g>
+  <g data-element="marketplace.devbook-config">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="0" y="1500" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="1547" font-size="15" font-weight="600" text-anchor="middle">devbook-config</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="1565" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="1587" font-size="12" text-anchor="middle">What this stack is, what this</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="1602" font-size="12" text-anchor="middle">machine has, and how this</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="1617" font-size="12" text-anchor="middle">repository is wired.</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-dashboard">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="720" y="1758" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="1812" font-size="15" font-weight="600" text-anchor="middle">delivery-surface-dashbo…</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="1830" font-size="11" text-anchor="middle" opacity="0.85">[Container: MCP server]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="1852" font-size="12" text-anchor="middle">The live view of a run, measured</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="1867" font-size="12" text-anchor="middle">by hooks rather than told.</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-collector">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="720" y="1968" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2015" font-size="15" font-weight="600" text-anchor="middle">delivery-surface-collec…</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2033" font-size="11" text-anchor="middle" opacity="0.85">[Container: MCP server]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2055" font-size="12" text-anchor="middle">A run recorded to disk rather</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2070" font-size="12" text-anchor="middle">than watched, for unattended</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2085" font-size="12" text-anchor="middle">sessions.</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-backlog">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="720" y="2178" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2225" font-size="15" font-weight="600" text-anchor="middle">delivery-surface-backlog</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2243" font-size="11" text-anchor="middle" opacity="0.85">[Container: MCP server]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2265" font-size="12" text-anchor="middle">A run shown in the Backlog</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2280" font-size="12" text-anchor="middle">desktop app, where its work item</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="2295" font-size="12" text-anchor="middle">already lives.</text>
+  </g>
+  <g data-element="github">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="1800" y="1242" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="1910" y="1289" font-size="15" font-weight="600" text-anchor="middle">GitHub</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1910" y="1307" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1910" y="1329" font-size="12" text-anchor="middle">Runs the checks on every pull</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1910" y="1344" font-size="12" text-anchor="middle">request, refreshes the index on</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1910" y="1359" font-size="12" text-anchor="middle">a schedule, and is the tracker …</text>
+  </g>
+  <g data-relationship="marketplace.devbook-config -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 1590L280 1590Q290 1590 290 1583L290 1583Q290 1575 300 1575L1360 1575Q1370 1575 1370 1583L1370 1583Q1370 1590 1380 1590L1440 1590"/>
+  </g>
+  <g data-relationship="marketplace.devbook-config -> marketplace.delivery.stack-config">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M220 1560C290 1560 290 510 360 510"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.flow">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 270C290 270 290 285 360 285"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.run">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 255C290 255 290 75 360 75"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.stack-config">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 285C290 285 290 480 360 480"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.phase">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 300L280 300Q290 300 290 310L290 614Q290 624 300 624L1000 624Q1010 624 1010 634L1010 716Q1010 726 1020 726L1080 726"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.gate">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M220 315L280 315Q290 315 290 325L290 592Q290 602 300 602L640 602Q650 602 650 612L650 728Q650 738 660 738L720 738"/>
+  </g>
+  <g data-relationship="marketplace.delivery.flow -> marketplace.delivery.phase">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M580 285L640 285Q650 285 650 295L650 509Q650 519 660 519L1000 519Q1010 519 1010 529L1010 734Q1010 744 1020 744L1080 744"/>
+  </g>
+  <g data-relationship="marketplace.delivery.stack-config -> marketplace.delivery.phase">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M580 480L640 480Q650 480 650 490L650 614Q650 624 660 624L1000 624Q1010 624 1010 634L1010 752Q1010 762 1020 762L1080 762"/>
+  </g>
+  <g data-relationship="marketplace.delivery.stack-config -> marketplace.delivery.gate">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M580 510C650 510 650 768 720 768"/>
+  </g>
+  <g data-relationship="marketplace.delivery.gate -> marketplace.delivery.phase">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M940 753C1010 753 1010 780 1080 780"/>
+  </g>
+  <g data-relationship="marketplace.delivery.phase -> marketplace.delivery.pull-request-lane">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M1300 738C1370 738 1370 1011 1440 1011"/>
+  </g>
+  <g data-relationship="marketplace.delivery.phase -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M1300 768C1370 768 1370 1560 1440 1560"/>
+  </g>
+  <g data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-dashboard">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M580 53C650 53 650 1833 720 1833"/>
+  </g>
+  <g data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-collector">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M580 75C650 75 650 2043 720 2043"/>
+  </g>
+  <g data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-backlog">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M580 97C650 97 650 2253 720 2253"/>
+  </g>
+  <g data-relationship="marketplace.delivery.pull-request-lane -> github">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M1660 1011C1730 1011 1730 1317 1800 1317"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-config -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="738" y="1551" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="1566" font-size="11" text-anchor="middle">Runs its init and update and</text>
+    <text class="c4-ink" fill="#1f2328" x="830" y="1580" font-size="11" text-anchor="middle">reads its stamp</text>
+    <text class="c4-muted" fill="#59636e" x="830" y="1594" font-size="11" text-anchor="middle">[undeclared]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-config -> marketplace.delivery.stack-config">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="235" y="1025" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="1040" font-size="11" text-anchor="middle">Is the writer of</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.flow">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="256" y="268" width="68" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="283" font-size="11" text-anchor="middle">Sequences</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.run">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="229" y="155" width="123" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="170" font-size="11" text-anchor="middle">Opens and advances</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.stack-config">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="207" y="366" width="167" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="381" font-size="11" text-anchor="middle">Resolves each phase entry</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="395" font-size="11" text-anchor="middle">from</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.phase">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="573" y="607" width="154" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="622" font-size="11" text-anchor="middle">Runs inline, forked, or</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="636" font-size="11" text-anchor="middle">delegated</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow-runner -> marketplace.delivery.gate">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="449" y="592" width="43" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="470" y="607" font-size="11" text-anchor="middle">Holds</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.flow -> marketplace.delivery.phase">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="784" y="509" width="93" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="524" font-size="11" text-anchor="middle">Runs in order</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.stack-config -> marketplace.delivery.phase">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="738" y="607" width="185" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="622" font-size="11" text-anchor="middle">Configures through one entry</text>
+    <text class="c4-ink" fill="#1f2328" x="830" y="636" font-size="11" text-anchor="middle">per flow</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.stack-config -> marketplace.delivery.gate">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="616" y="573" width="37" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="634" y="588" font-size="11" text-anchor="middle">Adds</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.gate -> marketplace.delivery.phase">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="921" y="750" width="179" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="765" font-size="11" text-anchor="middle">Presents the output of, and</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="779" font-size="11" text-anchor="middle">re-runs on revise</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.phase -> marketplace.delivery.pull-request-lane">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="1281" y="858" width="179" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="873" font-size="11" text-anchor="middle">Hands a branch under review</text>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="887" font-size="11" text-anchor="middle">to</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.phase -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="1296" y="1147" width="148" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="1162" font-size="11" text-anchor="middle">Checks the chapters at</text>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="1176" font-size="11" text-anchor="middle">spec-check with…</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-dashboard">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="595" y="933" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="948" font-size="11" text-anchor="middle">Is reported into</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-collector">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="595" y="1049" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="1064" font-size="11" text-anchor="middle">Is reported into</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.run -> marketplace.delivery-surface-backlog">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="585" y="1165" width="130" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="1180" font-size="11" text-anchor="middle">Is reported through</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.pull-request-lane -> github">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="1638" y="1140" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1730" y="1155" font-size="11" text-anchor="middle">Pushes, updates, and fixes</text>
+    <text class="c4-ink" fill="#1f2328" x="1730" y="1169" font-size="11" text-anchor="middle">the checks of a pull request</text>
+    <text class="c4-muted" fill="#59636e" x="1730" y="1183" font-size="11" text-anchor="middle">[gh]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="2504" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="2517" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="2504" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="2517" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="266" y="2504" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="2517" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="376" y="2504" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="2517" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="486" y="2504" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="518" y="2517" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-arrow)" d="M576 2512L598 2512"/>
+  <text class="c4-ink" fill="#1f2328" x="608" y="2517" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-arrow)" d="M713 2512L735 2512"/>
+  <text class="c4-ink" fill="#1f2328" x="745" y="2517" font-size="12">Implied relationship</text>
+</g>
+</svg>

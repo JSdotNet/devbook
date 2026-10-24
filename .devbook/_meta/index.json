@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 35,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
@@ -57,7 +57,7 @@
           "statusDeclared": false,
           "number": 6,
           "summary": "The scenarios that cross several blocks: a file becoming something a host loads, payload becoming state in somebody else's repository, and the run a flow skill describes. A flow that stays inside one block lives in that block's file under ## Runtime — see building-blocks/. Structure lives in…",
-          "diagrams": 3
+          "diagrams": 6
         },
         {
           "type": "file",
@@ -125,6 +125,17 @@
               "statusDeclared": false,
               "date": "2026-09-30",
               "summary": "A review note is a fenced annotation block in the chapter, beside the passage it comments on, and the fence — its schema, its only writer annotations.mjs, its lifecycle open → resolved → gone, and the sweep — is devbook's. It reaches the five devbook folders and nothing else. The gate that shows a…"
+            },
+            {
+              "type": "file",
+              "name": "c4-model.md",
+              "path": ".devbook/arc42/adr/c4-model.md",
+              "title": "C4 Model",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-10-20",
+              "summary": "An arc42 folder's architecture is one Structurizr DSL workspace, .devbook/arc42/workspace.dsl, and it is the only place an architecture element or view is defined. Chapters show its views by an image embed addressed c4:<view key>, records and building blocks name its elements in meta, Mermaid draws…",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -205,7 +216,7 @@
               "title": "Install",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-10-06",
+              "date": "2026-10-20",
               "summary": "A plugin reaches a repository through its init skill, is kept current by its update, and reaches it in no other way. init refuses where the component's stamp exists and update where it does not. Either writes the payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under…"
             },
             {
@@ -225,8 +236,9 @@
               "title": "Releases",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-09-30",
-              "summary": "Every plugin carries the same version — 1.25.1 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+              "date": "2026-10-22",
+              "summary": "Every plugin carries the same version — 1.29.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -264,7 +276,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "The phases of the delivery engine, a block inside it. Responsible for two things: that the list of phases a flow runs is closed and declared by the engine, and that a person's checkpoint is a gate attached to a phase, which configuration may add and never remove.",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -273,7 +285,8 @@
               "title": "delivery-pr-lane",
               "status": "active",
               "statusDeclared": false,
-              "summary": "The pull-request lane of the delivery engine, a block inside it. Responsible for one thing: that a finished change gets reviewed and merge-ready, whether a flow produced it or not."
+              "summary": "The pull-request lane of the delivery engine, a block inside it. Responsible for one thing: that a finished change gets reviewed and merge-ready, whether a flow produced it or not.",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -283,7 +296,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "A delivery run drawn inside Claude Code itself. Responsible for one thing: that the person in the session sees the run they are in — its phases, how each one ran, and the phase it is in now — without opening another window, and hears when any run on the machine stops for them.",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -293,7 +306,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "The entry points of delivery-schedule, a block inside it. Responsible for one thing: that each procedure a schedule fires picks its own input, runs with nobody watching, and publishes what it did without passing a gate or merging anything.",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -303,7 +316,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "Work that runs with nobody watching, and the catalog of triggers that fires it. Responsible for one thing: that a procedure can run in a session nobody is watching without ever passing a gate, without merging anything, and without carrying anything personal into the repository.",
-              "diagrams": 2
+              "diagrams": 3
             },
             {
               "type": "file",
@@ -313,7 +326,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "A run shown in the application where its work item already lives. Responsible for one thing: that the Backlog desktop app answers as a surface when, and only when, this plugin is installed — and says plainly when it cannot.",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -323,7 +336,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "Mermaid and Markdown rendered live beside the files they came from. Responsible for one thing: that a diagram or a document written to a file can be looked at, live, beside the file — and that looking at it creates nothing anyone could mistake for a record.",
-              "diagrams": 3
+              "diagrams": 4
             },
             {
               "type": "file",
@@ -333,7 +346,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "A run recorded to disk rather than watched, for unattended sessions. Responsible for one thing: that a run nobody watched is still legible afterwards — which stages ran, how many times, what a person decided at each gate, what the evidence was, and whether the run was handed off or abandoned.",
-              "diagrams": 3
+              "diagrams": 4
             },
             {
               "type": "file",
@@ -343,7 +356,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "The live view of a run, measured by hooks rather than told. Responsible for three things: that a run is visible while it happens, that what it shows was measured rather than claimed, and that uninstalling it costs a view and never a capability.",
-              "diagrams": 3
+              "diagrams": 4
             },
             {
               "type": "file",
@@ -363,7 +376,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "The code-sync part of devbook, a block inside it. Responsible for one thing: that a chapter and the code implementing it can be brought back into agreement, in whichever direction is behind, without either side being guessed.",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -373,7 +386,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "How a chapter is reviewed and decided. Responsible for two things: that every objection to a chapter is written into it, beside the passage it is about, and that an approval on it was chosen by a person in the session that wrote it.",
-              "diagrams": 3
+              "diagrams": 4
             },
             {
               "type": "file",
@@ -383,7 +396,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "The stack's rollout across one machine, drawn inside Claude Code itself. Responsible for one thing: that the person in the session sees, for every repository on this machine that has adopted the stack, which version each component is stamped at and how far that is from the newest, and how any one…",
-              "diagrams": 1
+              "diagrams": 2
             },
             {
               "type": "file",
@@ -393,7 +406,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "What this stack is, what this machine has, and how this repository is wired. Responsible for four things: that a repository's stack configuration exists before anything initializes itself, that it can be moved forward in one run, that its installation can be diagnosed without a write, and that…",
-              "diagrams": 3
+              "diagrams": 4
             },
             {
               "type": "file",
@@ -402,7 +415,8 @@
               "title": "devbook-derived",
               "status": "active",
               "statusDeclared": false,
-              "summary": "The committed index and the canvas that draws it. Responsible for one thing: that a repository which keeps the derived _meta/ indexes in its tree has them current on the default branch and never regenerated in a session."
+              "summary": "The committed index, the rendered C4 views, and the canvas that draws the graph. Responsible for one thing: that a repository which keeps the derived _meta/ files in its tree has them current on the default branch and never regenerated in a session.",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -411,7 +425,8 @@
               "title": "devbook-openspec",
               "status": "active",
               "statusDeclared": false,
-              "summary": "The change lane: the plugin that installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as a set of deltas against its devbook chapters."
+              "summary": "The change lane: the plugin that installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as a set of deltas against its devbook chapters.",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -420,7 +435,8 @@
               "title": "devbook-procedures",
               "status": "active",
               "statusDeclared": false,
-              "summary": "The procedures part of devbook, a block inside it. Responsible for one thing: that every repository has the five things it knows how to do and no plugin can write — run, capture, diagnose, estimate, prototype — each with a goal this block fixes and a body the repository owns."
+              "summary": "The procedures part of devbook, a block inside it. Responsible for one thing: that every repository has the five things it knows how to do and no plugin can write — run, capture, diagnose, estimate, prototype — each with a goal this block fixes and a body the repository owns.",
+              "diagrams": 1
             },
             {
               "type": "file",
@@ -430,7 +446,7 @@
               "status": "active",
               "statusDeclared": false,
               "summary": "This block makes sure output reads well, and that a large effort is planned before it is built. It holds reusable guidance that any plugin can name and none has to depend on, and one planning procedure a person runs by hand. Today that is five skills: show-me, which puts a picture before the prose…",
-              "diagrams": 2
+              "diagrams": 3
             },
             {
               "type": "file",
@@ -465,99 +481,102 @@
               "name": "1-body-budgets-unenforced.md",
               "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
               "title": "1. The Body Budgets Are Unenforced",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "in-progress",
               "number": 1,
               "date": "2026-09-04",
-              "summary": "Remediation state: in-progress · Severity: low · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "2-fleet-names-the-cli-directly.md",
               "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
               "title": "2. fleet Names the Claude CLI Directly",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "resolved",
               "number": 2,
               "date": "2026-09-03",
-              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "3-devbook-rename-has-no-migration.md",
               "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
               "title": "3. The devbook Asset Rename Ships No Migration",
-              "status": "active",
+              "status": "identified",
               "statusDeclared": false,
               "number": 3,
               "date": "2026-09-05",
-              "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "4-delivery-depends-on-devbook.md",
               "path": ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
               "title": "4. delivery Depends on devbook",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "in-progress",
               "number": 4,
               "date": "2026-09-07",
-              "summary": "Remediation state: in-progress · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "5-derived-index-is-not-optional.md",
               "path": ".devbook/arc42/tdr/5-derived-index-is-not-optional.md",
               "title": "5. The Derived Index Is Not Optional",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "resolved",
               "number": 5,
               "date": "2026-09-08",
-              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md",
               "path": ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md",
               "title": "6. sync-specs Borrows a Name OpenSpec Uses for Something Else",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "resolved",
               "number": 6,
               "date": "2026-09-15",
-              "summary": "Remediation state: resolved · Severity: low · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "7-the-decision-set-predates-the-concern-rule.md",
               "path": ".devbook/arc42/tdr/7-the-decision-set-predates-the-concern-rule.md",
               "title": "7. The Decision Set Predates the Concern Rule",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "resolved",
               "number": 7,
               "date": "2026-09-17",
-              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "8-the-domain-rule-is-not-exercised-here.md",
               "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
               "title": "8. The Domain Rule Is Not Exercised Here",
-              "status": "active",
+              "status": "identified",
               "statusDeclared": false,
               "number": 8,
               "date": "2026-09-21",
-              "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
             },
             {
               "type": "file",
               "name": "9-openspecs-model-does-not-cover-a-devbook-change.md",
               "path": ".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md",
               "title": "9. OpenSpec's Model Does Not Cover a devbook Change",
-              "status": "active",
-              "statusDeclared": false,
+              "status": "resolved",
               "number": 9,
               "date": "2026-09-27",
-              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
+              "summary": "Owner: the maintainer"
+            },
+            {
+              "type": "file",
+              "name": "10-the-c4-rules-run-ahead-of-this-devbook.md",
+              "path": ".devbook/arc42/tdr/10-the-c4-rules-run-ahead-of-this-devbook.md",
+              "title": "10. The C4 Rules Run Ahead of This Devbook",
+              "status": "resolved",
+              "number": 10,
+              "date": "2026-10-20",
+              "summary": "Owner: the maintainer"
             }
           ]
         }
