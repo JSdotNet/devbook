@@ -474,6 +474,13 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
     step's English text, so the demo plays with nothing fetched. Its screens'
     copy still follows `domain.md`'s language. A `signature` that is not the
     journey's current one makes it stale until its text is re-copied.
+  - A **playthrough** plays a whole journey end to end. It keeps its own `id`
+    and adds `journey: "<scenarios file>#<journey>"`, written as `part` is, and
+    the journey's `signature`. Each step adds `part`, the anchor of the part it
+    shows, and `step`, that part step's 1-based index, in the journey's order —
+    a part step may be left out, a whole part is warned — and embeds that step's
+    text as a linked walkthrough does. A walkthrough carries `part` or
+    `journey`, never both.
   - A requirement whose `#### Scenario:` is a `Proved by:` line gets its
     walkthroughs derived, the way its `e2e` test is: every walkthrough in any
     `*.demo.html` under `domain/` whose `part` names that part. A hand-written
@@ -490,6 +497,21 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
   verdict, or page, because where the file sits already says which it is. What
   a demo is and where it lives is `devbook-domain.md`'s. Omit the field
   entirely when no demo shows the chapter.
+- **playthrough** (optional, `domain/` `feature` and `sub-feature` chapters
+  only) — list of the playthroughs the feature's page shows, each
+  `<path>#walkthrough/<id>`: a demo's repository path and the id of a
+  playthrough its `demo-model` lists, whole — no step and no query:
+
+  ```text
+  playthrough: [.devbook/domain/ordering/features.demo.html#walkthrough/retry-a-declined-card]
+  ```
+
+  The journey it plays names the feature in its `related` (warning
+  otherwise). A tool that shows the page offers the first entry, and the
+  demo is folded into the chapter's fingerprint as a `demo` entry's is. When
+  it plays is the host's — spec-manager, Backlog — through devbook's
+  `devbook.demo.address@1` contract; how it looks is the repository's demo
+  template's. Omit the field when no playthrough walks the feature.
 - **change** (optional) — the change whose merge last touched this chapter or
   file: its folder name under `openspec/changes/`. Written by
   `delta.mjs --apply`, never by hand. Available in every folder. See

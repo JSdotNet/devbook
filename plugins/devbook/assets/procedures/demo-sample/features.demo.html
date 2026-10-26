@@ -7,7 +7,7 @@
 <script type="application/json" id="demo-meta">{"question": "Does a buyer whose card is declined at checkout keep the basket and know what to do next?"}</script>
 </head>
 <body>
-<!-- template:begin hash=sha256:e3e6363d74710dbbfe3b1705a6400a49c6ebd0adbb150ac23943716562eb4521 -->
+<!-- template:begin hash=sha256:202cae88ec70b3a2155723defc62754640d22c7656261c77cba4e933e28f2439 -->
 <!--
   The managed region of the demo template. A demo copies it byte for byte and never edits it:
   a change to it is a change to .devbook/design/demo-template.html, and every demo is refreshed
@@ -37,15 +37,20 @@
     settings      [{"key", "label", "options": [{"value", "label"}], "default"?}]
     viewports     [{"key", "label", "width"?, "default"?}]: width in px; none fills the window
     variants      [{"key", "label"}]: the panel switches them while there are two or more
-    walkthroughs  [{"id", "title", "part"?, "signature"?,
-                    "steps": [{"screen", "anchor"?, "role"?, "flags"?, "step"?, "text"}]}]
+    walkthroughs  [{"id", "title", "part"? | "journey"?, "signature"?,
+                    "steps": [{"screen", "anchor"?, "role"?, "flags"?, "part"?, "step"?, "text"}]}]
                   free: "id" is the slug of the #### Scenario: it plays, each step's "text"
                   the scenario line it shows. linked: "part" is "<page>.md#<part>", the
                   scenario page part it shows; "signature" the page signature its text was
                   copied at; each step's "step" the 1-based index of the part step it
-                  shows and "text" that step's English text, embedded so nothing is fetched
+                  shows and "text" that step's English text, embedded so nothing is fetched.
+                  playthrough: "journey" is "<page>.md#<journey>", the journey it plays end
+                  to end; each step's "part" the anchor of the part it shows and "step" that
+                  part step's index, in the journey's order. A playthrough shows a caption
+                  over the product and its steps grouped by part; Play advances any
+                  walkthrough on its own
 
-  Addresses and the four messages follow devbook's demo-address contract,
+  Addresses and the five messages follow devbook's demo-address contract,
   devbook.demo.address@1. demo:ready carries the hash above as its template version.
 -->
 <style>
@@ -187,6 +192,18 @@
   .demo-pins { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
   .demo-pin { position: absolute; display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border: 2px solid #16181d; border-radius: 11px 11px 11px 0; background: #f5c400; color: #16181d; font: 700 11px/1 ui-monospace, "Cascadia Mono", Consolas, monospace; }
 
+  /* A playthrough's caption: the step being played, over the product, in the panel's look. */
+  .demo-caption { position: sticky; bottom: 12px; z-index: 30; display: flex; align-items: center; gap: 12px; width: min(760px, calc(100% - 24px)); margin: 16px auto 12px; padding: 8px 12px; background: #16181d; color: #e9e6dc; border: 1px solid #000; box-shadow: inset 4px 0 0 #f5c400, var(--shadow-2); font: 12px/1.45 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  .demo-caption-body { flex: 1; display: grid; gap: 2px; min-width: 0; }
+  .demo-caption-part { color: #f5c400; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .demo-caption-text { font-size: 13px; }
+  .demo-caption-pos { color: #8b877b; white-space: nowrap; }
+  .demo-caption-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #2c3038; }
+  .demo-caption-bar > span { display: block; height: 100%; background: #f5c400; transition: width 0.3s; }
+  .demo-caption button { padding: 4px 8px; border: 1px solid #3a3f49; background: #20232a; color: inherit; font: inherit; cursor: pointer; white-space: nowrap; }
+  .demo-caption button:hover, .demo-caption button[aria-pressed="true"] { border-color: #f5c400; }
+  .demo-caption :focus-visible { outline: 2px solid #f5c400; outline-offset: 1px; }
+
   /* The control panel. Deliberately unlike any product: dark, monospaced, hazard-striped. */
   .dp { position: fixed; z-index: 2147483000; top: 0; right: 0; bottom: 0; width: 320px; display: flex; flex-direction: column; background: #16181d; color: #e9e6dc; border-left: 1px solid #000; font: 12px/1.45 ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace; box-shadow: -6px 0 18px rgb(0 0 0 / 25%); }
   .dp::before { content: ""; height: 8px; flex: none; background: repeating-linear-gradient(-45deg, #f5c400 0 10px, #16181d 10px 20px); }
@@ -221,6 +238,8 @@
   .dp-player-title { margin: 0; font-weight: 700; }
   .dp-steps { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
   .dp-steps .dp-item::before { counter-increment: step; content: counter(step) "."; color: #8b877b; min-width: 2ch; }
+  .dp-part { margin-top: 6px; padding: 0 6px; color: #f5c400; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dp-part:first-child { margin-top: 0; }
   .dp-player-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .dp-address { display: block; width: 100%; padding: 4px 6px; border: 1px solid #2c3038; background: #0f1114; color: #c9c5b8; overflow-wrap: anywhere; }
   .dp-error { color: #ff8a80; }
@@ -236,6 +255,12 @@
 <div class="demo-stage" data-demo-stage>
   <header class="shell" data-demo-shell></header>
   <div class="demo-pins" data-demo-pins aria-hidden="true"></div>
+  <div class="demo-caption" data-demo-caption role="region" aria-label="Playthrough" aria-live="polite" hidden>
+    <button type="button" data-demo-caption-play aria-pressed="false">▶ Play</button>
+    <div class="demo-caption-body"><span class="demo-caption-part" data-demo-caption-part></span><span class="demo-caption-text" data-demo-caption-text></span></div>
+    <span class="demo-caption-pos" data-demo-caption-pos></span>
+    <div class="demo-caption-bar" aria-hidden="true"><span data-demo-caption-bar></span></div>
+  </div>
 </div>
 <aside class="dp" data-demo-panel aria-label="Demo controls">
   <div class="dp-head">
@@ -250,6 +275,7 @@
 (() => {
   "use strict";
   const V = 1;
+  const PACE = 4000; // ms a playing walkthrough rests on each step
   const hosted = window.parent !== window;
   const list = (x) => (Array.isArray(x) ? x : []);
   const words = (s) => String(s || "").split(/[\s,]+/).filter(Boolean);
@@ -291,6 +317,8 @@
     const stage = document.querySelector("[data-demo-stage]");
     const shell = stage.querySelector("[data-demo-shell]");
     const pinLayer = stage.querySelector("[data-demo-pins]");
+    const caption = stage.querySelector("[data-demo-caption]");
+    const cap = (name) => caption.querySelector(`[data-demo-caption-${name}]`);
     const body = document.querySelector("[data-demo-panel-body]");
     const app = document.querySelector("main[data-demo-app]");
     if (!app) { body.append(h("p", { class: "dp-error", text: "This file has no main[data-demo-app]." })); return; }
@@ -371,10 +399,36 @@
     const screenAddress = (anchor) => `#${state.screen}${anchor ? `/${anchor}` : ""}${query()}`;
     const address = () => (state.walk ? `#walkthrough/${state.walk.id}/${state.walk.step}` : screenAddress(state.anchor));
 
+    // ---- Playing: a walkthrough advancing on its own, every PACE ms, until its last step ----
+    let timer = null, advancing = false;
+    const playing = () => timer !== null;
+    const currentWalk = () => (state.walk && walks.find((x) => x.id === state.walk.id)) || null;
+    const partLabel = (anchor) => String(anchor || "").replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase());
+    function stopPlaying() { if (timer !== null) { clearTimeout(timer); timer = null; } }
+    function play() {
+      stopPlaying();
+      const w = currentWalk();
+      if (!w) return;
+      if (state.walk.step >= w.steps.length) open({ walk: w, step: 1 }, false);
+      const tick = () => {
+        const cur = currentWalk();
+        if (!cur || state.walk.step >= cur.steps.length) { timer = null; render(false); return; }
+        advancing = true;
+        open({ walk: cur, step: state.walk.step + 1 }, false);
+        advancing = false;
+        timer = setTimeout(tick, PACE);
+      };
+      timer = setTimeout(tick, PACE);
+      render(false);
+    }
+    const togglePlay = () => { if (playing()) { stopPlaying(); render(false); } else play(); };
+
     // Opens a parsed address. A host's address and the URL reset what they omit to the panel's
-    // default; a link inside the demo keeps the panel as it is.
+    // default; a link inside the demo keeps the panel as it is. Anything but the player's own
+    // advance stops a walkthrough that is playing.
     function open(p, reset) {
       if (!p) return false;
+      if (!advancing) stopPlaying();
       if (p.walk) {
         const st = p.walk.steps[p.step - 1];
         state.walk = { id: p.walk.id, step: p.step };
@@ -478,17 +532,21 @@
     }
 
     // ---- Location ----
-    let last = null;
+    let last = null, lastPlaying = false;
     function sync() {
       const a = address();
+      const now = playing();
       addressOut.textContent = a;
-      if (a === last) return;
-      const moved = last && a.split("?")[0] !== last.split("?")[0];
-      last = a;
-      if (!hosted) {
-        try { history[moved ? "pushState" : "replaceState"](null, "", a); } catch (e) { /* no history here */ }
+      if (a === last && now === lastPlaying) return;
+      if (a !== last) {
+        const moved = last && a.split("?")[0] !== last.split("?")[0];
+        last = a;
+        if (!hosted) {
+          try { history[moved && !now ? "pushState" : "replaceState"](null, "", a); } catch (e) { /* no history here */ }
+        }
       }
-      post("demo:location", { address: a });
+      lastPlaying = now;
+      post("demo:location", now ? { address: a, playing: true } : { address: a });
     }
     const fromUrl = () => { if (location.hash && decodeURI(location.hash) !== decodeURI(last || "")) open(parse(location.hash), true); };
     window.addEventListener("hashchange", fromUrl);
@@ -497,7 +555,7 @@
     // ---- The panel ----
     const screenItems = new Map();
     const walkItems = new Map();
-    let addressOut, player, playerTitle, playerSteps, playerPos, prevBtn, nextBtn, annotateBox;
+    let addressOut, player, playerTitle, playerSteps, playerPos, prevBtn, nextBtn, playBtn, annotateBox;
     const roleSelect = h("select", { id: "dp-role", onchange: (e) => { state.role = e.target.value; render(false); } },
       roles.map((r) => h("option", { value: r.key, text: r.label || r.key })));
     const variantSelect = h("select", { id: "dp-variant", onchange: (e) => { state.variant = e.target.value; render(false); } },
@@ -531,13 +589,14 @@
         playerPos = h("span");
         prevBtn = h("button", { type: "button", class: "dp-btn", text: "← Back", onclick: () => step(-1) });
         nextBtn = h("button", { type: "button", class: "dp-btn", text: "Next →", onclick: () => step(1) });
+        playBtn = h("button", { type: "button", class: "dp-btn", "aria-pressed": "false", onclick: togglePlay });
         player = h("div", { class: "dp-player", hidden: true, role: "region", "aria-label": "Walkthrough" },
-          playerTitle, playerSteps, h("div", { class: "dp-player-nav" }, prevBtn, playerPos, nextBtn),
+          playerTitle, playerSteps, h("div", { class: "dp-player-nav" }, prevBtn, playerPos, nextBtn), playBtn,
           h("button", { type: "button", class: "dp-btn", text: "End walkthrough", onclick: () => open({ screen: state.screen, anchor: null }, false) }));
         sections.push(h("div", { class: "dp-section" }, h("p", { class: "dp-h", text: "Walkthroughs" }),
           h("ul", { class: "dp-list" }, walks.map((w) => {
             const btn = h("button", { type: "button", class: "dp-item", onclick: () => open({ walk: w, step: 1 }, false) },
-              h("span", { class: "dp-item-label", text: w.title || w.id }), h("span", { class: "dp-tag", text: `${w.steps.length} steps` }));
+              h("span", { class: "dp-item-label", text: w.title || w.id }), h("span", { class: "dp-tag", text: `${w.journey ? "end to end · " : ""}${w.steps.length} steps` }));
             walkItems.set(w.id, btn);
             return h("li", null, btn);
           })), player));
@@ -580,18 +639,44 @@
       for (const [k, sel] of settingSelects) sel.value = state.settings[k];
       for (const [k, btn] of vpButtons) btn.setAttribute("aria-pressed", String(k === state.vp));
       if (annotateBox) annotateBox.checked = state.annotate;
+      const w = currentWalk();
+      updateCaption(w);
       if (!player) return;
-      const w = state.walk && walks.find((x) => x.id === state.walk.id);
       player.hidden = !w;
       if (!w) return;
       playerTitle.textContent = w.title || w.id;
-      playerSteps.replaceChildren(...w.steps.map((st, i) => h("li", null, h("button", { type: "button", class: "dp-item",
-        "aria-current": i + 1 === state.walk.step ? "step" : null, onclick: () => open({ walk: w, step: i + 1 }, false) },
-        h("span", { class: "dp-item-label", text: st.text || st.screen })))));
+      // A playthrough's steps sit under the part of the journey each one shows.
+      const items = [];
+      let part = null;
+      w.steps.forEach((st, i) => {
+        if (w.journey && st.part !== part) { part = st.part; items.push(h("li", { class: "dp-part", text: partLabel(part) })); }
+        items.push(h("li", null, h("button", { type: "button", class: "dp-item",
+          "aria-current": i + 1 === state.walk.step ? "step" : null, onclick: () => open({ walk: w, step: i + 1 }, false) },
+          h("span", { class: "dp-item-label", text: st.text || st.screen }))));
+      });
+      playerSteps.replaceChildren(...items);
       playerPos.textContent = `Step ${state.walk.step} of ${w.steps.length}`;
       prevBtn.disabled = state.walk.step === 1;
       nextBtn.disabled = state.walk.step === w.steps.length;
+      playBtn.textContent = playing() ? "❚❚ Pause" : state.walk.step === w.steps.length ? "↺ Play again" : "▶ Play";
+      playBtn.setAttribute("aria-pressed", String(playing()));
     }
+
+    // The caption shows a playthrough over the product, so it reads with the panel hidden.
+    function updateCaption(w) {
+      caption.hidden = !(w && w.journey);
+      if (caption.hidden) return;
+      const st = w.steps[state.walk.step - 1];
+      const parts = [...new Set(w.steps.map((s) => s.part))];
+      cap("part").textContent = `Part ${parts.indexOf(st.part) + 1} of ${parts.length} · ${partLabel(st.part)}`;
+      cap("text").textContent = st.text || st.screen;
+      cap("pos").textContent = `${state.walk.step} / ${w.steps.length}`;
+      cap("bar").style.width = `${(100 * state.walk.step) / w.steps.length}%`;
+      const btn = cap("play");
+      btn.textContent = playing() ? "❚❚ Pause" : state.walk.step === w.steps.length ? "↺ Again" : "▶ Play";
+      btn.setAttribute("aria-pressed", String(playing()));
+    }
+    cap("play").addEventListener("click", togglePlay);
 
     // ---- Interaction inside the product ----
     stage.addEventListener("click", (e) => {
@@ -630,6 +715,7 @@
       const m = e.data;
       if (!m || typeof m !== "object" || typeof m.v !== "number" || m.v > V) return;
       if (m.type === "demo:goto") open(parse(m.address), true);
+      else if (m.type === "demo:play") { const p = parse(m.address); if (p && p.walk && open(p, true)) play(); }
       else if (m.type === "demo:pins") { state.pins = list(m.addresses).filter((a) => typeof a === "string"); placePins(); }
     });
 
@@ -649,7 +735,7 @@
       template: templateVersion(),
       screens: screens.map((s) => ({ id: s.id, title: s.title || s.id, ...(s.of ? { of: s.of } : {}) })),
       anchors: screens.flatMap((s) => list(s.anchors).filter((a) => anchorEl(s.id, a)).map((a) => `${s.id}/${a}`)),
-      walkthroughs: walks.map((w) => ({ id: w.id, title: w.title || w.id, steps: w.steps.map((st) => `${st.screen}${st.anchor ? `/${st.anchor}` : ""}`) })),
+      walkthroughs: walks.map((w) => ({ id: w.id, title: w.title || w.id, ...(w.journey ? { journey: w.journey } : {}), steps: w.steps.map((st) => `${st.screen}${st.anchor ? `/${st.anchor}` : ""}`) })),
     });
     if (!open(parse(location.hash), true)) open({ screen: home, anchor: null }, true);
   }
@@ -973,6 +1059,21 @@
         { "screen": "checkout", "anchor": "place-order", "text": "When they place the order and the bank declines the card" },
         { "screen": "checkout-declined", "anchor": "payment-error", "text": "Then the checkout says the card was declined and nothing was charged" },
         { "screen": "checkout-declined", "anchor": "basket-lines", "text": "And the basket still holds all 6 lines" }
+      ]
+    },
+    {
+      "id": "retry-a-declined-card",
+      "title": "A declined card is retried",
+      "journey": "scenarios.md#a-declined-card-is-retried",
+      "signature": "7dc0348c",
+      "steps": [
+        { "screen": "checkout", "anchor": "basket-lines", "role": "buyer", "part": "the-card-is-declined", "step": 1, "text": "Given a buyer with 6 lines in the basket" },
+        { "screen": "checkout", "anchor": "place-order", "part": "the-card-is-declined", "step": 2, "text": "When they place the order and the bank declines the card" },
+        { "screen": "checkout-declined", "anchor": "payment-error", "part": "the-card-is-declined", "step": 3, "text": "Then the checkout says the card was declined and nothing was charged" },
+        { "screen": "checkout-declined", "anchor": "place-order", "part": "another-card-places-the-order", "step": 1, "text": "When they try again with another card" },
+        { "screen": "order-placed", "anchor": "confirmation", "part": "another-card-places-the-order", "step": 2, "text": "Then the order is placed and its number shown" },
+        { "screen": "orders", "anchor": "orders-table", "part": "the-order-is-in-the-list", "step": 1, "text": "When they open their orders" },
+        { "screen": "orders", "anchor": "order-10482", "part": "the-order-is-in-the-list", "step": 2, "text": "Then the order is listed with its total and status" }
       ]
     }
   ]

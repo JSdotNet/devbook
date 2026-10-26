@@ -803,6 +803,9 @@ const FOLDER_EXTRA_FIELDS = {
         "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
         "deployment",
         "sync",
+        // The playthrough a feature's page shows: a demo walkthrough that plays
+        // a whole journey, resolved by demo.mjs. Contract 36.
+        "playthrough",
         ...C4_FIELDS,
         ...DECISION_FIELDS,
     ],
@@ -1000,6 +1003,7 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "layer",
     "feeds",
     "evidence",
+    "playthrough",
 ];
 
 // `.ai`'s placement fields: a file-level one would place chapters by implication.
@@ -1036,6 +1040,9 @@ const FIELD_TYPE_SCOPE = {
         "depends-on": ["feature", "sub-feature"],
         "feature-flag": ["feature", "sub-feature"],
         setting: ["feature", "sub-feature"],
+        // A playthrough plays a journey end to end, and a journey walks
+        // features: the page a person opens to see one is the feature's.
+        playthrough: ["feature", "sub-feature"],
         role: ["user", "organisation", "technical"],
         key: ["feature-flag", "setting"],
         default: ["feature-flag", "setting"],
@@ -3374,7 +3381,7 @@ export function chapterFingerprint(relPath, markdown, line = 1, demoText = null)
     }
     for (let i = Math.max(index, 0); i < chapters.length; i++) {
         if (i > index && index !== -1 && chapters[i].level <= level) break;
-        for (const ref of toList(chapters[i].meta?.demo)) {
+        for (const ref of [...toList(chapters[i].meta?.demo), ...toList(chapters[i].meta?.playthrough)]) {
             const target = String(ref).split("#")[0];
             if (isDemoPath(target)) paths.add(target);
         }

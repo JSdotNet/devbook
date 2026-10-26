@@ -1,8 +1,8 @@
 # Demos
 
 ```meta
-date: 2026-10-02
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
+date: 2026-10-22
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/12-glossary.md#playthrough", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
 c4: ["marketplace.devbook.demo", "marketplace.devbook.demo-template"]
 ```
 
@@ -46,9 +46,10 @@ Links run from Markdown to HTML. A chapter points at a screen, a state, or a
 walkthrough through an optional `demo` field in its `meta` block, and the demo names no page.
 The one exception is a linked walkthrough, whose `part` names the journey part it
 plays and embeds that part's step text, so a requirement the part proves derives its
-walkthroughs instead of naming them.
+walkthroughs instead of naming them, and its sibling the playthrough, whose `journey`
+names the whole journey it plays.
 That keeps every link where the checker and the indexes read, because they read Markdown.
-The address a `demo` field holds, and the four messages a frame that hosts a demo exchanges
+The address a `demo` field holds, and the five messages a frame that hosts a demo exchanges
 with it, are devbook's contract `plugins/devbook/resources/demo-address.md`, which the
 template, spec-manager, and Backlog follow.
 
@@ -129,6 +130,44 @@ A demo has a size target of 500 KB. `/prototype` works to stay under it with inl
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
 reports the size as a warning and never as an error.
 
+### Playing a journey end to end
+
+```meta
+```
+
+A linked walkthrough shows one part of a journey, so nothing played the whole journey, and a
+feature's page had no way to say which walk to show. A playthrough is the walkthrough that
+does: its `journey` names the journey, and each step names the part and the part step it
+shows, in the journey's order, with that step's text copied in as a linked walkthrough's is.
+The feature the journey walks names it in a `playthrough` field, and the graph carries that
+field on the feature's node for any tool that shows the page.
+
+```mermaid
+sequenceDiagram
+    participant Host as Host page
+    participant Demo as Demo template
+    Host->>Host: reads the feature's playthrough field
+    Host->>Demo: frames the demo, sandboxed
+    Demo-->>Host: demo:ready, the playthrough with its journey
+    Host->>Demo: demo:play with the walkthrough address
+    loop every step, at the template's pace
+        Demo-->>Host: demo:location with playing true
+    end
+    Demo-->>Host: demo:location without playing, at the last step
+```
+
+The work splits three ways, so no part decides another's question. devbook owns the
+convention: the field, the model's shape, and the address contract with its `demo:play`
+message. The host — spec-manager, Backlog — owns activation: whether the playthrough starts
+when the page opens, on a click, or not at all. The repository's template owns the look: the
+caption over the product, the steps grouped by part in the panel, and the pace. A host that
+styled the playthrough would make every repository's look the host's, and a template that
+started one on its own would play in every frame, a pull request preview included.
+
+A demo is still one file and still names no page: the field sits on the feature, never in the
+demo. `demo:play` joined `devbook.demo.address@1` without raising it, because a demo on an
+earlier template ignores a message type it does not know and a host falls back to `demo:goto`.
+
 ### What already landed
 
 ```meta
@@ -175,6 +214,12 @@ and `archive` skills carry a demo delta from proposal to archive.
   `flow-spec` pull request although nothing about the demo was wrong. A per-repository policy
   key to restore that mandate was rejected too: the author knows per demo whether it needs a
   change's two gates, and a key adds wording for two cases to every rule that mentions a demo.
+- **The playthrough named from the demo, or derived from the journey's `related`.** A demo
+  names no page, and a journey may walk several features that each want a different walk
+  shown; the feature says which, where the checker and the host already read.
+- **The host styling or pacing a playthrough, or the template starting one.** The look belongs
+  with the design system the template carries, and when to play belongs with the page that
+  frames the demo.
 - **A product-level demo.** It would duplicate the screens of every context it crosses and
   belong to none of them.
 - **A hard size limit.** A large context can need more than 500 KB, and refusing it would push
@@ -190,6 +235,7 @@ and `archive` skills carry a demo delta from proposal to archive.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-22 | A walkthrough may be a playthrough, whose `journey` names a whole journey and whose steps name the part and part step each shows, in the journey's order; a feature names the one its page shows in `playthrough`. devbook owns the convention and `demo:play`, joined to `devbook.demo.address@1`; the host owns activation, and the template the look. Contract 36, no migration. | Nothing played a journey end to end, and a page had no way to say which walk to show. |
 | 2026-10-13 | Migration `030-linked-walkthroughs` rewrites a free walkthrough whose id is a `Proved by:` case's slug to a linked one — `part` from the line, `signature` from the page, `step` by position, and the text copied by `demo-sync.mjs` — and leaves one whose step count differs from its part's free, listed `not-applicable` with the reason. | — |
 | 2026-10-13 | A walkthrough is free or linked. A linked one keeps its own id, names a scenario page part with `part`, embeds that part's English step text with the `signature` it was copied at, and is stale when the page moves; a requirement proved by the part gets it as a derived `demo` entry, and `verify-change` compares it with the part rather than a test file. The one link out of a demo is that `part`, naming a journey and no chapter. | — |
 | 2026-10-09 | A demo lands directly in a `flow-spec` pull request or as a demo delta of a change, its author's choice per demo; the change folder is no longer its only route. | — |
