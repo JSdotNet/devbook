@@ -37,7 +37,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows, and the requirements and invariants they guarantee |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
-| `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
+| `ai/` | How the team develops with AI: usage per stage of the seven-stage delivery path and the layers beneath it, concepts, adoption status |
 | `openspec/changes/` | Proposed changes to the folders above, as a proposal and deltas that `delta.mjs` merges; history under `archive/` |
 
 Adoption is partial by design — a repository may take only `domain/` and
@@ -322,7 +322,7 @@ skills exist.
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the DevOps loop, the adoption ladder, and the `tech/` boundary |
+| `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the delivery path and layer beneath it, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
 | `devbook-writing.md` | all five folders | How a chapter reads: full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, and a Mermaid diagram wherever a sequence, state, or structure is described |
@@ -462,7 +462,7 @@ only where `domain/` is adopted. The contract and the wiring are
 | `assets/procedures/skills/<name>.md` | The five procedure seeds: `name`, `description`, and `goal` in the frontmatter, an example-filled procedure below. `run.md` lands only where `/run-skill-generator` cannot run |
 | `assets/procedures/skill-wrappers.md` | How a procedure lands: one editable copy, a managed wrapper per host, where the goal sits, and `run`'s exception |
 | `assets/procedures/demo-template.html` | The starting demo template, seeded at `.devbook/design/demo-template.html` when `prototype` and `design/` are adopted: the managed region between `template:begin hash=…` and `template:end`, and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
-| `assets/procedures/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against, its region kept equal to the template's by `tools/devbook-meta/demo-template.test.mjs` |
+| `assets/procedures/demo-sample/features.demo.html` | A demo built on the template, with realistic data, one free walkthrough, and one playthrough of the journey in `scenarios.md` beside it: the fixture spec-manager and Backlog test against, its region kept equal to the template's by `tools/devbook-meta/demo-template.test.mjs` |
 | `assets/seeds/arc42/` | The starting `arc42/` folder `devbook:init` and `devbook:update` scaffold: a `workspace.dsl` holding the system, its person, and a context view, and the `03-context-and-scope.md` that embeds it, each `<…>` filled from the README or asked |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `actor`, `building-block`, `design-component`, `demo`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
@@ -514,7 +514,10 @@ the thirteenth is `033-c4-workspace`, which creates `arc42/workspace.dsl` or
 moves it from `arc42/_c4/`, turns each Mermaid C4 fence, each sequence whose participants are
 all workspace elements, and each Archify `architecture` or `sequence` spec into elements, a
 view, and the `c4:` embed that replaces the fence, ranks each debt record from its
-`## Severity` and `## Status` sections, and reports every diagram it cannot move.
+`## Severity` and `## Status` sections, and reports every diagram it cannot move; the
+fourteenth is `035-delivery-path-stages`, which maps every `ai/` `stage` list from the DevOps
+loop's eight words onto the delivery path's seven, de-duplicated and in path order, and adds no
+`substage`, `layer`, `feeds`, or `evidence`, which are the repository's to place.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -647,7 +650,11 @@ whole file typed `scenario` is an error from then on, so it ships `032-scenarios
 folds each page into `scenarios.md` and moves every reference, run folder, and spec header
 with it. 33 reads the C4 workspace and adds `c4`, `c4-touches`, `code`, `severity`, and the
 debt ladder, each with a safe default, and `033-c4-workspace` ships under it to move the
-diagrams a repository drew before the workspace into it.
+diagrams a repository drew before the workspace into it. 34 lets a `tech/` chapter be typed
+`plugin`, `skill`, or `agent`, an added value that owes nothing. 35 places an `ai/` chapter on the
+seven-stage delivery path or a layer beneath it, with `substage`, `feeds`, `evidence`, and a
+**Moves up when** bullet; the loop's eight stage words are errors from then on, so it ships
+`035-delivery-path-stages`, which maps each onto the path.
 
 ## Folder structure
 

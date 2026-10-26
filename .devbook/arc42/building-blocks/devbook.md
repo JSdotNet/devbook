@@ -63,14 +63,14 @@ change belongs to the engine.
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
-| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links: each linked walkthrough's step `text` and `signature` re-copied from its journey; `--check` exits 1 while one is stale or drifted |
+| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links: each linked walkthrough's and playthrough's step `text` and `signature` re-copied from its journey; `--check` exits 1 while one is stale or drifted |
 | `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
-| `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, by spec-manager and Backlog as a test fixture |
+| `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, with a free walkthrough and a playthrough of the journey in its `scenarios.md`, by spec-manager and Backlog as a test fixture |
 | `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 The three converter skills and `units.mjs` are described in
@@ -323,8 +323,14 @@ top-level heading carries a block of its own describing the document as a whole.
 | `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `deployment` sits on a `bounded-context` chapter or a `context.md` file-level block and is `service` or `module`; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | A context's `deployment` is stated alike on its `bounded-context` chapter and on the `context.md` that chapter's `related` names, or on neither | build | `unit:node:plugins/devbook/tools/devbook-meta/deployment-pairing.test.mjs` |
 | An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `ai/`'s `stage` is a chapter's own, from the DevOps loop's eight words; a file-level `stage` is an error and a usage without one is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `ai/`'s `stage` and `layer` are a chapter's own, from the delivery path's seven words and the three layer words; each `substage` sits under a listed stage, each `feeds` entry carries a label and resolves, `evidence` is one of four words, and a `trial` or `candidate` chapter says what moves it up; a file-level placement field is an error and a usage with neither `stage` nor `layer` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
+
+Migration `035-delivery-path-stages` moves an `ai/` folder written in the DevOps loop's eight
+stage words onto the path: it maps every `stage` list, de-duplicates it, and writes it in path
+order, and the checker's error on a loop word names it. It places nothing on a layer and writes
+no `substage`, `feeds`, or `evidence`, because those are a reading of the repository, not a
+rename.
 
 Two enums are the chapter's own. **Chapter Status** is where the content stands: each folder
 defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
@@ -493,7 +499,7 @@ what a person sees in a bounded context. It belongs to the Devbook Folder aggreg
 chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
 `context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
 the chapters whose `demo` field names it. Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
-journey part it plays. The file
+journey part it plays, and a playthrough's `journey`, which names the journey it plays end to end. The file
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
@@ -502,10 +508,18 @@ starting copy and a sample demo built on it ship with this block, under
 [demos record](../adr/demos.md) holds the reasons.
 
 A `demo` field and a note point into a demo by an address, and a frame that hosts a demo
-talks to it through four `postMessage` messages. Both are `resources/demo-address.md`,
+talks to it through five `postMessage` messages. Both are `resources/demo-address.md`,
 versioned as `devbook.demo.address@1`, which this block owns and the demo template,
 spec-manager, and Backlog follow. A demo opened with no parent frame ignores the messages, and
 a host frames it sandboxed without same-origin.
+
+A playthrough is the walkthrough that plays a whole journey: its `journey` names the journey,
+and each step the part and the part step it shows, in the journey's order. A `feature` or
+`sub-feature` chapter names the playthrough its page shows in its `playthrough` field, which
+the graph carries on the feature's node. The work splits three ways, so none of them overlaps:
+this block owns the field and the contract, the host — spec-manager, Backlog — owns activation
+through `demo:play`, and the repository's template owns the look: the caption over the
+product, the steps grouped by part, and the pace.
 
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
@@ -517,6 +531,9 @@ unlike its part step as drifted, and derives a `Proved by:` requirement's `demo`
 the walkthroughs linked to its part, beside its derived `tests`. It computes the signature with
 the scenario tools' `signature.mjs`, loaded only when a demo links a walkthrough, and
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
+`demo.mjs` checks a playthrough as it checks a linked walkthrough, but against its whole journey — each step's part and step, the
+journey's order, the text, and the signature — and warns on a part no step shows and on a
+feature's `playthrough` whose journey does not name the feature.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`
 replaces the target whole.
 
@@ -534,6 +551,8 @@ so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
 | A page-named demo exists only beside its page and moves with it on a split | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A requirement's walkthrough plays one of its own scenarios | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A playthrough plays its journey's parts in the journey's order, each step's text the part step it names | `demo.mjs` `linkedWalkthroughs` | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
+| A `playthrough` field sits on a feature and names a playthrough whole | `metadata.mjs`, `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
 | `demo-model` has the shape the template documents, and every walkthrough step resolves as the template resolves it | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | Every screen and anchor is listed in `demo-model` once, and no script but `demo-model` and `demo-meta` sits outside the managed region | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo's `demo-meta` holds `question` and nothing else | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
