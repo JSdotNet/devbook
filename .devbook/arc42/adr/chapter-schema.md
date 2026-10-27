@@ -70,7 +70,7 @@ an approval is of a content hash, so a tool can tell on any branch whether it st
 
 | Field | Today | Where it goes |
 | --- | --- | --- |
-| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | The tool's lifecycle per branch. A merged chapter is in force by definition |
+| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | The tool's lifecycle per branch. A merged chapter is in force by definition. A decision record's `proposed` lives on its branch and pull request, and merging decides it |
 | `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | `planned` and `in-progress` go to the tracker item that names the record. `resolved` stays as content, see below |
 | `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's decision record, keyed by chapter address and content fingerprint |
 | `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
