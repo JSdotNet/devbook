@@ -76,7 +76,7 @@ an approval is of a content hash, so a tool can tell on any branch whether it st
 | `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
 | `sync` | Four levels, nearest wins | The tool's direction map per repository, resolved the same way |
 | `issue` | One tracker link per chapter | The tracker's reference to the chapter, which both hosts already store |
-| `effort` | An estimate per chapter | The change proposal's tasks and the work item they become. A branch-true chapter has no work left to estimate |
+| `effort` | An estimate per chapter | Each task of the change proposal, and the work item it becomes. The proposal shows the sum of its tasks, computed by the tool and never written. A branch-true chapter has no work left to estimate |
 | `roadmap` | Tags per chapter | The change proposal, then Backlog goals and roadmap plans and spec-manager backlog labels |
 | `change` | Stamped by `delta.mjs --apply` | Dropped. Git history and the archived change folder already record it |
 | `annotation` fences | Review notes inside the chapter | The tool's comment threads, as a second step. See the open questions |
