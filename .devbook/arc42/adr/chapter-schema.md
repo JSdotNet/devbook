@@ -79,7 +79,7 @@ an approval is of a content hash, so a tool can tell on any branch whether it st
 | `effort` | An estimate per chapter | Each task of the change proposal, and the work item it becomes. The proposal shows the sum of its tasks, computed by the tool and never written. A branch-true chapter has no work left to estimate |
 | `roadmap` | Tags per chapter | The change proposal, then Backlog goals and roadmap plans and spec-manager backlog labels |
 | `change` | Stamped by `delta.mjs --apply` | Dropped. Git history and the archived change folder already record it |
-| `annotation` fences | Review notes inside the chapter | The tool's comment threads, as a second step. See the open questions |
+| `annotation` fences | Review notes inside the chapter | The tool's comment threads, anchored to the chapter address. The migration imports open fences and deletes resolved ones |
 
 **What stays.** Everything that describes the content and can be checked against the branch
 stays: `type`, `related`, `depends-on`, `tests`, `demo`, `playthrough`, `c4`, `c4-touches`,
@@ -107,14 +107,16 @@ stores workflow state in it moves that state to its own store under the same rul
   defaults to `report` without one.
 - `devbook-collaboration`: `chapter-approve` and `chapter-accept` write through a new
   capability group, `devbook.decision@1`, resolved from the live tool list like a surface.
-  With none bound they report the decision and write nothing. The review queue reads the same
-  group.
+  With none bound they report the decision and write nothing. The group also reads, posts,
+  and resolves review notes, and `chapter-review` and the review queue use it.
+- `devbook`: the annotation fence retires. `annotations.mjs`, `annotation-sweep`, and the
+  check's fence rules go once every host has imported the notes.
 - `devbook-openspec`: the proposal's rungs move to the same group. `delta.mjs --apply` asks
   the group whether the change is accepted over its current hash.
 - `delivery-schedule`: the devbook sweeps read directions from the group. The constraint that
   a sweep never writes a `status` above `draft` goes with the field.
-- A migration in `devbook` exports every moved value to a JSON file outside the repository,
-  for a host to import, and then strips the fields. It is a contract bump, so every plugin
+- A migration in `devbook` exports every moved value and every open note to a JSON file
+  outside the repository, for a host to import, and then strips the fields and every fence. It is a contract bump, so every plugin
   moves one minor in the same change.
 - This record, the annotations record, the `devbook-collaboration` building block, and the
   glossary's stale approval entry are rewritten when the proposal is decided.
@@ -143,6 +145,8 @@ acceptance, and the sweep verdict per chapter address. The changes make it autho
    devbook in contract 21.
 9. Keep effort, issue links, and roadmap labels on backlog items, which already reference
    chapters by address.
+10. Import open fences into `CommentThread`, keeping the note's kind so an open question
+    still blocks approval.
 
 ### Changes in Backlog
 
@@ -164,6 +168,8 @@ store for chapter state. The changes:
 6. Answer `devbook.decision@1` over the `backlog` MCP server.
 7. Drop `issue`, `effort`, and `roadmap` from the chapter view. Work items already hold effort
    and chapter references, and goals hold the roadmap.
+8. Import open fences into the existing annotation store, adding the note's kind and the
+   branch to its key.
 
 ### Open questions
 
@@ -175,9 +181,6 @@ store for chapter state. The changes:
 - **Does `deprecated` survive as content?** A deprecated chapter still describes code on the
   branch, so it could stay as a plain flag. The proposal drops it and states the deprecation
   in the chapter's prose.
-- **Do the annotation fences move in this change or the next?** They are review state too, and
-  both hosts already keep comment threads. The annotations record chose the fence on purpose,
-  so moving it reverses a decision and deserves its own proposal.
 - **Is an open change under `openspec/changes/` allowed on a branch?** It is spec-ahead
   content in git. Branch-true holds only if the change is applied before its pull request
   merges, or if the change lane moves into the tool's proposals.
