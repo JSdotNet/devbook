@@ -74,7 +74,7 @@ an approval is of a content hash, so a tool can tell on any branch whether it st
 | `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | `planned` and `in-progress` go to the tracker item that names the record. `resolved` stays as content, see below |
 | `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's decision record, keyed by chapter address and content fingerprint |
 | `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
-| `sync` | Four levels, nearest wins | The tool's direction map per repository, resolved the same way |
+| `sync` | Four levels, nearest wins | Backlog's direction map per repository, resolved the same way. See Schedules and sync |
 | `issue` | One tracker link per chapter | The tracker's reference to the chapter, which both hosts already store |
 | `effort` | An estimate per chapter | Each task of the change proposal, and the work item it becomes. The proposal shows the sum of its tasks, computed by the tool and never written. A branch-true chapter has no work left to estimate |
 | `roadmap` | Tags per chapter | The change proposal, then Backlog goals and roadmap plans and spec-manager backlog labels |
@@ -103,8 +103,8 @@ stores workflow state in it moves that state to its own store under the same rul
   published contract, `devbook.chapter.fingerprint@1`, so both hosts compute the same hash.
 - `devbook`: `code-sync-protocol.md` stops reading "agreed" from `status`. A merged chapter is
   agreed. Spec-ahead work is an approved proposal in the tool, never a chapter on the branch.
-- `devbook`: `units.mjs` takes the direction map as input instead of reading `sync`, and
-  defaults to `report` without one.
+- `devbook`: `units.mjs` keeps grouping chapters into sync units, which `verify-change` uses,
+  and loses `--direction`. Which units a sweep levels, and which way, is Backlog's choice.
 - `devbook-collaboration`: `chapter-approve` and `chapter-accept` write through a new
   capability group, `devbook.decision@1`, resolved from the live tool list like a surface.
   With none bound they report the decision and write nothing. The group also reads, posts,
@@ -113,13 +113,34 @@ stores workflow state in it moves that state to its own store under the same rul
   check's fence rules go once every host has imported the notes.
 - `devbook-openspec`: the proposal's rungs move to the same group. `delta.mjs --apply` asks
   the group whether the change is accepted over its current hash.
-- `delivery-schedule`: the devbook sweeps read directions from the group. The constraint that
-  a sweep never writes a `status` above `draft` goes with the field.
 - A migration in `devbook` exports every moved value and every open note to a JSON file
   outside the repository, for a host to import, and then strips the fields and every fence. It is a contract bump, so every plugin
   moves one minor in the same change.
 - This record, the annotations record, the `devbook-collaboration` building block, and the
   glossary's stale approval entry are rewritten when the proposal is decided.
+
+### Schedules and sync
+
+```meta
+```
+
+Everything about levelling chapters and code by direction moves to Backlog, and three
+schedules that read best across several repositories leave the marketplace.
+
+| What | Today | After |
+| --- | --- | --- |
+| `schedule-devbook-sweep`, its workflow scripts and report | `delivery-schedule` | Backlog's `backlog-tools` plugin |
+| `devbook-sweep-contract.md` | `delivery-schedule/resources/` | `backlog-tools`, beside the sweep |
+| `devbook-pull-sweep` and `devbook-push-sweep` | The schedule catalog | Backlog's own schedules, which read the direction map from its store |
+| Setting a direction | The `sync` field, written by hand or by Backlog and spec-manager | Backlog's devbook view, stored per repository and folder |
+| `schedule-morning-brief` and its catalog entry | `delivery-schedule` | Removed. It reads best across every repository at once |
+| `schedule-week-starter` | `delivery-schedule`, no catalog entry | Removed, for the same reason |
+| `schedule-weekly-cost-analysis` | `delivery-schedule`, no catalog entry | Removed, for the same reason |
+
+`devbook-verify` stays in `delivery-schedule`. It reports drift on every unit and writes
+nothing, so it needs no direction. The constraint that a sweep never writes a `status` above
+`draft` goes with the field. The `backlog-morning-brief` routine is deleted before the skill
+it runs is removed.
 
 ### Changes in spec-manager
 
@@ -133,13 +154,13 @@ acceptance, and the sweep verdict per chapter address. The changes make it autho
    fingerprint, so a decision stands on every branch whose chapter has the approved text.
 2. Apply the state overlay on every branch, not only on the target branch.
 3. Remove the write-back to git: `ChapterStateService.ProcessAsync` and the `sync` write in
-   `ProposalService`.
-4. Read status, rungs, and `sync` from the table, and keep reading them from Markdown only
-   for the one-time import.
+   `ProposalService`. Directions are Backlog's, so spec-manager stops setting one.
+4. Read status and rungs from the table, and keep reading them from Markdown only for the
+   one-time import.
 5. Move `statuses.json` into the product's configuration.
 6. Promote a branch's lifecycle state to the target branch when its pull request merges.
-7. Answer `devbook.decision@1` over MCP: read state, set a lifecycle rung, approve, accept,
-   read and set a direction.
+7. Answer `devbook.decision@1` over MCP: read state, set a lifecycle rung, approve, and
+   accept.
 8. Stop parsing `implementation-state`, `implemented-by`, `review`, `reviewer`, and
    `review-at`. The first two are drift and come from the sweep verdict, the last three left
    devbook in contract 21.
@@ -170,6 +191,9 @@ store for chapter state. The changes:
    and chapter references, and goals hold the roadmap.
 8. Import open fences into the existing annotation store, adding the note's kind and the
    branch to its key.
+9. Own sync: keep the direction map per repository and folder, set it in the devbook view, and
+   ship the devbook sweeps and their contract in `backlog-tools`, reading the map from the
+   store.
 
 ### Open questions
 
