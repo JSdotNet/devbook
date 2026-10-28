@@ -364,7 +364,7 @@ async function main() {
         const durationMs = startedAt ? Math.max(0, Date.now() - startedAt) : 0;
         appendToolCall(run, {
             toolName: name,
-            category: categorizeTool(name),
+            category: categorizeTool(name, payload.tool_input),
             durationMs,
             success: true,
             endedAt: new Date().toISOString(),
