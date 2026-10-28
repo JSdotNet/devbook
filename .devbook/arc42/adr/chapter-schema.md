@@ -143,7 +143,7 @@ schedules that read best across several repositories leave the marketplace.
 | Setting a direction | The `sync` field, written by hand or by Backlog and spec-manager | Backlog's devbook view, stored per repository and folder |
 | `schedule-morning-brief` and its catalog entry | `delivery-schedule` | Removed. It reads best across every repository at once |
 | `schedule-week-starter` | `delivery-schedule`, no catalog entry | Removed, for the same reason |
-| `schedule-weekly-cost-analysis` | `delivery-schedule`, no catalog entry | Removed, for the same reason |
+| `schedule-weekly-cost-analysis` | `delivery-schedule`, no catalog entry, reading the surface's runs | `backlog-tools`, across every repository, reading token usage through the `backlog` MCP server |
 
 `devbook-verify` stays in `delivery-schedule`. It reports drift on every unit and writes
 nothing, so it needs no direction. The constraint that a sweep never writes a `status` above
@@ -204,6 +204,9 @@ store for this state. The changes:
 9. Own sync: keep the direction map per repository and folder, set it in the devbook view, and
    ship the devbook sweeps and their contract in `backlog-tools`, reading the map from the
    store.
+10. Ship the weekly cost analysis in `backlog-tools`, and add a read-only usage tool to the
+    `backlog` MCP server. `get_run` leaves token figures out on purpose, so the report needs
+    a tool of its own.
 
 ### Open questions
 
