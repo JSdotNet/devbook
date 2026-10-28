@@ -43,10 +43,11 @@ related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/surfaces.md",
 
 **The candidate.** A branch's devbook states only what is true of that branch's code. It is
 never ahead of the code, with an agreed chapter waiting to be built, and never behind it, with
-built code waiting to be captured. Workflow state about a chapter leaves the `meta` block: the
-tool that runs the workflow keeps it, keyed by repository, branch, and chapter address, and
-nothing commits it. Three fields go first, as asked: `status` as a lifecycle, the approval and
-acceptance records, and `sync`.
+built code waiting to be captured. Workflow state leaves the `meta` block, and it exists for
+three subjects only: a change proposal, a decision record under discussion, and a debt record.
+The tool that runs the workflow keeps it, keyed by the subject, and nothing commits it. An
+ordinary chapter carries no state at all: merged, it is in force. Three fields go first, as
+asked: `status` as a lifecycle, the approval and acceptance records, and `sync`.
 
 **The standing choice.** Today a chapter carries its own workflow state in git. `status` holds
 a lifecycle rung, `domain/` and a change's `proposal.md` hold two decision rungs with six
@@ -59,9 +60,16 @@ the file.
 **Why change.** A rung is about a review, not about the content, so it changes on a different
 schedule from the content. Committed, it makes a branch ahead or behind its own decisions: an
 approval written on a feature branch is invisible on `main` until merge, and a merge carries a
-rung decided against other text. Kept per branch in the tool, the same state is current on
-every branch, and git carries only content. The approval fingerprint already makes this safe:
-an approval is of a content hash, so a tool can tell on any branch whether it still stands.
+rung decided against other text. Approval and acceptance are decisions about a change, so they
+belong to the proposal that makes it, and nobody approves a chapter once it is merged. Git then
+carries only content. The approval fingerprint already makes this safe: an approval is of the
+hash over a proposal and its deltas, so a tool can tell whether it still stands.
+
+| Subject | State the tool keeps | Keyed by |
+| --- | --- | --- |
+| Change proposal | `draft`, `approved`, `accepted`, with who, when, and the fingerprint | The proposal |
+| Decision record under discussion | `proposed` while its pull request is open, then decided or declined | The record's path and its pull request |
+| Debt record | `identified`, `planned`, `in-progress`, `resolved` | The record's path |
 
 ### What leaves the meta block
 
@@ -70,9 +78,9 @@ an approval is of a content hash, so a tool can tell on any branch whether it st
 
 | Field | Today | Where it goes |
 | --- | --- | --- |
-| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | The tool's lifecycle per branch. A merged chapter is in force by definition. A decision record's `proposed` lives on its branch and pull request, and merging decides it |
-| `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | `planned` and `in-progress` go to the tracker item that names the record. `resolved` stays as content, see below |
-| `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's decision record, keyed by chapter address and content fingerprint |
+| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | Nowhere for an ordinary chapter, which is in force once merged. A decision record's `proposed` becomes the tool's state for that record while its pull request is open |
+| `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | The tool's state for the record. The record's prose says what resolved it |
+| `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's state for the change proposal. A chapter keeps none |
 | `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
 | `sync` | Four levels, nearest wins | Backlog's direction map per repository, resolved the same way. See Schedules and sync |
 | `issue` | One tracker link per chapter | The tracker's reference to the chapter, which both hosts already store |
@@ -86,8 +94,7 @@ stays: `type`, `related`, `depends-on`, `tests`, `demo`, `playthrough`, `c4`, `c
 `code`, `date`, `severity`, `number`, `index`, `aliases`, the folder-specific fields, and a
 journey's setup fields. A `tech/` or `ai/` rating stays too, because it records a decision the
 branch makes, not a review in progress. It is renamed `rating`, so `status` no longer means two
-things. A debt record keeps one content value, `resolved`, beside the sentence that says what
-resolved it.
+things.
 
 **`ext`.** The namespace stays for facts a plugin derives from the content. A plugin that
 stores workflow state in it moves that state to its own store under the same rule.
@@ -105,9 +112,10 @@ stores workflow state in it moves that state to its own store under the same rul
   agreed. Spec-ahead work is an approved proposal in the tool, never a chapter on the branch.
 - `devbook`: `units.mjs` keeps grouping chapters into sync units, which `verify-change` uses,
   and loses `--direction`. Which units a sweep levels, and which way, is Backlog's choice.
-- `devbook-collaboration`: `chapter-approve` and `chapter-accept` write through a new
-  capability group, `devbook.decision@1`, resolved from the live tool list like a surface.
-  With none bound they report the decision and write nothing. The group also reads, posts,
+- `devbook-collaboration`: `chapter-approve` and `chapter-accept` decide a change proposal,
+  never a chapter, and write through a new capability group, `devbook.decision@1`, resolved
+  from the live tool list like a surface. The group also sets a decision record's and a debt
+  record's state. With none bound the skills report the decision and write nothing. The group also reads, posts,
   and resolves review notes, and `chapter-review` and the review queue use it.
 - `devbook`: the annotation fence retires. `annotations.mjs`, `annotation-sweep`, and the
   check's fence rules go once every host has imported the notes.
@@ -147,20 +155,22 @@ it runs is removed.
 ```meta
 ```
 
-spec-manager already has the store. Its `ChapterState` table holds status, approval,
-acceptance, and the sweep verdict per chapter address. The changes make it authoritative:
+spec-manager already has a store. Its `ChapterState` table holds status, approval,
+acceptance, and the sweep verdict per chapter address. The changes shrink it to the three
+subjects and make it authoritative:
 
-1. Add the branch to the key of `chapter_states`, and key approval and acceptance by
-   fingerprint, so a decision stands on every branch whose chapter has the approved text.
-2. Apply the state overlay on every branch, not only on the target branch.
+1. Key state by subject: a change proposal, a decision record, or a debt record. Ordinary
+   chapters get no row. Key a proposal's approval and acceptance by the fingerprint of the
+   proposal and its deltas.
+2. Show a chapter's state only where it has one, so no per-branch overlay is needed.
 3. Remove the write-back to git: `ChapterStateService.ProcessAsync` and the `sync` write in
    `ProposalService`. Directions are Backlog's, so spec-manager stops setting one.
-4. Read status and rungs from the table, and keep reading them from Markdown only for the
-   one-time import.
-5. Move `statuses.json` into the product's configuration.
-6. Promote a branch's lifecycle state to the target branch when its pull request merges.
-7. Answer `devbook.decision@1` over MCP: read state, set a lifecycle rung, approve, and
-   accept.
+4. Read the three subjects' state from the table, and read status and rungs from Markdown
+   only for the one-time import.
+5. Move `statuses.json` into the product's configuration, as the ladders of the three
+   subjects.
+6. Close a proposal's or a decision record's state when its pull request merges or closes.
+7. Answer `devbook.decision@1` over MCP: read a subject's state, set it, approve, and accept.
 8. Stop parsing `implementation-state`, `implemented-by`, `review`, `reviewer`, and
    `review-at`. The first two are drift and come from the sweep verdict, the last three left
    devbook in contract 21.
@@ -175,17 +185,17 @@ acceptance, and the sweep verdict per chapter address. The changes make it autho
 ```
 
 Backlog reads the fields today and writes `status` and `sync` into the working copy. It has no
-store for chapter state. The changes:
+store for this state. The changes:
 
-1. Add a chapter state store to the Devbook bounded context, beside `IDevbookAnnotationStore`,
+1. Add a small state store to the Devbook bounded context, beside `IDevbookAnnotationStore`,
    with a file system or SQLite adapter and replication through Cosmos like annotations.
-2. Key it by repository, branch, and chapter address, reusing the branch identity of
-   `DevbookSnapshotCache`. Key decisions by fingerprint, as spec-manager does.
+2. Key it by repository and subject: a change proposal, a decision record, or a debt record.
+   Key a proposal's decisions by fingerprint, as spec-manager does.
 3. Keep it out of the generated devbook database, which is rebuilt from the Markdown.
-4. Retire `DevbookMarkdownStatusWriter` and `DevbookMarkdownSyncWriter`. A status or a
+4. Retire `DevbookMarkdownStatusWriter` and `DevbookMarkdownSyncWriter`. A subject's state or a
    direction is then editable on a read-only branch snapshot too, because no file changes.
-5. Read the moved fields from the store in `MetadataStateLine` and the knowledge chapters, and
-   from `MetadataReader` only for the import.
+5. Show a subject's state from the store in `MetadataStateLine`, and read the old fields from
+   `MetadataReader` only for the import.
 6. Answer `devbook.decision@1` over the `backlog` MCP server.
 7. Drop `issue`, `effort`, and `roadmap` from the chapter view. Work items already hold effort
    and chapter references, and goals hold the roadmap.
