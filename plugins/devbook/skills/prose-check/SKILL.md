@@ -27,7 +27,9 @@ standard, and a class stated by half reports the wrong sentence.
   skill the repository has.
 - Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
   every step list in a journey from every class but `procedure-step`: a step is one
-  clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone.
+  clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone,
+  and a table for `long-cell` alone. A bold field line, such as `**Does:**` or `**Why:**`,
+  is a fragment by design and never a `telegraphic` hit.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -62,6 +64,9 @@ standard, and a class stated by half reports the wrong sentence.
    | `term-drift` | A synonym replaces a defined term, or the term carries a second meaning | The defined term, or a new term for the second meaning |
    | `noun-cluster` | Four or more nouns stacked, such as "payment order run retry policy" | Rewritten with a verb or a preposition |
    | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
+   | `prose-list` | A sentence or paragraph enumerating four or more items, such as a block's scope | A labelled list, or a table of concern and owner |
+   | `long-cell` | A table cell past about 15 words, or a phrase repeated in three or more rows | The detail moved below and linked, or the phrase said once |
+   | `buried-reason` | A sibling section of a shared shape that states its reason inside the fact, where its siblings use field lines | The fact, then a `**Why:**` line |
    | `procedure-step` | A how-to step not opening with an imperative verb, or any step with two actions or past about 20 words | One action per step |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram`, `flowchart`, or `graph` with two or more participants or nodes naming workspace elements, by identifier or name | The view to use: `systemContext` in 03 for `C4Context` or a diagram of people and systems, `container` or `component` in 05 or the block's file for a `flowchart` or `graph` of parts, `dynamic` in 06 or the block's `## Runtime` for `C4Dynamic`, the sequence, or a `flowchart` of steps, `deployment` in 07 — or "add it to the workspace" when no view has it |
