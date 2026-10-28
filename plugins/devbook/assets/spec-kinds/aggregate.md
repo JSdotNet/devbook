@@ -46,7 +46,7 @@ malformed.
 | Responsibility | What the root's public methods, taken together, let a caller do — not what any one method is called | Public methods that let a caller do what the chapter describes, and nothing beyond it |
 | Consistency boundary | Which types are loaded, mutated, and saved in one transaction: the repository's granularity, what the root's collections own, what it references by id only | One transactional unit: a repository whose granularity is this root, owned collections inline, other aggregates referenced by id |
 | Invariants, one `### Invariant:` chapter each in the invariants subpage | Guard clauses in the constructor and every mutating method, the exceptions they throw and the rejection codes they carry, validation actually enforced, and passing tests asserting the rule | Enforcement at the chapter's `Enforced at:` point — that constructor or that named transition — on the root itself, never in a caller |
-| Lifecycle | The creation path, the state transitions the mutating methods allow, and the terminal states | The creation path plus exactly the transitions the chapter allows — and no transition it does not |
+| Lifecycle, as the `stateDiagram-v2` that opens the chapter | The creation path, the state transitions the mutating methods allow, and the terminal states | The creation path plus exactly the transitions the diagram draws — and no transition it does not |
 
 An id-only reference to another aggregate is the strongest single signal of
 where the boundary runs. Record it: it is the fact a reader most needs and the
@@ -213,7 +213,7 @@ another aggregate reachable only by id.
 - Do not brief a repository, store, or DAO for an owned entity.
 - Do not add `depends-on` to a `domain.md` chapter.
 - Do not extend the pass into `context.md`, `features.md`, `requirements.md`,
-  `model.md`, `flow.md`, or `dependencies.md`. The invariants subpage is the
+  `model.md`, or `dependencies.md`. The invariants subpage is the
   one exception, because the rules are this boundary's and nothing else owns them.
 - Do not leave a rule in the aggregate chapter's prose, and do not write a new
   `### Invariants` table. A rule stated in prose has no `Enforced at:` and no

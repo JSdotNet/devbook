@@ -34,7 +34,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | Folder | Holds |
 |--------|-------|
 | `arc42/` | arc42 architecture chapters, ADRs, TDRs |
-| `domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows, and the requirements and invariants they guarantee |
+| `domain/` | Bounded contexts, ubiquitous language, aggregates and the flows they move through, and the requirements and invariants they guarantee |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
 | `ai/` | How the team develops with AI: usage per stage of the seven-stage delivery path and the layers beneath it, concepts, adoption status |
@@ -517,7 +517,10 @@ view, and the `c4:` embed that replaces the fence, ranks each debt record from i
 `## Severity` and `## Status` sections, and reports every diagram it cannot move; the
 fourteenth is `035-delivery-path-stages`, which maps every `ai/` `stage` list from the DevOps
 loop's eight words onto the delivery path's seven, de-duplicated and in path order, and adds no
-`substage`, `layer`, `feeds`, or `evidence`, which are the repository's to place.
+`substage`, `layer`, `feeds`, or `evidence`, which are the repository's to place; the fifteenth
+is `037-flows-in-their-chapters`, which moves each section of a flow page under the chapter of
+what it draws, rewrites every reference, and asks the person about each section its page does
+not place.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -557,7 +560,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **32**, covering the metadata schema a repository authors
+One number, currently **37**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -654,7 +657,10 @@ diagrams a repository drew before the workspace into it. 34 lets a `tech/` chapt
 `plugin`, `skill`, or `agent`, an added value that owes nothing. 35 places an `ai/` chapter on the
 seven-stage delivery path or a layer beneath it, with `substage`, `feeds`, `evidence`, and a
 **Moves up when** bullet; the loop's eight stage words are errors from then on, so it ships
-`035-delivery-path-stages`, which maps each onto the path.
+`035-delivery-path-stages`, which maps each onto the path. 36 adds `playthrough` to a feature,
+an added field that owes nothing. 37 retires `domain/`'s flow page — a diagram opens the
+chapter of what it draws — and a file typed `flow` is an error, so it ships
+`037-flows-in-their-chapters`.
 
 ## Folder structure
 

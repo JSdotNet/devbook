@@ -99,7 +99,7 @@ verdict is a step in a lifecycle the file does not know. When the prototype is c
 | --- | --- | --- |
 | Answers | What a person sees and how they move between screens | How the model behaves, such as an aggregate's lifecycle |
 | Built on | The demo template, with variants that differ in structure | A state panel labelled in the ubiquitous language |
-| Answer lands in | The file itself, carried into `domain/` as a demo with exactly one variant | A delta to `domain.md`, `flow.md`, or an invariants subpage |
+| Answer lands in | The file itself, carried into `domain/` as a demo with exactly one variant | A delta to `domain.md` or an invariants subpage |
 | Promoted | Yes, trimmed to one variant | Never, because it is code |
 
 A prototype that nobody takes further stays a standalone file, and its verdict stays with
