@@ -780,7 +780,8 @@ flowchart LR
   `create`, and `project` get a browser pass with captured evidence; a `feature` changing
   existing behaviour, `defect`, and `refactor` get targeted verification; `config` and
   `dependency` get startup only. Where there is no runnable application the depth is recorded
-  as skipped rather than claimed, and missing Playwright or Aspire tooling blocks the phase.
+  as skipped rather than claimed, and a missing Playwright CLI or Aspire MCP server blocks the
+  phase.
 - **A flow shipped by a higher layer declares its own phase ids.** The engine never enumerates a
   skill in a layer above it, so a tier is not something it can assign from here.
 

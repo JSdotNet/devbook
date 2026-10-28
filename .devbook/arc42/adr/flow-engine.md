@@ -1,7 +1,7 @@
 # Flow Engine
 
 ```meta
-date: 2026-10-13
+date: 2026-10-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.delivery.flow", "marketplace.delivery.flow-runner", "marketplace.delivery.phase", "marketplace.delivery.gate"]
 c4-touches: ["marketplace.delivery.stack-config", "marketplace.delivery.pull-request-lane"]
@@ -174,6 +174,7 @@ restates none of devbook's rules — it loads the repository's own instruction f
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-28 | Verify drives the browser through the Playwright CLI (`playwright-cli`, run through the shell) instead of the `playwright` MCP server, which leaves the engine's default servers; `phase-verify` defaults to `aspire` alone, and a missing CLI blocks Verify as a missing server did. The capture procedure, the MCP templates, and `devbook-config:init` follow. No migration: a repository's MCP files are its own, and a `playwright` id it still names resolves to nothing, reported once. | The CLI records video and traces, which the MCP server never exposed, and keeps snapshots on disk instead of in the context driving the scenarios. |
 | 2026-10-13 | The engine no longer derives a branch from a change: every run works on the branch it was started on and ends in its own pull request, and the tracker names no branch and holds no pull request back. Both git workflows go with it — `single-branch`'s `change/<name>` and `proposal-first`'s per-step branches — along with the `workflow` stamp field, a proposal's `Workflow:` line, and a step's `branch:` and `PR:` lines. The tracker reads a step's state off its ticks and the close's off the archive; `apply` builds every open step unless the caller names one. What one pull request carries — a change's proposal alone, the whole change, or one step of Backlog's plan — is decided per case by whoever starts the run, never in a repository. Migration `002-no-git-workflow` in `devbook-openspec`. | A per-repository default chose for every change what only the one planning it can judge, and a single tracker binding could not serve a plan and a whole change side by side. |
 | 2026-10-06 | Update Base is listed first by each flow skill rather than prepended by the runner unnamed. An unconfigured phase runs as the engine contract's *Runs by default* says — inline, fork, or delegated — rather than always inline. A red build skips `verify` and `spec-check` and goes to the ready check. | — |
 | 2026-10-06 | Unit seams narrowed to the backend area: `scope` derives one per invariant's `Enforced at:` line and leaves each `#### Scenario:` to `verify` and the e2e suite, so a frontend slice has no test-first seams. Decided by the Devbook Skill Intake proposal; implement no longer writes tests at every recorded seam whatever its area. | — |
