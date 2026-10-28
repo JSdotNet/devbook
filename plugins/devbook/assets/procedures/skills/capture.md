@@ -10,23 +10,25 @@ goal: "Return evidence a reviewer can open instead of taking your word for it: o
 the wrapper's goal: one entry per checkpoint and per failure, paths under the worktree root,
 the form named honestly.
 
-## First: what can this server actually record?
+## The tool: the Playwright CLI
 
-**Read the live tool list before choosing a form.** Do not assume video is available.
-`@playwright/mcp` 0.0.79 exposes no tracing or video tools — `browser_start_tracing` and
-`browser_stop_tracing` do not exist, and there is no `--save-trace` or `--save-video` option.
-Only `--save-session` and screenshots.
+Drive the browser with `playwright-cli` (`@playwright/cli`) through the shell. Check
+`playwright-cli --version` first; when it does not answer, capture is unavailable — name
+`npm install -g @playwright/cli@latest` and stop. Run `playwright-cli --help` for the exact
+command spellings of the installed version rather than recalling them.
 
-| The tool list shows | Capture as |
+| Form | Commands |
 | --- | --- |
-| No tracing tools — the common case | A numbered screenshot sequence |
-| `browser_start_tracing` / `browser_stop_tracing` | A video or trace file |
+| A screenshot | `screenshot [ref] --filename=<path>` |
+| A numbered screenshot sequence | one `screenshot --filename=` per step |
+| A video | `video-start <path>` … `video-stop` |
+| A trace | `tracing-start` … `tracing-stop` |
+
+Use a named session (`-s=<feature>`) so a parallel run never shares a browser, and close it
+when done. Take `snapshot` for element refs before interacting with an unfamiliar page.
 
 **Never call a screenshot sequence a video or a trace.** Name the form you actually produced,
-in the report and in the filename.
-
-Tool names here are bare. Resolve the prefix from your own tool list — a plugin-provided
-server is namespaced with its plugin, a repository-registered one is not.
+in the report and in the filename; a recording whose file was never written is not one.
 
 ## Capture
 
@@ -42,8 +44,12 @@ server is namespaced with its plugin, a repository-registered one is not.
 ```
 .wip/qa/<feature>/screenshots/<NN>-<what-it-shows>.png     single checkpoints
 .wip/qa/<feature>/sequence/<scenario>/<NN>-<step>.png      a multi-step flow
-.wip/qa/<feature>/video/<scenario>.webm                    only if tracing exists
+.wip/qa/<feature>/video/<scenario>.webm                    a recorded flow
+.wip/qa/<feature>/trace/<scenario>/                        a trace, moved from the CLI's output
 ```
+
+The CLI writes snapshots and anything not given a `--filename` under `.playwright-cli/`;
+that folder is working output, never evidence and never part of the change set.
 
 `<NN>` is zero-padded so evidence sorts in execution order. Name a failure so the failure is
 obvious: `05-submit-500-error.png`. Never reuse a filename — an overwritten frame is a lost
