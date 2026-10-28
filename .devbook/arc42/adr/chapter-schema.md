@@ -86,7 +86,7 @@ hash over a proposal and its deltas, so a tool can tell whether it still stands.
 | `sync` | Four levels, nearest wins | Backlog's direction map per repository, resolved the same way. See Schedules and sync |
 | `issue` | One tracker link per chapter | The tracker's reference to the chapter, which both hosts already store |
 | `effort` | An estimate per chapter | Each task of the change proposal, and the work item it becomes. The proposal shows the sum of its tasks, computed by the tool and never written. A branch-true chapter has no work left to estimate |
-| `roadmap` | Tags per chapter | The change proposal, then Backlog goals and roadmap plans and spec-manager backlog labels |
+| `roadmap` | Tags per chapter | Dropped. Backlog only copies the tags into its graph, and its goals and roadmap plans already group the work |
 | `change` | Stamped by `delta.mjs --apply` | Dropped. Git history and the archived change folder already record it |
 | `annotation` fences | Review notes inside the chapter | The tool's comment threads, anchored to the chapter address. The migration imports open fences and deletes resolved ones |
 
