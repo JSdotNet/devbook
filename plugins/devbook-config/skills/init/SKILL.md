@@ -79,15 +79,18 @@ record work this skill did not do.
    offers `devbook-config:local`, which writes it.
 
 6. **Declare the default MCP servers.** Every phase whose `mcp` step 3 left absent takes the
-   engine default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
+   engine default — `microsoft-learn`, `aspire` — and a default is only a name until a
    host can start the server. The report's **MCP servers** lines say which of those ids
    `.mcp.json`, `.vscode/mcp.json`, and `.github/mcp.json` already declare. When the
    repository has none of the three files, copy the delivery plugin's
    `resources/mcp-template.json` to `.mcp.json` and `resources/mcp-vscode-template.json` to
-   `.vscode/mcp.json`; drop `aspire` and `playwright` when nothing here runs, and drop
+   `.vscode/mcp.json`; drop `aspire` when nothing here runs, and drop
    `microsoft-learn` when the stack is not Microsoft's. When a file exists, add only the
    missing ids in its own shape and change nothing else in it. These files are the
-   repository's, unstamped, and never touched again by this plugin.
+   repository's, unstamped, and never touched again by this plugin. Browser automation is the
+   Playwright CLI, not a server: when something here runs, say whether `playwright-cli
+   --version` answers and, when it does not, name `npm install -g @playwright/cli@latest`;
+   never install it.
 
 7. **Let each adopted component initialize itself.** For every component chosen in step 2,
    invoke that component's own `init` and let it materialize its payload and write its

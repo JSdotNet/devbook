@@ -105,7 +105,7 @@ const FLOWS = {
 const MCP_DEFAULTS = {
     'phase-implement': ['microsoft-learn'],
     'phase-build-test': ['microsoft-learn'],
-    'phase-verify': ['aspire', 'playwright'],
+    'phase-verify': ['aspire'],
 };
 
 // Where a host reads a repository's MCP servers from. `.mcp.json` is read by Claude Code and
