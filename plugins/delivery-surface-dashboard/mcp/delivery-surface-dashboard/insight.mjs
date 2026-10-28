@@ -67,8 +67,14 @@ const CATEGORY_RULES = [
     { category: "Agent tasks", test: /^task$|^agent$|^skill$|^workflow$/i },
 ];
 
-export function categorizeTool(toolName) {
+// The Playwright CLI runs through the shell, so its calls are told apart by command.
+const PLAYWRIGHT_CLI = /(^|[\s;&|(])(npx\s+(-y\s+)?)?(playwright-cli|@playwright\/cli)\b/;
+
+export function categorizeTool(toolName, input) {
     const name = toolName || "unknown";
+    if (/powershell|bash|shell/i.test(name) && PLAYWRIGHT_CLI.test(String(input?.command ?? ""))) {
+        return "QA (Playwright/Aspire)";
+    }
     for (const rule of CATEGORY_RULES) {
         if (rule.test.test(name)) return rule.category;
     }

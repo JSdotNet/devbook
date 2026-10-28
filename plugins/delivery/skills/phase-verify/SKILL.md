@@ -57,20 +57,24 @@ fallback once, and continue.
 
 ## Required Tooling
 
-Browser automation and evidence need the `playwright` MCP server; log, trace, resource, and
-health evidence need `aspire`. Their configuration belongs to the bound QA agent, never to
-this phase. Check that both are in your own tool list and in the runtime monitor's, and call
-each tool by the name that list gives now, never a remembered one. The Playwright preflight is
-the one live check `resources/capture-contract.md` defines, which also settles who captures,
-what form is reported, and what an unavailable capture does to this stage.
+Browser automation and evidence need the Playwright CLI, `playwright-cli` from
+`@playwright/cli`, run through your shell tool; log, trace, resource, and health evidence need
+the `aspire` MCP server. Their setup belongs to the bound QA agent, never to this phase. Check
+that `playwright-cli --version` answers in your shell and that `aspire` is in your own tool list
+and the runtime monitor's, calling each Aspire tool by the name that list gives now, never a
+remembered one. The Playwright preflight is the one live check `resources/capture-contract.md`
+defines, which also settles who captures, what form is reported, and what an unavailable
+capture does to this stage.
 
-When a required server is missing, mark Verify `blocked` — never `done` or `skipped` — and
-record it for the ready check. Tell the user which server or tool is missing, why this depth
-needs it, and what setup would enable it. Never complete the phase through a manual or
-degraded substitute, and never report a browser snapshot or smoke output as a Playwright
-screenshot, video, or trace. When the tools reach the parent session but not you or the
-monitor, report a child-agent allowlist exposure failure: name the server, and say whether the
-allowlist used the plugin-namespaced or the bare form `resources/flow-execution-model.md` gives.
+When the CLI or the server is missing, mark Verify `blocked` — never `done` or `skipped` — and
+record it for the ready check. Tell the user which is missing, why this depth needs it, and
+what setup would enable it: `npm install -g @playwright/cli@latest` for the CLI. Never complete
+the phase through a manual or degraded substitute — the Playwright MCP server included — and
+never report a browser snapshot or smoke output as a Playwright screenshot, video, or trace.
+When the Aspire tools reach the parent session but not you or the monitor, report a
+child-agent allowlist exposure failure: name the server, and say whether the allowlist used the
+plugin-namespaced or the bare form `resources/flow-execution-model.md` gives; when you have no
+shell tool, report that as the exposure failure for the CLI.
 
 ## Depth
 

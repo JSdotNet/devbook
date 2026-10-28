@@ -404,7 +404,7 @@ const DEMO_PHASES: Record<string, { mode: FlowMode; [field: string]: unknown }> 
   'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
   'phase-review': { mode: 'fork', skill: 'delivery:phase-review' },
   'phase-build-test': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-low', skill: 'delivery:phase-build-test', model: 'sonnet', effort: 'low', mcp: [] },
-  'phase-verify': { mode: 'delegate', agent: 'qa:qa', skill: 'delivery:phase-verify', mcp: ['aspire', 'playwright'] },
+  'phase-verify': { mode: 'delegate', agent: 'qa:qa', skill: 'delivery:phase-verify', mcp: ['aspire'] },
   'phase-spec-check': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-xhigh', skill: 'devbook:verify-change', model: 'opus', effort: 'xhigh' },
   'phase-ready': { mode: 'inline', skill: 'delivery:phase-ready' },
   'phase-personal-validation': { mode: 'gate', skill: 'delivery:phase-personal-validation' },

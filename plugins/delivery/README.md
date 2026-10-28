@@ -94,9 +94,10 @@ never a file inside the clone — and `--print` emits the merged result as JSON,
 flow reads its effective configuration on either host, per *The overlays* in
 `resources/engine-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
 own machine-scope state, which the engine merges and never reads. A phase whose `mcp` is absent takes the engine
-default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
-`resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
-`devbook-config:init` can copy them into a repository that declares no server yet.
+default — `microsoft-learn`, `aspire` — and `resources/mcp-template.json` and
+`resources/mcp-vscode-template.json` declare those two in the shape each host reads, so
+`devbook-config:init` can copy them into a repository that declares no server yet. Browser
+automation is the Playwright CLI, run through the shell, so no server id names it.
 
 **Configuration chooses among behaviour the engine already implements; it never introduces
 new behaviour.** A stage is a prompt, not a program — "apply TDD", "escalate instead of

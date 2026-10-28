@@ -158,8 +158,8 @@ live there. What stays here is the contract around the phase:
   startup-only; nothing to run is `skipped` with the reason recorded. This selection is the last resort:
   `policy.qa.depth` outranks it, and `policy.qa.ceiling` caps the result — the full order is
   in `engine-contract.md`.
-- **Required tooling is required.** When the selected depth needs the Playwright or Aspire
-  MCP server and it is unavailable, mark the phase `blocked`, name the missing server and
+- **Required tooling is required.** When the selected depth needs the Playwright CLI or the
+  Aspire MCP server and it is unavailable, mark the phase `blocked`, name what is missing and
   the setup action, and record it for the ready check. Never complete this phase through a
   degraded fallback, and never present browser-snapshot output as Playwright evidence.
 - **A background monitor you started, you stop.** Collect the monitor's summary with

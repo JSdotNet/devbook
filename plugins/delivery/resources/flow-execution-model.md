@@ -58,17 +58,17 @@ own MCP configuration and names them per phase in that phase's `mcp` field — s
 - `phase-implement` and `phase-build-test`: `microsoft-learn`, for targeted official
   Microsoft/.NET/Azure/Aspire lookups tied to the stack being changed — never a broad research
   pass.
-- `phase-verify`: `aspire` and `playwright`, under the required-tooling rule in
-  `flow-phases.md`; not used when the depth is startup-only or the change has no
-  browser surface.
+- `phase-verify`: `aspire`, under the required-tooling rule in `flow-phases.md`. Browser
+  automation is the Playwright CLI through the shell, not an MCP server, so no id names it;
+  neither is used when the depth is startup-only or the change has no browser surface.
 - Every other phase: none. The phase grounds itself in the repository's own instruction
   files — the `repo-instructions` slot, matching `**/*.instructions.md`, and the checked-in
   devbook chapters and ADRs. `null` binds none, overriding a default.
 
 A default is only a name until the repository declares the server behind it.
-`resources/mcp-template.json` declares all three in the `.mcp.json` shape, which Claude Code
+`resources/mcp-template.json` declares both in the `.mcp.json` shape, which Claude Code
 and the Copilot CLI both read from the repository root; `resources/mcp-vscode-template.json`
-is the same three in the `.vscode/mcp.json` shape VS Code reads. `devbook-config:init` copies
+is the same two in the `.vscode/mcp.json` shape VS Code reads. `devbook-config:init` copies
 them into a repository that has neither, and `flow-code`'s `project` kind runs that setup; a repository that already declares
 its servers keeps its own files and adds only the ids it is missing.
 
@@ -123,7 +123,7 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    one level deep; a forked `implement` is never relied on to fork the reviewer itself. Pass
    each a brief file, per `phase-resolution.md`.
 4. **Run a background sub-agent only for genuinely concurrent long-running work** — in
-   practice, the runtime monitor tailing Aspire logs while Playwright drives scenarios. Launch
+   practice, the runtime monitor tailing Aspire logs while the Playwright CLI drives scenarios. Launch
    it with the `Agent` tool's `run_in_background`, steer it with `SendMessage`, and do not
    background work merely to save context.
 5. **Stop every background sub-agent you started, in the same phase that started it.**
