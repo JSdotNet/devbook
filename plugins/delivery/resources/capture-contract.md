@@ -17,7 +17,7 @@ Resolved in order, first hit wins, named once in the stage output:
 1. **The repository's `capture` skill**, its own at `.agents/skills/capture.md`, reached by
    name through the host's wrapper. The normal case.
 2. **The agent `phase-verify` runs on**, when one is bound and offers capture of its own.
-3. **The phase itself**, driving the browser server directly per this contract.
+3. **The phase itself**, driving the Playwright CLI directly per this contract.
 
 Neither a capture skill nor a QA plugin is a dependency. A missing one changes *who runs
 capture*, never whether it runs.
@@ -44,9 +44,9 @@ person, per **Step 4** of `skills/phase-personal-validation/SKILL.md`.
 
 ## Name the form honestly
 
-**A screenshot sequence is never reported as a video or a trace.** Browser servers differ in
-what they can record and a given version may expose no tracing tools at all, so the form is
-resolved from the live tool list per run, not assumed. Report the form actually produced.
+**A screenshot sequence is never reported as a video or a trace.** The Playwright CLI can
+record both (`video-start`/`video-stop`, `tracing-start`/`tracing-stop`), but a recording that
+did not start or did not write its file is not one, so report the form actually produced.
 
 A browser snapshot, an accessibility tree, or smoke output is **not** capture. Where a
 selected depth allows a degraded result they may be cited as fallback render evidence, named
@@ -58,7 +58,7 @@ One live preflight decides it: navigate to a target page and capture one frame b
 scenarios begin. If that fails, capture is unavailable for the run.
 
 - Where capture is **required**, the phase is `blocked` — never `done`, never `skipped`.
-  Name the missing server or tool and the action that would fix it, and record it for the
+  Name the missing CLI or tool and the action that would fix it, and record it for the
   ready check (`skills/phase-ready/SKILL.md`), which keeps it from reaching Personal
   Validation as finished work.
 - Where it is **not required**, record the limitation in the stage output and continue.
