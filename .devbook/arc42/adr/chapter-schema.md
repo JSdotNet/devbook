@@ -115,7 +115,9 @@ stores workflow state in it moves that state to its own store under the same rul
 - `devbook-collaboration`: `chapter-approve` and `chapter-accept` decide a change proposal,
   never a chapter, and write through a new capability group, `devbook.decision@1`, resolved
   from the live tool list like a surface. The group also sets a decision record's and a debt
-  record's state. With none bound the skills report the decision and write nothing. The group also reads, posts,
+  record's state. With none bound the skills report the decision and write nothing.
+  spec-manager and Backlog each keep their own state, and the two may differ. No binding
+  picks one: a skill uses whichever tool answers the group in its session, and says which. The group also reads, posts,
   and resolves review notes, and `chapter-review` and the review queue use it.
 - `devbook`: the annotation fence retires. `annotations.mjs`, `annotation-sweep`, and the
   check's fence rules go once every host has imported the notes.
@@ -213,8 +215,6 @@ store for this state. The changes:
 ```meta
 ```
 
-- **Which tool owns the state when both are installed?** The proposal suggests one binding
-  per repository, in `.devbook/config.json`, because a binding is configuration and not state.
 - **Does `deprecated` survive as content?** A deprecated chapter still describes code on the
   branch, so it could stay as a plain flag. The proposal drops it and states the deprecation
   in the chapter's prose.
