@@ -46,8 +46,9 @@ never ahead of the code, with an agreed chapter waiting to be built, and never b
 built code waiting to be captured. Workflow state leaves the `meta` block, and it exists for
 three subjects only: a change proposal, a decision record under discussion, and a debt record.
 The tool that runs the workflow keeps it, keyed by the subject, and nothing commits it. An
-ordinary chapter carries no state at all: merged, it is in force. Three fields go first, as
-asked: `status` as a lifecycle, the approval and acceptance records, and `sync`.
+ordinary chapter carries no state at all: merged, it is in force. The rule covers `.devbook/`
+alone. An open change under `openspec/changes/` may run ahead of the code on any branch, and
+that folder is what lets `.devbook/` stay true. Three fields go first, as asked: `status` as a lifecycle, the approval and acceptance records, and `sync`.
 
 **The standing choice.** Today a chapter carries its own workflow state in git. `status` holds
 a lifecycle rung, `domain/` and a change's `proposal.md` hold two decision rungs with six
@@ -109,7 +110,8 @@ stores workflow state in it moves that state to its own store under the same rul
   and the coverage exemption at `deprecated` go. `chapter-hash.mjs` stays and becomes a
   published contract, `devbook.chapter.fingerprint@1`, so both hosts compute the same hash.
 - `devbook`: `code-sync-protocol.md` stops reading "agreed" from `status`. A merged chapter is
-  agreed. Spec-ahead work is an approved proposal in the tool, never a chapter on the branch.
+  agreed. Spec-ahead work is an open change under `openspec/changes/`, on any branch, and
+  never a chapter under `.devbook/`.
 - `devbook`: `units.mjs` keeps grouping chapters into sync units, which `verify-change` uses,
   and loses `--direction`. Which units a sweep levels, and which way, is Backlog's choice.
 - `devbook-collaboration`: `chapter-approve` and `chapter-accept` decide a change proposal,
@@ -134,8 +136,8 @@ stores workflow state in it moves that state to its own store under the same rul
 ```meta
 ```
 
-Everything about levelling chapters and code by direction moves to Backlog, and three
-schedules that read best across several repositories leave the marketplace.
+Everything about levelling chapters and code by direction moves to Backlog, and the schedules
+that read best across several repositories leave the marketplace or move to Backlog.
 
 | What | Today | After |
 | --- | --- | --- |
@@ -209,15 +211,6 @@ store for this state. The changes:
 10. Ship the weekly cost analysis in `backlog-tools`, and add a read-only usage tool to the
     `backlog` MCP server. `get_run` leaves token figures out on purpose, so the report needs
     a tool of its own.
-
-### Open questions
-
-```meta
-```
-
-- **Is an open change under `openspec/changes/` allowed on a branch?** It is spec-ahead
-  content in git. Branch-true holds only if the change is applied before its pull request
-  merges, or if the change lane moves into the tool's proposals.
 
 ## Why
 
