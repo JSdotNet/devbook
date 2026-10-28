@@ -78,7 +78,7 @@ hash over a proposal and its deltas, so a tool can tell whether it still stands.
 
 | Field | Today | Where it goes |
 | --- | --- | --- |
-| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | Nowhere for an ordinary chapter, which is in force once merged. A decision record's `proposed` becomes the tool's state for that record while its pull request is open |
+| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | Nowhere for an ordinary chapter, which is in force once merged. A decision record's `proposed` becomes the tool's state for that record while its pull request is open. `deprecated` goes as in OpenSpec: a change removes the chapter with a `REMOVED` delta, and the archived change keeps its text and the reason |
 | `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | The tool's state for the record. The record's prose says what resolved it |
 | `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's state for the change proposal. A chapter keeps none |
 | `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
@@ -215,9 +215,6 @@ store for this state. The changes:
 ```meta
 ```
 
-- **Does `deprecated` survive as content?** A deprecated chapter still describes code on the
-  branch, so it could stay as a plain flag. The proposal drops it and states the deprecation
-  in the chapter's prose.
 - **Is an open change under `openspec/changes/` allowed on a branch?** It is spec-ahead
   content in git. Branch-true holds only if the change is applied before its pull request
   merges, or if the change lane moves into the tool's proposals.
