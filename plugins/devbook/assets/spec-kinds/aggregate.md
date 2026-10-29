@@ -135,8 +135,8 @@ assert it in `tests`. No `#### Scenario:` — the test names the case. A rule
 nothing asserts still gets its chapter, with no `tests`: the field's absence is
 the honest record, and a rule nothing asserts is one refactor away from being
 gone. A rule visible only in a disabled test, a TODO,
-or a comment gets `open` on its `Enforced at:` line and the question in a
-`kind: question` annotation fence, never a fact. Never merge chapters — a
+or a comment gets `open` on its `Enforced at:` line and the question raised as a
+`question` review note, never a fact. Never merge chapters — a
 chapter is what a brief quotes and an acceptance check is derived from.
 
 Settle every placement from that inventory: a type with a store of its own is a

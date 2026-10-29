@@ -26,7 +26,7 @@ Loads the brief: the scope record — folder, chapter kind, goal — and its cha
 open items on a retry round. Then the instruction files that govern the target path, read
 directly because a rule fires only when a host opens a matching file and a new chapter has
 none yet: `.agents/rules/devbook-<folder>.md`, `devbook-chapter-metadata.md`, and
-`devbook-writing.md`. Never a folder whole, an `annotation` fence, anything under `_meta/`, or
+`devbook-writing.md`. Never a folder whole, anything under `_meta/`, or
 source code.
 
 ## Steps

@@ -22,14 +22,14 @@ date: 2026-10-05
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Fourteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ![The plugin landscape](c4:plugins)
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is
-the manifest's own direction — `devbook-collaboration` declares `devbook`, so the arrow leaves
-`devbook-collaboration`. The engine is the one exception the picture shows: it calls whichever
+the manifest's own direction — `devbook-derived` declares `devbook`, so the arrow leaves
+`devbook-derived`. The engine is the one exception the picture shows: it calls whichever
 surface answers, so its arrows leave `delivery` for each surface, while the surface is the side
 that conforms to the published language. The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks)
 in chapter 8 lists the same relationships the other way round, upstream to downstream, because
@@ -449,9 +449,7 @@ from `devbook`'s, which records the procedure copies it seeds beside the folders
 `procedures.adopted` list that selects them, `components.derived` from `devbook-derived`'s for
 the refresh script, its workflows, and its rule, `components.openspec` from
 `devbook-openspec`'s, `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
-materializes nothing — and `components.schedule` from `delivery-schedule`'s.
-`devbook-collaboration` materializes nothing and stamps nothing
-([the annotations record](adr/annotations.md)). That puts `delivery` on both sides
+materializes nothing — and `components.schedule` from `delivery-schedule`'s. That puts `delivery` on both sides
 of the table at once — schema owner for the engine keys, holder of one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
 `devbook-config` maps the five to their install skills by hand: a manifest cannot say which

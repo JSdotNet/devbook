@@ -38,8 +38,9 @@ delta, per the devbook plugin's `resources/chapter-fingerprint.md`:
 
 `delta.mjs --apply <name> --accepted-hash <fingerprint>` merges only when the fingerprint the
 host recorded the acceptance at equals the change's current one, so nothing was edited after
-the decision, and refuses while an open `kind: question` annotation sits anywhere in the change.
-Read the acceptance from the host before calling it; with no host bound, nothing merges.
+the decision. The host refuses the acceptance while a `question` note is open anywhere in the
+change. Read the acceptance from the host through `devbook.decision@1` before calling it; with
+no host bound, nothing merges.
 
 ## A delta
 

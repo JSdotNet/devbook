@@ -114,7 +114,7 @@ Also called: brief.
 What `apply-change` derives from an agreed but unbuilt chapter and hands to the code-side flow:
 outcomes, invariants, ubiquitous language, out of scope, acceptance checks, and exactly one
 change category — new functionality, a change to existing behaviour, or a defect. It asks only
-for the delta the code does not yet satisfy, and never carries an open annotation: an open
+for the delta the code does not yet satisfy, and never carries an open review note: an open
 question stops the run at the gate rather than becoming a line item.
 
 ## Claim
@@ -180,8 +180,8 @@ Owned by [devbook-derived](building-blocks/devbook-derived.md).
 
 Also called: `_meta`, generated index, build output.
 
-Anything under a `_meta/` folder: the graph, the reading order, the annotation index, and the
-term register,
+Anything under a `_meta/` folder: the graph, the reading order, the term register, and the
+scenario register,
 emitted deterministically so a clean `git diff` proves they are current. A session never reads
 one as a source of fact and never regenerates one: two branches that each touch one chapter
 both rewrite the same JSON, and the conflict is only resolvable by re-running the generator —
@@ -502,17 +502,18 @@ feature heading is devbook's, and is what a bridge maps to OpenSpec's per-capabi
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#review-position"]
+related: [".devbook/arc42/building-blocks/devbook.md#chapter-review", ".devbook/arc42/adr/annotations.md"]
 ```
 
-Owned by [devbook-collaboration](building-blocks/devbook-collaboration.md).
+Owned by [devbook](building-blocks/devbook.md).
 
 Also called: review, review cycle.
 
-One chapter's trip from a brief to a decision. What it leaves in the chapter is its open
-annotation fences — any open is changes requested, none is cleared — and, at the end, a
-decision rung. Nothing records the pass itself: who owes the next move lives in the pull
-request or the tracker, and the chapter's `status` already says it is not settled.
+One chapter's or one change's reading against its folder's rules, by `chapter-review`. It
+leaves nothing in the chapter: each objection is a note in the host that keeps the subject's
+state, posted through `devbook.decision@1`, and an open `question` there is changes
+requested. Who owes the next move lives in the pull request or the tracker, and a decision on a
+change is the host's, taken by a person.
 
 ## Scheduler
 
@@ -531,25 +532,6 @@ and **absent is a normal outcome** — the operation reports it and changes noth
 scheduler is never used to create one. The scheduler is also where everything personal lives:
 the checkout's path, the approved tools, and the entry ids. Matching by name is
 what makes writing any of that into the repository unnecessary.
-
-## Stale Approval
-
-```meta
-date: 2026-09-08
-related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook"]
-```
-
-Owned by [devbook-collaboration](building-blocks/devbook-collaboration.md).
-
-Also called: lapsed approval.
-
-An approval still written on a chapter whose content has moved under it. It is a reporting
-concept rather than a state: nothing transitions a chapter into it, and the queue sweep is what
-surfaces it, because a chapter cannot notice its own approval has expired.
-
-**Retiring**, per [the chapter schema record](adr/chapter-schema.md#branch-true-devbook). An
-approval becomes the host's state for a change proposal, keyed by the proposal's fingerprint,
-so no chapter carries one to go stale. The term goes with `devbook-collaboration`.
 
 ## Sync Direction
 

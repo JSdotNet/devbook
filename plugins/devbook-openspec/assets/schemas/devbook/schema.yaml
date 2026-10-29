@@ -19,8 +19,7 @@ artifacts:
       devbook-chapter-metadata.md. The demo file itself never records a verdict.
 
       Read the chapters it touches and walk their `related` links first; never
-      load a devbook folder whole. Skip every `annotation` fence: a review note
-      is not content. Never write a `status` or a decision: the proposal's state
+      load a devbook folder whole. Never write a `status` or a decision: the proposal's state
       is the host's, through devbook.decision@1.
     requires: []
 

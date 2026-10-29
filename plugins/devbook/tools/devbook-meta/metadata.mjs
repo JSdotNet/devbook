@@ -297,7 +297,8 @@ const LEGACY_TYPE_FIELD_BY_FOLDER = { tech: "kind" };
 // validates none of it, and produces no edges from it. That is the whole point.
 // Without it, every extension would force a devbook schema bump and a migration
 // in every consuming repository. Reserved and currently unused: the first
-// extension's state became schema fields instead (the annotations decision).
+// extension's state became schema fields instead, and then moved to the hosts
+// (the annotations decision).
 //
 // The block grammar is flat single-line scalars, so the namespace is spelled
 // with dotted keys — `ext.<plugin>.<key>: <value>` — rather than by nesting.
@@ -643,14 +644,14 @@ const REMOVED_FIELDS = {
         "not what you want, give the documents a `number` or mark the directory's " +
         "entry point with `index: root`. See " +
         "devbook-chapter-metadata.md.",
-    // A review in progress is workflow state: the rung says the chapter is
-    // waiting, the open annotation fences say on what, and who owes the next
-    // move belongs to the pull request or the tracker. Contract 21.
+    // A review in progress is workflow state: the host that keeps the chapter's
+    // state holds its notes, and who owes the next move belongs to the pull
+    // request or the tracker. Contract 21.
     ...Object.fromEntries(
         ["review", "reviewer", "review-at"].map((field) => [
             field,
-            "a review in progress is the chapter's `status` rung plus its open annotation " +
-                "fences, and who owes the next move lives in the pull request or the tracker. " +
+            "a review in progress is the host's: its notes are comment threads read through " +
+                "`devbook.decision@1`, and who owes the next move lives in the pull request or the tracker. " +
                 "Run the `021-no-review-triad` migration, which deletes it.",
         ])
     ),
@@ -1500,8 +1501,7 @@ export function testIssues(meta) {
 /**
  * How many `#### Scenario:` headings sit under the chapter at `index`.
  *
- * A scenario belongs to the rule above it by position, exactly as an
- * annotation does: the count stops at the first heading back at or above the
+ * A scenario belongs to the rule above it by position: the count stops at the first heading back at or above the
  * rule's own level, and only headings one level deeper count — a scenario of a
  * scenario is not a thing, and a `#####` under one is its own business.
  */
@@ -1604,7 +1604,7 @@ export function behaviourIssues(type, meta, scenarios = 0, folder = "domain") {
  * links and images, `[label](target)`, and reference definitions,
  * `[label]: target`.
  *
- * Fenced blocks are skipped whole — the `meta` block, an `annotation`, a
+ * Fenced blocks are skipped whole — the `meta` block, a
  * diagram, a code sample — and so are code spans, so a chapter quoting link
  * syntax is not read as linking. The target comes back as written, `<…>`
  * brackets and a trailing title removed; resolving it is the caller's job.
@@ -2001,12 +2001,9 @@ export function validateDocument(relPath, markdown) {
         // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
         issues.push({ severity: issue.severity, message: issue.message });
     }
-    // Annotations are authored Markdown in the same file, so they are linted
-    // here rather than by a second pass a repository could forget to run.
-    for (const issue of annotationIssues(markdown)) {
-        // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
-        issues.push({ severity: issue.severity, message: issue.message });
-    }
+    // The annotation fence retired in contract 38; one left behind is reported
+    // here, in the same pass, so a repository cannot forget to look.
+    for (const issue of retiredFenceIssues(markdown)) issues.push(issue);
     for (const issue of historyHeaderIssues(relPath, markdown, fileMeta)) issues.push(issue);
     const optionalFields = new Set([
         ...COMMON_OPTIONAL_FIELDS,
@@ -2442,235 +2439,6 @@ export function deltaHeaderIssues(relPath, markdown) {
     return issues;
 }
 
-// ---------------------------------------------------------------------------
-// Annotations — the second fenced block
-// ---------------------------------------------------------------------------
-//
-// A note on a chapter belongs in the chapter. An annotation is the same device
-// as `meta`, one word different, placed in the body where the note belongs:
-//
-//     ```annotation
-//     author: jobsc
-//     date: 2026-09-02
-//     body: Is this still true now the outline rollup is a view?
-//     ```
-//
-// Writing a note as authored Markdown rather than as a row in the derived
-// database is what makes `devbook.db` wholly derived again — position is the
-// anchor, git is the sync and the backup, the pull request is the review, and
-// `git blame` is the authorship record. None of that has to be built.
-//
-// The block grammar is richer than `meta`'s deliberately flat one: a thread
-// needs a `body` that runs to a paragraph, an ordered `replies` list, and a
-// nested `ext` mapping. So annotations get their own small indentation-aware
-// reader below rather than bending `parseMetaBody`, which stays flat because
-// every field it carries is a scalar or a bracket list.
-
-const ANNOTATION_KINDS = ["comment", "question", "suggestion", "flag"];
-
-// Two states, and `resolved` is short-lived. An annotation is an open loop, not
-// a record: `resolved` lives for the rest of the branch so a reviewer sees the
-// exchange in the pull request that raised it, and the sweep deletes it before
-// the merge. git holds the history — the commit that removed the note, and the
-// change that answered it.
-const ANNOTATION_STATUSES = ["open", "resolved"];
-
-const ANNOTATION_DEFAULTS = { kind: "comment", status: "open" };
-
-// Closed core set. Anything a workflow above L0 wants to remember goes under
-// `ext:` in its own namespace, which is validated as a mapping and never read
-// into — the same seam the chapter's `meta` block already offers.
-const ANNOTATION_FIELDS = [
-    "kind",
-    "status",
-    "author",
-    "date",
-    "quote",
-    "body",
-    "replies",
-    "ext",
-];
-
-// `author` is written, never inferred: a note survives rewrites that `git blame`
-// does not follow, so the name has to travel inside the fence.
-const ANNOTATION_REQUIRED_FIELDS = ["author", "date", "body"];
-
-const ANNOTATION_REPLY_FIELDS = ["author", "date", "body"];
-
-const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-
-function lineIndent(line) {
-    return /^ */.exec(line)[0].length;
-}
-
-function isBlankLine(line) {
-    return line.trim() === "";
-}
-
-/**
- * Parse the body of a fenced ```annotation block into a nested object.
- *
- * Supports exactly the shapes the annotation schema uses: `key: scalar`, a `|`
- * block scalar, a list of mappings (`replies`), and a nested mapping (`ext`).
- * Anything else in the file is not part of this schema and is reported by
- * `annotationIssues` rather than silently absorbed.
- *
- * The reader is lenient where YAML is not, so every line it reads past that a
- * YAML parser would reject goes into `problems` as `{ line, message }`, the
- * line counted from 1 at the fence body's first, and the check reports each
- * one. A fence only this reader accepts is a note every other reader drops.
- */
-export function parseAnnotationBody(body, problems = []) {
-    const lines = body.split("\n");
-    let first = 0;
-    while (first < lines.length && isBlankLine(lines[first])) first++;
-    if (first >= lines.length) return {};
-    const [value] = parseAnnotationMapping(lines, first, lines.length, lineIndent(lines[first]), problems);
-    return value;
-}
-
-// A plain scalar may not open with an indicator, and may not carry `: ` or
-// ` #` — YAML reads the first as a nested mapping and the second as a comment.
-const PLAIN_SCALAR_FIRST = /^([-?:](\s|$)|[,[\]{}#&*!|>'"%@`])/;
-
-/**
- * One inline scalar, read the way YAML reads it: a double-quoted string with
- * its escapes, a single-quoted one with `''`, or a plain scalar. One YAML
- * would not read as a string is recorded in `problems` and kept as written.
- */
-function readAnnotationScalar(raw, problems, line) {
-    const value = raw.trim();
-    const problem = (message) => problems.push({ line: line + 1, message });
-    if (value.startsWith('"')) {
-        try {
-            const parsed = JSON.parse(value);
-            if (typeof parsed === "string") return parsed;
-        } catch {
-            // reported below
-        }
-        problem(`${value} is not one well-formed double-quoted string.`);
-        return stripQuotes(value);
-    }
-    if (value.startsWith("'")) {
-        if (/^'(?:[^']|'')*'$/.test(value)) return value.slice(1, -1).replace(/''/g, "'");
-        problem(`${value} is not one well-formed single-quoted string.`);
-        return stripQuotes(value);
-    }
-    if (PLAIN_SCALAR_FIRST.test(value) || /:(\s|$)/.test(value) || /\s#/.test(value)) {
-        problem(`${value} is not a valid plain YAML scalar — quote it, or write it as a | block.`);
-    }
-    return value;
-}
-
-function parseAnnotationMapping(lines, start, end, indent, problems = []) {
-    const map = {};
-    let i = start;
-    while (i < end) {
-        if (isBlankLine(lines[i])) {
-            i++;
-            continue;
-        }
-        if (lineIndent(lines[i]) < indent) break;
-        const match = /^([^:\s][^:]*):(?:[ \t]+(.*))?$/.exec(lines[i].slice(indent));
-        if (!match) {
-            problems.push({ line: i + 1, message: `${lines[i].trim()} is not a key: value line.` });
-            i++;
-            continue;
-        }
-        const key = match[1].trim();
-        const rest = (match[2] ?? "").trim();
-        if (rest === "|" || rest === "|-" || rest === ">") {
-            const [text, next] = parseAnnotationBlockScalar(lines, i + 1, end, indent);
-            map[key] = text;
-            i = next;
-        } else if (rest === "") {
-            const [child, next] = parseAnnotationNested(lines, i + 1, end, indent, problems);
-            map[key] = child;
-            i = next;
-        } else {
-            map[key] = readAnnotationScalar(rest, problems, i);
-            i++;
-        }
-    }
-    return [map, i];
-}
-
-/** A `|` body: every more-indented line, dedented by the block's own indent. */
-function parseAnnotationBlockScalar(lines, start, end, parentIndent) {
-    const collected = [];
-    let i = start;
-    let blockIndent = null;
-    while (i < end) {
-        if (isBlankLine(lines[i])) {
-            collected.push("");
-            i++;
-            continue;
-        }
-        const indent = lineIndent(lines[i]);
-        if (indent <= parentIndent) break;
-        if (blockIndent === null) blockIndent = indent;
-        collected.push(lines[i].slice(Math.min(blockIndent, indent)));
-        i++;
-    }
-    while (collected.length && collected[collected.length - 1] === "") collected.pop();
-    return [collected.join("\n"), i];
-}
-
-/** What follows a bare `key:` — a list of items, or a nested mapping. */
-function parseAnnotationNested(lines, start, end, parentIndent, problems = []) {
-    let i = start;
-    while (i < end && isBlankLine(lines[i])) i++;
-    if (i >= end || lineIndent(lines[i]) <= parentIndent) return [null, i];
-    const childIndent = lineIndent(lines[i]);
-    if (/^-\s/.test(lines[i].slice(childIndent))) {
-        return parseAnnotationList(lines, i, end, childIndent, problems);
-    }
-    return parseAnnotationMapping(lines, i, end, childIndent, problems);
-}
-
-function parseAnnotationList(lines, start, end, indent, problems = []) {
-    const items = [];
-    let i = start;
-    while (i < end) {
-        if (isBlankLine(lines[i])) {
-            i++;
-            continue;
-        }
-        if (lineIndent(lines[i]) < indent) break;
-        if (!/^-\s/.test(lines[i].slice(indent))) break;
-
-        // Gather this item's lines, then re-indent its first line so the whole
-        // item parses as an ordinary mapping two columns in from the dash.
-        const itemLines = [`${" ".repeat(indent + 2)}${lines[i].slice(indent + 2)}`];
-        let j = i + 1;
-        while (j < end) {
-            if (isBlankLine(lines[j])) {
-                itemLines.push(lines[j]);
-                j++;
-                continue;
-            }
-            const childIndent = lineIndent(lines[j]);
-            if (childIndent <= indent) break;
-            itemLines.push(lines[j]);
-            j++;
-        }
-        while (itemLines.length && isBlankLine(itemLines[itemLines.length - 1])) itemLines.pop();
-
-        const head = itemLines[0].slice(indent + 2);
-        // An item's problems count from its own first line; shift them back.
-        const local = [];
-        if (/^[^:\s][^:]*:/.test(head)) {
-            const [value] = parseAnnotationMapping(itemLines, 0, itemLines.length, indent + 2, local);
-            items.push(value);
-        } else {
-            items.push(readAnnotationScalar(head, local, 0));
-        }
-        problems.push(...local.map((problem) => ({ ...problem, line: problem.line + i })));
-        i = j;
-    }
-    return [items, i];
-}
-
 const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
 
 /**
@@ -2686,10 +2454,9 @@ const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
  *
  * Three things are excluded, each for its own reason. The `meta` blocks go
  * because the hash lives in one, and a value cannot be part of what it
- * fingerprints. The `annotation` fences go because a note written after the
- * approval is not a change to the content — an open question standing over an
- * approved chapter is already its own error, and lapsing the rung for a
- * resolved note would report the sweep as an edit. Whitespace goes because a
+ * fingerprints. The `annotation` fences go because a review note is not
+ * content: `devbook.chapter.fingerprint@1` stated the exclusion before the
+ * fence retired in contract 38, and keeping it keeps every recorded value. Whitespace goes because a
  * reflowed paragraph reads identically, and a rung that came off every time
  * someone rewrapped a line would be taken off for good.
  *
@@ -2871,7 +2638,7 @@ function hashedText(lines, from, end, dropped) {
  * The proposal is hashed as its file block is. A delta keeps its `meta`
  * fences, because in a delta they are content — the header says what kind of
  * change it is, and a `MODIFIED` block is the fields it sets — and drops only
- * its annotation fences. Each delta is keyed by the devbook file it targets,
+ * its `annotation` fences, as fingerprint@1 states. Each delta is keyed by the devbook file it targets,
  * so moving one to another target is an edit. A demo delta is read as a page
  * fingerprint reads a demo, its managed region left out. `deltas` is a list of
  * `{ target, markdown }`, in any order.
@@ -2895,250 +2662,34 @@ export function changeText(proposalMarkdown, deltas) {
 }
 
 /**
- * Every annotation fence in a document, in reading order.
+ * The `annotation` fences left in a document, each reported as retired.
  *
- * Position is the anchor. A fence annotates the block immediately above it;
- * placed directly after a heading's `meta` block it annotates the chapter as a
- * whole. That single rule replaces content hashes, relocation prompts, and a
- * repository-wide orphaned view — the note is not pointing at the passage from
- * a distance, it is in the passage's neighbourhood, so every ordinary text
- * operation carries it along.
- *
- * Consecutive fences all attach to the last block that is not itself an
- * annotation, so a passage can carry several threads without the second one
- * claiming to annotate the first.
- *
- * Each entry carries `{ line, endLine, raw, fields, chapter, ordinal, target,
- * attachedTo }`. `ordinal` is 1-based within the chapter: a tool addresses a
- * thread as `<path>#<slug>` plus its ordinal, because devbook assigns no ids.
+ * A review note was a fence in the chapter until contract 38. It is a comment
+ * thread in the host that keeps the chapter's workflow state now, read and
+ * posted through `devbook.decision@1`, and `038-workflow-state-leaves-the-chapter`
+ * deletes every fence, open or resolved. Only a fence at the top level is one:
+ * an `annotation` opener inside another fence is that fence's content.
  */
-export function parseAnnotations(markdown) {
+export function retiredFenceIssues(markdown) {
     const lines = markdown.split(/\r?\n/);
-    const annotations = [];
-    const ordinals = new Map();
-    let chapter = null;
-    let attachedTo = null;
-    let i = 0;
-
-    while (i < lines.length) {
-        const line = lines[i];
-
-        const heading = /^(#{1,6})\s+(.*)$/.exec(line);
-        if (heading) {
-            const text = heading[2].trim();
-            chapter = { level: heading[1].length, text, slug: slugify(text), line: i + 1 };
-            attachedTo = { kind: "heading", text, line: i + 1 };
-            i++;
-            continue;
-        }
-
-        const fence = FENCE_PATTERN.exec(line);
-        if (fence) {
-            const marker = fence[2];
-            const info = fence[3];
-            const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
-            const bodyLines = [];
-            let k = i + 1;
-            while (k < lines.length && !closer.test(lines[k])) {
-                bodyLines.push(lines[k]);
-                k++;
-            }
-            const raw = bodyLines.join("\n");
-            const label = info.toLowerCase();
-
-            if (label === "annotation") {
-                const key = chapter ? chapter.slug : "";
-                const ordinal = (ordinals.get(key) ?? 0) + 1;
-                ordinals.set(key, ordinal);
-                const problems = [];
-                annotations.push({
-                    line: i + 1,
-                    endLine: k + 1,
-                    raw,
-                    fields: parseAnnotationBody(raw, problems),
-                    problems,
-                    chapter,
-                    ordinal,
-                    target: attachedTo && attachedTo.kind === "text" ? "block" : "chapter",
-                    attachedTo,
-                });
-                // `attachedTo` is deliberately not reassigned: the next fence
-                // attaches to the same passage, not to this note.
-            } else if (label === "meta") {
-                attachedTo = { kind: "meta", text: raw, line: i + 1 };
-            } else {
-                attachedTo = { kind: "text", text: raw, line: i + 1 };
-            }
-            i = k + 1;
-            continue;
-        }
-
-        if (isBlankLine(line)) {
-            i++;
-            continue;
-        }
-
-        // An ordinary run of prose, table, or list lines is one block.
-        const blockStart = i;
-        const blockLines = [];
-        while (
-            i < lines.length &&
-            !isBlankLine(lines[i]) &&
-            !FENCE_PATTERN.test(lines[i]) &&
-            !/^#{1,6}\s+/.test(lines[i])
-        ) {
-            blockLines.push(lines[i]);
-            i++;
-        }
-        attachedTo = { kind: "text", text: blockLines.join("\n"), line: blockStart + 1 };
-    }
-
-    return annotations;
-}
-
-/** A note's fields with the two defaulted ones filled in. */
-export function resolveAnnotation(fields) {
-    const stated = Object.fromEntries(
-        Object.entries(fields ?? {}).filter(([, value]) => value != null)
-    );
-    return { ...ANNOTATION_DEFAULTS, ...stated };
-}
-
-export const annotationKinds = () => [...ANNOTATION_KINDS];
-export const annotationStatuses = () => [...ANNOTATION_STATUSES];
-
-/**
- * Lint every annotation fence in a document against the schema and the
- * placement rule.
- *
- * `quote` is checked against the block the note attaches to, and a quote that
- * matches nothing above is a *warning*, never an error: it is the tell that a
- * passage moved out from under its note, and a person decides what to do about
- * it. It is never used to resolve the attachment — position already did that.
- */
-export function annotationIssues(markdown) {
     const issues = [];
-    for (const note of parseAnnotations(markdown)) {
-        const where = `annotation at line ${note.line}`;
-        const fields = note.fields ?? {};
-
-        // Every other reader parses the fence as YAML and drops one that does
-        // not parse, so a fence only this reader accepts is a lost note.
-        for (const problem of note.problems ?? []) {
+    for (let i = 0; i < lines.length; i++) {
+        const fence = FENCE_PATTERN.exec(lines[i]);
+        if (!fence) continue;
+        const marker = fence[2];
+        const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
+        let k = i + 1;
+        while (k < lines.length && !closer.test(lines[k])) k++;
+        // An unclosed one is no note either, and the migration leaves it.
+        if (k < lines.length && fence[3].toLowerCase() === "annotation") {
             issues.push({
                 severity: "error",
-                message: `${where} is not valid YAML at line ${note.line + problem.line}: ${problem.message}`,
+                message:
+                    `has an \`annotation\` fence at line ${i + 1} — ` +
+                    movedToTooling("a review note is a comment thread in the host that keeps the chapter's workflow state, through `devbook.decision@1`"),
             });
         }
-
-        if (!note.chapter) {
-            issues.push({
-                severity: "error",
-                message: `${where} sits before the first heading — an annotation lives inside an addressable chapter.`,
-            });
-        }
-
-        for (const field of ANNOTATION_REQUIRED_FIELDS) {
-            const value = fields[field];
-            if (value == null || (typeof value === "string" && value.trim() === "")) {
-                issues.push({
-                    severity: "error",
-                    message: `${where} is missing required \`${field}\`.`,
-                });
-            }
-        }
-
-        if (fields.kind != null && !ANNOTATION_KINDS.includes(fields.kind)) {
-            issues.push({
-                severity: "error",
-                message: `${where} has kind "${fields.kind}", expected one of: ${ANNOTATION_KINDS.join(", ")}.`,
-            });
-        }
-
-        if (fields.status != null && !ANNOTATION_STATUSES.includes(fields.status)) {
-            issues.push({
-                severity: "error",
-                message: `${where} has status "${fields.status}", expected one of: ${ANNOTATION_STATUSES.join(", ")}.`,
-            });
-        }
-
-        if (typeof fields.date === "string" && !ISO_DATE_PATTERN.test(fields.date)) {
-            issues.push({
-                severity: "error",
-                message: `${where} has date "${fields.date}" — an annotation date is \`YYYY-MM-DD\`.`,
-            });
-        }
-
-        if (fields.quote != null) {
-            const passage = note.attachedTo?.kind === "text" ? note.attachedTo.text : "";
-            const normalize = (text) => String(text).replace(/\s+/g, " ").trim();
-            if (!normalize(passage).includes(normalize(fields.quote))) {
-                issues.push({
-                    severity: "warning",
-                    message: `${where} quotes "${fields.quote}", which matches nothing in the block above it — the passage may have moved out from under the note.`,
-                });
-            }
-        }
-
-        if (fields.replies != null) {
-            if (!Array.isArray(fields.replies)) {
-                issues.push({
-                    severity: "error",
-                    message: `${where} has \`replies\` that is not a list — one fence is one thread, and its replies are an ordered list of {author, date, body}.`,
-                });
-            } else {
-                fields.replies.forEach((reply, index) => {
-                    if (typeof reply !== "object" || reply === null || Array.isArray(reply)) {
-                        issues.push({
-                            severity: "error",
-                            message: `${where} reply ${index + 1} is not a mapping of {author, date, body}.`,
-                        });
-                        return;
-                    }
-                    for (const field of ANNOTATION_REPLY_FIELDS) {
-                        if (reply[field] == null || String(reply[field]).trim() === "") {
-                            issues.push({
-                                severity: "error",
-                                message: `${where} reply ${index + 1} is missing required \`${field}\`.`,
-                            });
-                        }
-                    }
-                    for (const key of Object.keys(reply)) {
-                        if (!ANNOTATION_REPLY_FIELDS.includes(key)) {
-                            issues.push({
-                                severity: "warning",
-                                message: `${where} reply ${index + 1} has unrecognized field \`${key}\`.`,
-                            });
-                        }
-                    }
-                });
-            }
-        }
-
-        // Opaque by contract: L0 checks that `ext` is a mapping of namespaces
-        // and then never looks inside one. That is the whole reason an
-        // extension can add a field and ship on its own release cadence.
-        if (fields.ext != null) {
-            const isMapping =
-                typeof fields.ext === "object" &&
-                !Array.isArray(fields.ext) &&
-                fields.ext !== null;
-            if (!isMapping) {
-                issues.push({
-                    severity: "error",
-                    message: `${where} has \`ext\` that is not a mapping of namespaces.`,
-                });
-            }
-        }
-
-        for (const key of Object.keys(fields)) {
-            if (!ANNOTATION_FIELDS.includes(key)) {
-                issues.push({
-                    severity: "warning",
-                    message: `${where} has unrecognized field \`${key}\` — the core set is closed, and extension state goes under \`ext.<namespace>\`.`,
-                });
-            }
-        }
+        i = k;
     }
     return issues;
 }

@@ -21,13 +21,20 @@ block in the adopted folders, and in every open change under `openspec/changes/<
 
 A block that already carries `rating` loses its `status`, and the report names the two when
 they differ. A delta's first block is its header and keeps its `change` and `delta`. Only lines
-inside a `meta` fence are read, so a sample in a `text` fence is left alone. `annotation`
-fences, `ext.*` keys, every other field, and an empty `meta` fence stay as they are.
+inside a `meta` fence are read, so a sample in a `text` fence is left alone. `ext.*` keys,
+every other field, and an empty `meta` fence stay as they are.
 
-It writes no export file. For each block it prints what it took off, value included:
+In the same files it deletes every `annotation` fence, open or resolved, with the blank line
+it sat in. A review note is a comment thread in the host now, through `devbook.decision@1`. A
+fence quoted inside another fence is that fence's content and stays, and so does an unclosed
+one. A fence is no part of a change's fingerprint, so deleting one moves none.
+
+It writes no export file. For each block it prints what it took off, value included, and for
+each fence its kind, status, author, and the start of its body:
 
 ```text
 - took off .devbook/arc42/adr/x.md:3 (X): status proposed, sync pull
+- took off .devbook/arc42/adr/x.md:14 (Why): annotation, question open by ana — "Why not MySQL?"
 ```
 
 Where `.devbook/statuses.json` exists, it says the check no longer reads it and leaves it in
@@ -36,13 +43,19 @@ place.
 It also deletes the checker files contract 38 retired, where they are still vendored under
 `.devbook/_tools/devbook-meta/`: `statuses.mjs`, `statuses.test.mjs`, `accepted-rung.test.mjs`,
 `status-optional.test.mjs`, and `sync-field.test.mjs`. Reconcile never deletes a copy, and the
-three tests import what `metadata.mjs` no longer exports.
+three tests import what `metadata.mjs` no longer exports. With the fence go `annotations.mjs`,
+`annotations-index.mjs`, `annotations.test.mjs`, and `annotations-write.test.mjs` there, and
+the fence's delivered rule and its wrappers: `.agents/rules/devbook-annotations.md`,
+`.claude/rules/devbook-annotations.md`, and
+`.github/instructions/devbook-annotations.instructions.md`. Reconcile orphans a rule nothing
+ships and never deletes it, and this one tells a model to write a fence through a tool that
+is gone.
 
 ## Before you run it
 
 Run each host's import first — Backlog, spec-manager — against the default branch. Each reads
 the current state and the open notes from the Markdown with its own parser. Once this runs,
-the values it strips exist only in git history. Delete `.devbook/statuses.json` once the hosts
+the values and the notes it strips exist only in git history. Delete `.devbook/statuses.json` once the hosts
 have imported its ladders.
 
 A change's fingerprint covers its proposal and every delta, `meta` blocks included, so an open
@@ -60,17 +73,23 @@ that runs the workflow keeps it, answering `devbook.decision@1`
 that should no longer be followed is removed by a change's `REMOVED` delta rather than marked
 `deprecated`. The direction a sweep levels a unit is Backlog's, the tracker keeps its own
 reference to a chapter, an estimate belongs to a proposal's tasks, and `roadmap` and `change`
-are dropped. The rating is renamed so `status` no longer means two things. The hosts import
-from the default branch, so an export file would be a second format for a single run. The
-record is `.devbook/arc42/adr/chapter-schema.md` in the marketplace.
+are dropped. The rating is renamed so `status` no longer means two things. A review note is
+workflow too: written, answered, or swept, each fence was a commit that changed no content, so
+the note now lives beside the state it is about. The hosts import from the default branch, so
+an export file would be a second format for a single run. The records are
+`.devbook/arc42/adr/chapter-schema.md` and `.devbook/arc42/adr/annotations.md` in the
+marketplace.
 
 ## What breaks
 
 The checker reports each moved field as an error naming this migration, and a `status` in
-`tech/` or `ai/` as renamed `rating`. After the run none is left. `delta.mjs --apply` no longer
-reads a decision from `proposal.md` and stamps no `change`: the caller reads the acceptance from
-the host and passes the fingerprint it was recorded at as `--accepted-hash`, and the merge
-refuses unless it is the change's fingerprint now. `units.mjs` no longer takes `--direction`.
+`tech/` or `ai/` as renamed `rating`, and an `annotation` fence as retired. After the run none
+is left. `delta.mjs --apply` no longer reads a decision from `proposal.md`, reads no fence for an
+open question, and stamps no `change`: the caller reads the acceptance from the host, which
+refuses one over an open question, and passes the fingerprint it was recorded at as
+`--accepted-hash`, and the merge refuses unless it is the change's fingerprint now. `units.mjs`
+no longer takes `--direction`. `annotations.mjs` and `_meta/annotations.json` are gone, a graph
+node carries no `openNotes`, and `build.mjs --write` deletes a stale `annotations.json`.
 
 ## How to verify
 
@@ -78,6 +97,6 @@ refuses unless it is the change's fingerprint now. `units.mjs` no longer takes `
 node migrate.mjs --check
 ```
 
-Exits `0` when no block carries a moved field or a `tech/` or `ai/` `status` and no retired
-checker file is left, and `1` while any remains, listing each. Drop the flag to apply; a second run changes nothing. Both forms
+Exits `0` when no block carries a moved field or a `tech/` or `ai/` `status`, no `annotation`
+fence is left, and no retired checker or rule file is left, and `1` while any remains, listing each. Drop the flag to apply; a second run changes nothing. Both forms
 take `--root <path>`, defaulting to the working directory.

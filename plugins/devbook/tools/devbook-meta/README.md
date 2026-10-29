@@ -3,12 +3,10 @@
 Checks the `meta` blocks embedded in the devbook folders under `.devbook/` —
 `arc42/`, `domain/`, `tech/`, `design/`, and `ai/`, at `.devbook/arc42/` and so
 on — plus a change's `proposal.md` and deltas under `openspec/changes/`, and,
-with `--write`, derives five machine-readable indexes from them:
+with `--write`, derives four machine-readable indexes from them:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
-- **`annotations.json`** — the open notes, from the `annotation` fences in the
-  chapters themselves.
 - **`naming.json`** — the term register: `domain/`'s ubiquitous language as a
   list, each term with its definition, its other names, and where it is worked out.
 - **`scenarios.json`** — the scenario register: every `type: scenario` page in
@@ -89,11 +87,11 @@ both halves of the contract.
 
 ## Outputs
 
-Five artifacts per adopted scope, each co-located with what it describes:
+Four artifacts per adopted scope, each co-located with what it describes:
 
 | Path | Scope |
 |---|---|
-| `.devbook/_meta/graph.json`, `.devbook/_meta/index.json`, `.devbook/_meta/annotations.json`, `.devbook/_meta/naming.json`, `.devbook/_meta/scenarios.json` | repository-wide rollup across all adopted devbook folders |
+| `.devbook/_meta/graph.json`, `.devbook/_meta/index.json`, `.devbook/_meta/naming.json`, `.devbook/_meta/scenarios.json` | repository-wide rollup across all adopted devbook folders |
 | `.devbook/arc42/_meta/*.json` | `arc42/` only |
 | `.devbook/domain/_meta/*.json` | `domain/` only |
 | `.devbook/tech/_meta/*.json` | `tech/` only |
@@ -113,12 +111,10 @@ followed, so a scoped graph stays about its own folder.
 | `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Loaded by `devbook-derived`'s canvas from the materialized path. |
 | `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI and loaded by `devbook-derived`'s canvas from the materialized path, so the check, the written indexes, and the live view are one parser. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
-| `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `naming.mjs` | Derives `naming.json` from the graph `buildGraph` already holds — its nodes and the chapter ledes it keeps beside them — so the register costs no second read of the corpus. |
 | `scenarios-index.mjs` | Derives `scenarios.json` from the register `buildGraph` keeps beside its nodes, which `scenario.mjs`'s pass builds while it checks the pages — so the register costs no second read of the corpus, and `graph.json` keeps its shape. |
-| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
-| `build.mjs` | CLI wrapper: writes all five artifacts per scope, runs `demo-template.mjs`'s check, prints stats, exits non-zero on errors. |
-| `delta.mjs` | The change folder's merge. `--check <change>` resolves every delta under `openspec/changes/<change>/devbook-delta/` to its target file and heading and lints each merged result; `--apply <change>` does the same, then, given `--accepted-hash <fingerprint>` equal to the change's current hash, writes the merges and moves the folder to `archive/<date>-<name>/`. A `*.demo.html` directly in a `devbook-delta/domain/<context>/` folder is the one other file allowed there: `--check` runs `demo.mjs`'s `demoFileIssues` over it and `--apply` replaces its target whole. Once every delta merges, `--check` lays the change's merges over the corpus in memory and runs `scenario.mjs`'s pass over the result, reporting each journey problem the change introduces — a `Proved by:` naming no part, an `actor`, `flags`, or `settings` entry that does not resolve — against the delta that causes it, so it surfaces before the change is decided rather than at archive. The graph build imports `checkDelta`, so every open delta is checked exactly as a merge would check it. `gateCheck`, before the merge, refuses unless `--accepted-hash` — the fingerprint a host recorded the acceptance at, through `devbook.decision@1` — equals the change's current hash, and refuses while an open `kind: question` annotation sits anywhere in the change. The merge stamps nothing on the chapters it lands in. |
+| `build.mjs` | CLI wrapper: writes all four artifacts per scope, deletes the retired `annotations.json` where an earlier release left one, runs `demo-template.mjs`'s check, prints stats, exits non-zero on errors. |
+| `delta.mjs` | The change folder's merge. `--check <change>` resolves every delta under `openspec/changes/<change>/devbook-delta/` to its target file and heading and lints each merged result; `--apply <change>` does the same, then, given `--accepted-hash <fingerprint>` equal to the change's current hash, writes the merges and moves the folder to `archive/<date>-<name>/`. A `*.demo.html` directly in a `devbook-delta/domain/<context>/` folder is the one other file allowed there: `--check` runs `demo.mjs`'s `demoFileIssues` over it and `--apply` replaces its target whole. Once every delta merges, `--check` lays the change's merges over the corpus in memory and runs `scenario.mjs`'s pass over the result, reporting each journey problem the change introduces — a `Proved by:` naming no part, an `actor`, `flags`, or `settings` entry that does not resolve — against the delta that causes it, so it surfaces before the change is decided rather than at archive. The graph build imports `checkDelta`, so every open delta is checked exactly as a merge would check it. `gateCheck`, before the merge, refuses unless `--accepted-hash` — the fingerprint a host recorded the acceptance at, through `devbook.decision@1` — equals the change's current hash; the host refuses the acceptance itself while a `question` note is open anywhere in the change. The merge stamps nothing on the chapters it lands in. |
 | `chapter-hash.mjs` | CLI over `metadata.mjs`'s `chapterFingerprint`: prints the content fingerprint of an addressed chapter, or of a change over its proposal and every delta, with every demo the block belongs to folded in — `<page>.demo.html` into `<page>.md`'s file block, the context's `demo.html` into `context.md`'s, and any demo a block's `demo` field names into that block — each without its managed region, so `demo-template.mjs --refresh` moves no fingerprint. A host records a decision against it, so the value recorded and the value checked come from one function. Run it from the repository root. The value is `devbook.chapter.fingerprint@1`, stated in `../../resources/chapter-fingerprint.md` for a host to recompute; `metadata.mjs` exports the text each value digests — `chapterText`, `chapterFingerprintText`, `changeText` — beside the value. |
 | `chapter-fingerprint.vector.json` | The shared vector every implementation of the fingerprint is tested against: block and change cases, each with its canonical text and value. `chapter-fingerprint.test.mjs` runs it in-process and through `chapter-hash.mjs`, with `node --test chapter-fingerprint.test.mjs`. |
 | `demo.mjs` | The click demos. Lints each `*.demo.html` against the HTML contract in `devbook-domain.md`, pairs a page-named demo with its page, and resolves every `demo` address — on a chapter, a delta, a `proposal.md`, or a change's `solution.md` — against the demo's `demo-model`, per `resources/demo-address.md`. A change's address resolves against the demo the change lands when it carries one. The graph build calls `demoProblems` once the corpus is read, and `linkedWalkthroughs` after the scenario pass: it resolves each linked walkthrough's `part` against the journey register, checks each `step` against the part, its `signature` against the journey's — computed with `../scenarios/signature.mjs`, loaded only when a demo links one — and its embedded `text` against the part step, and returns the links each `Proved by:` requirement's `demo` entries are derived from, beside its derived `tests`. It checks each playthrough the same way against the whole journey its `journey` names — every step's `part` and `step`, the journey's order, the text, the signature, and a part no step shows — and resolves every `playthrough` field on a feature to a playthrough whose journey names the feature. |
@@ -205,11 +201,8 @@ carry no `kind`, because those folders deliberately define no value set.
 Nodes carrying `outOfScope: true` sit outside the current scope and are
 included only because an in-scope node references them.
 
-A node carrying `openNotes` has that many unresolved annotation fences — on a
-`chapter` node its own, on a `file` node the total across the document. The
-field is omitted rather than emitted as `0`, so a viewer badges only what has
-something waiting. It is counted from the same read that builds the graph, so
-the canvas and the committed `graph.json` never disagree about it.
+A node carries no `openNotes` since contract 38: a review note is a comment
+thread in the host, which a viewer asks through `devbook.decision@1`.
 
 ### File node labels
 
@@ -312,7 +305,7 @@ each expects, without building a command.
 | A block missing `type` where its folder defines a value set for that level | error |
 | A `type` value outside its folder's value set | error |
 | A reference pointing outside the devbook folders | warning |
-| A relative Markdown link in chapter prose whose file does not exist, or whose `#anchor` no heading in an indexed file renders — absolute URLs, code spans, fences, `annotation` fences, and the anchors of a file outside the indexed corpus are not checked | warning |
+| A relative Markdown link in chapter prose whose file does not exist, or whose `#anchor` no heading in an indexed file renders — absolute URLs, code spans, fences, and the anchors of a file outside the indexed corpus are not checked | warning |
 | A `type` set in a folder that defines no value set | warning |
 | A literal `` `r`n `` / `\r\n` / `\n` escape sequence in body text | warning |
 | `tech/` still using the old `kind` field name | warning |
@@ -331,6 +324,7 @@ each expects, without building a command.
 | A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `role`, `version`, `alternatives`) on the file-level block | error |
 | `domain/` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature`, or `role` on one that is not a `user`, `organisation`, or `technical` actor | error |
 | A field moved to tooling — `status` outside `tech/` and `ai/`, an `approved-*` or `accepted-*` field, `sync`, `issue`, `effort`, `roadmap`, `change` — named with `038-workflow-state-leaves-the-chapter` | error |
+| An `annotation` fence at the top level of a chapter, open or resolved — retired with contract 38 and named with `038-workflow-state-leaves-the-chapter` | error |
 | `status` on a `tech/` or `ai/` block, renamed `rating` in contract 38 | error |
 | A `tech/` or `ai/` block without `rating`, or with one outside `candidate`, `trial`, `adopted`, `hold`, `retired` | error |
 | `ai/` `stage` entry outside the delivery path's seven — `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate` | error |
@@ -521,60 +515,6 @@ lists. So an area's `index.json` file count can be lower than its
 `_`-prefixed folders (such as `_meta/` itself) are tooling, not content, and
 are excluded from the outline.
 
-## Output shape: `annotations.json`
-
-Every annotation thread in the scope, in document order. A note is authored
-Markdown living in the chapter it is about; this is the derived half every
-reader comes off — the cross-repository inbox, the open-note count on a graph
-node, a host's approval gate showing the open questions on a change.
-
-```jsonc
-{
-  "schemaVersion": 6,
-  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
-  "scope": ".devbook/arc42",
-  "sources": [".devbook/arc42"],
-  "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
-  "problems": [],
-  "threads": [
-    {
-      "path": ".devbook/arc42/05-building-block-view.md",
-      "folder": "arc42",
-      // A thread has no id. It is addressed the way devbook addresses
-      // everything — a path plus a heading slug — with `ordinal` standing in
-      // for the id the schema deliberately does not assign.
-      "address": ".devbook/arc42/05-building-block-view.md#devbook-meta",
-      "chapter": "devbook-meta",
-      "chapterTitle": "Devbook Meta",
-      "ordinal": 1,
-      "line": 23,
-      // "block" annotates the passage above it; "chapter" sits straight after
-      // the heading's meta block and annotates the whole chapter.
-      "target": "block",
-      "kind": "question",
-      "status": "resolved",
-      "author": "jobsc",
-      "date": "2026-09-02",
-      "quote": "one indexed range read",
-      "body": "Does this hold after the outline gained the roadmap rollup?",
-      "replies": [
-        { "author": "claude/flow-spec", "date": "2026-09-02", "body": "No second scan." }
-      ],
-      // Opaque: validated as a mapping of namespaces, never read into.
-      "ext": { "your-plugin": { "raised-in": "2026-09-02" } }
-    }
-  ]
-}
-```
-
-`quote`, `replies`, and `ext` are omitted rather than emitted empty, so a
-consumer never has to tell "no quote" from "an empty quote".
-
-A `resolved` thread is still listed. It lives for the rest of the branch so a
-reviewer sees the exchange in the pull request that raised it — the sweep is
-what removes it, not the generator. A note that never gets swept is the smell
-this index makes visible; `devbook:annotation-sweep` is what removes it.
-
 ## Output shape: `naming.json`
 
 The ubiquitous language of every `domain/` context in the scope, as a list. The
@@ -583,8 +523,8 @@ show what a term *means* would otherwise parse Markdown; this is that list.
 
 ```jsonc
 {
-  // The register's own version, not the contract version graph.json, index.json,
-  // and annotations.json carry: a consumer outside this repository pins it. An added field leaves it
+  // The register's own version, not the contract version graph.json and index.json
+  // carry: a consumer outside this repository pins it. An added field leaves it
   // at 1; a removed or redefined one raises it.
   "schemaVersion": 1,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
@@ -626,7 +566,7 @@ names of a concept.
 
 `arc42/12-glossary.md` is not read: its "Also called" line is prose, not an
 `aliases` field, and the register reads fields only. A folder with no terms
-writes `{ "terms": [], "problems": [] }`, so every `_meta/` holds the same five
+writes `{ "terms": [], "problems": [] }`, so every `_meta/` holds the same four
 files.
 
 `problems` uses the shape the other documents use, and holds two warnings:
@@ -717,7 +657,7 @@ file. This is that list, from the scenario pass the check already runs.
 Run state is not here: a run is a file in the journey's run folder, written by the
 suite, and a reader compares its signature with the journey's. A folder with no
 journey writes `{ "scenarios": [], "problems": [] }`, so every `_meta/` holds the
-same five files.
+same four files.
 
 ## Viewing
 

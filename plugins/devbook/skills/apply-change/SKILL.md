@@ -52,5 +52,5 @@ or group per **The sync unit** in the protocol; the bounded context; the root.
 8. Close with the protocol's report table, one row per chapter in scope, with
    the brief attached and the flow it went to.
 
-A wrong chapter is a verdict, never an edit. An open `annotation` is a reason to stop at the
-gate, never a line in the brief, per `rules/devbook-annotations.md`.
+A wrong chapter is a verdict, never an edit. An open review note is a reason to stop at the
+gate, never a line in the brief.

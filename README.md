@@ -15,7 +15,7 @@ a sibling declare it and the host enforces it.
 
 | Layer | Plugins | What they give you |
 | --- | --- | --- |
-| Devbook | `devbook`, `devbook-derived`, `devbook-collaboration` | Addressed Markdown chapters under `.devbook/` with parseable `meta` blocks, generated `_meta/` indexes, a reference-graph canvas, converters between chapters and code, the five repository-owned procedure skills, and review and approval workflows over the chapters. |
+| Devbook | `devbook`, `devbook-derived` | Addressed Markdown chapters under `.devbook/` with parseable `meta` blocks, generated `_meta/` indexes, a reference-graph canvas, converters between chapters and code, the five repository-owned procedure skills, a chapter review that posts its notes to the host keeping the chapter's workflow state, and the `devbook.decision@1` contract that host answers. |
 | Change lane | `devbook-openspec` | The OpenSpec CLI installed and configured so a change is proposed, agreed, built step by step, and archived as deltas against its devbook chapters, with `spec`, `tracker`, `status`, and `archive` as providers a flow binds by name and `onboard` to walk a first change through. |
 | Skills | `devbook-skills` | Reusable guidance any plugin names and none depends on: `show-me`, which puts a diagram, tree, signature, diff, or table before the prose. |
 | Delivery | `delivery` | Two `flow-*` procedures that carry a change from request to a validated commit — the code, a dependency move and a new project among its kinds, and the devbook folders — each a sequence of phase skills, plus the pull-request lane and the single-item pickup. |

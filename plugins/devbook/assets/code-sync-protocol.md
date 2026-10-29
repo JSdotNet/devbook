@@ -415,7 +415,7 @@ The plan has three parts.
 3. **The report table**, as below, one row per chapter in scope, `aligned` rows
    included.
 
-A plan never carries a field the schema moved to tooling, an `annotation` fence, or an
+A plan never carries a field the schema moved to tooling, a review note, or an
 edit to anything outside the headings it lists.
 
 ## Carrying a plan in
@@ -439,7 +439,7 @@ This section owns what the carried chapters may say.
   it yet, and merging it is the agreement.
 - **`REMOVED` is never carried.** It stays a finding for a person.
 - **Only the chapters the plan lists.** Nothing outside its headings, and no
-  `annotation` fence.
+  review note.
 - **The workspace lands with its chapters.** A building block's DSL statements land with the
   chapters that embed or name them, and only the identifiers and view keys the plan lists.
   A `REMOVED` statement is never carried.

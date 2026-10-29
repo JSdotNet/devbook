@@ -1,7 +1,7 @@
 // 038-workflow-state-leaves-the-chapter against a devbook still carrying its
 // workflow state: every moved field comes off, a tech/ or ai/ `status` becomes
-// `rating`, a delta's header keeps `change`, archive/ and annotation fences are
-// left, line endings survive, and a second run changes nothing.
+// `rating`, a delta's header keeps `change`, every annotation fence is deleted,
+// archive/ is left, line endings survive, and a second run changes nothing.
 //
 //   node --test plugins/devbook/migrations/038-workflow-state-leaves-the-chapter/migrate.test.mjs
 
@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { rewrite } from "./migrate.mjs";
+import { rewrite, stripAnnotations } from "./migrate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPT = path.join(HERE, "migrate.mjs");
@@ -232,14 +232,16 @@ test("--check lists every value it would take off and writes nothing", () =>
         for (const [rel, content] of Object.entries(FILES)) assert.equal(read(root, rel), content, `${rel} untouched by --check`);
     }));
 
-test("apply strips the editorial folders, keeping ext, related, fences, and empty blocks", () =>
+test("apply strips the editorial folders and every annotation fence, keeping ext, related, other fences, and empty blocks", () =>
     withRepo(FILES, (root) => {
-        assert.equal(run(root).status, 0);
+        const result = run(root);
+        assert.equal(result.status, 0);
+        assert.match(result.stdout, /took off \.devbook\/domain\/ordering\/domain\.md:\d+ \(Order\): annotation, question open by ana — "Why\?"/);
         const domain = read(root, ".devbook/domain/ordering/domain.md");
         assert.match(domain, /```meta\ntype: domain\n```/);
         assert.match(domain, /```meta\ntype: aggregate\next\.some-plugin\.checked: 2026-09-17\nrelated: \[\.devbook\/domain\/ordering\/features\.md#checkout\]\n```/);
-        assert.match(domain, /```annotation\nkind: question\nstatus: open\n/, "annotation fence untouched");
-        assert.match(domain, /```text\nstatus: draft\n```/, "a text sample untouched");
+        assert.doesNotMatch(domain, /annotation/, "annotation fence deleted");
+        assert.match(domain, /The aggregate\.\n\n```text\nstatus: draft\n```/, "the gap closes up and a text sample is untouched");
         assert.equal(read(root, ".devbook/arc42/adr/use-postgres.md"), ADR.replace("status: proposed\n", ""));
         assert.match(read(root, ".devbook/arc42/adr/use-postgres.md"), /## Why\n\n```meta\n```/, "empty fence kept");
         assert.equal(read(root, ".devbook/arc42/tdr/no-retry-budget.md"), TDR.replace("status: planned\n", ""));
@@ -375,6 +377,118 @@ test("the checker files contract 38 retired are deleted, and the rest of the fol
             assert.ok(!existsSync(path.join(root, ".devbook/_tools/devbook-meta/statuses.mjs")));
             assert.ok(!existsSync(path.join(root, ".devbook/_tools/devbook-meta/sync-field.test.mjs")));
             assert.ok(existsSync(path.join(root, ".devbook/_tools/devbook-meta/metadata.mjs")));
+            assert.match(run(root, "--check").stdout, /nothing to do/);
+        }
+    ));
+
+test("stripAnnotations deletes open and resolved fences, with their gap, and leaves a quoted or unclosed one", () => {
+    const text = `# A
+
+${F}meta
+type: domain
+${F}
+
+First.
+
+${F}annotation
+kind: comment
+status: resolved
+author: bo
+date: 2026-09-01
+body: |
+  Answered.
+${F}
+${F}annotation
+author: cy
+date: 2026-09-02
+body: Still open?
+${F}
+
+Second.
+${F}annotation
+author: di
+date: 2026-09-03
+body: Tight.
+${F}
+Third.
+
+${F}${F}text
+${F}annotation
+body: quoted
+${F}
+${F}${F}
+
+## B
+
+${F}annotation
+body: never closed
+`;
+    const { text: out, fences } = stripAnnotations(text);
+    assert.equal(fences.length, 3);
+    assert.deepEqual(fences.map((f) => [f.kind, f.status, f.author, f.body, f.heading]), [
+        ["comment", "resolved", "bo", "Answered.", "A"],
+        ["comment", "open", "cy", "Still open?", "A"],
+        ["comment", "open", "di", "Tight.", "A"],
+    ]);
+    assert.match(out, /First\.\n\nSecond\.\n\nThird\./, "the gaps close up, and blocks a fence sat between stay apart");
+    assert.match(out, /``````text\n```annotation\nbody: quoted\n```\n``````/, "a quoted fence is the outer fence's content");
+    assert.match(out, /## B\n\n```annotation\nbody: never closed\n$/, "an unclosed fence is left");
+    assert.equal(stripAnnotations(out).fences.length, 0, "a second pass finds nothing");
+});
+
+test("stripAnnotations takes a file-opening fence's blank line along, and leaves an info string it never read as a note", () => {
+    const text = `${F}annotation\nbody: first\n${F}\n\n# T\n\n${F}annotation title\nbody: not a note\n${F}\n`;
+    const { text: out, fences } = stripAnnotations(text);
+    assert.equal(fences.length, 1);
+    assert.equal(out, `# T\n\n${F}annotation title\nbody: not a note\n${F}\n`);
+});
+
+test("a fence is reported at its line in the file as it stands, before meta lines come off", () =>
+    withRepo(
+        { ".devbook/arc42/adr/x.md": `# X\n\n${F}meta\nstatus: proposed\nsync: pull\n${F}\n\nWhy.\n\n${F}annotation\nauthor: ana\nbody: Why?\n${F}\n` },
+        (root) => {
+            const result = run(root, "--check");
+            assert.match(result.stdout, /x\.md:10 \(X\): annotation, comment open by ana/, result.stdout);
+        }
+    ));
+
+test("an annotation fence in an open change is deleted without moving its fingerprint", () =>
+    withRepo(
+        {
+            "openspec/changes/add-x/proposal.md": `# Add x\n\n${F}meta\ntype: change\n${F}\n\nWhy.\n\n${F}annotation\nkind: question\nauthor: ana\ndate: 2026-09-01\nbody: Why x?\n${F}\n`,
+        },
+        (root) => {
+            const result = run(root);
+            assert.equal(result.status, 0, result.stdout + result.stderr);
+            assert.match(result.stdout, /proposal\.md:\d+ \(Add x\): annotation, question open by ana — "Why x\?"/);
+            assert.doesNotMatch(result.stdout, /fingerprints anew/);
+            assert.equal(read(root, "openspec/changes/add-x/proposal.md"), `# Add x\n\n${F}meta\ntype: change\n${F}\n\nWhy.\n`);
+        }
+    ));
+
+test("the fence's delivered rule and its two wrappers are deleted with the fence's checker files", () =>
+    withRepo(
+        {
+            ".agents/rules/devbook-annotations.md": "x\n",
+            ".claude/rules/devbook-annotations.md": "x\n",
+            ".github/instructions/devbook-annotations.instructions.md": "x\n",
+            ".agents/rules/devbook-writing.md": "x\n",
+            ".devbook/_tools/devbook-meta/annotations.mjs": "export {};\n",
+            ".devbook/_tools/devbook-meta/annotations-index.mjs": "export {};\n",
+        },
+        (root) => {
+            const check = run(root, "--check");
+            assert.equal(check.status, 1);
+            assert.match(check.stdout, /would delete \.github\/instructions\/devbook-annotations\.instructions\.md, which devbook no longer ships/);
+            assert.equal(run(root).status, 0);
+            for (const rel of [
+                ".agents/rules/devbook-annotations.md",
+                ".claude/rules/devbook-annotations.md",
+                ".github/instructions/devbook-annotations.instructions.md",
+                ".devbook/_tools/devbook-meta/annotations.mjs",
+                ".devbook/_tools/devbook-meta/annotations-index.mjs",
+            ]) assert.ok(!existsSync(path.join(root, rel)), `${rel} deleted`);
+            assert.ok(existsSync(path.join(root, ".agents/rules/devbook-writing.md")), "another rule is kept");
             assert.match(run(root, "--check").stdout, /nothing to do/);
         }
     ));

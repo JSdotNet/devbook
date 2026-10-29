@@ -64,4 +64,4 @@ context where the kind has one, and the repository root.
 
 Never edit a source or test tree, and outside write mode write no devbook file: carrying the
 plan in is a person's move. The protocol's **What is agreed** and **Evidence rules** bind every
-step — no field the schema moved to tooling in either mode, no plan over an open change — and an open question belongs in review, never in an `annotation` fence written here.
+step — no field the schema moved to tooling in either mode, no plan over an open change — and an open question belongs in review, posted by `chapter-review`, never written here.

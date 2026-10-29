@@ -396,8 +396,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     outside: a scheduler, an inbound callback, the system account. The same
     three beats: what it is, what it triggers here, and how the model records
     it. Its contract, where it has one, stays in the dependency tables.
-  - A beat the repository cannot answer is left out and recorded as an
-    `annotation` fence, never filled in with a plausible sentence. "Nobody has
+  - A beat the repository cannot answer is left out and raised as a review
+    note, never filled in with a plausible sentence. "Nobody has
     stated which right this needs" is information; an invented right is not.
   - Another bounded context or a module is a dependency and belongs in the
     dependency tables, never here. Name a bank, a portal, or a scheduler here
@@ -746,9 +746,9 @@ instructions.
   line: it is a promise about the product, and where it is kept is the
   implementation's business.
 - A rule that is **not yet settled** is an invariant chapter with `open` on its
-  `Enforced at:` line and the open question itself in a `kind: question`
-  annotation fence beside it, per `devbook-annotations.md`. A requirement not
-  yet settled is the same, its open question in a `kind: question` fence. This is the hot spot of an Event
+  `Enforced at:` line and the open question itself raised as a `question` review
+  note on its address, through `devbook.decision@1`. A requirement not yet
+  settled is the same, its open question a `question` note. This is the hot spot of an Event
   Storming session kept in place rather than resolved by guessing, and it is
   where `assets/code-sync-protocol.md` means a rule to go when it says to record
   it as an open question instead of capturing it as fact.

@@ -38,10 +38,10 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 |---|---|
 | `init` | Checks the CLI, runs `openspec init` at the repository root, writes the schema, the config, and the rule, removes the scaffolded `specs/`, and stamps `components.openspec`. Refused where that stamp exists |
 | `update` | Checks the CLI against the stamped range, runs `openspec update`, replaces every managed file that still hashes to what landed, and re-stamps, after running any outstanding migration. Refused where no stamp exists |
-| `spec` | The skill an engine's Scope phase follows for a step of a change: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change below `approved` or whose approval has lapsed |
+| `spec` | The skill an engine's Scope phase follows for a step of a change: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change the host records no approval of, or whose approval has lapsed |
 | `tracker` | The provider for an engine's tracker: `tasks.md` as the work items, with `read_item`, `update_item`, and `comment`, and a step's state — `open`, `in progress`, `done` — read off its ticks, the close's off the archive |
 | `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. With `--replan`, a chore after the engine's Scope phase: re-checks the deltas, the open steps, and the related chapters against `main` and fails on any flag. Writes nothing |
-| `archive` | Checks both gates, merges every delta with `delta.mjs --apply --no-move`, then lets `openspec archive` move the folder |
+| `archive` | Reads the acceptance from the host through `devbook.decision@1`, merges every delta with `delta.mjs --apply --accepted-hash <fingerprint> --no-move`, then lets `openspec archive` move the folder |
 | `onboard` | Walks a person through a first real change, one move at a time |
 
 ## What the engine binds
