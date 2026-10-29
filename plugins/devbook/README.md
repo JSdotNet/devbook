@@ -375,6 +375,15 @@ demo the same way. The address and the four `postMessage` messages are
 [`resources/demo-address.md`](resources/demo-address.md), versioned, owned here, and followed
 by the demo template, spec-manager, and Backlog.
 
+### Decisions and fingerprints
+
+A host that keeps the state of a change proposal, a decision record, or a debt record, and the
+review notes on a chapter, answers a capability group over MCP:
+[`resources/decision.md`](resources/decision.md), `devbook.decision@1`. A decision is recorded against the
+fingerprint `chapter-hash.mjs` prints, stated for a host to recompute in
+[`resources/chapter-fingerprint.md`](resources/chapter-fingerprint.md),
+`devbook.chapter.fingerprint@1`, and pinned by `tools/devbook-meta/chapter-fingerprint.vector.json`.
+
 ### The `ext` namespace
 
 A plugin layered on top of devbook may keep its own per-chapter state under

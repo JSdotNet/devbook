@@ -38,8 +38,8 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 Twelve skills — six that own the convention in a repository, three that cross the boundary
 between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries, and three that
 carry a journey from its text to its run — plus the rules
-`init` delivers, the tools it materializes, one workflow, one hook, one contract that other
-plugins follow, and the one file a repository may author to change what the check accepts. None of the
+`init` delivers, the tools it materializes, one workflow, one hook, three contracts that other
+plugins follow or answer, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
 change belongs to the engine.
 
@@ -58,6 +58,8 @@ change belongs to the engine.
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, the graph build through `checkDelta` for every open delta, and `devbook-collaboration`'s review queue through `readChange` |
 | `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, `delta.mjs` through `demoFileIssues` for every demo a change carries, and `devbook-collaboration`'s review queue through `demoReader` |
 | `scenario.mjs` | journey rules, in-process | The graph build through `scenarioProblems`: the journey register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, the parts no requirement claims, and the journey outside the context of the requirements it proves |
+| `chapter-hash.mjs` | fingerprint CLI | The approval gate, and any caller of `devbook.decision@1` |
+| `chapter-fingerprint.vector.json` | shared test vector | spec-manager and Backlog, which must agree with it |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
@@ -69,6 +71,8 @@ change belongs to the engine.
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
+| `resources/decision.md` | contract, `devbook.decision@1` | spec-manager and Backlog, which answer it over MCP; a skill, which resolves it from the live tool list |
+| `resources/chapter-fingerprint.md` | contract, `devbook.chapter.fingerprint@1` | spec-manager and Backlog, which recompute the fingerprint a decision is recorded against |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, with a free walkthrough and a playthrough of the journey in its `scenarios.md`, by spec-manager and Backlog as a test fixture |
 | `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
@@ -306,6 +310,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | A block's `status` is held to the first `.devbook/statuses.json` rule matching its file and level, else to the built-in ladder; no rule makes `active` a rung, drops a decision rung, or widens a rating ladder | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/statuses.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| The fingerprint, of a block and of a change, agrees with the shared vector | `chapter-hash.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/chapter-fingerprint.test.mjs` |
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
@@ -995,6 +1000,7 @@ consumer that reaches only the converters or only the procedures is listed in
 | [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract — none of which it pins. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
+| spec-manager and Backlog | Published Language | Answer `devbook.decision@1` over MCP; recompute the fingerprint and run its vector | The two contracts and the vector | That both keep their shape within `@1`, and that `chapter-hash.mjs` prints what the vector pins. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
 
 **The undeclared row is the one that matters.** `delivery` cannot be declared a dependent
