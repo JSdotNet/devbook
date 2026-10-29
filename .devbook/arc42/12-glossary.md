@@ -536,7 +536,7 @@ what makes writing any of that into the repository unnecessary.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue"]
+related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook"]
 ```
 
 Owned by [devbook-collaboration](building-blocks/devbook-collaboration.md).
@@ -546,6 +546,10 @@ Also called: lapsed approval.
 An approval still written on a chapter whose content has moved under it. It is a reporting
 concept rather than a state: nothing transitions a chapter into it, and the queue sweep is what
 surfaces it, because a chapter cannot notice its own approval has expired.
+
+**Retiring**, per [the chapter schema record](adr/chapter-schema.md#branch-true-devbook). An
+approval becomes the host's state for a change proposal, keyed by the proposal's fingerprint,
+so no chapter carries one to go stale. The term goes with `devbook-collaboration`.
 
 ## Sync Direction
 
