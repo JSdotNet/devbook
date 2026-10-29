@@ -564,9 +564,12 @@ Also called: `sync`.
 
 Which way changes flow between a sync unit and its code: `push` from the agreed chapter to the
 code, `pull` from the code to the chapter, `sync` whichever way the drift verdict points,
-`report` nowhere, and `off` out of every sweep. It is written in a `meta` block at one of four
-levels — folder overview, `context.md`, context page, the unit's root chapter — and the nearest
-one wins; with none it is `report`.
+`report` nowhere, and `off` out of every sweep. The nearest level that sets one wins, and with
+none it is `report`.
+
+Since contract 38 no chapter carries a direction. Backlog keeps the direction map per
+repository and folder, per [the chapter schema record](adr/chapter-schema.md#schedules-and-sync),
+and the check reports a `sync` field left in a `meta` block as moved to tooling.
 
 ## Sync Group
 
@@ -579,9 +582,9 @@ Owned by [devbook](building-blocks/devbook.md).
 
 The sync units one sweep run verifies, changes on one branch, and lands as one pull request.
 Usually it is one unit; units join only when a chapter ties them — a requirement naming two
-aggregates and no feature — and never through a link such as `depends-on`. A group whose units
-resolve to different directions, or that holds more than 40 chapters, is set aside for a
-person, not acted on and never split. `units.mjs --groups` lists them.
+aggregates and no feature — and never through a link such as `depends-on`. A group that holds
+more than 40 chapters is set aside for a person, not acted on and never split.
+`units.mjs --groups` lists them.
 
 ## Sync Unit
 
@@ -592,12 +595,12 @@ related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-
 
 Owned by [devbook](building-blocks/devbook.md).
 
-What one verify pass covers and one sync direction governs: an aggregate with the entities,
+What one verify pass covers and one pull request changes: an aggregate with the entities,
 value objects, and enums it owns, the events it raises, its invariants, and the requirements
 and terms that name it; a domain service the same way; a feature with its sub-features and
 requirements; one feature flag or setting; one user or technical actor; one building block
 file; one component chapter; and one shared-types unit per context for its shared value
-objects and enums. A chapter the unit owns carries no direction of its own. `units.mjs` lists them with their effective direction.
+objects and enums. `units.mjs` lists them with their chapters and files.
 
 ## Tier
 

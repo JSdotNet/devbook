@@ -365,7 +365,6 @@ in [chapter 5](05-building-block-view.md#host-slots).
 ## Role
 
 ```meta
-status: deprecated
 date: 2026-10-05
 related: [".devbook/arc42/08-crosscutting-concepts.md#agent", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```

@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 component guideline that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
-verdicts, the status rules, the brief contract, and the report table; this file
+verdicts, what is agreed, the brief contract, and the report table; this file
 carries the kind.
 
 | | |
@@ -27,17 +27,13 @@ tokens they consume, where the product hand-rolled something. It never rewrites
 a rule that came from the source because the code does something else: that is
 a `conflict` finding against the code, not staleness in the chapter, and only
 observations the source does not speak to become chapter content on the
-strength of code alone. If the source exists but cannot be reached, say so, keep
-the affected chapters at `draft`, and note the gap in the chapter — the folder
-rules require exactly that.
+strength of code alone. If the source exists but cannot be reached, say so, and
+note the gap in the affected chapters — the folder rules require exactly that.
 
 `design/` folder rules that apply:
 
 - **`type: requirement` and nothing else.** A `### Requirement:` under the
   component is typed; the component chapter and every other guideline are not.
-- **`status` is `draft`, `active`, or `deprecated`.** There is no `proposed`,
-  and no `approved` or `accepted` rung — the two decision rungs are `domain/`'s.
-  The gate's `draft` rule applies unchanged.
 - **Guideline level only.** No wireframe, user flow, prototype, or screenshot is
   stored in `design/`.
 - **No dependency changes.** `component-libraries.md` records a recommendation
@@ -94,7 +90,7 @@ in tests confirm real adoption as distinct from an installed package. Each rule
 those tests assert drafts as a requirement chapter under the component.
 
 Compare the code against the authoritative source where there is one, and record
-divergence as `conflict`. Draft with no `status`, and with `type` on the
+divergence as `conflict`. Draft with `type` on the
 requirement chapters only. Write the known
 gaps as the chapter's own section, with a comparison table where more than one
 library is in play, prescriptive and testable — token names and thresholds, not

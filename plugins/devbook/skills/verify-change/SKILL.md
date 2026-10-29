@@ -39,15 +39,15 @@ repository root.
    as files: run no test and do not start the application; the run belongs to
    `capture-specs`. Only code that executes and tests that pass are evidence.
 4. Reach exactly one verdict per chapter, with the evidence that settles it,
-   specific enough to re-check. Mark it `unagreed` where the chapter's `status`
-   says so, per the protocol's status table: a verdict against a draft is a
-   verdict about a sketch.
+   specific enough to re-check. Mark it `unagreed` where an open change not yet
+   agreed touches the chapter, per the protocol's **What is agreed**: a verdict
+   beside an undecided change is a verdict about a sketch.
 5. Close with the protocol's report table — one table for the run, whatever
-   its scope, `aligned` rows included, with its **Sync** and **Sweep** columns
+   its scope, `aligned` rows included, with its **Unit** column
    from `units.mjs` — and stop.
    The `Action` column names what the verdict calls for and nothing is done:
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.
 
-Write nothing — no chapter, brief, `annotation` fence, `tests` entry, or `status` line — and
+Write nothing — no chapter, brief, `annotation` fence, or `tests` entry — and
 settle no `conflict` by picking a side or `unresolved` by guessing.

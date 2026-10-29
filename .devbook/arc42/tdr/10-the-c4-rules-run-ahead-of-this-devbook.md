@@ -3,7 +3,6 @@
 ```meta
 date: 2026-10-20
 severity: low
-status: resolved
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/README.md", ".devbook/arc42/tdr/README.md", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/devbook-skills.md#dependencies", ".devbook/arc42/06-runtime-view.md#authoring-an-asset"]
 c4: ["marketplace.devbook.c4-model"]
 ```

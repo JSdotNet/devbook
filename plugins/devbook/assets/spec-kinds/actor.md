@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 user or technical actor that `assets/code-sync-protocol.md` does not already
 say. The protocol carries the resolution ladder, the evidence rules, the five
-verdicts, the status rules, the brief contract, and the report table; this file
+verdicts, what is agreed, the brief contract, and the report table; this file
 carries the kind.
 
 | | |
@@ -39,7 +39,6 @@ no sync unit. A client registration found for a bank's file drop is the
   and the screens use, and `role` carries the spelling the code checks.
 - **`role` is a plain string or a list of them.** Never a reference. It is
   usual on a `user`, rare on a `technical` actor, and on no other chapter.
-- **`status`** follows `domain/`'s ladder, decision rungs included.
 - **Who, never what.** An actor chapter names the feature chapters its actions
   live in and does not restate them; a `technical` actor's contract lives in the
   dependency tables, and another context is a dependency, never an actor.
@@ -101,7 +100,7 @@ the policy, not that the action is behind it.
 Group roles into actors by who holds them, from the feature chapters and the
 screens: one actor may hold several roles, and lists them. Decide `user` or
 `technical` from how the identity is issued, never from the role's spelling.
-Draft with `type`, `role` where there is one, and `related`, and no `status`;
+Draft with `type`, `role` where there is one, and `related`;
 write the four beats the folder rule's template asks for. The `## Rights`
 matrix is the file's, not a unit's: a pass over one actor drafts that actor's
 column, and adds the matrix only when the context has several actors and

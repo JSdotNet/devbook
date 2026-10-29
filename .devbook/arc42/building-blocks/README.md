@@ -27,11 +27,10 @@ delivery, [delivery-schedule-entry-points](delivery-schedule-entry-points.md) in
 delivery-schedule, and [devbook-code-sync](devbook-code-sync.md) and
 [devbook-procedures](devbook-procedures.md) inside devbook. Raising the cap instead would hand one agent a unit too large to read whole.
 
-**The plugins are the truth.** Each file is one sync unit, and chapter 5's file-level block
-sets `sync: pull` for all of them: when a block and its plugin disagree, the sweep rewrites the
-block from what the plugin ships. A block that should lead its plugin instead states its own
-`sync` in its file-level block; none does today. The levels and values are "Sync direction" in
-`devbook-chapter-metadata.md`.
+**The plugins are the truth.** Each file is one sync unit: when a block and its plugin
+disagree, the block is rewritten from what the plugin ships. Chapter 5 set `sync: pull` for
+all of them until contract 38 took the direction out of the chapter. It is now Backlog's
+direction map for this repository, per the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync).
 
 ## The set
 

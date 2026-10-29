@@ -1,7 +1,7 @@
 # 3. Verify
 
 ```meta
-status: candidate
+rating: candidate
 type: stage
 ```
 
@@ -11,7 +11,7 @@ loads, that a chapter parses.
 ## Plugin Evaluation
 
 ```meta
-status: candidate
+rating: candidate
 type: practice
 stage: [verify]
 evidence: none
@@ -39,7 +39,7 @@ date: 2026-09-02
 ## Journeys
 
 ```meta
-status: candidate
+rating: candidate
 type: practice
 stage: [verify]
 evidence: none

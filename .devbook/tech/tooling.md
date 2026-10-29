@@ -1,7 +1,7 @@
 # Tooling
 
 ```meta
-status: adopted
+rating: adopted
 ```
 
 What a plugin's executable parts run on. Both entries are runtimes a consuming repository
@@ -10,7 +10,7 @@ already has; neither is installed by anything here.
 ## Node
 
 ```meta
-status: adopted
+rating: adopted
 type: runtime
 date: 2026-09-04
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
@@ -65,7 +65,7 @@ server-sent event stream, a Markdown renderer, and a Mermaid page are all reacha
 ## PowerShell
 
 ```meta
-status: adopted
+rating: adopted
 type: runtime
 date: 2026-09-04
 depends-on: [".devbook/tech/tooling.md#node"]

@@ -301,8 +301,8 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
 {
     const issues = validateDocument(
         ".devbook/ai/03-build.md",
-        `# Build\n\n${fence("status: adopted\ntype: stage\nstage: verify\n")}\n## TDD with an agent\n\n` +
-            `${fence("status: trial\ntype: practice\nstage: verify\n")}\nProse.\n\n- **Moves up when** — a second person works this way.\n`
+        `# Build\n\n${fence("rating: adopted\ntype: stage\nstage: verify\n")}\n## TDD with an agent\n\n` +
+            `${fence("rating: trial\ntype: practice\nstage: verify\n")}\nProse.\n\n- **Moves up when** — a second person works this way.\n`
     );
 
     check(
@@ -317,35 +317,12 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
-// --- an open question means the chapter is not agreed -------------------
+// --- an open question is the fence's own state ------------------------
 
-// Reported only against an approval, which is the contradiction: a person
-// signed for content that still carries an unanswered question. An open
-// question on any other rung is the state the fence exists for.
+// A chapter carries no decision since contract 38, so the checker has nothing
+// an open question could contradict: the note is what the fence is for.
 {
-    const approved = "type: aggregate\nstatus: approved\napproved-by: jobsc\napproved-at: 2026-09-01\n";
     const question = "kind: question\nauthor: jobsc\ndate: 2026-09-02\nbody: Does this still hold?\n";
-
-    const issues = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\n${note(question)}\nProse.\n`
-    );
-    check(
-        Boolean(find(issues, "error", "an open question means the chapter is not agreed")),
-        "an approval standing over an open question is an error",
-        dump(issues)
-    );
-
-    const resolved = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\n` +
-            `${note("kind: question\nstatus: resolved\n" + question.split("\n").slice(1).join("\n"))}\nProse.\n`
-    );
-    check(
-        resolved.length === 0,
-        "a resolved question under the same approval is silent",
-        dump(resolved)
-    );
 
     const active = validateDocument(
         ".devbook/domain/ordering/domain.md",
@@ -353,22 +330,10 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
     check(
         active.length === 0,
-        "an open question on an unapproved chapter is silent — that is what the fence is for",
+        "an open question on a chapter is silent — that is what the fence is for",
         dump(active)
     );
 
-    // Position is the anchor: the note under the sub-chapter is the
-    // sub-chapter's, so the approved parent above it stays clean.
-    const nested = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence(approved)}\nProse.\n\n` +
-            `### Line\n\n${fence("type: entity\n")}\n${note(question)}\nProse.\n`
-    );
-    check(
-        !find(nested, "error", "not agreed"),
-        "a question under a sub-chapter does not indict its approved parent",
-        dump(nested)
-    );
 }
 
 // --- journey field scope ---------------------------------------------
