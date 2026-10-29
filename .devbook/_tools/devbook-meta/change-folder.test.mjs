@@ -191,9 +191,6 @@ await refusedBy(async () => "sha256:00000000", "an acceptance recorded at anothe
 await refusedBy(decide, "a change edited after its decision", /changed after the decision/, (root) =>
     editFile(root, QUALITY_DELTA, (t) => t.replace("50 ms", "20 ms"))
 );
-await refusedBy(decide, "an open question in any delta", /open `kind: question`/, (root) =>
-    editFile(root, QUALITY_DELTA, (t) => t + note("question"))
-);
 
 {
     const root = await fixture();

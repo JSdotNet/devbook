@@ -49,5 +49,5 @@ repository root.
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.
 
-Write nothing — no chapter, brief, `annotation` fence, or `tests` entry — and
+Write nothing — no chapter, brief, review note, or `tests` entry — and
 settle no `conflict` by picking a side or `unresolved` by guessing.

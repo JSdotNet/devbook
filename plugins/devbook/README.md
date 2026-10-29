@@ -25,12 +25,11 @@ a merged chapter is in force. A generator walks the
 corpus and writes derived indexes under `_meta/`, which CI validates on every
 pull request and a scheduled job keeps current.
 
-A chapter may also carry `annotation` fences — review notes written in the
-chapter, beside the passage they are about. Markdown stays canonical,
-annotations included, so a note inherits position as its anchor, git as its
-sync and backup, the pull request as its review, and `git blame` as its
-authorship record. A note is an open loop, not a record: resolving one means
-deleting it, and a reader loading a chapter for context skips every fence.
+A review note is never text in the chapter. It is a comment thread in the host
+that keeps the chapter's workflow state, anchored to the chapter address and
+read, posted, and resolved through `devbook.decision@1`
+(`resources/decision.md`). `chapter-review` posts one per objection, and with no
+host bound it prints them and writes nothing.
 
 | Folder | Holds |
 |--------|-------|
@@ -141,17 +140,19 @@ and TDRs are records and stay out of the prose classes.
 **Trigger keywords:** `prose check`, `check the chapters' prose`,
 `what is stale in the devbook`, `tighten the chapters`
 
-### Skill: `annotation-sweep`
+### Skill: `chapter-review`
 
-Deletes every resolved annotation fence in one chapter and nothing else. It is
-the last step of the lifecycle in `rules/devbook-annotations.md`: `open` means
-somebody is waiting, `resolved` means answered and lives only the rest of the
-branch, and gone is the resting state — the prose change is the record and git
-holds the exchange. Chapter-scoped on purpose, so a person sees what is about to
-go before it does.
+Reviews one chapter, or one change and every delta in it, against its folder's
+rules, the chapters it links, and the evidence it claims, and posts one note per
+objection through `devbook.decision@1`: a `question` where the chapter cannot be
+judged until somebody answers, a `flag` the approver reads first, a `suggestion`
+or `comment` otherwise. An open question is changes requested; none open says
+nothing is outstanding, which is not approval. It never edits the chapter and
+never approves or accepts: those are a person's decisions, taken in the host.
+With no host bound it prints each note as it would be posted and writes nothing.
 
-**Trigger keywords:** `sweep the annotations`, `clear resolved notes`,
-`delete the answered comments`, `sweep before merging`
+**Trigger keywords:** `review this chapter`, `review the change`,
+`is this chapter still accurate`
 
 ### Skills: `scenario-write`, `scenario-derive`, `scenario-run`
 
@@ -324,7 +325,6 @@ skills exist.
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the delivery path and layer beneath it, the adoption ladder, and the `tech/` boundary |
-| `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
 | `devbook-writing.md` | all five folders | How a chapter reads: full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, labelled lists, field lines, and short table cells where a passage enumerates, and a Mermaid diagram wherever a sequence, state, or structure is described |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
@@ -365,8 +365,8 @@ the session-start hook, and the skills that name one by path.
 A chapter carries no review state. A branch's devbook is true of its code, so a merged
 chapter is in force and nobody approves it afterwards. State exists for a change proposal, a
 decision record under discussion, and a debt record, and the host that runs the workflow
-keeps it outside git, per **Decisions and fingerprints** below. Open `annotation` fences say
-what is still asked, and who owes the next move lives in the pull request or the tracker.
+keeps it outside git, per **Decisions and fingerprints** below. Its review notes are comment
+threads there, and who owes the next move lives in the pull request or the tracker.
 Where each field went is "Moved to tooling" in `devbook-chapter-metadata.md`.
 
 ### Demo addresses
@@ -403,27 +403,13 @@ node .devbook/_tools/devbook-meta/build.mjs --print          # the documents as 
 node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
 ```
 
-The checker builds the reference graph, the reading outline, the open-note
-index, the term register, and the scenario register in memory and reports what
-does not resolve. It writes nothing unless
+The checker builds the reference graph, the reading outline, the term register,
+and the scenario register in memory and reports what does not resolve. It writes nothing unless
 asked with `--write`, and nothing in this plugin asks: the committed `_meta/`
 indexes are [`devbook-derived`](../devbook-derived)'s, and its refresh paths are
-what pass the flag. `--print` emits the same five documents per scope for a
-viewer that cannot import `graph.mjs`, `outline.mjs`, and `annotations-index.mjs`
-in-process.
-
-```bash
-node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .devbook/arc42/05-building-block-view.md#devbook-meta
-node .devbook/_tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
-node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
-node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug>
-```
-
-`annotations.mjs` is the only writer of an annotation fence — the CLI above and
-any in-process caller import the same functions, so nothing else edits a note
-with a regular expression of its own. Its edits are surgical, and it never
-commits. See `tools/devbook-meta/README.md` for the document shapes.
+what pass the flag. `--print` emits the same four documents per scope for a
+viewer that cannot import `graph.mjs` and `outline.mjs` in-process. See
+`tools/devbook-meta/README.md` for the document shapes.
 
 ```bash
 node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
@@ -639,8 +625,8 @@ migration. 20 lets a repository declare its own `status` ladder per folder, file
 block level in `.devbook/statuses.json`; a folder or block the file does not name takes the
 built-in ladder, so a repository without the file validates as before and no migration is
 owed. 21 removes the review triad — `review`, `reviewer`, `review-at` — from every folder: a
-review in progress is the chapter's rung plus its open annotation fences, and who owes the
-next move is the pull request's or the tracker's. A leftover field is an error naming the
+review in progress is the chapter's rung plus its open notes, and who owes the next move is
+the pull request's or the tracker's. A leftover field is an error naming the
 migration, and `021-no-review-triad` deletes it.
 22 gives `design/` its one `type`, `requirement`: a rule a component keeps or
 breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
@@ -680,7 +666,10 @@ chapter of what it draws — and a file typed `flow` is an error, so it ships
 `037-flows-in-their-chapters`. 38 takes workflow state out of the chapter — `status` and the
 decision rungs, `.devbook/statuses.json`, `sync`, `issue`, `effort`, `roadmap`, and `change`
 move to the host that runs the workflow or are dropped, and a rating becomes `rating` — so each
-is an error naming `038-workflow-state-leaves-the-chapter`, which deletes or renames it.
+is an error naming `038-workflow-state-leaves-the-chapter`, which deletes or renames it. The
+`annotation` fence retires with them: a review note is a comment thread in the host, a fence
+left in a chapter is an error the same migration deletes, open or resolved, and
+`annotations.json` is no longer written.
 
 ## Folder structure
 
@@ -690,7 +679,7 @@ After running `devbook:init`, a repository that adopted everything has:
 .devbook/
 ├── config.json                      # the stack config, with devbook's stamp
 ├── arc42/
-│   ├── _meta/{graph,index,annotations,naming,scenarios}.json   # devbook-derived's, where enabled
+│   ├── _meta/{graph,index,naming,scenarios}.json   # devbook-derived's, where enabled
 │   └── <chapter>.md
 ├── domain/
 │   ├── _meta/…
@@ -707,7 +696,7 @@ After running `devbook:init`, a repository that adopted everything has:
 │   ├── adoption-map.md
 │   ├── <nn>-<part>.md
 │   └── concepts.md
-├── _meta/{graph,index,annotations,naming,scenarios}.json   # the rollup, devbook-derived's
+├── _meta/{graph,index,naming,scenarios}.json   # the rollup, devbook-derived's
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
     ├── devbook-tech/                # deterministic package inventory scripts

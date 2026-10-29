@@ -20,9 +20,7 @@ import {
     slugify,
     documentNumber,
     isExtensionField,
-    parseAnnotations,
     proseLinks,
-    resolveAnnotation,
     changePathParts,
     isUnitRoot,
     parseFeed,
@@ -306,7 +304,10 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // deletes them; a `tech/` or `ai/` rating is `rating`, which the same migration
 // renames. `.devbook/statuses.json` is no longer read. A node carries `rating`
 // where it has one and no `status` or `statusDeclared`, and the summary counts
-// `nodesByRating`.
+// `nodesByRating`. The `annotation` fence retires with it: a review note is a
+// comment thread in that tool, a fence left in a chapter is an error the same
+// migration deletes, a node carries no `openNotes`, and `annotations.json` is
+// no longer written.
 export const CONTRACT_VERSION = 38;
 
 // The oldest contract a reconcile still carries forward. A migration lives
@@ -505,8 +506,8 @@ function applyMeta(node, meta, folder) {
 
 /**
  * A chapter's lede: its first paragraph or blockquote, joined to one line with
- * its inline Markdown kept as written. Fences — the `meta` block, an
- * `annotation`, a diagram — are stepped over, and the next heading ends the
+ * its inline Markdown kept as written. Fences — the `meta` block, a
+ * diagram — are stepped over, and the next heading ends the
  * search, so a chapter that opens straight into a sub-chapter has none.
  *
  * Read from the lines `buildGraph` already holds, so the term register gets
@@ -663,17 +664,6 @@ export async function buildGraph(repoRoot, folders = null) {
         anchors.set(relPath, fileAnchors(chapters));
         links.push(...proseLinks(raw).map((link) => ({ ...link, from: relPath })));
 
-        // Open notes per chapter, counted from the same read. Carrying the
-        // count on the node is what lets the canvas badge the chapters nobody
-        // has answered — and because the canvas imports this module, the live
-        // view and the committed graph.json can never disagree about it.
-        const openNotes = new Map();
-        for (const note of parseAnnotations(raw)) {
-            if (resolveAnnotation(note.fields).status !== "open") continue;
-            const key = note.chapter?.slug ?? null;
-            openNotes.set(key, (openNotes.get(key) ?? 0) + 1);
-        }
-
         const fileMeta = chapters.find((c) => c.level === 1)?.meta ?? null;
         docs.push({ relPath, raw, chapters, fileMeta });
         const fileNode = {
@@ -695,10 +685,6 @@ export async function buildGraph(repoRoot, folders = null) {
         // no metadata field can supply.
         const number = documentNumber(relPath, fileMeta);
         if (number !== null) fileNode.number = number;
-        // Omitted rather than emitted as 0, so adding this did not churn every
-        // node of every existing index.
-        const fileOpenNotes = [...openNotes.values()].reduce((a, b) => a + b, 0);
-        if (fileOpenNotes) fileNode.openNotes = fileOpenNotes;
         nodes.set(fileNode.id, fileNode);
 
         // The schema lint, over every block in the file at once. It is the only
@@ -780,7 +766,6 @@ export async function buildGraph(repoRoot, folders = null) {
             };
             applyMeta(node, chapter.meta, folder);
             if (isUnitRoot(relPath, "chapter", chapter.meta, chapter.level)) unitRoots.add(id);
-            if (openNotes.get(chapter.slug)) node.openNotes = openNotes.get(chapter.slug);
             nodes.set(id, node);
             const lede = chapterLede(lines, chapter.line);
             if (lede) ledes.set(id, lede);

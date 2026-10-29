@@ -56,9 +56,7 @@ import {
     changeHash,
     changePathParts,
     isDemoPath,
-    parseAnnotations,
     parseDocument,
-    resolveAnnotation,
     deltaHeaderIssues,
     folderKindForPath,
     parseDeltaHeader,
@@ -563,32 +561,13 @@ export async function changeFingerprint(repoRoot, name) {
     return change ? changeHash(change.proposal, change.deltas) : null;
 }
 
-/**
- * What stands against merging the change beyond its deltas: the change is one
- * review, so an open question anywhere in it — the proposal or any delta —
- * means it is not agreed.
- */
-export function openQuestionIssues(change) {
-    const issues = [];
-    for (const file of [{ path: `${CHANGES_ROOT}/${change.name}/proposal.md`, markdown: change.proposal }, ...change.deltas]) {
-        for (const note of parseAnnotations(file.markdown)) {
-            const fields = resolveAnnotation(note.fields);
-            if (fields.status !== "open" || fields.kind !== "question") continue;
-            issues.push({
-                severity: "error",
-                message: `${file.path} carries an open \`kind: question\` annotation (line ${note.line}) — the change is decided as one, so an open question anywhere in it means it is not agreed.`,
-            });
-        }
-    }
-    return issues;
-}
-
 // ── The gate ────────────────────────────────────────────────────────────────
 // Run after every delta has resolved and before anything is written. A change
 // merges only once it is accepted over its fingerprint as it stands — so
-// nothing was edited after the decision — and with no open question anywhere
-// in it. The acceptance is kept by the tool that runs the workflow, through
-// `devbook.decision@1`; the caller passes the fingerprint it was recorded at.
+// nothing was edited after the decision. The acceptance is kept by the tool
+// that runs the workflow, through `devbook.decision@1`, which refuses it while
+// a `question` note is open anywhere in the change; the caller asks the group
+// and passes the fingerprint the acceptance was recorded at.
 async function gateCheck(repoRoot, report, acceptedHash) {
     const change = await readChange(repoRoot, report.name);
     if (!change) return [];
@@ -600,7 +579,6 @@ async function gateCheck(repoRoot, report, acceptedHash) {
     } else if (String(acceptedHash).trim() !== current) {
         problems.push(refuse(`was accepted at ${acceptedHash}, and now fingerprints as ${current} — it changed after the decision. Decide it again.`));
     }
-    problems.push(...openQuestionIssues(change).map((issue) => refuse(issue.message)));
     return problems;
 }
 

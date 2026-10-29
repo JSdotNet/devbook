@@ -21,7 +21,7 @@ Does:
 Doesn't:
 
 - Implement anything
-- Load a devbook folder whole, or read annotation fences as content
+- Load a devbook folder whole
 - Write devbook chapters (drafting and spec-check do)
 - Adopt a folder (that's devbook:init or update)
 

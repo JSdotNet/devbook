@@ -6,13 +6,14 @@
 //   node migrate.mjs --root ../other-repo
 //
 // Idempotent by construction: the shape that must not be present is a `meta`
-// block holding one of the moved fields, or a `status` in `tech/` or `ai/`.
-// Once every one is deleted or renamed `rating`, nothing is left to see, which
-// is what makes re-running it safe.
+// block holding one of the moved fields, a `status` in `tech/` or `ai/`, or an
+// `annotation` fence. Once every one is deleted or renamed `rating`, nothing is
+// left to see, which is what makes re-running it safe.
 //
-// It writes no export file. Each host imports the state from the default
-// branch's Markdown with its own parser before this runs; the report lists
-// every value taken off so the person running it can check the import has it.
+// It writes no export file. Each host imports the state and the open notes
+// from the default branch's Markdown with its own parser before this runs; the
+// report lists every value and note taken off so the person running it can
+// check the import has it.
 //
 // Dependency-free ESM against node built-ins, self-contained so it reads the
 // Markdown as it stands rather than through a checker that no longer knows the
@@ -32,15 +33,36 @@ export const FOLDERS = ["domain", "arc42", "tech", "design", "ai"];
 
 // The checker's files contract 38 retired. Reconcile replaces a vendored copy
 // and never deletes one, so each would stay behind as an orphan — and the
-// three tests import what metadata.mjs no longer exports, so they fail where
-// anyone runs the folder's tests. Nothing reads any of them.
+// tests import what metadata.mjs no longer exports, so they fail where
+// anyone runs the folder's tests. Nothing reads any of them. The last four
+// went with the `annotation` fence.
 const TOOLS = ".devbook/_tools/devbook-meta";
-export const RETIRED_TOOL_FILES = ["statuses.mjs", "statuses.test.mjs", "accepted-rung.test.mjs", "status-optional.test.mjs", "sync-field.test.mjs"];
+export const RETIRED_TOOL_FILES = [
+    "statuses.mjs",
+    "statuses.test.mjs",
+    "accepted-rung.test.mjs",
+    "status-optional.test.mjs",
+    "sync-field.test.mjs",
+    "annotations.mjs",
+    "annotations-index.mjs",
+    "annotations.test.mjs",
+    "annotations-write.test.mjs",
+];
 
-/** The retired checker files still present, as repository paths. */
-export async function retiredToolFiles(root) {
+// The delivered rule for the fence and its two host wrappers. Reconcile
+// orphans a rule nothing ships any more and leaves it, and this one tells a
+// model to write a fence through a tool that is gone.
+export const RETIRED_RULE_FILES = [
+    ".agents/rules/devbook-annotations.md",
+    ".claude/rules/devbook-annotations.md",
+    ".github/instructions/devbook-annotations.instructions.md",
+];
+
+/** The retired checker and rule files still present, as repository paths. */
+export async function retiredFiles(root) {
     const found = [];
     for (const name of RETIRED_TOOL_FILES) if (await exists(path.join(root, ...TOOLS.split("/"), name))) found.push(`${TOOLS}/${name}`);
+    for (const rel of RETIRED_RULE_FILES) if (await exists(path.join(root, ...rel.split("/")))) found.push(rel);
     return found;
 }
 
@@ -166,6 +188,90 @@ export function rewrite(text, { rating = false, deltaHeader = false } = {}) {
     return { text: out.join(eol), blocks };
 }
 
+/** A fence closer: a bare run of the opener's character, at least as long. */
+const closes = (line, marker) => {
+    const m = /^(`{3,}|~{3,})\s*$/.exec(line.trim());
+    return m !== null && m[1][0] === marker[0] && m[1].length >= marker.length;
+};
+
+/** What a report line says about one note: its kind, status, author, and the start of its body. */
+function noteSummary(body) {
+    const fields = {};
+    let text = null;
+    for (const [index, line] of body.entries()) {
+        const m = /^\s*([A-Za-z][\w-]*)\s*:\s*(.*)$/.exec(line);
+        if (m && !(m[1] in fields)) {
+            fields[m[1]] = unquote(m[2].trim());
+            if (m[1] === "body" && /^[|>][+-]?$/.test(fields.body)) {
+                fields.body = (body.slice(index + 1).find((l) => l.trim() !== "") ?? "").trim();
+            }
+            continue;
+        }
+        if (text === null && line.trim() !== "" && !/^\s/.test(line)) text = line.trim();
+    }
+    const said = String(fields.body ?? text ?? "").trim();
+    return {
+        kind: fields.kind ?? "comment",
+        status: fields.status ?? "open",
+        author: fields.author ?? null,
+        body: said.length > 80 ? `${said.slice(0, 77)}...` : said,
+    };
+}
+
+/**
+ * Delete every top-level `annotation` fence, open or resolved, with the blank
+ * line it sat in, so the gap closes up. A fence inside another fence is that
+ * fence's content, and an unclosed one is left as it is.
+ *
+ * Returns the new text and, per fence, `{ heading, line, kind, status, author,
+ * body }` — what the report prints, since no export file is written.
+ */
+export function stripAnnotations(text) {
+    const eol = text.includes("\r\n") ? "\r\n" : "\n";
+    const lines = text.split(/\r?\n/);
+    const out = [];
+    const fences = [];
+    let heading = null;
+    for (let i = 0; i < lines.length; i++) {
+        const fence = /^(`{3,}|~{3,})(.*)$/.exec(lines[i].trim());
+        if (!fence) {
+            const h = /^#{1,6}\s+(.*)$/.exec(lines[i]);
+            if (h) heading = h[1].trim();
+            out.push(lines[i]);
+            continue;
+        }
+        let k = i + 1;
+        while (k < lines.length && !closes(lines[k], fence[1])) k++;
+        if (k >= lines.length) {
+            out.push(...lines.slice(i));
+            break;
+        }
+        // The whole info string, as the checker reads a fence: `annotation title`
+        // was never a note, so it is content and stays.
+        if (fence[2].trim().toLowerCase() !== "annotation") {
+            out.push(...lines.slice(i, k + 1));
+            i = k;
+            continue;
+        }
+        fences.push({ heading, line: i + 1, ...noteSummary(lines.slice(i + 1, k)) });
+        const blankBefore = out.length > 0 && out[out.length - 1].trim() === "";
+        const blankAfter = k + 1 >= lines.length || lines[k + 1].trim() === "";
+        if (blankBefore && blankAfter) out.pop();
+        // Two blocks the fence sat between stay two blocks.
+        else if (!blankBefore && !blankAfter && out.length > 0) out.push("");
+        // A fence that opened the file takes the blank line after it along.
+        else if (out.length === 0 && blankAfter && k + 1 < lines.length - 1) k++;
+        i = k;
+    }
+    return { text: out.join(eol), fences };
+}
+
+/** One report line per deleted fence. */
+export function describeFence(rel, fence) {
+    const by = fence.author ? ` by ${fence.author}` : "";
+    return `${rel}:${fence.line} (${fence.heading ?? "no heading"}): annotation, ${fence.kind} ${fence.status}${by} — "${fence.body}"`;
+}
+
 async function* markdownFiles(dir) {
     let entries;
     try {
@@ -238,9 +344,13 @@ export async function plan(root) {
     const results = [];
     for (const entry of files) {
         const original = await readFile(entry.file, "utf8");
-        const { text, blocks } = rewrite(original, entry);
-        if (!blocks.length) continue;
-        results.push({ rel: path.relative(root, entry.file).split(path.sep).join("/"), file: entry.file, text, blocks });
+        const rewritten = rewrite(original, entry);
+        // Report each fence at its line in the file as it stands, before `meta` lines come off.
+        const { fences } = stripAnnotations(original);
+        const { text } = stripAnnotations(rewritten.text);
+        const blocks = rewritten.blocks;
+        if (!blocks.length && !fences.length) continue;
+        results.push({ rel: path.relative(root, entry.file).split(path.sep).join("/"), file: entry.file, text, blocks, fences });
     }
     return results;
 }
@@ -261,14 +371,18 @@ async function main(argv) {
     const ROOT = path.resolve(rootIndex !== -1 ? argv[rootIndex + 1] : process.cwd());
 
     const results = await plan(ROOT);
-    const orphans = await retiredToolFiles(ROOT);
+    const orphans = await retiredFiles(ROOT);
     const verb = checkOnly ? "would take off" : "took off";
-    for (const result of results) for (const block of result.blocks) console.log(`- ${verb} ${describe(result.rel, block)}`);
-    for (const orphan of orphans) console.log(`- ${checkOnly ? "would delete" : "deleted"} ${orphan}, which the checker no longer ships`);
+    for (const result of results) {
+        for (const block of result.blocks) console.log(`- ${verb} ${describe(result.rel, block)}`);
+        for (const fence of result.fences) console.log(`- ${verb} ${describeFence(result.rel, fence)}`);
+    }
+    for (const orphan of orphans) console.log(`- ${checkOnly ? "would delete" : "deleted"} ${orphan}, which devbook no longer ships`);
     // A change's fingerprint covers its proposal and every delta, `meta`
     // blocks included, so a rewritten change no longer matches a decision a
-    // host imported at the old fingerprint.
-    const changes = [...new Set(results.filter((r) => r.rel.startsWith(`${CHANGES}/`)).map((r) => r.rel.split("/")[2]))];
+    // host imported at the old fingerprint. Its `annotation` fences are not
+    // part of it, so deleting one moves nothing.
+    const changes = [...new Set(results.filter((r) => r.blocks.length && r.rel.startsWith(`${CHANGES}/`)).map((r) => r.rel.split("/")[2]))];
     for (const name of changes) {
         console.log(`- ${CHANGES}/${name}/ fingerprints anew once rewritten: a decision a host imported at the old fingerprint is decided again`);
     }
@@ -284,14 +398,14 @@ async function main(argv) {
         process.exit(0);
     }
     if (checkOnly) {
-        console.log(`${ID}: ${results.length} file(s) to rewrite, ${orphans.length} retired checker file(s) to delete.`);
+        console.log(`${ID}: ${results.length} file(s) to rewrite, ${orphans.length} retired file(s) to delete.`);
         process.exit(1);
     }
     for (const result of results) await writeFile(result.file, result.text, "utf8");
     for (const orphan of orphans) await rm(path.join(ROOT, ...orphan.split("/")));
     console.log(
-        `${ID}: applied; rewrote ${results.length} file(s), deleted ${orphans.length} retired checker file(s). No export file was written: the values ` +
-        "above live on only in git history, so check that each host imported them from the default branch.",
+        `${ID}: applied; rewrote ${results.length} file(s), deleted ${orphans.length} retired file(s). No export file was written: the values ` +
+        "and notes above live on only in git history, so check that each host imported them from the default branch.",
     );
     process.exit(0);
 }

@@ -13,6 +13,7 @@ const check = (ok, name, detail) => {
 };
 
 const fence = (body) => "```meta\n" + body + "```\n";
+// A retired `annotation` fence, which the check now reports.
 const note = (body) => "```annotation\n" + body + "```\n";
 const find = (issues, severity, needle) =>
     issues.find((i) => i.severity === severity && i.message.includes(needle));
@@ -317,23 +318,26 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
-// --- an open question is the fence's own state ------------------------
+// --- the annotation fence is retired --------------------------------
 
-// A chapter carries no decision since contract 38, so the checker has nothing
-// an open question could contradict: the note is what the fence is for.
+// A review note is a comment thread in the host since contract 38, so a fence
+// left in a chapter is reported, open or resolved, naming the migration.
 {
     const question = "kind: question\nauthor: jobsc\ndate: 2026-09-02\nbody: Does this still hold?\n";
+    const body = (inner) =>
+        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\n")}\n${inner}\nProse.\n`;
 
-    const active = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\n")}\n${note(question)}\nProse.\n`
-    );
+    const active = validateDocument(".devbook/domain/ordering/domain.md", body(note(question)));
     check(
-        active.length === 0,
-        "an open question on a chapter is silent — that is what the fence is for",
+        active.length === 1 &&
+            find(active, "error", "038-workflow-state-leaves-the-chapter") &&
+            find(active, "error", "`annotation` fence at line 13"),
+        "an annotation fence is an error naming the migration that deletes it",
         dump(active)
     );
 
+    const quoted = validateDocument(".devbook/domain/ordering/domain.md", body("````text\n" + note(question) + "````\n"));
+    check(quoted.length === 0, "an annotation fence quoted inside another fence is that fence's content", dump(quoted));
 }
 
 // --- journey field scope ---------------------------------------------

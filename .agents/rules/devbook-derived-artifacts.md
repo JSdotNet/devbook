@@ -177,19 +177,18 @@ repository actually adopts, plus a repository-wide rollup:
 |---|---|---|---|
 | `.devbook/_meta/graph.json` | repository-wide | reference graph | devbook's `.devbook/_tools/devbook-meta/build.mjs --write` |
 | `.devbook/_meta/index.json` | repository-wide | ordered reading outline | same |
-| `.devbook/_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
 | `.devbook/_meta/naming.json` | repository-wide | term register, from `domain/`'s terms and aliases | same |
 | `.devbook/_meta/scenarios.json` | repository-wide | scenario register, from `domain/`'s `type: scenario` pages and the requirement cases pointing at their parts | same |
-| `.devbook/arc42/_meta/*.json` | `arc42/` | all five of the above, scoped | same |
-| `.devbook/domain/_meta/*.json` | `domain/` | all five of the above, scoped | same |
-| `.devbook/tech/_meta/*.json` | `tech/` | all five of the above, scoped | same |
-| `.devbook/design/_meta/*.json` | `design/` | all five of the above, scoped | same |
-| `.devbook/ai/_meta/*.json` | `ai/` | all five of the above, scoped | same |
+| `.devbook/arc42/_meta/*.json` | `arc42/` | all four of the above, scoped | same |
+| `.devbook/domain/_meta/*.json` | `domain/` | all four of the above, scoped | same |
+| `.devbook/tech/_meta/*.json` | `tech/` | all four of the above, scoped | same |
+| `.devbook/design/_meta/*.json` | `design/` | all four of the above, scoped | same |
+| `.devbook/ai/_meta/*.json` | `ai/` | all four of the above, scoped | same |
 | `.devbook/arc42/_meta/c4/<view key>.svg` | `arc42/` | one picture per view of `workspace.dsl` | devbook-derived's `.devbook/_tools/c4-render/render.mjs` |
 
-`annotations.json` is derived like the others: the notes themselves are
-authored Markdown in the chapters, so deleting this file loses nothing. Write a
-note with `annotations.mjs`, never into this index.
+`annotations.json`, the open-note index, is no longer written: a review note is a comment
+thread in the host since contract 38, and `build.mjs --write` deletes a copy an earlier
+release left behind.
 
 `scenarios.json` is the one register of journeys: a reader lists them by address, with their
 parts, their screenshot labels, their setup fields, and the requirements each part proves,
