@@ -3284,8 +3284,16 @@ const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
  * its address and not a word of what was read.
  *
  * `line` is the block's 1-based heading line, as `parseDocument` reports it.
+ *
+ * The text hashed is `chapterText`, so a host recomputing the value per
+ * `resources/chapter-fingerprint.md` can compare the text before the hash.
  */
 export function chapterHash(markdown, line = 1) {
+    return digest(chapterText(markdown, line));
+}
+
+/** The normalised text `chapterHash` digests. */
+export function chapterText(markdown, line = 1) {
     const lines = markdown.split(/\r?\n/);
     const { chapters } = parseDocument(markdown);
 
@@ -3300,10 +3308,9 @@ export function chapterHash(markdown, line = 1) {
     }
 
     const heading = /^#{1,6}\s+(.*)$/.exec(lines[start] ?? "");
-    const normalised = [heading ? heading[1] : "", hashedText(lines, start + 1, end, ["meta", "annotation"])]
+    return [heading ? heading[1] : "", hashedText(lines, start + 1, end, ["meta", "annotation"])]
         .filter((entry) => entry !== "")
         .join("\n");
-    return digest(normalised);
 }
 
 const digest = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex").slice(0, 8)}`;
@@ -3379,8 +3386,15 @@ export function demoFingerprintText(text) {
  * recorded before demos existed changes value.
  */
 export function chapterFingerprint(relPath, markdown, line = 1, demoText = null) {
-    const base = chapterHash(markdown, line);
-    if (!demoText) return base;
+    return digest(chapterFingerprintText(relPath, markdown, line, demoText));
+}
+
+/**
+ * The text `chapterFingerprint` digests: `chapterText` for a block with no
+ * demo, else the block's `chapterHash` followed by each demo it folds in.
+ */
+export function chapterFingerprintText(relPath, markdown, line = 1, demoText = null) {
+    if (!demoText) return chapterText(markdown, line);
     const { chapters } = parseDocument(markdown);
     const index = chapters.findIndex((entry) => entry.line === line);
     const level = index === -1 ? 1 : chapters[index].level;
@@ -3401,7 +3415,7 @@ export function chapterFingerprint(relPath, markdown, line = 1, demoText = null)
         const text = demoText(demoPath);
         if (text != null) demos.push(`${demoPath}\n${demoFingerprintText(text)}`);
     }
-    return demos.length ? digest([base, ...demos].join("\n")) : base;
+    return demos.length ? [chapterHash(markdown, line), ...demos].join("\n") : chapterText(markdown, line);
 }
 
 /** Lines `from` to `end`, minus the fences labelled in `dropped`, whitespace-normalised. */
@@ -3448,6 +3462,11 @@ function hashedText(lines, from, end, dropped) {
  * `{ target, markdown }`, in any order.
  */
 export function changeHash(proposalMarkdown, deltas) {
+    return digest(changeText(proposalMarkdown, deltas));
+}
+
+/** The text `changeHash` digests. */
+export function changeText(proposalMarkdown, deltas) {
     const parts = [chapterHash(proposalMarkdown, parseDocument(proposalMarkdown).chapters.find((c) => c.level === 1)?.line ?? 1)];
     for (const delta of [...deltas].sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0))) {
         if (isDemoPath(delta.target)) {
@@ -3457,7 +3476,7 @@ export function changeHash(proposalMarkdown, deltas) {
         const lines = delta.markdown.split(/\r?\n/);
         parts.push(`${delta.target}\n${hashedText(lines, 0, lines.length, ["annotation"])}`);
     }
-    return digest(parts.join("\n"));
+    return parts.join("\n");
 }
 
 /**
