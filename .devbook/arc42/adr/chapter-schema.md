@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-10-08
+date: 2026-10-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.devbook.chapter", "marketplace.devbook.meta-block", "marketplace.devbook.devbook-folder"]
 c4-touches: ["marketplace.devbook-collaboration.approval", "marketplace.devbook-collaboration.acceptance"]
@@ -225,16 +225,15 @@ invent kinds heading level already carries. Nothing written under 21 stops valid
 migration is owed.
 
 **A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
-`model.md`, and
-`flow.md` each grow with the context, and a reader looking for one aggregate should not have
-to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
-`features.checkout.md`, `model.order.md`, `flow.flow-code.md` — holds one chapter of the file
+and `model.md` each grow with the context, and a reader looking for one aggregate should not
+have to load every aggregate to find it. `<file>.<name>.md` — `domain.order.md`,
+`features.checkout.md`, `model.order.md` — holds one chapter of the file
 it is named after, carries that file's `type`, and keeps the chapter's heading and block as
 they stood, so the address changes and nothing else does. The generator reads a split file
 directly after its base, or in the base's slot when every chapter has moved out; `domain.md`
 alone can never be dropped, because it holds the shared groupings that belong to no single
-aggregate, and `context.md` does not split, because it is the root and small by construction. Flows split first, on 2026-09-08; the other
-four followed once the same pressure showed up in `domain.md`. A split file is a new path with
+aggregate, and `context.md` does not split, because it is the root and small by construction. Flows split first, on 2026-09-08, until contract 37 retired the flow
+page; the others followed once the same pressure showed up in `domain.md`. A split file is a new path with
 a safe default — an unsplit context reads exactly as before — so it ships no migration.
 
 **A term is a chapter or an alias.** Twenty-eight of seventy-three terms in a `naming.md` were
@@ -357,21 +356,30 @@ a privilege into the record on the strength of the code that leaked it. The acto
 the whole unit: the `## Rights` matrix is the file's, read per actor column, and a rule about
 rights is a requirement its feature owns. Contract 28, additive, no migration.
 
-**A diagram is a view, not a unit.** `model.md`, `flow.md`, and their splits draw what other
-chapters claim. A class diagram's ownership, cardinalities, and id-only references are the
-aggregate's consistency boundary and relationships. A state machine is the aggregate's
-lifecycle, which the aggregate kind already verifies transition by transition. A sequence
-across aggregates is a domain service's coordination or a feature's requirement, proved by its
-unit or e2e test. A `flow.<name>.md` beside a skill is the other half of that skill's chapter.
-A `flow` kind would give each of those claims a second owner and so two verdicts for one
-transition, which the sync unit's roll-up could settle only by joining the flow to every
-aggregate it walks: a group that grows with the diagram rather than with the rule, and the
-merge the feature unit was kept out of for the same reason. So neither file has a converter
-kind, a sync unit, or a place for `sync`; their `##` sections keep no blocks, and a sweep
-reads them as context and never writes them. The cost is that a diagram can go stale beside a
-chapter that is right: no verdict reports it, and `prose-check` skips Mermaid fences. Closing
-that is a reading change — a unit's verify pass loading the diagrams that name it — and never
-a kind.
+**A diagram is a view, not a unit.** `model.md` and its splits draw what other chapters claim.
+A class diagram's ownership, cardinalities, and id-only references are the aggregate's
+consistency boundary and relationships, so a `model` kind would give each claim a second owner
+and two verdicts, settled only by joining the diagram to every aggregate it draws: a group that
+grows with the diagram rather than with the rule. So `model.md` has no converter kind, no sync
+unit, and no place for `sync`; its `##` sections keep no blocks, and a sweep reads it as
+context and never writes it. The cost is that a diagram can go stale beside a chapter that is
+right: no verdict reports it, and `prose-check` skips Mermaid fences.
+
+**A flow opens the chapter of what moves.** The flow page drew the same claims one step
+further away. A state machine is the aggregate's lifecycle, which the aggregate kind already
+verifies transition by transition; a process is a domain service's coordination or a feature's
+requirement, proved by its unit or e2e test; a skill's flow was by rule the other half of the
+skill's chapter. On the page, the picture of a lifecycle sat one file over from the prose that
+retold it, and none of its sections had an address. From contract 37 there is no flow page: a
+diagram sits directly under the `meta` block of the chapter it draws, ahead of the prose, and
+the prose keeps only what the picture cannot say. That chapter's kind now reads the diagram
+with the rest of the unit, which closes the staleness the page left open, and a process no
+chapter owns surfaces as the missing domain service it usually is. A sequence whose
+participants are building blocks goes to arc42's runtime view, per `devbook-domain.md`.
+Across the two consuming repositories, 54 diagrams on 27 pages had a chapter to go to.
+`037-flows-in-their-chapters` moves each section where the page says it belongs and asks the
+person running `devbook:update` about the rest, rerunning with their answers until no page is
+left.
 
 ## Rejected
 
@@ -407,7 +415,12 @@ a kind.
   can confirm; the `## Rights` matrix as a unit of its own, which would split one actor's rights
   from the actor; and a policy or client chapter type beside the actor, a second record of who.
 - A `flow` kind, whether its own unit or joined to the aggregates it walks; a `model` kind;
-  `sync` on `model.md`, `flow.md`, or their splits.
+  `sync` on `model.md` or its splits.
+- Keeping the flow page and linking each section from its chapter, which keeps the picture one
+  file away from the words; a `## Flows` grouping in `context.md`, which moves the page without
+  placing a diagram; folding the flow page into arc42's runtime view, where a lifecycle drawn
+  in domain terms has no building block to sit under; leaving the move to a hand edit after a
+  report, since a section whose page names its chapter is a script.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -426,6 +439,7 @@ a kind.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-28 | `domain/`'s flow page is retired: `flow.md` and every `flow.<name>.md`. A diagram opens the chapter of what it draws, under its `meta` block and ahead of its prose; a file typed `flow` is an error. Contract 37, `037-flows-in-their-chapters`, which moves each section and asks the person about the ones its page does not place. | Pictures before words: the lifecycle drawn one file away left the chapter retelling it, and every claim a flow drew already had a chapter. |
 | 2026-10-22 | A `feature` or `sub-feature` chapter may carry `playthrough`, the demo walkthrough its page shows playing a whole journey end to end, and a `demo-model` walkthrough may be that playthrough, with `journey` and a `part` and `step` per step. Contract 36, no migration: both are added fields with a safe default. | The page needed one place to say which walk to show, read where the checker and the index already read. |
 | 2026-10-22 | An `ai/` chapter is placed on the seven-stage delivery path — `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate` — or on the `thread`, `upkeep`, or `harness` layer beneath it, with `substage`, `feeds`, `evidence`, and a **Moves up when** bullet on a `trial` or `candidate` chapter. The eight loop words are errors. Contract 35, `035-delivery-path-stages`, which maps the loop's words onto the path and adds none of the new fields. | The loop's words placed a usage by tool lifecycle; the path places it by the question the work answers, and the layers hold what runs under every stage. |
 | 2026-10-20 | A journey is a `##` chapter typed `scenario` in its bounded context's `scenarios.md` or a split `scenarios.<name>.md`, its `###` parts owing no block; a whole file typed `scenario` is an error. Addressed `<scenarios file>#<journey>`, so features and requirements point at it through `related`; every journey and part anchor is unique in its file, retiring the stem register; `Proved by:` names `<scenarios file>#<part>` from the requirement's folder, `scenario:` images name the file from `.devbook/domain/`, and runs sit beside the file. Contract 32, `032-scenarios-md`; the signature's canonical text is unchanged. | — |

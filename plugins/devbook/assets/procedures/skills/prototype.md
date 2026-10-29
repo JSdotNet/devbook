@@ -44,7 +44,7 @@ A question that is both is two prototypes.
 
 | Source | Where | Take from it |
 | --- | --- | --- |
-| Domain model | `.devbook/domain/<context>/` — `domain.md`, its `domain.invariants.md`, `flow.md`, the ubiquitous language | states, events, and invariants, named as the chapter names them (logic); the actors, flags, and settings `demo-model` keys by (UI) |
+| Domain model | `.devbook/domain/<context>/` — `domain.md` with the diagram that opens each chapter, its `domain.invariants.md`, the ubiquitous language | states, events, and invariants, named as the chapter names them (logic); the actors, flags, and settings `demo-model` keys by (UI) |
 | Requirements | `.devbook/domain/<context>/requirements.md` | the `#### Scenario:` a free walkthrough plays, and its slug |
 | Journeys | `.devbook/domain/<context>/scenarios.md`, each `##` typed `scenario`; `node .devbook/_tools/scenarios/signature.mjs <scenarios.md>#<journey>` | the part a linked walkthrough shows, or the whole journey a playthrough plays; its steps' English text, and the journey signature |
 | Demo template | `.devbook/design/demo-template.html` | the managed region, copied byte for byte; the comment opening it is the authoring reference (UI) |
@@ -130,7 +130,7 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
   the happy path first, then each edge case, the one that settles the question last.
 - Styled plainly; the template and design system are optional here.
 - **The file is never carried into a proposal.** It is code. Its answer lands as a delta to
-  `domain.md`, `flow.md`, or an invariants subpage, through `flow-spec`.
+  `domain.md` or an invariants subpage, through `flow-spec`.
 
 ## Deliver
 
@@ -138,7 +138,7 @@ when one context's screens outgrow one file. Past 500 KB is allowed; say the siz
 - **The answer, one line, first**, for whoever asked — never written into the file. Then where it
   lands: a UI answer as the file itself, carried into `domain/` as a demo with one variant — in a
   `flow-spec` pull request or by a proposal, its author's choice; a
-  logic answer as a delta to `domain.md`, `flow.md`, or an invariants subpage; or nowhere, the
+  logic answer as a delta to `domain.md` or an invariants subpage; or nowhere, the
   file kept as evidence of what was tried. A person decides; the answer is a proposal until they do.
 - Then the path, the size, the screens or walkthroughs shown, per convention the guideline,
   token, or story it came from, every convention guessed, and — for a revision or a trim — the

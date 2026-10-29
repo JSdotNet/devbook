@@ -52,15 +52,14 @@ across `domain/`, ADRs, and code module names where practical.
                      # requirements, one per ##, its ### headings the parts
     scenarios/       # the runs of scenarios.md's journeys, one folder each
     model.md
-    flow.md          # optional: when the context has lifecycle/process flows
     dependencies.md  # optional: the dependencies, once context.md is too
                      # small for them
     domain.<name>.md        # optional: one chapter split out of the file it
     features.<name>.md      #   is named after — an aggregate or domain
     skills.<name>.md        #   service, a feature, a skill, one feature's
-    requirements.<name>.md  #   requirements, one aggregate's structure, one
-    model.<name>.md         #   flow — when it is large enough or read often
-    flow.<name>.md          #   enough to stand alone. See "A split file" below.
+    requirements.<name>.md  #   requirements, or one aggregate's structure —
+    model.<name>.md         #   when it is large enough or read often enough
+                            #   to stand alone. See "A split file" below.
     domain.<name>.invariants.md  # what the aggregate on domain.<name>.md
                                  # enforces, beside it
     scenarios.<name>.md     # optional: the journeys of one subject, split out
@@ -72,8 +71,7 @@ across `domain/`, ADRs, and code module names where practical.
 
 When starting a new bounded context, create the folder with `context.md`,
 `domain.md`, `model.md`, one of `features.md` or `skills.md`, and
-`requirements.md` and `domain.invariants.md`, using the templates below. Add
-`flow.md` when the context has lifecycle or process flows, and split
+`requirements.md` and `domain.invariants.md`, using the templates below. Split
 `actors.md` or `dependencies.md` out of `context.md` only when it has grown
 past what one file reads well with.
 
@@ -152,6 +150,25 @@ subpage of the domain page its aggregate is on. Each behaviour
 chapter points back at the chapter it belongs to through `related`, and that
 chapter points at it, so either half is reachable from the other.
 
+**A flow opens the chapter of what moves; there is no flow page.** A diagram
+sits directly under the `meta` block of the chapter it draws, before any prose,
+and the prose after it says only what the picture cannot: why, the edge a reader
+would miss, which state is persisted. What moves decides the chapter:
+
+| The diagram draws | It opens |
+|---|---|
+| One aggregate's or entity's states | That aggregate's or entity's chapter on its domain page |
+| A process one capability runs, or a value it derives | The domain service that owns it, else the feature or skill |
+| How the context's processes hand over to one another | `context.md`, after the boundary |
+| A path across contexts | `context-map.md` |
+| A sequence whose participants are building blocks, not domain terms | `arc42/`: the runtime view, or the block's `## Runtime` |
+
+A rule a transition enforces stays an invariant or a requirement, and the note
+under the diagram links to it instead of restating it. A chapter holding two
+diagrams heads each with a bold line naming it. A process no chapter owns is a
+modelling question — usually a missing domain service — settled before the
+diagram is placed.
+
 **Invariants are a subpage of their domain page.** `domain.invariants.md` holds
 the rules of the aggregates and domain services on `domain.md`, and
 `domain.order.invariants.md` those of the aggregate on a split `domain.order.md`.
@@ -228,14 +245,13 @@ separate glossary file: a registry that names what the model already names is a
 second copy, and it goes stale on the side nobody reads.
 
 **A split file holds one chapter of the file it is named after.** `domain.md`,
-`features.md` or `skills.md`, `requirements.md`, `scenarios.md`, `model.md`, and
-`flow.md` each split the same way:
+`features.md` or `skills.md`, `requirements.md`, `scenarios.md`, and `model.md`
+each split the same way:
 `<file>.<name>.md`, where the suffix is the kebab-case name of the one thing the
 file holds — `domain.order.md` is the `## Order` aggregate with everything it
 owns, `features.checkout.md` one feature with its sub-features,
 `requirements.checkout.md` one feature's requirements with their scenarios,
-`model.order.md` one aggregate's structure, `flow.flow-code.md` one flow, named after the skill it
-belongs to. `scenarios.<name>.md` is the one split that may hold several chapters:
+and `model.order.md` one aggregate's structure. `scenarios.<name>.md` is the one split that may hold several chapters:
 the journeys of one subject, often one feature's — `scenarios.returns.md` — since a
 journey is a whole walk and a subject reads as several. A split file carries the `type` of the file it came from, because it
 is the same kind of document at a smaller scope, and its chapter reads exactly as
@@ -245,8 +261,8 @@ rather than for the context; keep the base file for the chapters still better
 read together. An invariants subpage is not a split file: it follows its page,
 so `domain.order.md` brings `domain.order.invariants.md` with it and
 `domain.invariants.md` keeps only the rules of what stayed on `domain.md`.
-`features.md`, `skills.md`, `requirements.md`, `scenarios.md`, `model.md`, and
-`flow.md` may be dropped once every chapter is split out, and `domain.invariants.md` once no
+`features.md`, `skills.md`, `requirements.md`, `scenarios.md`, and `model.md`
+may be dropped once every chapter is split out, and `domain.invariants.md` once no
 aggregate left on `domain.md` has a rule; `domain.md` never is, because it holds
 what belongs to no single aggregate — the `## Shared Value Objects`,
 `## Shared Enums`, and `## Ubiquitous Language` groupings — and `context.md`
@@ -254,8 +270,8 @@ does not split at all, because it is the root document and what it holds is
 small by construction. A split chapter moves rather than copies: `## Order` lives at
 `domain.order.md#order` and nowhere else in the context. Wherever a rule or a
 skill names `domain.md`, `features.md`, `skills.md`, `requirements.md`,
-`scenarios.md`, `model.md`, or `flow.md`, it means that file or any split file of
-it; wherever
+`scenarios.md`, or `model.md`, it means that file or any split file of it;
+wherever
 one names the invariants subpage, it means `domain.invariants.md` or any
 `domain.<name>.invariants.md`.
 
@@ -303,7 +319,7 @@ filenames. `context-map.md` is `domain/`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `context.md` is the root document and the rest read in the order listed in the
 tree above — `domain.md`, `actors.md`, `skills.md` or `features.md`,
-`requirements.md`, `scenarios.md`, `model.md`, `flow.md`, `dependencies.md` — with a split file
+`requirements.md`, `scenarios.md`, `model.md`, `dependencies.md` — with a split file
 read directly after the file it is named after, in filename order among its
 siblings, and in that file's place when the file itself is gone. An invariants
 subpage reads directly after its page: `domain.md`, `domain.invariants.md`,
@@ -343,7 +359,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     context keeps them here.
   - A structural `## Dependencies` section, last, holding the tables
     `dependencies.md` describes, when the context keeps them here. It carries
-    no metadata block, like `flow.md`'s sections.
+    no metadata block, like `model.md`'s sections.
 - **domain.md** — One chapter per Aggregate, Domain Service, Domain Event, or
   Shared Value Objects / Shared Enums grouping in the context.
   - Aggregate chapters include sub-chapters for their owned Entities, Value
@@ -413,8 +429,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Group a skill's own stages or modes under it as sub-chapters; do not give a
     stage a chapter of its own at `##` level.
   - Describe what the skill lets someone do and what it guarantees, not how it
-    is implemented. Where it needs a diagram, that belongs in `flow.md` or in
-    its own `flow.<skill-name>.md`.
+    is implemented. The diagram of how it moves opens its chapter.
 - **requirements.md** — What the context's features guarantee, one chapter per
   feature. Each `## <Feature>` chapter carries `type: requirements` and a
   `related` reference to the feature chapter in `features.md` or `skills.md`;
@@ -482,22 +497,12 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     never copied under each; `Enforced at:` names the type.
 - **model.md** — The structural domain model: relationships between
   aggregates, entities, and value objects, ideally as a Mermaid class diagram,
-  plus relationship notes. Lifecycle/process flows live in `flow.md`, not
-  here.
-- **flow.md** — Lifecycle and process flows for the context (state machines,
-  sequence diagrams, flowcharts) — how aggregates move through their states and
-  how work moves across the context over time. Moved out of `model.md` so
-  `model.md` stays purely structural. Include only when the context actually
-  has a flow. Its `##` sections do not carry metadata blocks.
+  plus relationship notes. A lifecycle or process opens the chapter of what
+  moves, not here.
 - **<file>.<name>.md** — One chapter split out of `domain.md`, `features.md`,
-  `skills.md`, `requirements.md`, `model.md`, or `flow.md`,
-  under the rules of that file: a
-  `domain.<name>.md` chapter and its sub-chapters carry their blocks, a
-  `model.<name>.md` or `flow.<name>.md` carries only the file-level one. Where
-  a `flow.<name>.md` belongs to a skill, the file and that skill's chapter in
-  `skills.md` are two halves of one subject — the chapter says what it does,
-  the flow file draws how it moves — and each carries a `related` reference to
-  the other.
+  `skills.md`, `requirements.md`, or `model.md`, under the rules of that file:
+  a `domain.<name>.md` chapter and its sub-chapters carry their blocks, a
+  `model.<name>.md` carries only the file-level one.
 - **dependencies.md** — Outbound dependencies on other bounded contexts or
   modules, and known inbound dependents. The tables live under
   `## Dependencies` in `context.md` until they outgrow it; this file exists
@@ -540,12 +545,12 @@ instructions.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
   `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
   `skills.md`, `requirements.md`, `scenarios.md` (when present), `model.md`,
-  `flow.md`, `dependencies.md` (when present), each split file and invariants
+  `dependencies.md` (when present), each split file and invariants
   subpage (when present), and any additional page the context carries
   — must also carry the file-level metadata
   block described in `devbook-chapter-metadata.md`, placed directly under the
   file's top-level `#` heading. This applies even to `context-map.md`,
-  `model.md`, `flow.md`, their split files, `dependencies.md`, and any
+  `model.md`, its split files, `dependencies.md`, and any
   additional page, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
@@ -579,7 +584,7 @@ instructions.
   | Level | Values |
   |---|---|
   | Chapter | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
-  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `flow`, `dependencies` — or, for an additional page, its own filename |
+  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies` — or, for an additional page, its own filename |
 
   `requirements` and `invariants` are each in both sets, and mean the same
   thing at both levels: the file holds a context's, a `##` chapter holds one
@@ -632,10 +637,9 @@ instructions.
   entry with nothing to tell them apart. `context.md` alone is titled by the
   bounded-context name (`# Order Management`), because the context is what it
   holds. Every other base file is titled by its kind — `# Domain`, `# Actors`,
-  `# Features`, `# Skills`, `# Scenarios`, `# Model`, `# Flows`, `# Dependencies` — and a
+  `# Features`, `# Skills`, `# Scenarios`, `# Model`, `# Dependencies` — and a
   split file by the chapter it holds: `domain.order.md` and `model.order.md`
-  are `# Order`, `features.checkout.md` is `# Checkout`, and a
-  `flow.<name>.md` takes the flow's name. The chapter keeps its `##` heading
+  are `# Order`, and `features.checkout.md` is `# Checkout`. The chapter keeps its `##` heading
   and block exactly as they stood in the file it came from. A page the
   convention does not name is titled by its subject. Write the title in the
   language the folder is written in: `# Actoren` is `# Actors`.
@@ -977,7 +981,11 @@ type: aggregate
 related: [.devbook/domain/<context>/domain.invariants.md#<aggregate-heading-slug>]
 \`\`\`
 
-Responsibility, lifecycle, and why this aggregate exists as a consistency
+\`\`\`mermaid
+<stateDiagram-v2 of its lifecycle, when it has more than one state>
+\`\`\`
+
+Responsibility, and why this aggregate exists as a consistency
 boundary. The rules it guarantees are not here: they are `### Invariant:`
 chapters under `## <AggregateName>` in `domain.invariants.md`, which `related`
 above points at.
@@ -1018,6 +1026,10 @@ Values and what each one means in business terms.
 \`\`\`meta
 status: draft
 type: domain-service
+\`\`\`
+
+\`\`\`mermaid
+<flowchart or sequenceDiagram of the process it runs>
 \`\`\`
 
 Responsibility of the service, which aggregates/policies it coordinates, and
@@ -1228,6 +1240,10 @@ setting: [.devbook/domain/<context>/context.md#<setting-heading-slug>]
 related: [.devbook/domain/<context>/requirements.md#<feature-heading-slug>]
 \`\`\`
 
+\`\`\`mermaid
+<flowchart of the process it runs, when no domain service owns it>
+\`\`\`
+
 Short description of the capability and the business value it delivers. What it
 guarantees is not here: those are `### Requirement:` chapters under the matching
 `## <FeatureName>` chapter in `requirements.md`, which `related` points at.
@@ -1272,7 +1288,10 @@ type: skills
 \`\`\`meta
 status: draft
 type: feature
-related: [.devbook/domain/<context>/flow.<skill-name>.md]
+\`\`\`
+
+\`\`\`mermaid
+<flowchart of its stages, when it has more than one>
 \`\`\`
 
 What the skill does for whoever runs it, what it guarantees, and where it
@@ -1477,32 +1496,6 @@ classDiagram
   object reference).
 ```
 
-### flow.md
-
-```markdown
-# Flows
-
-\`\`\`meta
-status: draft
-type: flow
-\`\`\`
-
-> Lifecycle and process flows for this bounded context: how aggregates move
-> through their states and how work moves across the context over time.
-> Complementary to `model.md` (structure) and `domain.md`
-> (responsibilities/invariants).
-
-## <Flow Name>
-
-\`\`\`mermaid
-<mermaid state/sequence/flow diagram>
-\`\`\`
-
-- Optional notes: transitions, emitted events, and which state is persisted
-  vs. which is a workflow-only phase.
-```
-
-
 ### <file>.<name>.md
 
 One chapter split out of its file, under that file's template: the file-level
@@ -1513,31 +1506,7 @@ template under a `type: domain` file block; `features.checkout.md` and
 `skills.<skill-name>.md` the same for one feature or skill;
 `requirements.checkout.md` one feature's `## <FeatureName>` chapter with its
 `### Requirement:` chapters under a `type: requirements` file block;
-`model.order.md`
-the `model.md` template narrowed to one aggregate. A `flow.<name>.md`:
-
-```markdown
-# <Flow Name>
-
-\`\`\`meta
-status: draft
-type: flow
-related: [.devbook/domain/<context>/skills.md#<skill-name>]
-\`\`\`
-
-> One flow: <what moves, and from where to where>. Structure is in
-> [model.md](model.md); what the skill does is in
-> [skills.md](skills.md#<skill-name>).
-
-## <Flow Name>
-
-\`\`\`mermaid
-<mermaid state/sequence/flow diagram>
-\`\`\`
-
-- Optional notes: transitions, emitted events, and which state is persisted
-  vs. which is a workflow-only phase.
-```
+and `model.order.md` the `model.md` template narrowed to one aggregate.
 
 ### dependencies.md
 

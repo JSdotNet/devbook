@@ -351,7 +351,6 @@ const TYPE_BY_FOLDER = {
             "invariants",
             "scenarios",
             "model",
-            "flow",
             "dependencies",
         ],
     },
@@ -815,6 +814,10 @@ const FOLDER_EXTRA_FIELDS = {
     ai: ["depends-on", "stage", "substage", "layer", "feeds", "evidence"],
     [CHANGES_FOLDER]: ["category", ...DECISION_FIELDS],
 };
+
+// The flow page of `domain/`, retired by contract 37: a diagram opens the
+// chapter of what it draws. Named only to point at the migration.
+const RETIRED_FLOW_TYPE = "flow";
 
 // The DevOps loop's words, retired by contract 35; named only to point at the migration.
 const LOOP_WORDS = ["plan", "build", "test", "deploy", "monitor"];
@@ -1568,6 +1571,13 @@ export function typeIssues(folder, blockLevel, meta, fileBase = null) {
                 message: `has type "${SCENARIO_TYPE}" on its file-level block — a journey page is the shape before contract 32; a journey is now a \`##\` of the context's scenarios.md. Run the \`032-scenarios-md\` migration.`,
             });
         }
+        return issues;
+    }
+    if (folder === "domain" && blockLevel === "file" && declared === RETIRED_FLOW_TYPE) {
+        issues.push({
+            severity: "error",
+            message: `has type "${RETIRED_FLOW_TYPE}", a flow page — retired by contract 37: each diagram opens the chapter of what it draws. Run the \`037-flows-in-their-chapters\` migration.`,
+        });
         return issues;
     }
     if (allowed.length) {
@@ -2375,7 +2385,7 @@ const STRUCTURAL_ROOT_FILES = {
     tech: "technology-graph.md",
     ai: "adoption-map.md",
 };
-const STRUCTURAL_DOMAIN_BASES = ["model", "flow", "dependencies"];
+const STRUCTURAL_DOMAIN_BASES = ["model", "dependencies"];
 
 /**
  * Whether this document's headings are sections rather than chapters, so a

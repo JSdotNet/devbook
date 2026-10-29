@@ -61,8 +61,8 @@ artifacts:
       `.devbook/domain/<context>/features.demo.html` — trimmed to the one
       variant agreed, with its screen ids and anchors kept. It has no meta
       block and no sections, and the merge replaces its target whole. A logic
-      prototype is never copied in: its answer is a delta to domain.md,
-      flow.md, or an invariants subpage. Never edit a demo here; a revision is
+      prototype is never copied in: its answer is a delta to domain.md or
+      an invariants subpage. Never edit a demo here; a revision is
       a new prototype of the current demo.
 
       A change with no prose delta still writes one: a placeholder holding only

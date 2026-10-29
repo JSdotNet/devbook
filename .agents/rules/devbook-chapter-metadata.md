@@ -38,7 +38,7 @@ already treat as an addressable unit:
 - `.devbook/ai/<nn>-<part>.md` and `.devbook/ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
-- `domain/` `context-map.md`, `model.md`, `flow.md`, their split files,
+- `domain/` `context-map.md`, `model.md`, its split files,
   `dependencies.md`, and any additional page a context carries, `tech/`
   `technology-graph.md`, and `ai/` `adoption-map.md` are strategic/structural
   artifacts; their `##` sections do **not** carry per-chapter metadata blocks,
@@ -123,7 +123,7 @@ In addition to per-chapter blocks, every file in `domain/`, `arc42/`,
 describing the document as a whole. This gives the tooling a
 status/relations rollup for the
 file itself, distinct from the status of any individual chapter inside it —
-useful for files such as `domain/` `context-map.md`, `model.md`, `flow.md`,
+useful for files such as `domain/` `context-map.md`, `model.md`,
 and `dependencies.md`, whose `##` sections don't carry their own per-chapter
 blocks.
 
@@ -377,7 +377,7 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `scenario`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `flow`, `dependencies`, or an additional page's own filename |
+  | `domain/` | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `scenario`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies`, or an additional page's own filename |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format`, `plugin`, `skill`, `agent` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
   | `design/` | `requirement` | none |
@@ -985,7 +985,7 @@ Per directory, `_meta/index.json` is generated like this:
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
    `domain/`'s `domain` → `actors` → `skills` → `features` → `model` →
-   `flow` → `dependencies`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
+   `dependencies`, `design/`'s principles-then-tokens run, `tech/`'s `shared.md`
    first and `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by

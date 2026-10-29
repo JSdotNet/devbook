@@ -296,7 +296,11 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // fingerprint. A playthrough that skips a part, or whose journey does not name
 // the feature, is warned. Both are added fields with a safe default, so a
 // corpus written under 35 validates unchanged and no migration is owed.
-export const CONTRACT_VERSION = 36;
+//
+// 37 retires `domain/`'s flow page: `flow.md` and every `flow.<name>.md`. A
+// diagram opens the chapter of what it draws, and a file typed `flow` is an
+// error. `037-flows-in-their-chapters` moves each section into its chapter.
+export const CONTRACT_VERSION = 37;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

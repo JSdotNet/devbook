@@ -195,6 +195,9 @@ are installed: with neither, it names nothing.
    Each ships an idempotent `migrate.mjs`; call `--check` first, apply only if it
    exits `1`, then `--check` again to confirm. Record each in the ledger as it
    lands, or as `not-applicable` where its `appliesTo` names no adopted folder.
+   A migration that prints `ask` lines needs a person's answer: put each to the
+   person with its candidates, run it again with the flags the lines name, and
+   repeat until none is left. An unanswered `ask` is a stop, not a failure.
    Stop at the first failure with the ledger reflecting exactly what was applied.
 
 5. **Materialize.** Copy assets, overwriting only where the file's hash matches a

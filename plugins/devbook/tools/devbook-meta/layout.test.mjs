@@ -77,7 +77,7 @@ const corpus = [
     [`${at("tech")}/tooling.md`, `# Tooling\n\n${fence("status: adopted\n")}\nLast by convention.\n`],
     [`${at("tech")}/shared.md`, `# Shared\n\n${fence("status: adopted\n")}\nFirst by convention.\n`],
     [`${at("tech")}/backend.md`, `# Backend\n\n${fence("status: adopted\n")}\nIn between.\n`],
-    // A bounded context with split files: beside their base (`domain`, `flow`),
+    // A bounded context with split files: beside their base (`domain`),
     // in a dropped base's slot (`features`, `model`), two for one base, an
     // invariants subpage after the page it belongs to (`domain.md`, a split
     // `domain.order.md`) and none for a page without one (`domain.invoice.md`),
@@ -91,10 +91,8 @@ const corpus = [
         ["actors.md", "actors"],
         ["features.checkout.md", "features"],
         ["model.order.md", "model"],
-        ["flow.md", "flow"],
-        ["flow.fulfilment.md", "flow"],
         ["dependencies.md", "dependencies"],
-        ["notes.md", "flow"],
+        ["notes.md", "notes"],
     ].map(([name, type]) => [
         `${at("domain")}/order-management/${name}`,
         `# Order Management\n\n${fence(`type: ${type}\n`)}\nA file.\n`,
@@ -144,8 +142,6 @@ try {
         "actors.md",
         "features.checkout.md",
         "model.order.md",
-        "flow.md",
-        "flow.fulfilment.md",
         "dependencies.md",
         "notes.md",
     ];

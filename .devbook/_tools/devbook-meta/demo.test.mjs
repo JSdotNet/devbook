@@ -116,8 +116,8 @@ check(isPageNamedDemo(`${CONTEXT}/features.checkout.demo.html`), "a split page's
 check(!isPageNamedDemo(`${CONTEXT}/checkout-journey.demo.html`), "a name no page prescribes is not page-named");
 
 {
-    const problems = await demoProblemsOf({ [`${CONTEXT}/flow.demo.html`]: demoHtml() });
-    check(has(problems, "error", "is named for .devbook/domain/ordering/flow.md, which does not exist"), "a page-named demo without its page errors", dump(problems));
+    const problems = await demoProblemsOf({ [`${CONTEXT}/model.demo.html`]: demoHtml() });
+    check(has(problems, "error", "is named for .devbook/domain/ordering/model.md, which does not exist"), "a page-named demo without its page errors", dump(problems));
 }
 
 {
@@ -426,9 +426,9 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
 {
     const problems = await demoProblemsOf({
         [`${CHANGE}/proposal.md`]: proposalMd(`${DEMO}#checkout`),
-        [`${CHANGE}/devbook-delta/domain/ordering/flow.demo.html`]: demoHtml(),
+        [`${CHANGE}/devbook-delta/domain/ordering/model.demo.html`]: demoHtml(),
     });
-    check(has(problems, "error", "is named for .devbook/domain/ordering/flow.md"), "a proposed page-named demo without its page errors", dump(problems));
+    check(has(problems, "error", "is named for .devbook/domain/ordering/model.md"), "a proposed page-named demo without its page errors", dump(problems));
 }
 
 {
