@@ -4,7 +4,7 @@
 date: 2026-10-29
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.devbook.chapter", "marketplace.devbook.meta-block", "marketplace.devbook.devbook-folder"]
-c4-touches: ["marketplace.devbook-collaboration.approval", "marketplace.devbook-collaboration.acceptance"]
+c4-touches: ["marketplace.devbook.chapter-review"]
 ```
 
 A devbook is five folders of Markdown chapters under one parent — `.devbook/arc42`,
@@ -28,8 +28,9 @@ the two decision rungs and their six record fields, `sync`, `issue`, `effort`, `
 reports a `tech/` or `ai/` `status` as renamed `rating`, and no longer reads
 `.devbook/statuses.json`. `units.mjs` still groups chapters into sync units and has no
 `--direction`. `delta.mjs --apply` stamps nothing and merges a change only at the fingerprint a
-host recorded its acceptance at. The annotation fence and `devbook-collaboration` retire in the
-next step of the same release. The paragraphs under Why that give the moved fields' reasons are
+host recorded its acceptance at. The `annotation` fence is an error the same migration
+deletes, and `devbook-collaboration` is gone: `chapter-review` is `devbook`'s and posts its
+notes through `devbook.decision@1`. The paragraphs under Why that give the moved fields' reasons are
 this concern's history now.
 
 A proposed change to those folders is the one devbook content outside the parent: it lives in
@@ -43,7 +44,7 @@ else, per [the devbook-openspec building block](../building-blocks/devbook-opens
 ## Branch-true devbook
 
 ```meta
-related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-openspec.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md"]
+related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/building-blocks/devbook.md#chapter-review", ".devbook/arc42/building-blocks/devbook-openspec.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md"]
 ```
 
 **The choice.** A branch's devbook is never ahead of the code, with an agreed chapter waiting
@@ -117,19 +118,20 @@ stores workflow state in it moves that state to its own store under the same rul
   a change proposal over its fingerprint, and reads, posts, and resolves review notes. A skill
   uses whichever tool answers the group in its session and says which. With none bound it
   reports what it would write and writes nothing.
-- `devbook-collaboration` retires. `chapter-review` moves into `devbook` and posts its
-  findings through `devbook.decision@1`. The other four skills and `review-queue.mjs` go with
-  the plugin: a decision on a subject is made in the host that keeps its state.
-- `devbook`: the annotation fence retires. `annotations.mjs`, `annotation-sweep`, and the
-  check's fence rules go once every host has imported the notes.
-- `devbook-openspec`: the proposal's rungs move to the same group. `delta.mjs --apply` asks
-  the group whether the change is accepted over its current hash.
-- A migration in `devbook` strips the moved fields and every fence, and writes no export
-  file. Each host imports first, from the default branch. It is a contract bump, so every
-  plugin moves one minor in the same change.
+- `devbook-collaboration` is removed. `chapter-review` is `devbook`'s and posts its findings
+  through `devbook.decision@1`. The other four skills and `review-queue.mjs` went with the
+  plugin: a decision on a subject is made in the host that keeps its state.
+- `devbook`: the annotation fence is retired. `annotations.mjs`, `annotations-index.mjs`,
+  `annotation-sweep`, the `devbook-annotations` rule, and the check's fence rules are gone,
+  and `_meta/annotations.json` is no longer written. A fence left in a chapter is an error.
+- `devbook-openspec`: the proposal's approval and acceptance come from the same group. The
+  archive asks the group whether the change is accepted over its current fingerprint and
+  passes that fingerprint to `delta.mjs --apply` as `--accepted-hash`.
+- `038-workflow-state-leaves-the-chapter` strips the moved fields and every fence, open or
+  resolved, and writes no export file. Each host imports first, from the default branch. It
+  is a contract bump, so every plugin moved one minor with it.
 - This record and the annotations record state the decision. The `devbook-collaboration`
-  building block and the glossary's stale approval entry are marked retiring, and go with the
-  plugin.
+  building block and the glossary's stale approval entry are removed with the plugin.
 
 ### Schedules and sync
 
@@ -662,6 +664,7 @@ left.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-29 | The fence and `devbook-collaboration` go, in the same release. `chapter-review` moves into `devbook` and posts through `devbook.decision@1`; `annotations.mjs`, `annotation-sweep`, the `devbook-annotations` rule, and the fence lint are removed; 038 also deletes every `annotation` fence; `devbook-openspec`'s archive reads the acceptance from the group. | A note is workflow state, and the plugin that wrote fences and rungs had nothing left to write. |
 | 2026-10-29 | Contract 38 builds the decision in `devbook`. `status` outside `tech/` and `ai/`, `approved`, `accepted` and their six record fields, `sync`, `issue`, `effort`, `roadmap`, and `change` are errors naming `038-workflow-state-leaves-the-chapter`, which deletes them and writes no export file. A `tech/` or `ai/` rating is `rating`. `.devbook/statuses.json` loading, the rung checks, the stale-approval check, and the coverage exemption at `deprecated` go. `units.mjs` loses `--direction`, and `delta.mjs --apply` stamps no `change` and merges only with `--accepted-hash`, the fingerprint a host recorded the acceptance at. | The decision was recorded first so the hosts could import from the default branch before the fields left it. |
 | 2026-10-29 | A branch's devbook is true of its code. Workflow state leaves the `meta` block and exists only for a change proposal, a decision record under discussion, and a debt record, each host keeping its own. `status`, the decision rungs, `statuses.json`, `sync`, `issue`, `effort`, `roadmap`, `change`, and the fence leave the chapter; a rating becomes `rating`; `deprecated` becomes a `REMOVED` delta. `devbook-collaboration` retires and `chapter-review` moves into `devbook`. Decided, not yet built: the contract bump and its migration follow. | A rung is about a review, not the content, and committed it put a branch ahead of or behind its own decisions. |
 | 2026-10-28 | `domain/`'s flow page is retired: `flow.md` and every `flow.<name>.md`. A diagram opens the chapter of what it draws, under its `meta` block and ahead of its prose; a file typed `flow` is an error. Contract 37, `037-flows-in-their-chapters`, which moves each section and asks the person about the ones its page does not place. | Pictures before words: the lifecycle drawn one file away left the chapter retelling it, and every claim a flow drew already had a chapter. |

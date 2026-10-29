@@ -2,9 +2,9 @@
 
 ```meta
 date: 2026-10-29
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#annotation", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook", ".devbook/arc42/adr/plugin-boundaries.md"]
-c4: ["marketplace.devbook.annotation", "marketplace.devbook.fence-writer"]
-c4-touches: ["marketplace.devbook-collaboration.finding"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#chapter-review", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook", ".devbook/arc42/adr/plugin-boundaries.md"]
+c4: ["marketplace.devbook.chapter-review"]
+c4-touches: ["marketplace.devbook.chapter"]
 ```
 
 A review note is a comment thread in each host, anchored to the chapter address, and never
@@ -12,16 +12,16 @@ text in the chapter. spec-manager keeps it in its `CommentThread` table and Back
 annotation store, beside the workflow state each keeps for the same subject. A tool reads,
 posts, and resolves a note through `devbook.decision@1`, the capability group `devbook` owns.
 Only an open `kind: question` blocks approval of a change proposal, and a `flag` never blocks.
-`chapter-review` moves into `devbook` and posts its findings through the group, and
-`devbook-collaboration` retires, per [the chapter schema record](chapter-schema.md#branch-true-devbook).
+`devbook:chapter-review` posts its findings through the group, and `devbook-collaboration` is
+gone, per [the chapter schema record](chapter-schema.md#branch-true-devbook).
 
-The `annotation` fence retires with it. Each host imports the open fences by reading the
-repository's Markdown on its default branch, with the parser it already has. The devbook
-migration then strips every fence and writes no export file. `annotations.mjs`,
-`annotation-sweep`, and the check's fence rules go once every host has imported the notes.
-Until then the fence stands as it was built. It is `devbook`'s schema in the five devbook
-folders alone, and `annotations.mjs` is its only writer. A note in it is open, then resolved,
-then swept.
+The `annotation` fence is retired with it. Each host imports the open fences by reading the
+repository's Markdown on its default branch, with the parser it already has, and
+`038-workflow-state-leaves-the-chapter` then deletes every fence, open or resolved, and writes
+no export file. `annotations.mjs`, `annotation-sweep`, the `devbook-annotations` rule, and the
+check's fence rules are gone, and `_meta/annotations.json` is no longer written. The check
+reports a fence left in a chapter as an error naming the migration. The chapter fingerprint
+still leaves an `annotation` fence out, so no value recorded before the fence retired moves.
 
 ## Why
 
@@ -87,6 +87,7 @@ branch-true decision applies the same reason to the notes and the rungs themselv
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-29 | Built. `devbook:chapter-review` posts its notes through `devbook.decision@1`, and `devbook-collaboration` is removed. `annotations.mjs`, `annotations-index.mjs`, `annotation-sweep`, the `devbook-annotations` rule, `_meta/annotations.json`, and the fence lint go; a leftover fence is an error, and `038-workflow-state-leaves-the-chapter` deletes every one. | The hosts keep the notes, so nothing in the repository writes or reads one. |
 | 2026-10-29 | A review note is a comment thread in each host, read, posted, and resolved through `devbook.decision@1`, which `devbook` owns. The fence retires: each host imports the open fences from the default branch, and the migration strips them. `chapter-review` moves into `devbook` and `devbook-collaboration` retires. Decided, not yet built. | A note is workflow state, and a branch's devbook states only what is true of its code. |
 | 2026-09-30 | Accepting a change owes an `aligned` verdict only for a delta whose target `verify-change` covers. A step is `done` per its workflow, not only by a merge. | A delta against a decision or debt record or a prose chapter has no code to be measured against, and requiring one made such a change impossible to accept. |
 | 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. | — |
