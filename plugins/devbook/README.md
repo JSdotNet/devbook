@@ -19,8 +19,9 @@ path instead of by repository.
 ## What the convention is
 
 Each devbook folder holds Markdown chapters. Every chapter carries a `meta`
-block declaring its identity, status, number, date, its relationships to other
-chapters, and the test cases that assert what it claims. A generator walks the
+block declaring its identity, kind, number, date, its relationships to other
+chapters, and the test cases that assert what it claims — never a workflow state:
+a merged chapter is in force. A generator walks the
 corpus and writes derived indexes under `_meta/`, which CI validates on every
 pull request and a scheduled job keeps current.
 
@@ -37,7 +38,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `domain/` | Bounded contexts, ubiquitous language, aggregates and the flows they move through, and the requirements and invariants they guarantee |
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
-| `ai/` | How the team develops with AI: usage per stage of the seven-stage delivery path and the layers beneath it, concepts, adoption status |
+| `ai/` | How the team develops with AI: usage per stage of the seven-stage delivery path and the layers beneath it, concepts, adoption rating |
 | `openspec/changes/` | Proposed changes to the folders above, as a proposal and deltas that `delta.mjs` merges; history under `archive/` |
 
 Adoption is partial by design — a repository may take only `domain/` and
@@ -199,7 +200,7 @@ chapter is the **spec**.
   `assets/code-sync-protocol.md`. Its frontmatter declares `updates: true`, so a
   `phase-spec-check` binding runs it in write mode: it carries the plan's
   `code-ahead` entries into the chapters in scope, each with its `meta` block,
-  runs the devbook check, never sets a decision rung, and lists every edit for
+  runs the devbook check, and lists every edit for
   Personal Validation, per **Carrying a plan in** in the protocol.
 - **`apply-change`** — a chapter is agreed but unbuilt, so turn it into a
   change brief (outcomes, invariants, ubiquitous language, out of scope,
@@ -237,7 +238,7 @@ it belongs to and roots no unit:
 | `actor` | `.devbook/domain/<context>/actors.md`, or `context.md` while the actors live there | `user`, `technical` — an `organisation` is no unit | `assets/spec-kinds/actor.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
-| `demo` | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or a `*.demo.html` a `demo` field names | none — a demo has no `meta` block; it takes its page's status and `sync`, and capture never writes one | `assets/spec-kinds/demo.md` |
+| `demo` | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or a `*.demo.html` a `demo` field names | none — a demo has no `meta` block; it rides with its page's unit, and capture never writes one | `assets/spec-kinds/demo.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence
@@ -293,8 +294,8 @@ The shared rules live once in `assets/code-sync-protocol.md`, which all three
 skills reference and none repeats: counterpart resolution, the evidence rules
 (including why unit tests are first-class evidence for capture rather than a
 cross-check), a five-way drift verdict (`aligned`, `code-ahead`, `spec-ahead`,
-`conflict`, `unresolved`, where `conflict` always stops and asks), the status
-rules, the shape of the capture plan, and a shared report table.
+`conflict`, `unresolved`, where `conflict` always stops and asks), what is
+agreed, the shape of the capture plan, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
@@ -317,7 +318,7 @@ skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, the approval and acceptance records, and the `tests` test-case link format |
+| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, the `rating` ladder, `type` value sets, the fields moved to tooling, and the `tests` test-case link format |
 | `devbook-domain.md` | `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
@@ -361,12 +362,12 @@ the session-start hook, and the skills that name one by path.
 
 ### Review state
 
-A review in progress is never a field of its own. The chapter stays on its
-transitional rung, its open `annotation` fences say what is still asked, and who
-owes the next move lives in the pull request or the tracker. Only the decisions
-are recorded in the chapter: `approved-*` and `accepted-*`, because they have to
-travel with the content and lapse with it. [`devbook-collaboration`](../devbook-collaboration)'s skills run
-the pass; a repository without that plugin reviews the same way by hand.
+A chapter carries no review state. A branch's devbook is true of its code, so a merged
+chapter is in force and nobody approves it afterwards. State exists for a change proposal, a
+decision record under discussion, and a debt record, and the host that runs the workflow
+keeps it outside git, per **Decisions and fingerprints** below. Open `annotation` fences say
+what is still asked, and who owes the next move lives in the pull request or the tracker.
+Where each field went is "Moved to tooling" in `devbook-chapter-metadata.md`.
 
 ### Demo addresses
 
@@ -426,13 +427,16 @@ commits. See `tools/devbook-meta/README.md` for the document shapes.
 
 ```bash
 node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
-node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # merge, stamp `change`, move to archive/
-node .devbook/_tools/devbook-meta/delta.mjs --apply <change> --no-move   # merge; the caller moves the folder
+node .devbook/_tools/devbook-meta/delta.mjs --apply <change> --accepted-hash <fingerprint>   # merge, move to archive/
+node .devbook/_tools/devbook-meta/delta.mjs --apply <change> --accepted-hash <fingerprint> --no-move   # merge; the caller moves the folder
 ```
 
-`delta.mjs` is the only merge of a change's deltas into the chapters they target. Its
-`gateCheck`, before anything is written, refuses a change whose proposal is not `accepted`
-over its current hash. `chapter-hash.mjs openspec/changes/<name>` prints that hash.
+`delta.mjs` is the only merge of a change's deltas into the chapters they target, and it
+stamps nothing on them. Its `gateCheck`, before anything is written, refuses unless
+`--accepted-hash` — the fingerprint the host recorded the acceptance at, read through
+`devbook.decision@1` — equals the change's current hash, and refuses while an open
+`kind: question` sits anywhere in the change. `chapter-hash.mjs openspec/changes/<name>`
+prints that hash.
 
 ### Tooling: `devbook-tech`
 
@@ -467,7 +471,7 @@ only where `domain/` is adopted. The contract and the wiring are
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
-| `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the capture plan, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, what is agreed, the capture plan, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 | `assets/procedures/skills/<name>.md` | The five procedure seeds: `name`, `description`, and `goal` in the frontmatter, an example-filled procedure below. `run.md` lands only where `/run-skill-generator` cannot run |
 | `assets/procedures/skill-wrappers.md` | How a procedure lands: one editable copy, a managed wrapper per host, where the goal sits, and `run`'s exception |
 | `assets/procedures/demo-template.html` | The starting demo template, seeded at `.devbook/design/demo-template.html` when `prototype` and `design/` are adopted: the managed region between `template:begin hash=…` and `template:end`, and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
@@ -529,7 +533,11 @@ loop's eight words onto the delivery path's seven, de-duplicated and in path ord
 `substage`, `layer`, `feeds`, or `evidence`, which are the repository's to place; the fifteenth
 is `037-flows-in-their-chapters`, which moves each section of a flow page under the chapter of
 what it draws, rewrites every reference, and asks the person about each section its page does
-not place.
+not place; the sixteenth is `038-workflow-state-leaves-the-chapter`, which deletes `status`
+outside `tech/` and `ai/`, the six `approved-*` and `accepted-*` fields, `sync`, `issue`,
+`effort`, `roadmap`, and `change` from every block, renames a `tech/` or `ai/` `status` to
+`rating`, reports each value it took off, and writes no export file, because each host imports
+the state from the default branch's Markdown first.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -569,7 +577,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **37**, covering the metadata schema a repository authors
+One number, currently **38**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -669,7 +677,10 @@ seven-stage delivery path or a layer beneath it, with `substage`, `feeds`, `evid
 `035-delivery-path-stages`, which maps each onto the path. 36 adds `playthrough` to a feature,
 an added field that owes nothing. 37 retires `domain/`'s flow page — a diagram opens the
 chapter of what it draws — and a file typed `flow` is an error, so it ships
-`037-flows-in-their-chapters`.
+`037-flows-in-their-chapters`. 38 takes workflow state out of the chapter — `status` and the
+decision rungs, `.devbook/statuses.json`, `sync`, `issue`, `effort`, `roadmap`, and `change`
+move to the host that runs the workflow or are dropped, and a rating becomes `rating` — so each
+is an error naming `038-workflow-state-leaves-the-chapter`, which deletes or renames it.
 
 ## Folder structure
 

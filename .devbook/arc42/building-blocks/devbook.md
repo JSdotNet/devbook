@@ -75,7 +75,6 @@ change belongs to the engine.
 | `resources/chapter-fingerprint.md` | contract, `devbook.chapter.fingerprint@1` | spec-manager and Backlog, which recompute the fingerprint a decision is recorded against |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, with a free walkthrough and a playthrough of the journey in its `scenarios.md`, by spec-manager and Backlog as a test fixture |
-| `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 The three converter skills and `units.mjs` are described in
 [devbook-code-sync](devbook-code-sync.md#interfaces), and the seeds and the demo template in
@@ -301,21 +300,18 @@ top-level heading carries a block of its own describing the document as a whole.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A `#` line inside a fenced block is content, never a heading, to the parser and to every annotation write alike | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
 | `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
-| A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
-| A block's `status` is held to the first `.devbook/statuses.json` rule matching its file and level, else to the built-in ladder; no rule makes `active` a rung, drops a decision rung, or widens a rating ladder | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/statuses.test.mjs` |
-| `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| No block carries workflow state: `status` outside `tech/` and `ai/`, the six decision fields, `sync`, `issue`, `effort`, `roadmap`, and `change` are each an error naming `038-workflow-state-leaves-the-chapter` | parse | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs` |
+| A `tech/` or `ai/` block states its `rating` from the fixed adoption ladder, and no other folder carries one | parse | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A leftover `.devbook/statuses.json` is reported once and never read | graph build | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs` |
 | The fingerprint, of a block and of a change, agrees with the shared vector | `chapter-hash.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/chapter-fingerprint.test.mjs` |
-| `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
 | A journey is a `##` typed `scenario` in a bounded context's `scenarios.md` or `scenarios.<name>.md`, and every `##` there is one; the type on a file-level block, on a chapter of any other file, or in another folder is an error; its `###` parts owe no block and stay addressable, and every journey and part anchor is unique in its file | parse | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
-| A journey's `status` is absent, `draft`, or `proposed`; it carries no `tests`; its steps open with a bold Given, When, Then, or And | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| A journey carries no `status` and no `tests`, and its steps open with a bold Given, When, Then, or And | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs` |
 | `start`, `actor`, `data`, `profile`, `flags`, and `settings` sit on a journey's block alone; `actor`, `flags`, and `settings` resolve to an actor, a `feature-flag`, and a `setting` chapter, and `profile` and every portal named resolve in `.devbook/scenarios/profiles.json` when it exists | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | A `#### Scenario:` holding `Proved by: <scenarios file>#<part>` holds nothing else and names a part of a journey, from the requirement's folder, whose spec derives the requirement's `e2e` entry; a part no case names is reported as unclaimed, a journey outside the context holding most of the requirements it proves is a warning, and an inline case in a context with a journey is listed at `info` as a candidate to move into one | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
 | A `scenario:<context>/<scenarios file>#<label>` image names an existing scenarios file and a label in it, and neither it nor a `shot:` image counts as a diagram | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
@@ -364,25 +360,23 @@ The fenced `meta` (YAML) block under a heading: flat keys, no nesting, and equal
 is what turns a heading into a node, so deleting it as noise silently drops the chapter out of
 the graph and out of every reference pointing at it.
 
-The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
-— `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
-`accepted-hash` — scoped to `domain/` beside the rungs that write them, and `sync`, the
-sync direction, on `domain/`, `arc42/`, and `design/` blocks at the four levels the chapter
-schema decision names; each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
-it. Empty collections and nulls are omitted rather than written out, so absence has exactly
-one spelling. No field records a review in progress: that is `status` plus the chapter's open
-annotation fences, and the `review`, `reviewer`, and `review-at` fields contract 21 removed
-are reported by name.
+The field set is closed except for one seam. `type`, `related`, `date`, `tests`, `number`,
+and `index` are devbook's in every folder, `rating` is devbook's in `tech/` and `ai/`, and
+each folder adds the fields its rule documents. `ext.<plugin>.<key>` belongs to whoever
+namespaced it. Empty collections and nulls are omitted rather than written out, so absence has
+exactly one spelling. No field records workflow state. Since contract 38 a merged chapter is in
+force, and the tool that runs a workflow keeps the state of a change proposal, a decision record,
+or a debt record outside git, per the [chapter schema decision](../adr/chapter-schema.md#branch-true-devbook).
+The check reports each field that left the block by name, as it does the `review`, `reviewer`,
+and `review-at` fields contract 21 removed.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | A heading without a `meta` block is not a node, so deleting one drops the chapter out of the graph and out of every reference to it | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | Flat keys, no nesting, and equal by value | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The field set is closed except for `ext.<plugin>.<key>` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| The six decision fields are scoped to `domain/` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | Empty collections and nulls are omitted, so absence has exactly one spelling | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
-| `sync` is one of five directions, set only on a sync level and never on a chapter a unit owns; a value no unit inherits is warned | schema validator, `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
+| A field that left the block in contract 38 is reported by name, with the migration that deletes it | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs` |
 
 ### Annotation
 
@@ -563,7 +557,7 @@ so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
 | A demo's `demo-meta` holds `question` and nothing else | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A demo fetches nothing from the network | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo under `domain/` carries exactly one variant | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
-| A page's fingerprint covers its demos outside the managed region, so editing one lifts a stale approval and a template refresh lifts none | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A page's fingerprint covers its demos outside the managed region, so editing one changes the fingerprint a decision was recorded at and a template refresh changes none | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo over 500 KB is a warning, never an error | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo's managed region matches a template version, and one on an earlier version than the template's is a warning | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
 | `--refresh` rewrites only the managed region, and leaves a demo's own parts byte for byte | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
@@ -927,39 +921,36 @@ flowchart TD
 ### A Chapter's Standing
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#chapter", ".devbook/arc42/building-blocks/devbook-collaboration.md#the-review-pass"]
+related: [".devbook/arc42/building-blocks/devbook.md#chapter", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook", ".devbook/arc42/building-blocks/devbook-openspec.md"]
 ```
 
-The `domain/` ladder, with the two decision rungs — `approved`, then `accepted` — on top of it. `active` is the resting
-value and is written by omitting the field, which is why the diagram's busiest state is the
-one that says nothing.
+A chapter has no standing of its own to track. Once it merges it is in force, and the branch
+it sits on states only what is true of that branch's code. Work ahead of the code is an open
+change under `openspec/changes/`, and the change carries the decision.
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Draft: chapter written, status stated
-    Draft --> Proposed: put up for agreement
-    Proposed --> Draft: sent back
-    Proposed --> Active: agreed, and the field comes out
-    Draft --> Active: settled without a proposal round
-    Active --> Approved: a person approves it, signed and dated
-    Approved --> Active: the content changes, and rung, signature and date come off together
-    Active --> Deprecated: superseded by another chapter
-    Deprecated --> [*]
+    [*] --> Open: a change is proposed under openspec/changes
+    Open --> Approved: a host records the approval over the fingerprint
+    Approved --> Open: an edit changes the fingerprint
+    Approved --> Accepted: a host records the acceptance over the fingerprint
+    Accepted --> Merged: delta.mjs --apply with the accepted hash
+    Merged --> [*]: the chapters are in force
 ```
 
-- **Absence is the statement, not a gap.** Writing `status: active` explicitly is reported, so
-  one state never ends up with two spellings.
-- **`approved` is of what was read, not of the heading.** It drops the moment the content
-  changes, and `approved-by` and `approved-at` are written and deleted in the same change as
-  the rung. `accepted` above it drops with it, because a build was accepted against the text
-  that was approved. Where the optional `approved-hash` is written, "the content changed" is
-  a check result rather than something a reader has to establish from git.
-- **An open question is orthogonal to all of this.** A chapter carrying an open
-  `kind: question` fence is not agreed whatever its status says, which is why a reader in
-  review mode reads the fences and a reader loading task context skips them. The other kinds
-  are remarks about a chapter that stands. `--check` reports only the contradiction — an
-  `approved` chapter carrying an open question — because an open question is legal for the
-  length of a branch.
+- **The state lives in the host.** spec-manager and Backlog each keep a change proposal's,
+  a decision record's, and a debt record's state, and answer `devbook.decision@1`. The two may
+  differ, and a skill says which one answered it.
+- **An approval is of what was read.** It is recorded against the fingerprint of the proposal
+  and every delta, so any edit after it shows as a different fingerprint. `delta.mjs --apply`
+  merges only when the `--accepted-hash` its caller passes is the change's fingerprint now.
+- **Removal is a change.** A chapter that should no longer be followed is removed by a
+  `REMOVED` delta, and the archived change keeps its text and the reason.
+- **An open question still blocks the merge.** A change carrying an open `kind: question`
+  fence anywhere is not agreed, so `--apply` refuses it. The fence itself retires once every
+  host has imported the notes.
+- **A `tech/` or `ai/` rating is the exception.** It records a decision the branch makes, so it
+  stays in the chapter as `rating`.
 
 ## Dependencies
 

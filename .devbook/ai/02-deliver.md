@@ -1,7 +1,7 @@
 # 2. Deliver
 
 ```meta
-status: trial
+rating: trial
 type: stage
 ```
 
@@ -11,7 +11,7 @@ several.
 ## Flow Skills
 
 ```meta
-status: trial
+rating: trial
 type: skill
 stage: [specify, code, verify]
 evidence: none
@@ -57,7 +57,7 @@ A change routes to the flow named for what it changes, which runs it end to end.
 ## Fan-Out
 
 ```meta
-status: candidate
+rating: candidate
 type: skill
 stage: [decide, code]
 evidence: none
@@ -86,7 +86,7 @@ replaced `fleet`, which did the working part five sessions at a time, on 2026-09
 ## Scheduling
 
 ```meta
-status: trial
+rating: trial
 type: skill
 layer: [upkeep]
 evidence: partial

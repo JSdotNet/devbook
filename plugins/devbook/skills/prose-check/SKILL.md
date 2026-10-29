@@ -34,7 +34,7 @@ standard, and a class stated by half reports the wrong sentence.
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
 - Leaves `adr/` and `tdr/` out of the prose classes. A record names what existed on its
-  date; a stale name there is history, and superseding is a `status`, not a rewrite.
+  date; a stale name there is history, and superseding is a history row, not a rewrite.
 
 ## Steps
 

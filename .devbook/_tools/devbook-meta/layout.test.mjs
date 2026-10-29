@@ -71,12 +71,12 @@ const corpus = [
     ],
     [
         `${at("tech")}/technology-graph.md`,
-        `# Technology Graph\n\n${fence("status: adopted\nindex: root\n")}\n` +
-            `## Postgres\n\n${fence("status: adopted\ntype: service\n")}\nA database.\n`,
+        `# Technology Graph\n\n${fence("rating: adopted\nindex: root\n")}\n` +
+            `## Postgres\n\n${fence("rating: adopted\ntype: service\n")}\nA database.\n`,
     ],
-    [`${at("tech")}/tooling.md`, `# Tooling\n\n${fence("status: adopted\n")}\nLast by convention.\n`],
-    [`${at("tech")}/shared.md`, `# Shared\n\n${fence("status: adopted\n")}\nFirst by convention.\n`],
-    [`${at("tech")}/backend.md`, `# Backend\n\n${fence("status: adopted\n")}\nIn between.\n`],
+    [`${at("tech")}/tooling.md`, `# Tooling\n\n${fence("rating: adopted\n")}\nLast by convention.\n`],
+    [`${at("tech")}/shared.md`, `# Shared\n\n${fence("rating: adopted\n")}\nFirst by convention.\n`],
+    [`${at("tech")}/backend.md`, `# Backend\n\n${fence("rating: adopted\n")}\nIn between.\n`],
     // A bounded context with split files: beside their base (`domain`),
     // in a dropped base's slot (`features`, `model`), two for one base, an
     // invariants subpage after the page it belongs to (`domain.md`, a split

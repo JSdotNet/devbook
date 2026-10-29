@@ -55,6 +55,9 @@ already covers. A unit at `off` is left out, and one at `pull`, `push`, or `sync
 asked for; a `spec-ahead` row, a change nobody proposed, stays in the report's table.
 It reports and never writes a chapter or plans a capture on its own. The weekly
 `devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
+Since contract 38 no chapter states a direction, so every unit reads as `report` here until
+the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync) lands its last step:
+the routine then verifies every unit with no direction at all.
 
 ### schedule-devbook-sweep
 
@@ -84,6 +87,11 @@ resolver builds it as an issue's specification — a failing test first, the sma
 build and unit tests with bounded repair, two review lenses — a guard refuses any write under
 `.devbook/` and any removed file or public member, and `verify-change` again must read
 `aligned`. A group with a `code-ahead` chapter never reaches it.
+
+**Stale until it moves.** Since contract 38 no chapter carries `sync`, and `units.mjs` no
+longer takes `--direction`, so this sweep's group selection fails. Backlog's `backlog-tools`
+takes the sweep over and reads the direction from its own map, and a later step of the branch-true
+plan removes this entry point, per the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync).
 
 ### schedule-devbook-update
 

@@ -1,7 +1,6 @@
 # 03. Context and Scope
 
 ```meta
-status: draft
 c4: [system]
 ```
 

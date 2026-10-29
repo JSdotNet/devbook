@@ -350,11 +350,7 @@ application, a test run — that lives outside this one entirely.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| The acceptance stands on an approval record and never replaces one | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| `accepted-at` falls on or after `approved-at` | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| An unsigned, undated, or orphaned acceptance record is reported | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| Both records come off together when the content moves under them | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| The rung is on `domain/`'s ladder and a change's proposal, and no other folder's | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| Since contract 38 the acceptance record is a host's state over the change's fingerprint; devbook's check reports an `accepted-*` field written into a chapter as moved to tooling | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/workflow-state.test.mjs` |
 | It reads evidence that lives outside this block — a running application, a test run | `chapter-accept()` | untested |
 
 ### Chapter Approved

@@ -1,7 +1,7 @@
 # 1. Author
 
 ```meta
-status: adopted
+rating: adopted
 type: stage
 ```
 
@@ -11,7 +11,7 @@ change here starts in.
 ## Claude Code as Authoring Host
 
 ```meta
-status: adopted
+rating: adopted
 type: practice
 stage: [code]
 evidence: recorded

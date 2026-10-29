@@ -112,15 +112,14 @@ before, so the discipline is explicit, the same way `_meta/` has one:
 
 The scope is the `question` kind, open, and nothing wider. A `comment`, a
 `suggestion`, or a `flag` is somebody's remark about a chapter that stands; an
-unanswered question is a hole in the chapter itself, so it outranks whatever
-`status` says.
+unanswered question is a hole in the chapter itself.
 
 `--check` does not report one. An open question is the state the fence exists
 for and it is legal for the length of a branch, so a gate that failed on every
-one would teach everybody to ignore it. What `--check` does report, as an
-error, is the contradiction: a chapter on the `approved` rung carrying an open
-question, where a person has signed for content that still has an unanswered
-question in it. Resolve and sweep the note, or take the approval off.
+one would teach everybody to ignore it. A decision is the host's, per
+`devbook-chapter-metadata.md` under "Moved to tooling": it refuses to approve or
+accept a change proposal while one is open, and `delta.mjs --apply` refuses to
+merge a change that carries one anywhere.
 
 ## Writing one
 

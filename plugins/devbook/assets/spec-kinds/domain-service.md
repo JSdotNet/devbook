@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 domain service, policy, or process manager that `assets/code-sync-protocol.md`
 does not already say. The protocol carries the resolution ladder, the evidence
-rules, the five verdicts, the status rules, the brief contract, and the report
+rules, the five verdicts, what is agreed, the brief contract, and the report
 table; this file carries the kind.
 
 | | |

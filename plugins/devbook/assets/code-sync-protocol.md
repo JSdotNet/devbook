@@ -6,8 +6,9 @@ to its running code:
 - **`capture-specs`** — something already exists in the application, the matching
   chapter is missing, thin, or stale, so read the implementation and plan the
   chapter.
-- **`apply-change`** — a chapter is agreed but not built, so turn it into a
-  change brief and hand it to the flow that implements it.
+- **`apply-change`** — a chapter is agreed but not built — merged, or in an open
+  change a person has agreed — so turn it into a change brief and hand it to the
+  flow that implements it.
 - **`verify-change`** — report where the two stand, and write nothing.
 
 Throughout this file and the files that load it, **capture** is what `capture-specs`
@@ -35,7 +36,7 @@ silent everywhere else.
 
 | | `capture-specs` | `apply-change` | `verify-change` |
 |---|---|---|---|
-| Starting point | Implementation exists | Chapter exists and is agreed | Both exist |
+| Starting point | Implementation exists | Chapter merged, or an agreed open change | Both exist |
 | Missing thing | The chapter | The implementation | The knowledge of which side moved |
 | Reads | Source, tests, and the chapter as it stands | The chapter, plus code only to establish what is already there | Source, tests, and the chapter |
 | Writes | Nothing by default: a capture plan, delivered to the person. In write mode, the plan's `code-ahead` entries, carried into the chapters | A change brief, handed to the code-side flow | The report table, and nothing else |
@@ -59,7 +60,7 @@ service the same way; a feature with its sub-features and requirements; one
 feature flag or setting; one user or technical actor; one building block file; one
 component chapter; and one shared-types unit per context. A group is the units a requirement naming two
 aggregates and no feature ties together, and is usually one unit. The rules are
-"Sync direction" in `devbook-chapter-metadata.md`.
+"Sync units" in `devbook-chapter-metadata.md`.
 
 Never work membership out by reading. List it:
 
@@ -69,7 +70,7 @@ node .devbook/_tools/devbook-meta/units.mjs --groups --json
 
 Take the unit's or group's `chapters` as the scope, exactly. A chapter the tool
 lists as an orphan is in no unit and is reported, never adopted into one. A group
-the tool sets aside — mixed directions, or past its chapter cap — is reported with
+the tool sets aside — past its chapter cap — is reported with
 its reason and not acted on, and never split. A group is one run whatever kinds
 its units carry: each chapter is read through its own kind's file, and the run
 still ends in one table.
@@ -90,20 +91,11 @@ its units':
   applied in a later pass, once the capture has landed — the two directions never
   share a pass, per the paragraph above.
 
-**The direction.** `units.mjs` prints each unit's effective `sync`, the block it
-came from, and a group's rolled-up direction. The value decides which sweep acts
-on the verdict:
-
-| `sync` | Sweep that acts |
-|---|---|
-| `pull` | `devbook-pull-sweep`, on `code-ahead` |
-| `push` | `devbook-push-sweep`, on `spec-ahead` |
-| `sync` | the pull sweep on `code-ahead`, the push sweep on `spec-ahead` |
-| `report` | `devbook-verify`, which reports and writes nothing |
-| `off` | none |
-
-A verdict no sweep acts on — `conflict`, `unresolved`, one pointing against the
-direction, any verdict in a set-aside group — goes to a person.
+**Which way.** A unit carries no direction. Which units a sweep levels, and
+whether it carries code into chapters or chapters into code, is Backlog's,
+stored per repository and folder; `devbook-verify` reports every unit and writes
+nothing. A verdict no pass acts on — `conflict`, `unresolved`, any verdict in a
+set-aside group — goes to a person.
 
 ## Counterpart resolution
 
@@ -335,90 +327,59 @@ evidence, name the decision that has to be made, and wait.
 `unresolved` is likewise not a licence to guess. Report it as a finding — a
 concept nobody can pair to code is itself worth knowing about.
 
-## Status rules
+## What is agreed
 
-`status` records how settled the written chapter is. It is not a report on the
-code, and each of the three directions has a way of getting this wrong.
+A block carries no status. A branch's devbook is true of that branch's code, so
+**a chapter merged into the branch is agreed**: it is the model, and building
+it is the point. Work someone is still deciding is never a chapter under
+`.devbook/`. It is an open change under `openspec/changes/<name>/`, on any
+branch, per `devbook-changes.md`, and that is where spec-ahead work lives before
+it lands.
 
-The rule underneath every row below: **a spec that is ahead of the code stays
-ahead until a person says otherwise.** Nothing read from code may overwrite a
-chapter someone is still deciding about, and nothing gets built out of one.
+The rule underneath: **a change still being decided stays ahead until a person
+says otherwise.** Nothing read from code may overwrite it, and nothing gets
+built out of it.
 
-| Target's `status` | `capture-specs` | `verify-change` | `apply-change` |
-|---|---|---|---|
-| `active` — the agreed model, nothing pending against it | May plan. The plan is an ordinary delta against an agreed chapter | Verdicts against the chapter as it stands | Proceeds. This is the model, and building it is the point; the status adds no gate of its own |
-| `draft` or `proposed` — someone is still deciding | **Never plans over it.** Reports what the code has beside what the draft says, and proposes a replacement for neither | Verdicts as usual, and marks the verdict `unagreed` | **Stops and confirms** before emitting a brief |
-| `deprecated` — retired | **Never.** Reports the finding and stops | Report only | **Refuses.** Nothing is built from a retired chapter |
+A change is open against a chapter when a delta under
+`openspec/changes/<name>/devbook-delta/` — never `archive/` — sits at the
+chapter's file path and names the chapter's heading or one above it.
+**`capture-specs` never plans over it**: it reports the change by name beside
+what the code has, because the chapter's next content is already being decided
+there.
 
-`unagreed` is a flag on a verdict, not a sixth verdict: the five below are still
-the whole set, and the flag says only that the verdict was measured against
-something nobody has agreed to yet. A `code-ahead` against a `draft` is a
-statement about a sketch, and reading it as a statement about the model is the
-mistake the flag exists to prevent.
-
-`approved` and `accepted`, `domain/`'s two decision rungs, read as `active` in
-every column — they are `active` with a signature. The rows are about the
-chapter the run is aimed at.
-
-A change open against that chapter sits on top of every row. It is open when a
-delta under `openspec/changes/<name>/devbook-delta/` — never `archive/` — sits at
-the chapter's file path and names the chapter's heading or one above it, per
-`devbook-changes.md`. **`capture-specs` never plans over it**, whatever the
-status: it reports the change by name beside what the code has, because the
-chapter's next content is already being decided in that change.
-
-To the other two, a change is **pending truth** once agreed — its `proposal.md`
-at `approved` or `accepted` over its current hash, per `devbook-changes.md`.
-The target is then the chapter as the delta would leave it, which
+To the other two, an open change is **pending truth** once a person has agreed
+it — the host that keeps the proposal's state reports it `approved` or
+`accepted` over its current fingerprint, through `devbook.decision@1` (the
+devbook plugin's `resources/decision.md`). Name the host that answered. The
+target is then the chapter as the delta would leave it, which
 `delta.mjs --check <name>` merges in memory:
 
 | The change | `verify-change` | `apply-change` |
 |---|---|---|
 | Agreed | Verdicts against chapter plus delta. A `code-ahead` the delta explains is reported as `covered by change <name>, step N` — the `tasks.md` step whose `delivers:` names it — and is not drift | Proceeds against chapter plus delta, one step at a time |
-| At `proposed`, or its hash lapsed | Verdicts against the chapter as it stands, and names the change beside each verdict it touches | **Stops and confirms**, as over a `draft` |
+| Not agreed, its fingerprint moved since the decision, or no host bound | Verdicts against the chapter as it stands, marked `unagreed`, and names the change beside each verdict it touches | **Stops and confirms** before emitting a brief |
 
-**Capture writes no status at all.** Finding an implementation is not agreement
-that the implementation is the intended model, and a capture pass produces a
-plan rather than a chapter, so — with the one exception in
-[Carrying a plan in](#carrying-a-plan-in):
+`unagreed` is a flag on a verdict, not a sixth verdict: the five above are still
+the whole set, and the flag says only that the verdict was measured beside
+something nobody has agreed to yet. Reading it as a statement about the model
+is the mistake the flag exists to prevent.
 
-- A plan for a chapter that does not exist yet proposes content and no `status`
-  line. What the chapter is worth is decided when someone carries the plan in,
-  not by the pass that found the code.
-- A plan against a chapter that exists proposes no change to its `status`
-  either. Capture plans the chapter's *content*; a status change is a separate,
-  deliberate decision that belongs to the folder's flow and the person running
-  it.
-- Never propose `active` because the code exists. `active` means "this is the
-  current agreed model", and only a person agrees. In `domain/`, `arc42/`, and
-  `design/` that move is spelled by *deleting* the `status` line, since `active`
-  is those folders' resting value — so a plan never carries the removal of a
-  `draft` or `proposed` line either.
-- Never propose `deprecated` because the code was deleted. Code being gone may
-  mean the model was abandoned, or may mean it regressed. Report it as
-  `code-ahead` with the removal as the finding, and let the person decide.
+**Capture decides nothing.** Finding an implementation is not agreement that
+the implementation is the intended model, and a capture pass produces a plan
+rather than a chapter, so — with the one exception in
+[Carrying a plan in](#carrying-a-plan-in) — what the plan is worth is decided
+when someone reviews and merges it, not by the pass that found the code. Never
+propose removing a chapter because the code was deleted. Code being gone may
+mean the model was abandoned, or may mean it regressed. Report it as
+`code-ahead` with the removal as the finding, and let the person decide.
 
-**Apply must not brief an unsettled chapter without confirmation.** A
-chapter at `draft` or `proposed` has not been agreed:
+**Apply never builds an undecided change without confirmation.** Say what the
+change claims, that it is not yet agreed, and ask whether to build it as
+written or settle it first. Building from it silently turns an unreviewed
+sketch into shipped behaviour.
 
-- `approved` — proceed. The approval gate's rung: a person read this chapter and
-  approved it, with `approved-by` and `approved-at` recording who and when.
-- `active` — proceed. This is the agreed model, and building it is the point.
-- `draft` or `proposed` — stop and confirm before emitting a brief. Say what the
-  chapter currently claims, that it is not yet agreed, and ask whether to build
-  it as written or settle the chapter first. Building from a draft silently
-  turns an unreviewed sketch into shipped behaviour.
-- `deprecated` — do not build. Report it and stop.
-
-In `design/`, the ladder is only `draft`, `active`, `deprecated`; the `draft`
-rule above applies unchanged and there is no `proposed`. The two decision rungs,
-`approved` and `accepted` above it, sit on `domain/`'s ladder and on no other.
-
-**No skill here writes either decision rung.** Capture never sets it: finding
-code is not a person approving a chapter, and the same rule that forbids
-promoting to `active` forbids this more strongly. Apply never sets it either —
-it reads the rung and stops or proceeds. Only the approval gate, and the person
-answering it, writes `approved`, `approved-by`, and `approved-at`.
+**No skill here records a decision.** Approval and acceptance are the host's,
+made by the person answering it there; capture and apply only read them.
 
 ## The capture plan
 
@@ -454,10 +415,8 @@ The plan has three parts.
 3. **The report table**, as below, one row per chapter in scope, `aligned` rows
    included.
 
-A plan never carries a `status` line, an `annotation` fence, or an edit to anything
-outside the headings it lists. Where the target is a chapter still being decided — a
-`draft` — the plan proposes no replacement for it: it reports what the code has
-beside what the draft says and leaves the two for the person to reconcile.
+A plan never carries a field the schema moved to tooling, an `annotation` fence, or an
+edit to anything outside the headings it lists.
 
 ## Carrying a plan in
 
@@ -475,20 +434,14 @@ Two callers carry the plan in themselves, and the same rules bind both:
 
 This section owns what the carried chapters may say.
 
-- **`ADDED` chapters arrive at `status: draft`.** A plan carries no status, so the
-  carrier writes the one value that says nobody has agreed yet. Promoting it is the
-  reviewer's edit.
-- **Nothing above `draft`, and never a decision rung.** No `active`, no `approved`
-  or `accepted`, and no deleted `status` line — in a folder whose resting value is
-  `active`, deleting the line promotes the chapter.
-- **A `MODIFIED` chapter keeps its `status` line as it stands.** Where its new text
-  lapses an `approved-hash` or `accepted-hash`, the pull request says so.
+- **A carried chapter states nothing about its own standing.** No field says it
+  is a draft or agreed: the draft pull request is what says nobody has agreed
+  it yet, and merging it is the agreement.
 - **`REMOVED` is never carried.** It stays a finding for a person.
 - **Only the chapters the plan lists.** Nothing outside its headings, and no
   `annotation` fence.
-- **The workspace carries no status.** A building block's DSL statements land with the
-  chapters that embed or name them, and only the identifiers and view keys the plan lists;
-  each new block's file arrives at `draft`, which is what says nobody has agreed its element.
+- **The workspace lands with its chapters.** A building block's DSL statements land with the
+  chapters that embed or name them, and only the identifiers and view keys the plan lists.
   A `REMOVED` statement is never carried.
 - **Each carried chapter with its `meta` block, written in the same edit**, per the folder
   rule and `devbook-chapter-metadata.md`, then [the check](#the-check), run by the carrier
@@ -496,9 +449,9 @@ This section owns what the carried chapters may say.
   output; a failing chapter is never handed on.
 
 The apply direction has the same shape: the brief goes to the resolver as its
-specification, and the change lands as a draft pull request. The status gate's
-"stop and confirm" has nobody to ask, so a chapter at `draft` or `proposed` is
-skipped and named in the run's report, never built.
+specification, and the change lands as a draft pull request. "Stop and confirm"
+has nobody to ask, so an open change that is not agreed is skipped and named in
+the run's report, never built.
 
 ## Code-side writes: the change brief
 
@@ -544,7 +497,7 @@ The brief has five parts, and a change category.
 |---|---|
 | `new functionality` | The chapter describes a capability, type, or event the application does not have in any form. |
 | `change to existing behaviour` | The counterpart exists and works, and the chapter asks it to do something different or more. |
-| `defect` | The counterpart exists and is supposed to already satisfy the chapter, but does not. Reach this only from a `spec-ahead` verdict on content whose `status` says it was agreed and believed delivered — never from a `conflict`, which stops instead. |
+| `defect` | The counterpart exists and is supposed to already satisfy the chapter, but does not. Reach this only from a `spec-ahead` verdict on a merged chapter believed delivered — never from a `conflict`, which stops instead. |
 
 **The five parts:**
 
@@ -638,15 +591,11 @@ Column rules:
 - **Action** — what was done or is being asked for. For `conflict` and
   `unresolved`, the action is the question being put to the user.
 
-`verify-change` adds two columns after **Verdict**, read from `units.mjs` and
+`verify-change` adds one column after **Verdict**, read from `units.mjs` and
 never inferred:
 
-- **Sync** — the chapter's effective `sync` and the level it came from, as
-  `pull (context)`; `report (default)` when nothing states one; `—` for a chapter
-  in no unit.
-- **Sweep** — the sweep that will act on this verdict, per the table in
-  [The sync unit](#the-sync-unit), or `a person` when none will. A chapter in a
-  set-aside group says `a person` and why.
+- **Unit** — the root chapter address of the unit the chapter belongs to, or `—`
+  for a chapter in no unit. A chapter in a set-aside group names why.
 
 Report every chapter in scope, including the `aligned` ones. A pass that lists
 only its findings does not tell the reader what was checked and found fine, so

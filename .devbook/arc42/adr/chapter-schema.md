@@ -22,14 +22,15 @@ chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `al
 the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
-The schema does not carry that yet. Until the migration in
-[Branch-true devbook](#branch-true-devbook) lands, `status` is one field with one ladder per
-folder. The three editorial folders rest at `active` by omitting it. `domain/`'s ladder and a
-change's `proposal.md` carry two decision rungs. `approved` carries `approved-by`,
-`approved-at`, and an optional `approved-hash`, and `accepted` above it carries the same three. A
-repository may declare its own transitional rungs in `.devbook/statuses.json`. Which way a
-sync unit and its code flow is `sync`, nearest wins and `report` when none says. The
-paragraphs under Why give the reasons each of these had.
+Contract 38 carries this in `devbook`. The check reports `status` outside `tech/` and `ai/`,
+the two decision rungs and their six record fields, `sync`, `issue`, `effort`, `roadmap`, and
+`change` as errors, each naming `038-workflow-state-leaves-the-chapter`, which deletes them. It
+reports a `tech/` or `ai/` `status` as renamed `rating`, and no longer reads
+`.devbook/statuses.json`. `units.mjs` still groups chapters into sync units and has no
+`--direction`. `delta.mjs --apply` stamps nothing and merges a change only at the fingerprint a
+host recorded its acceptance at. The annotation fence and `devbook-collaboration` retire in the
+next step of the same release. The paragraphs under Why that give the moved fields' reasons are
+this concern's history now.
 
 A proposed change to those folders is the one devbook content outside the parent: it lives in
 `openspec/changes/<name>/` as a `type: change` proposal and one delta
@@ -244,8 +245,9 @@ a chapter came from. A merged chapter has no work left to estimate. A proposal's
 the tool sums them rather than storing a total that can drift.
 
 The paragraphs below on `approved`, `accepted`, the lapse, the resting `active`, the
-repository's rungs, and the sync direction give the reasons the moved fields had. They stand
-until the migration removes the fields, and then they are this concern's history.
+repository's rungs, and the sync direction give the reasons the moved fields had. Contract 38
+removed the fields, so they are this concern's history: they explain what a repository written
+before it still holds in git.
 
 **One layout.** The convention first permitted two — five root dot-folders or all five under
 `.devbook/` — and the generator understood only the flat one, so a nested address resolved to
@@ -660,6 +662,7 @@ left.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-29 | Contract 38 builds the decision in `devbook`. `status` outside `tech/` and `ai/`, `approved`, `accepted` and their six record fields, `sync`, `issue`, `effort`, `roadmap`, and `change` are errors naming `038-workflow-state-leaves-the-chapter`, which deletes them and writes no export file. A `tech/` or `ai/` rating is `rating`. `.devbook/statuses.json` loading, the rung checks, the stale-approval check, and the coverage exemption at `deprecated` go. `units.mjs` loses `--direction`, and `delta.mjs --apply` stamps no `change` and merges only with `--accepted-hash`, the fingerprint a host recorded the acceptance at. | The decision was recorded first so the hosts could import from the default branch before the fields left it. |
 | 2026-10-29 | A branch's devbook is true of its code. Workflow state leaves the `meta` block and exists only for a change proposal, a decision record under discussion, and a debt record, each host keeping its own. `status`, the decision rungs, `statuses.json`, `sync`, `issue`, `effort`, `roadmap`, `change`, and the fence leave the chapter; a rating becomes `rating`; `deprecated` becomes a `REMOVED` delta. `devbook-collaboration` retires and `chapter-review` moves into `devbook`. Decided, not yet built: the contract bump and its migration follow. | A rung is about a review, not the content, and committed it put a branch ahead of or behind its own decisions. |
 | 2026-10-28 | `domain/`'s flow page is retired: `flow.md` and every `flow.<name>.md`. A diagram opens the chapter of what it draws, under its `meta` block and ahead of its prose; a file typed `flow` is an error. Contract 37, `037-flows-in-their-chapters`, which moves each section and asks the person about the ones its page does not place. | Pictures before words: the lifecycle drawn one file away left the chapter retelling it, and every claim a flow drew already had a chapter. |
 | 2026-10-22 | A `feature` or `sub-feature` chapter may carry `playthrough`, the demo walkthrough its page shows playing a whole journey end to end, and a `demo-model` walkthrough may be that playthrough, with `journey` and a `part` and `step` per step. Contract 36, no migration: both are added fields with a safe default. | The page needed one place to say which walk to show, read where the checker and the index already read. |
