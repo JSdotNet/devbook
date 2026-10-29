@@ -23,6 +23,13 @@ schema and no state of its own: the only fields it writes are devbook's two deci
 their records, held to their meaning by devbook's check, and a finding lives in devbook's own
 device ([the annotations record](../adr/annotations.md)).
 
+**Retiring.** This block goes, per [the chapter schema record](../adr/chapter-schema.md#branch-true-devbook).
+A decision on a change proposal, a decision record, or a debt record is made in the host
+that keeps its state, and a review note is a comment thread there. `chapter-review` moves into
+[devbook](devbook.md) and posts its findings through `devbook.decision@1`, which `devbook`
+owns. The other four skills and `scripts/review-queue.mjs` go with the plugin. Until the plugin
+is removed, the block works as described below.
+
 ## Interfaces
 
 ```meta
