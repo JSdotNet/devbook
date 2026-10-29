@@ -25,10 +25,11 @@ or group per **The sync unit** in the protocol; the bounded context; the root.
 
 1. Load the protocol, the kind's file, and its folder rule. Read the chapter,
    everything the kind's file says comes with it, and nothing more.
-2. Apply the status gate, per chapter where the kind has sub-chapters:
-   `accepted`, `approved`, and `active` proceed; `draft` or `proposed` stops to confirm —
-   say what the chapter claims and that it is not agreed, then ask whether to
-   build it as written or settle it first; `deprecated` stops.
+2. Apply the agreement gate, per chapter where the kind has sub-chapters, per
+   the protocol's **What is agreed**: a merged chapter and an agreed open change
+   proceed; an open change its host does not report agreed stops to confirm —
+   say what it claims and that it is not agreed, then ask whether to build it as
+   written or settle it first.
 3. Resolve the counterpart by the protocol's ladder; record the rung. This
    picks the change category: no counterpart is `new functionality`, one that
    does less is `change to existing behaviour`, one believed to satisfy an
@@ -51,5 +52,5 @@ or group per **The sync unit** in the protocol; the bounded context; the root.
 8. Close with the protocol's report table, one row per chapter in scope, with
    the brief attached and the flow it went to.
 
-A wrong chapter is a verdict, never an edit. An open `annotation` is a reason to stop at the
-gate, never a line in the brief, per `rules/devbook-annotations.md`.
+A wrong chapter is a verdict, never an edit. An open review note is a reason to stop at the
+gate, never a line in the brief.

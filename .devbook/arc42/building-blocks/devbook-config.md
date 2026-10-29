@@ -121,10 +121,9 @@ and a leftover `model-selection.md` in the user's devbook config directory. Both
 that moves them: `delivery:update` for the map and `local` for the file.
 
 Where the change lane is stamped, it checks the OpenSpec CLI against `components.openspec.cli`
-and lists every open change whose proposal is still `proposed` and whose folder nobody has
-committed to in seven days. Both are warnings: the CLI is a fact about this machine, like a
-plugin it lacks, and a stale proposal waits on a person, which `chapter-approve` on the folder
-settles either way.
+and lists every open change whose folder nobody has committed to in seven days. Both are warnings: the CLI is a fact about this machine, like a
+plugin it lacks, and a stale proposal waits on a person, who settles it either way in the host
+that keeps the proposal's state.
 
 ### report
 
@@ -565,7 +564,6 @@ included. That is the whole shape of it.
 | [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, invokes `devbook:init` during init and `devbook:update` during update, and runs its migrations with `--check` from `doctor` | The folder layout, the two skill names, and `migrate.mjs --check` | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
 | [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their `init` or `update` during a fan-out | The stamp shape and each component's two skill names | Every component's stamp stays with the component. This block decides *whether* one runs and never what it does. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Conformist, read-only | Reads its stamp, invokes its `init` or `update` during a fan-out, and writes the provider ids it exposes into the engine keys | Its stamp, its two skill names, and the ids `devbook-openspec:spec` and `devbook-openspec:tracker` | The lane's questions are asked here because the bindings they answer are engine keys; everything OpenSpec materializes is the bridge's. |
-| [devbook-collaboration](devbook-collaboration.md#dependencies) | Conformist, read-only | Reports whether it is installed and enabled | The marketplace entry and manifests | It has no stamp, no `init`, and no `update`; enabling it is the whole adoption. |
 | The four surfaces | Conformist, read-only | Reports whether each is installed, enabled, and at what version | The marketplace entries and manifests | Naming a plugin is not depending on one. Every row degrades to `not installed`. |
 | The host's own plugin state | Conformist, **and a known divergence** | Reads the host's config directory, its installed-plugin file, its marketplace clones, and three settings layers merged nearest-last | The host's own file layout | Where a plugin is installed and whether it is enabled is a fact about a host and nothing else, so an asset answering it either names those files or answers nothing. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `scripts/` run in place from the plugin root | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here. |

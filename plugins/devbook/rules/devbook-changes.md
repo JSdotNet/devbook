@@ -1,14 +1,15 @@
 ---
 name: devbook-changes
-description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records, the delta shape the merge in delta.mjs applies, and how a journey and its Proved by pointers change through it.
+description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the delta shape the merge in delta.mjs applies, the acceptance it checks before merging, and how a journey and its Proved by pointers change through it.
 ---
 
 # The change folder
 
 A proposed change to the devbook lives in `openspec/changes/<name>/`, a kebab-case name, until
-`delta.mjs --apply` merges it and moves it to `openspec/changes/archive/<date>-<name>/`. The
-path is OpenSpec's and fixed: its CLI resolves `changes/` only under a folder named
-`openspec/`. Never read `archive/` as context — it is history, and the check never reads it.
+`delta.mjs --apply` merges it and moves it to `openspec/changes/archive/<date>-<name>/`. An open
+change may run ahead of the code on any branch: it is where work not yet built lives, so the
+chapters under `.devbook/` stay true of the branch's code. The path is OpenSpec's and fixed:
+its CLI resolves `changes/` only under a folder named `openspec/`. Never read `archive/` as context — it is history, and the check never reads it.
 
 Nothing in the change folder is part of the devbook graph. A change references the devbook; a
 devbook chapter never references a change — `related`, `depends-on`, or a prose link into
@@ -24,17 +25,22 @@ devbook chapter never references a change — `related`, `depends-on`, or a pros
 
 ## proposal.md
 
-The file-level block is `type: change`, `status: proposed`, and `category` — one of `feature`,
-`behaviour-change`, `defect`, because the category picks the flow that applies a step. Its
-`##` sections — `Why` and `Scope` — are sections and carry no block; the deltas name the
-chapters the change touches. The change is decided as one, so both gates are recorded once,
-here: `approved`, then `accepted`, with the six fields of `devbook-chapter-metadata.md` and
-both hashes always written.
-The hash covers the proposal and every delta — `chapter-hash.mjs openspec/changes/<name>` — and
-an open `kind: question` anywhere in the change is an error under either rung. The block may
-also carry `demo`, per `devbook-chapter-metadata.md`, naming the screens the change is about.
-`--apply` merges only an `accepted` change over its current hash, writes no rung onto a chapter it lands
-in — `change` points at the archived proposal — and lifts a chapter's own rung it makes stale.
+The file-level block is `type: change` and `category` — one of `feature`, `behaviour-change`,
+`defect`, because the category picks the flow that applies a step. Its `##` sections — `Why`
+and `Scope` — are sections and carry no block; the deltas name the chapters the change touches.
+The block may also carry `demo`, per `devbook-chapter-metadata.md`, naming the screens the
+change is about. It carries no `status`, no rung, and no estimate: the proposal's state —
+`draft`, `approved`, `accepted`, with who, when, and the fingerprint — is the host's, answered
+through `devbook.decision@1` (the devbook plugin's `resources/decision.md`), and `effort` sits
+on the tasks. The change is decided as one, over one fingerprint covering the proposal and every
+delta, per the devbook plugin's `resources/chapter-fingerprint.md`:
+`node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`.
+
+`delta.mjs --apply <name> --accepted-hash <fingerprint>` merges only when the fingerprint the
+host recorded the acceptance at equals the change's current one, so nothing was edited after
+the decision. The host refuses the acceptance while a `question` note is open anywhere in the
+change. Read the acceptance from the host through `devbook.decision@1` before calling it; with
+no host bound, nothing merges.
 
 ## A delta
 
@@ -53,10 +59,13 @@ entries one level deeper, which the merge lands one level up:
 - `delta: removed` — each named chapter goes whole; a `#` chapter removes the file.
 
 A paragraph is not addressable: change it by replacing its section. The delta's opening block
-carries no status — a delta inherits everything through `change`. A change with no prose delta
-still carries one delta, a placeholder holding only that block, because OpenSpec counts an
-empty `devbook-delta/` as unfinished. The merge stamps `change: <name>` on every chapter block
-it touched; `change` is provenance, written by the merge and never by hand.
+carries only `change` and `delta`. A change with no prose delta still carries one delta, a
+placeholder holding only that block, because OpenSpec counts an empty `devbook-delta/` as
+unfinished. The merge stamps nothing on the chapters it lands in: git history and the archived
+change record where a chapter came from.
+
+A chapter that should no longer be followed is removed, never marked: a `delta: removed` file
+or a `REMOVED` entry takes it out, and the archived change keeps its text and the reason.
 
 Run `node .devbook/_tools/devbook-meta/delta.mjs --check <name>` after every edit to a delta: it
 resolves each one to its target file and heading, lints the merged result, and then runs the

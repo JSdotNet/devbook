@@ -1,7 +1,7 @@
 # Technology Graph
 
 ```meta
-status: adopted
+rating: adopted
 index: root
 ```
 

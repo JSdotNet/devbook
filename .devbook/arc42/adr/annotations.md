@@ -1,92 +1,81 @@
 # Annotations
 
 ```meta
-date: 2026-09-30
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#annotation", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
-c4: ["marketplace.devbook.annotation", "marketplace.devbook.fence-writer"]
-c4-touches: ["marketplace.devbook-collaboration.finding"]
+date: 2026-10-29
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#chapter-review", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook", ".devbook/arc42/adr/plugin-boundaries.md"]
+c4: ["marketplace.devbook.chapter-review"]
+c4-touches: ["marketplace.devbook.chapter"]
 ```
 
-A review note is a fenced `annotation` block in the chapter, beside the passage it comments
-on, and the fence — its schema, its only writer `annotations.mjs`, its lifecycle open →
-resolved → gone, and the sweep — is `devbook`'s. It reaches the five devbook folders and
-nothing else. The gate that shows a chapter with its open notes and writes `status: approved`
-is `devbook-collaboration:chapter-approve`, in the review plugin and not the engine, and it
-reads the chapter rather than the derived index. Only an open `kind: question` blocks; a
-`flag` is shown first and never blocks. Where a review stands is the chapter's `status` and its
-open fences, and no field of its own; who owes the next move lives in the pull request or the
-tracker. The review plugin ships its five skills and nothing else: no rule, no install, no
-hook, no stamp.
+A review note is a comment thread in each host, anchored to the chapter address, and never
+text in the chapter. spec-manager keeps it in its `CommentThread` table and Backlog in its
+annotation store, beside the workflow state each keeps for the same subject. A tool reads,
+posts, and resolves a note through `devbook.decision@1`, the capability group `devbook` owns.
+Only an open `kind: question` blocks approval of a change proposal, and a `flag` never blocks.
+`devbook:chapter-review` posts its findings through the group, and `devbook-collaboration` is
+gone, per [the chapter schema record](chapter-schema.md#branch-true-devbook).
+
+The `annotation` fence is retired with it. Each host imports the open fences by reading the
+repository's Markdown on its default branch, with the parser it already has, and
+`038-workflow-state-leaves-the-chapter` then deletes every fence, open or resolved, and writes
+no export file. `annotations.mjs`, `annotation-sweep`, the `devbook-annotations` rule, and the
+check's fence rules are gone, and `_meta/annotations.json` is no longer written. The check
+reports a fence left in a chapter as an error naming the migration. The chapter fingerprint
+still leaves an `annotation` fence out, so no value recorded before the fence retired moves.
 
 ## Why
 
 ```meta
 ```
 
-**The fence is the foundation's.** `devbook-collaboration` first recorded a comment as one
-single-line `ext` finding, because the fence was designed as an L0 feature and L0 had not built
-it: building it from a layer above would put a schema element into `devbook`'s files, and a
-threaded store inside `ext` would rival a mechanism already designed. Once `devbook` shipped
-the fence, the premise was gone and the findings migrated — one fence per finding, placed
-against the chapter, `author` unknown. Two things arrived with the fence that a key could not
-do: an open question on an `approved` chapter fails the check, and a resolved note has to be
-swept.
+**A note is workflow, not content.** A note is about a review, and it changes on the review's
+schedule. In the chapter, every note written, answered, or swept was a commit that changed no
+content. A note written on a feature branch was invisible on `main` until merge, so a branch
+was ahead of or behind its own review. The [branch-true decision](chapter-schema.md#branch-true-devbook)
+takes workflow state out of git, and the notes on a subject belong beside its state.
 
-**The sweep is `devbook`'s too.** A repository that never installs the review plugin still
-gets notes — in an editor, in a pull request — and still needs them swept; a foundation whose
-lifecycle needs an extension to finish is the shape a layered stack avoids. The sweep is
-chapter-scoped, so the list is one a person can read before the delete. Promotion of a note to
-tracked work is nobody's yet: its vocabulary lives in `delivery`'s engine contract, which
-`devbook-collaboration` may not name, so it belongs in `delivery` or a bridge.
+**The hosts already keep threads.** spec-manager has `CommentThread` and Backlog has
+`IDevbookAnnotationStore`, each holding comments of its own. Beside the fence, a chapter's
+notes lived in two places that nothing kept level. Each host now keeps its own notes, as it
+keeps its own state, and the two may differ.
 
-**The folders, and nothing else.** A fence in a rule, a resource, or `AGENTS.md` is parsed,
-counted, and warned about by nothing. An instruction file is reviewed as code, in the pull
-request; widening the walk would mean deciding what a chapter is in a file with no `meta`
-block, and would put a reviewer's note into a file a host injects into every matching session.
-A fence after a `mermaid` block annotates the diagram, because position is the anchor.
+**The group is `devbook`'s.** With `devbook-collaboration` retired, the contract that reads
+and resolves a note needs an owner below both hosts and below every skill that posts one.
+`devbook` already owns the schema and the chapter fingerprint. A skill in `devbook` names a
+capability group, never a tool, so a lower layer still names no higher one. With no tool bound,
+`chapter-review` reports its findings and writes nothing.
 
-**The gate lives where the writer is.** The design put the gate in the engine, reading the
-derived index. But the decision is written into the chapter as devbook's own rung, and the
-engine reads that rung and never writes it — a gate in the engine would write three devbook
-fields from a plugin that claims to know none of devbook's schema. And a chapter is approved
-outside a run more often than inside one: an engine gate decides *this run continuing*, not the
-chapter's standing. The gate reads the chapter because it loads it anyway and every fact it
-needs is in that one file; the nightly index is exactly the copy missing the notes written a
-minute ago. The index is for reads that span chapters.
+**The import reads the Markdown.** Both hosts already parse the fences on the default branch,
+which is where the devbook states what is true. An export file would be a second format to
+version for a single run, written outside the repository where nobody reviews it.
 
-**A flag never blocks.** An unanswered question is a hole in the chapter and outranks
-`status`, which is devbook's rule; a comment, a suggestion, or a flag is a remark about a
-chapter that stands. Making a flag block from the review plugin would change what a devbook
-field means from one layer up. A stricter chapter gate would be a committed switch under
-`components.collaboration` that only ever tightens, and nobody has asked for one.
+**A flag never blocks.** An unanswered question is a hole in the change, and approving over
+it would agree to text nobody has finished. A comment, a suggestion, or a flag is a remark about
+text that stands. A stricter gate would be a host's setting that only ever tightens, and nobody
+has asked for one.
 
 **Review state is not a field.** The triad — `review`, `reviewer`, `review-at` — lived in the
-`ext` namespace until 2026-09-17 and in devbook's schema after it, mirroring the approval
-record. Contract 21 removes it, on a request from Budgetbeheer, the one repository that used
-the review pass in earnest. A chapter ready to read but not yet agreed is a rung on the status
-ladder, so a review field beside `status` said the chapter's stage twice: Budgetbeheer wrote
-`status: review` until adoption, the check rejected it, and the only spelling the check then
-took was `status: draft` with `review: requested` — the first one wrong. `changes-requested`
-and `cleared` were a cached copy of what the open fences already say, which the check then had
-to reconcile against them. And who owes the next move is workflow state: in the chapter, every
-reassignment was a content diff on text that did not change, where the pull request, the
-queue, or the tracker holds it for free. The decision records stay, because an approval and an
-acceptance have to travel with the content and lapse with it; a pending review does not.
-Moving the triad out of `ext` was still right — a field nobody validated was worse than either
-— and what the move took with it stays gone: the collaboration rule, its install, its stamp,
-and its hook. Independence from devbook was asked for and declined: every skill reads a `meta`
-block, writes through the fence writer, or writes the rung, and a collaboration plugin over
-arbitrary Markdown would rebuild devbook's schema inside itself.
+`ext` namespace until 2026-09-17 and in devbook's schema until contract 21, on a request from
+Budgetbeheer. A review field beside `status` said the chapter's stage twice, and
+`changes-requested` and `cleared` were a cached copy of what the open notes already said. Who
+owes the next move is workflow state, held in the pull request, the queue, or the tracker. The
+branch-true decision applies the same reason to the notes and the rungs themselves.
 
 ## Rejected
 
 ```meta
 ```
 
+- Keeping the fence as the source, with each host mirroring it: every note stays a commit
+  that changes no content.
+- Moving the notes in a later proposal than the state, which would leave an open question
+  blocking a rung no chapter carries any more.
+- A migration that exports every open note to a JSON file for a host to import.
+- `devbook.decision@1` owned by a host, or by `devbook-collaboration`, which would leave
+  `chapter-review` naming a higher layer.
 - A threaded store inside the `ext` namespace, and building the fence from L1.
 - The gate in the flow engine, reading `_meta/annotations.json`.
-- A folder-wide sweep, and a lint that reports fences outside the folders — the second is the
-  answer when someone first wants to annotate a rule.
+- A folder-wide sweep, and a lint that reports fences outside the folders.
 - `kind: flag` as a blocker, or a reviewer's choice of kind as a gate.
 - Review state in the `ext` namespace, and a collaboration plugin independent of devbook.
 - Review state as fields in devbook's schema — the triad, from 2026-09-17 to contract 21.
@@ -98,6 +87,8 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-10-29 | Built. `devbook:chapter-review` posts its notes through `devbook.decision@1`, and `devbook-collaboration` is removed. `annotations.mjs`, `annotations-index.mjs`, `annotation-sweep`, the `devbook-annotations` rule, `_meta/annotations.json`, and the fence lint go; a leftover fence is an error, and `038-workflow-state-leaves-the-chapter` deletes every one. | The hosts keep the notes, so nothing in the repository writes or reads one. |
+| 2026-10-29 | A review note is a comment thread in each host, read, posted, and resolved through `devbook.decision@1`, which `devbook` owns. The fence retires: each host imports the open fences from the default branch, and the migration strips them. `chapter-review` moves into `devbook` and `devbook-collaboration` retires. Decided, not yet built. | A note is workflow state, and a branch's devbook states only what is true of its code. |
 | 2026-09-30 | Accepting a change owes an `aligned` verdict only for a delta whose target `verify-change` covers. A step is `done` per its workflow, not only by a merge. | A delta against a decision or debt record or a prose chapter has no code to be measured against, and requiring one made such a change impossible to accept. |
 | 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. | — |
 | 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema. Contract 21, migration `021-no-review-triad`. | A review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. |

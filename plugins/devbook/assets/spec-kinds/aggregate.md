@@ -2,8 +2,8 @@
 
 What `capture-specs`, `apply-change`, and `verify-change` need to know about an
 aggregate that `assets/code-sync-protocol.md` does not already say. The protocol
-carries the resolution ladder, the evidence rules, the five verdicts, the status
-rules, the brief contract, and the report table; this file carries the kind.
+carries the resolution ladder, the evidence rules, the five verdicts, what is
+agreed, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
@@ -135,8 +135,8 @@ assert it in `tests`. No `#### Scenario:` — the test names the case. A rule
 nothing asserts still gets its chapter, with no `tests`: the field's absence is
 the honest record, and a rule nothing asserts is one refactor away from being
 gone. A rule visible only in a disabled test, a TODO,
-or a comment gets `open` on its `Enforced at:` line and the question in a
-`kind: question` annotation fence, never a fact. Never merge chapters — a
+or a comment gets `open` on its `Enforced at:` line and the question raised as a
+`question` review note, never a fact. Never merge chapters — a
 chapter is what a brief quotes and an acceptance check is derived from.
 
 Settle every placement from that inventory: a type with a store of its own is a
@@ -162,9 +162,9 @@ there rather than adding a copy.
 
 ## Applying — `apply-change`
 
-Apply the status gate **per chapter**. A root at `active` with a sub-chapter at
-`draft` is the common case: brief the settled parts and name the unsettled ones
-as needing a decision.
+Apply the agreement gate **per chapter**. A merged root with a sub-chapter an
+open change is still deciding is the common case: brief the settled parts and
+name the unsettled ones as needing a decision.
 
 Two failure modes are the default outcome unless the brief forbids them in
 writing: an owned entity given its own repository, and a shared value object

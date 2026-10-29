@@ -1,7 +1,7 @@
 {
   "name": "devbook-openspec",
   "description": "The change lane: installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as deltas against its devbook chapters — never a copy of OpenSpec's skills. init checks the CLI against the stamped range, runs openspec init at the repository root, writes the managed devbook schema (proposal → devbook-delta → solution → tasks) and a seeded config.yaml, removes the specs/ folder the CLI scaffolds, installs the change-folder rule with a wrapper per host, and stamps components.openspec; update runs openspec update and refreshes what it manages. Four providers an engine can bind by name: spec returns an approved change's specification unchanged, tracker keeps tasks.md as the work items with read_item, update_item, and comment, status reports steps, verdicts, and both gates, and archive checks the gates, merges every delta through devbook's delta.mjs, and lets openspec archive move the folder. onboard walks a first change through. An L1 extension over devbook.",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "author": {
     "name": "Job Schepers"
   },
@@ -20,7 +20,7 @@
   "dependencies": [
     {
       "name": "devbook",
-      "version": ">=1.13.0 <2.0.0",
+      "version": ">=1.32.0 <2.0.0",
       "marketplace": "jsdotnet-devbook"
     }
   ]

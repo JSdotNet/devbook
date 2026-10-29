@@ -33,7 +33,7 @@ way an `e2e` test does, and it gets no verdict row of its own.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper; `capture-specs` in write mode by a `phase-spec-check` binding |
-| `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
+| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass or one pull request covers; the sync sweeps, which select their groups from `--groups --json` |
 
 ### capture-specs
 
@@ -136,10 +136,9 @@ written, and the question a person actually asks before a review — has this fo
 is not answerable one chapter at a time. A table per chapter would hide the shape of the
 whole, which is the only thing a folder-wide run adds.
 
-Each row also carries the chapter's effective `sync`, with the level it came from, and the
-sweep that will act on its verdict — or a person, when none will. Both are read from
-`units.mjs`, never inferred, so the report a person reads before setting a direction says
-exactly what the next unattended run will do with it.
+Each row also names the unit the chapter belongs to, read from `units.mjs` and never
+inferred. Which way a sweep levels that unit is not the chapter's to say: since contract 38
+no chapter carries a direction, and Backlog keeps the direction map per repository and folder.
 
 ## Structure
 
@@ -162,36 +161,35 @@ related: [".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary
 
 Also called: `units.mjs`.
 
-`units.mjs` reads the reference graph and lists every sync unit with its chapters, its
-effective `sync` direction, and the block that direction came from. Each chapter belongs to one
+`units.mjs` reads the reference graph and lists every sync unit with its chapters and
+files. The graph build marks each unit's root chapter through `isUnitRoot` in `metadata.mjs`.
+Each chapter belongs to one
 unit, decided from headings, `type`, file names, and `related` alone: an owned type by the
 aggregate it sits under, an event by the raiser its `related` names, an invariant by the
 grouping it sits under, a requirement by the feature it names and only otherwise by the
 aggregate, and a term by the one unit its name or alias resolves into. Shared value objects and
 enums form one shared-types unit per context. A `user` or `technical` actor is a unit of its
 one chapter, in `actors.md` or `context.md`; an `organisation` is modelled and never
-authenticated, so it roots none and stays context, and a direction set on an `actors.md` of
-organisations only is one no unit inherits. A building block's files are its own file and the
+authenticated, so it roots none and stays context. A building block's files are its own file and the
 building-block view, and, where `arc42/` has a workspace, `workspace.dsl` and the `c4/` files
 it includes, since the workspace is part of the building-block kind.
 
 With `--groups` it joins units into the groups a sweep claims. A requirement that names two
 aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
 reference, or a shared type never does, so a feature touching five aggregates does not pull
-all five into one pull request. A group's direction rolls up from its units, a `sync` unit
-going with the one other direction it meets. A group whose units go two other ways, or that
-holds more than 40 chapters, is set aside for a person rather than split. Orphans — an event
-naming no raiser, a term with two homes, a requirement naming nothing — and a stated direction
-no unit inherits are listed beside. `--direction` keeps what one sweep picks up, and `--json`
-prints the result for the sweep to read.
+all five into one pull request. A group that holds more than 40 chapters is set aside for
+a person rather than split. Orphans are listed beside: an event naming no raiser, a term with
+two homes, or a requirement naming nothing. `--json` prints the result, at version 2, for a
+sweep to read. The `--direction` filter went with contract 38, because a direction is the
+sweep's own configuration now.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Every chapter belongs to at most one unit, decided from structure and never from prose | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A requirement naming a feature belongs to the feature, whatever else it names | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `syncLevel` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
+| A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `isUnitRoot` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A group past `maxGroupChapters` is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A building block lists `workspace.dsl`, and each included file that declares an element or a view, among its files whenever the workspace declares one | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 
@@ -333,9 +331,9 @@ flowchart LR
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule
   nobody agreed.
-- **Each converter carries the annotation prohibition itself.** `capture-specs` never writes a
-  fence, `apply-change` never carries one into a brief, and both say so in their own `Do not`
-  section. The session-start prompt states the reading rule; a writing rule has to be at the
+- **Each converter carries the review-note prohibition itself.** `capture-specs` never writes a
+  review note, `apply-change` never carries an open one into a brief, and both say so in their
+  own `Do not` section. The session-start prompt states the reading rule; a writing rule has to be at the
   point of use to survive the session that reaches it.
 
 ## Dependencies
@@ -354,7 +352,7 @@ parent is a brief handed to whatever flow a repository has.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#structure) | Shared Kernel, its parent | `units.mjs` reads the reference graph `build.mjs` derives; the skills read each kind's file under `assets/spec-kinds/` and follow `assets/code-sync-protocol.md` | The `meta` schema, the chapter address, the `sync` field, and the protocol | A scope, a verdict, and a capture plan are all expressed in chapters, so this block is the convention's own and ships in its plugin. |
+| [devbook](devbook.md#structure) | Shared Kernel, its parent | `units.mjs` reads the reference graph `build.mjs` derives; the skills read each kind's file under `assets/spec-kinds/` and follow `assets/code-sync-protocol.md` | The `meta` schema, the chapter address, `isUnitRoot`, and the protocol | A scope, a verdict, and a capture plan are all expressed in chapters, so this block is the convention's own and ships in its plugin. |
 | [delivery](delivery.md#flow-code) | Separate Ways | `apply-change` hands its brief to a repo-native `flow-*` first, then to `flow-code`, and stops with it when no engine is installed | A brief as ordinary input | No flow knows these skills exist, so the dependency runs one way and a repository without the engine still gets the brief. |
 
 ### Inbound

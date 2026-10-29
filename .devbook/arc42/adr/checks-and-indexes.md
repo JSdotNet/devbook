@@ -12,8 +12,7 @@ every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, 
 generator's `build.mjs --check` over `.devbook/`, which runs the schema validator on every
 file; `node --test` over every `*.test.mjs` under `plugins/` and `tools/`, each file named;
 and `claude plugin validate --strict`, deliberately unpinned. The checker — the
-validator, the graph, the outline, the fence writer, the `validate`, `annotation-sweep`, and
-`tech-update` skills — is `devbook`'s. `build.mjs` checks by default, emits the same documents
+validator, the graph, the outline, the `validate` and `tech-update` skills — is `devbook`'s. `build.mjs` checks by default, emits the same documents
 on `--print`, and writes only on `--write`. The committed `_meta/` index and everything that
 exists to keep it fresh — the refresh script, the nightly workflow, the drift warning, the
 `devbook-derived-artifacts.md` rule, the `refresh` skill, the deny snippet — is

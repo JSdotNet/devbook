@@ -22,10 +22,10 @@ standard, and a class stated by half reports the wrong sentence.
 
 ## Hard Constraints
 
-- Writes nothing. Not a chapter, not an annotation, not `_meta/`. A finding becomes an edit
+- Writes nothing. Not a chapter, not a review note, not `_meta/`. A finding becomes an edit
   only when a person makes it through the folder's flow, or a note through whatever review
   skill the repository has.
-- Skips every `meta` and `annotation` fence, every code and Mermaid fence, every table, and
+- Skips every `meta` fence, every code and Mermaid fence, every table, and
   every step list in a journey from every class but `procedure-step`: a step is one
   clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone,
   and a table for `long-cell` alone. A bold field line, such as `**Does:**` or `**Why:**`,
@@ -34,7 +34,7 @@ standard, and a class stated by half reports the wrong sentence.
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
 - Leaves `adr/` and `tdr/` out of the prose classes. A record names what existed on its
-  date; a stale name there is history, and superseding is a `status`, not a rewrite.
+  date; a stale name there is history, and superseding is a history row, not a rewrite.
 
 ## Steps
 

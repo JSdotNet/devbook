@@ -31,7 +31,7 @@ first and stops when this week already has a retro.
   `arc42/` among them. Product code and the person's own overlay — their model, effort, or
   settings — are listed, never edited: the overlay lives outside the repository.
 - A chapter edit follows that folder's instruction file and `devbook-chapter-metadata.md`, as
-  `flow-spec` would: its `meta` block in the same commit, never an `annotation` fence, never a
+  `flow-spec` would: its `meta` block in the same commit, never a review note, never a
   file under `_meta/`. The draft pull request stands in for `flow-spec`'s approval gate, so a
   chapter edit lands nowhere else.
 - Every recommendation names its evidence: a count over the window, a session or run, a pull

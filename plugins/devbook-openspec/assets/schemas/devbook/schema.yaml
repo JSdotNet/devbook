@@ -8,7 +8,7 @@ artifacts:
     template: proposal.md
     instruction: |
       Write the proposal per devbook-changes.md. Its file-level meta block is
-      `type: change`, `status: proposed`, and `category` — one of `feature`,
+      `type: change` and `category` — one of `feature`,
       `behaviour-change`, `defect` — because the category picks the flow that
       applies a step. Then two sections, each without a meta block: `## Why` and
       `## Scope`. The deltas name the chapters the change touches.
@@ -19,9 +19,8 @@ artifacts:
       devbook-chapter-metadata.md. The demo file itself never records a verdict.
 
       Read the chapters it touches and walk their `related` links first; never
-      load a devbook folder whole. Skip every `annotation` fence: a review note
-      is not content. Never write `approved` or `accepted`: only the approve and
-      accept gates write those.
+      load a devbook folder whole. Never write a `status` or a decision: the proposal's state
+      is the host's, through devbook.decision@1.
     requires: []
 
   - id: devbook-delta

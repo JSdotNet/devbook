@@ -90,7 +90,7 @@ plugins/devbook/assets/code-sync-protocol.md — read that section before writin
 - A MODIFIED chapter keeps its status line as it stands; say when the new text lapses an
   approved-hash or accepted-hash.
 - REMOVED is never carried; it stays a finding.
-- Only the chapters the plan lists; no annotation fence.
+- Only the chapters the plan lists; no review note.
 Each edit follows the folder's own rule file — .agents/rules/devbook-<folder>.md where the
 repository delivers it — and devbook-chapter-metadata.md, with the meta block written in the
 same change as the content.
@@ -349,8 +349,8 @@ const LENSES = [
       'Folder rule: does every carried chapter obey its folder\'s rule file, devbook-chapter-metadata.md, ' +
       'and "Carrying a plan in unattended"? Look for an ADDED chapter not at status: draft, any status ' +
       'raised or deleted, a decision rung, a missing or malformed meta block, a rule left in a prose ' +
-      'chapter instead of requirements.md or an invariants subpage, a chapter outside the plan, an ' +
-      'annotation fence, and a claim the code does not support.',
+      'chapter instead of requirements.md or an invariants subpage, a chapter outside the plan, a ' +
+      'review note written into a chapter, and a claim the code does not support.',
   },
   {
     key: 'prose',

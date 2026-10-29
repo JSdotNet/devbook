@@ -35,7 +35,7 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
 ## Do not
 
-- Do not write a chapter, a `status` line, a `sync` value, an `annotation` fence, or a change
+- Do not write a chapter, a `status` line, a `sync` value, a review note, or a change
   brief, and do not plan a capture: the issue names the capture, and a person asks for it.
 - Do not open an issue for a `spec-ahead` or `unresolved` row; the report carries them.
 - Do not close a `devbook-drift` issue whose row is now `aligned`: say so in the report.

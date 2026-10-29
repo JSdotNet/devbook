@@ -21,7 +21,7 @@ skill reports the first half and never asserts the second.
    `devbook:update`, or `devbook:init` where devbook has no stamp, not this.
 
 2. **Read the record task-scoped.** The adoption map plus the stage files, nothing else in
-   the folder. Skip `annotation` fences: review notes, not content.
+   the folder.
 
 3. **Diff only what the report sources.**
 

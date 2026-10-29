@@ -13,8 +13,8 @@ vocabulary every block is written in is [chapter 8](../08-crosscutting-concepts.
 one block owns are in the [glossary](../12-glossary.md).
 
 **One plugin, one block.** A plugin is the unit a host installs, versions, and can refuse to
-load, so it is already the line a model cannot cross without somebody declaring it. Fourteen
-files follow the fourteen plugin folders under `plugins/`, name for name.
+load, so it is already the line a model cannot cross without somebody declaring it. Thirteen
+files follow the thirteen plugin folders under `plugins/`, name for name.
 
 **A block that outgrows one sweep nests the next level in.** The pull sweep sets aside any
 file past forty chapters, because one agent cannot verify more against the code in one pass.
@@ -27,11 +27,10 @@ delivery, [delivery-schedule-entry-points](delivery-schedule-entry-points.md) in
 delivery-schedule, and [devbook-code-sync](devbook-code-sync.md) and
 [devbook-procedures](devbook-procedures.md) inside devbook. Raising the cap instead would hand one agent a unit too large to read whole.
 
-**The plugins are the truth.** Each file is one sync unit, and chapter 5's file-level block
-sets `sync: pull` for all of them: when a block and its plugin disagree, the sweep rewrites the
-block from what the plugin ships. A block that should lead its plugin instead states its own
-`sync` in its file-level block; none does today. The levels and values are "Sync direction" in
-`devbook-chapter-metadata.md`.
+**The plugins are the truth.** Each file is one sync unit: when a block and its plugin
+disagree, the block is rewritten from what the plugin ships. Chapter 5 set `sync: pull` for
+all of them until contract 38 took the direction out of the chapter. It is now Backlog's
+direction map for this repository, per the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync).
 
 ## The set
 
@@ -45,7 +44,6 @@ block from what the plugin ships. A block that should lead its plugin instead st
 | [devbook-procedures](devbook-procedures.md) | Inside devbook | The five things a repository knows how to do and no plugin can write, each with a goal devbook fixes |
 | [devbook-derived](devbook-derived.md) | L1 on devbook | The committed `_meta/` index, its refresh paths, and the canvas that draws the graph |
 | [devbook-openspec](devbook-openspec.md) | L1 on devbook | The change lane: OpenSpec installed and configured so a change is a set of deltas against the chapters, proposed, agreed, built step by step, and archived |
-| [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
 | [devbook-skills](devbook-skills.md) | L0 foundation | Reusable guidance any plugin names and none depends on: `show-me`, a picture before the prose, `research-brief`, a cited answer from primary sources, `pr-body`, a pull request description that declares its door, and `retro`, what to change after a session went badly; and `wayfinder`, an effort too big for one session planned as a map of decision tickets |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
