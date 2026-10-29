@@ -1,6 +1,7 @@
 # Chapter Schema
 
 ```meta
+status: proposed
 date: 2026-10-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.devbook.chapter", "marketplace.devbook.meta-block", "marketplace.devbook.devbook-folder"]
@@ -33,6 +34,183 @@ per file it touches, at that file's path under `devbook-delta/`, until `delta.mj
 merges the deltas one heading level up, stamps `change` on every chapter it touched, and moves
 the folder to `archive/`. The path is OpenSpec's, because its CLI resolves `changes/` nowhere
 else, per [the devbook-openspec building block](../building-blocks/devbook-openspec.md#constraints).
+
+## Proposed
+
+```meta
+related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-openspec.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md"]
+```
+
+**The candidate.** A branch's devbook states only what is true of that branch's code. It is
+never ahead of the code, with an agreed chapter waiting to be built, and never behind it, with
+built code waiting to be captured. Workflow state leaves the `meta` block, and it exists for
+three subjects only: a change proposal, a decision record under discussion, and a debt record.
+The tool that runs the workflow keeps it, keyed by the subject, and nothing commits it. An
+ordinary chapter carries no state at all: merged, it is in force. The rule covers `.devbook/`
+alone. An open change under `openspec/changes/` may run ahead of the code on any branch, and
+that folder is what lets `.devbook/` stay true. Three fields go first, as asked: `status` as a lifecycle, the approval and acceptance records, and `sync`.
+
+**The standing choice.** Today a chapter carries its own workflow state in git. `status` holds
+a lifecycle rung, `domain/` and a change's `proposal.md` hold two decision rungs with six
+record fields, and `sync` says which way a sweep levels the chapter and its code. Both hosts
+already keep a copy: spec-manager stores it in its `ChapterState` table and writes it back to
+git through a proposal pull request, and Backlog writes `status` and `sync` straight into the
+working copy. Each write is a commit that changes no content, and each copy can disagree with
+the file.
+
+**Why change.** A rung is about a review, not about the content, so it changes on a different
+schedule from the content. Committed, it makes a branch ahead or behind its own decisions: an
+approval written on a feature branch is invisible on `main` until merge, and a merge carries a
+rung decided against other text. Approval and acceptance are decisions about a change, so they
+belong to the proposal that makes it, and nobody approves a chapter once it is merged. Git then
+carries only content. The approval fingerprint already makes this safe: an approval is of the
+hash over a proposal and its deltas, so a tool can tell whether it still stands.
+
+| Subject | State the tool keeps | Keyed by |
+| --- | --- | --- |
+| Change proposal | `draft`, `approved`, `accepted`, with who, when, and the fingerprint | The proposal |
+| Decision record under discussion | `proposed` while its pull request is open, then decided or declined | The record's path and its pull request |
+| Debt record | `identified`, `planned`, `in-progress`, `resolved` | The record's path |
+
+### What leaves the meta block
+
+```meta
+```
+
+| Field | Today | Where it goes |
+| --- | --- | --- |
+| `status` in `domain/`, `arc42/`, `design/` | `draft`, `proposed`, `deprecated`, resting `active` | Nowhere for an ordinary chapter, which is in force once merged. A decision record's `proposed` becomes the tool's state for that record while its pull request is open. `deprecated` goes as in OpenSpec: a change removes the chapter with a `REMOVED` delta, and the archived change keeps its text and the reason |
+| `status` on a debt record | `identified`, `planned`, `in-progress`, `resolved` | The tool's state for the record. The record's prose says what resolved it |
+| `approved`, `accepted`, and their six record fields | `domain/` chapters and a change's `proposal.md` | The tool's state for the change proposal. A chapter keeps none |
+| `.devbook/statuses.json` | A repository's own ladders | The tool's configuration per product |
+| `sync` | Four levels, nearest wins | Backlog's direction map per repository, resolved the same way. See Schedules and sync |
+| `issue` | One tracker link per chapter | The tracker's reference to the chapter, which both hosts already store |
+| `effort` | An estimate per chapter | Each task of the change proposal, and the work item it becomes. The proposal shows the sum of its tasks, computed by the tool and never written. A branch-true chapter has no work left to estimate |
+| `roadmap` | Tags per chapter | Dropped. Backlog only copies the tags into its graph, and its goals and roadmap plans already group the work |
+| `change` | Stamped by `delta.mjs --apply` | Dropped. Git history and the archived change folder already record it |
+| `annotation` fences | Review notes inside the chapter | The tool's comment threads, anchored to the chapter address. The migration imports open fences and deletes resolved ones |
+
+**What stays.** Everything that describes the content and can be checked against the branch
+stays: `type`, `related`, `depends-on`, `tests`, `demo`, `playthrough`, `c4`, `c4-touches`,
+`code`, `date`, `severity`, `number`, `index`, `aliases`, the folder-specific fields, and a
+journey's setup fields. A `tech/` or `ai/` rating stays too, because it records a decision the
+branch makes, not a review in progress. It is renamed `rating`, so `status` no longer means two
+things.
+
+**`ext`.** The namespace stays for facts a plugin derives from the content. A plugin that
+stores workflow state in it moves that state to its own store under the same rule.
+
+### Changes in this repository
+
+```meta
+```
+
+- `devbook`: the metadata rule, the folder rules, and `devbook-changes.md` drop the fields.
+  The check reports each one as moved to tooling. `statuses.json` loading, the rung checks,
+  and the coverage exemption at `deprecated` go. `chapter-hash.mjs` stays and becomes a
+  published contract, `devbook.chapter.fingerprint@1`, so both hosts compute the same hash.
+- `devbook`: `code-sync-protocol.md` stops reading "agreed" from `status`. A merged chapter is
+  agreed. Spec-ahead work is an open change under `openspec/changes/`, on any branch, and
+  never a chapter under `.devbook/`.
+- `devbook`: `units.mjs` keeps grouping chapters into sync units, which `verify-change` uses,
+  and loses `--direction`. Which units a sweep levels, and which way, is Backlog's choice.
+- `devbook-collaboration`: `chapter-approve` and `chapter-accept` decide a change proposal,
+  never a chapter, and write through a new capability group, `devbook.decision@1`, resolved
+  from the live tool list like a surface. The group also sets a decision record's and a debt
+  record's state. With none bound the skills report the decision and write nothing.
+  spec-manager and Backlog each keep their own state, and the two may differ. No binding
+  picks one: a skill uses whichever tool answers the group in its session, and says which. The group also reads, posts,
+  and resolves review notes, and `chapter-review` and the review queue use it.
+- `devbook`: the annotation fence retires. `annotations.mjs`, `annotation-sweep`, and the
+  check's fence rules go once every host has imported the notes.
+- `devbook-openspec`: the proposal's rungs move to the same group. `delta.mjs --apply` asks
+  the group whether the change is accepted over its current hash.
+- A migration in `devbook` exports every moved value and every open note to a JSON file
+  outside the repository, for a host to import, and then strips the fields and every fence. It is a contract bump, so every plugin
+  moves one minor in the same change.
+- This record, the annotations record, the `devbook-collaboration` building block, and the
+  glossary's stale approval entry are rewritten when the proposal is decided.
+
+### Schedules and sync
+
+```meta
+```
+
+Everything about levelling chapters and code by direction moves to Backlog, and the schedules
+that read best across several repositories leave the marketplace or move to Backlog.
+
+| What | Today | After |
+| --- | --- | --- |
+| `schedule-devbook-sweep`, its workflow scripts and report | `delivery-schedule` | Backlog's `backlog-tools` plugin |
+| `devbook-sweep-contract.md` | `delivery-schedule/resources/` | `backlog-tools`, beside the sweep |
+| `devbook-pull-sweep` and `devbook-push-sweep` | The schedule catalog | Backlog's own schedules, which read the direction map from its store |
+| Setting a direction | The `sync` field, written by hand or by Backlog and spec-manager | Backlog's devbook view, stored per repository and folder |
+| `schedule-morning-brief` and its catalog entry | `delivery-schedule` | Removed. It reads best across every repository at once |
+| `schedule-week-starter` | `delivery-schedule`, no catalog entry | Removed, for the same reason |
+| `schedule-weekly-cost-analysis` | `delivery-schedule`, no catalog entry, reading the surface's runs | `backlog-tools`, across every repository, reading token usage through the `backlog` MCP server |
+
+`devbook-verify` stays in `delivery-schedule`. It reports drift on every unit and writes
+nothing, so it needs no direction. The constraint that a sweep never writes a `status` above
+`draft` goes with the field. The `backlog-morning-brief` routine is deleted before the skill
+it runs is removed.
+
+### Changes in spec-manager
+
+```meta
+```
+
+spec-manager already has a store. Its `ChapterState` table holds status, approval,
+acceptance, and the sweep verdict per chapter address. The changes shrink it to the three
+subjects and make it authoritative:
+
+1. Key state by subject: a change proposal, a decision record, or a debt record. Ordinary
+   chapters get no row. Key a proposal's approval and acceptance by the fingerprint of the
+   proposal and its deltas.
+2. Show a chapter's state only where it has one, so no per-branch overlay is needed.
+3. Remove the write-back to git: `ChapterStateService.ProcessAsync` and the `sync` write in
+   `ProposalService`. Directions are Backlog's, so spec-manager stops setting one.
+4. Read the three subjects' state from the table, and read status and rungs from Markdown
+   only for the one-time import.
+5. Move `statuses.json` into the product's configuration, as the ladders of the three
+   subjects.
+6. Close a proposal's or a decision record's state when its pull request merges or closes.
+7. Answer `devbook.decision@1` over MCP: read a subject's state, set it, approve, and accept.
+8. Stop parsing `implementation-state`, `implemented-by`, `review`, `reviewer`, and
+   `review-at`. The first two are drift and come from the sweep verdict, the last three left
+   devbook in contract 21.
+9. Keep effort, issue links, and roadmap labels on backlog items, which already reference
+   chapters by address.
+10. Import open fences into `CommentThread`, keeping the note's kind so an open question
+    still blocks approval.
+
+### Changes in Backlog
+
+```meta
+```
+
+Backlog reads the fields today and writes `status` and `sync` into the working copy. It has no
+store for this state. The changes:
+
+1. Add a small state store to the Devbook bounded context, beside `IDevbookAnnotationStore`,
+   with a file system or SQLite adapter and replication through Cosmos like annotations.
+2. Key it by repository and subject: a change proposal, a decision record, or a debt record.
+   Key a proposal's decisions by fingerprint, as spec-manager does.
+3. Keep it out of the generated devbook database, which is rebuilt from the Markdown.
+4. Retire `DevbookMarkdownStatusWriter` and `DevbookMarkdownSyncWriter`. A subject's state or a
+   direction is then editable on a read-only branch snapshot too, because no file changes.
+5. Show a subject's state from the store in `MetadataStateLine`, and read the old fields from
+   `MetadataReader` only for the import.
+6. Answer `devbook.decision@1` over the `backlog` MCP server.
+7. Drop `issue`, `effort`, and `roadmap` from the chapter view. Work items already hold effort
+   and chapter references, and goals hold the roadmap.
+8. Import open fences into the existing annotation store, adding the note's kind and the
+   branch to its key.
+9. Own sync: keep the direction map per repository and folder, set it in the devbook view, and
+   ship the devbook sweeps and their contract in `backlog-tools`, reading the map from the
+   store.
+10. Ship the weekly cost analysis in `backlog-tools`, and add a read-only usage tool to the
+    `backlog` MCP server. `get_run` leaves token figures out on purpose, so the report needs
+    a tool of its own.
 
 ## Why
 
