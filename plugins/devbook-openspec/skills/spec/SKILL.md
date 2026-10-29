@@ -13,10 +13,11 @@ stands: derive nothing, summarise nothing, and supplement nothing. Write nothing
 1. **Resolve the item.** A work item from `devbook-openspec:tracker` is `<change>#step-<N>`; a
    bare change name means its first open step, per the tracker's states. No such folder under
    `openspec/changes/`, or no such step in its `tasks.md`: say which and stop.
-2. **Refuse an unagreed change.** Read `proposal.md`'s file block. Refuse, naming the fix, when
-   its `status` is neither `approved` nor `accepted`, or when `approved-hash` differs from
-   `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>` — the change was
-   edited after it was approved, so run `devbook-collaboration:chapter-approve` on it again.
+2. **Refuse an unagreed change.** Ask the host that answers `devbook.decision@1` (devbook's
+   `resources/decision.md`) for the proposal with `devbook_get_state`, and name it. Refuse,
+   naming the fix, when no host is bound, when its `approval` is `null`, or when the approval's
+   fingerprint differs from `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`
+   — the change was edited after it was approved, so the person approves it again in the host.
    Refuse too a step marked `owner: me`: a person builds that one.
 3. **Return, verbatim and in this order:** `proposal.md`; every delta the step's `delivers:`
    line names, whole — the file, not the one chapter; `solution.md`; and the step's own block

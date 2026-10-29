@@ -19,12 +19,14 @@ otherwise offer `devbook-openspec:init` and stop.
 2. **Explore**, optionally: `/opsx:explore`, or the skill bound as `openspec.grill` when one is.
 3. **Propose**: `/opsx:propose`. Show the four artifacts it wrote under
    `openspec/changes/<name>/`, and run `delta.mjs --check <name>` together.
-4. **Approve**: `devbook-collaboration:chapter-approve` on the change folder. Point out that the
-   approval is one record on `proposal.md`, and that any later edit lapses it.
+4. **Approve**: the person approves the change in the host that keeps its state, through
+   `devbook.decision@1`. Point out that the approval is one record in that host, at the
+   change's fingerprint, and that any later edit lapses it.
 5. **Build**: `/opsx:apply`, which builds the change whole — a step marked
    `owner: me` is the person's. Show `devbook-openspec:status` between steps.
-6. **Verify and accept**: `devbook:verify-change`, then `devbook-collaboration:chapter-accept`.
-7. **Archive**: `devbook-openspec:archive`, and show the merged chapters with `change` on them.
+6. **Verify and accept**: `devbook:verify-change`, then the person accepts the change in the
+   same host.
+7. **Archive**: `devbook-openspec:archive`, and show the merged chapters.
 
 End with what the person now knows how to do alone, and where each rule lives:
 `devbook-changes.md` for the shape, `devbook-openspec-change.md` for what OpenSpec does in it.

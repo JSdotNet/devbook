@@ -3,7 +3,7 @@ schema: devbook
 context: |
   The source of truth is the devbook, under .devbook/. Read the chapters a
   change names and walk their related links; never load a devbook folder whole.
-  Annotation fences are review notes, not content: skip them.
+  A review note is a comment thread in the host, never text in a chapter.
   A change lives in openspec/changes/<name>/ and is a set of deltas against
   devbook chapters. Its shape is .agents/rules/devbook-changes.md, and what an
   OpenSpec skill does inside it is .agents/rules/devbook-openspec-change.md.

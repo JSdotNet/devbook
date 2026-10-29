@@ -10,16 +10,17 @@ Open the reply with `devbook-openspec@<version>`, `version` read from `../../.cl
 This rewrites chapters in the devbook, so every refusal below is stated in full and none is
 skipped. Run from the repository root, on a branch of its own.
 
-1. **The gate check.** Run `../status/SKILL.md` for the change. Refuse — show the status table
-   and stop — unless `proposal.md` is at `status: accepted`, both `approved-hash` and
-   `accepted-hash` equal the change's current fingerprint, no open `kind: question` fence
-   remains, and every step is `done`. Do not accept on the person's behalf here: route to
-   `devbook-collaboration:chapter-accept`.
-2. **Merge.** `node .devbook/_tools/devbook-meta/delta.mjs --apply <name> --no-move`. It checks
-   the gates again and refuses on the same terms; on a refusal, report it verbatim and stop —
-   nothing is written. On success it has written each target chapter, stamped `change` on
-   every chapter it touched, and replaced each demo a demo delta targets whole — a `replaced`
-   line, where a chapter reads `merged`.
+1. **The gate check.** Run `../status/SKILL.md` for the change. Ask the host that answers
+   `devbook.decision@1` (devbook's `resources/decision.md`) for the proposal's state with
+   `devbook_get_state`, and name it. Refuse — show the status table and stop — unless its
+   `acceptance` stands at the change's current fingerprint and every step is `done`. With no
+   host bound, refuse: there is no acceptance to read, and nothing merges. Never accept on the
+   person's behalf here: acceptance is their decision, taken in the host.
+2. **Merge.** `node .devbook/_tools/devbook-meta/delta.mjs --apply <name> --accepted-hash <fingerprint> --no-move`,
+   the fingerprint the host recorded the acceptance at. It refuses unless that is the change's
+   fingerprint now; on a refusal, report it verbatim and stop — nothing is written. On success
+   it has written each target chapter, stamping nothing, and replaced each demo a demo delta
+   targets whole — a `replaced` line, where a chapter reads `merged`.
    If its output ends in a `moved` line, the repository's copy predates `--no-move` and already
    moved the folder: skip step 3 and say `devbook:update` refreshes the tool.
 3. **Move.** `openspec archive <name> --yes --skip-specs`. Its warning that the proposal lacks
