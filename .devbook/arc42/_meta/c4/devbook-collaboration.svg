@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="890" viewBox="0 0 1760 890" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - devbook-collaboration">
+<title>[Component] jsdotnet-devbook marketplace - devbook-collaboration</title>
+<desc>The review position, its findings, and the two decisions taken on it.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-devbook-collaboration-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1760" height="890"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - devbook-collaboration</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The review position, its findings, and the two decisions taken on it.</text>
+<g transform="translate(52 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="1424" y="488" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="1434" y="506" font-size="12" font-weight="600">L0 foundation</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="1340" height="412" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">devbook-collaboration [Container]</text>
+  <g data-element="marketplace.devbook">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="1440" y="516" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="563" font-size="15" font-weight="600" text-anchor="middle">devbook</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="581" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="603" font-size="12" text-anchor="middle">Addressed Markdown chapters,</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="618" font-size="12" text-anchor="middle">their meta block, the check, and</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1550" y="633" font-size="12" text-anchor="middle">the reconcile that puts the…</text>
+  </g>
+  <g data-element="marketplace.devbook-collaboration.review-position">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="152" font-size="15" font-weight="600" text-anchor="middle">Review Position</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="170" font-size="11" text-anchor="middle" opacity="0.85">[Component]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="192" font-size="12" text-anchor="middle">One chapter&#39;s place in a review,</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="207" font-size="12" text-anchor="middle">read from its rung and its open</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="222" font-size="12" text-anchor="middle">fences and never stored.</text>
+  </g>
+  <g data-element="marketplace.devbook-collaboration.finding">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="1080" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="152" font-size="15" font-weight="600" text-anchor="middle">Finding</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="170" font-size="11" text-anchor="middle" opacity="0.85">[Component: Markdown]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="192" font-size="12" text-anchor="middle">One unresolved objection, kept</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="207" font-size="12" text-anchor="middle">as an annotation fence in the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="222" font-size="12" text-anchor="middle">chapter body.</text>
+  </g>
+  <g data-element="marketplace.devbook-collaboration.approval">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="152" font-size="15" font-weight="600" text-anchor="middle">Approval</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="170" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="192" font-size="12" text-anchor="middle">Writes the approved rung and its</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="207" font-size="12" text-anchor="middle">record and sweeps the resolved</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="222" font-size="12" text-anchor="middle">notes.</text>
+  </g>
+  <g data-element="marketplace.devbook-collaboration.review-queue">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="47" font-size="15" font-weight="600" text-anchor="middle">Review Queue</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Node.js]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="87" font-size="12" text-anchor="middle">Reports open notes, pending</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="102" font-size="12" text-anchor="middle">decisions, and stale approvals</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="117" font-size="12" text-anchor="middle">across every adopted folder.</text>
+  </g>
+  <g data-element="marketplace.devbook-collaboration.acceptance">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="264" font-size="15" font-weight="600" text-anchor="middle">Acceptance</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="282" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="304" font-size="12" text-anchor="middle">Writes the accepted rung and its</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="319" font-size="12" text-anchor="middle">record on top of an approval.</text>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.review-position -> marketplace.devbook-collaboration.finding">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M940 180C1010 180 1010 165 1080 165"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.review-position">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M580 158C650 158 650 195 720 195"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.finding">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M580 180L640 180Q650 180 650 170L650 83Q650 73 660 73L1000 73Q1010 73 1010 83L1010 185Q1010 195 1020 195L1080 195"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.acceptance -> marketplace.devbook-collaboration.approval">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M220 285C290 285 290 180 360 180"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.review-queue -> marketplace.devbook-collaboration.review-position">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M220 75L280 75Q290 75 290 74L290 74Q290 73 300 73L640 73Q650 73 650 83L650 155Q650 165 660 165L720 165"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.finding -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-collaboration-arrow)" d="M1300 180C1370 180 1370 576 1440 576"/>
+  </g>
+  <g data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-collaboration-arrow)" d="M580 203L640 203Q650 203 650 213L650 376Q650 386 660 386L1360 386Q1370 386 1370 396L1370 596Q1370 606 1380 606L1440 606"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.review-position -> marketplace.devbook-collaboration.finding">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="921" y="156" width="179" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="171" font-size="11" text-anchor="middle">Is read off the open fences</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="185" font-size="11" text-anchor="middle">of</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.review-position">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="613" y="167" width="74" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="182" font-size="11" text-anchor="middle">Decides on</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.finding">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="750" y="56" width="160" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="71" font-size="11" text-anchor="middle">Is blocked by an open</text>
+    <text class="c4-ink" fill="#1f2328" x="830" y="85" font-size="11" text-anchor="middle">question and sweeps the…</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.acceptance -> marketplace.devbook-collaboration.approval">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="213" y="223" width="154" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="238" font-size="11" text-anchor="middle">Stands on the record of</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.review-queue -> marketplace.devbook-collaboration.review-position">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="393" y="63" width="154" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="470" y="78" font-size="11" text-anchor="middle">Reports every chapter&#39;s</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.finding -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="1309" y="368" width="123" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="383" font-size="11" text-anchor="middle">Is written through</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-collaboration.approval -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="930" y="369" width="160" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="384" font-size="11" text-anchor="middle">Writes the approved rung</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="398" font-size="11" text-anchor="middle">into</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="842" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="855" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="842" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="855" font-size="12">Component</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="266" y="842" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="855" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="376" y="842" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="855" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-collaboration-arrow)" d="M466 850L488 850"/>
+  <text class="c4-ink" fill="#1f2328" x="498" y="855" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-collaboration-arrow)" d="M603 850L625 850"/>
+  <text class="c4-ink" fill="#1f2328" x="635" y="855" font-size="12">Implied relationship</text>
+</g>
+</svg>

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
@@ -9,7 +9,7 @@
     ".devbook/ai"
   ],
   "stats": {
-    "pages": 0,
+    "journeys": 0,
     "parts": 0,
     "labels": 0,
     "unclaimed": 0

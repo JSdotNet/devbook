@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="950" viewBox="0 0 1040 950" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - delivery">
+<title>[Component] jsdotnet-devbook marketplace - delivery</title>
+<desc>The pull-request lane and what hands it a branch.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-delivery-pr-lane-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1040" height="950"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - delivery</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The pull-request lane and what hands it a branch.</text>
+<g transform="translate(68 156)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="-16" y="-28" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="-6" y="-10" font-size="12" font-weight="600">delivery-phases</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="344" y="230" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="354" y="248" font-size="12" font-weight="600">delivery-pr-lane</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-36" y="-60" width="652" height="504" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-24" y="-39" font-size="13" font-weight="600">delivery [Container]</text>
+  <g data-element="marketplace.delivery.phase">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="47" font-size="15" font-weight="600" text-anchor="middle">Phase</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="87" font-size="12" text-anchor="middle">The unit a repository</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="102" font-size="12" text-anchor="middle">configures: one stable id, one</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="117" font-size="12" text-anchor="middle">phase skill, and one entry per…</text>
+  </g>
+  <g data-element="marketplace.delivery.pull-request-lane">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="258" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="305" font-size="15" font-weight="600" text-anchor="middle">Pull Request Lane</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="323" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="345" font-size="12" text-anchor="middle">Pushes, updates, fixes the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="360" font-size="12" text-anchor="middle">checks of, and scores a finished</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="375" font-size="12" text-anchor="middle">pull request until it is…</text>
+  </g>
+  <g data-element="github">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="720" y="564" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="611" font-size="15" font-weight="600" text-anchor="middle">GitHub</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="629" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="651" font-size="12" text-anchor="middle">Runs the checks on every pull</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="666" font-size="12" text-anchor="middle">request, refreshes the index on</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="681" font-size="12" text-anchor="middle">a schedule, and is the tracker …</text>
+  </g>
+  <g data-relationship="marketplace.delivery.phase -> marketplace.delivery.pull-request-lane">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-pr-lane-arrow)" d="M220 75C290 75 290 333 360 333"/>
+  </g>
+  <g data-relationship="marketplace.delivery.pull-request-lane -> github">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-pr-lane-arrow)" d="M580 333C650 333 650 639 720 639"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.phase -> marketplace.delivery.pull-request-lane">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="201" y="187" width="179" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="202" font-size="11" text-anchor="middle">Hands a branch under review</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="216" font-size="11" text-anchor="middle">to</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery.pull-request-lane -> github">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="558" y="462" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="477" font-size="11" text-anchor="middle">Pushes, updates, and fixes</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="491" font-size="11" text-anchor="middle">the checks of a pull request</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="505" font-size="11" text-anchor="middle">[gh]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="32" y="902" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="915" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="149" y="902" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="915" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="259" y="902" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="291" y="915" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="369" y="902" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="401" y="915" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-pr-lane-arrow)" d="M459 910L481 910"/>
+  <text class="c4-ink" fill="#1f2328" x="491" y="915" font-size="12">Relationship</text>
+</g>
+</svg>

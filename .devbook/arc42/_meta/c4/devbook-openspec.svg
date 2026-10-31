@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1044" height="1100" viewBox="0 0 1044 1100" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - devbook-openspec">
+<title>[Component] jsdotnet-devbook marketplace - devbook-openspec</title>
+<desc>The schema, the config, the change rule, and how a change lands.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-devbook-openspec-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1044" height="1100"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - devbook-openspec</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The schema, the config, the change rule, and how a change lands.</text>
+<g transform="translate(52 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="704" y="698" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="714" y="716" font-size="12" font-weight="600">L0 foundation</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="980" height="622" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">devbook-openspec [Container]</text>
+  <g data-element="marketplace.devbook">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="720" y="726" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="773" font-size="15" font-weight="600" text-anchor="middle">devbook</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="791" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="813" font-size="12" text-anchor="middle">Addressed Markdown chapters,</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="828" font-size="12" text-anchor="middle">their meta block, the check, and</text>
+    <text class="c4-ink-container" fill="#ffffff" x="830" y="843" font-size="12" text-anchor="middle">the reconcile that puts the…</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.schema">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="152" font-size="15" font-weight="600" text-anchor="middle">Schema</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="170" font-size="11" text-anchor="middle" opacity="0.85">[Component: YAML]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="192" font-size="12" text-anchor="middle">The project schema defining a</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="207" font-size="12" text-anchor="middle">change&#39;s artifacts from proposal</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="222" font-size="12" text-anchor="middle">through deltas to tasks.</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.config">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="257" font-size="15" font-weight="600" text-anchor="middle">Config</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: YAML]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="297" font-size="12" text-anchor="middle">The seeded OpenSpec config with</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="312" font-size="12" text-anchor="middle">context, per-artifact rules, and</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="327" font-size="12" text-anchor="middle">apply and archive routing.</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.change-rule">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="47" font-size="15" font-weight="600" text-anchor="middle">Change Rule</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Markdown]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="87" font-size="12" text-anchor="middle">The host rule that keeps</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="102" font-size="12" text-anchor="middle">OpenSpec&#39;s skills to devbook&#39;s</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="117" font-size="12" text-anchor="middle">change shape inside a change…</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.step-state">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="257" font-size="15" font-weight="600" text-anchor="middle">Step State</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="297" font-size="12" text-anchor="middle">Works out each step&#39;s state from</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="312" font-size="12" text-anchor="middle">the ticked tasks file, never</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="327" font-size="12" text-anchor="middle">from a branch.</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.landing">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="315" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="362" font-size="15" font-weight="600" text-anchor="middle">Landing a Change</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="380" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="402" font-size="12" text-anchor="middle">Checks the gates, merges the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="417" font-size="12" text-anchor="middle">deltas, and has OpenSpec move</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="432" font-size="12" text-anchor="middle">the change.</text>
+  </g>
+  <g data-element="marketplace.devbook-openspec.stamp">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="420" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="467" font-size="15" font-weight="600" text-anchor="middle">Stamp</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="485" font-size="11" text-anchor="middle" opacity="0.85">[Component: JSON]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="507" font-size="12" text-anchor="middle">Records the plugin version, the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="522" font-size="12" text-anchor="middle">CLI range, and the materialized</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="537" font-size="12" text-anchor="middle">files.</text>
+  </g>
+  <g data-relationship="marketplace.devbook-openspec.config -> marketplace.devbook-openspec.schema">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-openspec-arrow)" d="M220 270C290 270 290 180 360 180"/>
+  </g>
+  <g data-relationship="marketplace.devbook-openspec.config -> marketplace.devbook-openspec.landing">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-openspec-arrow)" d="M220 300C290 300 290 390 360 390"/>
+  </g>
+  <g data-relationship="marketplace.devbook-openspec.landing -> marketplace.devbook-openspec.step-state">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-openspec-arrow)" d="M580 375C650 375 650 285 720 285"/>
+  </g>
+  <g data-relationship="marketplace.devbook-openspec.change-rule -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-openspec-arrow)" d="M220 75L280 75Q290 75 290 85L290 487Q290 497 300 497L640 497Q650 497 650 507L650 776Q650 786 660 786L720 786"/>
+  </g>
+  <g data-relationship="marketplace.devbook-openspec.landing -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-openspec-arrow)" d="M580 405C650 405 650 816 720 816"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-openspec.config -> marketplace.devbook-openspec.schema">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="262" y="215" width="56" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="230" font-size="11" text-anchor="middle">Selects</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-openspec.config -> marketplace.devbook-openspec.landing">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="213" y="335" width="154" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="350" font-size="11" text-anchor="middle">Routes a change through</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-openspec.landing -> marketplace.devbook-openspec.step-state">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="570" y="320" width="160" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="335" font-size="11" text-anchor="middle">Checks the gates through</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-openspec.change-rule -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="384" y="480" width="173" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="470" y="495" font-size="11" text-anchor="middle">Keeps OpenSpec&#39;s skills to</text>
+    <text class="c4-ink" fill="#1f2328" x="470" y="509" font-size="11" text-anchor="middle">the shape of</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-openspec.landing -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="582" y="601" width="136" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="616" font-size="11" text-anchor="middle">Merges the deltas of</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="1052" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="1065" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="1052" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="1065" font-size="12">Component</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="266" y="1052" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="1065" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="376" y="1052" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="1065" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-openspec-arrow)" d="M466 1060L488 1060"/>
+  <text class="c4-ink" fill="#1f2328" x="498" y="1065" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-openspec-arrow)" d="M603 1060L625 1060"/>
+  <text class="c4-ink" fill="#1f2328" x="635" y="1065" font-size="12">Implied relationship</text>
+</g>
+</svg>
