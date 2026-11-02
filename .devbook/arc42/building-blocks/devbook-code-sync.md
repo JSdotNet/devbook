@@ -15,8 +15,9 @@ decides what one run covers, and the two directions they run in.
 
 Outside it: the chapter shape and the check, which are [devbook](devbook.md#structure)'s; the
 flow that builds a change brief, which is [delivery](delivery.md)'s `flow-code`; and the
-unattended sweeps that pass a sync unit or group, which are
-[delivery-schedule-entry-points](delivery-schedule-entry-points.md)'s.
+unattended runs that pass a sync unit or group — the drift report, which is
+[delivery-schedule-entry-points](delivery-schedule-entry-points.md#schedule-devbook-verify)'s,
+and the sweeps that level by direction, which are Backlog's.
 
 ## Interfaces
 
@@ -33,7 +34,7 @@ way an `e2e` test does, and it gets no verdict row of its own.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper; `capture-specs` in write mode by a `phase-spec-check` binding |
-| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass or one pull request covers; the sync sweeps, which select their groups from `--groups --json` |
+| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass or one pull request covers; `schedule-devbook-verify`, which lists the units from `--json`; Backlog's sync sweeps, which select their groups from `--groups --json` |
 
 ### capture-specs
 
@@ -363,5 +364,5 @@ parent is a brief handed to whatever flow a repository has.
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [delivery-phases](delivery-phases.md#phase-spec-check) | Separate Ways | A repository binds `capture-specs` to `phase-spec-check`, and its `updates: true` frontmatter lets the phase write | The skill name and the `updates` key | That write mode carries only `code-ahead` entries in scope and never a decision rung. |
-| [delivery-schedule-entry-points](delivery-schedule-entry-points.md#schedule-devbook-sweep) | Separate Ways | `schedule-devbook-verify` invokes `verify-change` per unit; `schedule-devbook-sweep` selects its groups from `units.mjs --groups --json` and runs the converter its direction names | The skill names and the `--json` output's `version` | That the scope a person checks and the scope a sweep acts on are the same list. |
+| [delivery-schedule-entry-points](delivery-schedule-entry-points.md#schedule-devbook-verify) | Separate Ways | `schedule-devbook-verify` lists the units from `units.mjs --json` and invokes `verify-change` per unit | The skill name and the `--json` output's `version` | That the scope a person checks and the scope the drift report covers are the same list. |
 | A person, either host | Conformist | Invokes one skill per run, routed by the session-start hook | The report table and the drift verdicts | That a verdict names which of the other two skills it calls for. |

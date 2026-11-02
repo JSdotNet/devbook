@@ -1,6 +1,6 @@
 ---
 name: findings-contract
-description: What the review entry points share — the review checklist, the severity words, the one ranked findings table, the key a finding is deduplicated by, and the issue a finding opens. Read by schedule-review, schedule-security-review, schedule-performance-review, and schedule-merge-review.
+description: What the review entry points share — the review checklist, the severity words, the one ranked findings table, the key a finding is deduplicated by, and the issue a finding opens. Read by schedule-security-review, schedule-performance-review, and schedule-merge-review.
 ---
 
 # Findings Contract

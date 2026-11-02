@@ -17,10 +17,10 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
    plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
-   selection; change it only where the user asks. A selected name the catalog no longer ships
-   is reported and dropped from the selection. Run each `../../migrations/*/migrate.mjs
+   selection; change it only where the user asks. A retired name is dropped, never a
+   failure — the contract's *Retired Schedules*. Run each `../../migrations/*/migrate.mjs
    --check` in number order, the repository root as the working directory, and carry its
-   plan into the report: the routines it names are the ones step 6 re-times.
+   plan into the report: the routines it names are the ones step 6 re-times or disables.
 2. **Resolve the repository and the checkout.** `gh repo view --json nameWithOwner,defaultBranchRef`
    gives `{{repo}}` and `{{base}}`; the parent of `git rev-parse --path-format=absolute
    --git-common-dir`, with forward slashes, gives `{{checkout}}`. When `git rev-parse
@@ -42,8 +42,8 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    otherwise, with the cron (the stamp's override when it has one) converted to this
    machine's timezone, `enabled: true`, and the worktree option on wherever the scheduler
    takes it — the contract's *What a local routine changes*. Then set `enabled: false`
-   on every entry carrying this repository's name prefix that is no longer selected, and say
-   that deleting one is done on the host's own page.
+   on every entry with this repository's prefix whose title is a deselected or retired
+   schedule, and say deleting one is done on the host's own page. Leave any other title.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —
    and no other key in the file. Leave the commit to the user, and say so.
 8. **Report** one table: schedule, the catalog's UTC cron beside the local one, created /
