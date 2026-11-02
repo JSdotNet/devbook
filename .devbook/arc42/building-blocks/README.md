@@ -16,8 +16,8 @@ one block owns are in the [glossary](../12-glossary.md).
 load, so it is already the line a model cannot cross without somebody declaring it. Thirteen
 files follow the thirteen plugin folders under `plugins/`, name for name.
 
-**A block that outgrows one sweep nests the next level in.** The pull sweep sets aside any
-file past forty chapters, because one agent cannot verify more against the code in one pass.
+**A block that outgrows one verify pass nests the next level in.** The unit lister sets aside
+any group past forty chapters, because one agent cannot verify more against the code in one pass.
 A plugin that grows past that keeps its own file as the white box and moves a part with its own
 responsibility into `<plugin>-<part>.md` beside it, the way arc42 opens a level 2 block inside
 a level 1 one. The part's file names its parent in its first sentence and in `related`, and

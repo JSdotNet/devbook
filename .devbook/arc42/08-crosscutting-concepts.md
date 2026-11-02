@@ -194,7 +194,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 *orchestration* — the word once covered fan-out and single-session staging at once, and the
 fan-out it described no longer ships. `delivery` holds two `flow-*` — the code and the five
 devbook folders, since [flows belong to delivery](adr/plugin-boundaries.md) — and one `phase-*`
-per phase; `delivery-schedule` holds eighteen `schedule-*` beside a bare `init` and `update`.
+per phase; `delivery-schedule` holds fifteen `schedule-*` beside a bare `init` and `update`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

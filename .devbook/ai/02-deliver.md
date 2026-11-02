@@ -97,11 +97,11 @@ date: 2026-10-06
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, as a local
 routine on the maintainer's machine with nobody watching, and lands a change as a pull request and its report as the run's last message.
 
-- **Used for** — three of the sixteen catalog schedules are enabled against this repository,
+- **Used for** — three of the thirteen catalog schedules are enabled against this repository,
   per the stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, and
   `merge-review`. `package-update` and `devbook-pull-sweep` were dropped from the selection at
-  the 1.19 update; the sync sweeps run elsewhere first, and no chapter here sets a sync
-  direction. The issue sweep is not among them yet.
+  the 1.19 update, and the sync sweeps left the catalog for Backlog's `backlog-tools` in
+  1.32.0. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a
   glance, not a rebase.
 - **Evidence** — the fact the design first rested on came back false on 2026-09-28: a cloud
