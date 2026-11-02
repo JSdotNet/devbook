@@ -131,6 +131,8 @@ nothing in the picture.
     of the [adoption view](#the-loop-picture), read from the same fields, so
     the two never disagree.
   - Explains the rating ladder and how to read and extend the folder.
+  - Links the scheduler's `tech/` chapter, when the repository has one — the
+    one place the [loop picture](#the-loop-picture) learns which it is.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
     carries a file-level block only — the same rule as `.devbook/domain/context-map.md`
     and `.devbook/tech/technology-graph.md`.
@@ -159,6 +161,8 @@ ladder.
 | A card in a row | a chapter whose `stage` or `layer` lists it; a chapter listing several sits at its first stage, else its first layer, and names the rest |
 | The card's column | its `rating` |
 | The card's evidence mark | its `evidence` |
+| The card's evidence text | its **Evidence** bullet, printed beside the evidence mark |
+| The card's scheduled mark | a `depends-on` entry naming the scheduler's `tech/` chapter |
 | What the card waits on | its **Moves up when** bullet |
 | Since when | its `date` |
 
@@ -169,7 +173,10 @@ request between `verify` and `integrate`, and the layers as bands beneath.
 |---|---|
 | A node | a chapter, in the column or band the adoption view gives it |
 | A labelled arrow | a `feeds` entry: to the chapter before the colon, labelled with the text after it |
+| A dashed arrow | a `feeds` entry with a `candidate` chapter at either end |
+| The open loop, in place of the dashed arrow | a `feeds` entry out of a `candidate` chapter at `operate` into an `adopted` chapter: the loop not yet closed |
 | A dotted support link | a `related` entry |
+| A node's scheduled mark | as on the adoption card |
 | The platforms row | the `tech/` chapters the `depends-on` entries name, with how many usages rest on each |
 
 **Model** — the path as a model of work.
@@ -180,6 +187,11 @@ request between `verify` and `integrate`, and the layers as bands beneath.
 | A sub-stage card under a stage | a `substage` entry `<stage>/<word>`, holding every chapter that lists it, in order of first appearance |
 | A stage with no sub-stages | one unnamed card holding the chapters at that stage |
 | The layer rows beneath | the chapters whose `layer` lists each one |
+
+The scheduler's `tech/` chapter is the one the repository's scheduled usages
+run on, named once, by a link in `adoption-map.md`; a repository with no
+scheduler draws no scheduled mark. Each of these marks is a reading of fields
+already authored, never a field of its own.
 
 In every view a stage with no chapter renders empty. That is the picture doing
 its job, so never fill a stage with a chapter that names a tool and no usage.
