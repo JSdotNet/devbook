@@ -92,7 +92,7 @@ feature or requirement points at a journey through `related` like at any other
 chapter. A journey sits in the context of the requirements it proves; one that
 crosses contexts sits in the context holding most of them, and on a tie in any of
 them. The check warns on a journey placed elsewhere. Its shape, setup fields, and
-status are `devbook-chapter-metadata.md`'s under "Journeys". Its runs sit beside
+fields are `devbook-chapter-metadata.md`'s under "Journeys". Its runs sit beside
 the file, in `scenarios/<journey>/`; profiles and data sets live in
 `.devbook/scenarios/`, which holds no journey.
 
@@ -396,8 +396,8 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     outside: a scheduler, an inbound callback, the system account. The same
     three beats: what it is, what it triggers here, and how the model records
     it. Its contract, where it has one, stays in the dependency tables.
-  - A beat the repository cannot answer is left out and recorded as an
-    `annotation` fence, never filled in with a plausible sentence. "Nobody has
+  - A beat the repository cannot answer is left out and raised as a review
+    note, never filled in with a plausible sentence. "Nobody has
     stated which right this needs" is information; an invented right is not.
   - Another bounded context or a module is a dependency and belongs in the
     dependency tables, never here. Name a bank, a portal, or a scheduler here
@@ -539,9 +539,8 @@ instructions.
   `context.md` or `actors.md`, and every Term chapter under `domain.md`'s
   `## Ubiquitous Language` grouping must carry a
   metadata block as described in
-  `devbook-chapter-metadata.md`. `type` is required; `status` is
-  optional here (see below); the optional cross-folder tags (`related`) and
-  issue link (`issue`) are included only when they have a value.
+  `devbook-chapter-metadata.md`. `type` is required; the optional cross-folder
+  tags (`related`) are included only when they have a value.
 - Every file in `domain/` — `context-map.md` and, per bounded context,
   `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
   `skills.md`, `requirements.md`, `scenarios.md` (when present), `model.md`,
@@ -555,28 +554,13 @@ instructions.
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
   context whose `domain.md` declared it before contract 11.
-- The metadata block's `status` field uses `draft`, `proposed`, `active`, or
-  `deprecated` in this folder. This folder describes the current (or
-  agreed-future) model, not a task queue, so there is no `done`: `active`
-  means "this is the current model", `deprecated` means superseded. That is
-  the built-in ladder; a repository replaces its transitional rungs per file
-  in `.devbook/statuses.json`, per `devbook-chapter-metadata.md`.
-- On top of that ladder sit the two decision rungs, defined once in
-  `devbook-chapter-metadata.md` and belonging to **this folder only**:
-  `approved`, a person agreed this chapter, recorded with `approved-by` and
-  `approved-at`; and `accepted` above it, a person saw the built work against
-  this chapter and accepted it, recorded with `accepted-by` and `accepted-at`
-  beside the approval record it stands on. Each may carry a content
-  fingerprint — `approved-hash`, `accepted-hash` — which is what makes a lapse
-  a check result rather than something a reader has to establish. Both are
-  written explicitly, never rested at, and both come off together the moment
-  the content changes.
-- **`active` is this folder's resting value, so it is written by omitting the
-  field.** State `status` only while the chapter is in transition (`draft`,
-  `proposed`) or carries a standing warning (`deprecated`); drop the line when
-  it settles. Most of a mature bounded context is the current model, and
-  restating that on every chapter says nothing while hiding the few chapters
-  that are genuinely moving. Writing `status: active` explicitly is reported.
+- This folder describes the model the branch's code implements, and nothing
+  else: no field says a chapter is a draft, agreed, approved, or superseded.
+  A merged chapter is the current model. A model not yet built is an open
+  change under `openspec/changes/`, per `devbook-changes.md`, and a chapter that
+  no longer holds is removed by a change's `REMOVED` delta. A change proposal's
+  approval and acceptance are the host's state, per "Moved to tooling" in
+  `devbook-chapter-metadata.md`.
 - The metadata block's `type` field records what kind of thing the chapter or
   file is — the classification that is **never** written into the heading. This
   folder's value sets are:
@@ -596,9 +580,8 @@ instructions.
   `scenario` is a chapter value of a scenarios file alone: every `##` there is
   one, and on any other chapter or on a file-level block it is an error. A whole
   file typed `scenario` is the journey page of contract 31; `032-scenarios-md`
-  folds it into `scenarios.md`. A journey's `status` is `draft` or `proposed`
-  while it is written or agreed, and absent once it is in force; it takes no
-  decision rung.
+  folds it into `scenarios.md`. A merged journey is in force; what proves it is
+  its run.
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -704,12 +687,9 @@ instructions.
   error that names the `011-context-md` migration.
 
   Either link is an **identity** link only — it says "this chapter and that
-  switch are the same capability". It is deliberately **not** a status mapping.
-  The `status` values above describe how settled the written model is; a
-  flag's rollout or a setting's default describes whether the running behaviour
-  can be relied on. Those answer different questions, so do not translate one
-  vocabulary into the other, and do not infer a chapter's `status` from its
-  switch or the reverse.
+  switch are the same capability". A flag's rollout or a setting's default
+  describes whether the running behaviour can be relied on, which is the
+  product's configuration and never a chapter field.
 - `context.md` Feature Flag and Setting chapters carry `key`: the identifier
   as the code spells it, a single plain string — `key: checkout.express` — and
   never a reference. It is what a flag check or a configuration read found in
@@ -766,26 +746,24 @@ instructions.
   line: it is a promise about the product, and where it is kept is the
   implementation's business.
 - A rule that is **not yet settled** is an invariant chapter with `open` on its
-  `Enforced at:` line and the open question itself in a `kind: question`
-  annotation fence beside it, per `devbook-annotations.md`. A requirement not
-  yet settled is the same, at `status: draft`. This is the hot spot of an Event
+  `Enforced at:` line and the open question itself raised as a `question` review
+  note on its address, through `devbook.decision@1`. A requirement not yet
+  settled is the same, its open question a `question` note. This is the hot spot of an Event
   Storming session kept in place rather than resolved by guessing, and it is
   where `assets/code-sync-protocol.md` means a rule to go when it says to record
   it as an open question instead of capturing it as fact.
 
-  An `open` rule does not stop the aggregate reaching `active` — a model can
-  be the current one and still carry a known unanswered question. It does stop
-  that one rule being *built*: an `apply-change` pass names it as needing a decision
-  instead of briefing an implementation of a rule nobody has agreed. The
-  existing gate already refuses `approved` or `accepted` over an open question,
-  so a rung on a chapter carrying one is reported without a second rule here.
+  An `open` rule does not stop the aggregate being the current model — a model
+  can be the current one and still carry a known unanswered question. It does
+  stop that one rule being *built*: an `apply-change` pass names it as needing a
+  decision instead of briefing an implementation of a rule nobody has agreed.
 - A requirement with no scenarios is reported as a coverage warning. A promise
   with no case that exercises it is a sentence nobody can tell has been broken,
   and one a brief cannot derive an acceptance check from. It is a warning and
   not an error because the rule is still worth recording before its cases are
-  written — but a chapter left that way is not finished. A requirement at
-  `status: deprecated` is not reported: it records a withdrawn promise, and a
-  withdrawn promise has no case left to exercise. An invariant with no
+  written — but a chapter left that way is not finished. A requirement that no
+  longer holds is removed by a change's `REMOVED` delta, not kept with a
+  warning on it. An invariant with no
   scenarios is complete: its claim and its rejection code are the check.
 - `tests` entries are checked against the file they sit in: `unit` for an
   invariant, `e2e` — or `integration` for a policy no user triggers — for a
@@ -828,7 +806,6 @@ instructions.
 # <System or Product Name>
 
 \`\`\`meta
-status: draft
 type: context-map
 \`\`\`
 
@@ -886,7 +863,6 @@ each one.>
 # <Bounded Context Name>
 
 \`\`\`meta
-status: draft
 index: root
 type: context
 deployment: module
@@ -902,7 +878,6 @@ instead>.
 ## <Switch Name>
 
 \`\`\`meta
-status: draft
 type: feature-flag
 key: <flag.key.as.the.code.checks.it>
 default: off
@@ -915,7 +890,6 @@ on changes, and when the flag is retired.
 ## <Setting Name>
 
 \`\`\`meta
-status: draft
 type: setting
 key: <setting.key.as.the.code.reads.it>
 scope: user
@@ -929,7 +903,6 @@ turns the capability on or shapes how it behaves.
 ## <User Name>
 
 \`\`\`meta
-status: draft
 type: user
 role: <RoleNameAsTheAuthorizationLayerSpellsIt>
 related: [.devbook/domain/<context>/features.md#<heading-slug>]
@@ -963,7 +936,6 @@ describes, one heading level down.
 # Domain
 
 \`\`\`meta
-status: draft
 type: domain
 \`\`\`
 
@@ -976,7 +948,6 @@ type: domain
 ## <AggregateName>
 
 \`\`\`meta
-status: draft
 type: aggregate
 related: [.devbook/domain/<context>/domain.invariants.md#<aggregate-heading-slug>]
 \`\`\`
@@ -993,7 +964,6 @@ above points at.
 ### <EntityName>
 
 \`\`\`meta
-status: draft
 type: entity
 \`\`\`
 
@@ -1002,7 +972,6 @@ Role within the aggregate, identity, and lifecycle notes.
 ### <ValueObjectName>
 
 \`\`\`meta
-status: draft
 type: value-object
 \`\`\`
 
@@ -1011,7 +980,6 @@ Meaning, equality semantics, and validation rules.
 ### <EnumName>
 
 \`\`\`meta
-status: draft
 type: enum
 \`\`\`
 
@@ -1024,7 +992,6 @@ Values and what each one means in business terms.
 ## <DomainServiceName>
 
 \`\`\`meta
-status: draft
 type: domain-service
 \`\`\`
 
@@ -1045,7 +1012,6 @@ What it reacts to is a requirement of the unit that reacts, in
 ## <EventName>
 
 \`\`\`meta
-status: draft
 type: domain-event
 related: [.devbook/domain/<context>/domain.md#<aggregate-heading-slug>]
 \`\`\`
@@ -1067,7 +1033,6 @@ Published when <business trigger>.
 ## Shared Value Objects
 
 \`\`\`meta
-status: draft
 type: shared-value-objects
 \`\`\`
 
@@ -1076,7 +1041,6 @@ type: shared-value-objects
 ### <SharedValueObjectName>
 
 \`\`\`meta
-status: draft
 type: value-object
 \`\`\`
 
@@ -1085,7 +1049,6 @@ Meaning, equality semantics, validation rules, and which aggregates use it.
 ## Shared Enums
 
 \`\`\`meta
-status: draft
 type: shared-enums
 \`\`\`
 
@@ -1094,7 +1057,6 @@ type: shared-enums
 ### <SharedEnumName>
 
 \`\`\`meta
-status: draft
 type: enum
 \`\`\`
 
@@ -1103,7 +1065,6 @@ Values and what each one means in business terms, and which aggregates use it.
 ## Ubiquitous Language
 
 \`\`\`meta
-status: draft
 type: ubiquitous-language
 \`\`\`
 
@@ -1114,7 +1075,6 @@ type: ubiquitous-language
 ### <Canonical Term>
 
 \`\`\`meta
-status: draft
 type: term
 aliases: [<AliasA>, <AliasB>]
 related: [.devbook/domain/<context>/domain.md#<heading-slug>]
@@ -1156,7 +1116,6 @@ moves here.
 # Actors
 
 \`\`\`meta
-status: draft
 type: actors
 \`\`\`
 
@@ -1168,7 +1127,6 @@ type: actors
 ## <User Name>
 
 \`\`\`meta
-status: draft
 type: user
 role: <RoleNameAsTheAuthorizationLayerSpellsIt>
 related: [.devbook/domain/<context>/features.md#<heading-slug>]
@@ -1188,7 +1146,6 @@ Which right it needs, and where that right is configured.
 ## <Organisation Name>
 
 \`\`\`meta
-status: draft
 type: organisation
 \`\`\`
 
@@ -1198,7 +1155,6 @@ and how it appears in the model.
 ## <Technical Actor Name>
 
 \`\`\`meta
-status: draft
 type: technical
 related: [.devbook/domain/<context>/context.md#dependencies]
 \`\`\`
@@ -1223,7 +1179,6 @@ comes last.
 # Features
 
 \`\`\`meta
-status: draft
 type: features
 \`\`\`
 
@@ -1233,7 +1188,6 @@ type: features
 ## <FeatureName>
 
 \`\`\`meta
-status: draft
 type: feature
 feature-flag: [.devbook/domain/<context>/context.md#<switch-heading-slug>]
 setting: [.devbook/domain/<context>/context.md#<setting-heading-slug>]
@@ -1251,7 +1205,6 @@ guarantees is not here: those are `### Requirement:` chapters under the matching
 ### <SubFeatureName>
 
 \`\`\`meta
-status: draft
 type: sub-feature
 \`\`\`
 
@@ -1276,7 +1229,6 @@ A skill is a feature here, so the chapter types are the same.
 # Skills
 
 \`\`\`meta
-status: draft
 type: skills
 \`\`\`
 
@@ -1286,7 +1238,6 @@ type: skills
 ## <skill-name>
 
 \`\`\`meta
-status: draft
 type: feature
 \`\`\`
 
@@ -1300,7 +1251,6 @@ stops. Name the skill exactly as a user types it, so the anchor is the name.
 ### <Stage or Mode Name>
 
 \`\`\`meta
-status: draft
 type: sub-feature
 \`\`\`
 
@@ -1317,7 +1267,6 @@ One stage of the skill, or one mode it can run in.
 # Requirements
 
 \`\`\`meta
-status: draft
 type: requirements
 \`\`\`
 
@@ -1327,7 +1276,6 @@ type: requirements
 ## <FeatureName>
 
 \`\`\`meta
-status: draft
 type: requirements
 related: [.devbook/domain/<context>/features.md#<feature-heading-slug>]
 \`\`\`
@@ -1338,7 +1286,6 @@ related: [.devbook/domain/<context>/features.md#<feature-heading-slug>]
 ### Requirement: <what it promises, as a short name>
 
 \`\`\`meta
-status: draft
 type: requirement
 tests: e2e:playwright:tests/e2e/<spec>.ts#<test title>
 \`\`\`
@@ -1354,7 +1301,6 @@ The system SHALL <one promise, stated once>.
 ### Requirement: <a promise a journey proves>
 
 ```meta
-status: draft
 type: requirement
 ```
 
@@ -1386,7 +1332,6 @@ at `domain.<name>.md`.
 # Invariants
 
 \`\`\`meta
-status: draft
 type: invariants
 \`\`\`
 
@@ -1396,7 +1341,6 @@ type: invariants
 ## <AggregateName>
 
 \`\`\`meta
-status: draft
 type: invariants
 related: [.devbook/domain/<context>/domain.md#<aggregate-heading-slug>]
 \`\`\`
@@ -1408,7 +1352,6 @@ related: [.devbook/domain/<context>/domain.md#<aggregate-heading-slug>]
 ### Invariant: <the rule, as a short name>
 
 \`\`\`meta
-status: draft
 type: invariant
 tests: unit:dotnet:<Ordering.Domain.Tests.OrderTests.TheRule>
 \`\`\`
@@ -1429,7 +1372,6 @@ Enforced at: <constructor | <Transition>() | all mutations | open>
 ## Shared Value Objects
 
 \`\`\`meta
-status: draft
 type: invariants
 related: [.devbook/domain/<context>/domain.md#shared-value-objects]
 \`\`\`
@@ -1441,7 +1383,6 @@ related: [.devbook/domain/<context>/domain.md#shared-value-objects]
 ### Invariant: <the rule, as a short name>
 
 \`\`\`meta
-status: draft
 type: invariant
 tests: unit:dotnet:<Ordering.Domain.Tests.IbanTests.TheRule>
 \`\`\`
@@ -1464,7 +1405,6 @@ the promise is checked.
 # Model
 
 \`\`\`meta
-status: draft
 type: model
 \`\`\`
 
@@ -1517,7 +1457,6 @@ section; then the section moves here whole.
 # Dependencies
 
 \`\`\`meta
-status: draft
 type: dependencies
 \`\`\`
 

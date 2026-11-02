@@ -1,7 +1,6 @@
 # Design
 
 ```meta
-status: draft
 index: root
 ```
 
@@ -13,7 +12,6 @@ not happened yet.
 ## Dashboard
 
 ```meta
-status: draft
 related: [".devbook/ai/02-deliver.md#flow-skills"]
 ```
 

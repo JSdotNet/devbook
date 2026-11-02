@@ -1,7 +1,7 @@
 # Shared
 
 ```meta
-status: adopted
+rating: adopted
 ```
 
 Formats and protocols that cut across every layer: what an asset is written in, and how a
@@ -10,7 +10,7 @@ plugin ships tools rather than prose.
 ## Markdown
 
 ```meta
-status: adopted
+rating: adopted
 type: format
 ```
 
@@ -20,7 +20,7 @@ whatever a plain Markdown viewer shows is what the host gets.
 ## Model Context Protocol
 
 ```meta
-status: adopted
+rating: adopted
 type: protocol
 related: [".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 ```
@@ -36,7 +36,7 @@ extension registering two canvases and ships no server at all.
 ## MCP Apps
 
 ```meta
-status: trial
+rating: trial
 type: protocol
 date: 2026-09-03
 depends-on: [".devbook/tech/shared.md#model-context-protocol"]

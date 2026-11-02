@@ -9,9 +9,8 @@ workspace "jsdotnet-devbook" {
 
             group "L0 foundation" {
                 devbook = container "devbook" "Addressed Markdown chapters, their meta block, the check, and the reconcile that puts the convention into a repository." "Claude Code plugin" {
-                    chapter = component "Chapter" "One addressable heading with its meta block and anchored annotations, the block's consistency boundary." "Markdown"
+                    chapter = component "Chapter" "One addressable heading with its meta block, the block's consistency boundary." "Markdown"
                     meta-block = component "Meta Block" "The flat block under a heading that turns it into a graph node." "YAML"
-                    annotation = component "Annotation" "A review note fenced inside a chapter and deleted when it is resolved." "Markdown"
                     devbook-folder = component "Devbook Folder" "One of the governed folders under .devbook and the unit of adoption." "Markdown"
                     change = component "Change" "A proposed change folder whose deltas merge into the chapters it lands in." "Markdown"
                     demo = component "Demo" "A self-contained HTML page showing what a person sees in a bounded context." "HTML"
@@ -19,7 +18,7 @@ workspace "jsdotnet-devbook" {
                     reference-graph = component "Reference Graph" "The derived graph of every chapter as a node and every reference as an edge." "JSON"
                     reconciler = component "Reconciler" "Brings a repository level with the installed release and stamps what it materialized." "Skill"
                     index-generator = component "Index Generator" "The checker that walks the corpus and builds the graph, the outline, and the registers." "Node.js"
-                    fence-writer = component "Fence Writer" "The only writer of annotation fences, as a command and as functions." "Node.js"
+                    chapter-review = component "Chapter Review" "Reads a chapter against its folder's rules and posts one note per objection through devbook.decision@1." "Skill"
                     tech-inventory = component "Tech Inventory" "Scripts that read package manifests and emit deterministic JSON." "Node.js"
                     scenario-tools = component "Scenario Tools" "The runner, reporter, signature, coverage check, and demo sync that tie end-to-end specs to scenario pages." "Node.js"
 
@@ -74,14 +73,6 @@ workspace "jsdotnet-devbook" {
                     refresh-paths = component "Refresh Paths" "The skill, script, and workflows that rewrite the committed _meta/ indexes." "PowerShell, GitHub Actions"
                     view-renderer = component "View Renderer" "Draws every C4 view of the workspace as a committed SVG." "Node.js"
                     canvas = component "Canvas" "Two Copilot canvases drawing the reference graph and one chapter live." "Copilot extension"
-                }
-
-                devbook-collaboration = container "devbook-collaboration" "How a chapter is reviewed and decided: findings in the chapter, and an approval that stays valid." "Claude Code plugin" {
-                    review-position = component "Review Position" "One chapter's place in a review, read from its rung and its open fences and never stored."
-                    finding = component "Finding" "One unresolved objection, kept as an annotation fence in the chapter body." "Markdown"
-                    approval = component "Approval" "Writes the approved rung and its record and sweeps the resolved notes." "Skill"
-                    review-queue = component "Review Queue" "Reports open notes, pending decisions, and stale approvals across every adopted folder." "Node.js"
-                    acceptance = component "Acceptance" "Writes the accepted rung and its record on top of an approval." "Skill"
                 }
 
                 devbook-openspec = container "devbook-openspec" "The change lane: OpenSpec installed and configured so a change is a set of deltas against the chapters." "Claude Code plugin" {
@@ -174,8 +165,7 @@ workspace "jsdotnet-devbook" {
 
         # Between plugins, in the direction of the coupling
         marketplace.devbook-derived -> marketplace.devbook "Builds the index with the checker it ships" "dependencies: devbook >=1.1.0 <2.0.0"
-        marketplace.devbook-collaboration -> marketplace.devbook "Writes findings and rungs in devbook's schema" "dependencies: devbook >=1.0.0 <2.0.0"
-        marketplace.devbook-openspec -> marketplace.devbook "Lands a change as deltas against the chapters" "dependencies: devbook >=1.13.0 <2.0.0"
+        marketplace.devbook-openspec -> marketplace.devbook "Lands a change as deltas against the chapters" "dependencies: devbook >=1.32.0 <2.0.0"
         marketplace.delivery-schedule -> marketplace.delivery "Targets the engine's skills and never a flow" "dependencies: delivery >=1.0.0 <2.0.0"
         marketplace.delivery-schedule -> marketplace.devbook "Names prose-check and the devbook checks as targets" "undeclared"
         marketplace.delivery -> marketplace.devbook "Drafts devbook folders with flow-spec and checks chapters at spec-check" "undeclared, TDR 4"
@@ -215,11 +205,11 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook.devbook-folder -> marketplace.devbook.chapter "Holds"
         marketplace.devbook.devbook-folder -> marketplace.devbook.demo "Holds"
         marketplace.devbook.chapter -> marketplace.devbook.meta-block "Carries"
-        marketplace.devbook.chapter -> marketplace.devbook.annotation "Anchors"
         marketplace.devbook.change -> marketplace.devbook.chapter "Merges its deltas into"
         marketplace.devbook.index-generator -> marketplace.devbook.reference-graph "Builds, with the workspace's elements and views in it"
         marketplace.devbook.index-generator -> marketplace.devbook.c4-model "Reads, and checks every embed and identifier against"
-        marketplace.devbook.fence-writer -> marketplace.devbook.annotation "Writes and resolves"
+        marketplace.devbook.chapter-review -> marketplace.devbook.chapter "Reads against its folder's rules"
+        marketplace.devbook.chapter-review -> backlog "Reads and posts review notes, where it answers the group" "devbook.decision@1"
         marketplace.devbook.reconciler -> marketplace.devbook.devbook-folder "Adopts and drops"
         marketplace.devbook.reconciler -> marketplace.devbook.scenario-tools "Materializes"
         marketplace.devbook.reconciler -> marketplace.devbook.tech-inventory "Materializes"
@@ -236,15 +226,6 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook-derived.refresh-paths -> marketplace.devbook-derived.view-renderer "Runs after the index write"
         marketplace.devbook-derived.view-renderer -> marketplace.devbook.c4-model "Reads the workspace through devbook's reader" "c4.mjs"
         marketplace.devbook-derived.canvas -> marketplace.devbook.reference-graph "Draws"
-
-        # devbook-collaboration
-        marketplace.devbook-collaboration.review-position -> marketplace.devbook-collaboration.finding "Is read off the open fences of"
-        marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.review-position "Decides on"
-        marketplace.devbook-collaboration.approval -> marketplace.devbook-collaboration.finding "Is blocked by an open question and sweeps the resolved ones"
-        marketplace.devbook-collaboration.acceptance -> marketplace.devbook-collaboration.approval "Stands on the record of"
-        marketplace.devbook-collaboration.review-queue -> marketplace.devbook-collaboration.review-position "Reports every chapter's"
-        marketplace.devbook-collaboration.finding -> marketplace.devbook.fence-writer "Is written through"
-        marketplace.devbook-collaboration.approval -> marketplace.devbook.meta-block "Writes the approved rung into"
 
         # devbook-openspec
         marketplace.devbook-openspec.config -> marketplace.devbook-openspec.schema "Selects"
@@ -318,7 +299,7 @@ workspace "jsdotnet-devbook" {
             autolayout lr
         }
 
-        container marketplace "plugins" "The fourteen plugins grouped by layer, every arrow in the direction of the coupling." {
+        container marketplace "plugins" "The thirteen plugins grouped by layer, every arrow in the direction of the coupling." {
             include *
             autolayout tb
         }
@@ -339,11 +320,6 @@ workspace "jsdotnet-devbook" {
         }
 
         component marketplace.devbook-derived "devbook-derived" "The refresh paths, the view renderer, and the canvas." {
-            include *
-            autolayout lr
-        }
-
-        component marketplace.devbook-collaboration "devbook-collaboration" "The review position, its findings, and the two decisions taken on it." {
             include *
             autolayout lr
         }

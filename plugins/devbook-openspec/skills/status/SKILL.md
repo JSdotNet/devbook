@@ -27,24 +27,25 @@ nothing: every edit this report points at is a person's or another skill's.
    `Proved by:` names one of its parts — `stale` or `missing` with `devbook:scenario-run` as the
    action, `current` otherwise. Where `verify-change` is not installed, say the column is
    empty and why.
-4. **Gates.** From `proposal.md`'s file block: `status`, who approved and accepted it and when,
-   and whether each `-hash` still equals `node .devbook/_tools/devbook-meta/chapter-hash.mjs
-   openspec/changes/<name>`. A hash that no longer matches is a lapsed gate, not a passed one.
-   Any open `kind: question` fence in the proposal or a delta is listed: it blocks both gates.
-5. **Next move**, exactly one: approve (`devbook-collaboration:chapter-approve` on the change),
-   build the first open step (`/opsx:apply`), fix a verdict, run a stale or missing scenario
-   (`devbook:scenario-run`), accept (`devbook-collaboration:chapter-accept` — every step
-   `done`, every delta it can verify aligned, and every delivered journey's run current), or
-   archive (`devbook-openspec:archive` — accepted, both hashes current).
+4. **Gates.** From the host answering `devbook.decision@1` (devbook's `resources/decision.md`),
+   named: `devbook_get_state` — state, who approved and accepted and when, and whether each
+   fingerprint still equals `chapter-hash.mjs openspec/changes/<name>`; one that does not is a
+   lapsed gate. `devbook_list_notes` on the proposal and each delta: an open `question` blocks
+   both gates. With no host bound, say the gates cannot be read.
+5. **Next move**, exactly one: approve (the person, in the host), build the first open step
+   (`/opsx:apply`), fix a verdict, run a stale or missing scenario (`devbook:scenario-run`),
+   accept (the person, in the host — every step `done`, every delta it can verify aligned, and
+   every delivered journey's run current), or archive (`devbook-openspec:archive` — accepted at
+   the current fingerprint).
 
 ## `--replan`
 
 Bound as a chore after the engine's `phase-scope` with `on-failure: required`, so it runs after
 the base is fetched and before a step's scope is acted on. One change — the one the run's item belongs
 to — and three checks instead of the report, in order: every delta against its target chapter
-as it now stands on `main` (a target changed since `approved-at` is a conflict); every open
+as it now stands on `main` (a target changed since the approval is a conflict); every open
 step against the code through `devbook:verify-change` (a step whose requirements and
 invariants already hold, or whose assumption a merged step broke); and every `depends-on` and
 `related` chapter of the proposal (one deprecated or rewritten since). Print one row per flag
 and exit non-zero on any, zero on none. Rewrite nothing: revising is `/opsx:update`, and a
-revised delta lapses the approval and goes back through `chapter-approve`.
+revised delta lapses the approval, and the person approves the change again in the host.

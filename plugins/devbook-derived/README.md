@@ -2,7 +2,7 @@
 
 The committed devbook index. [devbook](../devbook) ships the convention and its checker;
 this plugin keeps what that checker can derive — the reference graph, the reading outline,
-and the open-note index — **in the repository's tree**, for a reader that cannot run the
+and the term and scenario registers — **in the repository's tree**, for a reader that cannot run the
 checker itself, and owns everything that keeps those files fresh.
 
 An L1 extension: it depends on `devbook` and nothing else. Enable it to commit the index;

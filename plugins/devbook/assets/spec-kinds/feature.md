@@ -2,8 +2,8 @@
 
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature that `assets/code-sync-protocol.md` does not already say. The protocol
-carries the resolution ladder, the evidence rules, the five verdicts, the status
-rules, the brief contract, and the report table; this file carries the kind.
+carries the resolution ladder, the evidence rules, the five verdicts, what is
+agreed, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
@@ -28,9 +28,9 @@ Feature chapters are the only `domain/` chapters that carry `depends-on`,
 `feature-flag`, and `setting`. `feature-flag` and `setting` are references to
 the switch chapters in the context's `context.md` — the `setting` kind covers
 those — and each is an **identity** link only: this chapter and that switch are
-the same capability, never a status mapping in either direction. A flag at full
-rollout does not make a chapter `active`, and a `draft` chapter says nothing
-about the flag. `depends-on` records delivery ordering between features, not
+the same capability, never a mapping of one's maturity onto the other. A flag at
+full rollout says nothing about the chapter, and the chapter says nothing about
+the flag. `depends-on` records delivery ordering between features, not
 code coupling: two features sharing an aggregate are not dependent; one that
 cannot ship until another exists is. Omit any of the three when it has no
 value.
@@ -143,8 +143,7 @@ invariants from the `related` chapters hold.
   selectors, or screenshots into `features.md`.
 - Do not write an authorization rule into `features.md`, or create a `user`
   chapter from a role check alone.
-- Do not infer `status` from a flag's maturity, or a flag's state from `status`;
-  do not infer that a feature is delivered because its flag exists.
+- Do not infer a flag's state from the chapter, or the reverse; do not infer that a feature is delivered because its flag exists.
 - Do not set `depends-on` from a code reference or a shared aggregate, and do
   not brief a feature whose prerequisites are unbuilt without reporting the
   chain.

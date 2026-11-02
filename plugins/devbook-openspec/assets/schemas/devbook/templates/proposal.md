@@ -2,7 +2,6 @@
 
 ```meta
 type: change
-status: proposed
 category: feature
 ```
 

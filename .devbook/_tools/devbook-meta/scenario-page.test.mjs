@@ -3,7 +3,7 @@
 // headings the parts.
 //
 // The per-document rules are validateDocument's: where the type may sit, the
-// parts that owe no block, the anchors unique in a file, the fixed status set,
+// parts that owe no block, the anchors unique in a file, a journey's state moved to tooling,
 // the field set with `tests` refused, the setup fields only on a journey, the
 // step keywords, and the shape of a `Proved by:` case. The corpus-wide rules
 // are the graph build's: the setup fields resolved against chapters and the
@@ -61,8 +61,8 @@ const scenarios = (meta, body = "") =>
 for (const [folder, relPath, meta] of [
     ["arc42", ".devbook/arc42/set-up.md", "type: scenario\n"],
     ["design", ".devbook/design/set-up.md", "type: scenario\n"],
-    ["tech", ".devbook/tech/set-up.md", "type: scenario\nstatus: trial\n"],
-    ["ai", ".devbook/ai/set-up.md", "type: scenario\nstatus: trial\n"],
+    ["tech", ".devbook/tech/set-up.md", "type: scenario\nrating: trial\n"],
+    ["ai", ".devbook/ai/set-up.md", "type: scenario\nrating: trial\n"],
 ]) {
     const issues = validateDocument(relPath, `# Set up\n\n${fence(meta)}\nProse.\n`);
     check(has(errors(issues), `has type "scenario" in .${folder}`), `type: scenario in .${folder} is an error`, dump(issues));
@@ -91,23 +91,19 @@ for (const [folder, relPath, meta] of [
     check(!has(issues, "has no `meta` block"), "a part, and a heading under it, without a block is not reported", dump(issues));
 }
 
-// ── DB3: status ────────────────────────────────────────────────────────────
+// ── DB3: a journey carries no status ───────────────────────────────────────
 
 for (const status of ["draft", "proposed"]) {
     const issues = validateDocument(FILE, scenarios(`type: scenario\nstatus: ${status}\n`));
-    check(errors(issues).length === 0 && warnings(issues).length === 0, `status: ${status} is accepted`, dump(issues));
-}
-for (const status of ["active", "approved", "deprecated", "nonsense"]) {
-    const issues = validateDocument(FILE, scenarios(`type: scenario\nstatus: ${status}\n`));
-    check(has(errors(issues), `has status "${status}" on a journey`), `status: ${status} is an error`, dump(issues));
+    check(errors(issues).length === 1 && has(errors(issues), "038-workflow-state-leaves-the-chapter"), `status: ${status} on a journey is moved to tooling`, dump(issues));
 }
 
 // ── DB4: the field set ─────────────────────────────────────────────────────
 
 {
     const meta =
-        "type: scenario\nrelated: [.devbook/domain/work/features.md#backlog-board]\nroadmap: [scenario-pages]\n" +
-        "issue: \"#12\"\neffort: 3\ndate: 2026-10-07\nchange: add-scenarios\naliases: [Backlog setup]\next.spec-manager.pinned: yes\n";
+        "type: scenario\nrelated: [.devbook/domain/work/features.md#backlog-board]\n" +
+        "date: 2026-10-07\naliases: [Backlog setup]\next.spec-manager.pinned: yes\n";
     const issues = validateDocument(FILE, scenarios(meta));
     check(errors(issues).length === 0 && warnings(issues).length === 0, "the common fields, aliases, and ext.* are accepted on a journey", dump(issues));
 }

@@ -1,19 +1,20 @@
 ---
 name: draft-pr-contract
-description: How an unattended sweep resolves one item on its own branch and lands it — claim, worktree, the work script, the empty-diff check, the commit, the draft pull request and its ordered body, the failure marker, the worktree removal. The caller names the schedule, the item, the work script, and the failure marker. Read by schedule-issue-sweep and schedule-devbook-sweep.
+description: How an unattended sweep resolves one item on its own branch and lands it — claim, worktree, the work script, the empty-diff check, the commit, the draft pull request and its ordered body, the failure marker, the worktree removal. The caller names the schedule, the item, the work script, and the failure marker. Read by schedule-issue-sweep, and by a sweep another plugin ships that lands through it.
 ---
 
 # Draft Pull Request Contract
 
-One item at a time, never two at once, in the session the sweep runs in. The caller supplies:
+One item at a time, never two at once, in the session the sweep runs in. The caller supplies
+the five parameters below; a sweep in another plugin states its own values in its own contract.
 
-| Parameter | Issue sweep | Devbook sweep |
-| --- | --- | --- |
-| `<schedule>` — the branch and worktree segment | `issue-sweep` | `devbook-<direction>-sweep` |
-| `<item>` — the item's slug | `<number>-<slug>`, issue number first | the sync group's `slug` |
-| `<issue>` — the issue the item answers and claims | the issue itself | the group's `devbook-drift` issue, opened first when none exists |
-| work script — a `Workflow` script and its `args` | `../scripts/resolve-issue.workflow.js` | per direction, in `devbook-sweep-contract.md` |
-| `<failure marker>` — the label that keeps a failed item out of later runs | `sweep-failed` | `sync-failed` |
+| Parameter | Issue sweep |
+| --- | --- |
+| `<schedule>` — the branch and worktree segment | `issue-sweep` |
+| `<item>` — the item's slug | `<number>-<slug>`, issue number first |
+| `<issue>` — the issue the item answers and claims | the issue itself |
+| work script — a `Workflow` script and its `args` | `../scripts/resolve-issue.workflow.js` |
+| `<failure marker>` — the label that keeps a failed item out of later runs | `sweep-failed` |
 
 1. **Claim.** Add `in-progress` to `<issue>` and assign `@me`; create the label if absent. A
    claim that fails skips the item with a line in the brief.

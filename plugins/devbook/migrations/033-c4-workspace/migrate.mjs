@@ -20,7 +20,7 @@ import { readdir, readFile, rm, rmdir, stat, writeFile, mkdir } from "node:fs/pr
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DEBT_SEVERITIES, blockLadder, builtInStatuses } from "../../tools/devbook-meta/metadata.mjs";
+import { DEBT_SEVERITIES } from "../../tools/devbook-meta/metadata.mjs";
 import { C4_KEYWORDS, mermaidKeyword, parseArchifyArchitecture, parseArchifySequence, parseMermaidC4, parseSequence } from "./diagrams.mjs";
 import { INCLUDE_FOLDER, Model, WORKSPACE, readFromFiles, skeleton } from "./workspace.mjs";
 
@@ -29,9 +29,12 @@ const STAMP = ".devbook/config.json";
 const ARC42 = ".devbook/arc42/";
 const OLD_FOLDER = ".devbook/arc42/_c4/";
 const DEBT_FOLDER = ".devbook/arc42/tdr/";
-// The checker's own ladders: the debt ladder on a record's top-level block, the folder's elsewhere.
-const DEBT_STATUSES = blockLadder("arc42", `${DEBT_FOLDER}x.md`, "file", {}).statuses;
-const ARC42_RUNGS = builtInStatuses("arc42");
+// The ladders of contract 33, which this migration is written against: the debt
+// ladder on a record's top-level block, the folder's elsewhere. The checker
+// stopped defining them in contract 38, when a debt record's state left the
+// chapter; `038-workflow-state-leaves-the-chapter` strips what this writes.
+const DEBT_STATUSES = ["identified", "planned", "in-progress", "resolved"];
+const ARC42_RUNGS = ["draft", "proposed", "active", "deprecated"];
 const SPEC_FILE = /^(.+)\.(\d+)\.([a-z]+)(\.standard)?\.json$/;
 const lower = (v) => String(v ?? "").toLowerCase();
 const clauses = (list) => list.map((p) => String(p).replace(/\.$/, "")).join("; ");

@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about the
 building block view that `assets/code-sync-protocol.md` does not already say.
 The protocol carries the resolution ladder, the evidence rules, the five
-verdicts, the status rules, the brief contract, and the report table; this file
+verdicts, what is agreed, the brief contract, and the report table; this file
 carries the kind.
 
 | | |
@@ -24,10 +24,9 @@ carries the kind.
   sequenced work. Cross-references use `related`.
 - **The top-level chapter's `meta` block doubles as the file-level block.** An
   `arc42/` file is exactly one top-level chapter — never add a second block.
-- The status ladder is `draft`, `proposed`, `active`, `deprecated`. There is no
-  `approved` or `accepted` rung in `arc42/` — the two decision rungs are
-  `domain/`'s. A structural change is expensive to reverse, so the gate's
-  confirmation below `active` matters here.
+- A block carries no status: a merged block is the standing structure. A
+  structural change is expensive to reverse, so the gate's confirmation over an
+  undecided open change matters here.
 
 If `arc42/` does not exist, stop and adopt it through `devbook:update`, or `devbook:init` where devbook has no stamp yet. Create the file
 only when the chapter will have real content — the folder rules forbid
@@ -67,8 +66,8 @@ code here: none of the drift below is reported for them or for a relationship th
   `code-ahead` and the plan drafts the file whole; the chapters are verdicted against the code
   alone until it exists.
 
-The protocol's status rules apply unchanged: a block at `draft` or `proposed` keeps its
-verdict and is marked `unagreed`.
+The protocol's rules on what is agreed apply unchanged: a verdict measured beside an
+undecided open change is marked `unagreed`.
 
 A capture plan drafts DSL as well as chapters. Its delta for the workspace is keyed by element
 identifier or view key instead of heading — `ADDED`, `MODIFIED` with the current statement
@@ -111,7 +110,7 @@ name the interfaces a block genuinely exposes.
 Settle level 1 from what runs independently and level 2 from what other blocks
 depend on as a unit — a project nothing depends on separately is not a level 2
 block, whatever its name — and stop decomposing where the blocks stop having
-distinct responsibilities. Draft with no `type` and no `status`. Draft each
+distinct responsibilities. Draft with no `type`. Draft each
 block's element, and its relationships from the edges that exist, in their
 direction, and note where an edge contradicts the intended layering. Embed the
 view; never draw the blocks in a Mermaid fence.

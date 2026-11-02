@@ -65,8 +65,7 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    `devbook-openspec:update`, then `delivery:update`, then
    `delivery-schedule:update` — and
    let it run its migrations oldest first, overwrite what is stale, leave what is customized,
-   and rewrite its own stamp. `devbook-collaboration` has no `init` or `update`: enabling it is the
-   whole adoption.
+   and rewrite its own stamp.
 
    The order is load-bearing: each later `update` reads what an earlier one rewrote. Show the
    diff and the notes each one shows. When the change lane's `update` stops on an OpenSpec CLI

@@ -118,7 +118,9 @@ async function buildDocumentPayload(state) {
     // The folder's resting status travels with the payload so the page can
     // badge a block that omits `status` with the state it actually has. The
     // page cannot derive it: it sees a path, not the schema.
-    const restingStatus = restingStatusFor(folderKindForPath(state.relPath));
+    // A checker from contract 38 on has no resting status: only a `tech/` or
+    // `ai/` block carries a value, its `rating`.
+    const restingStatus = restingStatusFor ? restingStatusFor(folderKindForPath(state.relPath)) : null;
     return { path: state.relPath, raw, fileTitle, fileMeta, chapters, issues, restingStatus };
 }
 

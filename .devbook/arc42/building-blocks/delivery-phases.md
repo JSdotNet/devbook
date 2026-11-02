@@ -55,7 +55,7 @@ In `flow-spec` it derives the folder and the chapter kind instead. It selects th
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
 to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
 the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
-a folder whole or an annotation fence.
+a folder whole.
 
 It also lists the [journeys](devbook.md#scenario-tools) the item references, the list
 `implement`, `verify`, and `spec-check` work from. A journey comes in directly, when the

@@ -108,10 +108,10 @@ plugin directories on purpose: where a plugin is installed is a fact about a hos
 else, and no slot exists for it.
 
 **The committed index is an extension.** A repository that wants `_meta/` committed enables
-`devbook-derived` and runs its `init`; one that does not never sees a derived file. The
-review plugin has the same shape after its state moved into devbook's schema: five skills, no
-rule, no install, no stamp ([annotations](annotations.md), [checks and
-indexes](checks-and-indexes.md)).
+`devbook-derived` and runs its `init`; one that does not never sees a derived file
+([checks and indexes](checks-and-indexes.md)). The review plugin had no rule, no install, and
+no stamp, and once contract 38 moved review state to the hosts it had nothing left to write:
+it is removed, and `chapter-review` is `devbook`'s ([annotations](annotations.md)).
 
 **The repository's procedures are an extension over the convention, not a payload of the
 engine.** `start` and `capture` began as two seeds the engine's install wrote, because the
@@ -144,7 +144,8 @@ cost is one stamp migration, which [install](install.md) records; a repository t
 
 **The change lane is an extension over the convention, and OpenSpec is installed, never
 copied.** A change is a set of deltas against devbook chapters, merged by devbook's own
-`delta.mjs` and decided by `devbook-collaboration`'s gates, so everything the lane adds is
+`delta.mjs` and decided in the host that keeps the proposal's state, through
+`devbook.decision@1`, so everything the lane adds is
 procedure around a shape devbook owns: `devbook-openspec`, an L1 over `devbook`. It configures
 OpenSpec through its documented surfaces — a project schema and `config.yaml` — rather than
 forking a dozen skills against a project that releases every few weeks, and it names the engine

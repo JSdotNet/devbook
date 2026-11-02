@@ -8,7 +8,7 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscu
 This repository ships authoring assets rather than a running product, so a *user* here is a
 host that loads an asset and a repository that installs one. Both sit outside every building
 block, and every block conforms to them rather than the other way round. What is inside the
-boundary is the marketplace and its fourteen plugins, one block each under
+boundary is the marketplace and its thirteen plugins, one block each under
 [`building-blocks/`](building-blocks/README.md); everything below is outside it.
 
 ## Business Context

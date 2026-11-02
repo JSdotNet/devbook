@@ -24,10 +24,6 @@ const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 // manifest cannot answer: naming the plugin behind a stamp whose plugin is not installed here.
 // Hardcoding it is the same bargain the rest of this script already takes, recorded at
 // `.devbook/arc42/adr/plugin-boundaries.md`.
-// `devbook-collaboration` is absent on purpose: it materializes nothing and stamps nothing
-// (`.devbook/arc42/adr/annotations.md`), so a
-// repository adopts it by enabling it and nothing here reconciles it.
-//
 // `contract: false` is not "has not got round to it". Only a component whose update rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
 // it owns whole has hash-matching as its whole migration mechanism. So four of these five will

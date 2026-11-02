@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 feature flag or a setting that `assets/code-sync-protocol.md` does not already
 say. The protocol carries the resolution ladder, the evidence rules, the five
-verdicts, the status rules, the brief contract, and the report table; this file
+verdicts, what is agreed, the brief contract, and the report table; this file
 carries the kind.
 
 | | |
@@ -38,12 +38,10 @@ a field, not a second procedure.
   the feature points at.
 - **`default` is `on` or `off` on a flag** and the shipped value on a setting.
   `scope` is `user`, `tenant`, or `system` on a setting and absent on a flag.
-- **`status` is `draft`, `proposed`, `active` (by omission), or `deprecated`**,
-  plus `domain/`'s two decision rungs, `approved` and `accepted` above it. A
-  retired flag is `deprecated` until the chapter is removed with its last
-  reference.
-- **Identity, never status.** The switch's rollout or value says nothing about
-  the chapter's `status`, and the reverse.
+- **A retired flag's chapter is removed** with its last reference, by a
+  change's `REMOVED` delta.
+- **Identity, never maturity.** The switch's rollout or value says nothing about
+  the chapter, and the reverse.
 
 ## Mapping
 
@@ -76,7 +74,7 @@ never written from the product is a flag, however it is spelled.
 Reconcile the heading with the feature chapter that already describes the
 capability — usually it exists, and the switch takes its name. Then propose
 the feature side: `feature-flag` or `setting` on that chapter, pointing here.
-Draft with `type`, `key`, and `default`, and no `status`; `scope` on a
+Draft with `type`, `key`, and `default`; `scope` on a
 setting; `related` to the feature chapters. Do not write an owner or a
 retirement condition the catalog does not state.
 
@@ -108,7 +106,6 @@ produces the stated behaviour, the change path refuses a caller outside
 - Do not decide `feature-flag` or `setting` from the key's spelling — decide
   it from where the value is stored and who writes it.
 - Do not invent an owner, a rollout plan, or a retirement date.
-- Do not infer `status` from the switch's rollout, or the reverse.
 - Do not brief a rollout, or the capability the switch delivers.
 - Do not write a switch chapter for a key nobody can name in business
   language — report it.

@@ -25,23 +25,24 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Twenty-two skills in two halves: eighteen entry points that pick their own input, each with
+Seventeen skills in two halves: thirteen entry points that pick their own input, each with
 the `report.md` template its report follows, and four that put a trigger in the scheduler and
 read it back. Every one of them is also runnable by hand, which is how a cadence gets proved
 before it is trusted. Beside them: the shipped catalog, seven contracts, one shared work script, the
-catalog checker, one migration, one hook, and one stamp.
+catalog checker, two migrations, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, eighteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, thirteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `findings-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes, the frame every `report.md` fills, and how every entry point runs by hand or unattended and reports to a surface; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the review checklist, severity, ranked table, and issue the review entry points share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its failure marker a parameter; what the two devbook sync sweeps share, down to the `devbook-sync-report` block |
-| `scripts/resolve-issue.workflow.js` | work script | A sweep, through the host's workflow tool, per `draft-pr-contract.md` — the issue sweep directly, the devbook push sweep from inside `apply-unit.workflow.js`, with a `flow-code` kind: Scope; Implement, a failing test first; Build & Test with bounded repair; Review, two lenses |
+| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `findings-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes, the frame every `report.md` fills, and how every entry point runs by hand or unattended and reports to a surface; the change window `schedule-weekly-update` and `schedule-whats-new` share; the review checklist, severity, ranked table, and issue the review entry points share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its five parameters the caller's |
+| `scripts/resolve-issue.workflow.js` | work script | The issue sweep, through the host's workflow tool, per `draft-pr-contract.md`, and a sweep another plugin ships that resolves an item the same way, with a `flow-code` kind: Scope; Implement, a failing test first; Build & Test with bounded repair; Review, two lenses |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
+| `migrations/002-retired-schedules/` | migration | `update`, in its first step: names the retired schedules a stamp still carries |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
 | `components.schedule` | stamp in the stack config | Written by `init` and `update` alone, read by [devbook-config](devbook-config.md) |
 
@@ -258,6 +259,8 @@ unnecessary.
 | Nothing personal is written into the repository | `init`, `update` | untested |
 | The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
 | A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
+| A retired name is dropped and its routine disabled, never a failure | `update` | `migrate.test.mjs`, the drop only |
+| A routine whose title is no catalog or retired schedule is left alone | `update` | untested |
 | A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
 
 The value it holds:
@@ -324,7 +327,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: fifteen trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
@@ -368,7 +371,7 @@ capability — a divergence taken on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets, and the sync sweep lists its groups with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets, and `schedule-devbook-verify` lists its units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names the skill `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares; `schedule-weekly-retro` names the skill `retro` for its lenses | The skill name alone | A reviewer weighs a merge by whether it can be walked back, and a retro's lenses are written once. Without the skill, the contract's body still states the door, and the review finds a one-way diff from the diff itself; without `retro`, the weekly retro reads through its own three lenses. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
@@ -385,8 +388,9 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports what it did in the same shape, and that the next run updates its pull request rather than duplicating it. |
+| Backlog's `backlog-tools` | Conformist, read-only | Its devbook sweep reads three of this plugin's files by path | `report-contract.md`, `draft-pr-contract.md`, `scripts/resolve-issue.workflow.js` | That the paths stay, and that `update` leaves its routine alone. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the sixteen schedules
+**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

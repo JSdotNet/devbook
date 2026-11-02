@@ -82,7 +82,7 @@ its brief; it is the one that edits.
   phase `blocked` with its output; never hand a failing chapter to the gate.
 - **Never set the `approved` status.** It stays a person's decision. An edit that would move
   a chapter to `approved` is reverted and reported.
-- **Never edit code**, and never a chapter's `annotation` fence.
+- **Never edit code**, and never write a review note into a chapter.
 
 ## Step 4 — List Every Edit for Personal Validation
 

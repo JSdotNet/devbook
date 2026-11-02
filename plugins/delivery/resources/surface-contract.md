@@ -172,8 +172,7 @@ that surface's own `runId`:
   `units` rows of the run's `devbook-sync-report` block — per unit its `unit`, `kind`, `sync`,
   `syncFrom`, `verdict`, `action`, and `link`, and per chapter its `chapter`, `verdict`, and
   `evidence`. Pass the rows verbatim, the same ones the brief's fenced block carries; the
-  sweep that writes the block owns its shape: `resources/devbook-sweep-contract.md` in
-  `delivery-schedule`, under *The Report Block*. A surface may keep
+  sweep that writes the block owns its shape, in its own contract. A surface may keep
   the latest verdict per chapter; one that ignores the argument stays conformant, and a run
   that verified nothing sends none.
 

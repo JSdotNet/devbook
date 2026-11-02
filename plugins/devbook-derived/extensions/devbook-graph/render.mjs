@@ -57,6 +57,7 @@ mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
 // state to normalize.
 function statusBadge(status, restingStatus) {
   const resolved = status || restingStatus || null;
+  if (resolved === null) return "";
   const atRest = !status && resolved !== null;
   const cls = "status status-" + String(resolved || "unknown").toLowerCase() + (atRest ? " status-at-rest" : "");
   const title = atRest ? ' title="at rest — this block states no status, so the folder&#39;s resting value applies"' : "";
@@ -107,13 +108,13 @@ async function loadDocument() {
   const metaList = document.getElementById("meta-list");
   metaList.innerHTML = "";
   if (data.fileMeta) {
-    metaList.innerHTML += '<div class="chapter-card"><h4>File: ' + escapeHtml(data.fileTitle || "") + ' ' + statusBadge(data.fileMeta.status, data.restingStatus) + '</h4>' +
-      Object.entries(data.fileMeta).filter(([k]) => k !== "status").map(([k, v]) => renderField(k, v)).join("") + '</div>';
+    metaList.innerHTML += '<div class="chapter-card"><h4>File: ' + escapeHtml(data.fileTitle || "") + ' ' + statusBadge(data.fileMeta.rating ?? data.fileMeta.status, data.restingStatus) + '</h4>' +
+      Object.entries(data.fileMeta).filter(([k]) => k !== "status" && k !== "rating").map(([k, v]) => renderField(k, v)).join("") + '</div>';
   }
   for (const chapter of data.chapters) {
     if (!chapter.meta || chapter.level === 1) continue;
-    metaList.innerHTML += '<div class="chapter-card"><h4>' + "#".repeat(chapter.level) + ' ' + escapeHtml(chapter.text) + ' ' + statusBadge(chapter.meta.status, data.restingStatus) + '</h4>' +
-      Object.entries(chapter.meta).filter(([k]) => k !== "status").map(([k, v]) => renderField(k, v)).join("") + '</div>';
+    metaList.innerHTML += '<div class="chapter-card"><h4>' + "#".repeat(chapter.level) + ' ' + escapeHtml(chapter.text) + ' ' + statusBadge(chapter.meta.rating ?? chapter.meta.status, data.restingStatus) + '</h4>' +
+      Object.entries(chapter.meta).filter(([k]) => k !== "status" && k !== "rating").map(([k, v]) => renderField(k, v)).join("") + '</div>';
   }
 
   const issueList = document.getElementById("issue-list");

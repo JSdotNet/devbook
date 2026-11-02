@@ -17,7 +17,8 @@ lands a change (`archive`).
 
 Outside it: the shape of a change and its delta, the merge, and both gate records, which are
 [devbook](devbook.md#change)'s — `devbook-changes.md` and `delta.mjs`; the approve and accept
-decisions, which are [devbook-collaboration](devbook-collaboration.md)'s; the flows that carry
+decisions, which a person takes in the host that keeps the proposal's state, through
+`devbook.decision@1`; the flows that carry
 each step, which are the engine's; and OpenSpec's own skills and CLI, which are installed and
 configured here, never copied.
 
@@ -118,8 +119,11 @@ the action when the run is not current, which stands before acceptance.
 ```meta
 ```
 
-`archive` runs `status` as the gate check, then `delta.mjs --apply <name> --no-move`, then
-`openspec archive <name> --yes --skip-specs`. devbook's merge refuses on the same gates again;
+`archive` runs `status` as the gate check, asks `devbook.decision@1` for the proposal's
+acceptance, and passes the fingerprint it was recorded at to `delta.mjs --apply <name>
+--accepted-hash <fingerprint> --no-move`, then runs `openspec archive <name> --yes --skip-specs`.
+With no host bound, or no acceptance at the change's current fingerprint, it stops before the
+merge. devbook's merge refuses a fingerprint that is not the change's own;
 `--no-move` leaves the folder where OpenSpec's archive expects it, and OpenSpec's move lands it
 at the same `archive/<date>-<name>/` devbook's own move would have. Run end to end on a trial
 change against 1.13.2: the gate refused `proposed`, the merge stamped `change`, and the archive
@@ -250,7 +254,7 @@ provider strings a repository binds.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.13.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
-| [devbook-collaboration](devbook-collaboration.md) | Separate Ways | `chapter-approve` and `chapter-accept` named as the next move | The skill names alone | The two gates are decisions, and deciding is that plugin's; `status` names them and never writes a rung. |
+| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.32.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
+| `devbook.decision@1`, answered by spec-manager or Backlog | Conformist, resolved from the live tool list | `devbook_get_state` on the proposal, for its approval and acceptance and the fingerprint each was recorded at | [devbook](devbook.md)'s `resources/decision.md` | The two gates are a person's decisions, taken in the host that keeps the state; `status` and `archive` read them and never record one. |
 | OpenSpec CLI | Conformist | `openspec init`, `update`, `new change`, `status`, `validate`, `schema validate`, `archive` | The CLI, its `schema.yaml` and `config.yaml` formats, and its fixed `openspec/` layout | The workflow is OpenSpec's; the bridge only configures it. |
 | delivery | Separate Ways | Provider strings in `.devbook/config.json`, skipped when absent | The engine's `spec` point and its `plugin:skill` tracker contract | A step runs through a flow when an engine is installed and through `/opsx:apply` when not. |

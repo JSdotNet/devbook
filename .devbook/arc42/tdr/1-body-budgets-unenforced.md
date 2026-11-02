@@ -3,7 +3,6 @@
 ```meta
 date: 2026-09-04
 severity: low
-status: in-progress
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
 c4: ["marketplace"]
 ```

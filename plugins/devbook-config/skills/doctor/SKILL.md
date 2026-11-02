@@ -51,11 +51,11 @@ two writers for one stamp is how a reconcile stops being idempotent.
 6. **Check the change lane** when `components.openspec` exists. Run `openspec --version`
    from the repository root: absent, or outside `components.openspec.cli`, is a warning —
    a fact about this machine, like a plugin it lacks — and the fix is
-   `npm install -g @fission-ai/openspec@latest`, run by the person, never here. Then, for
-   each `openspec/changes/<name>/` outside `archive/`, read `status` from `proposal.md`'s
-   block: a change still at `proposed` whose folder `git log -1 --format=%cs` dates more than
-   seven days back — or, never committed, whose newest file is — is a warning naming the
-   change and its age, fixed by `devbook-collaboration:chapter-approve` on the folder.
+   `npm install -g @fission-ai/openspec@latest`, run by the person, never here. Then each
+   `openspec/changes/<name>/` outside `archive/` whose folder `git log -1 --format=%cs` dates
+   more than seven days back — or, never committed, whose newest file is — is a warning naming
+   the change and its age, fixed by a person deciding it in the host that keeps its state;
+   `devbook-openspec:status` names the move.
 7. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
    hard drift; report staleness, customization, and unresolved providers without failing — a
    stale generated file must not block an unrelated pull request.

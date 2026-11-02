@@ -6,16 +6,6 @@
       ],
       "install": "ai"
     },
-    "devbook-annotations": {
-      "paths": [
-        ".devbook/arc42/**",
-        ".devbook/domain/**",
-        ".devbook/tech/**",
-        ".devbook/design/**",
-        ".devbook/ai/**"
-      ],
-      "install": "always"
-    },
     "devbook-arc42": {
       "paths": [
         ".devbook/arc42/**"

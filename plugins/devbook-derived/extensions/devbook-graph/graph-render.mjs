@@ -127,11 +127,13 @@ function escapeHtml(value) {
 // \`statusDeclared: false\`. The badge shows that value — dimmed, and titled to say
 // the file never spelled it out — because it is the node's real state, not a
 // second flavour of unknown.
+// From contract 38 a node carries \`rating\` instead, on \`tech/\` and \`ai/\` only.
 function statusBadge(d) {
+  const value = d.rating ?? d.status;
   const atRest = d.statusDeclared === false;
-  const cls = "status status-" + String(d.status).toLowerCase() + (atRest ? " status-at-rest" : "");
+  const cls = "status status-" + String(value).toLowerCase() + (atRest ? " status-at-rest" : "");
   const title = atRest ? " title='at rest — the block states no status, so the folder&#39;s resting value applies'" : "";
-  return '<span class="' + cls + '"' + title + '>' + escapeHtml(d.status) + "</span>";
+  return '<span class="' + cls + '"' + title + '>' + escapeHtml(value) + "</span>";
 }
 
 // One row per test link: the level as a badge, the runner's own selector, and —
@@ -310,7 +312,7 @@ function showDetails(node) {
 
   const parts = [
     "<div class=\\"field\\"><b>label</b>" + escapeHtml(d.label) + "</div>",
-    d.status ? '<div class="field"><b>status</b>' + statusBadge(d) + "</div>" : "",
+    d.rating || d.status ? '<div class="field"><b>' + (d.rating ? "rating" : "status") + "</b>" + statusBadge(d) + "</div>" : "",
     d.kind ? "<div class=\\"field\\"><b>kind</b>" + escapeHtml(d.kind) + "</div>" : "",
     d.version ? "<div class=\\"field\\"><b>version</b>" + escapeHtml(d.version) + "</div>" : "",
     d.effort != null ? "<div class=\\"field\\"><b>effort</b>" + escapeHtml(String(d.effort)) + "</div>" : "",
@@ -391,7 +393,7 @@ function renderStats() {
     '<div class="stat"><span>edges</span><span>' + s.edges + "</span></div>" +
     group("by folder", s.nodesByFolder) +
     group("by type", s.nodesByType) +
-    group("by status", s.nodesByStatus) +
+    group(s.nodesByRating ? "by rating" : "by status", s.nodesByRating ?? s.nodesByStatus) +
     group("edges by type", s.edgesByType);
 }
 

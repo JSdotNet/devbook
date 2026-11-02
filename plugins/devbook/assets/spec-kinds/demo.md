@@ -3,7 +3,7 @@
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
 click demo that `assets/code-sync-protocol.md` does not already say. The
 protocol carries the resolution ladder, the evidence rules, the five verdicts,
-the status rules, the brief contract, and the report table; this file carries
+what is agreed, the brief contract, and the report table; this file carries
 the kind.
 
 | | |
@@ -18,14 +18,14 @@ the kind.
 
 ## It rides with its page
 
-A demo is no sync unit and carries no `meta` block, `status`, or `sync` of its
+A demo is no sync unit and carries no `meta` block of its
 own. It belongs to the unit of the page it pairs with — `demo.html` to
 `context.md`, `<page>.demo.html` to `<page>.md` — and to the unit of every
 chapter whose `demo` field names it. A run whose scope holds such a chapter
 reads the demo through this file beside that chapter's own kind, and a run
-given a demo by path takes this kind. Its effective `sync` and its status are
-the page's, or the naming chapter's: a demo placed by a `draft` page is a
-sketch, and its verdicts carry `unagreed`.
+given a demo by path takes this kind. Whether it is agreed is
+the page's, or the naming chapter's: a demo an undecided open change replaces
+is a sketch, and its verdicts carry `unagreed`.
 
 What the demo is the source of truth for, and what it is not:
 
@@ -114,4 +114,4 @@ the language is `conflict`, whatever the code does.
 - Do not read the managed region or the control panel as product.
 - Do not let a demo override a requirement, an invariant, a term, or a
   `design/` guideline.
-- Do not give a demo its own status, `sync`, or unit.
+- Do not give a demo its own block or unit.

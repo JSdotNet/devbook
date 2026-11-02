@@ -1,7 +1,7 @@
 # Hosts
 
 ```meta
-status: adopted
+rating: adopted
 ```
 
 The platforms that read an asset, the one that runs it, and the one library a host supplies at
@@ -11,7 +11,7 @@ files are authored for.
 ## Claude Code Plugin API
 
 ```meta
-status: adopted
+rating: adopted
 type: platform
 related: [".devbook/arc42/05-building-block-view.md#marketplace-root"]
 ```
@@ -23,7 +23,7 @@ marketplace name.
 ## Claude Code CLI
 
 ```meta
-status: trial
+rating: trial
 type: platform
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 related: [".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md"]
@@ -39,7 +39,7 @@ listed because it is what a person runs to start a session at all.
 ## Copilot Plugin API
 
 ```meta
-status: adopted
+rating: adopted
 type: platform
 related: [".devbook/arc42/adr/hosts.md"]
 ```
@@ -51,7 +51,7 @@ The second reader every asset is authored for.
 ## Copilot Extension SDK
 
 ```meta
-status: trial
+rating: trial
 type: library
 date: 2026-09-04
 depends-on: [".devbook/tech/hosts.md#copilot-plugin-api"]
@@ -72,7 +72,7 @@ it became canvas-only, so there is no longer a second one to answer that on its 
 ## Scheduled Routines
 
 ```meta
-status: trial
+rating: trial
 type: platform
 date: 2026-09-28
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
