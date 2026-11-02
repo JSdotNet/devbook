@@ -17,10 +17,12 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
    plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
-   selection; change it only where the user asks. A selected name the catalog no longer ships
-   is reported and dropped from the selection. Run each `../../migrations/*/migrate.mjs
-   --check` in number order, the repository root as the working directory, and carry its
-   plan into the report: the routines it names are the ones step 6 re-times.
+   selection; change it only where the user asks. A name in `enabled` or `overrides` the
+   catalog no longer ships is reported, dropped from both, and never a failure: step 6
+   disables its routine and step 7 writes the stamp without it. Run each
+   `../../migrations/*/migrate.mjs --check` in number order, the repository root as the
+   working directory, and carry its plan into the report: the routines it names are the ones
+   step 6 re-times or disables.
 2. **Resolve the repository and the checkout.** `gh repo view --json nameWithOwner,defaultBranchRef`
    gives `{{repo}}` and `{{base}}`; the parent of `git rev-parse --path-format=absolute
    --git-common-dir`, with forward slashes, gives `{{checkout}}`. When `git rev-parse
@@ -42,8 +44,9 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    otherwise, with the cron (the stamp's override when it has one) converted to this
    machine's timezone, `enabled: true`, and the worktree option on wherever the scheduler
    takes it — the contract's *What a local routine changes*. Then set `enabled: false`
-   on every entry carrying this repository's name prefix that is no longer selected, and say
-   that deleting one is done on the host's own page.
+   on every entry carrying this repository's name prefix whose title is a catalog schedule no
+   longer selected or a retired one a migration names, and say that deleting one is done on
+   the host's own page. An entry with any other title is another tool's routine: leave it.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —
    and no other key in the file. Leave the commit to the user, and say so.
 8. **Report** one table: schedule, the catalog's UTC cron beside the local one, created /

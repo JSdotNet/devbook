@@ -61,7 +61,7 @@ change belongs to the engine.
 | `scenario.mjs` | journey rules, in-process | The graph build through `scenarioProblems`: the journey register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, the parts no requirement claims, and the journey outside the context of the requirements it proves |
 | `chapter-hash.mjs` | fingerprint CLI | `devbook-openspec`'s archive, and any caller of `devbook.decision@1` |
 | `chapter-fingerprint.vector.json` | shared test vector | spec-manager and Backlog, which must agree with it |
-| `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
+| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass covers; `schedule-devbook-verify`, which lists the units from `--json`; Backlog's sync sweeps, which select their groups from `--groups --json` |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |

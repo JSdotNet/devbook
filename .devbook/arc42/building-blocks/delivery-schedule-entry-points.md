@@ -3,14 +3,14 @@
 ```meta
 related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 c4: ["marketplace.delivery-schedule.entry-point"]
-code: ["plugins/delivery-schedule/skills/schedule-devbook-sweep", "plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-morning-brief", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-review", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-week-starter", "plugins/delivery-schedule/skills/schedule-weekly-cost-analysis", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
+code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
 ```
 
 The entry points of [delivery-schedule](delivery-schedule.md), a block inside it. Responsible
 for one thing: that each procedure a schedule fires picks its own input, runs with nobody
 watching, and publishes what it did without passing a gate or merging anything.
 
-Inside the block: the eighteen `schedule-*` skills that pick their own input, each with the
+Inside the block: the thirteen `schedule-*` skills that pick their own input, each with the
 `report.md` template its report follows, the work script a sweep lands an item through, and the
 report every run ends with.
 
@@ -24,11 +24,10 @@ an entry point calls, which are [delivery](delivery.md)'s.
 related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 ```
 
-Eighteen skills, each reached by the scheduler on a cadence or by a person by hand, which is how
+Thirteen skills, each reached by the scheduler on a cadence or by a person by hand, which is how
 a cadence gets proved before it is trusted. The contracts they share are delivery-schedule's:
 the preamble every prompt opens with, the report contract, the change window, the findings
-contract, the tightening standard, the draft pull request contract, and the devbook sweep
-contract.
+contract, the tightening standard, and the draft pull request contract.
 
 ### schedule-devbook-validate
 
@@ -44,54 +43,20 @@ trigger's target: the catalog names a `schedule-*` entry point or, as with `pros
 ### schedule-devbook-verify
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/adr/chapter-schema.md#schedules-and-sync"]
 ```
 
-Run `devbook:verify-change` over every sync unit at `report` — the direction a chapter has when
-nothing sets one — one run per unit, and open one `devbook-drift` issue per unit with a
-`code-ahead` or `conflict` row that no open pull request, approved change, or earlier issue
-already covers. A unit at `off` is left out, and one at `pull`, `push`, or `sync` belongs to
-[schedule-devbook-sweep](#schedule-devbook-sweep), so no unit is verified by two routines. A `code-ahead` row names a capture plan waiting to be
-asked for; a `spec-ahead` row, a change nobody proposed, stays in the report's table.
-It reports and never writes a chapter or plans a capture on its own. The weekly
-`devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
-Since contract 38 no chapter states a direction, so every unit reads as `report` here until
-the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync) lands its last step:
-the routine then verifies every unit with no direction at all.
-
-### schedule-devbook-sweep
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook-code-sync.md#unit-lister", ".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep", ".devbook/arc42/building-blocks/delivery.md#dependencies"]
-```
-
-Bring chapters and code level in the direction each chapter states in its own `sync` field,
-with nobody watching. One entry point serves both directions, taking `direction: pull` or
-`push`, because selection, verification, filing, and the brief are the same work and only the
-resolving step differs. It is the issue sweep with a sync group where that has an issue: list
-the groups `units.mjs` assigns to the direction, verify up to twelve in parallel with one
-read-only agent each, file one `devbook-drift` issue per group a person must answer, and land up
-to N of the rest one at a time through the shared draft pull request step, with `sync-failed` as
-the failure marker. Pull writes chapters only and adds them at `draft`; push writes source and
-tests only, from agreed chapters only; neither removes anything or resolves a `conflict`. A
-`sync` group drifting both ways is pulled first and pushed once the capture has merged. The
-brief closes with a `devbook-sync-report` block, which also reaches a bound surface as the run's
-`verdicts`. What the directions share is `resources/devbook-sweep-contract.md`. Pull lands
-through `capture-unit.workflow.js` beside the skill — `capture-specs` over the group, the plan
-carried into the chapters under the folder rule, `build.mjs --check` with bounded repair,
-folder-rule and prose review lenses, and `verify-change` again, which must read `aligned` on
-every chapter acted on — on the Monday `devbook-pull-sweep` schedule. Push lands through
-`apply-unit.workflow.js`, on the Wednesday `devbook-push-sweep` schedule, one group a run:
-`apply-change` over the group's agreed `spec-ahead` chapters stops at the brief, the shared
-resolver builds it as an issue's specification — a failing test first, the smallest change,
-build and unit tests with bounded repair, two review lenses — a guard refuses any write under
-`.devbook/` and any removed file or public member, and `verify-change` again must read
-`aligned`. A group with a `code-ahead` chapter never reaches it.
-
-**Stale until it moves.** Since contract 38 no chapter carries `sync`, and `units.mjs` no
-longer takes `--direction`, so this sweep's group selection fails. Backlog's `backlog-tools`
-takes the sweep over and reads the direction from its own map, and a later step of the branch-true
-plan removes this entry point, per the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync).
+Run `devbook:verify-change` over every sync unit, one run per unit, and open one `devbook-drift`
+issue per unit with a `code-ahead` or `conflict` row that no open pull request, agreed change,
+or earlier issue already covers. Since contract 38 no chapter states a direction, so the
+routine lists the units with `units.mjs --json` and verifies them all, with no direction to
+filter by. A `code-ahead` row names a capture plan waiting to be asked for; a `spec-ahead` row,
+a change nobody proposed, stays in the report's table. It reports and never writes a chapter
+or plans a capture on its own. The weekly `devbook-verify` trigger's target, on the same
+wrapper rule as `schedule-devbook-validate`. Levelling chapters and code in a direction is
+Backlog's, per the [chapter schema record](../adr/chapter-schema.md#schedules-and-sync), so
+the units a Backlog sweep levels are verified here as well, and its report reads beside this
+one.
 
 ### schedule-devbook-update
 
@@ -123,15 +88,14 @@ the repository will accept. It adds nothing but a pointer that replaces a duplic
 ### schedule-issue-sweep
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-morning-brief", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
 Classify every open issue nobody has classified in the repository's own labels and write that
 back; close what high-confidence evidence shows already resolved, with the evidence in the
 comment; resolve up to N of the rest one at a time, each on its own branch, each a draft pull
 request whose body says what could not be proved; and publish one brief, needs-you first. The
-weekday `issue-sweep` trigger's target, timed before the morning brief because the brief ranks
-by the labels it writes.
+weekday `issue-sweep` trigger's target.
 
 An issue carrying a `wayfinder:*` label is left out before triage. It is a map or a decision
 ticket, and it belongs to the person working the map, so the sweep never classifies, comments
@@ -197,16 +161,6 @@ record it rests on and is `ready` only with no Important finding left. A diff th
 while its body says otherwise is Blocking: the declaration is a claim the review checks, never
 one it trusts.
 
-### schedule-morning-brief
-
-```meta
-```
-
-Report what changed in this repository since yesterday and what needs a person today, in one
-screen, needs-you first. It is triage, read once: the
-[weekly update](#schedule-weekly-update) is the record. Both read the same sources over
-different windows, stated once in the plugin's change window contract.
-
 ### schedule-package-update
 
 ```meta
@@ -226,14 +180,6 @@ and one implemented is the shape: an unattended run that fixed all ten would be 
 changes in one branch. While the previous run's pull request is still open, a run reports and
 implements nothing, so one pull request never carries two findings.
 
-### schedule-review
-
-```meta
-```
-
-Sweep TODOs, open suggestions, and the code review checklist, and report the findings —
-optionally as issues.
-
 ### schedule-security-review
 
 ```meta
@@ -252,23 +198,6 @@ related: [".devbook/arc42/building-blocks/devbook.md#tech-update", ".devbook/arc
 Run `devbook:tech-update` over every `tech/` layer and land what moved as one draft pull
 request, never a merge — a rating is a person's decision. The weekly `tech-update` trigger's
 target.
-
-### schedule-week-starter
-
-```meta
-```
-
-Digest what the tracked topics published this week, as one report.
-
-### schedule-weekly-cost-analysis
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetry"]
-```
-
-Read the week's token telemetry from the run surface and report the cost. It reads measured
-numbers or it reports none — a surface that does not capture telemetry leaves this empty rather
-than estimated.
 
 ### schedule-weekly-retro
 
@@ -300,7 +229,7 @@ folder's own rules; the draft pull request is the approval a chapter would other
 Report the repository's week as one update a stakeholder can read — shipped, in flight, issues,
 releases, what the schedules landed, and what carries over — with the numbers beside the
 narrative. One per week, kept as the record of everything that changed; the
-[morning brief](#schedule-morning-brief) is the same sources over a day.
+[change report](#schedule-whats-new) reads its pull request rows across several repositories.
 
 ### schedule-whats-new
 
@@ -332,9 +261,8 @@ Also called: schedule skill, schedulable procedure.
 
 A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the
 unclassified issues and the top of the backlog, every pull request waiting on a reviewer, the
-outdated packages, the week's changes in the tracked repositories, the repository's own day or
-week, the instruction assets a model loads.
-Eighteen ship here.
+outdated packages, the week's changes in the tracked repositories, the repository's own week,
+the instruction assets a model loads. Thirteen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
@@ -457,7 +385,7 @@ the rows below are the ones inside the plugin and the engine it calls.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `findings-contract.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
+| [delivery-schedule](delivery-schedule.md#interfaces) | Same plugin | Every prompt opens with the preamble, and every report follows the report contract | `schedule-preamble.md`, `report-contract.md`, `findings-contract.md`, `draft-pr-contract.md` | The unattended rules are stated once, beside the catalog that fires them. |
 | [delivery](delivery.md#flow-code) | Customer-Supplier, declared by the plugin | An entry point calls a flow, or `resolve-issue.workflow.js` runs a `flow-code` kind's phases | The flow names and the parking rule at a gate | The entry point is the adapter that picks the input a flow would otherwise need a person for. |
 
 ### Inbound

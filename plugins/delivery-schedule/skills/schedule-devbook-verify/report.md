@@ -26,7 +26,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Outcome | What | Why |
 | --- | --- | --- |
 
-*`schedule-devbook-verify@<version>` · <n> report units · <ISO datetime UTC>*
+*`schedule-devbook-verify@<version>` · <n> units · <ISO datetime UTC>*
 ```
 
 *Drift* holds every row that is not `aligned`; the `aligned` rows are the count alone.

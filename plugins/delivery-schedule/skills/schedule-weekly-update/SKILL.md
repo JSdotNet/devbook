@@ -9,8 +9,7 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 Runs under *Running an Entry Point* in `../../resources/report-contract.md`. The sources, what
 places an item in the window, the order, and what a run never does are
-`../../resources/change-window-contract.md`'s. Written for someone who was not in the work; the
-morning brief is the triage.
+`../../resources/change-window-contract.md`'s. Written for someone who was not in the work.
 
 ## Inputs
 

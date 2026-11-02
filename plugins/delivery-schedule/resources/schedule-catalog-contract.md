@@ -107,7 +107,9 @@ every skill here starts with:
 | `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate* |
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
-the person deletes it in the host's own page. **None reachable is a normal outcome:**
+the person deletes it in the host's own page. A routine whose title is neither a catalog
+schedule nor a retired one a migration names belongs to another tool, even under this
+repository's name prefix, and is never touched. **None reachable is a normal outcome:**
 `delivery-schedule:update` prints each finished prompt with its local cron for that page and
 stops; the other two say the host holds the answer. A scheduler with no `get_run_log` or
 `get` answers `schedule-status` and `schedule-run` from `list_runs` alone, and the skill says
@@ -153,7 +155,7 @@ and by nothing else, and never another component's key:
     "schedule": {
       "pluginVersion": "1.0.0",
       "enabled": ["package-update", "merge-review", "devbook-validate"],
-      "overrides": { "merge-review": { "cron": "0 7 * * 1-5" }, "devbook-pull-sweep": { "maxResolve": 1 } }
+      "overrides": { "merge-review": { "cron": "0 7 * * 1-5" }, "issue-sweep": { "maxResolve": 3 } }
     }
   }
 }
@@ -162,7 +164,9 @@ and by nothing else, and never another component's key:
 `enabled` is the selection; `overrides` carries a per-schedule `cron` where the catalog's
 cadence does not fit the repository, and a `maxResolve` where the schedule sets one and the
 repository wants fewer or more items per run. An override the schedule has no field for is
-reported and ignored. Both are facts about the repository. Deliberately absent:
+reported and ignored. A name in `enabled` or `overrides` that the catalog no longer ships is
+reported and dropped by `update`, never a failure: its routine is disabled like any deselected
+one, and the rewritten stamp no longer carries it. Both are facts about the repository. Deliberately absent:
 scheduler ids, the checkout's path, the approved tools, and who created them — personal, and
 wrong the moment a second person opens the file. They live in the scheduler.
 
@@ -183,13 +187,9 @@ schedules run on the weekend, so what they produce is waiting on Monday morning 
 interrupting a working day. They run one per hour so no two share the checkout, in dependency
 order: `package-update`, then `devbook-update`, then `security-review` over the new dependency
 set on Saturday; `tech-update`, then the checks that read it, then the two weekly reports
-covering the whole week on Sunday. The weekday schedules end with `morning-brief`, so it can
-report what the sweep and the merge review did. `weekly-retro` takes 09:00 on both weekend days
+covering the whole week on Sunday. `weekly-retro` takes 09:00 on both weekend days
 and runs at most once a week: its target gates on the plan's remaining credit, so the second
-firing is the retry before the weekly reset. The devbook sweeps are the exception to the
-weekend: their draft pull requests wait on a reviewer, so `devbook-pull-sweep` runs Monday at
-04:00, before the issue sweep, and lands where the week starts, and `devbook-push-sweep`
-Wednesday at 04:00, two days later, so the chapters a pull carried can be merged first. Match a cadence to how
+firing is the retry before the weekly reset. Match a cadence to how
 fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
 daily package update produces a queue.
 
