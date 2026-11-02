@@ -77,9 +77,10 @@ rating rests on, and every `trial` or `candidate` chapter says what moves it up.
 The picture above is the hand-drawn form of the adoption view a tool draws from the same
 fields: the seven stages in path order and the three layers beneath, and at each the chapters
 whose `stage` or `layer` names it, shaded by rating and carrying the `tech/` chapter their
-`depends-on` names. Two usages rest on the Claude Code plugin API and one on the CLI; the
-other three name none, which is the normal case for a practice. No chapter here hands work to
-another yet, so none carries `feeds`.
+`depends-on` names. Two usages rest on the Claude Code plugin API, one on the CLI, and one on
+[Scheduled Routines](../tech/hosts.md#scheduled-routines), the scheduler here, which is what
+draws Scheduling as scheduled; the other two name none, which is the normal case for a
+practice. No chapter here hands work to another yet, so none carries `feeds`.
 
 To add a practice, write its `##` chapter in the file where it reads best, with `status`,
 `type`, `stage` or `layer`, `date`, and the fields the chapter template asks for, then attach

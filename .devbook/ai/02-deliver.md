@@ -90,6 +90,7 @@ rating: trial
 type: skill
 layer: [upkeep]
 evidence: partial
+depends-on: [".devbook/tech/hosts.md#scheduled-routines"]
 related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-10-06
 ```
