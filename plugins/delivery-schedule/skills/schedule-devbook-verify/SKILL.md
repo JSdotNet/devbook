@@ -18,19 +18,19 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 1. **Collect.** List the units with `node .devbook/_tools/devbook-meta/units.mjs --json`. No
    chapter states a direction, so every unit is in scope. For each unit in scope, invoke
    `devbook:verify-change` with the unit as its scope, and merge the tables into one, each row
-   keeping its unit. The `orphans` go
-   to the report as they stand. No devbook folder adopted, or `units.mjs` or `devbook:verify-change`
-   absent: say which and stop. The sync unit is "The sync unit" in
-   `plugins/devbook/assets/code-sync-protocol.md`.
+   keeping its unit. The `orphans` go to the report as they stand. No devbook folder adopted,
+   or `units.mjs` or `devbook:verify-change` absent: say which and stop. The sync unit is "The
+   sync unit" in `plugins/devbook/assets/code-sync-protocol.md`.
 2. **Filter.** Keep the units with a `code-ahead` or `conflict` row. Drop a row marked
-   `unagreed` — a verdict against a change nobody agreed is about a sketch — and a row an open pull request or
-   an approved change naming the chapter already covers.
+   `unagreed` — a verdict against a change nobody agreed is about a sketch — and a row an open
+   pull request or an agreed change naming the chapter already covers.
 3. **Issues.** One per unit. List the open issues labelled `devbook-drift`, matched by the title
    `[Devbook drift] <unit id>`; an earlier run's `[Devbook drift] <path>#<heading-slug>` for one
-   of its chapters covers that row. One is open: comment when a verdict changed, otherwise leave
-   it. None: open it with labels `devbook-drift` and `automated`, the unit's rows, their
-   evidence, and the action the report named — `devbook:capture-specs` over the unit for
-   `code-ahead`, the question put to a person for `conflict`.
+   of its chapters covers that row, and so does a sweep's issue whose body names the chapter.
+   One is open: comment when a verdict changed, otherwise leave it. None: open it with labels
+   `devbook-drift` and `automated`, the unit's rows, their evidence, and the action the report
+   named — `devbook:capture-specs` over the unit for `code-ahead`, the question put to a person
+   for `conflict`.
 4. **Report** in `report.md` beside this file, with the issues from step 3 linked. Every row `aligned`: the counts and nothing else.
 
 ## Do not

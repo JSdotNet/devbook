@@ -38,6 +38,13 @@ test('every retired name is gone from the catalog, and no shipped name is retire
     assert.ok(catalog.includes('devbook-verify'), 'devbook-verify stays');
 });
 
+test('the contract keeps a Retired Schedules row for each, title included, so update finds the routine', () => {
+    const contract = readFileSync(join(PLUGIN, 'resources', 'schedule-catalog-contract.md'), 'utf8');
+    for (const [name, title] of Object.entries(RETIRED)) {
+        assert.ok(contract.includes(`| \`${name}\` | ${title} | 1.32.0 |`), name);
+    }
+});
+
 test('a retired name is dropped from enabled and overrides, the rest kept in order', () => {
     const entry = {
         pluginVersion: '1.26.0',

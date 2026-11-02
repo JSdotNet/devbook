@@ -42,7 +42,7 @@ catalog checker, two migrations, one hook, and one stamp.
 | `scripts/resolve-issue.workflow.js` | work script | The issue sweep, through the host's workflow tool, per `draft-pr-contract.md`, and a sweep another plugin ships that resolves an item the same way, with a `flow-code` kind: Scope; Implement, a failing test first; Build & Test with bounded repair; Review, two lenses |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
-| `migrations/002-retired-schedules/` | migration | `update`, in its first step: names `devbook-pull-sweep`, `devbook-push-sweep`, and `morning-brief` where the selection or its overrides still carry them, each with the title its routine has; step 1 drops them, step 6 disables the routines, step 7 writes the stamp without them |
+| `migrations/002-retired-schedules/` | migration | `update`, in its first step: names the retired schedules a stamp still carries |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
 | `components.schedule` | stamp in the stack config | Written by `init` and `update` alone, read by [devbook-config](devbook-config.md) |
 
@@ -259,8 +259,8 @@ unnecessary.
 | Nothing personal is written into the repository | `init`, `update` | untested |
 | The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
 | A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
-| A selected name the catalog no longer ships is dropped from `enabled` and `overrides` and its routine disabled, never a failure | `update`, `002-retired-schedules` | `migrate.test.mjs` |
-| A routine under the repository's name prefix whose title is no catalog or retired schedule is another tool's, and is left alone | `update` | untested |
+| A retired name is dropped and its routine disabled, never a failure | `update` | `migrate.test.mjs`, the drop only |
+| A routine whose title is no catalog or retired schedule is left alone | `update` | untested |
 | A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
 
 The value it holds:
@@ -388,7 +388,7 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports what it did in the same shape, and that the next run updates its pull request rather than duplicating it. |
-| Backlog's `backlog-tools` | Conformist, read-only | Its devbook sweep reads `report-contract.md`, `draft-pr-contract.md`, and `scripts/resolve-issue.workflow.js` from the installed plugin, and its routine's prompt opens with `schedule-preamble.md` | Those paths, and the draft pull request step's five parameters | That the paths stay, the step keeps its parameters, and `update` leaves its routine alone although it carries the repository's name prefix. |
+| Backlog's `backlog-tools` | Conformist, read-only | Its devbook sweep reads three of this plugin's files by path | `report-contract.md`, `draft-pr-contract.md`, `scripts/resolve-issue.workflow.js` | That the paths stay, and that `update` leaves its routine alone. |
 
 **Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not

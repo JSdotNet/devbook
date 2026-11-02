@@ -108,7 +108,7 @@ every skill here starts with:
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
 the person deletes it in the host's own page. A routine whose title is neither a catalog
-schedule nor a retired one a migration names belongs to another tool, even under this
+schedule nor one under *Retired Schedules* belongs to another tool, even under this
 repository's name prefix, and is never touched. **None reachable is a normal outcome:**
 `delivery-schedule:update` prints each finished prompt with its local cron for that page and
 stops; the other two say the host holds the answer. A scheduler with no `get_run_log` or
@@ -164,11 +164,25 @@ and by nothing else, and never another component's key:
 `enabled` is the selection; `overrides` carries a per-schedule `cron` where the catalog's
 cadence does not fit the repository, and a `maxResolve` where the schedule sets one and the
 repository wants fewer or more items per run. An override the schedule has no field for is
-reported and ignored. A name in `enabled` or `overrides` that the catalog no longer ships is
-reported and dropped by `update`, never a failure: its routine is disabled like any deselected
-one, and the rewritten stamp no longer carries it. Both are facts about the repository. Deliberately absent:
+reported and ignored. Both are facts about the repository. A retired name is dropped, per
+*Retired Schedules*. Deliberately absent:
 scheduler ids, the checkout's path, the approved tools, and who created them — personal, and
 wrong the moment a second person opens the file. They live in the scheduler.
+
+## Retired Schedules
+
+A schedule that leaves the catalog keeps its row here, so `update` still finds its routine by
+title once the file is gone — on a machine whose stamp no longer names it too.
+
+| Schedule | Title | Retired in | Went to |
+| --- | --- | --- | --- |
+| `devbook-pull-sweep` | Devbook pull sweep | 1.32.0 | Backlog's `backlog-tools` |
+| `devbook-push-sweep` | Devbook push sweep | 1.32.0 | Backlog's `backlog-tools` |
+| `morning-brief` | Morning brief | 1.32.0 | Removed |
+
+`update` drops a retired name from `enabled` and `overrides`, disables its routine, and
+writes the stamp without it — never a failure. A retired name wins over a migration that
+would re-time it. `migrations/002-retired-schedules/` names the ones a stamp still carries.
 
 ## The Prerequisite
 

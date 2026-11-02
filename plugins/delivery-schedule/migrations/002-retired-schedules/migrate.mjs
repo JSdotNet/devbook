@@ -18,7 +18,7 @@ const STAMP = ".devbook/config.json";
 
 /**
  * The catalog entries this release retires, each with the title its routine carries as
- * `<owner>/<repo> · <title>`, so update step 6 can find the routine with its file gone.
+ * `<owner>/<repo> · <title>` — the rows the contract's *Retired Schedules* table adds.
  */
 export const RETIRED = {
     "devbook-pull-sweep": "Devbook pull sweep",
@@ -50,7 +50,7 @@ export function retire(entry) {
 export async function main(argv) {
     const checkOnly = argv.includes("--check");
     const rootIndex = argv.indexOf("--root");
-    const root = path.resolve(rootIndex !== -1 ? argv[rootIndex + 1] : process.cwd());
+    const root = path.resolve(rootIndex !== -1 ? argv[rootIndex + 1] ?? "." : process.cwd());
 
     let entry = null;
     try {

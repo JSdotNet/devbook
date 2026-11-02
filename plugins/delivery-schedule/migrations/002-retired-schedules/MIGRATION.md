@@ -20,8 +20,9 @@ No catalog entry named them, so no selection can.
 
 A repository that selected a retired schedule still lists it under `components.schedule`, and
 its routine still fires a skill that is gone. `delivery-schedule:update` drops the name from
-`enabled` and `overrides` in its step 1, disables the routine in its step 6 like any deselected
-one, and writes the stamp without it in step 7. A retired name is never a failure.
+`enabled` and `overrides` in its step 1, disables the routine in its step 6 by the title the
+contract's *Retired Schedules* keeps, and writes the stamp without it in step 7. A retired name
+is never a failure, and wins over `001-weekend-cadence`'s re-time of `morning-brief`.
 `migrate.mjs --check` exits `1` while `enabled` or `overrides` names one, and prints what
 `update` drops. Without `--check` it prints the same plan and writes nothing: the stamp has
 one writer.
