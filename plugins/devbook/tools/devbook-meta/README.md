@@ -340,6 +340,7 @@ each expects, without building a command.
 | A change's `proposal.md` without `category`, or with one outside `feature`, `behaviour-change`, `defect` | error |
 | A delta whose opening `meta` block is missing, names another change, lacks `delta`, or carries any other field | error |
 | A delta naming a chapter or section its target lacks, adding one it has, or using a section other than `ADDED`, `MODIFIED`, `REMOVED` | error |
+| A delta with text under a removed chapter's heading, or a `meta` block under a modified one's — fields go under `MODIFIED`, and prose there replaces the lead | error |
 | A delta whose merge would leave its target with a new error | error |
 | A delta header's `change` that is not one lowercase kebab-case change name | error |
 | A page-named demo — `demo.html`, or `<page>.demo.html` for a page `domain/` prescribes — without its page beside it | error |

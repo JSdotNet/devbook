@@ -53,12 +53,15 @@ entries one level deeper, which the merge lands one level up:
 
 - `delta: added` — each named chapter is new, with its block and any `ADDED` entries: a `#`
   chapter creates the file, a `##` one lands at its end. Anything deeper is an entry of its parent.
-- `delta: modified` — each named chapter exists. `MODIFIED` may open with a `meta` block of
+- `delta: modified` — each named chapter exists. Prose directly under its heading replaces the
+  chapter's lead — the text between its block and its first subsection, a file's intro under
+  `#` included — and keeps the block. `MODIFIED` may open with a `meta` block of
   fields to set, the rest kept; each of its entries replaces the section of that heading whole.
   `ADDED` entries are new sections; a `REMOVED` entry is a heading, removed with its subtree.
 - `delta: removed` — each named chapter goes whole; a `#` chapter removes the file.
 
-A paragraph is not addressable: change it by replacing its section. The delta's opening block
+A paragraph inside a section is not addressable: change it by replacing its section, or by
+replacing the lead when it sits there. The delta's opening block
 carries only `change` and `delta`. A change with no prose delta still carries one delta, a
 placeholder holding only that block, because OpenSpec counts an empty `devbook-delta/` as
 unfinished. The merge stamps nothing on the chapters it lands in: git history and the archived

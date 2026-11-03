@@ -297,6 +297,24 @@ for (const c of refusals) {
     check(removedFile.issues.length === 0 && removedFile.merged === null, "removing the `#` chapter removes the file");
     const deep = run(fence("change: add-cache\ndelta: added\n") + "\n### Orphan\n\nNo parent.\n", decisions);
     check(errorsOf(deep.issues).some((i) => /no parent/.test(i.message)), "an added chapter below `##` is refused: it is an ADDED entry of its parent");
+    const lead = run(fence("change: add-cache\ndelta: modified\n") + "\n## Caching\n\nUse a cache, evicted on write.\n\n### REMOVED\n\n#### Open questions\n", decisions);
+    check(
+        lead.issues.length === 0 && lead.merged.includes(`## Caching\n\n${fence("")}\nUse a cache, evicted on write.\n\n### Consequences`) && !lead.merged.includes("Use a cache.\n"),
+        "text under a modified chapter's heading replaces its lead, keeping its block and subsections",
+        JSON.stringify(lead)
+    );
+    const intro = run(fence("change: add-cache\ndelta: modified\n") + "\n# Decisions\n\nWhat we chose, and why.\n", decisions);
+    check(
+        intro.issues.length === 0 && intro.merged.startsWith(`# Decisions\n\n${fence("")}\nWhat we chose, and why.\n\n## Caching`),
+        "a file's intro, under its `#` title, is replaced the same way",
+        JSON.stringify(intro)
+    );
+    const bare = run(fence("change: add-cache\ndelta: modified\n") + "\n# Notes\n\nNew intro.\n", "# Notes\n\nOld intro.\n\n## A\n\nText.\n");
+    check(bare.issues.length === 0 && bare.merged === "# Notes\n\nNew intro.\n\n## A\n\nText.\n", "a chapter with no block has its lead replaced too", JSON.stringify(bare));
+    const leadMeta = run(fence("change: add-cache\ndelta: modified\n") + `\n## Caching\n\n${fence("related: []\n")}\nUse a cache.\n`, decisions);
+    check(errorsOf(leadMeta.issues).some((i) => /set fields in the `meta` block opening MODIFIED/.test(i.message)), "a `meta` block under a modified chapter's heading is refused: fields go under MODIFIED", JSON.stringify(leadMeta.issues));
+    const removedLead = run(fence("change: add-cache\ndelta: removed\n") + "\n## Logging\n\nGone.\n", decisions);
+    check(errorsOf(removedLead.issues).some((i) => /a removed chapter holds nothing/.test(i.message)), "a removed chapter still holds no text");
     const placeholder = run(fence("change: add-cache\ndelta: modified\n"), decisions);
     check(placeholder.placeholder && placeholder.merged === decisions, "a delta naming no chapter is a placeholder and merges nothing");
 }

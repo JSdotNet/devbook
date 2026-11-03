@@ -15,7 +15,8 @@
 // file it changes, opens with a `meta` block carrying `change` and `delta`, and
 // names chapters by heading. Under each chapter it names, `ADDED`, `MODIFIED`,
 // and `REMOVED` sections hold entries one heading level down; the merge lands
-// them one level up, heading by heading, and stamps nothing: git history and
+// them one level up, heading by heading — text directly under a modified
+// chapter's heading replaces its lead — and stamps nothing: git history and
 // the archived change record where a chapter came from. The shape is
 // `devbook-changes.md`'s; this file only implements it.
 //
@@ -267,8 +268,13 @@ export function mergeDelta(parsed, original, change) {
             continue;
         }
         const [hit] = matches;
-        if (target.intro.slice(1).some((line) => line.trim() !== "")) {
-            issues.push({ severity: "error", message: `${kind === "removed" ? "removes" : "modifies"} ${where} with text directly under the heading — ${kind === "removed" ? "a removed chapter holds nothing" : "set fields under MODIFIED and replace sections by heading"}.` });
+        const lead = trimBlank(target.intro.slice(1));
+        if (kind === "removed" && lead.length) {
+            issues.push({ severity: "error", message: `removes ${where} with text directly under the heading — a removed chapter holds nothing.` });
+            continue;
+        }
+        if (lead.some((line) => /^```meta\s*$/.test(line.trim()))) {
+            issues.push({ severity: "error", message: `modifies ${where} with a \`meta\` block directly under the heading — the lead there is prose; set fields in the \`meta\` block opening MODIFIED.` });
             continue;
         }
 
@@ -285,6 +291,15 @@ export function mergeDelta(parsed, original, change) {
         let chapter = lines.slice(hit.index, hit.end);
         const direct = () => headingsOf(chapter).filter((h) => h.level === level + 1);
         const section = (name) => target.sections.find((s) => s.name === name);
+
+        // Text under the delta's heading replaces the chapter's lead — the text
+        // between its `meta` block and its first subsection — and keeps the block.
+        if (lead.length) {
+            const own = metaFenceAfter(chapter, 0, chapter.length);
+            const from = own ? own.close + 1 : 1;
+            const to = headingsOf(chapter, 1)[0]?.index ?? chapter.length;
+            chapter.splice(from, to - from, "", ...lead, ...(to < chapter.length ? [""] : []));
+        }
 
         for (const entry of section("REMOVED")?.entries ?? []) {
             const found = direct().filter((h) => h.slug === entry.slug);
