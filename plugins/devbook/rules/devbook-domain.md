@@ -64,6 +64,8 @@ across `domain/`, ADRs, and code module names where practical.
                                  # enforces, beside it
     scenarios.<name>.md     # optional: the journeys of one subject, split out
                             # of scenarios.md, with its runs in scenarios.<name>/
+    scenarios.<name>.<page>.md  # optional: one variant of that subject's
+                                # journeys, runs in scenarios.<name>.<page>/
     demo.html               # optional: what a person sees in the context,
                             # counted with context.md
     <page>.demo.html        # optional: the screens of <page>.md, beside it
@@ -253,7 +255,10 @@ owns, `features.checkout.md` one feature with its sub-features,
 `requirements.checkout.md` one feature's requirements with their scenarios,
 and `model.order.md` one aggregate's structure. `scenarios.<name>.md` is the one split that may hold several chapters:
 the journeys of one subject, often one feature's — `scenarios.returns.md` — since a
-journey is a whole walk and a subject reads as several. A split file carries the `type` of the file it came from, because it
+journey is a whole walk and a subject reads as several. A subject's journeys may
+split once more into subpages, `scenarios.<name>.<page>.md`, when the same subject is
+walked again under another variant — `scenarios.returns.courier.md` beside
+`scenarios.returns.md` — and read directly after it; no deeper level exists. A split file carries the `type` of the file it came from, because it
 is the same kind of document at a smaller scope, and its chapter reads exactly as
 it did inside that file: same heading, same block, same sub-chapters. Split when
 the file stops being readable, or when readers arrive looking for one chapter
@@ -459,7 +464,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     part, never as a warning.
   - `tests` on a requirement chapter are `e2e`, or `integration` for a policy
     no user triggers.
-- **scenarios.md**, **scenarios.<name>.md** — The journeys that prove the
+- **scenarios.md**, **scenarios.<name>.md**, **scenarios.<name>.<page>.md** — The journeys that prove the
   context's requirements, one `##` chapter each, typed `scenario` and carrying
   the setup fields, per `devbook-chapter-metadata.md` under "Journeys". A
   journey's `related` names the features it walks through, and each points

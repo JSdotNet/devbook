@@ -7,7 +7,8 @@
 // pointer derives.
 //
 // A journey is a `##` chapter typed `scenario` in a scenarios file —
-// `scenarios.md` or `scenarios.<name>.md` in a bounded context — and its `###`
+// `scenarios.md`, `scenarios.<name>.md`, or `scenarios.<name>.<page>.md` in a
+// bounded context — and its `###`
 // headings are its parts. The per-document rules — where the type may sit, the
 // step keywords, the field shapes, the anchors unique in a file —
 // are validateDocument's, in metadata.mjs. This module runs once per graph

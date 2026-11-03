@@ -453,8 +453,8 @@ const BEHAVIOUR_TEST_LEVELS = {
 const SCENARIO_HEADING = /^Scenario:/i;
 
 // A journey: one end-to-end walk through the product, written as a `##`
-// chapter of a scenarios file — `scenarios.md` or a split `scenarios.<name>.md`
-// — in the bounded context holding most of the requirements it proves. Its
+// chapter of a scenarios file — `scenarios.md`, a split `scenarios.<name>.md`,
+// or its subpage `scenarios.<name>.<page>.md` — in the bounded context holding most of the requirements it proves. Its
 // `###` headings are its parts, sections that owe no block and stay
 // addressable. Two words stay apart in every rule — a *journey* is the
 // `scenario` chapter; a scenario *case* is the `#### Scenario:` under a
@@ -486,13 +486,15 @@ const SETUP_PORTAL = /^([a-z0-9][a-z0-9-]*):(.+)$/;
 const SETUP_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
- * Whether a document is a scenarios file: `scenarios.md` or a split
- * `scenarios.<name>.md`, directly in a bounded context folder.
+ * Whether a document is a scenarios file: `scenarios.md`, a split
+ * `scenarios.<name>.md`, or a split's subpage `scenarios.<name>.<page>.md`,
+ * directly in a bounded context folder.
  */
 export function isScenariosFile(relPath) {
     if (folderKindForPath(relPath) !== "domain") return false;
-    const subject = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + "domain".length + 1);
-    return subject.split("/").length === 2 && domainFileName(relPath).base === "scenarios" && !domainFileName(relPath).page;
+    const segments = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + "domain".length + 1).split("/");
+    const { base, page } = domainFileName(relPath);
+    return segments.length === 2 && base === "scenarios" && !page && segments[1].split(".").length <= 4;
 }
 
 /** Split a portal prefix off a setup entry: `admin:/route` → `{ portal: "admin", rest: "/route" }`. */
@@ -2078,7 +2080,7 @@ export function validateDocument(relPath, markdown) {
             if (chapter.level === 1 || !chapter.meta || resolveType(kind, chapter.meta) !== SCENARIO_TYPE || kind !== "domain") continue;
             issues.push({
                 severity: "error",
-                message: `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line}) has type "${SCENARIO_TYPE}" outside a scenarios file — a journey is a \`##\` of \`scenarios.md\` or \`scenarios.<name>.md\` in the bounded context of the requirements it proves.`,
+                message: `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line}) has type "${SCENARIO_TYPE}" outside a scenarios file — a journey is a \`##\` of \`scenarios.md\`, \`scenarios.<name>.md\`, or \`scenarios.<name>.<page>.md\` in the bounded context of the requirements it proves.`,
             });
         }
     }
