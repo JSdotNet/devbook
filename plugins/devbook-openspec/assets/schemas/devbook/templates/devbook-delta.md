@@ -5,6 +5,8 @@ delta: modified
 
 ## <!-- the heading of the chapter this delta changes, at its own level -->
 
+<!-- optional: prose here replaces the chapter's lead, its meta block kept -->
+
 ### MODIFIED
 
 #### <!-- a section replaced whole, with its meta block; a journey's part is replaced whole too, never step by step -->
