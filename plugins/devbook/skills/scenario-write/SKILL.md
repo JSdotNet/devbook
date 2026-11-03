@@ -15,7 +15,7 @@ or a setup field changed here turns the last run stale until the spec is re-deri
 
 1. **Place it** in the context of the requirements it proves, as a `##` of
    `.devbook/domain/<context>/scenarios.md`, or of the `scenarios.<name>.md` that holds its
-   subject; create `# Scenarios` with `type: scenarios` when the context has none. A journey
+   subject, or its subpage `scenarios.<name>.<page>.md` for one variant of that subject; create `# Scenarios` with `type: scenarios` when the context has none. A journey
    across contexts goes to the one holding most of them. Its heading names what the actor does
    and is unique in the file, per `../../rules/devbook-naming.md`. A retitle or a move changes
    its address: move every `Proved by:`, `related`, and `scenario:` reference and its run folder

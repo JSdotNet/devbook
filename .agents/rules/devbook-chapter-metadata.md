@@ -642,7 +642,8 @@ chapter.
 
 A **journey** is one end-to-end walk through the product, written as a `##`
 chapter typed `scenario` in its bounded context's scenarios file —
-`scenarios.md`, or a split `scenarios.<name>.md`. Its `###` headings are the
+`scenarios.md`, a split `scenarios.<name>.md`, or a split's subpage
+`scenarios.<name>.<page>.md`. Its `###` headings are the
 journey's **parts**, and its steps are list items under them. Keep two words apart
 in every rule: the journey is the `scenario` chapter; a **scenario case** is a
 `#### Scenario:` under a requirement, which points at one part with `Proved by:`
@@ -652,7 +653,7 @@ requirements point at it through `related`, and it points back.
 | Element | Convention | Checked |
 |---|---|---|
 | Recognition | `type: scenario` in the block under a `##` of a scenarios file. Every `##` there is a journey. The type on a file-level block, or on a chapter of any other file, is an error; `032-scenarios-md` folds the pages of contract 31 into `scenarios.md`. | Yes |
-| Location | `.devbook/domain/<context>/scenarios.md` or `scenarios.<name>.md`, in the context holding most of the requirements whose cases point at its parts, any of them on a tie. Another context is a warning; any other folder an error. `.devbook/scenarios/` holds profiles and data sets, never a journey. | Yes |
+| Location | `.devbook/domain/<context>/scenarios.md`, `scenarios.<name>.md`, or `scenarios.<name>.<page>.md`, in the context holding most of the requirements whose cases point at its parts, any of them on a tie. Another context is a warning; any other folder an error. `.devbook/scenarios/` holds profiles and data sets, never a journey. | Yes |
 | Address | `<scenarios file>#<journey>`, the journey's anchor in its file. It is the journey's identity for every tool; the same name in two files is two journeys. | Yes |
 | Anchors | Every journey and part heading is unique in its file, so `<scenarios file>#<anchor>` names one. | Yes, a repeat is an error |
 | Language | English only: headings, steps, captions, labels, and every keyword. | The keywords only |
@@ -663,7 +664,7 @@ requirements point at it through `related`, and it points back.
 | Screenshot point | `![caption](shot:<label>)` between step lists, never inside one, and inside a journey. The label is `[a-z0-9-]+`, unique in the file. | No: the tool that takes it checks it |
 | Reference elsewhere | `![caption](scenario:<context>/<scenarios file>#<label>)` shows a screenshot on another page; `related: [<scenarios file>#<journey>]` links a journey and `#<part>` a part. | The reference resolves |
 | Fields | `related`, `date`, `aliases`, `ext.*`, and the six setup fields. `tests` is an error: the journey is the test. A merged journey is in force; what proves it is its run. | Yes |
-| Runs | `<scenarios file without .md>/<journey>/`: `run.json` and one PNG per label, beside the file. | By the scenario tools |
+| Runs | `<scenarios file without .md>/<journey>/`: `run.json` and one PNG per label, beside the file, so a subpage's journey runs into `scenarios.<name>.<page>/<journey>/`. | By the scenario tools |
 
 The setup fields say where the journey starts and in which configuration it runs.
 They are legal on a journey's block and nowhere else. A reference is written from
