@@ -51,6 +51,14 @@ const scenarios = (meta, body = "") =>
     check(errors(issues).length === 0 && warnings(issues).length === 0, "a journey in a split scenarios file is clean", dump(issues));
 }
 {
+    const issues = validateDocument(".devbook/domain/work/scenarios.returns.courier.md", scenarios("type: scenario\n"));
+    check(errors(issues).length === 0 && warnings(issues).length === 0, "a journey in a subpage of a split scenarios file is clean", dump(issues));
+}
+{
+    const issues = validateDocument(".devbook/domain/work/scenarios.returns.courier.late.md", scenarios("type: scenario\n"));
+    check(has(errors(issues), "outside a scenarios file"), "a scenarios file three suffixes deep is none, and its journey is an error", dump(issues));
+}
+{
     const issues = validateDocument(".devbook/domain/work/set-up.md", `# Set up\n\n${fence("type: scenario\n")}\n## A part\n\n- **Given** a\n`);
     check(has(errors(issues), "032-scenarios-md"), "a whole file typed scenario is an error naming the migration", dump(issues));
 }
@@ -325,6 +333,20 @@ const proved = (target, requirementsPath = REQUIREMENTS) => ({
 {
     const graph = await graphOf(base("type: scenario\n", proved(`${FILE}#statuses-are-set-up`)));
     check(problemsAbout(graph, "has `Proved by:").length === 0, "a Proved by pointer by repository path resolves", dump(graph.problems));
+}
+{
+    const SUBPAGE = ".devbook/domain/work/scenarios.returns.courier.md";
+    const graph = await graphOf(
+        base("type: scenario\n", {
+            [SUBPAGE]: scenarios("type: scenario\n"),
+            [REQUIREMENTS]: requirements("Proved by: scenarios.returns.courier.md#statuses-are-set-up\n"),
+            [SPEC]: `// scenario: ${SUBPAGE}#set-up-and-fill-the-backlog\n// signature: 9c41e2a0\nimport { scenario } from "x";\n`,
+        })
+    );
+    const requirement = graph.nodes.find((n) => n.id === `${REQUIREMENTS}#requirement-columns-follow-the-status-order`);
+    check(problemsAbout(graph, "has `Proved by:").length === 0, "a Proved by pointer into a scenarios subpage resolves", dump(graph.problems));
+    check(graph.nodes.some((n) => n.id === `${SUBPAGE}#set-up-and-fill-the-backlog` && n.kind === "scenario"), "a subpage's journey is a chapter node of kind scenario");
+    check(JSON.stringify(requirement?.tests) === JSON.stringify([`e2e:playwright:${SPEC}#Statuses are set up`]), "a pointer into a subpage derives the e2e entry from the spec naming its journey", JSON.stringify(requirement));
 }
 {
     const graph = await graphOf(base("type: scenario\n", { [REQUIREMENTS]: requirements("Proved by: scenarios.md#statuses-are-set-up\n") }));
