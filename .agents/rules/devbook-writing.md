@@ -53,7 +53,7 @@ about nine nodes, and split a larger one.
 - Open a section with its point. Background comes after.
 - Use at most one dash per paragraph. Never chain clauses with dashes or write fragments
   such as "no X, no Y, no Z": write sentences or a bulleted list. A field line or a list
-  item under a lead-in, below, is the one place a fragment stands.
+  item under a lead-in, below, are the only places a fragment stands.
 - Use each term the glossary or ubiquitous language defines in that one meaning, never a
   synonym. Never coin a name, such as a "fill-run", unless the same change defines it there.
 - Explain an abbreviation or code name at its first use in a chapter, or link to where it is
@@ -65,7 +65,7 @@ about nine nodes, and split a larger one.
 
 ## Lists, fields, and tables
 
-A list says in five lines what a paragraph takes fifteen for. When a passage enumerates, list
+When a passage enumerates, list
 it, and keep sentences for what connects the items. A list must not cost words: its items
 repeat no subject and no lead-in, and a list longer than the sentence it replaces is wrong.
 

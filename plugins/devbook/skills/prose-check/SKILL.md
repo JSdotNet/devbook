@@ -31,7 +31,7 @@ standard, and a class stated by half reports the wrong sentence.
   every step list in a journey from every class but `procedure-step`: a step is one
   clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone,
   and a table for `long-cell` and `moved-text` alone. A bold field line, such as `**Does:**` or `**Why:**`,
-  is a fragment by design and never a `telegraphic` hit.
+  or a list item under a lead-in is a fragment by design and never a `telegraphic` hit.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -81,8 +81,8 @@ standard, and a class stated by half reports the wrong sentence.
    against the tree, never guessed.
 
 5. **Count words.** For each chapter that differs from Base, count its words outside every
-   fence, reading the old text with `git show`. A chapter that grew with no added fact is the
-   finding `devbook-writing.md`'s goal names; report it as `moved-text` or `padding`.
+   fence, reading the old text with `git show`. Outside `adr/` and `tdr/`, report a chapter that
+   grew with no added fact and no section its folder rule requires as `moved-text` or `padding`.
 
 6. **Report.** One table per folder, findings ordered `stale-name`, `second-definition`,
    `structure`, then the prose classes, cut at Limit with the remainder counted per class.
