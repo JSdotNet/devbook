@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
@@ -19,6 +19,8 @@ standard, and a class stated by half reports the wrong sentence.
 
 - Scope: every adopted folder (default), one folder, or one file.
 - Limit: findings reported in full (default `50`); the rest are counted per class.
+- Base: the git ref word counts and `moved-text` compare against (default: the merge base with the
+  default branch). A chapter it lacks counts from zero.
 
 ## Hard Constraints
 
@@ -28,8 +30,8 @@ standard, and a class stated by half reports the wrong sentence.
 - Skips every `meta` fence, every code and Mermaid fence, every table, and
   every step list in a journey from every class but `procedure-step`: a step is one
   clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone,
-  and a table for `long-cell` alone. A bold field line, such as `**Does:**` or `**Why:**`,
-  is a fragment by design and never a `telegraphic` hit.
+  and a table for `long-cell` and `moved-text` alone. A bold field line, such as `**Does:**` or `**Why:**`,
+  or a list item under a lead-in is a fragment by design and never a `telegraphic` hit.
 - Reports nothing a folder rule requires. The rule for the folder — `devbook-arc42.md`,
   `devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md` — is read
   before the folder is, and a section the rule's template asks for is never a finding.
@@ -60,24 +62,32 @@ standard, and a class stated by half reports the wrong sentence.
    | `restated-heading` | A section's first sentence paraphrases its heading | Cut it; start at the second sentence |
    | `repeated-body` | A closing paragraph repeats what the section already said | Cut it |
    | `telegraphic` | Clauses or list items chained with dashes, more than one dash in a paragraph, or a run of fragments such as "no X, no Y, no Z" | The same content as full sentences or a bulleted list |
-   | `long-sentence` | A sentence past about 35 words, or carrying more than one idea | The sentence split |
+   | `long-sentence` | A sentence past about 25 words, or carrying more than one idea | The sentence split |
    | `term-drift` | A synonym replaces a defined term, or the term carries a second meaning | The defined term, or a new term for the second meaning |
    | `noun-cluster` | Four or more nouns stacked, such as "payment order run retry policy" | Rewritten with a verb or a preposition |
    | `long-paragraph` | A paragraph of more than six sentences | Split at the next point |
-   | `prose-list` | A sentence or paragraph enumerating four or more items, such as a block's scope | A labelled list, or a table of concern and owner |
-   | `long-cell` | A table cell past about 15 words, or a phrase repeated in three or more rows | The detail moved below and linked, or the phrase said once |
+   | `prose-list` | A sentence or paragraph enumerating four or more items, such as a block's scope | Cut what the reader does not need, then a labelled list or a table of concern and owner, only if that costs no more words |
+   | `long-cell` | A table cell past about 15 words, or a phrase repeated in three or more rows | The cell cut; only what the reader still needs moved below and linked; or the phrase said once |
+   | `padding` | Words that add no fact: "in order to", "the fact that", list items repeating one subject or lead-in, or prose or steps retelling a diagram or C4 view | The passage without them |
+   | `moved-text` | Text below a table that repeats its row's name or restates the row, or, against Base, that left a cell or paragraph and returned no shorter | Cut it, or keep only the fact the row lacks |
    | `buried-reason` | A sibling section of a shared shape that states its reason inside the fact, where its siblings use field lines | The fact, then a `**Why:**` line |
    | `procedure-step` | A how-to step not opening with an imperative verb, or any step with two actions or past about 20 words | One action per step |
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram`, `flowchart`, or `graph` with two or more participants or nodes naming workspace elements, by identifier or name | The view to use: `systemContext` in 03 for `C4Context` or a diagram of people and systems, `container` or `component` in 05 or the block's file for a `flowchart` or `graph` of parts, `dynamic` in 06 or the block's `## Runtime` for `C4Dynamic`, the sequence, or a `flowchart` of steps, `deployment` in 07 — or "add it to the workspace" when no view has it |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
+   | `no-glance` | A chapter whose subject its title, its folder's convention, and its opening leave unclear, or whose content has a shape with no picture near the top; never `adr/`, `tdr/`, `domain.md`, or its splits | The picture `devbook-writing.md` names, and one opening sentence only if the subject is still unclear |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |
 
    A hit inside text the constraints above protect is not a finding. A `stale-name` is tested
    against the tree, never guessed.
 
-5. **Report.** One table per folder, findings ordered `stale-name`, `second-definition`,
+5. **Count words.** For each chapter that differs from Base, count its words outside every
+   fence, reading the old text with `git show`. Outside `adr/` and `tdr/`, report a chapter that
+   grew with no added fact and no section its folder rule requires as `moved-text` or `padding`.
+
+6. **Report.** One table per folder, findings ordered `stale-name`, `second-definition`,
    `structure`, then the prose classes, cut at Limit with the remainder counted per class.
-   Close with the totals: chapters read, findings per class, and the standard applied — the
+   Add one table of chapter, base words, current words, and change, with its total. Close with
+   the totals: chapters read, findings per class, and the standard applied — the
    folder rules and `devbook-writing.md` by name. No findings is a one-line report, and the ordinary case for a
    chapter that settled.

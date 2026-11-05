@@ -163,7 +163,8 @@ diagram kinds, and the engine reports in prose as before. A declared dependency 
 second plugin with each foundation for guidance that only improves how output reads, and a
 missing skill must cost readability, never a load. `domain.md` and its splits are the exception
 in the devbook: they keep the diagrams `devbook-domain.md` prescribes, because that rule already
-fixes the model chapter's shape.
+fixes the model chapter's shape. A session-start hook carries the skill into ordinary replies,
+which no caller names; it is guarded like every other, and it still installs nothing.
 
 The same plugin holds `research-brief`, on the same terms: a cited answer from primary sources
 to a question the repository cannot answer. `delivery`'s Scope phase names it when an external
@@ -233,8 +234,8 @@ belongs to a person's map.
 - Folding `devbook-procedures` into `devbook-skills`: the procedures need the reconcile
   protocol, so `devbook-skills` would depend on `devbook` and become L1, while
   `devbook-writing.md` in `devbook` names `show-me` from it — a lower layer naming a higher
-  one. It would also change what `devbook-skills` is, from skills only to a plugin with an
-  install, a hook, a stamp, and migrations.
+  one. It would also change what `devbook-skills` is, from a plugin that installs nothing to one
+  with an install, a stamp, and migrations.
 - Splitting the procedures, `prototype` into `devbook` and the other four into
   `devbook-skills`: the four still need the install machinery, which needs either a
   dependency on `devbook`, the layering problem again, or a copy of the reconcile protocol,
@@ -253,6 +254,7 @@ belongs to a person's map.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-05 | `devbook-skills` gains a session-start hook and `show-me` an orientation card; `delivery`'s handback, gates, and summary name the card, still with no declared dependency. | A person switching between sessions must see what a reply is about at once, and ordinary replies have no caller to name the skill. |
 | 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. | — |
 | 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. | — |
 | 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. | — |

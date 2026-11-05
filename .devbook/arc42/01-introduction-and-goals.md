@@ -31,6 +31,7 @@ is kept so a later chapter lands in its place.
 | Every dependency is declared | A plugin that silently needs a sibling installed to work. One that names its layer is fine; the host enforces it. |
 | An asset earns every line | Prose that restates the model default, or a rule stated in two files. |
 | A loaded asset works | A manifest or frontmatter shape one host rejects at load time. |
+| A person sees at a glance what something is about | A chapter, reply, question, or notification that must be read through before its subject is clear. |
 
 ## Stakeholders
 

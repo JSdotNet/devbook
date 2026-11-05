@@ -19,7 +19,7 @@ concludes without them.
 
 1. **Summarize the delivered outcome**: the change, the pull request if one opened, the
    Personal Validation decision, and what Report Back reached or why it was skipped. With the
-   `show-me` skill available, write it per that skill.
+   `show-me` skill available, write it per that skill, opening with its orientation card.
 2. **Run the `phase-summary.after` chores** in order. Each contributes to the summary and
    captures what this run learned. A chore may fail without failing the run unless it
    declared itself required; name every failure in the summary.

@@ -33,7 +33,8 @@ map and its tickets, which live on the tracker.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `show-me` | skill | A person who asks to be shown, or a caller that names it: `devbook-writing.md`, and `delivery` when it writes a pull request description and reports back to the person |
+| `show-me` | skill | A person who asks to be shown, or a caller that names it: `devbook-writing.md`, and `delivery` when it writes a pull request description, reports back to the person, or opens Personal Validation, a gate, or the Summary with the orientation card |
+| `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start, in a repository with `.devbook/config.json` or that names the plugin in `enabledPlugins` |
 | `research-brief` | skill | A person who asks for research, or a caller that names it: `delivery`'s Scope phase, and its Drafting phase for `arc42/` and `tech/` |
 | `pr-body` | skill | A person writing a pull request, or a caller that names it: `delivery`'s Create Pull Request phase, and `delivery-schedule`'s draft pull request contract; `schedule-merge-review` reads the door it declares |
 | `retro` | skill | A person after a session or run, or a caller that names it: `delivery`'s Summary, which offers it after two or more revise rounds at Personal Validation, and `delivery-schedule`'s `schedule-weekly-retro`, which reads a week through its lenses |
@@ -49,6 +50,11 @@ The skill picks the picture from what the content describes, puts it first, and 
 prose after it to the reasons, the exceptions, and the limits. It writes Markdown that renders
 on both hosts and on GitHub, so its pictures are Mermaid, fenced code, and tables. An HTML
 mockup is out of scope: neither a chapter nor a pull request can carry one.
+
+It also holds the orientation card: five aligned lines that open a handback, a decision, or a
+finished change, so a person switching between sessions sees the change, its stage, and what it
+needs from them. The hook loads the skill's rule into every session, because an ordinary reply
+has no caller to name it.
 
 ### research-brief
 
@@ -206,7 +212,7 @@ Which phase or contract names which skill is in the Inbound table below.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and two manifests | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like every other plugin here. |
-| Claude Code and Copilot Plugin APIs | Conformist | Manifests and skills | Each host's own schemas | Enabling the plugin is the whole adoption. |
+| Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, and one session-start hook | Each host's own schemas | Enabling the plugin is the whole adoption. |
 | The repository's issue tracker | Conformist | The host's issue CLI — `gh` on GitHub — with the tracker's native sub-issues and blocking | The tracker's own API | `wayfinder` keeps its map there. A tracker without native blocking takes a body line instead. |
 
 ### Inbound
@@ -217,6 +223,6 @@ Which phase or contract names which skill is in the Inbound table below.
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Separate Ways | `devbook-writing.md` names `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Nothing else. Without the skill, the rule's own table of diagram kinds applies. |
-| [delivery](delivery.md#dependencies) | Separate Ways | The Create Pull Request phase names `pr-body`, and `show-me` beneath it; the report-back to the person names `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief`; the Summary offers `retro` after two or more revise rounds | The skill name alone | Nothing else. Without `retro`, the Summary offers nothing; without `pr-body`, the description follows `show-me` or plain prose; without `show-me`, the engine reports in prose as before; without `research-brief`, it cites each external fact's primary source itself or leaves the fact open. |
+| [delivery](delivery.md#dependencies) | Separate Ways | The Create Pull Request phase names `pr-body`, and `show-me` beneath it; the report-back to the person, Personal Validation, a gate, and the Summary name `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief`; the Summary offers `retro` after two or more revise rounds | The skill name alone | Nothing else. Without `retro`, the Summary offers nothing; without `pr-body`, the description follows `show-me` or plain prose; without `show-me`, the engine reports in prose as before; without `research-brief`, it cites each external fact's primary source itself or leaves the fact open. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares; `schedule-weekly-retro` names `retro` for its lenses | The skill name alone | Nothing else. Without `pr-body`, the contract's body still states the door, and the review judges a one-way diff from the diff itself; without `retro`, the weekly retro reads through its own three lenses. The issue sweep leaves every `wayfinder:*` issue to its map, by label, without naming the skill. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether the plugin is installed and enabled | The marketplace entry and manifests | Nothing: there is no stamp to read and no install to invoke. |

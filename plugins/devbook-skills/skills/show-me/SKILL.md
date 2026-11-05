@@ -1,11 +1,36 @@
 ---
 name: show-me
-description: 'Explain with a picture before prose: pick the diagram, tree, signature, diff, or table that shows the content, put it first, and keep the words to what it cannot say. Use when: explaining code, a change, a plan, or a design; writing a PR description or a stage report; a chapter section describing steps, states, parts, or files; "/show-me", "too much text".'
+description: 'Explain with a picture before prose: pick the diagram, tree, signature, diff, or table that shows the content, put it first, and keep the words to what it cannot say. Use when: explaining code, a change, a plan, or a design; writing a PR description or a stage report; handing work back or asking for a decision; a chapter section describing steps, states, parts, or files; "/show-me", "too much text".'
 ---
 
 # Show Me
 
 Open the reply with `devbook-skills@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
+This file exceeds the 40-line body budget on purpose: the card's shape and its alignment rules
+hold only when read together.
+
+## Orientation card
+
+Open a reply or a tracker comment that hands work back, asks for a decision, or reports a
+finished change with this card, after any version line and above any picture. The person is arriving from another session.
+
+```text
+devbook / writing rule / Personal Validation
+WHAT     Chapters must use fewer words; prose-check measures it
+CHANGED  Rule cuts before moving; prose-check gains two classes
+YOU      Approve or revise, about 2 minutes
+RISK     Two-way door; nothing pushed
+```
+
+- Open with repository, change, and stage, in a `text` fence.
+- Pad each label to nine characters so every value starts in one column. Keep each value to one
+  line of about 70 characters.
+- Use no progress bars, box characters, arrows, or columns inside a value: they shift the
+  alignment between fonts.
+- `YOU` names the one thing needed, or `nothing`. `RISK` names the door and what left the
+  machine. `CHANGED` says `none` when nothing changed.
+- Skip the card for one fact, one answer, a reply mid-task, or a run nobody is present for.
 
 ## Pick the picture
 

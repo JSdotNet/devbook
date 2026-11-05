@@ -31,6 +31,9 @@ It runs inline in the owner session, so the links are clickable in the conversat
 is reading, and again on every revise round: a revised change set is a new thing to look at, so
 re-run the whole skill rather than pointing back at the previous handback.
 
+With the `show-me` skill available and a person present, open the handback with its orientation
+card, after the version line and above the links.
+
 ## Step 1 — Make Sure It Is Actually Running
 
 A link to a process that is not listening is worse than no link.

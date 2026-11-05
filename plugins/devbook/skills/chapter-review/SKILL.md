@@ -29,9 +29,10 @@ review that skips a lens misses the finding.
    | Rating | In `tech/` and `ai/`, does `rating` still match reality? |
    | Scope | Does the chapter say one thing, or has a second subject grown inside it? |
    | Gaps | What does a reader need that the chapter does not say? |
+   | Delivery | Per the goal in `../../rules/devbook-writing.md`, is the subject clear at a glance, and does a picture carry what has a shape? |
 
-   Each finding carries its evidence and the change that would settle it. Skip style: a
-   wording preference filed beside a wrong invariant buries the invariant.
+   Each finding carries its evidence and the change that would settle it. Skip style beyond
+   that goal: a wording preference filed beside a wrong invariant buries the invariant.
 4. **Post one note per objection**, `devbook_post_note` on `<path>#<slug>` of the passage it is
    about: `question` when the chapter cannot be judged until somebody answers, `flag` when the
    approver should read it first, `suggestion` or `comment` otherwise. Answer an open note you

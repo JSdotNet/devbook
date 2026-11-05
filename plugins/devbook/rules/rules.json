@@ -63,7 +63,8 @@
         ".devbook/domain/**",
         ".devbook/tech/**",
         ".devbook/design/**",
-        ".devbook/ai/**"
+        ".devbook/ai/**",
+        "openspec/changes/**"
       ],
       "install": "always"
     }
