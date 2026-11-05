@@ -132,7 +132,8 @@ Reads every adopted folder and reports the prose that does not earn its lines
 — a name that no longer exists in the tree, a term defined a second time, a
 hedge in a statement of fact, a paragraph restating its heading, a synonym
 for a defined term, a stack of four nouns, a paragraph past six sentences, a
-procedure step that is not one short imperative action — beside what
+procedure step that is not one short imperative action, padding, text moved
+rather than cut — and word counts per chapter against a base, beside what
 `devbook:validate` reports about structure. Report only: it writes nothing, and a
 finding becomes an edit when a person makes it through the folder's flow. ADRs
 and TDRs are records and stay out of the prose classes.
