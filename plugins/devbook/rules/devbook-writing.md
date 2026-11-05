@@ -22,9 +22,9 @@ Deliver information efficiently, in a form a person reads easily.
 Use the fewest words that stay plain. A rewrite that grows a passage is wrong unless it adds a
 fact. Diagrams and extra lines do not count against it: only words do.
 
-Prefer a picture over text wherever the content has a shape. Open a chapter with one sentence
-that says what it is about, then its picture. A section the folder rule requires first keeps
-its place.
+Prefer a picture over text wherever the content has a shape, and put it at the top of the
+chapter. Add an opening sentence only when the title and the folder's convention leave the
+subject unclear. A section the folder rule requires first keeps its place.
 
 ## Show it first
 

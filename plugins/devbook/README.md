@@ -132,8 +132,8 @@ Reads every adopted folder and reports the prose that does not earn its lines
 — a name that no longer exists in the tree, a term defined a second time, a
 hedge in a statement of fact, a paragraph restating its heading, a synonym
 for a defined term, a stack of four nouns, a paragraph past six sentences, a
-procedure step that is not one short imperative action, an opening that does
-not say what the chapter is about, padding, text moved
+procedure step that is not one short imperative action, a chapter whose
+subject is unclear at a glance, padding, text moved
 rather than cut — and word counts per chapter against a base, beside what
 `devbook:validate` reports about structure. Report only: it writes nothing, and a
 finding becomes an edit when a person makes it through the folder's flow. ADRs
@@ -328,7 +328,7 @@ skills exist.
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the delivery path and layer beneath it, the adoption ladder, and the `tech/` boundary |
 | `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
-| `devbook-writing.md` | all five folders | How a chapter reads: the fewest words that stay plain, an opening that shows the subject at a glance, full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, labelled lists, field lines, and short table cells that cost no words, and a Mermaid diagram wherever a sequence, state, or structure is described |
+| `devbook-writing.md` | all five folders | How a chapter reads: the fewest words that stay plain, a subject clear at a glance, full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, labelled lists, field lines, and short table cells that cost no words, and a Mermaid diagram wherever a sequence, state, or structure is described |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob is scoped to the `.devbook/` folders and the change folder, so the plugin stays silent in
