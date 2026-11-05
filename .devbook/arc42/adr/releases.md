@@ -1,12 +1,12 @@
 # Releases
 
 ```meta
-date: 2026-11-03
+date: 2026-11-05
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 c4: ["marketplace"]
 ```
 
-Every plugin carries the same version — `1.34.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.35.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -81,6 +81,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-05 | Every plugin is `1.35.0`. `devbook-writing.md` states the goal of efficient, readable delivery in the fewest plain words and loads under `openspec/changes/`; `prose-check` gains `padding`, `moved-text`, `no-glance`, and word counts against a base; `chapter-review` gains a Delivery lens; `show-me` gains an orientation card that `delivery` opens handbacks, gates, summaries, and comments with; `devbook-skills` gains a session-start hook. | Chapters grew under `1.34.0`, and a person switching between sessions must see at once what something is about. No contract changed, and reconcile replaces the rule and its wrappers on its own, so no migration is owed. |
 | 2026-11-03 | Every plugin is `1.34.0`. `devbook`'s `delta.mjs` merges prose directly under a `delta: modified` chapter's heading as the chapter's new lead — the text between its `meta` block and its first subsection, a file's intro under `#` included — keeping the block, where it refused the delta before. `devbook-openspec`'s delta template shows the slot. Only a delta that was refused merges differently, so no contract moves and no migration is owed; a delta that merges where it could not is a minor release. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-03 | Every plugin is `1.33.0`. A split scenarios file may have subpages, `scenarios.<name>.<page>.md`, one level deep: `devbook`'s scenario tools read a subpage as a scenarios file, so its journeys are signed, coverage-checked, and run, with runs in `scenarios.<name>.<page>/<journey>/`, and `devbook-naming`, `devbook-chapter-metadata`, and `devbook-domain` describe it. The checker already accepted the shape. A file shape is added and none is removed, so no contract moves and no migration is owed; reconcile replaces the delivered rules and the scenario tools on a shipped hash. A minor release for the new shape. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-02 | Every plugin is `1.32.1`. `devbook-ai`'s loop picture names four marks a tool already drew from the chapters without the rule saying so: the adoption card's evidence text, read from the **Evidence** bullet; a scheduled mark on a usage whose `depends-on` names the scheduler's `tech/` chapter, which `adoption-map.md` links once; a dashed `feeds` arrow with a `candidate` at either end; and the open loop, a `feeds` arrow out of a `candidate` at `operate` into an `adopted` chapter. Each is a reading of fields already authored, so no contract moves and no migration is owed: only the rule text changes, and reconcile replaces a delivered copy still on a shipped hash. A patch. The other plugins move unchanged. | Every plugin moves together. |
