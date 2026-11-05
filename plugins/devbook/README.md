@@ -328,7 +328,7 @@ skills exist.
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the delivery path and layer beneath it, the adoption ladder, and the `tech/` boundary |
 | `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
-| `devbook-writing.md` | all five folders | How a chapter reads: the fewest words that stay plain, a subject clear at a glance, full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, labelled lists, field lines, and short table cells that cost no words, and a Mermaid diagram wherever a sequence, state, or structure is described |
+| `devbook-writing.md` | all five folders and `openspec/changes/` | How a chapter reads: the fewest words that stay plain, a subject clear at a glance, full sentences, short paragraphs and imperative steps, one meaning per term, no dash chains, noun stacks, or coined names, labelled lists, field lines, and short table cells that cost no words, and a Mermaid diagram wherever a sequence, state, or structure is described |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob is scoped to the `.devbook/` folders and the change folder, so the plugin stays silent in

@@ -164,7 +164,7 @@ a record stays as it was taken: an edit is a person's, through the folder's flow
 related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/12-glossary.md#review-pass"]
 ```
 
-Read one chapter, or one change with its proposal and every delta, against its folder's rules,
+Read one chapter, or one change with its proposal and every delta, against its folder's rules and the writing goal,
 its neighbours one `related` or `depends-on` step away, and the evidence it claims, and post
 one note per objection on the address of the passage it is about. Notes are posted through
 `devbook.decision@1` to the host that answers it in the session, named in the report; with

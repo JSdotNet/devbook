@@ -63,6 +63,8 @@ record moving to `accepted`.
    - **Reach an item through the bound tracker's tooling first**, then the host's CLI for that
      tracker. `bindings["delivery.tracker"]` says which tooling reaches an issue or an entry,
      per **Bindings → Tracker** in `resources/engine-contract.md`.
+   - **With the `show-me` skill available, open each comment with its orientation card**: it
+     is read later, away from this run.
    - **Add a new comment; never rewrite an item's body or create an item.** Ticking a task
      through the provider's own operation — `update_item` for a `plugin:skill` tracker — is
      the one other edit. A provider with no task list skips the tick and says so.

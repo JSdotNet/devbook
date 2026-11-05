@@ -8,6 +8,8 @@ description: How a devbook chapter reads. Plain sentences a new team member unde
 This file exceeds the 60-line body budget on purpose: it is the whole standard
 `prose-check` reports against, and a convention stated by half reports the wrong sentence.
 
+A change's proposal and deltas follow this rule too, because a delta becomes a chapter.
+
 Write a chapter for a person first: a new team member reading it without context. An agent
 reads the same text, and plain sentences cost it less than packed ones.
 

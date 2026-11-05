@@ -12,8 +12,8 @@ hold only when read together.
 
 ## Orientation card
 
-Open a reply that hands work back, asks for a decision, or reports a finished change with this
-card, after any version line and above any picture. The person is arriving from another session.
+Open a reply or a tracker comment that hands work back, asks for a decision, or reports a
+finished change with this card, after any version line and above any picture. The person is arriving from another session.
 
 ```text
 devbook / writing rule / Personal Validation
