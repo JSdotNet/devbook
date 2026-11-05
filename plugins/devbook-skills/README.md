@@ -3,8 +3,8 @@
 Reusable guidance any plugin can name and none has to depend on, and planning a person runs
 by hand.
 
-An L0 plugin with no dependencies. It ships skills and nothing else: no rule, no install, no
-hook, and no entry in the stamp. Other plugins name its skills by name alone and keep their
+An L0 plugin with no dependencies. It ships skills and one session-start hook: no rule, no
+install, and no entry in the stamp. Other plugins name its skills by name alone and keep their
 own short rule for when it is absent, so enabling it improves what they write and disabling it
 breaks nothing. `wayfinder` is named by no plugin: a person invokes it, and it writes issues,
 never files. The decision is recorded in

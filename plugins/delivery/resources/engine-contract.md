@@ -336,7 +336,9 @@ below, not a second mechanism.
 | `show` | `artifact`, `summary`, `none` | `artifact` renders the phase's output through the surface — the specification itself, not a description of it. Default `summary`. |
 | `unattended` | `block`, `proceed`, `skip-phase` | What an unattended run does here. `skip-phase` skips the phase. Default `block`. |
 
-With the `show-me` skill available, a gate opens with its orientation card, above the question.
+With the `show-me` skill available, a gate a person is present for opens with its orientation
+card, above the question, unless it is `show: none` or purpose `resource`, which show just the
+question.
 
 A gate applies in every flow that has its phase. A gate at a phase the flow lacks is inert in
 that flow, so `{ "at": "verify" }` never stops a `flow-spec` run.

@@ -3,7 +3,7 @@
 ```meta
 date: 2026-09-07
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/08-crosscutting-concepts.md#hook", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/hosts.md"]
-c4: ["marketplace.devbook", "marketplace.devbook-derived", "marketplace.delivery", "marketplace.delivery-schedule", "marketplace.delivery-surface-dashboard.telemetry-capture"]
+c4: ["marketplace.devbook", "marketplace.devbook-derived", "marketplace.delivery", "marketplace.delivery-schedule", "marketplace.devbook-skills", "marketplace.delivery-surface-dashboard.telemetry-capture"]
 c4-touches: ["claude-code"]
 ```
 

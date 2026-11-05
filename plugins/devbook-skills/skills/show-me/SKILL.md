@@ -13,7 +13,7 @@ hold only when read together.
 ## Orientation card
 
 Open a reply that hands work back, asks for a decision, or reports a finished change with this
-card, above any picture. The person is arriving from another session.
+card, after any version line and above any picture. The person is arriving from another session.
 
 ```text
 devbook / writing rule / Personal Validation
@@ -30,7 +30,7 @@ RISK     Two-way door; nothing pushed
   alignment between fonts.
 - `YOU` names the one thing needed, or `nothing`. `RISK` names the door and what left the
   machine. `CHANGED` says `none` when nothing changed.
-- Skip the card for one fact, one answer, or a reply mid-task.
+- Skip the card for one fact, one answer, a reply mid-task, or a run nobody is present for.
 
 ## Pick the picture
 
