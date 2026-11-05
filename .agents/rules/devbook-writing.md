@@ -20,6 +20,10 @@ style meant for a model. Never copy that style into a chapter.
 Use the fewest words that stay plain. A rewrite that grows a passage is wrong unless it adds a
 fact. Diagrams and extra lines do not count against it: only words do.
 
+Let a reader arriving from other work see at a glance what the chapter is about. Open it with
+one sentence that says so, and with a picture when its content has a shape. A section its
+folder rule requires first keeps its place, and a decision record opens with its decision.
+
 ## Show it first
 
 When the `show-me` skill is available, follow it for every chapter except `domain.md` and its

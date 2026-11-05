@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
@@ -75,6 +75,7 @@ standard, and a class stated by half reports the wrong sentence.
    | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
    | `mermaid-architecture` | Where `arc42/` is adopted, a Mermaid fence of any `C4*` kind, or a `sequenceDiagram`, `flowchart`, or `graph` with two or more participants or nodes naming workspace elements, by identifier or name | The view to use: `systemContext` in 03 for `C4Context` or a diagram of people and systems, `container` or `component` in 05 or the block's file for a `flowchart` or `graph` of parts, `dynamic` in 06 or the block's `## Runtime` for `C4Dynamic`, the sequence, or a `flowchart` of steps, `deployment` in 07 — or "add it to the workspace" when no view has it |
    | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
+   | `no-glance` | A chapter whose opening does not say what it is about, or whose content has a shape with no picture near the top; a chapter outside `adr/` and `tdr/` only | One opening sentence, then the picture `devbook-writing.md` names |
    | `structure` | Whatever step 1 reported | The fix in `devbook:validate`'s `repairs.md` |
 
    A hit inside text the constraints above protect is not a finding. A `stale-name` is tested

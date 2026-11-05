@@ -151,7 +151,7 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
 The prose half beside `validate`'s structural half: read every adopted folder and report
 the sentence that says nothing a reader needs or names something the tree no longer has — a
 stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
-a stack of nouns, padding, text moved rather than cut, a paragraph or a step past the length
+a stack of nouns, an unclear opening, padding, text moved rather than cut, a paragraph or a step past the length
 `devbook-writing.md` sets, and, where
 `arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence,
 flowchart, or graph between workspace elements — with the view to draw instead. It also counts each changed chapter's words
