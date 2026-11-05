@@ -29,7 +29,12 @@ Then enable `devbook-skills` with `/plugin`. There is nothing to install into th
 | `wayfinder` | Plans an effort too big for one session as a `wayfinder:map` issue whose child issues are decision tickets — research, prototype, grilling, task — linked by native blocking, then resolves one frontier ticket per session until nothing is left to decide. Plans; never builds the destination | Nobody: a person types `/wayfinder`. `delivery-schedule`'s issue sweep leaves every `wayfinder:*` issue alone |
 
 `show-me` writes plain Markdown only: Mermaid, fenced code, and tables. That is what a
-chapter, a pull request, and a chat reply can all render.
+chapter, a pull request, and a chat reply can all render. It also holds the orientation card, a
+five-line opening for a handback, a decision, or a finished change.
+
+A session-start hook applies `show-me` to every reply in a repository with
+`.devbook/config.json` or that names this plugin in its `enabledPlugins`. It stays silent
+elsewhere on Claude Code, and Copilot's prompt hook cannot guard itself, so it always speaks there.
 
 `research-brief` returns its brief and never lands it. The caller chooses the place: a
 decision record's options through `flow-spec`, `openspec/changes/<id>/research.md`, a ticket,

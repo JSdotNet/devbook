@@ -34,6 +34,7 @@ map and its tickets, which live on the tracker.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `show-me` | skill | A person who asks to be shown, or a caller that names it: `devbook-writing.md`, and `delivery` when it writes a pull request description and reports back to the person |
+| `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start, in a repository that uses devbook |
 | `research-brief` | skill | A person who asks for research, or a caller that names it: `delivery`'s Scope phase, and its Drafting phase for `arc42/` and `tech/` |
 | `pr-body` | skill | A person writing a pull request, or a caller that names it: `delivery`'s Create Pull Request phase, and `delivery-schedule`'s draft pull request contract; `schedule-merge-review` reads the door it declares |
 | `retro` | skill | A person after a session or run, or a caller that names it: `delivery`'s Summary, which offers it after two or more revise rounds at Personal Validation, and `delivery-schedule`'s `schedule-weekly-retro`, which reads a week through its lenses |
@@ -49,6 +50,11 @@ The skill picks the picture from what the content describes, puts it first, and 
 prose after it to the reasons, the exceptions, and the limits. It writes Markdown that renders
 on both hosts and on GitHub, so its pictures are Mermaid, fenced code, and tables. An HTML
 mockup is out of scope: neither a chapter nor a pull request can carry one.
+
+It also holds the orientation card: five aligned lines that open a handback, a decision, or a
+finished change, so a person switching between sessions sees the change, its stage, and what it
+needs from them. The hook loads the skill's rule into every session, because an ordinary reply
+has no caller to name it.
 
 ### research-brief
 

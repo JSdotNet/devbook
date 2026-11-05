@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "prompt",
+        "prompt": "In a repository that uses devbook, write every reply to the person per the show-me skill: a picture before the prose when the content has a shape, one plain sentence when it does not. Open a reply that hands work back, asks for a decision, or reports a finished change with that skill's orientation card, so a person switching between sessions knows in seconds what it is about. Read the skill before the first such reply."
+      }
+    ]
+  }
+}
