@@ -108,7 +108,7 @@ related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#report-e
 related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-This block has two aggregates, two domain services, and one host-specific part.
+This block has two aggregates and two domain services, one of them host-specific.
 
 ![delivery-surface-dashboard's components](c4:delivery-surface-dashboard)
 

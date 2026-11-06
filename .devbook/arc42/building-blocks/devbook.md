@@ -17,7 +17,7 @@ told when the two have drifted apart.
 - The review of a chapter against its folder's rules
 - The reconcile that materializes the convention into a repository
 - The change folder and the merge of its deltas
-- The [C4 model](#c4-model) an `arc42/` folder's chapters embed and point at
+- The contract around the [C4 model](#c4-model) an `arc42/` folder's chapters embed and point at
 
 **Nested blocks**, each with its own file
 
@@ -54,7 +54,7 @@ plugins follow or answer, and the one file a repository may author to change wha
 accepts. None of the skills is a flow: this block ships the shape and the check, and the engine
 owns the procedure for carrying a change.
 
-A schedule reaches a skill through `delivery-schedule`'s own wrapper.
+The schedules for `validate`, `tech-update`, and `verify-change` reach them through `delivery-schedule`'s own wrappers.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |

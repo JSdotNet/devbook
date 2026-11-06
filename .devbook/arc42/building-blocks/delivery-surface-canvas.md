@@ -51,7 +51,7 @@ related: [".devbook/arc42/building-blocks/delivery-surface-canvas.md#view"]
 - **Does:** shows Mermaid source live and pannable, with an optional explanation panel beside it.
 - **Draws:** whatever the source says: C4, sequence, state, deployment, aggregate, context map,
   domain-event flow, subdomain landscape, wireframes, user flows.
-- **Navigates:** `push` drills into a related diagram and walks back through the breadcrumbs, and
+- **Navigates:** `push` drills into a related diagram, Back walks the breadcrumbs, and
   `replace` updates in place. The history is the only thing this block remembers, and it dies
   with the panel.
 
@@ -283,7 +283,7 @@ marketplace entry.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | Copilot Extension SDK | Conformist, and structurally | `extensions/delivery-surface-canvas/`, a `copilot-extension.json` and the module that registers two canvases | The host's extension shape | A canvas panel is the one thing this block needs, and only one host has one. |
-| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the render group's two operation names, and nothing else | `resources/surface-contract.md`: `delivery.surface.render@1` | It matches operation names, which lets a canvas satisfy it without being an MCP server. |
+| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the render group's two operation names, and nothing else | `resources/surface-contract.md`: `delivery.surface.render@1` | The contract matches operation names, which lets a canvas satisfy it without being an MCP server. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel, with one documented exception | Plugin folder and one manifest; **no marketplace entry** | [Chapter 8](../08-crosscutting-concepts.md) | Only one host can load it, so the folder-shape rule is satisfied rather than broken. |
 | The local loopback origin | Conformist | Viewer pages at an ephemeral port with a per-instance token, view changes pushed to the open page | Its own transport | The canvas server outlives the panel that opened it, so it alone needs a token. |
 

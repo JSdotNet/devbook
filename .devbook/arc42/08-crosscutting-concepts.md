@@ -34,7 +34,7 @@ A term true of one plugin lives in that plugin's block file and in the
 [Schedule](#schedule) is a kind of trigger here and its parts are the glossary's.
 [Flow Skill](#flow-skill) names a scope against its neighbours, and
 [delivery](building-blocks/delivery.md) says what one is made of. Where a host uses a different
-word for the same thing, this chapter records the host's word as an alias and never adopts it.
+word for the same thing, the host's word is recorded as an alias and never adopted.
 [Chapter 5](05-building-block-view.md) holds the shapes these concepts take in the repository,
 and this chapter links there rather than restating them.
 
@@ -153,7 +153,7 @@ and ignore the keys they do not recognise, which is why an asset has one authore
 
 A named persona with its own tool allowlist, as `agents/<role>.agent.md`. Copilot calls it a
 custom agent, Claude a subagent. An agent only Claude may load lives in `runners/` instead and
-is listed in the Claude manifest alone. Copilot's manifest names agent directories and loads
+is listed in the Claude manifest alone, because Copilot's manifest names agent directories and loads
 everything under `agents/`. Delegation targets live in the body prose, because only one of
 the two hosts reads a `handoffs` key.
 
@@ -361,7 +361,7 @@ ready check take no entry: the first always runs inline with the runner, and the
 from what the other phases recorded.
 
 A phase whose configured effort overrides its skill's own default runs on Claude inside one of
-the `runner-<effort>` agents. A subagent call can set a model but not an effort. The
+the `runner-<effort>` agents, because a subagent call can set a model but not an effort. The
 runner keeps the specialist's instructions, drops its tool list, and carries none at all, which
 the asset checker allows for the runner plugin's agents only. Copilot has no runner and runs
 that phase on the session's effort.

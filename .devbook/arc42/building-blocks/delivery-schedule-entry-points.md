@@ -139,7 +139,7 @@ collision with work in flight, because the code moved.
 related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point"]
 ```
 
-An unattended run may take one closure: an issue already fixed, obsolete, or a duplicate, at
+An unattended run may take only one kind of closure: an issue already fixed, obsolete, or a duplicate, at
 high confidence, with a commit, file, pull request, or sibling issue named in the closing
 comment. Every other stale verdict is a proposal with its command. Every pull request is a draft,
 the one that proved itself and the one that did not alike, because personal validation happens

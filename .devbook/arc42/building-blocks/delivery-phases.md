@@ -182,13 +182,13 @@ related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/
 
 The phase itself checks every journey `scope` listed, whichever skill is bound, and never edits
 one. A journey whose signature no longer matches the signature its run recorded, or that has no
-run, is reported `stale` in a table of its own after the verdicts. It qualifies the run and is
-not a sixth verdict.
+run, is reported `stale` in a table of its own after the verdicts, because it qualifies the run
+and is not a sixth verdict.
 
 A referenced part that nothing proves makes the requirement pointing at it
 `spec-ahead`. Either no spec implements it, or its run left it `not-run` behind a held step. The ready
-check reads both as not ready. The exception is a `stale` journey that `verify` could not run at
-its depth, which goes to the gate as a question.
+check reads a `stale` journey and a `spec-ahead` requirement as not ready. The exception is a `stale`
+journey that `verify` could not run at its depth, which goes to the gate as a question.
 
 ### phase-ready
 

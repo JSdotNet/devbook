@@ -57,7 +57,7 @@ devbook chapters.
 The project schema `devbook` sits at `openspec/schemas/devbook/`. Its artifacts run
 `proposal` → `devbook-delta` → `solution` → `tasks`, with `apply` tracking `tasks.md`.
 `solution` is OpenSpec's `design` renamed, because `design` is a devbook folder here.
-`init` writes it and `update` replaces it while it still hashes to what landed.
+The schema is managed: `init` writes it and `update` replaces it while it still hashes to what landed.
 
 Every artifact carries a `description`. Every `instruction` is a block scalar, because a plain
 YAML scalar cannot hold the `: ` in `` `owner: me` ``. `openspec schema validate devbook` passes on 1.13.2.

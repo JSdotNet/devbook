@@ -41,7 +41,7 @@ Backlog's map for this repository, per the [chapter schema record](../adr/chapte
 
 | Block | Layer | In one line |
 | --- | --- | --- |
-| [devbook](devbook.md) | L0 foundation | Addressed Markdown chapters, the `meta` block under them, the check, the reconcile into a repository, and five procedures |
+| [devbook](devbook.md) | L0 foundation | Addressed Markdown chapters, the `meta` block under them, the check, the reconcile that puts the convention into a repository, and five procedures |
 | [devbook-code-sync](devbook-code-sync.md) | Inside devbook | A chapter and the code implementing it brought back into agreement, in whichever direction is behind |
 | [devbook-procedures](devbook-procedures.md) | Inside devbook | The five things a repository knows how to do and no plugin can write |
 | [devbook-derived](devbook-derived.md) | L1 on devbook | The committed `_meta/` index, its refresh paths, and the canvas that draws the graph |
@@ -73,4 +73,4 @@ The five skills in that guidance:
 
 The delivery engine and devbook are the two blocks everything else serves. The engine carries
 work, and devbook is what the work is grounded in and what it writes back to. The four
-surfaces answer one published contract and are interchangeable, which is why there is more than one.
+surfaces answer one published contract and are interchangeable, which is the whole reason there is more than one.

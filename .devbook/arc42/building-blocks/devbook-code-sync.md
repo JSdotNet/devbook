@@ -41,7 +41,7 @@ prove them the way an `e2e` test does. It gets no verdict row of its own.
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, sync unit, or sync group |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass or one pull request covers |
 
-The session-start hook routes a person there when a task crosses between a chapter and its
+The session-start hook routes a person to a skill when a task crosses between a chapter and its
 code. The weekly `devbook-verify` schedule also reaches `verify-change`, through
 `delivery-schedule`'s wrapper, and a `phase-spec-check` binding reaches `capture-specs` in write
 mode. `schedule-devbook-verify` lists the units from `--json`, and Backlog's sync sweeps select their groups

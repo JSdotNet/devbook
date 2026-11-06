@@ -6,10 +6,10 @@ c4: ["marketplace.devbook-config-view"]
 code: ["plugins/devbook-config-view"]
 ```
 
-The stack's rollout across one machine, drawn inside Claude Code itself. The person in the session
-sees every repository on this machine that has adopted the stack. Each shows which version each
-component is stamped at, how far that is from the newest, and how it is wired. None of that needs
-a terminal opened in each.
+The stack's rollout across one machine, drawn inside Claude Code itself. It is responsible for one
+thing: the person in the session sees every repository on this machine that has adopted the stack.
+Each shows which version each component is stamped at, how far that is from the newest, and how it
+is wired. None of that needs a terminal opened in each.
 
 **Owns:**
 
