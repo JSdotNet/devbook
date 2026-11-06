@@ -48,7 +48,7 @@ date: 2026-10-08
 ```
 
 `devbook:scenario-write` writes a journey once in its context's `scenarios.md`, `scenario-derive`
-derives its Playwright spec from it, and `scenario-run` commits its run beside the file.
+derives its Playwright spec from it, and `scenario-run` runs it. Its run is committed beside the file.
 
 - **Used for** — nothing here yet. This repository ships the three skills and the tools under
   them, but adopts no `domain/` folder and has no application to drive. So there is no journey to
