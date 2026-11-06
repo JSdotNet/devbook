@@ -334,7 +334,18 @@
         "devbook-validate",
         "tech-update",
         "merge-review"
-      ]
+      ],
+      "overrides": {
+        "devbook-validate": {
+          "cron": "0 5 * * *"
+        },
+        "tech-update": {
+          "cron": "50 5 * * 0"
+        },
+        "merge-review": {
+          "cron": "30 7 * * 1-5"
+        }
+      }
     },
     "delivery-surface-dashboard": {
       "sessionNaming": {
