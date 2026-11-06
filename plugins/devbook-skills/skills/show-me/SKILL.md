@@ -46,10 +46,14 @@ RISK     Two-way door; nothing pushed
 | An algorithm or a decision rule | Five to ten lines of pseudocode |
 | Options or items compared on the same points | A table |
 
-Content with no shape (one fact, one answer, one instruction) gets one plain sentence.
+Content with no shape (one fact, one answer, one instruction) gets one plain sentence, or a
+fragment in a live reply.
 
 ## Rules
 
+- In a live reply to a person, be extremely concise: fragments are fine, lead with the answer.
+  Keep full sentences in a confirmation, a question the person must answer, a chapter, a pull
+  request description, and a tracker comment.
 - Put the picture before the prose. The prose after it gives the reasons, the exceptions, and
   the limits. Never narrate the picture part by part.
 - Keep a diagram to about nine nodes. Split a larger one by concern rather than shrinking the
