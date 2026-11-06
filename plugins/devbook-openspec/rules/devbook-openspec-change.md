@@ -43,3 +43,6 @@ rule is what they do differently from OpenSpec's defaults.
   delta. Run `devbook-openspec:archive`, which reads the acceptance from the host, merges every
   delta into its chapter over that fingerprint, and only then lets `openspec archive` move the
   folder. Never edit `archive/`.
+- **Evidence after the archive stays out of it.** A QA report or screenshot that arrives once a
+  change is archived goes on the ticket or the pull request, never in the change's folder. Work
+  it turns up is a pull request or a new change of its own; never reopen the archived one.
