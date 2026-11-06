@@ -44,9 +44,9 @@ type: platform
 related: [".devbook/arc42/adr/hosts.md"]
 ```
 
-Every asset is authored for this second reader. It reads `.github/plugin/plugin.json` and
+Every asset targets this second reader. It reads `.github/plugin/plugin.json` and
 `hooks.json`, honours the `handoffs` key, and applies a *repository's* instruction files from
-`applyTo`. It never applies a plugin's, which it has no key for.
+`applyTo`, never a plugin's, which it has no key for.
 
 ## Copilot Extension SDK
 
