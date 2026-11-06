@@ -45,7 +45,7 @@ record. This block therefore keeps the subsystem's stem and is named for what it
 | Personal Validation review card | Approve, Revise, and Reject buttons in the pane, each `$.prompt.submit` of the gate's reply as the person's own prompt | A person, while this session's run waits at Personal Validation |
 
 The inline rows replace the transcript's raw JSON for a surface's `start_run` and
-`update_stage` calls. They match by pattern in either host spelling, so they draw a call to any
+`update_stage` calls, matched by pattern in either host spelling, so they draw a call to any
 surface, not only the two whose files this block reads.
 
 ## Structure
@@ -81,8 +81,8 @@ it, and the view infers where the run records neither. Where the two differ the 
 phase's detail names the field.
 
 The row also carries what the pass found, when the stage's `execution` records it
-(`round 2 · 1 blocker` on Review, `0 defects` on Verify). It is yellow for an open blocker, red for
-a defect, and nothing for a stage that records none.
+(`round 2 · 1 blocker` on Review, `0 defects` on Verify). Yellow marks an open blocker, red a defect, and a stage that
+records none shows nothing.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |

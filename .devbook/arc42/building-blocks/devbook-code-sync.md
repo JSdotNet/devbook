@@ -34,7 +34,7 @@ click demo as the `demo` kind inside its page's unit.
 
 A journey is not a kind. It is
 evidence for the requirements whose cases point at its parts. Its derived spec and its last run
-prove them the way an `e2e` test does. It gets no verdict row of its own.
+prove them the way an `e2e` test does. It gets no verdict row.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |

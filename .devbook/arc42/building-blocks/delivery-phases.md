@@ -180,15 +180,15 @@ related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/
 - **Updating skill:** touches only `code-ahead` rows in scope, never sets `approved`, and runs
   the devbook check after it. Its edits are part of what the person approves.
 
-The phase itself checks every journey `scope` listed, whichever skill is bound, and never edits
+The phase checks every journey `scope` listed, whichever skill is bound, and never edits
 one. A journey whose signature no longer matches the signature its run recorded, or that has no
 run, is reported `stale` in a table of its own after the verdicts, because it qualifies the run
 and is not a sixth verdict.
 
 A referenced part that nothing proves makes the requirement pointing at it
-`spec-ahead`. Either no spec implements it, or its run left it `not-run` behind a held step. The ready
-check reads a `stale` journey and a `spec-ahead` requirement as not ready. The exception is a `stale`
-journey that `verify` could not run at its depth, which goes to the gate as a question.
+`spec-ahead`. No spec implements it, or its run left it `not-run` behind a held step. The ready
+check reads a `stale` journey or a `spec-ahead` requirement as not ready, unless `verify` could
+not run that journey at its depth, which goes to the gate as a question.
 
 ### phase-ready
 
