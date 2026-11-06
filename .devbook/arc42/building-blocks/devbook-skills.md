@@ -61,6 +61,11 @@ related: [".devbook/arc42/adr/plugin-boundaries.md"]
 - **Loaded by:** The hook, which puts the skill's rule into every session.
 - **Why:** An ordinary reply has no caller to name it.
 
+A live reply to a person is extremely concise, and fragments are fine, because the person can
+ask a follow-up. Whatever is read later or decides something keeps full sentences: a
+confirmation, a question the person must answer, a chapter, a pull request description, and a
+tracker comment.
+
 ### research-brief
 
 ```meta
@@ -168,6 +173,7 @@ The other four parts:
 | The picture comes before the prose, and the prose never narrates it part by part | `show-me` | untested |
 | A diagram stays at about nine nodes, and a larger one is split | `show-me` | untested |
 | Every picture renders as plain Markdown on both hosts and on GitHub | `show-me` | untested |
+| A live reply may use fragments; a confirmation, a question to the person, a chapter, a pull request description, and a tracker comment keep full sentences | `show-me` | untested |
 | Every claim in a brief cites a primary source, and a claim without one is not written | `research-brief` | untested |
 | A brief writes nothing to the repository | `research-brief` | untested |
 | A one-way door links the decision record it rests on, or says there is none | `pr-body` | untested |

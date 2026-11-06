@@ -30,6 +30,8 @@ because it governs authoring *here*.
 - The test is model-relative. Settle a disagreement by running the asset, not by debate.
 - Known no-ops: "keep content in English" (set repository-wide, if at all), "remove
   ambiguity", "validate consistency", "be thorough".
+- Fragments are fine in an asset where the meaning stays unambiguous. Safety-critical text
+  stays in full prose, per AGENTS.md.
 
 ## Size Budgets
 
