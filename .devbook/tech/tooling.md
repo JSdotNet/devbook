@@ -19,7 +19,7 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 A plugin's executable parts run on it:
 
 - `devbook`'s checker with its test suites and its `devbook-tech` package-inventory scripts
-- its scenario tools
+- `devbook`'s scenario tools
 - the migration scripts
 - `delivery`'s stack-config checker and the tests behind it
 - `delivery-schedule`'s catalog checker
@@ -68,9 +68,9 @@ On every pull request, `.github/workflows/repo-checks.yml` runs:
 `devbook-meta.yml`, the workflow `devbook:update` materialized from
 `plugins/devbook/assets/workflows/`, runs the vendored one's `--check`.
 
-The surface servers are where the constraint bites hardest and still holds. `node:http` plus a CDN
-script tag in the page itself reach an HTTP server, a server-sent event stream, a Markdown renderer,
-and a Mermaid page.
+The surface servers are where the constraint bites hardest and still holds. An HTTP server, a
+server-sent event stream, a Markdown renderer, and a Mermaid page are all reachable from `node:http`
+plus a CDN script tag in the page itself.
 
 ## PowerShell
 
