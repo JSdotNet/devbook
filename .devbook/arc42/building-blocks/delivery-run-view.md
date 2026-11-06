@@ -6,22 +6,30 @@ c4: ["marketplace.delivery-run-view"]
 code: ["plugins/delivery-run-view"]
 ```
 
-A delivery run drawn inside Claude Code itself. Responsible for one thing: that the person in
-the session sees the run they are in — its phases, how each one ran, and the phase it is in now
-— without opening another window, and hears when any run on the machine stops for them.
+A delivery run drawn inside Claude Code itself. Its one responsibility is that the person in the
+session sees the run they are in without opening another window. They also hear when any run on
+the machine stops for them. The view shows its phases, how each one ran, and the phase it is in now.
 
-Inside the block: reading the run files the surfaces write, inferring what a run does not
-record, drawing the result as a pane, a band above the prompt, inline transcript rows, and
-the status line, alerting when any checkout's run reaches a gate or blocks, and handing the
-person's gate answer to the session. Outside it: recording the run, which is every surface's
-job; deciding what a run records, which is the surface contract's; and deciding the gate, which
-is the flow-runner's — a button here only types the reply the person would have typed. It
-writes no file, answers no operation, and stamps nothing.
+**Owns**
+
+- reading the run files the surfaces write
+- inferring what a run does not record
+- drawing the result as a pane, a band above the prompt, inline transcript rows, and the status line
+- alerting when any checkout's run reaches a gate or blocks
+- handing the person's gate answer to the session
+
+| Concern | Owner |
+| --- | --- |
+| Recording the run | every surface |
+| Deciding what a run records | the surface contract |
+| Deciding the gate | the flow-runner; a button here only types the reply the person would have typed |
+
+It writes no file, answers no operation, and stamps nothing.
 
 It is not a surface. A surface is a server named `delivery-surface-*` that answers the
 contract's operations, and the engine records a run on every one it finds
-([surfaces](../adr/surfaces.md)); a reader under that prefix would be resolved as a place to
-record, so this block keeps the subsystem's stem and is named for what it shows.
+([surfaces](../adr/surfaces.md)). A reader under that prefix would be resolved as a place to
+record. This block therefore keeps the subsystem's stem and is named for what it shows.
 
 ## Interfaces
 
@@ -67,12 +75,14 @@ flowchart LR
     C --> Q["$.prompt.submit into this session"]
 ```
 
-A phase's mode, agent, skill, model, effort, MCP servers, and chores are read from the run's
-`runContext.phases` entry — what was resolved — with the stage's `execution` — what ran —
-over it, and inferred where the run records neither. Where the two differ the row carries a
-`≠` and the phase's detail names the field. The row also carries what the pass found, when
-the stage's `execution` records it — `round 2 · 1 blocker` on Review, `0 defects` on Verify —
-yellow for an open blocker, red for a defect, and nothing for a stage that records none.
+A phase's mode, agent, skill, model, effort, MCP servers, and chores come from the
+run's `runContext.phases` entry (what was resolved). The stage's `execution` (what ran) overrides
+it, and the view infers where the run records neither. Where the two differ the row carries a `≠` and the
+phase's detail names the field.
+
+The row also carries what the pass found, when the stage's `execution` records it
+(`round 2 · 1 blocker` on Review, `0 defects` on Verify). Yellow marks an open blocker, red a defect, and a stage that
+records none shows nothing.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -95,9 +105,9 @@ yellow for an open blocker, red for a defect, and nothing for a stage that recor
 related: [".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-Declares nothing and is declared by nothing. Its one real coupling is to a file format no
-contract publishes; the gate replies it submits are the flow-runner's words — `approve`,
-`revise`, `decline` — read by a model, not parsed by a contract.
+It declares nothing and nothing declares it. Its one real coupling is to a file format no contract
+publishes. The gate replies it submits are the flow-runner's words, `approve`, `revise`, and
+`decline`, which a model reads and no contract parses.
 
 ### Outbound
 

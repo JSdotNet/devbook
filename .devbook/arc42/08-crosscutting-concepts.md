@@ -5,499 +5,38 @@ number: 8
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/06-runtime-view.md", ".devbook/arc42/12-glossary.md", ".devbook/tech/hosts.md#claude-code-plugin-api", ".devbook/tech/hosts.md#copilot-plugin-api"]
 ```
 
-The language every plugin is written in — the shared kernel. **One plugin, one block:** a plugin
-is the unit a host installs, versions, and can refuse to load, so it is already the line a
-model cannot cross without somebody declaring it, and the twelve files under
-[building-blocks/](building-blocks/README.md) follow the twelve plugin folders name for name. This
-chapter is the one part of the picture that is not a plugin. It holds only what is true of
-every plugin, so a new plugin costs a block file as well as a marketplace entry, and the two
-land together.
+The language every plugin is written in: the shared kernel. **One plugin, one block:** a plugin
+is the unit a host installs, versions, and can refuse to load. It is already the line a model
+cannot cross without somebody declaring it, and the twelve files under
+[building-blocks/](building-blocks/README.md) follow the twelve plugin folders name for name.
+This chapter is the one part of the picture that is not a plugin. It holds only what is true of
+every plugin. A new plugin therefore costs a block file as well as a marketplace entry, and the
+two land together.
 
-What the kernel is responsible for: that an asset written once loads correctly in every host
-that reads it, and that a plugin can be installed on its own. Inside its boundary: the folder
-shape of a plugin, the two manifests, the frontmatter each host requires, the marketplace
-listing, and the vocabulary below. Outside it: how a host resolves or ranks what it loaded, and
-anything the assets themselves are used to build — a plugin that orchestrates .NET delivery
-work says nothing here about .NET. Everything it defines is co-owned: a change to the plugin
-folder shape, the manifest pair, the layer order, the stamp, or a migration is a change to
-every block at once, which is why the kernel stays small on purpose and a term earns a place
-here only by being true of every plugin.
+The kernel is responsible for two things: an asset written once loads correctly in every host
+that reads it, and a plugin can be installed on its own.
 
-This repository ships authoring assets rather than a running product, so a *user* here is a
-host that loads an asset and a repository that installs one. Both sit outside every block, and
-every block conforms to them rather than the other way round.
+- **Inside its boundary:** the folder shape of a plugin, the two manifests, the frontmatter each
+  host requires, the marketplace listing, and the vocabulary below.
+- **Outside it:** how a host resolves or ranks what it loaded, and anything the assets are used
+  to build. A plugin that orchestrates .NET delivery work says nothing here about .NET.
+
+Everything it defines is co-owned. A change to the plugin folder shape, the manifest pair, the
+layer order, the stamp, or a migration changes every block at once. The kernel therefore stays
+small on purpose, and a term earns a place here only by being true of every plugin.
+
+This repository ships authoring assets rather than a running product. A *user* here is a host
+that loads an asset and a repository that installs one. Both sit outside every block, and every
+block conforms to them.
 
 A term true of one plugin lives in that plugin's block file and in the
-[glossary](12-glossary.md), with a `related` link back to whatever kernel term it refines —
-[Schedule](#schedule) is a kind of trigger here and its parts are the glossary's;
-[Flow Skill](#flow-skill) names a scope against its neighbours where
+[glossary](12-glossary.md), with a `related` link back to the kernel term it refines.
+[Schedule](#schedule) is a kind of trigger here and its parts are the glossary's.
+[Flow Skill](#flow-skill) names a scope against its neighbours, and
 [delivery](building-blocks/delivery.md) says what one is made of. Where a host uses a different
-word for the same thing, the host's word is recorded as an alias rather than adopted.
-[Chapter 5](05-building-block-view.md) holds the shapes these concepts take in the repository;
-this chapter links there rather than restating them.
-
-## Marketplace
-
-```meta
-related: [".devbook/arc42/05-building-block-view.md#marketplace-root", ".devbook/arc42/adr/releases.md"]
-```
-
-A repository that offers plugins for installation, identified by the `name` in
-`.claude-plugin/marketplace.json`. That name is the local primary key: a host keys its
-registry, its cache, and every `plugin@marketplace` reference by it, so two marketplaces one
-user has added may not share a name. This repository's marketplace is `jsdotnet-devbook`.
-
-## Plugin
-
-```meta
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
-```
-
-One folder under `plugins/`, holding assets that belong together, installable on its own and
-listed once in the marketplace. It may declare a hard dependency on a plugin in a lower layer,
-which the host enforces and which makes an illegal combination unreachable; it must never
-depend on the agent a phase names, a tracker, or a surface — those are bound per repository or
-resolved from the live tool list, and a missing one must cost capability, not loading.
-
-## Host
-
-```meta
-```
-
-Also called: client.
-
-A tool that loads a plugin's assets: Claude Code or GitHub Copilot. Hosts read the same files
-and ignore the keys they do not recognise, which is why an asset has one authored copy.
-
-## Agent
-
-```meta
-```
-
-A named persona with its own tool allowlist, as `agents/<role>.agent.md`. Copilot calls it a
-custom agent, Claude a subagent. An agent only Claude may load lives in `runners/` instead and
-is listed in the Claude manifest alone, because Copilot's manifest names agent directories and
-loads everything under `agents/`. Delegation targets live in the body prose, because only one of
-the two hosts reads a `handoffs` key.
-
-## Skill
-
-```meta
-```
-
-A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
-trigger — the sentence a host matches a request against — not a summary of its contents.
-Every skill opens its reply with `<plugin>@<version>`, read from the manifest beside it rather
-than recalled, so the answer names the release that gave it; `.agents/rules/skills.md` says
-why the line is in every skill.
-
-## Plugin Rule
-
-```meta
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
-```
-
-A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
-`rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
-`.agents/rules/` an install writes hold the same names, so a rule referencing a sibling resolves in
-both. Every plugin rule is delivered: no host applies one from inside a plugin, so it reaches a
-session only where the plugin's install skill has written it into a repository, with each host's
-wrapper beside it — the delivery is drawn in
-[chapter 5](05-building-block-view.md#plugin-folder). Shared text an asset reads by path is a
-[contract](#contract), not a rule.
-
-## Contract
-
-```meta
-```
-
-Reference an asset points at by path, as `resources/<name>.md`, carrying `name` and
-`description` and no scope of its own — the engine and surface contracts, the schedule catalog contract,
-the issue sweep state contract. It is loaded by the explicit reference and by nothing else, so
-a contract no skill or agent names is unreachable. It takes the rule budget, because it is the
-same kind of prose, and it stays over that budget by kind. Distinct from a
-[plugin rule](#plugin-rule), which exists to be installed somewhere else.
-
-## Hook
-
-```meta
-related: [".devbook/arc42/adr/hooks.md"]
-```
-
-A host-executed action bound to a session event. The two hosts disagree on what a session-start
-hook may be, so the event, not the intent, decides the form it takes.
-
-## Devbook Folder
-
-```meta
-date: 2026-10-08
-related: [".devbook/arc42/adr/chapter-schema.md"]
-```
-
-One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
-`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block, at
-`.devbook/<name>/`. A repository adopts any subset; there is one layout.
-
-The convention's own name is the only noun for these; there is no common-noun synonym, because
-a convention that has a name does not need one — *knowledge* was that synonym until
-2026-09-07, and a reader meeting "the knowledge folders" beside `devbook-meta` had to work out
-that the two named one thing. Everything the plugin ships is named `devbook-` for the same
-reason: the old prefix said only which plugin used to own the folder. What `_meta/graph.json`
-derives from their `meta` blocks is the **reference graph**.
-
-A **journey** is one end-to-end walk through the product, written as a `##` chapter typed
-`scenario` in its bounded context's `scenarios.md`; its `###` headings are its **parts**. It
-sits in the context holding most of the requirements it proves, and it is addressed like any
-chapter, `<scenarios file>#<journey>`, so any number of features and requirements point at it.
-A **scenario case** is the `#### Scenario:` under a requirement, which may point at a part
-with `Proved by:` instead of spelling out its own steps. The two words stay apart: the journey
-is the walk, the case is one thing a requirement promises. A journey's runs sit beside its
-file, in `scenarios/<journey>/`; profiles and data sets live in `.devbook/scenarios/`, which
-holds no journey. The writing convention lives in `devbook-chapter-metadata.md` under
-*Journeys*, and a journey is written in English whatever language the other chapters use,
-because its steps are the test's steps.
-
-A demo's **walkthrough** plays a journey through its screens, and is one of two kinds. A **free
-walkthrough** carries its own step text and takes the slug of the inline scenario case it plays
-as its id. A **linked walkthrough** keeps its own id, names a part with `part`, and embeds that
-part's English step text with the page **signature** it was copied at, so the demo still opens
-with nothing fetched. A requirement whose case is `Proved by:` a part gets every walkthrough
-linked to that part as a derived `demo` entry, and a linked walkthrough whose signature is not
-the page's is stale until `/prototype` re-copies its text. The convention is
-`devbook-chapter-metadata.md` under the `demo` field.
-
-## Flow Skill
-
-```meta
-date: 2026-10-05
-related: [".devbook/ai/02-deliver.md#flow-skills", ".devbook/arc42/06-runtime-view.md#a-flow-run", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/flow-engine.md"]
-```
-
-A staged procedure for one kind of change, run start to finish inside one session, ending at
-the personal validation gate. A flow is named for what it changes: `flow-code` for a
-repository's code, and `flow-spec` for a devbook chapter. What one run does with its
-[phases](#phase) is [A Flow Run](06-runtime-view.md#a-flow-run).
-
-Four neighbours share the vocabulary and are not interchangeable with it:
-
-| Prefix | Scope |
-| --- | --- |
-| `flow-` | One session, delegating to subagents. Never to another session. |
-| `phase-` | One [phase](#phase) of a flow, named for its id — `phase-scope`, `phase-implement`, `phase-review`, `phase-verify`. Never invoked directly. |
-| `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
-
-A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
-one scope needs none: `devbook-config` holds `init`, `update`, `doctor`, `report`, `ask`,
-`adoption`, and `local` bare, and the plugin name carries what a prefix would have.
-
-Each prefix names one scope and no prefix names two, which is why none of them is called after
-*orchestration* — the word once covered fan-out and single-session staging at once, and the
-fan-out it described no longer ships. `delivery` holds two `flow-*` — the code and the five
-devbook folders, since [flows belong to delivery](adr/plugin-boundaries.md) — and one `phase-*`
-per phase; `delivery-schedule` holds fifteen `schedule-*` beside a bare `init` and `update`.
-
-A plugin takes its subsystem's stem; the things inside it are named for what they are. So
-`delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
-subsystem while `flow-code` and `phase-build-test` are the procedures inside them — which is
-why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
-a contract other surfaces answer carries the contract word after the stem and the
-implementation after that, so the three are read as one kind from the marketplace list alone.
-A surface interchangeable with nothing does not: the contract word marks membership, and
-`devbook-graph` beside `delivery-surface-canvas` would read as a second implementation of the
-render group, which it is not.
-
-No skill in this marketplace spawns a session. Fan-out across sessions and worktrees was its
-own subsystem and prefix, `fleet-`, until 2026-09-21, when the one thing anyone wanted from it
-— a backlog swept, closed, and worked with nobody watching — turned out to want one session
-and hours rather than five sessions and minutes; it is the issue sweep in
-[delivery-schedule](building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep) now, and the
-reason is in [the plugin boundaries record](adr/plugin-boundaries.md).
-
-## Schedule
-
-```meta
-date: 2026-09-07
-related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-Also called: routine, automation.
-
-A trigger that fires a procedure the stack already ships, as a local routine: a session the
-host's scheduler starts on the maintainer's machine, in the repository's checkout, with no
-memory of a previous run. A cadence, a target skill, the plugins that skill needs, and a
-prompt self-contained enough to run it with nobody watching. A schedule is a trigger and never
-a procedure — the `schedule-*` entry point is what runs; the schedule is what asks.
-
-Both hosts ship the capability under their own name: **Routines** in Claude Code,
-**Automations** in the GitHub Copilot app. Neither word is adopted, because adopting one would
-name a host; *schedule* is the term and both are aliases of it.
-
-Four words carry the shape. An **entry point** is a `schedule-*` skill that picks its own
-input, so it needs no person to hand it one. The **catalog** is the set of schedule files a
-plugin ships. The **preamble** is the unattended rules every prompt starts with, stated once.
-The **scheduler** is whatever the live session exposes that turns a name, a cron expression, a
-repository, and a prompt into a scheduled session — resolved by capability, and absent as a
-normal outcome.
-
-A schedule names an entry point or a read-and-report skill, never a
-[flow](#flow-skill): a flow ends at a gate, and an unattended run parks where a gate would be.
-
-## Phase
-
-```meta
-date: 2026-10-05
-related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/06-runtime-view.md#a-flow-run", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config"]
-```
-
-One step of a flow, with a stable id, and the unit a repository configures. Each phase is one
-skill, `phase-<id>`, and one entry per flow in the `phases` map of the
-[stack config](05-building-block-view.md#stack-config). The list is closed and declared by the
-engine: a repository chooses who runs a phase and how, never what the phases are. A repository
-that needs another shape writes a repo-native `flow-*` skill, which declares its own phase ids
-and still reuses the phases.
-
-| Field | Says |
-| --- | --- |
-| `agent` | Who runs the phase: a `plugin:agent` or a `repo:` agent, or `null` to run it inline |
-| `skill` | The procedure the agent follows. Absent, the phase's own `phase-<id>` skill |
-| `model`, `effort` | What the phase runs on. A committed value is the team's default, and an overlay overrides it field by field |
-| `mcp` | The MCP servers the phase uses, resolved from the live tool list |
-| `before`, `after` | Chores, run in declared order: side effects and a report, never a change to the outcome |
-
-Each field resolves on its own, the most specific key first and then the session, so `{}` is a
-complete entry. A key may carry a qualifier: the folder on `drafting` in `flow-spec`, or an
-area on `implement`. A chore may declare itself required and stop the run when it fails; it
-still may not rewrite a phase's result or stand in for a gate. A few phases take options of
-their own, such as `phase-verify.app` and `phase-report-back.targets`.
-
-The kind of change never selects phases. It changes what happens inside `implement` and how
-deep `verify` goes, and only `plan` is limited to a kind, `create`. Personal Validation and the
-ready check take no entry: the first always runs inline with the runner, and the second decides
-from what the other phases recorded.
-
-A phase whose configured effort overrides its skill's own default runs on Claude inside one of
-the `runner-<effort>` agents, because a sub-agent call can set a model but not an effort. The
-runner keeps the specialist's instructions and drops its tool list. Copilot has no runner and
-runs that phase on the session's effort. The runners carry no tool list at all, which the
-asset checker allows for the runner plugin's agents only.
-
-## Gate
-
-```meta
-date: 2026-10-05
-related: [".devbook/arc42/08-crosscutting-concepts.md#phase"]
-```
-
-A human checkpoint attached to a [phase](#phase), before or after it:
-`{ "at": "scope", "when": "after" }`. It presents that phase's output and asks a question with
-three answers: *approve* continues, *revise* re-runs the phase carrying the human's notes, and
-*decline* blocks the stage — never a silent skip.
-
-Configuration may add a gate anywhere and may never remove one or hand one to a plugin, which
-is the asymmetry that makes gates safe: adding a checkpoint can only make a flow more
-conservative. Personal Validation is the mandatory instance of the same pattern, not a second
-mechanism. An unattended run parks at a blocking gate with a handoff brief; it never waits, and
-it never self-approves.
-
-## Surface
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
-```
-
-Where work becomes visible or recorded, and nothing else. A surface is any installed
-`delivery-surface-*` plugin — an MCP server under that name, or a host canvas — implementing
-one capability split by operation group — lifecycle, render, export — because an
-implementation may answer only part of it.
-
-A surface is never a dependency in either direction: the thing being rendered knows no surface
-exists, and the surface knows nothing about what produced its input. Whichever tool opens it
-resolves it at runtime from the live tool list, by its server name, in the order
-`bindings["delivery.surface"]` gives. A run is recorded by every lifecycle surface that
-opens; render and export go to the first that answers. **Absence is a normal outcome:**
-the run produces its file artifacts, says so once, and continues — it costs a view, never a
-capability.
-
-Four ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
-render only, `delivery-surface-collector` lifecycle and export only, and
-`delivery-surface-backlog` lifecycle by forwarding to the Backlog desktop app, answering
-`unavailable` at open while the app is closed so the run continues on the others. The
-engine names none of them. Each declares exactly
-the tool names its groups name and nothing more, which is what makes one substitutable for
-another — the table is in [chapter 5](05-building-block-view.md#surface-plugins), the reason in
-[the decision](adr/surfaces.md).
-
-A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
-nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
-which is why canvas actions are matched by operation name while a server is matched by its
-name.
-
-`devbook-graph` ships in `devbook-derived` and loads devbook's checker modules from their
-materialized path at runtime; it renders the reference graph rebuilt from the
-chapters on open, never from `_meta/`, and opens a single chapter beside its parsed `meta` block in a second canvas,
-`devbook-chapter`. It answers no operation group and substitutes for nothing, which is why it
-takes devbook's stem and the thing it draws rather than the surface word, per the
-[naming rule](#flow-skill). It is packaged in `devbook-derived`, which declares `devbook`, and
-reaches devbook's modules through the path devbook's install materializes rather than through
-a relative import — the shape [the surfaces record](adr/surfaces.md) waited for.
-
-## Host Slot
-
-```meta
-date: 2026-09-23
-related: [".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/05-building-block-view.md#host-slots"]
-```
-
-A name a shared asset reads instead of a host's own file: `repo-instructions`,
-`model-override`, `stage-delegation`, `surface`, `pr-lane`, `session-id`. A slot is
-bound, never branched — an asset that carries an if-this-host clause has not used a slot.
-
-Behavioural divergence binds as a capability rather than as a host: `stage-delegation` asks
-whether subagents exist and `pr-lane` whether the CLI is present, so neither re-diverges the
-moment one host gains a feature.
-
-The set is closed and every slot has a documented unbound behaviour, so unbound is a resting
-state rather than a gap. No plugin binds a slot: a repository sets one under
-`bindings["delivery.slots"]`, the live session answers it, or the default stands — the table is
-in [chapter 5](05-building-block-view.md#host-slots).
-
-## Role
-
-```meta
-date: 2026-10-05
-related: [".devbook/arc42/08-crosscutting-concepts.md#agent", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-Retired as a binding: the specialist a flow consults is now the `agent` of a [phase](#phase).
-A role was a specialist a flow consulted by name — `architecture`, `qa`, `domain`, `ux`,
-`product`, `docs`, `security` — bound to a plugin under `bindings["delivery.roles"]`. Each
-became the agent of the phases it ran. `architecture` runs `scope` and `plan` in `flow-code`
-and drafts the `arc42` and `tech` folders in `flow-spec`. `qa` runs `verify`. `domain`, `ux`,
-and `docs` draft the `domain`, `design`, and `ai` folders. No phase names `product` or
-`security`, and the checker rejects `bindings["delivery.roles"]` by name.
-
-What held for a role holds for a phase's agent. It is never a dependency, because one missing
-specialist must not demote every skill that names it. A specialist also holds no flow control:
-sequencing, gates, session spawning, and delegation belong to the runner that consults it. See
-[the decision](adr/plugin-boundaries.md).
-
-## Tracker
-
-```meta
-date: 2026-09-03
-```
-
-The work-item system a repository tracks work in — GitHub issues, Jira tickets, Markdown
-chapters, Backlog entries, or a `plugin:skill` provider that reports a step's state off its
-pull request — bound per repository behind one set of operations. It is a
-binding and not a dependency for the same reason a phase's agent is: no repository should end up with Jira installed
-because it enabled the flows.
-
-## Stamp
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/06-runtime-view.md#materializing-a-component", ".devbook/arc42/adr/install.md"]
-```
-
-A component's entry under `components` in `.devbook/config.json`, recording what that plugin
-put in the repository: the plugin version it is on, and every file copied in or marker-fenced
-section written with the hash it had when it landed, computed by the hash rules in devbook's
-reconcile protocol. A component whose install rewrites content
-the repository authored carries three fields more — the contract version, which features it
-adopted, and the [migration](#migration) ledger — and `devbook` is
-[the only one](adr/install.md). One that writes no files stamps its own selection in place of
-the file map. The same file's other top-level keys are the engine's — see
-[Stack Config](05-building-block-view.md#stack-config).
-
-It records what the *repository* has taken on, never who installed what — that is per-user and
-would make the file wrong the moment a second person opened it. A plugin that materializes
-anything ships an `init` and an `update` that write its own entry and touch no other
-component's; `devbook-config:doctor` is the one reader of every entry. A component that
-materializes nothing and ships no `init` has its selection written by hand — `delivery-surface-dashboard`'s
-session-naming words are [the one case](adr/configuration.md) — and the boundary holds
-unchanged: the entry is still that component's alone. How a stamp moves is
-[Materializing a Component](06-runtime-view.md#materializing-a-component).
-
-## Migration
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/08-crosscutting-concepts.md#stamp"]
-```
-
-One breaking change to a plugin's contract, shipped as a folder — `migrations/<contractVersion>-<slug>/` —
-holding a `MIGRATION.md` and an idempotent `migrate.mjs` whose `--check` exits non-zero while
-work remains. The id is immutable once released: a shipped migration is never rewritten, only
-followed by a new one.
-
-Presence in a repository's ledger decides whether a migration runs, never a comparison of
-version numbers, which is what makes re-running one safe. A prose migration note is not a
-migration — it does not run, so it becomes an unbounded manual chore in every consuming
-repository. Which changes owe one is decided once, in `AGENTS.md` under *When a change ships a
-migration*.
-
-## MCP Server
-
-```meta
-related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/flow-engine.md"]
-```
-
-A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
-whichever plugin provides it, so an allowlist that names the server must carry both the
-plugin-namespaced and the bare spelling.
-
-The engine requires none. A repository declares its servers in its own MCP configuration and
-names them per [phase](#phase), in the phase's `mcp` field. A named server is resolved from the
-live tool list at the phase that uses it, the way a surface is. One that does not answer is
-reported once and the phase continues without it, so it costs the phase its grounding, never
-the run. See [the decision](adr/flow-engine.md).
-
-## Layer
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/05-building-block-view.md#level-1-the-plugin-landscape", ".devbook/arc42/adr/plugin-boundaries.md"]
-```
-
-A plugin's position in the dependency order, and the only thing that decides which other
-plugins it may name. A lower layer never names a higher one.
-
-| Layer | Depends on | Example |
-| --- | --- | --- |
-| L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-derived`, `devbook-openspec` |
-| L2b bridge | Two stacks at once, deliberately | none |
-| L3 surface | Neither direction, and never declared: resolved from the live tool list | the four `delivery-surface-*` plugins — a surface is not a layer, as the sentence below says; `devbook-graph` is not one either, ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
-
-The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
-sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
-tool list and no-ops when absent, so nothing may declare one. Every plugin's layer is drawn in
-[chapter 5](05-building-block-view.md#level-1-the-plugin-landscape).
-
-## Extension Namespace
-
-```meta
-date: 2026-09-03
-related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/adr/annotations.md"]
-```
-
-The seam a higher layer stores state through without a release of the layer beneath it: a
-reserved key the lower layer carries through untouched, unvalidated, and namespaced by whoever
-owns it. In `devbook` it is `ext.<plugin>.<key>` in a chapter's `meta` block.
-
-Two rules, and they are the whole value. The owner never adds a field of its own to the schema
-beneath it, because that would trade one fact for a contract bump and a migration in every
-consuming repository. Nobody reads another plugin's keys as if they were schema — an opaque
-namespace two plugins interpret is no longer opaque.
-
-An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
-render as they always did, and mean nothing to anyone. That is what makes the seam safe to
-reserve before anything needs it. It is reserved and unused: the first extension to store
-state through it moved that state into devbook's schema instead, because the fields mirrored
-ones devbook already owned, and contract 38 then moved the review state out of git to the
-hosts ([the annotations record](adr/annotations.md)).
+word for the same thing, the host's word is recorded as an alias and never adopted.
+[Chapter 5](05-building-block-view.md) holds the shapes these concepts take in the repository,
+and this chapter links there rather than restating them.
 
 ## Model
 
@@ -568,11 +107,490 @@ classDiagram
   reached by name at run time and never appears here.
 - An asset belongs to one plugin and one plugin only; the same file is never shipped twice.
   An agent's handoff targets and a skill's `plugin:asset` references are names, not
-  associations — a target that resolves to nothing degrades one stage rather than failing a
+  associations: a target that resolves to nothing degrades one stage rather than failing a
   load.
 - A stamp lives in the consuming repository, not in the plugin, and is written only by the
   plugin's own install skill. It relates to migrations by id presence in its ledger, never by
   comparing versions.
+
+## Marketplace
+
+```meta
+related: [".devbook/arc42/05-building-block-view.md#marketplace-root", ".devbook/arc42/adr/releases.md"]
+```
+
+A repository that offers plugins for installation, identified by the `name` in
+`.claude-plugin/marketplace.json`. That name is the local primary key: a host keys its
+registry, its cache, and every `plugin@marketplace` reference by it. Two marketplaces one user
+has added may therefore not share a name. This repository's marketplace is `jsdotnet-devbook`.
+
+## Plugin
+
+```meta
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
+```
+
+One folder under `plugins/`, holding assets that belong together, installable on its own and
+listed once in the marketplace. It may declare a hard dependency on a plugin in a lower layer,
+which the host enforces and which makes an illegal combination unreachable. It must never
+depend on the agent a phase names, a tracker, or a surface. Those are bound per repository or
+resolved from the live tool list, and a missing one must cost capability, not loading.
+
+## Host
+
+```meta
+```
+
+Also called: client.
+
+A tool that loads a plugin's assets: Claude Code or GitHub Copilot. Hosts read the same files
+and ignore the keys they do not recognise, which is why an asset has one authored copy.
+
+## Agent
+
+```meta
+```
+
+A named persona with its own tool allowlist, as `agents/<role>.agent.md`. Copilot calls it a
+custom agent, Claude a subagent. An agent only Claude may load lives in `runners/` instead and
+is listed in the Claude manifest alone, because Copilot's manifest names agent directories and loads
+everything under `agents/`. Delegation targets live in the body prose, because only one of
+the two hosts reads a `handoffs` key.
+
+## Skill
+
+```meta
+```
+
+A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
+trigger, the sentence a host matches a request against, not a summary of its contents.
+Every skill opens its reply with `<plugin>@<version>`, read from the manifest beside it rather
+than recalled, so the answer names the release that gave it. `.agents/rules/skills.md` says
+why the line is in every skill.
+
+## Plugin Rule
+
+```meta
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
+```
+
+A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
+`rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
+`.agents/rules/` an install writes hold the same names, so a rule referencing a sibling resolves in
+both. Every plugin rule is delivered. No host applies one from inside a plugin. It reaches a
+session only where the plugin's install skill has written it into a repository, with each host's
+wrapper beside it. [Chapter 5](05-building-block-view.md#plugin-folder) draws the delivery. Shared text an asset reads by path is a
+[contract](#contract), not a rule.
+
+## Contract
+
+```meta
+```
+
+Reference an asset points at by path, as `resources/<name>.md`, carrying `name` and
+`description` and no scope of its own. Examples are the engine and surface contracts, the schedule
+catalog contract, and the issue sweep state contract. Only the explicit reference loads it, so
+a contract no skill or agent names is unreachable. It takes the rule budget, because it is the
+same kind of prose, and it stays over that budget by kind. Distinct from a
+[plugin rule](#plugin-rule), which exists to be installed somewhere else.
+
+## Hook
+
+```meta
+related: [".devbook/arc42/adr/hooks.md"]
+```
+
+A host-executed action bound to a session event. The two hosts disagree on what a session-start
+hook may be, so the event, not the intent, decides the form it takes.
+
+## Devbook Folder
+
+```meta
+date: 2026-10-08
+related: [".devbook/arc42/adr/chapter-schema.md"]
+```
+
+One of the five folders the `devbook` convention governs (`arc42`, `domain`, `tech`, `design`,
+`ai`), at `.devbook/<name>/`, holding addressed Markdown **chapters**, each carrying a fenced
+`meta` block. A repository adopts any subset; there is one layout.
+
+The convention's own name is the only noun for these. There is no common-noun synonym, because
+a convention that has a name does not need one. *Knowledge* was that synonym until 2026-09-07,
+and a reader meeting "the knowledge folders" beside `devbook-meta` had to work out that the two
+named one thing. Everything the plugin ships is named `devbook-` for the same
+reason: the old prefix said only which plugin used to own the folder. What `_meta/graph.json`
+derives from their `meta` blocks is the **reference graph**.
+
+A **journey** is one end-to-end walk through the product, written as a `##` chapter typed
+`scenario` in its bounded context's `scenarios.md`. Its `###` headings are its **parts**. It
+sits in the context holding most of the requirements it proves. It is addressed like any
+chapter, `<scenarios file>#<journey>`, so any number of features and requirements point at it.
+
+A **scenario case** is the `#### Scenario:` under a requirement, which may point at a part
+with `Proved by:` instead of spelling out its own steps. The two words stay apart: the journey
+is the walk, the case is one thing a requirement promises.
+
+A journey's runs sit beside its file, in `scenarios/<journey>/`. Profiles and data sets live in
+`.devbook/scenarios/`, which holds no journey. The writing convention lives in
+`devbook-chapter-metadata.md` under *Journeys*. A journey is written in English whatever
+language the other chapters use, because its steps are the test's steps.
+
+A demo's **walkthrough** plays a journey through its screens, and is one of two kinds:
+
+- A **free walkthrough** carries its own step text and takes the slug of the inline scenario
+  case it plays as its id.
+- A **linked walkthrough** keeps its own id, names a part with `part`, and embeds that part's
+  English step text with the page **signature** it was copied at. The demo therefore still opens
+  with nothing fetched.
+
+A requirement whose case is `Proved by:` a part gets every walkthrough linked to that part as a
+derived `demo` entry. A linked walkthrough whose signature is not the page's is stale until
+`/prototype` re-copies its text. The convention is
+`devbook-chapter-metadata.md` under the `demo` field.
+
+## Flow Skill
+
+```meta
+date: 2026-10-05
+related: [".devbook/ai/02-deliver.md#flow-skills", ".devbook/arc42/06-runtime-view.md#a-flow-run", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/flow-engine.md"]
+```
+
+A staged procedure for one kind of change, run start to finish inside one session, ending at
+the personal validation gate. A flow is named for what it changes: `flow-code` for a
+repository's code, and `flow-spec` for a devbook chapter. What one run does with its
+[phases](#phase) is [A Flow Run](06-runtime-view.md#a-flow-run).
+
+Four neighbours share the vocabulary and are not interchangeable with it:
+
+| Prefix | Scope |
+| --- | --- |
+| `flow-` | One session, delegating to subagents. Never to another session. |
+| `phase-` | One [phase](#phase) of a flow, named for its id — `phase-scope`, `phase-implement`, `phase-review`, `phase-verify`. Never invoked directly. |
+| `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
+
+A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
+one scope needs none. `devbook-config` holds `init`, `update`, `doctor`, `report`, `ask`,
+`adoption`, and `local` bare, and the plugin name carries what a prefix would have.
+
+Each prefix names one scope, which is why none of them is called after *orchestration*. That
+word once covered fan-out and single-session staging at once, and the fan-out it described no
+longer ships. `delivery` holds two `flow-*`, for the code and the five devbook folders, since
+[flows belong to delivery](adr/plugin-boundaries.md), and one `phase-*` per phase.
+`delivery-schedule` holds fifteen `schedule-*` beside a bare `init` and `update`.
+
+A plugin takes its subsystem's stem, and the things inside it are named for what they are. So
+`delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
+subsystem, while `flow-code` and `phase-build-test` are the procedures inside them. A surface is
+therefore `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
+a contract other surfaces answer carries the contract word after the stem and the
+implementation after that. The three therefore read as one kind from the marketplace list alone.
+A surface interchangeable with nothing does not: the contract word marks membership.
+`devbook-graph` beside `delivery-surface-canvas` would read as a second implementation of the
+render group, which it is not.
+
+No skill in this marketplace spawns a session. Fan-out across sessions and worktrees was its
+own subsystem and prefix, `fleet-`, until 2026-09-21. The one thing anyone wanted from it was a
+backlog swept, closed, and worked with nobody watching. That turned out to want one session
+and hours rather than five sessions and minutes. It is now the issue sweep in
+[delivery-schedule](building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep), and
+the reason is in [the plugin boundaries record](adr/plugin-boundaries.md).
+
+## Schedule
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+Also called: routine, automation.
+
+A trigger that fires a procedure the stack already ships, as a local routine. The host's
+scheduler starts that session on the maintainer's machine, in the repository's checkout, with no
+memory of a previous run. A schedule holds a cadence, a target skill, the plugins that skill
+needs, and a prompt self-contained enough to run it with nobody watching. A schedule is a trigger
+and never a procedure: the `schedule-*` entry point is what runs, and the schedule is what asks.
+
+Both hosts ship the capability under their own name: **Routines** in Claude Code,
+**Automations** in the GitHub Copilot app. Neither word is adopted, because adopting one would
+name a host; *schedule* is the term and both are aliases of it.
+
+Four words carry the shape:
+
+- **Entry point:** a `schedule-*` skill that picks its own input, so it needs no person to hand
+  it one.
+- **Catalog:** the set of schedule files a plugin ships.
+- **Preamble:** the unattended rules every prompt starts with, stated once.
+- **Scheduler:** whatever the live session exposes that turns a name, a cron expression, a
+  repository, and a prompt into a scheduled session. It is resolved by capability, and absent is
+  a normal outcome.
+
+A schedule names an entry point or a read-and-report skill, never a
+[flow](#flow-skill): a flow ends at a gate, and an unattended run parks where a gate would be.
+
+## Phase
+
+```meta
+date: 2026-10-05
+related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/06-runtime-view.md#a-flow-run", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config"]
+```
+
+One step of a flow, with a stable id, and the unit a repository configures. Each phase is one
+skill, `phase-<id>`, and one entry per flow in the `phases` map of the
+[stack config](05-building-block-view.md#stack-config). The list is closed and declared by the
+engine: a repository chooses who runs a phase and how, never what the phases are. A repository
+that needs another shape writes a repo-native `flow-*` skill, which declares its own phase ids
+and still reuses the phases.
+
+| Field | Says |
+| --- | --- |
+| `agent` | Who runs the phase: a `plugin:agent` or a `repo:` agent, or `null` to run it inline |
+| `skill` | The procedure the agent follows. Absent, the phase's own `phase-<id>` skill |
+| `model`, `effort` | What it runs on. A committed value is the team's default; an overlay overrides it field by field |
+| `mcp` | The MCP servers the phase uses, resolved from the live tool list |
+| `before`, `after` | Chores, run in declared order: side effects and a report, never a change to the outcome |
+
+Each field resolves on its own, the most specific key first and then the session, so `{}` is a
+complete entry. A key may carry a qualifier: the folder on `drafting` in `flow-spec`, or an
+area on `implement`. A chore may declare itself required and stop the run when it fails; it
+still may not rewrite a phase's result or stand in for a gate. A few phases take options of
+their own, such as `phase-verify.app` and `phase-report-back.targets`.
+
+The kind of change never selects phases. It changes what happens inside `implement` and how
+deep `verify` goes, and only `plan` is limited to a kind, `create`. Personal Validation and the
+ready check take no entry: the first always runs inline with the runner, and the second decides
+from what the other phases recorded.
+
+A phase whose configured effort overrides its skill's own default runs on Claude inside one of
+the `runner-<effort>` agents, because a subagent call can set a model but not an effort. The
+runner keeps the specialist's instructions, drops its tool list, and carries none at all, which
+the asset checker allows for the runner plugin's agents only. Copilot has no runner and runs
+that phase on the session's effort.
+
+## Gate
+
+```meta
+date: 2026-10-05
+related: [".devbook/arc42/08-crosscutting-concepts.md#phase"]
+```
+
+A human checkpoint attached to a [phase](#phase), before or after it:
+`{ "at": "scope", "when": "after" }`. It presents that phase's output and asks a question with
+three answers: *approve* continues, *revise* re-runs the phase carrying the human's notes, and
+*decline* blocks the stage, never a silent skip.
+
+Configuration may add a gate anywhere and may never remove one or hand one to a plugin. That
+asymmetry makes gates safe: adding a checkpoint can only make a flow more conservative. Personal Validation is the mandatory instance of the same pattern, not a second
+mechanism. An unattended run parks at a blocking gate with a handoff brief; it never waits, and
+it never self-approves.
+
+## Surface
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
+```
+
+Where work becomes visible or recorded, and nothing else. A surface is any installed
+`delivery-surface-*` plugin: an MCP server under that name, or a host canvas. It implements one
+capability split by operation group (lifecycle, render, export), because an implementation may
+answer only part of it.
+
+A surface is never a dependency in either direction: the thing being rendered knows no surface
+exists, and the surface knows nothing about what produced its input. Whichever tool opens it
+resolves it at runtime from the live tool list, by its server name, in the order
+`bindings["delivery.surface"]` gives. Every lifecycle surface that opens records the run, and
+render and export go to the first that answers. **Absence is a normal outcome:**
+the run produces its file artifacts, says so once, and continues. It costs a view, never a
+capability.
+
+Four ship here, and the engine names none of them:
+
+- `delivery-surface-dashboard`: all three groups.
+- `delivery-surface-canvas`: render only.
+- `delivery-surface-collector`: lifecycle and export only.
+- `delivery-surface-backlog`: lifecycle, by forwarding to the Backlog desktop app. It answers
+  `unavailable` at open while the app is closed, so the run continues on the others.
+
+Each declares exactly the tool names its groups name and nothing more, which makes one
+substitutable for another. The table is in [chapter 5](05-building-block-view.md#surface-plugins),
+the reason in [the decision](adr/surfaces.md).
+
+A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
+nothing else, so its two operations arrive as canvas actions rather than namespaced tools.
+Canvas actions are therefore matched by operation name, while a server is matched by its name.
+
+`devbook-graph` ships in `devbook-derived`, which declares `devbook`, and loads devbook's checker
+modules from their materialized path at runtime. It renders the reference graph rebuilt from the
+chapters on open, never from `_meta/`. It opens a single chapter beside its parsed `meta` block in
+a second canvas, `devbook-chapter`. It answers no operation group and substitutes for nothing, so
+it takes devbook's stem and the thing it draws rather than the surface word, per the
+[naming rule](#flow-skill). It reaches devbook's modules through the path devbook's install
+materializes rather than through a relative import, the shape
+[the surfaces record](adr/surfaces.md) waited for.
+
+## Host Slot
+
+```meta
+date: 2026-09-23
+related: [".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/05-building-block-view.md#host-slots"]
+```
+
+A name a shared asset reads instead of a host's own file: `repo-instructions`,
+`model-override`, `stage-delegation`, `surface`, `pr-lane`, `session-id`. A slot is
+bound, never branched: an asset that carries an if-this-host clause has not used a slot.
+
+Behavioural divergence binds as a capability rather than as a host. `stage-delegation` asks
+whether subagents exist and `pr-lane` whether the CLI is present, so neither re-diverges the
+moment one host gains a feature.
+
+The set is closed and every slot has a documented unbound behaviour, so unbound is a resting
+state rather than a gap. No plugin binds a slot: a repository sets one under
+`bindings["delivery.slots"]`, the live session answers it, or the default stands. The table is
+in [chapter 5](05-building-block-view.md#host-slots).
+
+## Role
+
+```meta
+date: 2026-10-05
+related: [".devbook/arc42/08-crosscutting-concepts.md#agent", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+Retired as a binding: the specialist a flow consults is now the `agent` of a [phase](#phase).
+A role was a specialist a flow consulted by name (`architecture`, `qa`, `domain`, `ux`,
+`product`, `docs`, `security`), bound to a plugin under `bindings["delivery.roles"]`. Each
+became the agent of the phases it ran:
+
+- `architecture` runs `scope` and `plan` in `flow-code` and drafts the `arc42` and `tech` folders
+  in `flow-spec`.
+- `qa` runs `verify`.
+- `domain`, `ux`, and `docs` draft the `domain`, `design`, and `ai` folders.
+
+No phase names `product` or `security`, and the checker rejects `bindings["delivery.roles"]` by
+name.
+
+What held for a role holds for a phase's agent. It is never a dependency, because one missing
+specialist must not demote every skill that names it. A specialist also holds no flow control:
+sequencing, gates, session spawning, and delegation belong to the runner that consults it. See
+[the decision](adr/plugin-boundaries.md).
+
+## Tracker
+
+```meta
+date: 2026-09-03
+```
+
+The work-item system a repository tracks work in, bound per repository behind one set of
+operations: GitHub issues, Jira tickets, Markdown chapters, Backlog entries, or a `plugin:skill`
+provider that reports a step's state off its pull request. It is a binding and not a dependency
+for the same reason a phase's agent is: no repository should end up with Jira installed because
+it enabled the flows.
+
+## Stamp
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/06-runtime-view.md#materializing-a-component", ".devbook/arc42/adr/install.md"]
+```
+
+A component's entry under `components` in `.devbook/config.json`, recording what that plugin
+put in the repository. It holds the plugin version it is on, and every file copied in or marker-fenced
+section written with the hash it had when it landed. Devbook's reconcile protocol sets the hash
+rules.
+
+A component whose install rewrites content the repository authored carries three fields
+more: the contract version, which features it adopted, and the [migration](#migration) ledger.
+`devbook` is [the only one](adr/install.md). One that writes no files stamps its own selection in
+place of the file map. The same file's other top-level keys are the engine's, per
+[Stack Config](05-building-block-view.md#stack-config).
+
+It records what the *repository* has taken on, never who installed what. That is per-user and
+would make the file wrong the moment a second person opened it. A plugin that materializes
+anything ships an `init` and an `update` that write its own entry and touch no other
+component's. `devbook-config:doctor` is the one reader of every entry. A component that
+materializes nothing and ships no `init` has its selection written by hand, and
+`delivery-surface-dashboard`'s session-naming words are [the one case](adr/configuration.md). The
+boundary holds unchanged: the entry is still that component's alone. How a stamp moves is
+[Materializing a Component](06-runtime-view.md#materializing-a-component).
+
+## Migration
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/08-crosscutting-concepts.md#stamp"]
+```
+
+One breaking change to a plugin's contract, shipped as a folder, `migrations/<contractVersion>-<slug>/`,
+holding a `MIGRATION.md` and an idempotent `migrate.mjs` whose `--check` exits non-zero while
+work remains. The id is immutable once released: a shipped migration is never rewritten, only
+followed by a new one.
+
+Presence in a repository's ledger decides whether a migration runs, never a comparison of
+version numbers, which is what makes re-running one safe. A prose migration note is not a
+migration: it does not run, so it becomes an unbounded manual chore in every consuming
+repository. Which changes owe one is decided once, in `AGENTS.md` under *When a change ships a
+migration*.
+
+## MCP Server
+
+```meta
+related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/flow-engine.md"]
+```
+
+A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
+whichever plugin provides it, so an allowlist that names the server must carry both the
+plugin-namespaced and the bare spelling.
+
+The engine requires none. A repository declares its servers in its own MCP configuration and
+names them per [phase](#phase), in the phase's `mcp` field. A named server is resolved from the
+live tool list at the phase that uses it, the way a surface is. One that does not answer is
+reported once and the phase continues without it, so it costs the phase its grounding, never
+the run. See [the decision](adr/flow-engine.md).
+
+## Layer
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/05-building-block-view.md#level-1-the-plugin-landscape", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+A plugin's position in the dependency order, and the only thing that decides which other
+plugins it may name. A lower layer never names a higher one.
+
+| Layer | Depends on | Example |
+| --- | --- | --- |
+| L0 foundation | Nothing. Works with only itself installed | `devbook` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-openspec` |
+| L2b bridge | Two stacks at once, deliberately | none |
+| L3 surface | Neither direction, and never declared: resolved from the live tool list | the four `delivery-surface-*` plugins |
+
+The layer is not a field in any manifest: it is what the `dependencies` array says, read as a
+sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
+tool list and no-ops when absent, so nothing may declare one. `devbook-graph` is not one either:
+it ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files. Every plugin's layer is drawn in
+[chapter 5](05-building-block-view.md#level-1-the-plugin-landscape).
+
+## Extension Namespace
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/adr/annotations.md"]
+```
+
+The seam a higher layer stores state through without a release of the layer beneath it. It is a
+reserved key the lower layer carries through untouched, unvalidated, and namespaced by whoever
+owns it. In `devbook` it is `ext.<plugin>.<key>` in a chapter's `meta` block.
+
+Two rules are the whole value. The owner never adds a field of its own to the schema
+beneath it. That would trade one fact for a contract bump and a migration in every
+consuming repository. Nobody reads another plugin's keys as if they were schema, because an opaque
+namespace two plugins interpret is no longer opaque.
+
+An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
+render as they always did, and mean nothing to anyone. That makes the seam safe to
+reserve before anything needs it. It is reserved and unused. The first extension to store
+state through it moved that state into devbook's schema instead, because the fields mirrored
+ones devbook already owned. Contract 38 then moved the review state out of git to the
+hosts ([the annotations record](adr/annotations.md)).
 
 ## Published Languages
 
@@ -588,7 +606,6 @@ What one block publishes and others conform to without either side declaring the
 | The checker's CLI — `--check`, `--print`, `--write`, `--scope` | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md)'s refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
 | The procedure goal — one sentence per `run`, `capture`, `diagnose`, `estimate`, `prototype` that holds whatever the body says | [devbook](building-blocks/devbook-procedures.md#goal) | [delivery](building-blocks/delivery.md)'s `verify` phase, and any session invoking the skill by name | The `goal` field of each seed, rendered into the managed wrapper per host |
 | The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `naming.json`, `scenarios.json` and their `schemaVersion` | [devbook-derived](building-blocks/devbook-derived.md) | The Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
-
 | The decision contract `devbook.decision@1` — the state of a change proposal, a decision record, and a debt record, a proposal's approval and acceptance over its fingerprint, and the review notes on a chapter address | [devbook](building-blocks/devbook.md) | spec-manager and the Backlog app, which answer it; `devbook:chapter-review`, which posts its notes through it; and `devbook-openspec`, which reads a change's acceptance through it | `resources/decision.md`; the fingerprint is `devbook.chapter.fingerprint@1`, computed by `tools/devbook-meta/chapter-hash.mjs` |
 | The behaviour headings — `### Requirement:` with its SHALL sentence and `#### Scenario:` cases in `requirements.md`, `### Invariant:` with its claim, rejection code, and `Enforced at:` line and no scenario in the invariants subpage of a domain page, `domain.invariants.md` or `domain.<name>.invariants.md` | [devbook](building-blocks/devbook.md) | `capture-specs`, `apply-change`, `verify-change`, and any tool that reads OpenSpec's requirement blocks | `rules/devbook-domain.md`, materialized into a repository |
 | The capture plan's delta markers — `ADDED`, `MODIFIED`, `REMOVED` by heading | [devbook](building-blocks/devbook.md) | The person carrying a plan into a folder, and any bridge that carries one across | `assets/code-sync-protocol.md` → *The capture plan* |
@@ -607,8 +624,8 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08
 ```
 
 - **A lower layer never names a higher one.** The `dependencies` array is the whole statement
-  of the [layer](#layer) order, and a block that would have to name something above it has
-  found a published language it should be conforming to instead.
+  of the [layer](#layer) order. A block that would have to name something above it has found a
+  published language it should be conforming to instead.
 - **A phase's agent, a tracker, and a surface are bound per repository, never declared.** They are how a
   block reaches capability it does not own without acquiring a dependency on it, and a
   missing one costs capability rather than a load.
@@ -618,9 +635,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08
 - **Nobody writes another block's state.** One component's stamp, another block's `ext`
   namespace, and the engine's config keys each have exactly one writer.
 - **Two blocks never share a term with two meanings.** Where a host's word differs from this
-  repository's, the host's word is recorded as an alias — an "Also called" line under the
-  concept or glossary entry that owns it — and never adopted: *Routines* and *Automations* both
-  resolve to [Schedule](#schedule).
+  repository's, the host's word is recorded as an "Also called" alias under the concept or
+  glossary entry that owns it, and never adopted. *Routines* and *Automations* both resolve to
+  [Schedule](#schedule).
 
 ## Relationships Between Blocks
 
@@ -630,11 +647,11 @@ related: [".devbook/arc42/05-building-block-view.md#level-1-the-plugin-landscape
 
 [Chapter 5's landscape](05-building-block-view.md#level-1-the-plugin-landscape) draws every
 edge from the plugin that carries the coupling to the plugin it couples to, the manifest's own
-direction. This table reads the same relationships the way DDD does, upstream to downstream —
-from the block that owns a model to the block that has to live with it. Two blocks are core
-because everything else exists to serve them: the delivery engine carries work, and devbook is
-what the work is grounded in and what it writes back to. The four surfaces are generic on
-purpose — they answer one published contract and are interchangeable — and the rest are
+direction. This table reads the same relationships the way Domain-Driven Design (DDD) does, upstream to
+downstream: from the block that owns a model to the block that has to live with it. Two blocks
+are core because everything else exists to serve them. The delivery engine carries work, and
+devbook is what the work is grounded in and what it writes back to. The four surfaces are generic
+on purpose, because they answer one published contract and are interchangeable. The rest are
 supporting.
 
 | Upstream | Downstream | Pattern | Declared |
@@ -645,14 +662,14 @@ supporting.
 | [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `/opsx:apply` builds the step |
 | [devbook](building-blocks/devbook-procedures.md#procedure), for the procedures | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
-| [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
+| [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | Open Host Service + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
 | [devbook-derived](building-blocks/devbook-derived.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-devbook-validate` refreshes where the script exists and skips where it does not |
 | [devbook](building-blocks/devbook.md) | [delivery](building-blocks/delivery.md) | **Undeclared** | No, and it should be — see [debt record 4](tdr/4-delivery-depends-on-devbook.md) |
 | every block | [devbook-config](building-blocks/devbook-config.md) | Conformist, read-only | No, deliberately — it names every plugin and depends on none |
 | the two hosts | every block | Conformist | Not declarable; the host decides what loads |
 
-The undeclared row is the one to read twice. `delivery`'s `flow-spec` is named for devbook's
+In the undeclared row, `delivery`'s `flow-spec` is named for devbook's
 folders and expects every chapter to carry devbook's `meta` block, while both manifests say
 nothing. It is recorded as debt rather than drawn as a dependency, because declaring it would
 demote every one of the engine's skills wherever devbook is absent.
@@ -674,13 +691,13 @@ and are conformed to; the repositories that adopt a plugin sit outside it and ar
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | Claude Code Plugin API | Conformist | Files read at load: `.claude-plugin/marketplace.json`, `.claude-plugin/plugin.json`, `skills/`, `hooks/hooks.json` | The manifest schema `claude plugin validate --strict` enforces | The host decides what loads; the kernel has no say in the shape and writes to it. |
-| Copilot Plugin API | Conformist | Files read at load: `.github/plugin/plugin.json`, `hooks.json`, `applyTo` globs, `handoffs` | The manifest and frontmatter shapes that host documents | Same host relationship, second reader. Both hosts ignoring unknown keys is what lets one file serve both. |
+| Copilot Plugin API | Conformist | Files read at load: `.github/plugin/plugin.json`, `hooks.json`, `applyTo` globs, `handoffs` | The manifest and frontmatter shapes that host documents | Same relationship, second reader. Both hosts ignore unknown keys, which lets one file serve both. |
 
 Both rows are Conformist by choice: there is no anti-corruption layer between an asset and its
-host because the asset *is* the host's format. The cost is paid in the authored file — see
-[the hosts record](adr/hosts.md). Nothing here depends on a host's runtime behaviour — how it
-ranks a skill, when it applies an instruction — which is what keeps the boundary stated at the
-top of this chapter honest.
+host because the asset *is* the host's format. The authored file pays the cost, per
+[the hosts record](adr/hosts.md). Nothing here depends on a host's runtime behaviour, such as how
+it ranks a skill or when it applies an instruction. That keeps the boundary stated at the top of
+this chapter honest.
 
 ### Inbound
 
@@ -702,27 +719,27 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#agent", ".devbook/arc42/08
 The kernel ships no skill; what it offers is a way of authoring, and each part of it is a thing
 a host or a consuming repository can observe.
 
-**Author an asset.** Write one file that both hosts load — an agent, a skill, an instruction
-file, or a hook. The value is a single copy per asset: nothing to keep two variants of,
-nothing that drifts. Authoring for both hosts means carrying both hosts' tool ids in one
-allowlist, pinning only a model both accept, and restating in prose what one host ignores —
-handoff targets, and the paths of the instruction files a host does not apply by itself
-([the hosts record](adr/hosts.md)). Staying within budget means keeping an asset short enough
-that a model attends to all of it, and saying why in the file when it must be longer: the
-budget triggers a disclosure decision and is not a gate, and `AUTHORING.md` holds the budgets
-and the kinds that are long by nature ([debt record 1](tdr/1-body-budgets-unenforced.md)).
-The path from a written file to a loaded one is
-[Authoring an Asset](06-runtime-view.md#authoring-an-asset).
+**Author an asset.** Write one file that both hosts load: an agent, a skill, an instruction
+file, or a hook. The value is a single copy per asset: no two variants to keep and nothing that
+drifts. Authoring for both hosts means carrying both hosts' tool ids in one allowlist and pinning
+only a model both accept. It also restates in prose what one host ignores: handoff targets, and the paths of the instruction files a host does not apply by itself
+([the hosts record](adr/hosts.md)).
+
+Staying within budget means keeping an asset short enough that a model attends to all of it, and
+saying why in the file when it must be longer. The budget triggers a disclosure decision and is
+not a gate. `AUTHORING.md` holds the budgets and the kinds that are long by nature
+([debt record 1](tdr/1-body-budgets-unenforced.md)). The path from a written file to a loaded one
+is [Authoring an Asset](06-runtime-view.md#authoring-an-asset).
 
 **Package and offer a plugin.** Group assets that belong together into one folder a host can
-install on its own, ship the manifest of every host that can load something in it, declare
-the lower layer it cannot work without so the host makes an illegal combination unreachable,
-and list it once in the marketplace so a host can offer it. Which files, which manifests, and
+install on its own. Ship the manifest of every host that can load something in it. Declare the
+lower layer it cannot work without, so the host makes an illegal combination unreachable. List it
+once in the marketplace so a host can offer it. Which files, which manifests, and
 the one host-only exception are in [chapter 5](05-building-block-view.md#plugin-folder) and
 [Marketplace Root](05-building-block-view.md#marketplace-root).
 
-**Materialize a component.** Copy a plugin's inert payload into a consuming repository, record
-what landed in that repository's [stamp](#stamp), and carry it forward with runnable
+**Materialize a component.** Copy a plugin's inert payload into a consuming repository. Record
+what landed in that repository's [stamp](#stamp). Carry it forward with runnable
 [migrations](#migration) rather than prose notes. What lands is
 [chapter 5, level 2](05-building-block-view.md#level-2-what-lands-in-a-repository); how it
 moves is [Materializing a Component](06-runtime-view.md#materializing-a-component).

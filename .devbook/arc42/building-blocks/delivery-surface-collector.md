@@ -6,18 +6,28 @@ c4: ["marketplace.delivery-surface-collector"]
 code: ["plugins/delivery-surface-collector"]
 ```
 
-A run recorded to disk rather than watched, for unattended sessions. Responsible for one thing:
-that a run nobody watched is still legible afterwards — which stages ran, how many times, what
-a person decided at each gate, what the evidence was, and whether the run was handed off or
-abandoned.
+This block records a run to disk for unattended sessions. It is responsible for one thing: a run
+nobody watched is still legible afterwards:
 
-Inside the block: the run store, the handoff round trip a resumed session depends on, and the
-Markdown report. It answers two of the three capability groups.
+- which stages ran, and how many times
+- what a person decided at each gate
+- what the evidence was
+- whether the run was handed off or abandoned
 
-Outside it: rendering, deliberately, and everything about what produced the run. It declares
-no dependency and names no engine. The kernel vocabulary — surface, capability group, MCP
-server — is [chapter 8](../08-crosscutting-concepts.md)'s; the two terms this block owns,
-headless and unanswered group, are in the [glossary](../12-glossary.md#headless).
+**Owns:**
+
+- the run store
+- the handoff round trip a resumed session depends on
+- the Markdown report
+
+It answers two of the three capability groups.
+
+Rendering, deliberately, and everything about what produced the run lie outside it. It declares
+no dependency and names no engine.
+
+[Chapter 8](../08-crosscutting-concepts.md) owns the kernel vocabulary: surface, capability group,
+MCP server. The two terms this block owns, headless and unanswered group, are in the
+[glossary](../12-glossary.md#headless).
 
 ## Interfaces
 
@@ -25,9 +35,8 @@ headless and unanswered group, are in the [glossary](../12-glossary.md#headless)
 related: [".devbook/arc42/adr/surfaces.md", ".devbook/arc42/08-crosscutting-concepts.md#surface"]
 ```
 
-Two capability groups, and one deliberate absence. It ships no skills — one MCP server over
-stdio, no page, no port, and nothing a person invokes by name. Everything here is about what is
-still true after the session has ended.
+This block answers two capability groups and leaves one deliberately absent. It ships no skills:
+it is one MCP server over stdio with no page and no port, and a person invokes nothing by name.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -44,15 +53,14 @@ absent rather than stubbed.
 related: [".devbook/arc42/building-blocks/delivery-surface-collector.md#run-record"]
 ```
 
-Answer the lifecycle group and keep the result on disk, keyed by worktree, outside the
-repository. Runs survive a session restart and never show up in `git status`.
-
-Keep what outlives the session: stage status, output, and repeat count; the gate decision a
-person returned; QA scenarios and their evidence paths; the handoff marker and its note. Each
-earns its place by answering a question a later reader actually has.
-
-Reattach or refuse: resume a handed-off run and decline an abandoned one. Both look idle by
-every derived signal; the [marker](#handoff-marker) is the only thing that separates them.
+- **Does:** answers the lifecycle group and keeps the result on disk, keyed by worktree, outside
+  the repository.
+- **Why:** runs survive a session restart and never show up in `git status`.
+- **Keeps:** what outlives the session: stage status, output, and repeat count; the gate decision
+  a person returned; QA scenarios and their evidence paths; the handoff marker and its note.
+- **Why:** each answers a question a later reader actually has.
+- **Reattaches or refuses:** resumes a handed-off run and declines an abandoned one. Both look idle
+  by every derived signal, and only the [marker](#handoff-marker) separates them.
 
 ### Answer Nothing for Render
 
@@ -60,12 +68,11 @@ every derived signal; the [marker](#handoff-marker) is the only thing that separ
 related: [".devbook/arc42/12-glossary.md#headless", ".devbook/arc42/12-glossary.md#unanswered-group"]
 ```
 
-Leave the render tool names absent rather than stubbing them. A caller resolves each capability
-group separately, so it finds this one unanswered and renders nowhere — instead of finding a
-stub that pretends to have shown someone something.
-
-`open_dashboard` answers with no URL and says the run is being recorded rather than shown.
-There is nothing to open, and saying so once is the whole behaviour.
+- **Does:** leaves the render tool names absent rather than stubbing them.
+- **Why:** a caller resolves each capability group separately, so it finds this one unanswered and
+  renders nowhere, instead of finding a stub that pretends to have shown someone something.
+- **`open_dashboard`:** answers with no URL and says the run is being recorded rather than shown.
+  Saying so once is the whole behaviour.
 
 ### Report Without Telemetry
 
@@ -73,13 +80,13 @@ There is nothing to open, and saying so once is the whole behaviour.
 related: [".devbook/arc42/building-blocks/delivery-surface-collector.md#report-export"]
 ```
 
-Write the run's Markdown report — prompts, stages, output, QA evidence paths, monitoring
-findings, the handoff note, the summary. Asking for another format still writes Markdown and
-says so, rather than failing a run over a file extension.
-
-No token counts, no per-stage cost, no context gauge. Nothing here observes a session, so those
-numbers would be a column of zeroes reading as a measurement rather than as an absence — and a
-caller must never fill them in by hand.
+- **Does:** writes the run's Markdown report: prompts, stages, output, QA evidence paths, monitoring
+  findings, the handoff note, the summary. Asking for another format still writes Markdown and
+  says so, never failing a run over a file extension.
+- **Never:** token counts, per-stage cost, or a context gauge. A caller must never fill them in by
+  hand.
+- **Why:** nothing here observes a session, so those numbers would be a column of zeroes reading
+  as a measurement rather than as an absence.
 
 ## Structure
 
@@ -87,8 +94,8 @@ caller must never fill them in by hand.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#structure", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-The [dashboard](delivery-surface-dashboard.md#structure)'s model with two things removed, and
-the removals are the content: no viewer, and no telemetry.
+This is the [dashboard](delivery-surface-dashboard.md#structure)'s model without a viewer or
+telemetry, and the removals are the content.
 
 ![delivery-surface-collector's components](c4:delivery-surface-collector)
 
@@ -138,21 +145,21 @@ classDiagram
 ```
 
 - **There is no `Viewer` and no `Telemetry`, and neither is an omission.** The render group's
-  tool names are absent so a caller resolves it unanswered; the telemetry fields are absent
+  tool names are absent so a caller resolves it unanswered. The telemetry fields are absent
   because nothing here observes a session, and a column of zeroes reads as a measurement
   rather than as an absence.
 - **`EvidencePath` is cited and never inlined.** Inlining evidence into a self-contained report
-  is a rendering job. The consequence is that the screenshot has to stay in the worktree that
-  produced it, which is a real cost accepted rather than hidden.
+  is a rendering job. The screenshot therefore has to stay in the worktree that produced it,
+  a real cost accepted rather than hidden.
 - **`HandoffMarker` is the only stored derived-looking thing in the model, and it is stored
-  for a reason.** Idleness is computed on read; the marker cannot be, because "was this handed
+  for a reason.** Idleness is computed on read. The marker cannot be, because "was this handed
   off on purpose" is not visible in any timestamp.
 - **`GateDecision` is recorded so a resumed session can re-run the gate**, not so it can skip
-  it. The record is what makes the resumed session aware there was a decision at all, in a
-  conversation it cannot read.
+  it. The record makes the resumed session aware there was a decision at all, in a conversation
+  it cannot read.
 - **`RunRecord` is fed by a caller this model cannot name**, exactly as in the dashboard. Both
-  are implementations of one published contract, and their models being nearly identical is
-  the evidence that the contract is doing its job.
+  implement one published contract, and their nearly identical models are the evidence that the
+  contract is doing its job.
 
 ### Run Record
 
@@ -162,12 +169,17 @@ related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#run-reco
 
 Also called: run, run store, run file.
 
-One run kept for later rather than shown now: stages with status, output and repeat count,
-gate decisions, QA scenarios with their evidence paths, and the handoff marker. One JSON file
-per run, outside the repository, keyed by worktree path.
+A record keeps one run for later rather than showing it:
 
-The selection is the design. What earns its keep in a session nobody watched is the half that
-outlives the session — which is why lifecycle and export are answered here and render is not.
+- stages with status, output and repeat count
+- gate decisions
+- QA scenarios with their evidence paths
+- the handoff marker
+
+Each run is one JSON file, outside the repository, keyed by worktree path.
+
+The selection is the design. What earns its keep in an unwatched session is the half that
+outlives it, so this block answers lifecycle and export and not render.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -186,12 +198,12 @@ outlives the session — which is why lifecycle and export are answered here and
 
 The record owns two entities besides the [Handoff Marker](#handoff-marker):
 
-- **Stage Record** (entity) — one stage as recorded: name, status, output, links, and how many
-  times it finished. The repeat count matters more here than anywhere else — a stage repeated
+- **Stage Record** (entity) is one stage as recorded: name, status, output, links, and how many
+  times it finished. The repeat count matters more here than anywhere else. A stage repeated
   after a revise decision is the one thing a report written days later cannot reconstruct
   from anything else.
-- **QA Scenario** (entity) — one validation scenario with its status and evidence paths. The
-  report cites the path; the screenshot stays in the worktree that produced it, which is the
+- **QA Scenario** (entity) is one validation scenario with its status and evidence paths. The
+  report cites the path, and the screenshot stays in the worktree that produced it. That is the
   trade this surface makes by writing Markdown and not HTML.
 
 ### Handoff Marker
@@ -200,12 +212,12 @@ The record owns two entities besides the [Handoff Marker](#handoff-marker):
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#handoff-marker", ".devbook/arc42/12-glossary.md#park", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
-The note a deliberately handed-off run leaves behind, and the difference between a run to
-reattach to and one to close. A parked run and an abandoned run are idle by identical signals;
-only one carries this.
+This is the note a deliberately handed-off run leaves behind, and the difference between a run
+to reattach to and one to close. A parked run and an abandoned run are idle by identical
+signals, and only one carries this.
 
-That distinction is exactly what `start_run` needs in order to resume one and refuse the other,
-and it is the reason a marker is a stored value while idleness is derived.
+`start_run` needs that distinction to resume one and refuse the other, and it is the reason a
+marker is a stored value while idleness is derived.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -218,14 +230,20 @@ and it is the reason a marker is a stored value while idleness is derived.
 related: [".devbook/arc42/12-glossary.md#headless"]
 ```
 
-Writes the run's report from what was recorded: prompt history, the stage table, each stage's
-output and links, QA scenarios with their evidence paths, monitoring findings, the handoff
-note, and the summary.
+It writes the run's report from what was recorded:
 
-Command-invoked, at the end of a run or long after it. **Markdown, and only Markdown.** A
+- prompt history
+- the stage table
+- each stage's output and links
+- QA scenarios with their evidence paths
+- monitoring findings
+- the handoff note
+- the summary
+
+It runs on command, at the end of a run or long after. **It writes only Markdown.** A
 self-contained HTML report with evidence inlined is a rendering job, and rendering is the half
-this surface does not answer — so asking for another format still writes Markdown and says so
-in the result rather than failing the run over a file extension.
+this surface does not answer. Asking for another format still writes Markdown and says so in the
+result, never failing the run over a file extension.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -240,15 +258,10 @@ in the result rather than failing the run over a file extension.
 related: [".devbook/arc42/building-blocks/delivery-surface-collector.md#run-record", ".devbook/arc42/building-blocks/delivery-surface-collector.md#handoff-marker"]
 ```
 
-The one flow that matters here: a run recorded, left, and picked up again — and what a caller
-finds when it resolves this surface.
-
 ### A Record's Life
 
 ```meta
 ```
-
-Three ends, and the difference between two of them is a single stored value.
 
 ```mermaid
 stateDiagram-v2
@@ -266,21 +279,21 @@ stateDiagram-v2
     Reported --> [*]
 ```
 
+A record has three ends, and a single stored value separates two of them.
+
 - **`Idle` and `Parked` look identical to every derived signal.** Only the marker separates
-  them, which is why it is stored where idleness is computed — and why `start_run` can reattach
+  them, which is why it is stored where idleness is computed, and why `start_run` can reattach
   to one and refuse the other.
 - **A reattached run resumes on its stage.** Opening a second record beside a parked run is
-  the duplicate this whole round trip exists to prevent, and it is what the collector's own
-  test drives over stdio the way a host does.
+  the duplicate this whole round trip exists to prevent. The collector's own test drives that
+  over stdio the way a host does.
 - **Every end reports.** A run that finished and exported nothing is a run nobody can read
-  afterwards, which for a surface whose entire purpose is *afterwards* is a total loss.
+  afterwards, a total loss for a surface whose entire purpose is *afterwards*.
 
 ### What a Caller Finds
 
 ```meta
 ```
-
-Two groups answer and one does not, and the one that does not is the interesting half.
 
 ```mermaid
 flowchart LR
@@ -297,7 +310,7 @@ flowchart LR
   two groups honestly rather than three groups badly.
 - **A stub would be worse than an absence.** A render call that returns success without
   showing anyone anything makes the caller believe a person saw something.
-- **`open_dashboard` returning no URL is a normal outcome**, not a degraded one — for a
+- **`open_dashboard` returning no URL is a normal outcome**, not a degraded one. For a
   scheduled or unattended run it is the correct one.
 
 ## Dependencies
@@ -315,7 +328,7 @@ Like every surface here, it declares nothing and nothing declares it.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the lifecycle and export tool names, and deliberately not the render ones | `resources/surface-contract.md`: `delivery.surface.lifecycle@1`, `.export@1` | Declaring exactly the names of the groups it answers is what makes it substitutable for another implementation of those groups. |
+| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the lifecycle and export tool names, and deliberately not the render ones | `resources/surface-contract.md`: `delivery.surface.lifecycle@1`, `.export@1` | Declaring exactly its groups' names keeps it substitutable for another implementation of them. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `mcp/<server>/` | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here. |
 | Model Context Protocol | Conformist | One MCP server over stdio, plain Node, no listening socket | The protocol's own schemas | The transport is how a caller reaches it. There is no page and no port. |
 | The local filesystem, outside the repository | Conformist | One JSON file per run, keyed by worktree path, root overridable | Its own store layout | A run must survive a session restart and must never appear in `git status`. |
@@ -327,23 +340,20 @@ Like every surface here, it declares nothing and nothing declares it.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| Whatever drives a run | Customer-Supplier, this block supplying | Tool names matched by pattern from the live tool list | The two groups it answers | That groups are resolved separately, so the missing render group is read as unanswered rather than as a broken surface. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, this block supplying | Lifecycle calls from an unattended cloud session | The same contract | That a run recorded with nobody watching is readable afterwards — which is the case this implementation exists for. |
+| Whatever drives a run | Customer-Supplier, this block supplying | Tool names matched by pattern from the live tool list | The two groups it answers | Groups resolve separately, so the missing render group reads as unanswered, not as a broken surface. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, this block supplying | Lifecycle calls from an unattended cloud session | The same contract | A run recorded with nobody watching is readable afterwards, the case this implementation exists for. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether this plugin is installed, enabled, and at what version | The marketplace entry and the manifest | Nothing but the name and version. |
 
 The absent render group is a declaration, not a gap. A caller finds it unanswered and renders
-nowhere, rather than finding a stub that pretends to have shown someone something — which is
-the reason [the surfaces record](../adr/surfaces.md) forbids declaring a name you do not
-implement.
+nowhere, rather than finding a stub that pretends to have shown someone something. That is why
+[the surfaces record](../adr/surfaces.md) forbids declaring a name you do not implement.
 
-No telemetry dependency, and therefore no telemetry. Nothing here observes a session, so there
-is no hook, no host-specific half, and no numbers — which also means this block works
-identically on both hosts, where the [dashboard](delivery-surface-dashboard.md#telemetry)'s
-capture does not.
+This block has no telemetry dependency, and therefore no telemetry. Nothing here observes a
+session, so it has no hook, host-specific half, or numbers. It therefore works identically on
+both hosts, where the [dashboard](delivery-surface-dashboard.md#telemetry)'s capture does not.
 
-No page, no port, no authentication question. The whole HTTP surface the dashboard has to
-reason about does not exist here, which is most of why this implementation is the right one
-for a run nobody is watching.
+This block has no page, no port, and no authentication question. The whole HTTP surface the
+dashboard has to reason about does not exist here. That is most of why this implementation is
+the right one for a run nobody is watching.
 
-A surface is never a dependency in either direction. Nothing declares one, and none answering
-is a normal outcome.
+A surface is never a dependency in either direction, and none answering is a normal outcome.

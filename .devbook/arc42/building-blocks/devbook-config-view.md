@@ -6,25 +6,34 @@ c4: ["marketplace.devbook-config-view"]
 code: ["plugins/devbook-config-view"]
 ```
 
-The stack's rollout across one machine, drawn inside Claude Code itself. Responsible for one
-thing: that the person in the session sees, for every repository on this machine that has
-adopted the stack, which version each component is stamped at and how far that is from the
-newest, and how any one of them is wired, without opening a terminal in each.
+The stack's rollout across one machine, drawn inside Claude Code itself. It is responsible for one
+thing: the person in the session sees every repository on this machine that has adopted the stack.
+Each shows which version each component is stamped at, how far that is from the newest, and how it
+is wired. None of that needs a terminal opened in each.
 
-Inside the block: finding the repositories, reading each `.devbook/config.json`, grading each
-stamp against the installed marketplace, flagging the keys the stack retired, deriving how each
-phase runs from its map entry, and drawing the result as a pane. Outside it: writing the config,
-which is [devbook-config](devbook-config.md)'s `init` and `update` and each component's own;
-diagnosing it, which is `devbook-config:doctor`; and resolving a phase for a run, which is the
-flow-runner's. It writes no file, runs no skill, and stamps nothing.
+**Owns:**
 
-It sits beside devbook-config rather than inside it for the reason
-[delivery-run-view](delivery-run-view.md) sits beside delivery: it is function-hook modules,
-which one host loads, and a view is something a person opts into. Inside devbook-config, every
-repository that enables that plugin for its skills would load a pane it never asked for, and the
-plugin whose skills both hosts read would carry a module only one of them can. Apart, it follows
-the viewer test chapter 5 already states for delivery-run-view, so the placement owes no new
-decision.
+- finding the repositories
+- reading each `.devbook/config.json`
+- grading each stamp against the installed marketplace
+- flagging the keys the stack retired
+- deriving how each phase runs from its map entry
+- drawing the result as a pane
+
+| Concern | Owner |
+| --- | --- |
+| Writing the config | [devbook-config](devbook-config.md)'s `init` and `update`, and each component's own |
+| Diagnosing it | `devbook-config:doctor` |
+| Resolving a phase for a run | The flow-runner |
+
+It writes no file, runs no skill, and stamps nothing.
+
+It sits beside devbook-config for the reason [delivery-run-view](delivery-run-view.md) sits beside
+delivery: it is function-hook modules, which one host loads, and a view is something a person opts
+into. Inside devbook-config, every repository that enables that plugin for its skills would load a
+pane it never asked for. The plugin whose skills both hosts read would also carry a module only one
+of them can. Apart, it follows the viewer test chapter 5 states for delivery-run-view, so the
+placement owes no new decision.
 
 ## Interfaces
 
@@ -43,9 +52,9 @@ decision.
 ```meta
 ```
 
-One module, `hooks/register.tsx`, and the state contract it keeps, `types/index.d.ts`.
-
 ![devbook-config-view's components](c4:devbook-config-view)
+
+One module, `hooks/register.tsx`, and the state contract it keeps, `types/index.d.ts`.
 
 ```mermaid
 flowchart LR
@@ -77,7 +86,7 @@ runs a skill, not while the pane is open.
 related: [".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-Declares nothing and is declared by nothing. Its real couplings are to tables it repeats.
+It declares nothing and nothing declares it. Its real couplings are to tables it repeats.
 
 ### Outbound
 
@@ -86,8 +95,8 @@ Declares nothing and is declared by nothing. Its real couplings are to tables it
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook-config](devbook-config.md) | Conformist, read-only | Repeats `scripts/report.mjs`'s stamp-to-plugin map, folded stamps, and retired keys; fills its `doctor` and `update` prompts | None published: the tables in the script | A hooks module reads no other plugin's code. A key the report starts calling retired is missed here until the table is copied. |
-| [delivery](delivery.md) | Conformist, read-only | Repeats the **Runs by default** column of `resources/engine-contract.md` and the resolution rules of `resources/phase-resolution.md` | The engine contract | The map draws what the flow-runner would run; a changed default draws wrong until it is copied. |
+| [devbook-config](devbook-config.md) | Conformist, read-only | Repeats `scripts/report.mjs`'s stamp-to-plugin map, folded stamps, and retired keys; fills its `doctor` and `update` prompts | None published: the tables in the script | A hooks module reads no other plugin's code. A newly retired key is missed here until the table is copied. |
+| [delivery](delivery.md) | Conformist, read-only | Repeats the **Runs by default** column of `resources/engine-contract.md` and the resolution rules of `resources/phase-resolution.md` | The engine contract | The map draws what the flow-runner would run. A changed default draws wrong until copied. |
 | The installed marketplace | Conformist | Reads `.claude-plugin/marketplace.json` where `known_marketplaces.json` places it | Claude Code's marketplace folder | The newest version is what this machine could install, not what is published. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and the Claude manifest alone | [Chapter 5](../05-building-block-view.md#plugin-folder) | Function-hook modules load on one host. |
 | Claude Code function-hook API | Conformist | `hooks/hooks.json` naming `./register.tsx` under `modules`, `types` and `userConfig` in the manifest | The host's module, state, and option shapes | The pane and the prompt box are the host's. |

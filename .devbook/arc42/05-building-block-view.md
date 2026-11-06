@@ -10,10 +10,9 @@ number: 5
 related: [".devbook/arc42/08-crosscutting-concepts.md#marketplace"]
 ```
 
-`.claude-plugin/marketplace.json` is the only file a host reads before installing anything: the
-marketplace `name`, its owner, and one entry per plugin (`name`, `source`, `description`,
-`version`). A plugin folder that is not listed here does not exist as far as a host is
-concerned.
+`.claude-plugin/marketplace.json` is the only file a host reads before installing anything. It
+holds the marketplace `name`, its owner, and one entry per plugin (`name`, `source`,
+`description`, `version`). To a host, a plugin folder not listed here does not exist.
 
 ## Level 1: The Plugin Landscape
 
@@ -22,24 +21,28 @@ date: 2026-10-05
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
-not a manifest field but what each `dependencies` array says, read as a sentence.
+Thirteen plugin folders group by [layer](08-crosscutting-concepts.md#layer), which is what each
+`dependencies` array says, read as a sentence, and not a manifest field.
 
 ![The plugin landscape](c4:plugins)
 
-**Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is
-the manifest's own direction — `devbook-derived` declares `devbook`, so the arrow leaves
-`devbook-derived`. The engine is the one exception the picture shows: it calls whichever
-surface answers, so its arrows leave `delivery` for each surface, while the surface is the side
-that conforms to the published language. The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks)
-in chapter 8 lists the same relationships the other way round, upstream to downstream, because
-that is DDD's convention for model influence. Neither is wrong and they are not
-interchangeable: read this one for what a host enforces, and that one for who has to live with
-whose model. What each plugin owns, exposes, and depends on is its own file under
-[`building-blocks/`](building-blocks/README.md); nothing below restates a block that has one.
-A plugin too large for one file opens its level 2 there as well: delivery's phases and its
-pull-request lane, delivery-schedule's entry points, and devbook's code sync and procedures
-each have a file beside their plugin's.
+**Arrows point from the plugin that carries the coupling to the plugin it couples to**, the
+manifest's own direction: `devbook-derived` declares `devbook`, so the arrow leaves
+`devbook-derived`. The engine is the one exception the picture shows. It calls whichever surface
+answers, so its arrows leave `delivery` for each surface, while the surface conforms to the
+published language.
+
+The [relationships table](08-crosscutting-concepts.md#relationships-between-blocks) in chapter 8
+lists the same relationships the other way round, upstream to downstream, because that is
+Domain-Driven Design's convention for model influence. Neither is wrong, and they are not
+interchangeable. Read this picture for what a host enforces, and that table for who has to live
+with whose model.
+
+What each plugin owns, exposes, and depends on is its own file under
+[`building-blocks/`](building-blocks/README.md); nothing below restates a block that has one. A
+plugin too large for one file opens its level 2 there as well. Delivery's phases and its
+pull-request lane, delivery-schedule's entry points, and devbook's code sync and procedures each
+have a file beside their plugin's.
 
 Each arrow's technology says which kind of coupling it is:
 
@@ -47,29 +50,29 @@ Each arrow's technology says which kind of coupling it is:
 | --- | --- | --- |
 | `dependencies:` and a range | Declared in `dependencies`, enforced by the host | Unreachable: the host installs the lower layer or the plugin is demoted |
 | A capability, `delivery.surface.*@1` | A published language neither side declares | The caller resolves the group unanswered and continues |
-| `undeclared`, `undeclared, TDR 4`, `skill name`, `binding` | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
+| `undeclared`, `undeclared, TDR 4`, `skill name`, `binding` | Real in the assets and in no manifest | Reported and skipped, or in one case nothing warns |
 | `file`, `copied tables` | A viewer reading what another plugin writes, or repeating its tables | The viewer draws stale or nothing, and nothing warns |
-| None, drawn dashed | Implied: only components inside the two plugins are related, such as `delivery-schedule`'s entry point recording its run into `delivery-surface-collector` | As for the component relationship it stands for |
+| None, drawn dashed | Implied: only components inside the two plugins relate, such as `delivery-schedule`'s entry point recording its run into `delivery-surface-collector` | As for the component relationship it stands for |
 
 The undeclared `delivery → devbook` arrow is the one to read twice. `flow-code`, the engine's flow
-for every code change, works with devbook absent, so it is not an L1 extension; it is one stack
-rather than two, so it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
-for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
+for every code change, works with devbook absent, so it is not an L1 extension. It is one stack
+rather than two, so it is not a bridge. Undeclared is the only position left, and an undeclared
+coupling has nowhere for a check to live: see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
 
-The second `delivery → devbook` arrow, labelled `skill name`, is a different kind: the engine names two
-procedures, `run` and `capture`, and the paths they live at — `.claude/skills/run-<name>/SKILL.md`
-for the recipe Claude Code's `run` follows, `.agents/skills/capture.md` — and never the plugin
-that seeds them. A repository may write both by hand and the engine is none
-the wiser; absent, a flow does without and says so. The seam is the skill name, which is why
-the procedures can ship inside `devbook` and the engine can stay capability-free — see
+The second `delivery → devbook` arrow, labelled `skill name`, is a different kind. The engine names
+two procedures, `run` and `capture`, and the paths they live at, and never the plugin that seeds
+them. The paths are `.claude/skills/run-<name>/SKILL.md`, for the recipe Claude Code's `run`
+follows, and `.agents/skills/capture.md`. A repository may write both by hand and the engine is
+none the wiser. Absent, a flow does without and says so. The seam is the skill name, so the
+procedures can ship inside `devbook` and the engine can stay capability-free: see
 [the plugin boundaries record](adr/plugin-boundaries.md).
 
-The `devbook-openspec → delivery` binding runs the same way as the procedures one: the
-bridge ships a `spec` and a `tracker` provider an engine binds by name in `.devbook/config.json`,
-and names the engine nowhere else. Unbound, OpenSpec's own `/opsx:apply` builds each step.
+The `devbook-openspec → delivery` binding runs the same way as the procedures one. The bridge ships
+a `spec` and a `tracker` provider an engine binds by name in `.devbook/config.json`, and names the
+engine nowhere else. Unbound, OpenSpec's own `/opsx:apply` builds each step.
 
-`devbook-config` sits in no layer for the opposite reason: it names every plugin here and
-declares none deliberately, so a plugin it cannot find is a row reading `not installed` rather
+`devbook-config` sits in no layer for the opposite reason. It names every plugin here and
+deliberately declares none, so a plugin it cannot find is a row reading `not installed` rather
 than a failed load.
 
 ## Plugin Folder
@@ -78,7 +81,7 @@ than a failed load.
 related: [".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
 ```
 
-One folder per plugin, holding two manifests and the assets themselves:
+Each plugin is one folder holding two manifests and the assets:
 
 | Path | Read by |
 | --- | --- |
@@ -95,62 +98,60 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 | `README.md`, and any sibling `*.md` at the plugin root | people, never a host |
 
-Documentation for a reader sits at the plugin root beside `README.md` — `delivery`'s
-`FLOW-DIAGRAMS.md`. `resources/` is not that shelf: what goes
-there is reference an asset points at by path, so a file no skill or rule names has no
-way to be loaded and only costs every consumer bytes.
+Documentation for a reader sits at the plugin root beside `README.md`, such as `delivery`'s
+`FLOW-DIAGRAMS.md`. `resources/` is not that shelf: it holds reference an asset points at by
+path. A file there that no skill or rule names has no way to be loaded and only costs every
+consumer bytes.
 
 A plugin ships the manifest of every host that can load something in it, which for almost every
-plugin here is both. `delivery-surface-canvas` is the standing exception: a Copilot canvas extension
-and nothing else, so it carries the Copilot manifest alone and takes no marketplace entry —
-there is nothing in it for Claude to install. `delivery-run-view` and `devbook-config-view` are
-the same test from the other side: function-hook modules and nothing else, so each carries the
-Claude manifest alone and keeps its marketplace entry, which is how Claude installs it. The exception is allowed on that
-test and no other, so a plugin holding one host-only asset still ships both, and the checker
-fails a plugin that has no Copilot manifest yet ships `skills/`, `agents/`, `hooks.json`, or
-`extensions/`.
+plugin here is both. Two cases carry one manifest:
+
+- `delivery-surface-canvas` is a Copilot canvas extension and nothing else. It carries the Copilot
+  manifest alone and takes no marketplace entry, because it holds nothing for Claude to install.
+- `delivery-run-view` and `devbook-config-view` are function-hook modules and nothing else. Each
+  carries the Claude manifest alone and keeps its marketplace entry, which is how Claude installs it.
+
+The exception is allowed on that test and no other. A plugin holding one host-only asset still ships both. The checker fails a plugin that has no Copilot manifest yet ships `skills/`,
+`agents/`, `hooks.json`, or `extensions/`.
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
-files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
-is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
-naming each [layer](08-crosscutting-concepts.md#layer) beneath, one entry for an
-extension and two for a bridge. Copilot's manifest has no verified equivalent, so a dependency
-is declared once, on the Claude side, and stated in prose in the plugin's README for the other
-host.
+files explicitly and omits `skills` and `hooks`, which that host discovers on its own. It alone
+carries `dependencies`, an array of `{ name, version, marketplace }` naming each
+[layer](08-crosscutting-concepts.md#layer) beneath, one entry for an extension and two for a
+bridge. Copilot's manifest has no verified equivalent. So a dependency is declared once, on the
+Claude side, and stated in prose in the plugin's README for the other host.
 
-An `mcp/<server>/` folder holds a server's own tree — its entry point, its modules, its pages,
-and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
+An `mcp/<server>/` folder holds a server's own tree: its entry point, its modules, its pages,
+and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`, and nothing
 else in the plugin has to know the folder exists. `delivery-surface-dashboard` and
-`delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none — see
+`delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none: see
 [the decision](adr/surfaces.md).
 
-An `extensions/<name>/` folder ships a [surface](08-crosscutting-concepts.md#surface)
-the other way: a `copilot-extension.json` naming it, and the module that registers its
-canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
-resolves it at runtime, and a host without an extension mechanism never sees it. `devbook-derived`
-ships one, `devbook-graph`, which renders the reference graph devbook's checker builds. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
-its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
-manifest and no marketplace entry.
+An `extensions/<name>/` folder ships a [surface](08-crosscutting-concepts.md#surface) the other
+way: a `copilot-extension.json` naming it, and the module that registers its canvases. No manifest
+lists it and nothing in the plugin loads it. Whichever tool opens it resolves it at runtime, and a
+host without an extension mechanism never sees it. `devbook-derived` ships one, `devbook-graph`,
+which renders the reference graph devbook's checker builds. `delivery-surface-canvas` ships one
+too, as its only transport: its two viewer pages sit in the extension's own `views/`.
 
-What coupling exists runs one way and at runtime: `devbook-graph` loads devbook's graph,
-outline, and metadata modules from `.devbook/_tools/devbook-meta/`, the path devbook's install
-materializes, which is why the live view, the check, and the committed index cannot disagree.
-Nothing in the checker knows the canvas exists. That runtime load is what let the folder leave
-`devbook` — see [the decision](adr/surfaces.md).
+What coupling exists runs one way and at runtime: `devbook-graph` loads devbook's graph, outline,
+and metadata modules from `.devbook/_tools/devbook-meta/`, the path devbook's install materializes.
+That is why the live view, the check, and the committed index cannot disagree. Nothing in the
+checker knows the canvas exists. That runtime load let the folder leave `devbook`: see
+[the decision](adr/surfaces.md).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
-payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run
-from the plugin root. It is the only one left. The pair of identical
-`generate-diagram-svgs.ps1` scripts that used to sit in two specialist plugins — duplicated
-because neither plugin may name the other — left with them.
+payload copied anywhere. `devbook-config` ships `report.mjs`, which its read-only skills run from
+the plugin root. It is the only one left. The pair of identical `generate-diagram-svgs.ps1` scripts
+that used to sit in two specialist plugins, duplicated because neither plugin may name the other,
+left with them.
 
-A `rules/` folder holds exactly one thing: rules an install writes into a repository. Neither
-host applies one on its own — no manifest here declares a rules key and neither host has a
-rules component — so the folder's whole purpose is delivery. The plugin's
-`init` writes each into a repository as one `.agents/rules/<name>.md` body and a wrapper per
-host, and its `update` refreshes them. `rules/<name>.md` carries name and description and no scope of its own;
-`rules/rules.json` keys each rule by that name and holds its `paths` and the adopted folder
-that pulls it in — see
+A `rules/` folder holds exactly one thing: rules an install writes into a repository. Neither host
+applies one on its own, because no manifest here declares a rules key and neither host has a rules
+component. The folder's whole purpose is delivery. The plugin's `init` writes each rule into a
+repository as one `.agents/rules/<name>.md` body and a wrapper per host, and its `update` refreshes
+them. `rules/<name>.md` carries name and description and no scope of its own. `rules/rules.json`
+keys each rule by that name and holds its `paths` and the adopted folder that pulls it in: see
 [the decision](adr/install.md).
 
 ```mermaid
@@ -165,19 +166,16 @@ flowchart LR
     inst -.->|"all three hash-tracked"| stamp["components.&lt;name&gt; in .devbook/config.json"]
 ```
 
-Three things follow from the shape and none of them is obvious from the folder listing. An
-upgrade refreshes all three copies because the stamp tracks each hash; a copy somebody edited is
-reported and left alone rather than overwritten; and dropping a folder from `adopted` orphans its
-trio rather than deleting it.
+Three things follow from the shape. An upgrade refreshes all three copies because the stamp tracks
+each hash. A copy somebody edited is reported and left alone rather than overwritten. Dropping a
+folder from `adopted` orphans its trio rather than deleting it.
 
-Shared text a skill or an agent reads by path is not that, and lives in `resources/`: the
-`rules/` folder announces a delivery mechanism, and a contract does not use it.
+Shared text a skill or an agent reads by path is not that, and lives in `resources/`. The `rules/` folder announces a delivery mechanism, and a contract does not use it.
 `delivery` and `delivery-schedule` ship no `rules/` folder at all.
 
-The last row is the part no host reads. A plugin that installs something into a repository
-carries it as inert payload — templates, generators, migration scripts — and its own
-`init` is what puts it there and records it in the
-[stamp](08-crosscutting-concepts.md#stamp); its `update` keeps it current.
+The last row is the part no host reads. A plugin that installs something into a repository carries
+it as inert payload: templates, generators, migration scripts. Its own `init` puts it there and
+records it in the [stamp](08-crosscutting-concepts.md#stamp), and its `update` keeps it current.
 
 ## Level 2: What Lands in a Repository
 
@@ -186,8 +184,8 @@ date: 2026-10-05
 related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/08-crosscutting-concepts.md#stamp"]
 ```
 
-The other half of the building block view. Nothing above this line runs in a consuming
-repository; everything below it was put there by an install skill and is tracked by a stamp.
+Nothing above this line runs in a consuming repository. An install skill put everything below it
+there, and a stamp tracks it.
 
 ```mermaid
 flowchart TB
@@ -233,27 +231,26 @@ flowchart TB
     folders --> meta
 ```
 
-The two trios are the same shape with the ownership reversed. A rule body is the plugin's — a
-host-neutral copy the install refreshes while it still hashes to a release — and its wrappers
-are ceremony. A procedure body is the repository's from the first edit onward, and its
-wrappers are where the plugin keeps the one thing it does own: the goal, refreshed on every
-upgrade, so `run` means the same across every repository while how it is done never does.
+The two trios are the same shape with the ownership reversed. A rule body is the plugin's, a
+host-neutral copy the install refreshes while it still hashes to a release, and its wrappers are
+ceremony. A procedure body is the repository's from the first edit onward. Its wrappers are where
+the plugin keeps the one thing it does own, the goal, refreshed on every upgrade. So `run` means
+the same across every repository while how it is done never does.
 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
-the engine-owned keys and stops; each `components.<name>` stamp stays with the component
-that knows what it materialized, which is why
-[`devbook:init` and `devbook:update` did not move](adr/plugin-boundaries.md)
-into the config plugin and why its `init` and `update` end by invoking them.
+the engine-owned keys and stops. Each `components.<name>` stamp stays with the component that knows
+what it materialized. That is why [`devbook:init` and `devbook:update` did not move](adr/plugin-boundaries.md)
+into the config plugin, and why its `init` and `update` end by invoking them.
 
 Three of these boxes are the reason [debt record 4](tdr/4-delivery-depends-on-devbook.md) exists.
-`.devbook/_tools/` holds devbook's checker at the path devbook's `init` writes it to, and
-`flow-spec` is named for devbook's folders and expects every chapter to carry the `meta` block
-devbook's schema defines — one skill wide since the 2026-09-15 fold, which also stopped it
-naming that path — so the engine leans on a plugin it declares no knowledge of.
+`.devbook/_tools/` holds devbook's checker at the path devbook's `init` writes it to. `flow-spec`
+is named for devbook's folders and expects every chapter to carry the `meta` block devbook's schema
+defines. It is one skill wide since the 2026-09-15 fold, which also stopped it naming that path.
+So the engine leans on a plugin it declares no knowledge of.
 
-The dashed edge is the only one an upgrade re-runs wholesale. `_meta/` is written by neither
-component's `init` or `update`: it is derived from the chapters and refreshed by the `devbook-validate` schedule,
-because two branches each touching one chapter both rewrite the same JSON.
+The dashed edge is the only one an upgrade re-runs wholesale. Neither component's `init` or
+`update` writes `_meta/`. It is derived from the chapters and the `devbook-validate` schedule
+refreshes it, because two branches each touching one chapter both rewrite the same JSON.
 
 ## Roles and Services
 
@@ -264,44 +261,49 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08
 
 **No specialist plugin ships here.** Roles and services were the two ways a flow reached a
 specialist, and both are now a [phase](08-crosscutting-concepts.md#phase)'s fields. Where a flow
-needs expertise, a repository names the agent that runs the phase, and the skill it follows, in
-that phase's entry of the `phases` map. The seven specialists that used to live in this
+needs expertise, a repository names the agent and the skill it follows in that phase's entry of the `phases` map. The seven specialists that used to live in this
 marketplace are [published from their own](adr/plugin-boundaries.md).
 
 | Phase | Flow | What its agent or skill brings |
 | --- | --- | --- |
-| `scope` | both | The kind, the acceptance criteria, the seams `implement` tests at, a refactor's target layout, and the chapters every later brief loads |
+| `scope` | both | The kind, acceptance criteria, `implement`'s test seams, a refactor's target layout, and the chapters every later brief loads |
 | `plan` | `flow-code`, `create` only | The design mapped onto the project structure |
-| `implement` | `flow-code` | A change set, tests first at each backend seam, with the work the kind needs: a dependency move, a project's bootstrap and scaffold, a defect's reproducing test. It decides whether the change needs frontend, backend, or both, and runs each area as its own fork |
-| `review` | `flow-code` | One fresh-context review per slice, against the repository's rules, a code-smell baseline, and correctness, with every finding cited. It never edits |
+| `implement` | `flow-code` | A change set, tests first at each backend seam, with the work the kind needs |
+| `review` | `flow-code` | One fresh-context review per slice, with every finding cited |
 | `build-test` | `flow-code` | Build and suite results. Default procedure: `phase-build-test` |
-| `verify` | `flow-code` | A running application, started through the repository's own `run` procedure, and evidence from it through its `capture` procedure. `phase-verify.app` names the provider that starts the application, and the evidence rules hold from `capture-contract.md` whichever provider answers |
-| `spec-check` | `flow-code` | Before the gate, one verdict per item of the specification and the chapters the change set touches. A repository with devbook chapters names `devbook:verify-change` as its skill |
+| `verify` | `flow-code` | A running application, started through the repository's own `run` procedure, and evidence through its `capture` procedure |
+| `spec-check` | `flow-code` | Before the gate, one verdict per item of the specification and the chapters the change set touches |
 | `drafting:<folder>` | `flow-spec` | The chapter, drafted by the agent the folder's entry names |
 | `report-back` | both | The result, sent to every origin, every linked item, and every target in `phase-report-back.targets` |
 
+The work a kind needs is a dependency move, a project's bootstrap and scaffold, or a defect's
+reproducing test. `implement` decides whether the change needs frontend, backend, or both, and runs
+each area as its own fork. `review` checks against the repository's rules, a code-smell baseline, and
+correctness, and never edits. `phase-verify.app` names the provider that starts the application, and
+the evidence rules hold from `capture-contract.md` whichever provider answers. A repository with
+devbook chapters names `devbook:verify-change` as `spec-check`'s skill.
+
 `update-base`, `check-review`, `create-pr`, and `summary` take an entry like the rest, usually
 `{}`. Personal Validation and the ready check take none. An absent `agent` runs the phase as the
-engine contract's *Runs by default* column says — inline, fork, or delegated — and an absent
-`skill` runs the phase's own `phase-<id>` skill.
+engine contract's *Runs by default* column says: inline, fork, or delegated. An absent `skill` runs
+the phase's own `phase-<id>` skill.
 
 A missing specialist costs capability, not a load. `delivery` and `devbook-flows` used to carry
 over two hundred `plugin:asset` references naming the seven. Every one became the point it was
-filling, and every point is now a phase's field, so the engine names no plugin it does not
-publish and there is nothing left to dangle. A repository's `phases` map and the overlays over
-it are the only places a specialist's name appears.
+filling, and every point is now a phase's field. So the engine names no plugin it does not publish,
+and nothing is left to dangle. A repository's `phases` map and the overlays over it are the only
+places a specialist's name appears.
 
 An agent is named as `plugin:agent`, never by its plugin alone. A plugin with several agents
-leaves a bare name nothing to resolve to, and an agent id in a `skill` field resolves to nothing;
+leaves a bare name nothing to resolve to, and an agent id in a `skill` field resolves to nothing.
 `devbook-config:doctor` reports both against what is installed.
 
 `implement` and `review` are two entries on purpose. Review stays its own skill and its own key,
-so it never inherits the implementer's agent or context, and a repository can run it on a
+so it never inherits the implementer's agent or context. A repository can run it on a
 stronger model than its Build & Test.
 
-Nothing here holds flow control either, and that stays true now that no specialist ships from
-this marketplace: sequencing, gates, session spawning, and delegation belong to the runner that
-consults a phase — see [the decision](adr/plugin-boundaries.md).
+Nothing here holds flow control either. Sequencing, gates, session spawning, and delegation belong
+to the runner that consults a phase: see [the decision](adr/plugin-boundaries.md).
 
 ## Surface Plugins
 
@@ -310,30 +312,32 @@ date: 2026-09-03
 related: [".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Four plugins are where a run becomes visible or recorded. None declares a dependency, none
-names the engine, and each is resolved at run time from the live tool list by its
-`delivery-surface-*` server name — so which one answers is decided by what is installed and the
-order `bindings["delivery.surface"]` gives, and none answering is a normal outcome.
+Four plugins are where a run becomes visible or recorded. None declares a dependency or names the
+engine. Each is resolved at run time from the live tool list by its `delivery-surface-*` server
+name. What is installed and the order `bindings["delivery.surface"]` gives decide which one answers,
+and none answering is a normal outcome.
 
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |
 | `delivery-surface-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
-| `delivery-surface-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
+| `delivery-surface-canvas` | no | yes | no | The same two viewers as two Copilot canvases; with no MCP server, it answers on that host only |
 | `delivery-surface-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
-| `delivery-surface-backlog` | yes | no | once Backlog lists it | A stdio MCP server forwarding to the Backlog desktop app's own endpoint; the run lives in the app, and a closed app answers `unavailable` at open |
+| `delivery-surface-backlog` | yes | no | once Backlog lists it | A stdio MCP server forwarding to the Backlog desktop app's own endpoint; the run lives in the app |
 
-Each declares exactly the tool names its groups name and nothing more, which is what makes one
-substitutable for another. `delivery-surface-dashboard` is also the only one that captures anything by
-itself: its hooks fold tool calls, sub-agent use, and token usage into the run, so the numbers
-in its panels are measured rather than self-reported.
+A closed Backlog app answers `unavailable` at open. Each plugin declares exactly the tool names its
+groups name and nothing more, which makes one substitutable for another.
+`delivery-surface-dashboard` is also the only one that captures anything by itself: its hooks fold
+tool calls, sub-agent use, and token usage into the run, so its panels' numbers are measured rather
+than self-reported.
 
-That capture is Claude-only, and structurally so rather than by omission. It ships
+That capture is Claude-only, structurally rather than by omission. The plugin ships
 `hooks/hooks.json` and no root `hooks.json`, because the hook reads the session transcript and
-writes the run store — work a Copilot `type: prompt` hook cannot do. So the substitutability the
-table describes holds per capability group and not per host: a Copilot run bound to this plugin
-through the repository's own MCP configuration gets the same lifecycle tools and the same panels, with the telemetry figures absent rather than
-wrong. Nothing in the contract names telemetry, which is why this costs a column and not a
-group.
+writes the run store. A Copilot `type: prompt` hook cannot do that.
+
+So the substitutability the
+table describes holds per capability group and not per host. A Copilot run can bind this plugin through the repository's own MCP configuration. It gets the same lifecycle tools and the same panels,
+with the telemetry figures absent rather than wrong. Nothing in the contract names telemetry, which
+is why this costs a column and not a group.
 
 ## Host Slots
 
@@ -343,10 +347,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc4
 ```
 
 `delivery` declares a closed set of six names a shared asset reads instead of a host's own
-file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
-[deleted](adr/hosts.md), and nowhere in the stack is a
-host's own file, path, or capability named now — save the `session-id` token and the runner's
-browser-pane tool, which [stand on purpose](adr/hosts.md).
+file. **No plugin binds them.** The two that did, `claude-desktop` and `copilot-app`, are
+[deleted](adr/hosts.md). The stack now names no host's own file, path, or capability, save the
+`session-id` token and the runner's browser-pane tool, which [stand on purpose](adr/hosts.md).
 
 | Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |
@@ -358,17 +361,21 @@ browser-pane tool, which [stand on purpose](adr/hosts.md).
 | `session-id` | the host's substitution into skill content | `start_run` carries no `sessionId` |
 
 The first three are host facts a repository can state. `stage-delegation` and `surface` are
-capability answers resolved at run time, which is what keeps two hosts from re-diverging the
-moment one gains what the other has. `model-override` answers one question only: where a
-1.13.0 `model-selection.md` is left over, so `devbook-config:local` can convert it into overlay
-`phases` entries. Phase resolution never reads it — a phase's model is a field of its `phases`
-entry, committed as the team's default and overridden per machine in an overlay. `session-id` is answered by the host alone: Claude Code
-substitutes `${CLAUDE_SESSION_ID}` in skill content, so each skill that calls `start_run`
-carries that token verbatim, and Copilot CLI substitutes nothing and hands its session id only
-to hooks — a token still reading as a placeholder is the unbound case.
+capability answers resolved at run time, which keeps two hosts from re-diverging the moment one
+gains what the other has.
 
-Unbound is now the resting state of the whole table, and the table is what keeps that visible
-rather than silent.
+`model-override` answers one question only: where a 1.13.0 `model-selection.md` is left over, so
+`devbook-config:local` can convert it into overlay `phases` entries. Phase resolution never reads
+it. A phase's model is a field of its `phases` entry, committed as the team's default and overridden
+per machine in an overlay.
+
+`session-id` is answered by the host alone. Claude Code substitutes `${CLAUDE_SESSION_ID}` in skill
+content, so each skill that calls `start_run` carries that token verbatim. Copilot CLI substitutes
+nothing and hands its session id only to hooks. A token still reading as a placeholder is the
+unbound case.
+
+Unbound is now the resting state of the whole table, and the table keeps that visible rather than
+silent.
 
 ## Config Plugin
 
@@ -379,51 +386,57 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08
 
 `devbook-config` is the one plugin whose subject is the marketplace rather than a unit of work.
 It owns the repository's [stack config](#stack-config) and answers *what is this, what have I
-got, and how is this repository wired* — the only place those questions are answered together,
+got, and how is this repository wired*. It is the only place those questions are answered together,
 because no other plugin is allowed to name every plugin.
 
 | Skill | Writes |
 | --- | --- |
 | `init` | The engine-owned keys of a repository's stack config, for the first time, before any component initializes itself |
 | `update` | The same keys, moved forward, after each component reconciled itself |
-| `doctor` | Nothing. It reads every component's stamp against the disk, outstanding migrations, and the AGENTS.md sections, and names the `update` that fixes each finding |
-| `report` | Nothing. It prints the setup report for the repository as it stands — versions, scopes, what is adopted and bound, procedures, routines, overlays, and what `doctor` still finds — and `init` and `update` close on it |
+| `doctor` | Nothing. It reads every stamp against the disk, outstanding migrations, and the AGENTS.md sections, and names the `update` that fixes each finding |
+| `report` | Nothing. It prints the setup report for the repository as it stands, and `init` and `update` close on it |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
-| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md`. Never the committed config |
+| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md), and `AGENTS.local.md`. Never the committed config |
 
-The seven take no prefix. It is named `devbook-config` for the file it writes,
+The setup report covers versions, scopes, what is adopted and bound, procedures, routines, overlays,
+and what `doctor` still finds. Overlays at the user or repository layer carry the
+agent, model, and effort this person sets for a phase.
+
+The seven take no prefix. The plugin is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
 `devbook` included.
 
-`scripts/report.mjs` is the read-only half, run in place from the plugin root: it reads
-the catalog in both the working tree and the host's clone, the host's installed-plugin state,
-the three settings layers merged nearest-last, the stack config, the devbook folders in both
-layouts, and the engine's own `skills/` folder. A clone older than the source is why "already
-latest" is usually wrong, so the report prints both and the commit behind each.
+`scripts/report.mjs` is the read-only half, run in place from the plugin root. It reads:
 
-`devbook-config:adoption` is the second reader, and it stops one step earlier than the report does. The
-derivable half of `ai/` — which plugins are installed and enabled, which `flow-*` and
-`schedule-*` the copies on disk ship, what the config wires — goes stale on every upgrade and is
-exactly what the report already prints. The other half rates whether people work that way, which
-no file on disk records, so a `status`, an **Adopted by**, or an **Evidence** line is never
-derived from an install. Reporting drift is inside the plugin's subject; writing a chapter is
-`flow-spec`'s.
+- the catalog in both the working tree and the host's clone
+- the host's installed-plugin state
+- the three settings layers, merged nearest-last
+- the stack config
+- the devbook folders in both layouts
+- the engine's own `skills/` folder
+
+A clone older than the source is why "already latest" is usually wrong, so the report prints both
+and the commit behind each.
+
+`devbook-config:adoption` is the second reader, and it stops one step earlier than the report. The
+derivable half of `ai/` goes stale on every upgrade and is what the report already prints:
+which plugins are installed and enabled, which `flow-*` and `schedule-*` the copies on disk ship,
+and what the config wires. The other half rates whether people work that way, which no file on disk
+records. So a `status`, an **Adopted by**, or an **Evidence** line is never derived from an install.
+Reporting drift is inside the plugin's subject; writing a chapter is `flow-spec`'s.
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
-stays with that component's own `init` and `update`, which are the only things that know what it
-materialized — so neither moves here, and `devbook-config:init` and `devbook-config:update` end by
-invoking them rather than reimplementing them. `devbook-config:doctor` reads every stamp and
-writes none: the installation half of what `check` used to ask, moved to the one context
-allowed to read them all.
+stays with that component's own `init` and `update`, the only things that know what it materialized.
+So neither moves here, and `devbook-config:init` and `devbook-config:update` end by invoking them
+rather than reimplementing them. `devbook-config:doctor` reads every stamp and writes none: it is
+the installation half of what `check` used to ask, moved to the one context allowed to read them all.
 
-The report is also the one place a host's own paths are still named, which
-[the slot decision](adr/hosts.md) otherwise ended —
-recorded as a [deliberate divergence](adr/plugin-boundaries.md)
-rather than left silent. Where a plugin is installed and whether it is enabled is a fact about
-a host and about nothing else, so a report that answers it either names those files or answers
-nothing. It reads one host's, names every file it read and every one that was absent, and
-leaves the other host's rows empty while the catalog half still answers.
+The report is also the one place that still names a host's own paths, which
+[the slot decision](adr/hosts.md) otherwise ended, recorded as a
+[deliberate divergence](adr/plugin-boundaries.md). Where a plugin is installed and whether it is
+enabled is a fact about a host and nothing else. A report that answers it either names those
+files or answers nothing. It reads one host's and names every file it read and every one that was absent. It leaves the other host's rows empty while the catalog half still answers.
 
 ## Stack Config
 
@@ -437,30 +450,40 @@ stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
 | --- | --- | --- |
-| `bindings`, `phases`, `policy`, `gates`, and the optional `areas` | `delivery` | Which tracker and other bindings the repository uses; one complete map per flow saying which agent runs each [phase](08-crosscutting-concepts.md#phase), which skill it follows, on which model and effort, with which MCP servers and chores; the closed set of policy switches; any human gates beyond the mandatory one, attached to phase ids; and a path hint for `implement`'s areas. |
-| `components.<name>` | that component's own install skill — or the person, for a component that ships none | What the component materialized into the repository, and its migration ledger; or, for one that materializes nothing, its selection. |
+| `bindings`, `phases`, `policy`, `gates`, and the optional `areas` | `delivery` | Listed below. |
+| `components.<name>` | that component's own install skill, or the person for a component that ships none | What the component materialized, and its migration ledger; or, for one that materializes nothing, its selection. |
+
+- `bindings`: which tracker and other bindings the repository uses.
+- `phases`: one complete map per flow saying which agent runs each
+  [phase](08-crosscutting-concepts.md#phase), which skill it follows, on which model and effort,
+  with which MCP servers and chores.
+- `policy`: the closed set of policy switches.
+- `gates`: any human gates beyond the mandatory one, attached to phase ids.
+- `areas`: a path hint for `implement`'s areas.
 
 Nobody writes another owner's key. `delivery` ships the schema for its keys in
-`resources/config.schema.json` and a checker that rejects an unknown key rather than
-ignoring it, so a typo is an error rather than a silently absent setting.
+`resources/config.schema.json` and a checker that rejects an unknown key, so a typo is an error
+rather than a silently absent setting.
 
-Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
-from `devbook`'s, which records the procedure copies it seeds beside the folders and the
-`procedures.adopted` list that selects them, `components.derived` from `devbook-derived`'s for
-the refresh script, its workflows, and its rule, `components.openspec` from
-`devbook-openspec`'s, `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
-materializes nothing — and `components.schedule` from `delivery-schedule`'s. That puts `delivery` on both sides
-of the table at once — schema owner for the engine keys, holder of one stamp — and the
-boundary still holds, because the halves are different skills and neither reads the other's key.
-`devbook-config` maps the five to their install skills by hand: a manifest cannot say which
-plugin is behind a stamp whose plugin this machine has not installed.
+Five components stamp themselves, each through its own `init` and `update`:
 
-It sits beside the devbook chapter folders and is read by every host, which is the whole reason
-it left `.github/` — see [the decision](adr/configuration.md).
+- `components.devbook` from `devbook`'s, which records the procedure copies it seeds beside the
+  folders and the `procedures.adopted` list that selects them.
+- `components.derived` from `devbook-derived`'s, for the refresh script, its workflows, and its rule.
+- `components.openspec` from `devbook-openspec`'s.
+- `components.delivery` from `delivery`'s: `pluginVersion` alone, since the engine materializes nothing.
+- `components.schedule` from `delivery-schedule`'s.
+
+That puts `delivery` on both sides of the table at once, as schema owner for the engine keys and
+holder of one stamp. The boundary still holds, because the halves are different skills and neither
+reads the other's key. `devbook-config` maps the five to their install skills by hand: a manifest
+cannot say which plugin is behind a stamp whose plugin this machine has not installed.
+
+The file sits beside the devbook chapter folders and is read by every host, which is the whole
+reason it left `.github/`: see [the decision](adr/configuration.md).
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
-It is the only engine file in the folder: the runtime facts a run needs live in the
-repository's own `run` recipe, not in a second file here — see
-[the configuration record](adr/configuration.md).
+It is the only engine file in the folder. The runtime facts a run needs live in the repository's
+own `run` recipe, not in a second file here: see [the configuration record](adr/configuration.md).
 
 ## Schedule Plugin
 
@@ -470,10 +493,13 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
-into. Two halves in one folder: thirteen `schedule-*` entry points that pick their own input and
-run a flow, a review, a sweep, or a report, and thirteen files under `resources/schedules/`, each a cadence, a target
-skill, the plugins that target needs, and the task half of a prompt, plus one preamble that
-carries the unattended rules every prompt starts with.
+into. It has two halves in one folder:
+
+- Thirteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep,
+  or a report.
+- Thirteen files under `resources/schedules/`, each a cadence, a target skill, the plugins that
+  target needs, and the task half of a prompt. One preamble carries the unattended rules
+  every prompt starts with.
 
 | Schedule | Target | Cadence |
 | --- | --- | --- |
@@ -491,25 +517,23 @@ carries the unattended rules every prompt starts with.
 | `weekly-retro` | `delivery-schedule:schedule-weekly-retro` | weekly |
 | `prose-check` | `devbook:prose-check` | weekly |
 
-Four skills read the catalog. `delivery-schedule:init` and `delivery-schedule:update` build each prompt, resolves the scheduler from
-the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
-<title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
-logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
-entry, a cron that could fire more than hourly, or a target that is a flow.
+Four skills read the catalog. `delivery-schedule:init` and `delivery-schedule:update` build each
+prompt, resolve the scheduler from the live tool list, and create or update each entry matched by
+name (`<owner>/<repo> · <title>`). A second sync updates rather than duplicates. `schedule-status`
+reads runs and logs back, and `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a
+malformed entry, a cron that could fire more than hourly, or a target that is a flow.
 
-The plugin depends on `delivery` and names `devbook`, the L1 extension shape: the entry
-points call the engine's flows and phases, so the dependency is real, while a target in
-another plugin is named and skipped when the repository has not enabled it.
-It named a third until the specialists
-[left the marketplace](adr/plugin-boundaries.md):
-what a target delegates to is a binding the consuming repository makes, not a plugin the
-schedule can require.
+The plugin depends on `delivery` and names `devbook`, the L1 extension shape. The entry points call
+the engine's flows and phases, so the dependency is real. A target in another plugin is named
+and skipped when the repository has not enabled it. It named a third until the specialists
+[left the marketplace](adr/plugin-boundaries.md). What a target delegates to is a binding the
+consuming repository makes, not a plugin the schedule can require.
 
-State splits by who it belongs to. The selection and any cadence or `maxResolve` override are repository
-facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`delivery-schedule:init` and `delivery-schedule:update` only. The scheduler ids, the checkout's path, and the tools a routine
-was approved for are personal and live in the scheduler — every schedule is a local routine on
-one machine — and matching by name is what makes writing them down unnecessary.
+State splits by who it belongs to. The selection and any cadence or `maxResolve` override are
+repository facts and go in `components.schedule` of the [stack config](#stack-config), written only
+by `delivery-schedule:init` and `delivery-schedule:update`. The scheduler ids, the checkout's path,
+and the tools a routine was approved for are personal and live in the scheduler. Every schedule is a
+local routine on one machine, and matching by name makes writing them down unnecessary.
 
 ## Asset Kinds
 
@@ -517,5 +541,5 @@ one machine — and matching by name is what makes writing them down unnecessary
 related: [".devbook/arc42/08-crosscutting-concepts.md#agent"]
 ```
 
-Agents, skills, instruction files, hooks, and MCP servers. Each kind has one file shape and one
-place it may live; nothing is assembled at build time, because there is no build.
+Agents, skills, instruction files, hooks, and MCP servers each have one file shape and one place
+they may live. Nothing is assembled at build time, because there is no build.

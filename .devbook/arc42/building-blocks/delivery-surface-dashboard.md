@@ -6,18 +6,26 @@ c4: ["marketplace.delivery-surface-dashboard"]
 code: ["plugins/delivery-surface-dashboard"]
 ```
 
-The live view of a run, measured by hooks rather than told. Responsible for three things: that
-a run is visible while it happens, that what it shows was measured rather than claimed, and
-that uninstalling it costs a view and never a capability.
+This block shows a run live, measured by hooks rather than told. It is responsible for three
+things: a run is visible while it happens, what it shows was measured rather than claimed, and
+uninstalling it costs a view and never a capability.
 
-Inside the block: the run store, the three pages, the telemetry the hooks capture, and the
-report exported at the end. It answers all three capability groups of the surface contract.
+**Owns:**
 
-Outside it: what produced the run. This block knows nothing about flows, gates, or extension
-points — it receives lifecycle calls, and whoever made them resolved its tool names by pattern
-from the live tool list. It declares no dependency and names no engine. The kernel vocabulary —
-surface, capability group, MCP server — is [chapter 8](../08-crosscutting-concepts.md)'s; the one
-term this block owns, idleness, is in the [glossary](../12-glossary.md#idleness).
+- the run store
+- the three pages
+- the telemetry the hooks capture
+- the report exported at the end
+
+It answers all three capability groups of the surface contract.
+
+What produced the run lies outside it. This block knows nothing about flows, gates, or extension
+points. It receives lifecycle calls, and whoever made them resolved its tool names by pattern
+from the live tool list. It declares no dependency and names no engine.
+
+[Chapter 8](../08-crosscutting-concepts.md) owns the kernel vocabulary: surface, capability group,
+and MCP server. The one term this block owns, idleness, is in the
+[glossary](../12-glossary.md#idleness).
 
 ## Interfaces
 
@@ -25,21 +33,21 @@ term this block owns, idleness, is in the [glossary](../12-glossary.md#idleness)
 related: [".devbook/arc42/adr/surfaces.md", ".devbook/arc42/08-crosscutting-concepts.md#surface"]
 ```
 
-Three capability groups, whole, plus the one thing no other surface here does: measure. It
-ships no skills — its whole surface is an MCP server's tools and three pages, and there is
-nothing a person invokes by name.
+This block answers three capability groups whole and also measures, which no other surface here
+does. It ships no skills: its whole surface is an MCP server's tools and three pages, and a
+person invokes nothing by name.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `open_dashboard`, `start_run`, `record_prompt`, `set_run_context`, `update_stage`, `finish_run`, `list_runs`, `get_run` | MCP tools, `delivery.surface.lifecycle@1` | A caller matching the names by pattern from the live tool list |
 | `render_diagram`, `render_markdown` | MCP tools, `delivery.surface.render@1` | The same caller, resolving the group on its own |
 | `export_report` | MCP tool, `delivery.surface.export@1` | The same, at the end of a run or long after it |
-| The run timeline, the diagram viewer, the document viewer | Three pages, one file each | Inline as a `ui://` resource where the host implements MCP Apps, on a loopback origin where it does not |
-| `telemetry-hook.mjs` | Command hook, `hooks/hooks.json` | The host that has command hooks, on its tool events — outside any run's control flow |
+| The run timeline, the diagram viewer, the document viewer | Three pages, one file each | Inline as a `ui://` resource under MCP Apps, otherwise on a loopback origin |
+| `telemetry-hook.mjs` | Command hook, `hooks/hooks.json` | A host with command hooks, on tool events, outside any run's control flow |
 
 The eleven tool names are the declared surface, exactly and nothing more. They carry a
 plugin-namespaced prefix when installed as a plugin and a bare one from a repository's own MCP
-configuration; a consumer matches by pattern and never by one spelling.
+configuration. A consumer matches by pattern and never by one spelling.
 
 ### Track a Run
 
@@ -47,17 +55,15 @@ configuration; a consumer matches by pattern and never by one spelling.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#run-record", ".devbook/arc42/building-blocks/delivery.md#run-started"]
 ```
 
-Answer the lifecycle group — open, start, record the prompt, set the context, update a stage,
-finish, list, get — and keep the result on disk, keyed by worktree, outside the repository. A
-run survives a session restart and never shows up in `git status`.
-
-Reattach to a parked run: pick a handed-off run up where it stopped rather than opening a
-second beside it. Both a parked run and an abandoned one look idle; the
-[handoff marker](#handoff-marker) is the only thing that tells them apart.
-
-Read idleness and title from the run: derive whether a run has stalled and what to call it from
-where its output has landed, rather than storing either as status. A list of parallel sessions
-is then readable at a glance without anyone having to name them.
+- **Does:** answers the lifecycle group (open, start, record the prompt, set the context, update
+  a stage, finish, list, get) and keeps the result on disk, keyed by worktree, outside the repository.
+- **Why:** a run survives a session restart and never shows up in `git status`.
+- **Reattaches:** picks a handed-off run up where it stopped rather than opening a second beside
+  it. A parked run and an abandoned one both look idle, and only the
+  [handoff marker](#handoff-marker) tells them apart.
+- **Derives:** whether a run has stalled and what to call it, from where its output has landed,
+  rather than storing either as status.
+- **Why:** a list of parallel sessions is then readable at a glance without anyone naming them.
 
 ### Watch a Run Live
 
@@ -65,13 +71,13 @@ is then readable at a glance without anyone having to name them.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#viewer"]
 ```
 
-Show the run list, each run's stages with status and output, QA scenarios with their evidence
-inline, and the tool-activity and context panels. Rendered inline where the host implements
-MCP Apps, and on a loopback origin where it does not — one page file either way.
-
-Render a diagram or a document — the render group: Mermaid rendered live and pannable, Markdown
-rendered as formatted HTML, both with push-and-replace navigation so a drill-down can be
-stepped back. A rendered view is a preview of a file that exists, never a replacement for it.
+- **Does:** shows the run list, each run's stages with status and output, QA scenarios with their
+  evidence inline, and the tool-activity and context panels.
+- **Served:** inline where the host implements MCP Apps, and on a loopback origin where it does
+  not, from one page file either way.
+- **Renders:** the render group, Mermaid live and pannable and Markdown as formatted HTML, both
+  with push-and-replace navigation so a drill-down can be stepped back.
+- **Never:** replaces a file. A rendered view is a preview of one that exists.
 
 ### Measure the Session
 
@@ -79,13 +85,12 @@ stepped back. A rendered view is a preview of a file that exists, never a replac
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetry-capture", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetry"]
 ```
 
-Fold tool calls, sub-agent use, and token usage into the run from hook-captured tool events,
-and warn when the context gauge crosses its threshold. Nothing asks the agent to count
-anything, which is what separates these numbers from an estimate.
-
-This is the one capability outside the contract, and it degrades to nothing rather than to
-something wrong: on a host without command hooks the run is tracked in full and the panels are
-simply empty.
+- **Does:** folds tool calls, sub-agent use, and token usage into the run from hook-captured tool
+  events, and warns when the context gauge crosses its threshold.
+- **Why:** nothing asks the agent to count anything, which separates these numbers from an estimate.
+- **Limit:** this is the one capability outside the contract. It degrades to nothing rather than
+  to something wrong: on a host without command hooks the run is tracked in full and the panels
+  are empty.
 
 ### Export the Report
 
@@ -93,10 +98,9 @@ simply empty.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#report-export"]
 ```
 
-Answer the export group: the prompt history, the stage table, each stage's output and links, QA
-scenarios with their evidence, monitoring findings, the handoff note, and the summary — as
-Markdown, or as self-contained HTML with the evidence inlined so the report survives the
-worktree that produced it.
+- **Does:** answers the export group with [the run's report](#report-export), as Markdown or as
+  self-contained HTML with the evidence inlined.
+- **Why:** inlined evidence lets the report survive the worktree that produced it.
 
 ## Structure
 
@@ -104,8 +108,7 @@ worktree that produced it.
 related: [".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Two aggregates and two domain services: what a run record holds, what the pages read, and
-where the one host-specific part sits.
+This block has two aggregates and two domain services, one of them host-specific.
 
 ![delivery-surface-dashboard's components](c4:delivery-surface-dashboard)
 
@@ -173,21 +176,21 @@ classDiagram
     Viewer ..> RunRecord : reads
 ```
 
-- **Nothing in this model points at the engine, and that is the design.** `RunRecord` is fed
-  by lifecycle calls from a caller it cannot name; the caller resolved these tool names by
-  pattern from the live tool list. Installing this plugin makes runs visible and uninstalling
-  it costs a view.
+- **Nothing in this model points at the engine, and that is the design.** A caller it cannot
+  name feeds `RunRecord` through lifecycle calls, having resolved these tool names by pattern
+  from the live tool list. Installing this plugin makes runs visible and uninstalling it costs
+  a view.
 - **`Telemetry` is the only association written from outside the tool surface.** The hook runs
-  on the host's tool events, not inside a run, which is why it is `0..1` and why its absence is
+  on the host's tool events, not inside a run. That is why it is `0..1` and why its absence is
   a legitimate state rather than a failure.
 - **Idleness and the session title are absent from this diagram on purpose.** Both are derived
-  on read — from the last update and from where the output landed — and storing either would
-  make a stale value indistinguishable from a current one.
+  on read, from the last update and from where the output landed. Storing either would make a
+  stale value indistinguishable from a current one.
 - **`EvidencePath` is a value, and its whole content is a constraint.** It resolves against the
-  worktree root and refuses anything outside it; the HTML export inlines what it points at so
+  worktree root and refuses anything outside it. The HTML export inlines what it points at, so
   the report outlives the file.
 - **`Viewer` reads `RunRecord` and is not part of it.** The pages are a projection served over
-  the plugin's own origin, which is why navigation is not an extra tool: a surface declaring
+  the plugin's own origin, which is why navigation is not an extra tool. A surface declaring
   more than the contract stops being swappable for one that declares exactly it.
 - **`GateDecision` is recorded and never made here.** A resumed session re-runs the gate rather
   than trusting this record, which is why the surface holding it is not a party to it.
@@ -200,14 +203,20 @@ related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/
 
 Also called: run, run store, run file.
 
-One run as this block holds it: stages with status and output, the prompt history, QA
-scenarios with their evidence, gate decisions, telemetry, and a handoff marker. One JSON file
-per run, outside the repository and keyed by worktree path — so a run survives a session
-restart and never shows up in `git status`.
+One record holds one run:
 
-It is a record and not the run. Nothing here advances a run or decides anything about it; it
-folds what it is told, adds what its own hooks measured, and answers questions about the
-result.
+- stages with status and output
+- the prompt history
+- QA scenarios with their evidence
+- gate decisions
+- telemetry
+- a handoff marker
+
+The store keeps one JSON file per run, outside the repository and keyed by worktree path. A run
+therefore survives a session restart and never shows up in `git status`.
+
+It is a record and not the run. Nothing here advances a run or decides anything about it. It
+folds what it is told, adds what its own hooks measured, and answers questions about the result.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -228,32 +237,32 @@ result.
 The record owns two entities and two values besides [Telemetry](#telemetry) and the
 [Handoff Marker](#handoff-marker):
 
-- **Stage Record** (entity) — one stage as recorded: name, status, output, links, and how many
-  times it finished. Identity inside the record is the stage name, and the repeat count is
-  what keeps a revise decision legible — a stage that ran twice must not read as one long
-  stage.
-- **QA Scenario** (entity) — one validation scenario with its status and the evidence it
-  produced. It has identity because it is reported individually and because its evidence is
-  cited from the exported report by path.
-- **Evidence Path** (value) — a path to a screenshot or a recording, resolved against the git
-  worktree root. Anything resolving outside it is refused — a surface that will cite an
-  arbitrary path is a surface that will read one. The HTML export inlines these as data URIs,
-  so an exported report stays readable after the worktree is gone. The Markdown one cites
+- **Stage Record** (entity) is one stage as recorded: name, status, output, links, and how many
+  times it finished. Its identity inside the record is the stage name. The repeat count keeps a
+  revise decision legible, because a stage that ran twice must not read as one long stage.
+- **QA Scenario** (entity) is one validation scenario with its status and the evidence it
+  produced. It has identity because it is reported individually and because the exported report
+  cites its evidence by path.
+- **Evidence Path** (value) is a path to a screenshot or a recording, resolved against the git
+  worktree root. This block refuses anything resolving outside it, because a surface that will
+  cite an arbitrary path is a surface that will read one. The HTML export inlines these as data
+  URIs, so an exported report stays readable after the worktree is gone. The Markdown one cites
   them, which is why the file has to stay where it was produced.
-- **Session Title** (value; also called session name, prefix) —
+- **Session Title** (value; also called session name, prefix) is
   `<prefix>[:<context>] — <run title>`, computed from where the run's writes landed: a
-  published Artifact, one of the five devbook folders, or code, with the bounded context
-  appended when the winning files sit in exactly one. The record tallies kinds; the word each
-  kind is shown as comes from `components.delivery-surface-dashboard.sessionNaming.labels` in
-  the repository's stack config, where `null` means no prefix — and no rename, since an
-  unprefixed copy of the run title is worse than the host's own name — and `devbook` stands
-  for all five folders. Kinds sharing a word are tallied as one before the dominant kind is
-  picked. `null` before anything has been written, for the same reason. The config key is
+  published Artifact, one of the five devbook folders, or code. It appends the bounded context
+  when the winning files sit in exactly one.
+
+  The record tallies kinds, and the word each kind shows as comes from
+  `components.delivery-surface-dashboard.sessionNaming.labels` in the repository's stack config.
+  There, `devbook` stands for all five folders, and `null` means no prefix and no rename, since
+  an unprefixed copy of the run title is worse than the host's own name. Kinds sharing a word
+  are tallied as one before the dominant kind is picked. The title is `null` before anything has
+  been written, for the same reason. The config key is
   [the configuration record](../adr/configuration.md)'s.
 
-Idleness — a run whose session ended or that nothing has advanced for hours — is derived on
-read and never stored, because a stored idleness is indistinguishable from a stale one; the
-[glossary](../12-glossary.md#idleness) has the term.
+[Idleness](../12-glossary.md#idleness) is derived on read and never stored, because a stored
+idleness is indistinguishable from a stale one.
 
 ### Telemetry
 
@@ -262,14 +271,13 @@ read and never stored, because a stored idleness is indistinguishable from a sta
 
 Also called: tool activity, token usage, insight panel.
 
-Tool calls, sub-agent use, and token usage, folded into the record by hooks running on tool
-events. Nothing asks the agent to count anything, which is the entire point: a self-reported
-number is an estimate wearing a measurement's clothes.
+Hooks running on tool events fold tool calls, sub-agent use, and token usage into the record.
+Nothing asks the agent to count anything, because a self-reported number is an estimate posing
+as a measurement.
 
-It is captured through a command hook that reads an event payload and writes a file — work a
-prompt hook cannot do. On a host without command hooks the run is still tracked in full and the
-panels simply have nothing to show, which is why this costs a column and not a capability
-group.
+A command hook captures it by reading an event payload and writing a file, which a prompt hook
+cannot do. On a host without command hooks the run is still tracked in full and the panels
+have nothing to show. That is why this costs a column and not a capability group.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -282,10 +290,9 @@ group.
 related: [".devbook/arc42/building-blocks/delivery-surface-collector.md#handoff-marker", ".devbook/arc42/12-glossary.md#idleness"]
 ```
 
-The note a deliberately handed-off run leaves behind. It is what distinguishes a parked run
-from an abandoned one — both look idle by every other signal, and only one should be reattached
-to. Separating them is what a later `start_run` needs in order to reattach to one and refuse
-the other.
+This is the note a deliberately handed-off run leaves behind. It distinguishes a parked run from
+an abandoned one: both look idle by every other signal, and only one should be reattached to. A
+later `start_run` needs that distinction to reattach to one and refuse the other.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -299,10 +306,10 @@ the other.
 
 Also called: page, panel, dashboard.
 
-The three pages: the run timeline, the Mermaid diagram viewer, and the Markdown document
-viewer. Each is served two ways from one file — inline where the host implements MCP Apps, and
-on a loopback origin where it does not — with a bridge answering the page's own network calls
-as tool calls so neither page learns which way it was loaded.
+The viewer is three pages: the run timeline, the Mermaid diagram viewer, and the Markdown
+document viewer. One file serves each page two ways: inline where the host implements MCP Apps,
+and on a loopback origin where it does not. A bridge answers the page's own network calls as
+tool calls, so neither page learns which way it was loaded.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -322,13 +329,20 @@ identity within its viewer.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#run-record"]
 ```
 
-Writes the run's report from what was recorded: prompt history, the stage table, each stage's
-output and links, QA scenarios with their evidence, monitoring findings, the handoff note, and
-the summary — as Markdown, or as self-contained HTML with the evidence inlined.
+It writes the run's report from what was recorded, as Markdown or as self-contained HTML with
+the evidence inlined:
 
-Command-invoked, at the end of a run or long after it. It is a service rather than behaviour on
-[Run Record](#run-record) because it produces an artifact outside the record and reads across
-every part of it at once.
+- prompt history
+- the stage table
+- each stage's output and links
+- QA scenarios with their evidence
+- monitoring findings
+- the handoff note
+- the summary
+
+It runs on command, at the end of a run or long after. It is a service, not behaviour on
+[Run Record](#run-record), because it produces an artifact outside the record and reads across
+all of it at once.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -343,13 +357,12 @@ every part of it at once.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetry"]
 ```
 
-The hook that runs on tool events and folds tool calls, sub-agent use, token usage, and where
-each write landed into the record, and warns when the session's context gauge crosses a
-threshold.
+This hook runs on tool events. It folds tool calls, sub-agent use, token usage, and where each
+write landed into the record, and warns when the session's context gauge crosses a threshold.
 
-Event-triggered, by the host, outside any run's control flow. It is the one thing in this
-marketplace that measures a session rather than being told about it — which is also why it is
-the one place this block is host-specific, structurally rather than by omission.
+The host triggers it, outside any run's control flow. It is the one thing in this
+marketplace that measures a session rather than being told about it. That is also why it is the
+one place this block is host-specific, structurally rather than by omission.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -364,15 +377,10 @@ the one place this block is host-specific, structurally rather than by omission.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#run-record", ".devbook/arc42/building-blocks/delivery.md#run-started"]
 ```
 
-How a record fills up, and how a page reaches a viewer.
-
 ### A Record, Filled
 
 ```meta
 ```
-
-Every arrow into the record is a lifecycle call from a caller this block cannot name, except
-the telemetry one — which comes from the host, outside any run's control flow.
 
 ```mermaid
 sequenceDiagram
@@ -402,10 +410,11 @@ sequenceDiagram
 ```
 
 - **Reattach or open, never both.** A second record beside a parked run is the failure the
-  handoff marker exists to prevent, and it is the one behaviour here with a test driving the
-  real server over stdio.
-- **Telemetry arrives on a different path from everything else.** It is the only input not
-  sent by the caller, which is exactly what makes the numbers a measurement.
+  handoff marker exists to prevent. It is the one behaviour here with a test driving the real
+  server over stdio.
+- **Telemetry arrives on a different path from everything else.** Every other arrow into the
+  record is a lifecycle call from a caller this block cannot name. Telemetry comes from the host,
+  outside any run's control flow, which is what makes the numbers a measurement.
 - **A repeat is a repeat.** A stage recorded once after two attempts has erased the revise
   decision that caused the second one.
 
@@ -413,8 +422,6 @@ sequenceDiagram
 
 ```meta
 ```
-
-One file, two transports, and a bridge so neither page learns which one carried it.
 
 ```mermaid
 flowchart LR
@@ -429,16 +436,16 @@ flowchart LR
 ```
 
 - **Navigation is not a tool.** A surface that declares more than the contract stops being
-  swappable for one that declares exactly it — so anything the pages need beyond the eleven
-  names is served over the plugin's own origin.
+  swappable for one that declares exactly it. The plugin's own origin therefore serves anything
+  the pages need beyond the eleven names.
 - **The loopback address is stable per worktree.** A tab or a host's browser pane left open
-  outlives a server restart, and `?run=<id>` lands on one run; a taken port falls back to an
+  outlives a server restart, and `?run=<id>` lands on one run. A taken port falls back to an
   ephemeral one rather than failing to serve.
 - **There is no authentication on the HTTP side**, and reaching it already requires local
   access to the machine. The [canvas](delivery-surface-canvas.md) implementation of the same
   contract does check a token, because it outlives the panel that opened it.
 - **A rendered view is a preview of a file that exists.** Render the same source that was
-  written to disk; a rendered view nobody saved is not a record of anything.
+  written to disk. A rendered view nobody saved is not a record of anything.
 
 ## Dependencies
 
@@ -456,12 +463,14 @@ either direction.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the tool names of all three capability groups, and nothing else | `resources/surface-contract.md`: `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Declaring exactly the contract's names is what makes one implementation substitutable for another. Declaring more would end that. |
+| [delivery](delivery.md#dependencies) | Conformist to a Published Language | Implements the tool names of all three capability groups, and nothing else | `resources/surface-contract.md`: `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | Declaring exactly these names keeps implementations substitutable; declaring more would end that. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `mcp/<server>/`, `hooks/hooks.json` | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here. |
 | Model Context Protocol | Conformist | One MCP server, started on the first tool call, plain Node with no npm dependencies | The protocol's own schemas | The transport is how a caller reaches it at all. |
-| MCP Apps | Conformist, optional | Pages read as `ui://` resources and rendered inline where the host implements it | The MCP Apps resource shape | Where it is absent, the same file is served on a loopback origin — which is what the bridge exists for. |
-| The host's command hooks | Conformist, host-specific | `hooks/hooks.json`, a hook reading a tool-event payload and writing the run store | The host's own hook schema | Measuring requires reading an event and writing a file, which a prompt hook cannot do. There is no root `hooks.json` beside it, structurally rather than by omission. |
+| MCP Apps | Conformist, optional | Pages read as `ui://` resources and rendered inline where the host implements it | The MCP Apps resource shape | Where it is absent, a loopback origin serves the same file, which is what the bridge exists for. |
+| The host's command hooks | Conformist, host-specific | `hooks/hooks.json`, a hook reading a tool-event payload and writing the run store | The host's own hook schema | Measuring requires reading an event and writing a file, which a prompt hook cannot do. |
 | The local filesystem, outside the repository | Conformist | One JSON file per run, keyed by worktree path, root overridable | Its own store layout | A run must survive a session restart and must never appear in `git status`. |
+
+No root `hooks.json` sits beside `hooks/hooks.json`, structurally rather than by omission.
 
 ### Inbound
 
@@ -470,24 +479,21 @@ either direction.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| Whatever drives a run | Customer-Supplier, this block supplying | Tool names matched by pattern from the live tool list, never by one spelling | The three capability groups | That each group is resolved separately, and that this one answers all three. It names no caller and no caller names it. |
+| Whatever drives a run | Customer-Supplier, this block supplying | Tool names matched by pattern from the live tool list, never by one spelling | The three capability groups | Each group resolves separately, and this block answers all three. Neither names the other. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, this block supplying | The same lifecycle calls, from unattended sessions | The same contract | The same. It follows the engine's reporting contract and treats no surface bound as normal. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether this plugin is installed, enabled, and at what version | The marketplace entry and the manifest | Nothing but the name and version. |
 
-A surface is never a dependency in either direction. The thing being rendered knows no surface
-exists, and this block knows nothing about what produced its input. Whichever tool opens it
-resolves it at run time, and none answering is a normal outcome — it costs a view, never a
-capability.
+The thing being rendered knows no surface exists, and this block knows nothing about what
+produced its input. Whichever tool opens it resolves it at run time, and none answering is a
+normal outcome: it costs a view, never a capability.
 
 Substitutability is per capability group, not per host. The three groups are resolved
-separately, so a caller finds the ones this block answers and looks elsewhere — or nowhere —
-for the rest.
+separately, so a caller finds the ones this block answers and looks elsewhere, or nowhere, for
+the rest.
 
 The telemetry dependency is the one asymmetry, and it is a column rather than a group. A
 Copilot run bound to this plugin gets the same lifecycle tools and the same panels with the
 numbers absent rather than wrong. Nothing in the contract names telemetry, which is what keeps
 the asymmetry from costing a capability group.
 
-Namespacing is a matching problem, not a naming one. The tools surface with a plugin-namespaced
-prefix when installed as a plugin and a bare one from a repository's own MCP configuration; a
-consumer matches by pattern and never by one spelling.
+Namespacing is a matching problem, not a naming one, as [Interfaces](#interfaces) says.
