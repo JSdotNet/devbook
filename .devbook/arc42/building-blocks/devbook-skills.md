@@ -8,37 +8,43 @@ code: ["plugins/devbook-skills"]
 
 This block makes sure output reads well, and that a large effort is planned before it is
 built. It holds reusable guidance that any plugin can name and none has to depend on, and one
-planning procedure a person runs by hand. Today that is five skills: `show-me`, which puts a picture before
-the prose whenever the content has a shape; `research-brief`, which answers a question about
-something outside the repository from primary sources, every claim cited; `pr-body`, which
-writes a pull request description that says whether the merge can be walked back; 
-`retro`, which reads one session or run back and ranks what would make the next one get
-further; and `wayfinder`, which charts an effort too big for one session as a map of decision
-tickets on the repository's issue tracker and resolves them one per session.
+planning procedure a person runs by hand.
 
-Inside the block: the catalog of picture kinds, the content each one fits, and the rule that
-prose afterwards says only what the picture cannot; and the shape of a research brief, with
-what counts as a primary source; and the three sections of a pull request description, with
-what makes a door one-way; and the lenses a retro reads through; and the shapes of a wayfinder map and its tickets. Outside it: where the output goes. A
-chapter's sections are its folder rule's, a pull request's structure is the repository's
-template, a flow's report follows the engine's reporting contract, and a brief lands wherever
-its caller puts it. The block owns no state in the repository,
-installs nothing into one, and stamps nothing; the only thing it writes anywhere is a wayfinder
-map and its tickets, which live on the tracker.
+**Owns** five skills:
+
+- `show-me` puts a picture before the prose whenever the content has a shape. It holds the catalog of picture kinds, the content each one fits, and the rule that prose afterwards says only what the picture cannot.
+- `research-brief` answers a question about something outside the repository from primary sources, every claim cited. It holds the shape of a brief and what counts as a primary source.
+- `pr-body` writes a pull request description that says whether the merge can be walked back. It holds the three sections and what makes a door one-way.
+- `retro` reads one session or run back and ranks what would make the next one get further. It holds the lenses it reads through.
+- `wayfinder` charts an effort too big for one session as a map of decision tickets on the repository's issue tracker and resolves them one per session. It holds the shapes of a map and its tickets.
+
+Where the output goes lies outside the block:
+
+| Concern | Owner |
+| --- | --- |
+| A chapter's sections | Its folder rule |
+| A pull request's structure | The repository's template |
+| A flow's report | The engine's reporting contract |
+| Where a brief lands | Its caller |
+
+The block owns no state in the repository, installs nothing into one, and stamps nothing. The
+only thing it writes anywhere is a wayfinder map and its tickets, which live on the tracker.
 
 ## Interfaces
 
 ```meta
 ```
 
+A caller reaches a skill by naming it, as [Inbound](#inbound) lists, and no caller names `wayfinder`.
+
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `show-me` | skill | A person who asks to be shown, or a caller that names it: `devbook-writing.md`, and `delivery` when it writes a pull request description, reports back to the person, or opens Personal Validation, a gate, or the Summary with the orientation card |
-| `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start, in a repository with `.devbook/config.json` or that names the plugin in `enabledPlugins` |
-| `research-brief` | skill | A person who asks for research, or a caller that names it: `delivery`'s Scope phase, and its Drafting phase for `arc42/` and `tech/` |
-| `pr-body` | skill | A person writing a pull request, or a caller that names it: `delivery`'s Create Pull Request phase, and `delivery-schedule`'s draft pull request contract; `schedule-merge-review` reads the door it declares |
-| `retro` | skill | A person after a session or run, or a caller that names it: `delivery`'s Summary, which offers it after two or more revise rounds at Personal Validation, and `delivery-schedule`'s `schedule-weekly-retro`, which reads a week through its lenses |
-| `wayfinder` | skill | A person alone, by `/wayfinder`: no plugin names it, and the host never invokes it on its own. `delivery-schedule`'s issue sweep leaves every issue it labels alone |
+| `show-me` | skill | A person who asks to be shown |
+| `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host at session start, where `.devbook/config.json` exists or `enabledPlugins` names the plugin |
+| `research-brief` | skill | A person who asks for research |
+| `pr-body` | skill | A person writing a pull request |
+| `retro` | skill | A person after a session or run |
+| `wayfinder` | skill | A person alone, by `/wayfinder`; the host never invokes it on its own |
 
 ### show-me
 
@@ -46,15 +52,14 @@ map and its tickets, which live on the tracker.
 related: [".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-The skill picks the picture from what the content describes, puts it first, and keeps the
-prose after it to the reasons, the exceptions, and the limits. It writes Markdown that renders
-on both hosts and on GitHub, so its pictures are Mermaid, fenced code, and tables. An HTML
-mockup is out of scope: neither a chapter nor a pull request can carry one.
-
-It also holds the orientation card: five aligned lines that open a handback, a decision, or a
-finished change, so a person switching between sessions sees the change, its stage, and what it
-needs from them. The hook loads the skill's rule into every session, because an ordinary reply
-has no caller to name it.
+- **Does:** Picks the picture from what the content describes, puts it first, and keeps the prose after it to the reasons, the exceptions, and the limits.
+- **Writes:** Markdown that renders on both hosts and on GitHub, so its pictures are Mermaid, fenced code, and tables.
+- **Never:** An HTML mockup.
+- **Why:** Neither a chapter nor a pull request can carry one.
+- **Holds:** The orientation card, five aligned lines that open a handback, a decision, or a finished change.
+- **Why:** A person switching between sessions sees the change, its stage, and what it needs from them.
+- **Loaded by:** The hook, which puts the skill's rule into every session.
+- **Why:** An ordinary reply has no caller to name it.
 
 ### research-brief
 
@@ -62,12 +67,11 @@ has no caller to name it.
 related: [".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-The skill answers one question from the sources that own each fact — official documentation,
-source code, a specification, a first-party API — and never from a write-up of them. The brief
-is a question, a short answer, one cited claim per row with a confidence of `confirmed`,
-`inferred`, or `unverified`, and what the sources leave open. It returns the brief and writes
-nothing, so the caller decides where it lands. It is adapted from the `research` skill in
-`mattpocock/skills`, which writes its findings to a file itself.
+- **Does:** Answers one question from the sources that own each fact (official documentation, source code, a specification, a first-party API), never from a write-up of them.
+- **Returns:** A question, a short answer, one cited claim per row with a confidence of `confirmed`, `inferred`, or `unverified`, and what the sources leave open.
+- **Writes:** Nothing.
+- **Why:** The caller decides where the brief lands.
+- **Adapted from:** The `research` skill in `mattpocock/skills`, which writes its findings to a file itself.
 
 ### pr-body
 
@@ -75,16 +79,13 @@ nothing, so the caller decides where it lands. It is adapted from the `research`
 related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-merge-review"]
 ```
 
-The skill writes three sections. **Summary** is one view of the change, picked per `show-me`.
-**Evidence** is a before and an after from the same check, tiered: a screenshot is S, a test run
-or console output A, a green build or check B; the depth validation reached is stated, and
-startup-only says nothing was exercised. **Merge Danger** declares the door and the blast
-radius. In a repository with devbook a door is one-way when the change ships a migration,
-renames a `.devbook/config.json` key or a stamp field, deletes data, or touches an `accepted`
-chapter, and a one-way door links the decision record it rests on. A repository's pull request
-template and a caller's ordered body keep their structure; the skill fills the sections that
-match. It is adapted from the `pr` skill in `mattpocock/skills`, which copies `show-me`'s
-catalog in where this one names the skill.
+- **Does:** Writes three sections.
+  - **Summary** is one view of the change, picked per `show-me`.
+  - **Evidence** is a before and an after from the same check, tiered: a screenshot is S, a test run or console output A, a green build or check B. It states the depth validation reached, and startup-only says nothing was exercised.
+  - **Merge Danger** declares the door and the blast radius.
+- **One-way door:** In a repository with devbook, a change that ships a migration, renames a `.devbook/config.json` key or a stamp field, deletes data, or touches an `accepted` chapter. It links the decision record it rests on.
+- **Keeps:** The structure of a repository's pull request template and a caller's ordered body. The skill fills the sections that match.
+- **Adapted from:** The `pr` skill in `mattpocock/skills`, which copies `show-me`'s catalog in where this one names the skill.
 
 ### retro
 
@@ -92,31 +93,18 @@ catalog in where this one names the skill.
 related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-weekly-retro", ".devbook/arc42/building-blocks/delivery-phases.md#phase-summary"]
 ```
 
-The skill reads one session — the current one unless another is named — or one delivery run
-the surface recorded, with the person present, and ranks the changes to the agent's
-environment that would have saved the most turns or tokens. It looks through ten lenses:
-navigation, rediscovery, automated checks, coding standards, baseline size, unused context,
-no-ops, tool economy, information access, and model and effort. A mechanical violation gets a check in the
-repository's own linter, hook, or CI, never a written rule; a written rule is kept for a
-judgement call and goes to review rather than implementation. It presents the candidates and
-writes nothing, so each accepted one is a change through the flow that owns the file. The
-lenses live here alone: `schedule-weekly-retro` reads a week of sessions through the same set
-and lands its edits as a draft pull request. It is adapted from the `retro` skill in
-`mattpocock/skills`, merged with the three lenses the weekly retro carried before.
+- **Does:** Reads one session (the current one unless another is named) or one delivery run the surface recorded, with the person present, and ranks the changes to the agent's environment that would have saved the most turns or tokens.
+- **Ten lenses:** Navigation, rediscovery, automated checks, coding standards, baseline size, unused context, no-ops, tool economy, information access, and model and effort.
+- **Answers:** A mechanical violation with a check in the repository's own linter, hook, or CI, never a written rule. A written rule is kept for a judgement call and goes to review rather than implementation.
+- **Writes:** Nothing. It presents the candidates, so each accepted one is a change through the flow that owns the file.
+- **Only holder of:** The lenses. `schedule-weekly-retro` reads a week of sessions through the same set and lands its edits as a draft pull request.
+- **Adapted from:** The `retro` skill in `mattpocock/skills`, merged with the three lenses the weekly retro carried before.
 
 ### wayfinder
 
 ```meta
 related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep"]
 ```
-
-The skill plans an effort that no single session can hold. It has two modes. Charting names
-the destination, grills breadth-first for the open decisions, and creates one `wayfinder:map`
-issue with a child issue per decision ticket that can already be stated precisely, wired by the
-tracker's native blocking. Working takes one frontier ticket — open, unblocked, unclaimed —
-claims it by assignment, resolves it, closes it with the answer as a comment, and folds what
-the answer revealed back into the map. A session resolves one ticket; research tickets are the
-exception, run in the background.
 
 ```mermaid
 stateDiagram-v2
@@ -131,16 +119,19 @@ stateDiagram-v2
     Decided --> [*]
 ```
 
-A ticket resolves a decision and never a slice of the build: the map is done when nothing is
-left to decide, and the pull to just do the work marks its edge, unless the map's Notes carry
-execution into it. The four ticket types each name how they resolve: `research` through
-`research-brief`, whose brief is the resolution comment; `prototype` through the repository's
-`prototype` skill when it has one; `grilling` through a `grilling` skill, or one question at a
-time inline when there is none; `task` by doing the work that unblocks a decision. The tracker
-is the repository's own, reached through the host's issue CLI, and the shapes of the map and a
-ticket live in `map.md` beside the skill. It is adapted from the `wayfinder` skill in
-`mattpocock/skills`, which reads its tracker operations from a setup skill of its own and
-resolves grilling through two named skills with no fallback.
+- **Does:** Plans an effort that no single session can hold, in two modes.
+  - **Charting** names the destination, grills breadth-first for the open decisions, and creates one `wayfinder:map` issue. The issue has a child per decision ticket that can already be stated precisely, wired by the tracker's native blocking.
+  - **Working** takes one frontier ticket (open, unblocked, unclaimed), claims it by assignment, resolves it, closes it with the answer as a comment, and folds what the answer revealed back into the map.
+- **Limit:** A session resolves one ticket. Research tickets are the exception, run in the background.
+- **Never:** A slice of the build. A ticket resolves a decision, and the map is done when nothing is left to decide. The pull to just do the work marks its edge, unless the map's Notes carry execution into it.
+- **Ticket types:** Four, each naming how it resolves.
+  - `research`: through `research-brief`, whose brief is the resolution comment.
+  - `prototype`: through the repository's `prototype` skill when it has one.
+  - `grilling`: through a `grilling` skill, or one question at a time inline when there is none.
+  - `task`: by doing the work that unblocks a decision.
+- **Tracker:** The repository's own, reached through the host's issue CLI.
+- **Shapes:** The map's and a ticket's live in `map.md` beside the skill.
+- **Adapted from:** The `wayfinder` skill in `mattpocock/skills`, which reads its tracker operations from a setup skill of its own and resolves grilling through two named skills with no fallback.
 
 ## Structure
 
@@ -151,8 +142,7 @@ Five parts, two of which lean on another:
 
 ![devbook-skills' components](c4:devbook-skills)
 
-The first is `show-me`'s catalog: each row pairs a kind of content with the picture that
-shows it.
+`show-me`'s catalog pairs each kind of content with the picture that shows it.
 
 | The content describes | Picture |
 | --- | --- |
@@ -166,11 +156,12 @@ shows it.
 | An algorithm | Short pseudocode |
 | Options or items compared on the same points | A table |
 
-The second is `research-brief`'s brief: question, answer, one cited claim per row with its
-confidence, and what stays unanswered. The third is `pr-body`'s description: Summary, Evidence,
-Merge Danger. The fourth is `retro`'s ten lenses, each pairing what to look for with the
-change it calls for. The fifth is `wayfinder`'s map — Destination, Notes, Decisions so far, Not
-yet specified, Out of scope — and its ticket, a question under one of four type labels.
+The other four parts:
+
+- `research-brief`'s brief: question, answer, one cited claim per row with its confidence, and what stays unanswered.
+- `pr-body`'s description: Summary, Evidence, Merge Danger.
+- `retro`'s ten lenses, each pairing what to look for with the change it calls for.
+- `wayfinder`'s map (Destination, Notes, Decisions so far, Not yet specified, Out of scope) and its ticket, a question under one of four type labels.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -193,16 +184,16 @@ yet specified, Out of scope — and its ticket, a question under one of four typ
 related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-An L0 foundation that declares nothing and is declared by nothing. Callers name the skill
-alone, and each keeps its own short rule for when the skill is absent.
-
 ![devbook-skills' dependencies](c4:devbook-skills-dependencies)
 
-The view also draws the couplings between the three callers themselves, and the pull
-requests delivery and delivery-schedule open on GitHub; those belong to
-[delivery](delivery.md#dependencies) and [delivery-schedule](delivery-schedule.md#dependencies).
-Only the arrow from devbook-skills to GitHub is this block's: `wayfinder` writing its map.
-Which phase or contract names which skill is in the Inbound table below.
+This L0 foundation declares nothing and nothing declares it. Callers name the skill alone, and
+each keeps its own short rule for when the skill is absent.
+
+The view also draws the couplings between the three callers, and the pull requests delivery and
+delivery-schedule open on GitHub. Those belong to [delivery](delivery.md#dependencies) and
+[delivery-schedule](delivery-schedule.md#dependencies). Only the arrow from devbook-skills to
+GitHub is this block's: `wayfinder` writing its map. Which phase or contract names which skill
+is in the Inbound tables below.
 
 ### Outbound
 
@@ -213,7 +204,7 @@ Which phase or contract names which skill is in the Inbound table below.
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and two manifests | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like every other plugin here. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, and one session-start hook | Each host's own schemas | Enabling the plugin is the whole adoption. |
-| The repository's issue tracker | Conformist | The host's issue CLI — `gh` on GitHub — with the tracker's native sub-issues and blocking | The tracker's own API | `wayfinder` keeps its map there. A tracker without native blocking takes a body line instead. |
+| The repository's issue tracker | Conformist | The host's issue CLI (`gh` on GitHub), with native sub-issues and blocking | The tracker's own API | `wayfinder` keeps its map there. A tracker without native blocking takes a body line instead. |
 
 ### Inbound
 
@@ -222,7 +213,18 @@ Which phase or contract names which skill is in the Inbound table below.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Separate Ways | `devbook-writing.md` names `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Nothing else. Without the skill, the rule's own table of diagram kinds applies. |
-| [delivery](delivery.md#dependencies) | Separate Ways | The Create Pull Request phase names `pr-body`, and `show-me` beneath it; the report-back to the person, Personal Validation, a gate, and the Summary name `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief`; the Summary offers `retro` after two or more revise rounds | The skill name alone | Nothing else. Without `retro`, the Summary offers nothing; without `pr-body`, the description follows `show-me` or plain prose; without `show-me`, the engine reports in prose as before; without `research-brief`, it cites each external fact's primary source itself or leaves the fact open. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares; `schedule-weekly-retro` names `retro` for its lenses | The skill name alone | Nothing else. Without `pr-body`, the contract's body still states the door, and the review judges a one-way diff from the diff itself; without `retro`, the weekly retro reads through its own three lenses. The issue sweep leaves every `wayfinder:*` issue to its map, by label, without naming the skill. |
+| [devbook](devbook.md#dependencies) | Separate Ways | `devbook-writing.md` names `show-me` for every chapter except `domain.md` and its splits | The skill name | Nothing else. Without the skill, the rule's own table of diagram kinds applies. |
+| [delivery](delivery.md#dependencies) | Separate Ways | Names the skills below | The skill name | Nothing else |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | Names the skills below | The skill name | Nothing else |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether the plugin is installed and enabled | The marketplace entry and manifests | Nothing: there is no stamp to read and no install to invoke. |
+
+| Caller | Skill | Named at | Without it |
+| --- | --- | --- | --- |
+| delivery | `pr-body` | The Create Pull Request phase | The description follows `show-me` or plain prose. |
+| delivery | `show-me` | Beneath `pr-body`; the report-back to the person; its orientation card opens Personal Validation, a gate, and the Summary | The engine reports in prose as before. |
+| delivery | `research-brief` | The Scope phase, and the Drafting phase for `arc42/` and `tech/` | It cites each external fact's primary source itself or leaves the fact open. |
+| delivery | `retro` | The Summary, after two or more revise rounds at Personal Validation | It offers nothing. |
+| delivery-schedule | `pr-body` | `draft-pr-contract.md`, for a sweep's draft pull request body; `schedule-merge-review` reads the door it declares | The contract's body still states the door, and the review judges a one-way diff from the diff itself. |
+| delivery-schedule | `retro` | `schedule-weekly-retro`, for its lenses | It reads through its own three lenses. |
+
+The issue sweep leaves every `wayfinder:*` issue to its map by label, naming no skill.

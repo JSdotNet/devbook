@@ -6,19 +6,25 @@ c4: ["marketplace.delivery-surface-backlog"]
 code: ["plugins/delivery-surface-backlog"]
 ```
 
-A run shown in the application where its work item already lives. Responsible for one thing:
-that the Backlog desktop app answers as a surface when, and only when, this plugin is
-installed — and says plainly when it cannot.
+A run shown in the application where its work item already lives. Its one responsibility is that the
+Backlog desktop app answers as a surface when, and only when, this plugin is installed. It says
+plainly when it cannot.
 
-Inside the block: one stdio MCP server that forwards calls to the MCP endpoint inside the
-running app, the resolution of that endpoint and its bearer token, and the one answer it
-composes itself — `unavailable` at open time. The run store, the Sessions pane, and every
-refusal are Backlog's, in `JSdotNet/Backlog`.
+**Owns**
 
-Outside it: what produced the run, and Backlog's tracker. The general `backlog` MCP server a
-repository registers to reach its work items is a different server under a different name, and
-never a surface. This block declares no dependency and names no engine. The kernel vocabulary —
-surface, capability group, MCP server — is [chapter 8](../08-crosscutting-concepts.md)'s.
+- one stdio MCP server that forwards calls to the MCP endpoint inside the running app
+- the resolution of that endpoint and its bearer token
+- the one answer it composes itself: `unavailable` at open time
+
+| Concern | Owner |
+| --- | --- |
+| The run store, the Sessions pane, every refusal, and the tracker | Backlog, in `JSdotNet/Backlog` |
+| What produced the run | whatever drives a run |
+
+The general `backlog` MCP server a repository registers to reach its work items is a different
+server under a different name, and never a surface. This block declares no dependency and names
+no engine. [Chapter 8](../08-crosscutting-concepts.md) holds the kernel vocabulary: surface,
+capability group, and MCP server.
 
 ## Interfaces
 
@@ -41,10 +47,11 @@ caller sees is a tool name it forwards.
 related: [".devbook/arc42/building-blocks/delivery-surface-backlog.md#endpoint"]
 ```
 
-Hand each lifecycle call to Backlog's `/mcp` over streamable HTTP — initialize once, keep the
-`Mcp-Session-Id` when Backlog issues one, read a JSON or an event-stream answer — and return
-Backlog's result or JSON-RPC error as it came. Nothing is checked on the way through: a second
-set of guards beside Backlog's would be a second contract drifting beside the first.
+- **Does:** hand each lifecycle call to Backlog's `/mcp` over streamable HTTP. Initialize once,
+  keep the `Mcp-Session-Id` when Backlog issues one, and read a JSON or an event-stream answer.
+- **Returns:** Backlog's result or JSON-RPC error unchanged.
+- **Checks:** nothing on the way through.
+- **Why:** a second set of guards beside Backlog's would be a second contract drifting beside the first.
 
 ### Answer Unavailable
 
@@ -52,10 +59,11 @@ set of guards beside Backlog's would be a second contract drifting beside the fi
 related: [".devbook/arc42/adr/surfaces.md"]
 ```
 
-Tell a caller at open time that Backlog cannot be the surface: `open_dashboard` returns
-`unavailable: true` with the reason when nothing listens, the endpoint is absent, the token is
-refused, or Backlog lists no `open_dashboard`. The contract's skip rule does the rest. Any
-later operation that cannot reach Backlog is a tool error — the run already lives there.
+- **At open:** `open_dashboard` tells a caller Backlog cannot be the surface. It returns
+  `unavailable: true` with the reason when nothing listens, the endpoint is absent, the token is
+  refused, or Backlog lists no `open_dashboard`. The contract's skip rule does the rest.
+- **Later:** an operation that cannot reach Backlog is a tool error.
+- **Why:** the run already lives there.
 
 ## Structure
 
@@ -74,11 +82,11 @@ A value and a session, and nothing stored.
 
 Also called: Backlog endpoint, port and token.
 
-Where Backlog listens and how it is let in: `http://127.0.0.1:<port>/mcp` with a bearer token.
-Resolved from `BACKLOG_MCP_PORT` and `BACKLOG_MCP_TOKEN`, then `mcpServer.port` and
-`mcpServer.token` in the app's `settings.json`, then port `5757` — the order Backlog's own
-`backlog-tools` telemetry forwarder reads them in. Re-resolved after Backlog stops answering, so
-an app restarted on another port is found again.
+Where Backlog listens and how it is let in: `http://127.0.0.1:<port>/mcp` with a bearer token. It
+resolves from `BACKLOG_MCP_PORT` and `BACKLOG_MCP_TOKEN`, then `mcpServer.port` and
+`mcpServer.token` in the app's `settings.json`, then port `5757`, the order Backlog's own
+`backlog-tools` telemetry forwarder uses. It re-resolves after Backlog stops answering, so an app
+restarted on another port is found again.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -135,8 +143,8 @@ sequenceDiagram
     end
 ```
 
-- **Unavailable is an answer, not an error.** It is the one thing this proxy composes, and it
-  is given at open time because that is where a caller still decides which surfaces record the run.
+- **Unavailable is an answer, not an error.** It is the one thing this proxy composes. It comes
+  at open time because that is where a caller still decides which surfaces record the run.
 - **Mid-run is different.** A Backlog that closes after `start_run` fails the next call as a
   tool error, and the caller treats it as the tooling failure it is.
 

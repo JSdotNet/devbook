@@ -5,11 +5,10 @@ number: 3
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/tech/hosts.md", ".devbook/arc42/05-building-block-view.md#level-1-the-plugin-landscape"]
 ```
 
-This repository ships authoring assets rather than a running product, so a *user* here is a
-host that loads an asset and a repository that installs one. Both sit outside every building
-block, and every block conforms to them rather than the other way round. What is inside the
-boundary is the marketplace and its thirteen plugins, one block each under
-[`building-blocks/`](building-blocks/README.md); everything below is outside it.
+This repository ships authoring assets, not a running product. A *user* here is a host that
+loads an asset and a repository that installs one. Both sit outside every building block, and
+every block conforms to them. The boundary holds the marketplace and its thirteen plugins, one
+block each under [`building-blocks/`](building-blocks/README.md); everything below is outside it.
 
 ## Business Context
 
@@ -24,8 +23,8 @@ related: [".devbook/arc42/01-introduction-and-goals.md#stakeholders"]
 | The maintainer | Authors every asset by hand, runs the checks, releases every plugin at one version | [Chapter 1](01-introduction-and-goals.md#stakeholders), [the releases record](adr/releases.md) |
 | Claude Code and GitHub Copilot | Read the same manifest, skill, and hook files; each ignores the keys it does not know | [Hosts](../tech/hosts.md), [the hosts record](adr/hosts.md) |
 | A consuming repository | Installs a component, keeps its stamp in `.devbook/config.json`, and is reconciled on every upgrade | [Chapter 5, level 2](05-building-block-view.md#level-2-what-lands-in-a-repository), [the install record](adr/install.md) |
-| GitHub | Runs the check on every pull request, refreshes the derived index on a schedule, and is the tracker a flow reports to | [devbook-derived](building-blocks/devbook-derived.md), [delivery](building-blocks/delivery.md) |
-| A scheduled local routine | Runs an entry point with nobody watching, on the maintainer's machine in a fresh worktree of the repository | [delivery-schedule](building-blocks/delivery-schedule.md) |
+| GitHub | Checks every pull request, refreshes the derived index on a schedule, and is a flow's tracker | [devbook-derived](building-blocks/devbook-derived.md), [delivery](building-blocks/delivery.md) |
+| A scheduled local routine | Runs an entry point with nobody watching, in a fresh worktree on the maintainer's machine | [delivery-schedule](building-blocks/delivery-schedule.md) |
 | The Backlog desktop app | Reads the committed `_meta/` index and graph off disk and never writes them | [devbook-derived](building-blocks/devbook-derived.md#dependencies) |
 
 ## Technical Context
@@ -34,15 +33,15 @@ related: [".devbook/arc42/01-introduction-and-goals.md#stakeholders"]
 related: [".devbook/tech/hosts.md", ".devbook/arc42/08-crosscutting-concepts.md#host"]
 ```
 
-Nothing here is a dependency in a manifest; each row is what the checked-in files are authored
-for, and the ratings are in [`tech/`](../tech/hosts.md).
+Nothing here is a dependency in a manifest. Each row is what the checked-in files are authored
+for, and [`tech/`](../tech/hosts.md) holds the ratings.
 
 | Interface | Direction | Carried as | Owned by |
 | --- | --- | --- | --- |
 | Claude Code plugin API | inbound: the host reads | `.claude-plugin/marketplace.json`, `.claude-plugin/plugin.json`, `skills/`, `hooks/hooks.json` | [Chapter 8](08-crosscutting-concepts.md#host) |
 | Copilot plugin API | inbound: the host reads | `.github/plugin/plugin.json`, `hooks.json`, and the `.github/instructions/` wrappers an install writes | [Chapter 8](08-crosscutting-concepts.md#host) |
 | Claude Code CLI | outbound, until 2026-09-21: one plugin invoked it | `claude --bg` and `claude agents --json --all`, from the deleted `fleet`; no asset invokes it now | [debt record 2](tdr/2-fleet-names-the-cli-directly.md), resolved |
-| The host's scheduler and workflow tools | outbound: one plugin invokes, resolved from the live tool list | the desktop app's `scheduled-tasks` for the catalog, `RemoteTrigger` only to retire a cloud copy, and `Workflow` under `schedule-issue-sweep`'s two scripts, from `delivery-schedule` | [delivery-schedule](building-blocks/delivery-schedule.md), [the hosts record](adr/hosts.md) |
+| The host's scheduler and workflow tools | outbound: one plugin invokes, resolved from the live tool list | the desktop app's `scheduled-tasks` for the catalog, `RemoteTrigger` only to retire a cloud copy, and `Workflow` under `schedule-issue-sweep`'s two scripts | [delivery-schedule](building-blocks/delivery-schedule.md), [the hosts record](adr/hosts.md) |
 | Copilot Extension SDK | inbound: the host loads at run time | `extensions/<name>/` with `copilot-extension.json` | [Chapter 8](08-crosscutting-concepts.md#surface) |
 | A consuming repository's tree | outbound: an install writes | `.agents/rules/`, one wrapper per host, `.devbook/_tools/`, `.github/workflows/`, one marker-fenced `AGENTS.md` section, one stamp | [Chapter 8](08-crosscutting-concepts.md#stamp), [the install record](adr/install.md) |
 | GitHub Actions | outbound: workflows an install materializes | `devbook-meta.yml`, `devbook-meta-nightly.yml`, `devbook-meta-drift.yml` | [devbook](building-blocks/devbook.md), [devbook-derived](building-blocks/devbook-derived.md) |

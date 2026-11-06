@@ -6,24 +6,35 @@ c4: ["marketplace.delivery"]
 code: ["plugins/delivery"]
 ```
 
-The delivery engine. Responsible for three things: that one unit of work reaches a review-ready
-change inside one session, that a person decided it was ready, and that a repository can shape
-the run without being able to weaken it.
+The delivery engine answers for three things:
 
-Inside the block: the two flows, the closed list of phases they run and a repository
-configures, the human gates it may add and never remove, the engine-owned keys of the stack
-config, and the pull-request lane at the end. Two of those are blocks of their own one level
-in, each with its own file: the phases and their gates are
-[delivery-phases](delivery-phases.md), and the lane is [delivery-pr-lane](delivery-pr-lane.md).
+- One unit of work reaches a review-ready change inside one session.
+- A person decided it was ready.
+- A repository can shape the run without being able to weaken it.
+
+**Owns:**
+
+- the two flows
+- the closed list of phases they run and a repository configures
+- the human gates a repository may add and never remove
+- the engine-owned keys of the stack config
+- the pull-request lane at the end
+
+**Nested blocks**, each with its own file:
+
+- [delivery-phases](delivery-phases.md): the phases and their gates
+- [delivery-pr-lane](delivery-pr-lane.md): the lane
+
 This file is the engine's white box around them: the flows, the run, the runner, and the
-configuration. The component view under [Structure](#structure) draws
-these parts and the two nested blocks together.
+configuration. The component view under [Structure](#structure) draws these parts and the two
+nested blocks together.
 
-Outside it: deploy, which is where "delivery" stops here; expertise, which is an agent a
-repository binds to a phase; visibility, which is a [surface](delivery-surface-dashboard.md)
-resolved at run time; and a backlog worked with nobody watching, which is
-[delivery-schedule](delivery-schedule.md)'s issue sweep. That sweep takes one item at a time in
-a session no flow shares.
+| Outside it | Owner |
+| --- | --- |
+| Deploy | None: "delivery" stops here |
+| Expertise | An agent a repository binds to a phase |
+| Visibility | A [surface](delivery-surface-dashboard.md) resolved at run time |
+| A backlog worked with nobody watching | [delivery-schedule](delivery-schedule.md)'s issue sweep, one item at a time in a session no flow shares |
 
 ## Interfaces
 
@@ -31,20 +42,20 @@ a session no flow shares.
 related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate"]
 ```
 
-Twenty-five skills, six agents, one hook, and the contracts under `resources/` that everything
-a repository plugs in answers to. No rule, no MCP server, no extension, and no workflow ship
-here. The engine is reached by invoking a flow, and everything else it exposes is a contract
+The block exposes twenty-five skills, six agents, one hook, and the contracts under `resources/`
+that everything a repository plugs in answers to. It ships no rule, MCP server, extension, or
+workflow. Invoking a flow reaches the engine, and everything else it exposes is a contract
 another block or a repository conforms to.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `flow-code`, `flow-spec` | skills, the two flows | A person routing one unit of work, `start-session-from-issue`, or a higher layer's worker or schedule entry point |
 | `phase-update-base`, `phase-scope`, `phase-plan`, `phase-implement`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary`, `phase-drafting`, `phase-check-review` | skills, one per phase | The flow-runner, in the flow's phase order, never a person directly |
-| `push-branch`, `update-pr-branch`, `fix-pr-checks`, `pr-merge-ready` | skills, the pull-request lane | A person, on a change a flow did or did not produce; `pr-merge-ready` uses the other three |
+| `push-branch`, `update-pr-branch`, `fix-pr-checks`, `pr-merge-ready` | skills, the pull-request lane | A person, on a change from a flow or not; `pr-merge-ready` uses the other three |
 | `start-session-from-issue`, `sre-alerts-to-work-items` | skills, tracker entry points | A person, through the bound tracker |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
+| `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill; no agent spawns it |
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `scenario-page-check.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `tdd-rules.md`, `implement-kinds.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
@@ -58,19 +69,17 @@ lane skill in [delivery-pr-lane](delivery-pr-lane.md#interfaces). The rest are b
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/arc42/building-blocks/delivery.md#change-kind"]
 ```
 
-Carry any change to the code from a request to a review-ready change. That covers a feature or
-an incremental change, a defect, a structure or layout refactor, and a new module, service, or
-first runnable increment. It also covers the tooling, CI, scripting, and housekeeping around
-them, a dependency move, and creating and scaffolding a repository.
+- **Does:** carry any change to the code from a request to a review-ready change.
+- **Covers:** a feature or an incremental change; a defect; a structure or layout refactor; a
+  new module, service, or first runnable increment; the tooling, CI, scripting, and housekeeping
+  around them; a dependency move; creating and scaffolding a repository.
+- **Why:** one flow carries all seven kinds because every kind runs the same phases.
 
-One flow carries all seven kinds because every kind runs the same phases. Scope derives the
-kind, and the kind changes only what `implement` does and how deep `verify` goes. A dependency
-move is the `dependency` kind: analysis, a baseline, reversible batches, the security scan,
-and feature adoption are the work `implement` does for it. Scaffolding a repository is the
-`project` kind in the same way.
-
-A thin request is the normal case rather than a reason to refuse the run. A defect's fix has a
-test in front of it, and a refactor holds behaviour still on purpose.
+Scope derives the kind, and the kind changes only what `implement` does and how deep `verify`
+goes. A dependency move is the `dependency` kind: analysis, a baseline, reversible batches, the
+security scan, and feature adoption are the work `implement` does for it. Scaffolding a
+repository is the `project` kind in the same way. [flow-code run](#flow-code-run) covers a thin
+request, a defect, and a refactor.
 
 ### flow-spec
 
@@ -78,12 +87,14 @@ test in front of it, and a refactor holds behaviour still on purpose.
 related: [".devbook/arc42/building-blocks/delivery.md#flow-spec-run"]
 ```
 
-Write or correct a devbook folder: an architecture chapter, decision record, or debt record; a
-bounded context or the context map; the technology graph; design principles, tokens, and
-component guidance; the AI adoption record. One flow serves the five folders because the
-procedure is the same and only the drafting agent differs. The folder qualifies the drafting
-phase, and the repository's own instruction file for that folder says what a chapter must look
-like. The flow runs the repository's check and never regenerates the derived indexes. It is the
+- **Does:** write or correct a devbook folder: an architecture chapter, decision record, or debt
+  record; a bounded context or the context map; the technology graph; design principles, tokens,
+  and component guidance; the AI adoption record.
+- **Never:** regenerates the derived indexes.
+- **Why:** the procedure is the same across the five folders, and only the drafting agent differs.
+
+The folder qualifies the drafting phase, and the repository's own instruction file for that
+folder says what a chapter must look like. The flow runs the repository's check. It is the
 escalation target when any other flow discovers it needs a decision.
 
 ### start-session-from-issue
@@ -92,10 +103,10 @@ escalation target when any other flow discovers it needs a decision.
 related: [".devbook/arc42/08-crosscutting-concepts.md#tracker"]
 ```
 
-Start this session's work from one tracker item: fetch what matches a filter, select one,
-claim it, route it to the flow its type calls for, and run that flow here. It records the item
-in the run's `origins` with its kind. One item per run, with a person present, is what
-separates it from the fan-out lane.
+- **Does:** start this session's work from one tracker item: fetch what matches a filter →
+  select one → claim it → route it to the flow its type calls for → run that flow here.
+- **Records:** the item in the run's `origins`, with its kind.
+- **Unlike the fan-out lane:** one item per run, with a person present.
 
 ### sre-alerts-to-work-items
 
@@ -103,9 +114,9 @@ separates it from the fan-out lane.
 related: [".devbook/arc42/08-crosscutting-concepts.md#tracker"]
 ```
 
-Turn active Azure Monitor alerts into tracked work items, so an incident becomes something the
-rest of this block already knows how to carry. Azure is the alert source; where the item lands
-is the tracker binding's answer, not this skill's.
+- **Does:** turn active Azure Monitor alerts into tracked work items. The tracker binding, not
+  this skill, says where the item lands.
+- **Why:** an incident becomes something the rest of this block already knows how to carry.
 
 ### init and update
 
@@ -113,34 +124,11 @@ is the tracker binding's answer, not this skill's.
 related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
 ```
 
-Record the engine in a repository, and nothing more: it materializes no file, because
-everything it reads is the engine keys or a skill the repository owns. `init` writes
-`components.delivery` as `pluginVersion` alone and refuses where that entry exists; `update`
-rewrites it to the installed version and refuses where it does not.
-
-**Release what an earlier engine seeded.** An engine before the procedures moved out of it —
-into a plugin of their own, and from there into [devbook](devbook-procedures.md#procedure) — wrote `start`
-and `capture` with a wrapper per host and stamped them under `components.delivery.materialized`.
-`update` drops those entries and deletes no file: each stays the repository's until
-`devbook:update` adopts it.
-
-**Rewrite the old configuration keys.** `update` runs the migration that folds `extensions`,
-`bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` into one complete `phases` map per
-flow, moves a map left under a retired flow into `flow-code`, renames `policy.phases.verification`,
-`phases.workItemUpdate`, and a gate's `skip-point` to their 1.14.0 names, and drops
-`policy.validate.retryBudget`. It is
-`migrations/001-phase-maps/`, the engine's first, and it lives for the 1.x major per
-[the releases decision](../adr/releases.md). It rewrites the committed file and both overlay
-layers, writing `{}` for every phase the old file never named in the committed one and keeping
-an overlay partial, and it re-points a gate on an extension point at the phase that point
-belonged to. A role bound to a bare plugin becomes that plugin's single agent. A plugin with
-several agents, or one not installed on this machine, is written as found and listed among the
-notes `update` shows beside the diff, because the script never guesses an agent. A `qa` role
-lands beside a `qa.run` skill and yields only to a `qa.run` agent, and a null `qa.run` writes
-nothing, since it bound no provider rather than forcing the phase inline. The `spec` point lands
-on `flow-code` alone, the only flow that builds from a specification. An `app.start` naming the
-retired `repo:start` or `delivery:phase-validation` is never carried into `phase-verify.app`.
-`update` then re-validates and re-stamps.
+- **Does:** record the engine in a repository, and nothing more. `init` writes
+  `components.delivery` as `pluginVersion` alone, and `update` rewrites it to the installed version.
+- **Refuses:** `init`, where that entry exists; `update`, where it does not.
+- **Never:** materializes a file.
+- **Why:** everything it reads is the engine keys or a skill the repository owns.
 
 ```mermaid
 flowchart LR
@@ -151,24 +139,54 @@ flowchart LR
   D --> S["components.delivery re-stamped"]
 ```
 
+**Release what an earlier engine seeded.** The procedures moved out of the engine into a plugin
+of their own, and from there into [devbook](devbook-procedures.md#procedure). An engine before
+that move wrote `start` and `capture` with a wrapper per host and stamped them under
+`components.delivery.materialized`. `update` drops those entries and deletes no file: each stays
+the repository's until `devbook:update` adopts it.
+
+**Rewrite the old configuration keys.** `update` runs `migrations/001-phase-maps/`, the engine's
+first migration, which lives for the 1.x major per [the releases decision](../adr/releases.md).
+The migration:
+
+- folds `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` into one
+  complete `phases` map per flow
+- moves a map left under a retired flow into `flow-code`
+- renames `policy.phases.verification`, `phases.workItemUpdate`, and a gate's `skip-point` to
+  their 1.14.0 names
+- drops `policy.validate.retryBudget`
+- rewrites the committed file and both overlay layers, writing `{}` in the committed one for
+  every phase the old file never named, and keeping an overlay partial
+- re-points a gate on an extension point at the phase that point belonged to
+
+A role bound to a bare plugin becomes that plugin's single agent. A plugin with several agents,
+or one not installed on this machine, is written as found. It joins the notes `update` shows
+beside the diff, because the script never guesses an agent.
+
+A `qa` role lands beside a `qa.run` skill and yields only to a `qa.run` agent. A null `qa.run`
+writes nothing, since it bound no provider rather than forcing the phase inline. The `spec` point
+lands on `flow-code` alone, the only flow that builds from a specification. An `app.start` naming
+the retired `repo:start` or `delivery:phase-validation` is never carried into `phase-verify.app`.
+`update` then re-validates and re-stamps.
+
 ## Structure
 
 ```meta
 related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/adr/configuration.md"]
 ```
 
-What a run is made of, what a repository declares about it, and where the line runs between
-what the engine owns and what a repository binds. Five aggregates, two domain services, three
-domain events, and the two value objects and one enum more than one aggregate holds, all drawn
-in the model below. Two of the aggregates, Phase and Gate, and the Gate Decision value object
-are described in [delivery-phases](delivery-phases.md#structure), and the Pull Request Lane
-service in [delivery-pr-lane](delivery-pr-lane.md#structure). The
-kernel vocabulary is defined once in [chapter 8](../08-crosscutting-concepts.md): plugin,
-layer, tracker, surface, host slot, phase, and gate. The terms this block owns and no part
-below names are in the [glossary](../12-glossary.md): tier, Personal Validation, PR lane, and
-provider.
-
 ![delivery's components](c4:delivery)
+
+This section says what a run is made of and what a repository declares about it. It also says
+where the line runs between what the engine owns and what a repository binds. The model below draws five
+aggregates, two domain services, three domain events, and the two value objects and one enum
+more than one aggregate holds. [delivery-phases](delivery-phases.md#structure) describes two of
+the aggregates, Phase and Gate, and the Gate Decision value object.
+[delivery-pr-lane](delivery-pr-lane.md#structure) describes the Pull Request Lane service.
+
+[Chapter 8](../08-crosscutting-concepts.md) defines the kernel vocabulary once: plugin, layer,
+tracker, surface, host slot, phase, and gate. The [glossary](../12-glossary.md) holds the terms
+this block owns and no part below names: tier, Personal Validation, PR lane, and provider.
 
 ### Model
 
@@ -259,15 +277,15 @@ classDiagram
     Run ..> Surface : publishes lifecycle events to
 ```
 
-- **A flow names a phase; a phase entry says who runs it.** That indirection is the entire
-  reason this block declares no specialist dependency. `Flow` and the agent never meet except
-  through `PhaseEntry`, so a missing agent is a field that resolved to the session rather than
-  a plugin that failed to load.
+- **A flow names a phase; a phase entry says who runs it.** That indirection is why this
+  block declares no specialist dependency. `Flow` and the agent meet only through `PhaseEntry`,
+  so a missing agent is a field that resolved to the session rather than a plugin that failed
+  to load.
 - **The `Flow → Phase` association is to a closed list the engine declares.** A repository
   writes `PhaseEntry` rows and never `Phase` rows, which is why configuration cannot become a
   second flow language.
 - **`Gate` hangs off a phase id, not off a run's stage.** That lets configuration add one
-  anywhere with a stable name, and it makes Personal Validation an instance of the pattern
+  anywhere with a stable name. It also makes Personal Validation an instance of the pattern
   rather than an exception to it.
 - **`GateDecision` is a value held in two places on purpose.** The stage carries it so the run
   reads correctly, and the gate produced it. Recording it twice is harmless, and re-deriving it
@@ -276,7 +294,7 @@ classDiagram
   answers the lifecycle group and knows nothing about which implementation did. See
   [the surfaces record](../adr/surfaces.md).
 - **`StackConfig` here is the engine keys, not the file.** Every `components.<name>` stamp in
-  the same file belongs to that component's `init` and `update` skills, which is why the class
+  the same file belongs to that component's `init` and `update` skills. The class therefore
   carries the engine's names and not a generic key bag.
 - **Nothing associates with a host.** `HostSlot` is a name with a documented unbound
   behaviour, bound from configuration or answered by the live session. It is the only shape in
@@ -290,9 +308,9 @@ related: [".devbook/arc42/adr/flow-engine.md"]
 
 Also called: execution, session run.
 
-One execution of one flow over one unit of work: the stages and their results, the prompts
-that produced them, the gate decisions a person returned, and where the change landed. It is
-the consistency boundary because a stage result, the decision that accepted it, and the change
+A run is one execution of one flow over one unit of work: the stages and their results, the
+prompts that produced them, the gate decisions a person returned, and where the change landed.
+It is the consistency boundary because a stage result, the decision that accepted it, and the change
 it produced are only meaningful together. A run that recorded an approval it cannot name a
 stage for has recorded nothing.
 
@@ -321,24 +339,29 @@ another block.
 A run owns one entity, one value object, and one enum.
 
 **Stage** (also called: step) is one phase as this run executed it, with identity inside the
-run: the phase id, a status, the output it produced, the links and evidence it gathered, how
-it actually ran — mode, agent, skill, model, and effort, beside what the run resolved for it —
-and how many times it finished. A stage is a prompt rather than a program, such as "apply TDD" or
-"escalate instead of continuing when the request needs a new architectural decision". That is
-why configuration can choose among phases and never define one. The repeat count is not
-bookkeeping. A stage that ran again after a revise decision reads as two attempts rather than
-one long step, and a resumed session and a report both depend on that difference.
+run:
+
+- the phase id and a status
+- the output it produced
+- the links and evidence it gathered
+- how it actually ran (mode, agent, skill, model, and effort), beside what the run resolved for it
+- how many times it finished
+
+A stage is a prompt rather than a program, such as "apply TDD" or "escalate instead of continuing
+when the request needs a new architectural decision". That is why configuration can choose among
+phases and never define one. A stage that ran again after a revise decision reads as two attempts rather than one long step. A resumed session and a report
+both depend on that difference.
 
 **Run Context** (value object) is what the run is about, set once and refined rather than
-accumulated: the change kind, the item being worked, the branch, and the worktree it lives in.
-It also holds `origins`, every work item the run started from, each with its kind: `issue`,
-`entry`, `annotation`, or `change`, and none for an ad-hoc request. It is a value because nothing in it has
-identity. Replacing it wholesale is the only sensible update, and two runs with the same
+accumulated. It holds the change kind, the item being worked, the branch, and the worktree it
+lives in. It also holds `origins`, every work item the run started from, each with its kind:
+`issue`, `entry`, `annotation`, or `change`, and none for an ad-hoc request. It is a value
+because nothing in it has identity. Replacing it wholesale is the only sensible update, and two runs with the same
 context are still two runs.
 
 **Stage Status** (enum) says whether a stage is pending, running, finished, or blocked. Blocked
-is the one that carries weight: a declined gate produces it, and it is never spelled as
-skipped, because a skipped stage reads as a decision nobody made.
+is the one that carries weight: a declined gate produces it. It is never spelled as skipped,
+because a skipped stage reads as a decision nobody made.
 
 ### Flow
 
@@ -348,15 +371,15 @@ related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/flow-en
 
 Also called: flow skill, staged procedure.
 
-A staged procedure named for what changes, run start to finish in one session and passing
-the Personal Validation gate before its pull request. Two ship here: `flow-code` for every
+A flow is a staged procedure named for what changes. It runs start to finish in one session and
+passes the Personal Validation gate before its pull request. Two ship here: `flow-code` for every
 change to the code and `flow-spec` for the five devbook folders. Each owns its
 [phase](delivery-phases.md#phase) order and the [tier](#phase-tier) that order makes.
 
-A flow is the unit a request is routed to, so what it changes is the boundary that matters. A
+A request routes to a flow, so what it changes is the boundary that matters. A
 repository needing a different shape writes its own `flow-*`, which takes precedence for what
-it covers, declares its own phase ids, and still reuses the phases. It never configures this
-one into something else.
+it covers. It declares its own phase ids and reuses the phases. It never configures
+this one into something else.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -374,15 +397,14 @@ one into something else.
 related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/12-glossary.md#tier"]
 ```
 
-The enum [Flow](#flow) owns: which phases a flow runs. `flow-code` runs one tier for every
-kind, and only `plan` is limited to a kind, `create`. A `config` change therefore also gets
-review and Build & Test, where a broken workflow file fails. `flow-spec` keeps a shorter tier
-of its own. It drafts and checks in place of implementing, building, verifying, and
-checking the spec, because there is nothing runnable and the chapter it writes is the
-specification.
+This enum, which [Flow](#flow) owns, says which phases a flow runs. `flow-code` runs one tier for
+every kind, and only `plan` is limited to a kind, `create`. A `config` change therefore also gets
+review and Build & Test, where a broken workflow file fails. `flow-spec` keeps a shorter tier. It
+drafts and checks in place of implementing, building, verifying, and checking the spec, because
+there is nothing runnable and the chapter it writes is the specification.
 
-Session Handoff belongs to no tier. It is an interrupt rather than a step, firing at whatever
-stage the run has reached when the context gauge crosses its threshold.
+Session Handoff is an interrupt rather than a step, firing when the context gauge crosses its
+threshold.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -399,10 +421,10 @@ related: [".devbook/arc42/adr/configuration.md", ".devbook/arc42/05-building-blo
 
 Also called: `config.json`, delivery config.
 
-`.devbook/config.json`, and specifically the keys this block owns: `bindings`, `phases`,
+This is `.devbook/config.json`, specifically the keys this block owns: `bindings`, `phases`,
 `policy`, `gates`, and the optional `areas`. It is the one file a consuming repository commits
 for the whole stack, and the boundary inside it is by key. Every `components.<name>` stamp
-belongs to that component's own `init` and `update` skills and is never written here.
+belongs to that component's own `init` and `update` skills, and this block never writes one.
 
 `phases` holds one complete map per flow, and model and effort are legal in it as the team's
 defaults. A user overlay wins field by field, so nobody's own cost choice is taken away.
@@ -410,7 +432,7 @@ defaults. A user overlay wins field by field, so nobody's own cost choice is tak
 not tell `phase-implement` which code is frontend.
 
 Reading the file is not adopting devbook. The path is a path: the engine reads it with no
-devbook folder present, which is the reason the file could move there at all.
+devbook folder present, which is why the file could move there at all.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -428,12 +450,18 @@ devbook folder present, which is the reason the file could move there at all.
 
 The config owns two value objects: Policy Switch, and the Binding that follows.
 
-**Policy Switch** is one member of a closed set: QA depth and its ceiling, the retry budgets
-for review and the ready check, the gate revise budget, and which optional phases run. It also
-covers whether the flow commits at each handback, whether a pull request is required, and
-whether a change's scenarios must each name a test before the change is accepted. `advisory`
-shows the unverified scenarios, and `linked` refuses acceptance over them; the acceptance gate
-reads the switch and refuses. The set is closed because an open one would be a stage
+**Policy Switch** is one member of a closed set:
+
+- QA depth and its ceiling
+- the retry budgets for review and the ready check
+- the gate revise budget
+- which optional phases run
+- whether the flow commits at each handback
+- whether a pull request is required
+- whether a change's scenarios must each name a test before the change is accepted
+
+`advisory` shows the unverified scenarios. Under `linked`, the acceptance gate reads the switch
+and refuses acceptance over them. The set is closed because an open one would be a stage
 definition wearing a shorter name.
 
 ### Binding
@@ -442,14 +470,10 @@ definition wearing a shorter name.
 related: [".devbook/arc42/building-blocks/delivery.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#tracker"]
 ```
 
-The value object [Stack Config](#stack-config) owns: a name resolved to whatever fills it in
-this repository. The tracker resolves to a provider, the surface to an order of servers, and a
-host slot to a fact about this repository. Who runs a phase and which MCP servers it uses are
-not bindings: they are fields of the phase's entry. A binding is a value. Replace it and the
-flow resolves the new one on its next run, with nothing to migrate.
-
-An explicit `null` is a binding, not an absence: it says deliberately unbound, which the
-vocabulary distinguishes from a key nobody wrote.
+This value object, which [Stack Config](#stack-config) owns, is a name resolved to whatever fills
+it in this repository. The tracker resolves to a provider, the surface to an order of servers,
+and a host slot to a fact about this repository. Who runs a phase and which MCP servers it uses
+are not bindings: they are fields of the phase's entry.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -464,9 +488,9 @@ related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/d
 
 Also called: runner, sequencer.
 
-The agent that runs a session's flow. It sequences the phases the flow names, Update Base first.
-It resolves each phase's agent, skill, model, and effort, runs the phase the way those fields
-say, tracks the run against the surface, runs the ready check, and enforces the gate.
+The flow runner is the agent that runs a session's flow. It sequences the phases the flow names, Update Base first.
+It resolves each phase's agent, skill, model, and effort, and runs the phase the way those fields
+say. It tracks the run against the surface, runs the ready check, and enforces the gate.
 
 ```mermaid
 flowchart TD
@@ -480,9 +504,9 @@ flowchart TD
     effort -->|yes| runner["runner-effort runs the named agent's body"]
 ```
 
-A forked or delegated phase gets a brief file, never the conversation: the runner writes
+A forked or delegated phase gets a brief file, never the conversation. The runner writes
 `<phase>-brief.md` into the run folder, under the surface's state directory or the host's
-scratch directory, and never into the worktree, so no brief lands in the change set.
+scratch directory. It never writes into the worktree, so no brief lands in the change set.
 
 A sub-agent call can set a model but not an effort, which is why the effort runners exist.
 Each carries `effort:` and nothing else, and a phase run inside one gets the runner's tools,
@@ -490,16 +514,15 @@ not the specialist's own list. A specialist that needs its tool list kept declar
 effort. Copilot gets no runner: it runs an effort-set phase on the session's effort, and the
 run says so once.
 
-Invocation semantics: command-invoked, once per run, and it holds the session for the run's
-whole length. The behaviour does not belong on [Run](#run) because it coordinates a run, a
-flow, the config, and agents none of them know about. The thing that enforces a gate must also
-not be a thing an agent bound to a phase can be.
+A command invokes the runner once per run, and it holds the session for the run's whole
+length. The behaviour does not belong on [Run](#run) because it coordinates a run, a
+flow, the config, and agents none of them know about. What enforces a gate must also never be an
+agent bound to a phase.
 
-It also owns the loop between `implement` and `review`. It alternates the two forks one slice
-at a time, because a forked `implement` cannot be relied on to fork the reviewer itself. And it
-is the commit point: a phase handing back is where the change set is committed when policy says
-so, which keeps a run's history legible without every agent having to know it is being
-recorded.
+It also owns the loop between `implement` and `review`, alternating the two forks one slice
+at a time, because a forked `implement` cannot be relied on to fork the reviewer itself. It is also
+the commit point: a phase handing back is where the change set is committed when policy says
+so. That keeps a run's history legible without every agent knowing it is being recorded.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -518,8 +541,8 @@ related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/
 ```
 
 Published when a run begins, in the `delivery.surface.lifecycle@1` language. The publisher
-does not know which surface is listening, or whether any is: the tool names are resolved by
-pattern from the live tool list, and nothing answering is a normal outcome.
+does not know which surface is listening, or whether any is. The tool names resolve by pattern
+from the live tool list, and nothing answering is a normal outcome.
 
 Payload:
 
@@ -554,7 +577,7 @@ related: [".devbook/arc42/building-blocks/delivery.md#run"]
 ```
 
 Published whenever a stage changes status, produces output, gathers evidence, or records a
-gate decision. The whole surface contract is built around this event: everything a report or a
+gate decision. The surface contract is built around this event: everything a report or a
 resumed session needs is a fold of these.
 
 Payload:
@@ -563,11 +586,11 @@ Payload:
 - `output`, `links`: what it produced, and where the artifacts are
 - `qaScenarios`: scenarios with their status and evidence paths, where `verify` ran
 - `evidence`: optional; one `{ journey, stem, part, outcome, runAt }` per part of each journey
-  `verify` ran — `journey` its address, `stem` its anchor for a reader of the first shape —
-  `outcome` being `passed`, `failed`, or `not-run`
-- `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
-  entry per sub-agent call — beside what the run resolved for it; and, optionally, what the
-  pass found: `round` on Implement and Review, `blockers` on Review, `defectsFound` on Verify
+  `verify` ran. `journey` is its address, `stem` its anchor for a reader of the first shape, and
+  `outcome` is `passed`, `failed`, or `not-run`
+- `execution`: how the phase actually ran (mode, agent, runner, skill, model, effort, and one
+  entry per sub-agent call), beside what the run resolved for it. Optionally, what the pass
+  found: `round` on Implement and Review, `blockers` on Review, `defectsFound` on Verify
 - `decision`: the gate outcome, where a gate was attached to this phase
 - `quality`: optional, on the Review stage; the review rounds each slice took and the `rule`
   and `bug` blockers each round left open or fixed, as they stand so far
@@ -585,10 +608,9 @@ Published language rules:
   past `@1`: a run that ran no journey sends none, and a surface that does not read it
   keeps everything else the stage carries.
 - **Quality is reported, never derived.** Only the phase that reviews or verifies the work knows
-  how many rounds it took, what review blocked, and what got past it, so the engine sends
+  how many rounds it took, what review blocked, and what got past it. The engine therefore sends
   those facts with the stage that found each, and a surface that keeps them records them as
-  sent and derives none. They are
-  additive under `@1`, and they never enter how a run is priced.
+  sent and derives none. They are additive under `@1`, and they never enter how a run is priced.
 - **A repeat is a repeat.** A stage finishing twice is recorded twice, because a revise
   decision that reads as one long stage has erased the decision.
 - **Telemetry is never written by hand.** A surface that measures reports it, and one that does
@@ -602,8 +624,7 @@ related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/buil
 ```
 
 Published when a run reaches its Summary phase or stops, and a run that stopped is finished
-too. The distinction between finished-and-delivered and finished-and-blocked lives in the
-payload rather than in whether the event fired.
+too. The payload, rather than whether the event fired, tells a delivered run from a blocked one.
 
 Payload:
 
@@ -638,14 +659,13 @@ Published language rules:
 related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
-A value object held by more than one aggregate. A name a shared asset reads instead of a
-host's own file: `repo-instructions`, `model-override`, `stage-delegation`, `surface`,
-`pr-lane`, `session-id`. A slot is bound or it takes its documented unbound default, and it is
-never branched on. An asset carrying an if-this-host clause has not used a slot.
+This value object, which more than one aggregate holds, is a name a shared asset reads instead
+of a host's own file: `repo-instructions`, `model-override`, `stage-delegation`, `surface`,
+`pr-lane`, `session-id`.
 
-Three of the six, `stage-delegation`, `surface`, and `session-id`, are answered by the live
-session rather than by configuration. That keeps the hosts from re-diverging the moment one
-gains what the other has. Unbound is the resting state of the whole set.
+The live session rather than configuration answers three of the six: `stage-delegation`,
+`surface`, and `session-id`. That keeps the hosts from re-diverging the moment one gains what
+the other has.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -661,14 +681,10 @@ related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/d
 
 Also called: change category.
 
-An enum held by more than one aggregate. What kind of change a `flow-code` run is making:
-`feature`, `create`, `refactor`, `defect`, `config`, `dependency`, or `project`. `scope`
-resolves it once, early. It is the input to two decisions that would otherwise each need their
-own switch: what `implement` does, and how deep `verify` goes. It never decides which phases
-run, apart from `plan` running for `create` alone.
-
-It is a claim about the change, never about the flow that carried it. `flow-spec` derives a
-folder and a chapter kind instead, which pick the drafting agent.
+This enum, which more than one aggregate holds, says what kind of change a `flow-code` run is
+making: `feature`, `create`, `refactor`, `defect`, `config`, `dependency`, or `project`. What
+`implement` does and how deep `verify` goes would otherwise each need their own switch. `flow-spec` derives a folder and
+a chapter kind instead, which pick the drafting agent.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -682,8 +698,8 @@ folder and a chapter kind instead, which pick the drafting agent.
 related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
-How a run moves: the phase spine with its two cycles, the two tiers a flow runs, and then each
-of the two flows. The three answers a gate can give are
+This section shows the phase spine with its two cycles, the two tiers a flow runs, and each of
+the two flows. The three answers a gate can give are
 [A Gate, Answered](delivery-phases.md#a-gate-answered). Every flow diagram below runs the same
 spine. The agent, model, and MCP servers each phase resolves are the repository's `phases` map,
 and the config templates ship both maps filled in. This section is the model, not the wiring.
@@ -692,9 +708,6 @@ and the config templates ship both maps filled in. This section is the model, no
 
 ```meta
 ```
-
-The phases of `flow-code` in order, with the two loops a run can take before a person sees it.
-Chores hang off a phase as its `before` and `after` and never move the spine.
 
 ```mermaid
 flowchart TD
@@ -715,6 +728,8 @@ flowchart TD
     createPr --> reportBack["report-back"]
     reportBack --> summary(["summary"])
 ```
+
+`flow-code` runs these phases in order, with the two loops a run can take before a person sees it. Chores hang off a phase as its `before` and `after` and never move the spine.
 
 - **The gate is the only place a run stops for a person, and configuration may only add more.**
   It sits before `create-pr` and never inside it, so approval is a recorded decision rather
@@ -743,9 +758,6 @@ flowchart TD
 ```meta
 ```
 
-Same opening, same close, different middle. The tier belongs to the flow: `flow-code` runs the
-code tier for every kind, and `flow-spec` runs its own, shorter tier.
-
 ```mermaid
 flowchart LR
     subgraph code["Code tier, flow-code"]
@@ -772,13 +784,15 @@ flowchart LR
     end
 ```
 
+The tiers share their opening and close and differ in the middle. `flow-code` runs the code tier for every kind, and `flow-spec` runs its own, shorter tier.
+
 - **The `flow-spec` tier drafts and checks in place of building, verifying, and checking the
   spec.** There is nothing runnable to verify and nothing to check a chapter against, since the
   chapter is the specification. A chapter change still passes the ready check and Personal
   Validation and still opens for review.
 - **Verify's depth inside the code tier is driven by the kind.** A `feature` adding behaviour,
-  `create`, and `project` get a browser pass with captured evidence; a `feature` changing
-  existing behaviour, `defect`, and `refactor` get targeted verification; `config` and
+  `create`, and `project` get a browser pass with captured evidence. A `feature` changing
+  existing behaviour, `defect`, and `refactor` get targeted verification. `config` and
   `dependency` get startup only. Where there is no runnable application the depth is recorded
   as skipped rather than claimed, and a missing Playwright CLI or Aspire MCP server blocks the
   phase.
@@ -791,7 +805,7 @@ flowchart LR
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
-The lane for every change to the code. Its phase order is [A Run, End to End](#a-run-end-to-end),
+This lane carries every change to the code. Its phase order is [A Run, End to End](#a-run-end-to-end),
 and what the skill does is under [Interfaces](#flow-code). Every kind runs those phases. The
 kind changes the work inside `implement` and the depth of `verify`:
 
@@ -834,13 +848,15 @@ sequenceDiagram
 - **Areas are the skill's call.** `phase-implement` runs frontend and backend in order when
   one side consumes the other's new contracts or they share a file, and in parallel only when
   neither holds.
-- **A referenced journey travels the whole run.** `scope` lists every
-  [journey](devbook.md#scenario-tools) the item references, directly or through a
-  requirement whose case points at one of its parts. `implement` derives each journey's spec,
-  `verify` runs exactly those journeys, `spec-check` reports a journey whose run no longer
-  matches it as `stale` and a referenced part with no spec as `spec-ahead`, and Personal
-  Validation shows their screenshots beside the app. The journey is written before the run and
+- **A referenced journey travels the whole run.** The journey is written before the run and
   never during it.
+  - `scope` lists every [journey](devbook.md#scenario-tools) the item references, directly or
+    through a requirement whose case points at one of its parts.
+  - `implement` derives each journey's spec.
+  - `verify` runs exactly those journeys.
+  - `spec-check` reports a journey whose run no longer matches it as `stale`, and a referenced
+    part with no spec as `spec-ahead`.
+  - Personal Validation shows their screenshots beside the app.
 - **Behaviour is held still on purpose in a refactor.** `scope` lists every move and the
   reference each one forces before a file is touched, so the diff stays reviewable as a move.
 - **A defect's fix has a test in front of it.** The failing test that reproduces it is
@@ -861,9 +877,8 @@ sequenceDiagram
 related: [".devbook/arc42/building-blocks/delivery.md#flow-spec", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
-One flow for the five devbook folders: an architecture chapter, a decision or debt record, a
-bounded context, the technology graph, the design guidelines, and the adoption record alike.
-What the skill does is under [Interfaces](#flow-spec).
+One flow serves the five devbook folders alike. What the skill does is under
+[Interfaces](#flow-spec).
 
 ```mermaid
 flowchart TD
@@ -879,19 +894,19 @@ flowchart TD
 ```
 
 - **The folder and the kind are settled inside the flow, not before it.** `scope` derives which
-  folder the change lands in and, for `arc42/`, whether it is a chapter, a decision, a debt
-  record, or a proposal, which is a decision record in `proposed` status. There is no separate
-  flow per folder to route to, and no ADR or TDR flow either.
+  folder the change lands in. For `arc42/`, it derives whether the change is a chapter, a
+  decision, a debt record, or a proposal, which is a decision record in `proposed` status. There is no separate
+  flow per folder to route to, and no decision or debt record flow either.
 - **The folder picks the agent.** `phase-drafting:arc42` and its siblings each name their own
   agent, model, and effort, so a repository can draft `design/` with a UX specialist and `ai/`
   on a cheaper model.
 - **It carries none of the folder's rules.** What a chapter must look like is the repository's
   own instruction file for that folder. The flow loads it task-scoped, runs the check the
   repository's `AGENTS.md` names, and never regenerates the derived indexes.
-- It is the escalation target for a new decision, a cross-cutting redesign, a boundary
-  question, and accepted debt. A phase that discovers it needs a decision escalates here
+- **It is the escalation target for a new decision, a cross-cutting redesign, a boundary
+  question, and accepted debt.** A phase that discovers it needs a decision escalates here
   rather than taking one inline.
-- It stops at `scope` when the repository has not adopted the folder. Adopting one is the
+- **It stops at `scope` when the repository has not adopted the folder.** Adopting one is the
   convention's own `init` or `update` and never a flow's job.
 
 ## Dependencies
@@ -900,8 +915,8 @@ flowchart TD
 related: [".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-An L0 foundation. Its `dependencies` array is empty and its README devotes a section to what
-it never depends on. One row below says that is not the whole truth.
+This block is an [L0](../08-crosscutting-concepts.md#layer) foundation. Its `dependencies` array
+is empty and its README devotes a section to what it never depends on. One row below qualifies that.
 
 ### Outbound
 
@@ -911,14 +926,27 @@ it never depends on. One row below says that is not the whole truth.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here, and the kernel is what "packaged" means. |
-| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | `flow-code` works with devbook absent, so it is not an L1 extension; declaring it would demote every skill. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
+| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Declaring it would demote every skill. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
 | A bound agent per phase | Binding, never a dependency | Named in a phase's `agent` field as `plugin:agent` or `repo:<agent>`, resolved when the phase runs | The phase's brief and the skill it follows | One missing specialist must not demote every skill. With no agent, the runner runs the phase inline. |
-| A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]`: GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill` provider | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
+| A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]`: GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill` provider | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. |
 | An MCP server per phase | Binding, per phase | Named in a phase's `mcp` field, resolved from the live tool list at the phase that uses it | The tool-name pattern, never one spelling | A server that does not answer costs that phase its grounding, never the run, and is reported once. |
-| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | The Create PR phase names the skill `pr-body`, and `show-me` beneath it; the report back to the person, Personal Validation, a gate, and the Summary name `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief`; the Summary offers `retro` after two or more revise rounds | The skill name alone | A reviewer and the person at a gate read a picture faster than prose, a reviewer weighs a merge by whether it can be walked back, a fact outside the repository needs its primary source, and a run that took several rounds is worth reading back. Without these skills, the engine writes the description from the review and the evidence in prose and cites each external fact itself or marks it open, and offers no retro, so nothing is declared. |
+| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | The engine names its skills, listed below | The skill name alone | Optional, so nothing is declared. |
 | A surface | Resolved at run time, never declared | A `delivery-surface-*` server in the live tool list, in `bindings["delivery.surface"]` order | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
-| Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent and the effort runners, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. Host divergence is absorbed through a slot rather than a branch, and the effort runners load on Claude Code only. |
+| Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent and the effort runners, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. A slot rather than a branch absorbs host divergence. |
 | A consuming repository | Customer-Supplier, this block supplying | `.devbook/config.json`, the engine-owned keys; the `run` and `capture` skills it names by name and reads at `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md`, whoever wrote them | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
+
+`flow-code` works with devbook absent, so delivery is not an L1 extension. With no tracker bound,
+a flow runs to its file artifacts and opens nothing.
+
+| devbook-skills skill | Named by | Why |
+| --- | --- | --- |
+| `pr-body` | The Create PR phase | A reviewer weighs a merge by whether it can be walked back |
+| `show-me` | The Create PR phase beneath `pr-body`, the report back to the person, Personal Validation, a gate, and the Summary | A reviewer and the person at a gate read a picture faster than prose |
+| `research-brief` | The Scope phase, and the Drafting phase for `arc42/` and `tech/` | A fact outside the repository needs its primary source |
+| `retro` | The Summary, offered after two or more revise rounds | A run that took several rounds is worth reading back |
+
+Without these skills, the engine writes the description from the review and the evidence in
+prose, cites each external fact itself or marks it open, and offers no retro.
 
 ### Inbound
 
@@ -927,12 +955,12 @@ it never depends on. One row below says that is not the whole truth.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call these flows and phases | Flow names, the phase contract, the parking rule at a gate | That an unattended run parks where Personal Validation would be, and that no schedule may target a flow. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call these flows and phases | Flow names, the phase contract, the parking rule at a gate | An unattended run parks where Personal Validation would be, and no schedule may target a flow. |
 | [delivery-surface-dashboard](delivery-surface-dashboard.md#dependencies) | Conformist to a Published Language | Implements `delivery.surface.lifecycle@1`, `.render@1`, `.export@1` | `resources/surface-contract.md` | The tool names and their shapes. It names no engine, and the engine names no surface. |
-| [delivery-surface-canvas](delivery-surface-canvas.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | That a caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |
+| [delivery-surface-canvas](delivery-surface-canvas.md#dependencies) | Conformist to a Published Language | Implements `.render@1` only | Same contract, one group | A caller resolves each group separately, so an unanswered group renders nowhere rather than finding a stub. |
 | [delivery-surface-collector](delivery-surface-collector.md#dependencies) | Conformist to a Published Language | Implements `.lifecycle@1` and `.export@1` | Same contract, two groups | The same. Its absent render group is a declaration, not an omission. |
-| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads the engine keys, every phase entry, every binding, every gate, and the `skills/` folder on disk | The config schema and the skill naming convention | That the engine keys keep their shape and the `flow-*` / `phase-*` prefixes keep their meaning. It writes the engine keys and nothing else. |
-| A repo-native `flow-*` skill | Open Host Service | Declares its own phase ids and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | That the phase vocabulary is stable, and that a repo-native skill takes precedence for what it covers. |
+| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads the engine keys, every phase entry, every binding, every gate, and the `skills/` folder on disk | The config schema and the skill naming convention | The engine keys keep their shape and the `flow-*` / `phase-*` prefixes keep their meaning. It writes the engine keys and nothing else. |
+| A repo-native `flow-*` skill | Open Host Service | Declares its own phase ids and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | The phase vocabulary is stable, and a repo-native skill takes precedence for what it covers. |
 
 - **Every binding row is a dependency this block refused to declare, and each refusal has the
   same reason:** a missing provider must cost capability rather than a load. Twenty-five
@@ -940,12 +968,12 @@ it never depends on. One row below says that is not the whole truth.
   exists to prevent.
 - **The undeclared devbook row is the exception, and it is exceptional in the wrong
   direction.** The coupling is real in one flow; what is missing is the declaration. The
-  debt record's first remediation was taken by the 2026-09-15 fold: `flow-spec` runs the
+  2026-09-15 fold took the debt record's first remediation: `flow-spec` runs the
   repository's own check, restates no schema rule, and stops where the folder is not adopted.
   The folder names and the `meta` block it expects are what remain, still undeclared.
-- **Nothing here names a host.** Slots absorb what would otherwise be host branches, and the
-  ones answered by the live session cannot let the hosts re-diverge the moment one gains what
-  the other has.
+- **Nothing here names a host.** Slots absorb what would otherwise be host branches. The ones
+  the live session answers cannot let the hosts re-diverge the moment one gains what the other
+  has.
 - **Fan-out is not a dependency in either direction.** A flow owns a run, a gate, and a user
   turn, none of which survives a session boundary. The mechanism that spawns a session per item
   therefore lives where no flow can reach it.

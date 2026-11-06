@@ -6,17 +6,23 @@ c4: ["marketplace.delivery.phase", "marketplace.delivery.gate"]
 code: ["plugins/delivery/skills/phase-build-test", "plugins/delivery/skills/phase-check-review", "plugins/delivery/skills/phase-create-pr", "plugins/delivery/skills/phase-drafting", "plugins/delivery/skills/phase-implement", "plugins/delivery/skills/phase-personal-validation", "plugins/delivery/skills/phase-plan", "plugins/delivery/skills/phase-ready", "plugins/delivery/skills/phase-report-back", "plugins/delivery/skills/phase-review", "plugins/delivery/skills/phase-scope", "plugins/delivery/skills/phase-spec-check", "plugins/delivery/skills/phase-summary", "plugins/delivery/skills/phase-update-base", "plugins/delivery/skills/phase-verify"]
 ```
 
-The phases of the [delivery](delivery.md) engine, a block inside it. Responsible for two
-things: that the list of phases a flow runs is closed and declared by the engine, and that a
-person's checkpoint is a gate attached to a phase, which configuration may add and never remove.
+The phases of the [delivery](delivery.md) engine, a block inside it. It answers for two
+things. The engine closes and declares the list of phases a flow runs. A person's checkpoint is
+a gate attached to a phase, which configuration may add and never remove.
 
-Inside the block: the fifteen `phase-*` skills, the entry a repository writes for each phase,
-the chores that hang off one, and the gate with the decision it produces.
+**Owns**
 
-Outside it: the order the phases run in and who runs them, which are delivery's
-[flows](delivery.md#flow) and its [flow-runner](delivery.md#flow-runner); where a phase's fields
-are read from, which is the [stack config](delivery.md#stack-config); and the work on a pull
-request after it opens, which is the [pull-request lane](delivery-pr-lane.md).
+- the fifteen `phase-*` skills
+- the entry a repository writes for each phase
+- the chores that hang off a phase
+- the gate and the decision it produces
+
+| Concern | Owner |
+| --- | --- |
+| The order the phases run in | delivery's [flows](delivery.md#flow) |
+| Who runs them | its [flow-runner](delivery.md#flow-runner) |
+| Where a phase's fields are read from | the [stack config](delivery.md#stack-config) |
+| The work on a pull request after it opens | the [pull-request lane](delivery-pr-lane.md) |
 
 ## Interfaces
 
@@ -26,9 +32,11 @@ related: [".devbook/arc42/building-blocks/delivery.md#interfaces", ".devbook/arc
 
 Fifteen skills, one per phase, each named `phase-<id>`. The flow-runner reaches every one in its
 flow's order, and a person never invokes one directly. They answer to the engine's contracts
-under `resources/`: `flow-phases.md` for the shared phases, `phase-resolution.md` for how an
-entry's fields resolve, and `implement-kinds.md`, `tdd-rules.md`, and `smell-baseline.md` for
-the work inside `implement` and `review`.
+under `resources/`:
+
+- `flow-phases.md` for the shared phases
+- `phase-resolution.md` for how an entry's fields resolve
+- `implement-kinds.md`, `tdd-rules.md`, and `smell-baseline.md` for the work inside `implement` and `review`
 
 ### phase-update-base
 
@@ -36,10 +44,11 @@ the work inside `implement` and `review`.
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Fetch the base and fast-forward, or rebase the branch's own unpushed commits, on the branch
-the run was started on. It never switches branches, never stashes, and never touches a dirty tree. A conflict
-blocks the phase rather than being resolved here, and a branch with an open pull request
-belongs to `update-pr-branch`.
+- **Does:** fetch the base and fast-forward, or rebase the branch's own unpushed commits, on
+  the branch the run was started on.
+- **Never:** switches branches, stashes, or touches a dirty tree.
+- **On a conflict:** blocks the phase rather than resolving it here.
+- **Open pull request:** that branch belongs to `update-pr-branch`.
 
 ### phase-scope
 
@@ -47,22 +56,28 @@ belongs to `update-pr-branch`.
 related: [".devbook/arc42/building-blocks/delivery.md#change-kind"]
 ```
 
-Restate the request, derive the kind and the acceptance criteria, and record the seams
-`implement` tests at. Unit seams are recorded for the backend area only, one per invariant's
-`Enforced at:` line, while each `#### Scenario:` is an end-to-end or integration seam left to
-`verify` and the e2e suite, so the frontend gets no test-first seams. For a refactor it plans the target layout and the references to update.
-In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
-chapters every later brief loads, as one list, and escalates a new decision or bounded context
-to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
-the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
-a folder whole.
+- **Does:** restate the request, derive the kind and the acceptance criteria, and record the
+  seams `implement` tests at. For a refactor, plan the target layout and the references to update.
+- **Seams:** unit seams for the backend area only, one per invariant's `Enforced at:` line. Each
+  `#### Scenario:` is an end-to-end or integration seam left to `verify` and the e2e suite, so
+  the frontend gets no test-first seams.
+- **In `flow-spec`:** derives the folder and the chapter kind instead.
+- **Selects:** the devbook chapters every later brief loads, as one list.
+- **Escalates:** a new decision or bounded context to `flow-spec`.
+- **Never:** implements anything or writes a chapter.
+- **Reads:** chapters from the corpus the devbook checker prints from the Markdown, never from a
+  committed `_meta/` index, and never a folder whole.
 
-It also lists the [journeys](devbook.md#scenario-tools) the item references, the list
-`implement`, `verify`, and `spec-check` work from. A journey comes in directly, when the
-request, its origin, or a selected chapter names the journey, one of its parts, or one of its
-screenshots, or through a selected requirement whose case's `Proved by:` line names a part. It
-reads them from the journey register in the same printed corpus. A journey is listed whole,
-with the parts the item references marked, because a journey only ever runs whole.
+It also lists the [journeys](devbook.md#scenario-tools) the item references, which `implement`,
+`verify`, and `spec-check` work from. It reads them from the journey register in the same printed
+corpus. A journey comes in one of two ways:
+
+- directly, when the request, its origin, or a selected chapter names the journey, one of its
+  parts, or one of its screenshots
+- through a selected requirement whose case's `Proved by:` line names a part
+
+A journey is listed whole, with the parts the item references marked, because a journey only
+ever runs whole.
 
 ### phase-plan
 
@@ -70,9 +85,9 @@ with the parts the item references marked, because a journey only ever runs whol
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run"]
 ```
 
-Map the design onto the project structure for a `create`: the contracts, the wiring, health and
-observability, and the slices `implement` works through. It runs for no other kind and writes
-no code.
+- **Does:** map the design onto the project structure for a `create`: the contracts, the wiring,
+  health and observability, and the slices `implement` works through.
+- **Never:** runs for another kind or writes code.
 
 ### phase-implement
 
@@ -80,21 +95,24 @@ no code.
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/arc42/building-blocks/delivery-phases.md#phase-review"]
 ```
 
-Write the tests at each recorded backend seam, then the code, running only compile and the touched
-tests. Its first call plans the slices and builds nothing: each slice is a seam or an area, and
-it decides whether the change needs frontend, backend, or both, and whether they run in order
-or in parallel. Every later call builds one slice and returns, so the flow-runner can review it.
-Each area runs as its own fork with its own context contract. With no seams recorded it names
-them before any test, and never skips test-first silently. The per-kind work, the dependency
-move and the project bootstrap and scaffold included, is in `implement-kinds.md`, and the
-test-first rules ported from Matt Pocock's `/tdd` are in `tdd-rules.md`. The spec is
-fixed input: a spec problem returns `revise: phase-scope` rather than a redesign inline. It never
-runs the full suite, commits, or reviews its own work.
+- **Does:** write the tests at each recorded backend seam, then the code, running only compile
+  and the touched tests.
+- **First call:** plans the slices and builds nothing. Each slice is a seam or an area. The
+  call decides whether the change needs frontend, backend, or both, and whether they run in
+  order or in parallel.
+- **Later calls:** each builds one slice and returns, so the flow-runner can review it.
+- **Areas:** each runs as its own fork with its own context contract.
+- **No seams recorded:** names them before any test, and never skips test-first silently.
+- **Spec:** fixed input. A spec problem returns `revise: phase-scope` rather than a redesign inline.
+- **Never:** runs the full suite, commits, or reviews its own work.
 
-For each journey `scope` listed, it invokes devbook's `scenario-derive` in the first slice
-the journey crosses, before that slice's code, and fills the step bodies the change builds. It
-never edits the journey, the setup hook, or the profiles: the journey is the source, and a
-journey that cannot be derived is a spec problem returned to `scope`.
+`implement-kinds.md` holds the per-kind work, the dependency move and the project bootstrap and
+scaffold included. `tdd-rules.md` holds the test-first rules ported from Matt Pocock's `/tdd`.
+
+For each journey `scope` listed, it invokes devbook's `scenario-derive` in the first slice the
+journey crosses, before that slice's code. It fills the step bodies the change builds. It never
+edits the journey, the setup hook, or the profiles, because the journey is the source. A journey
+that cannot be derived is a spec problem returned to `scope`.
 
 ### phase-review
 
@@ -102,10 +120,10 @@ journey that cannot be derived is a spec problem returned to `scope`.
 related: [".devbook/arc42/building-blocks/delivery-phases.md#phase-implement", ".devbook/arc42/building-blocks/delivery.md#flow-code-run"]
 ```
 
-Review one slice in a fresh context: the repository's own rules first, then a code-smell
-baseline, then correctness. Every finding cites a rule or a failure scenario. It never edits
-code, never checks conformance to the spec, and never spawns agents. Its blockers go back to
-`implement` within `policy.review.retryBudget`.
+- **Does:** review one slice in a fresh context: the repository's own rules first, then a
+  code-smell baseline, then correctness. Every finding cites a rule or a failure scenario.
+- **Never:** edits code, checks conformance to the spec, or spawns agents.
+- **Returns:** blockers to `implement` within `policy.review.retryBudget`.
 
 ### phase-build-test
 
@@ -113,10 +131,11 @@ code, never checks conformance to the spec, and never spawns agents. Its blocker
 related: [".devbook/arc42/building-blocks/delivery.md#flow"]
 ```
 
-Build every project and run the unit and end-to-end suites, and return the failing targets
-with the error lines that matter. It is the one full run of the suites, once every slice is
-reviewed clean. It never fixes a failure and never continues on red: a red result is recorded,
-and the ready check sends it back to `implement`.
+- **Does:** build every project, run the unit and end-to-end suites, and return the failing
+  targets with the error lines that matter. It is the one full run of the suites, once every
+  slice is reviewed clean.
+- **Never:** fixes a failure or continues on red. A red result is recorded, and the ready check
+  sends it back to `implement`.
 
 ### phase-verify
 
@@ -124,27 +143,26 @@ and the ready check sends it back to `implement`.
 related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-procedures.md#procedure"]
 ```
 
-Check the running application, at a depth the change kind decides. New behaviour gets a browser
-pass with captured evidence, a change to existing behaviour gets targeted verification, and a
-`config` or `dependency` change gets startup only. It starts the application through the
-repository's own `run` procedure and takes evidence through its `capture` procedure.
-`phase-verify.app` names the provider that starts the application, and `null` there means
-nothing to start.
+- **Does:** check the running application, at a depth the change kind decides. New behaviour
+  gets a browser pass with captured evidence. A change to existing behaviour gets targeted
+  verification. A `config` or `dependency` change gets startup only.
+- **Uses:** the repository's own `run` procedure to start the application and its `capture`
+  procedure for evidence. `phase-verify.app` names the provider that starts the application, and
+  `null` there means nothing to start.
 
 **Record the depth honestly.** A shallower depth is reported as the depth it was, never as
-verification that did not happen. This is the one guarantee that makes the other depths usable
-at all.
+verification that did not happen. This one guarantee makes the other depths usable.
 
-**Run exactly the referenced journeys.** At the full and the targeted depth, the journeys
-`scope` listed run through devbook's `scenario-run`, all of them in one run against the
-instance this phase started, and no other journey. A journey always runs whole, because a
-filtered run writes no `run.json`. Each part's outcome is reported as the stage's
+**Run exactly the referenced journeys.** At the full and the targeted depth, devbook's
+`scenario-run` runs all the journeys `scope` listed and no other. They share one run against the
+instance this phase started. A journey always runs whole, because a filtered run writes no
+`run.json`. Each part's outcome is reported as the stage's
 [scenario evidence](delivery.md#stage-updated), and the run file and its screenshots stay in the
-change set. A journey that is not run, for its depth or because its spec no longer matches,
-is recorded with the reason rather than run some other way.
+change set. A journey not run, for its depth or because its spec no longer matches, is
+recorded with the reason rather than run some other way.
 
 **Capture evidence without a QA plugin.** The evidence rules are the engine's own contract, so
-they hold with no QA plugin, no agent bound on `verify`, and no capture skill. Capture resolves
+they hold without a QA plugin, an agent bound on `verify`, or a capture skill. Capture resolves
 to the repository's `capture` skill, then the bound agent's, then this phase driving it
 directly. A missing piece changes who captures, never whether capture happens.
 
@@ -154,20 +172,23 @@ directly. A missing piece changes who captures, never whether capture happens.
 related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs"]
 ```
 
-Check the change set against the specification the run built on and the chapters it touches,
-one verdict per item, before Personal Validation. The bound skill decides whether the phase
-only reports or also updates. An updating skill touches only `code-ahead` rows in scope, never
-sets `approved`, and runs the devbook check after it, and its edits are part of what the person
-approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
-`capture-specs` does, and `verify-change`, the default binding, does not.
+- **Does:** check the change set against the specification the run built on and the chapters it
+  touches, one verdict per item, before Personal Validation.
+- **Bound skill:** decides whether the phase only reports or also updates. A skill updates when
+  its `SKILL.md` frontmatter declares `updates: true`: devbook's `capture-specs` does, and
+  `verify-change`, the default binding, does not.
+- **Updating skill:** touches only `code-ahead` rows in scope, never sets `approved`, and runs
+  the devbook check after it. Its edits are part of what the person approves.
 
-Every journey `scope` listed is checked by the phase itself, whichever skill is bound, and
-never edited. A journey whose signature no longer matches the signature its run recorded, or
-that has no run, is reported `stale` in a table of its own after the verdicts, because it qualifies
-the run and is not a sixth verdict. A referenced part that nothing proves — no spec implements
-it, or its run left it `not-run` behind a held step — makes the requirement pointing at it
-`spec-ahead`. The ready check reads both as not ready, except a
-`stale` journey that `verify` could not run at its depth, which goes to the gate as a question.
+The phase itself checks every journey `scope` listed, whichever skill is bound, and never edits
+one. A journey whose signature no longer matches the signature its run recorded, or that has no
+run, is reported `stale` in a table of its own after the verdicts. It qualifies the run and is
+not a sixth verdict.
+
+A referenced part that nothing proves makes the requirement pointing at it
+`spec-ahead`. Either no spec implements it, or its run left it `not-run` behind a held step. The ready
+check reads both as not ready. The exception is a `stale` journey that `verify` could not run at
+its depth, which goes to the gate as a question.
 
 ### phase-ready
 
@@ -175,12 +196,15 @@ it, or its run left it `not-run` behind a held step — makes the requirement po
 related: [".devbook/arc42/building-blocks/delivery.md#flow-runner"]
 ```
 
-Decide whether the run is ready for Personal Validation from what review, Build & Test,
-`verify`, `spec-check`, and `scope` recorded. Not ready sends a brief of what is missing back to
-`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. Once the budget
-is spent, the run reaches the gate with the open items listed first, and an unattended run
-parks instead. `code-ahead` and `unresolved` rows never send the run back, because they need a
-person. It does no new work, runs inline, and takes no configuration.
+- **Does:** decide whether the run is ready for Personal Validation from what review, Build &
+  Test, `verify`, `spec-check`, and `scope` recorded. It does no new work, runs inline, and takes
+  no configuration.
+- **Not ready:** sends a brief of what is missing back to `implement`, or to `drafting` in
+  `flow-spec`, within `policy.ready.retryBudget`.
+- **Budget spent:** the run reaches the gate with the open items listed first, and an unattended
+  run parks instead.
+- **Never sends back:** `code-ahead` and `unresolved` rows.
+- **Why:** they need a person.
 
 ### phase-personal-validation
 
@@ -188,23 +212,28 @@ person. It does no new work, runs inline, and takes no configuration.
 related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
-Hand the run back to a person to look at: bring the application up, publish the review links
-as clickable URLs, say what to check by hand, and present the review findings, the spec-check
-table, and any open items. It runs again on every revise round, because a revised change set is
-a new thing to look at. When the change implements a click demo, the demo is published beside
-the app at the addresses its chapters name, and the what-to-check list compares the two screen
-by screen, per [the demos decision](../adr/demos.md): the demo is the agreed reference the
-built work is accepted against. The screenshots of every journey `verify` ran are listed
-the same way, part by part with each part's outcome, beside the app link of the screen each one
-shows. The handback ends on one picture from `verify` and the running application's URLs,
-written after everything else in the reply, so the last thing in view is what to open.
+- **Does:** hand the run back to a person to look at. Bring the application up, publish the
+  review links as clickable URLs, and say what to check by hand. Present the review findings,
+  the spec-check table, and any open items.
+- **Runs again:** on every revise round.
+- **Why:** a revised change set is a new thing to look at.
 
-**Present, never decide.** The phase produces the review; the approve, revise, or decline
+When the change implements a click demo, the demo is published beside the app at the addresses
+its chapters name. The what-to-check list compares the two screen by screen, per
+[the demos decision](../adr/demos.md). The demo is the agreed reference the built work is
+accepted against.
+
+The screenshots of every journey `verify` ran are listed the same way, part by
+part with each part's outcome. Each sits beside the app link of the screen it shows. The handback
+ends on one picture from `verify` and the running application's URLs, after everything else in
+the reply. The last thing in view is then what to open.
+
+**Present, never decide.** The phase produces the review, and the approve, revise, or decline
 decision after it belongs to the flow-runner. Nothing in the handoff can approve, skip, or
-soften that [gate](#gate). That is what lets the presentation be a phase skill while the gate
-itself stays out of a repository's reach.
+soften that [gate](#gate). That lets the presentation be a phase skill while the gate itself
+stays out of a repository's reach.
 
-**No entry, no agent, and no model.** It refuses every field, has no entry in any phases map,
+**Take no entry, agent, or model.** It refuses every field, has no entry in any phases map,
 and runs inline in the session the person is reading. A subagent has no user turn to hand back
 to, and a link nobody can click is not a handback. Starting the application is the phase's own
 job: a list of commands for the person to run is a failed handback rather than a shortcut.
@@ -215,9 +244,9 @@ job: a list of commands for the person to run is a failed handback rather than a
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Open the pull request for the approved change set with the host's own action or `gh`, one per
-run. With the `pr-lane` slot unbound, it writes file artifacts
-only and opens nothing.
+- **Does:** open the pull request for the approved change set with the host's own action or
+  `gh`, one per run.
+- **With the `pr-lane` slot unbound:** writes file artifacts only and opens nothing.
 
 ### phase-report-back
 
@@ -225,10 +254,10 @@ only and opens nothing.
 related: [".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/building-blocks/delivery.md#run"]
 ```
 
-Send the result to where the run came from. `phase-report-back.targets` names the
-destinations: every `origin` the run recorded, every `linked` item the change set names, and
-any `plugin:skill`, in order. One failed target blocks the phase, and the report names the
-targets that succeeded.
+- **Does:** send the result to where the run came from.
+- **Targets:** every `origin` the run recorded, every `linked` item the change set names, and any
+  `plugin:skill`, in order, named by `phase-report-back.targets`.
+- **Blocks:** on one failed target, and the report names those that succeeded.
 
 ### phase-summary
 
@@ -236,10 +265,11 @@ targets that succeeded.
 related: [".devbook/arc42/building-blocks/delivery.md#run-finished", ".devbook/arc42/building-blocks/devbook-skills.md#retro"]
 ```
 
-Close the run: state what it produced and where it landed, and publish the run's end to the
-surface. Closing chores hang off it as `summary.after`. A run that took two or more revise
-rounds at Personal Validation ends with an offer to run the `retro` skill over it — an offer
-only, never made in an unattended run.
+- **Does:** close the run: state what it produced and where it landed, and publish the run's end
+  to the surface.
+- **Chores:** closing chores hang off it as `summary.after`.
+- **Offers:** the `retro` skill over a run that took two or more revise rounds at Personal
+  Validation. It only offers, and never in an unattended run.
 
 ### phase-drafting and phase-check-review
 
@@ -247,11 +277,13 @@ only, never made in an unattended run.
 related: [".devbook/arc42/building-blocks/delivery.md#flow-spec-run"]
 ```
 
-`flow-spec`'s own two phases. `phase-drafting` writes the chapter through the agent its folder
-qualifier binds, under the repository's instruction file for that folder.
-`phase-check-review` checks `meta` blocks and references after renames, runs the devbook check,
-and lists every status change for the gate. It never regenerates `_meta/` and never edits
-code.
+`flow-spec`'s own two phases.
+
+- **`phase-drafting`:** writes the chapter through the agent its folder qualifier binds, under
+  the repository's instruction file for that folder.
+- **`phase-check-review`:** checks `meta` blocks and references after renames, runs the devbook
+  check, and lists every status change for the gate. It never regenerates `_meta/` and never
+  edits code.
 
 ## Structure
 
@@ -261,7 +293,7 @@ related: [".devbook/arc42/building-blocks/delivery.md#model", ".devbook/arc42/ad
 
 Two aggregates and the value object both share with a [run](delivery.md#run): the phase a
 repository configures, the gate a person answers, and the decision that answer leaves behind.
-All three are drawn in the engine's [model](delivery.md#model), beside the run they shape.
+The engine's [model](delivery.md#model) draws all three, beside the run they shape.
 
 ![delivery-phases' components](c4:delivery-phases)
 
@@ -272,18 +304,16 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/ad
 ```
 
 The unit a repository configures. A phase has a stable id, is one skill named `phase-<id>`,
-and has one entry per flow in the `phases` map. The entry says which agent runs it, which
-skill it follows, on which model, at which effort, with which MCP servers, and which chores run
-before and after it. The list is closed and declared by the engine: a repository picks who runs
-a phase, never what the phases are. That asymmetry keeps configuration from becoming a second,
-undocumented flow language.
+and has one entry per flow in the `phases` map. The entry names its agent, its skill, its model,
+its effort, its MCP servers, and the chores that run before and after it. The engine closes and
+declares the list: a repository picks who runs a phase, never what the phases are. That asymmetry
+keeps configuration from becoming a second, undocumented flow language.
 
 Every field resolves on its own, most specific key first, then the session. An absent field
-inherits the session's model and effort, and the phase runs as the engine contract's *Runs by
-default* column says — inline, fork, or delegated — so `{}` is a complete entry. The
-qualifier after a colon is the folder on `phase-drafting` in `flow-spec`, or an area on
-`phase-implement`. No qualifier names a kind, because what a kind needs is
-`phase-implement`'s call.
+inherits the session's model and effort. The phase runs inline, fork, or delegated, as the
+engine contract's *Runs by default* column says. So `{}` is a complete entry. The qualifier after
+a colon is the folder on `phase-drafting` in `flow-spec`, or an area on `phase-implement`. No
+qualifier names a kind, because what a kind needs is `phase-implement`'s call.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -301,9 +331,9 @@ a report and never changes an outcome. The session's opening chores hang off
 `update-base.before`, test data off `verify.before`, and closing chores off `summary.after`.
 
 A **replan** is the `scope.after` chore that re-checks an agreed change before a run acts on
-it: every proposed chapter change against its target on the base, every open step against the
-code, and the chapters the change relates to. Bound `required`, a flag stops the run. The chore
-rewrites nothing, since revising the plan is the change owner's decision.
+it. It checks every proposed chapter change against its target on the base, every open step
+against the code, and the chapters the change relates to. Bound `required`, a flag stops the
+run. It rewrites nothing, since revising the plan is the change owner's decision.
 
 ### Gate
 
@@ -313,11 +343,11 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/adr
 
 A human checkpoint attached to a phase id. `{ "at": "scope", "when": "after" }` presents the
 output of `scope` and asks a question. Personal Validation is the mandatory instance of this
-pattern rather than a second mechanism, so there is one gate concept for configuration and the
+pattern rather than a second mechanism. There is one gate concept for configuration and the
 engine alike.
 
 The asymmetry is the whole design. Configuration may add a gate anywhere and may never remove
-one or hand one to a plugin, so a repository's overlay can only ever make a flow more
+one or hand one to a plugin. A repository's overlay can therefore only ever make a flow more
 conservative.
 
 | Invariant | Enforced at | Evidence |
@@ -339,10 +369,10 @@ block rather than inferred from silence.
 related: [".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/building-blocks/delivery.md#run"]
 ```
 
-A value object held by more than one aggregate. What a person answered at a gate, with the
-notes they gave: an outcome, the phase it was attached to, and the stage it belonged to. Both
-[Run](delivery.md#run) and [Gate](#gate) hold it because it is the one fact they must agree on. It is a
-value so that recording it twice is harmless and re-deriving it is impossible.
+A value object held by more than one aggregate: what a person answered at a gate, with the
+notes they gave. It holds an outcome, the phase it was attached to, and the stage it belonged to.
+Both [Run](delivery.md#run) and [Gate](#gate) hold it because it is the one fact they must agree
+on. A value makes recording it twice harmless and re-deriving it impossible.
 
 A resumed session re-runs the gate rather than trusting a decision it cannot see the
 conversation behind. That only works because the decision is written down rather than
@@ -362,8 +392,7 @@ What a gate does to a run. The spine it sits on is delivery's
 ```meta
 ```
 
-Three outcomes, and the difference between them is what happens to the run rather than what
-the person felt about the work.
+The three outcomes differ in what happens to the run, not in what the person felt about the work.
 
 ```mermaid
 stateDiagram-v2

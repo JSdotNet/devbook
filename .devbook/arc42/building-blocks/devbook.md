@@ -6,29 +6,39 @@ c4: ["marketplace.devbook"]
 code: ["plugins/devbook"]
 ```
 
-The convention itself. Responsible for three things: that a chapter can be addressed, that
-the reference pointing at it still resolves, and that a repository can adopt the convention,
-upgrade it, and be told when the two have drifted apart.
+The convention itself. It answers for three things: a chapter can be addressed, the reference
+pointing at it still resolves, and a repository can adopt the convention, upgrade it, and be
+told when the two have drifted apart.
 
-Inside the block: the `meta` block and its field set, the address a chapter is reached by, the
-review of a chapter against its folder's rules, the reconcile that materializes the convention into a repository, the
-change folder and the merge of its deltas, the two directions between a chapter and the
-code that implements it, and the five procedures every repository has and no plugin can
-write — `run`, `capture`, `diagnose`, `estimate`, `prototype` — each with a goal this block
-fixes and a body the repository owns. Two of those are blocks of their own one level in,
-each with its own file: the two directions between a chapter and its code are
-[devbook-code-sync](devbook-code-sync.md), and the five procedures are
-[devbook-procedures](devbook-procedures.md). This file is the convention's white box around
-them: the chapter, the folder, the check, and the reconcile — and the
-[C4 model](#c4-model) an `arc42/` folder's chapters embed and point at. The component view
-under [Structure](#structure) draws this file's parts and the two nested blocks together.
+**Owns**
 
-Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
-the procedure for changing a chapter belongs to [delivery](delivery.md). A review note and a
-decision on a change are kept by the host that keeps the subject's state, through
-`devbook.decision@1`, which this block owns and never answers. The
-committed `_meta/` index is [devbook-derived](devbook-derived.md)'s: this block's checker
-takes a `--write` flag and nothing in this block passes it.
+- The `meta` block and its field set
+- The address a chapter is reached by
+- The review of a chapter against its folder's rules
+- The reconcile that materializes the convention into a repository
+- The change folder and the merge of its deltas
+- The [C4 model](#c4-model) an `arc42/` folder's chapters embed and point at
+
+**Nested blocks**, each with its own file
+
+- [devbook-code-sync](devbook-code-sync.md): the two directions between a chapter and the code
+  that implements it
+- [devbook-procedures](devbook-procedures.md): the five procedures every repository has and no
+  plugin can write, `run`, `capture`, `diagnose`, `estimate`, and `prototype`, each with a goal
+  this block fixes and a body the repository owns
+
+This file is the convention's white box around them: the chapter, the folder, the check, and
+the reconcile. The component view under [Structure](#structure) draws this file's parts and the
+two nested blocks together.
+
+What a chapter should *say* lies outside it, because the folder rules describe a shape, not
+content.
+
+| Concern | Owner |
+| --- | --- |
+| The procedure for changing a chapter | [delivery](delivery.md) |
+| A review note and a decision on a change | The host that keeps the subject's state, through `devbook.decision@1`, which this block owns and never answers |
+| The committed `_meta/` index | [devbook-derived](devbook-derived.md): this block's checker takes a `--write` flag and nothing in this block passes it |
 
 ## Interfaces
 
@@ -36,44 +46,46 @@ takes a `--write` flag and nothing in this block passes it.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Twelve skills — six that own the convention in a repository, three that cross the boundary
-between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries, and three that
-carry a journey from its text to its run — plus the rules
-`init` delivers, the tools it materializes, one workflow, one hook, three contracts that other
-plugins follow or answer, and the one file a repository may author to change what the check accepts. None of the
-skills is a flow: this block ships the shape and the check, and the procedure for carrying a
-change belongs to the engine.
+Twelve skills: six own the convention in a repository, three cross the boundary between a
+chapter and the code implementing it, each over seven chapter kinds and the demo a page
+carries, and three carry a journey from its text to its run. The block also has the rules
+`init` delivers, the tools it materializes, one workflow, one hook, three contracts other
+plugins follow or answer, and the one file a repository may author to change what the check
+accepts. None of the skills is a flow: this block ships the shape and the check, and the engine
+owns the procedure for carrying a change.
+
+A schedule reaches a skill through `delivery-schedule`'s own wrapper.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `validate` | skill | A person, or the daily `devbook-validate` schedule through `delivery-schedule`'s own wrapper |
-| `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
+| `validate` | skill | A person, or the daily `devbook-validate` schedule |
+| `tech-update` | skill | A person, or the weekly `tech-update` schedule |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
-| `chapter-review` | skill | A person, on one chapter or one change; it posts through `devbook.decision@1` and, with no host bound, prints its notes and writes nothing |
-| `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted: `scenario-write` from a chapter that needs a journey, `scenario-derive` when the coverage check names it, `scenario-run` to prove a page; and delivery's [phases](delivery-phases.md#phase-implement), `scenario-derive` from `implement` and `scenario-run` from `verify`, for the pages a run's scope lists; described under [Scenario Tools](#scenario-tools) |
-| `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
-| `devbook-chapter-metadata.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
+| `chapter-review` | skill | A person, on one chapter or one change |
+| `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted, and delivery's [phases](delivery-phases.md#phase-implement); described under [Scenario Tools](#scenario-tools) |
+| `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule |
+| `devbook-chapter-metadata.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through `init`'s wrapper; a folder's rule lands only where adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every open delta |
 | `demo.mjs` | demo rules, in-process | The graph build through `demoProblems` and `linkedWalkthroughs`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
-| `scenario.mjs` | journey rules, in-process | The graph build through `scenarioProblems`: the journey register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, the parts no requirement claims, and the journey outside the context of the requirements it proves |
+| `scenario.mjs` | journey rules, in-process | The graph build through `scenarioProblems`, for the journey invariants under [Chapter](#chapter) and the journey register |
 | `chapter-hash.mjs` | fingerprint CLI | `devbook-openspec`'s archive, and any caller of `devbook.decision@1` |
 | `chapter-fingerprint.vector.json` | shared test vector | spec-manager and Backlog, which must agree with it |
-| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass covers; `schedule-devbook-verify`, which lists the units from `--json`; Backlog's sync sweeps, which select their groups from `--groups --json` |
+| `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass covers; `schedule-devbook-verify`, listing units from `--json`; Backlog's sync sweeps, selecting groups from `--groups --json` |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
-| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links: each linked walkthrough's and playthrough's step `text` and `signature` re-copied from its journey; `--check` exits 1 while one is stale or drifted |
-| `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
+| `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links |
+| `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | Derived specs import the runner and its `shot` helper; the repository's Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
-| `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
-| `resources/decision.md` | contract, `devbook.decision@1` | spec-manager and Backlog, which answer it over MCP; `chapter-review` and `devbook-openspec`'s archive, which resolve it from the live tool list |
-| `resources/chapter-fingerprint.md` | contract, `devbook.chapter.fingerprint@1` | spec-manager and Backlog, which recompute the fingerprint a decision is recorded against |
-| `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
+| `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog address and talk to a demo through it and never extend it |
+| `resources/decision.md` | contract, `devbook.decision@1` | spec-manager and Backlog answer it over MCP; `chapter-review` and `devbook-openspec`'s archive resolve it from the live tool list |
+| `resources/chapter-fingerprint.md` | contract, `devbook.chapter.fingerprint@1` | spec-manager and Backlog recompute the fingerprint a decision is recorded against |
+| `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | `init` and `update` materialize them into `.agents/skills/<name>.md` with a wrapper per host, `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, with a free walkthrough and a playthrough of the journey in its `scenarios.md`, by spec-manager and Backlog as a test fixture |
 
 The three converter skills and `units.mjs` are described in
@@ -86,13 +98,15 @@ The three converter skills and `units.mjs` are described in
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#reconciling-a-repository"]
 ```
 
-Bring devbook into a repository that has none: ask which folders and which procedures to
-adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. An
-`arc42/` folder starts from `assets/seeds/arc42/`: a workspace holding the system, its person,
-and a context view, and the chapter 03 that embeds that view, each placeholder filled from the
-README. It refuses where `components.devbook` already exists —
-"already initialized, run update" — because the stamp is what the next run reads, and a second
-init would ask again what it already answers.
+- **Does:** brings devbook into a repository that has none: asks which folders and which
+  procedures to adopt, scaffolds each folder, copies the payload, seeds each procedure, and
+  writes the stamp.
+- **Seeds:** an `arc42/` folder from `assets/seeds/arc42/`: a workspace holding the system, its
+  person, and a context view, and the chapter 03 that embeds that view, each placeholder filled
+  from the README.
+- **Refuses:** where `components.devbook` exists: "already initialized, run update".
+- **Why:** the stamp is what the next run reads, and a second init would ask again what it
+  already answers.
 
 ### update
 
@@ -100,19 +114,21 @@ init would ask again what it already answers.
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#reconciling-a-repository"]
 ```
 
-Bring a stamped repository level with the installed release in one idempotent operation:
-detect, resolve, plan, migrate, materialize, stamp and verify. An upgrade, a change in which
-folders are adopted, and an outstanding migration are the same run, and the stamp says which.
-It refuses where no stamp exists, since with no provenance every file on disk would read as
-customized.
+- **Does:** brings a stamped repository level with the installed release in one idempotent
+  operation: detect → resolve → plan → migrate → materialize → stamp and verify. An upgrade, a
+  change in which folders are adopted, and an outstanding migration are the same run, and the
+  stamp says which.
+- **Refuses:** a repository without a stamp.
+- **Why:** with no provenance, every file on disk would read as customized.
+- **Only writer of:** everything it materializes: the rules and their per-host wrappers, the CI
+  workflow, the tooling, the procedures and their wrappers, and one marker-fenced section of
+  the repository's agent instructions.
+- **Never:** overwrites a materialized file that changed underneath. It reports and leaves it.
 
-It is the only writer of everything it materializes — the rules and their per-host wrappers,
-the CI workflow, the tooling, the procedures and their wrappers, and one marker-fenced section
-of the repository's agent instructions. A procedure dropped from `procedures.adopted` orphans
-its three files, reported and never deleted; a path once written and no longer is moves
-through a migration, since hash-matching cannot move a customized body. A materialized file that changed underneath is reported and left, never
-overwritten; an edit inside a marker-fenced section makes the next reconcile skip the section,
-which is what the markers exist for.
+A procedure dropped from `procedures.adopted` orphans its three files, reported and never
+deleted. A path it no longer writes moves through a migration, since hash-matching cannot move
+a customized body. An edit inside a marker-fenced section makes the next reconcile skip the
+section, which is what the markers exist for.
 
 ### validate
 
@@ -120,15 +136,13 @@ which is what the markers exist for.
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#index-generator"]
 ```
 
-Validates the corpus: does every chapter satisfy the schema, does every reference resolve. It
-repairs what it can prove in the chapters and hands every other write back. Whether the
-installation is current — the stamp, the ledger, the `AGENTS.md` section — is
-[devbook-config's `doctor`](devbook-config.md#doctor), the one context that reads every
-component's stamp. The daily `devbook-validate` schedule reaches it through
-`delivery-schedule`'s own wrapper.
-
-Two writers for one file is how a reconcile stops being idempotent, which is why this skill is
-deliberately narrow.
+- **Does:** validates the corpus: does every chapter satisfy the schema, does every reference
+  resolve. It repairs what it can prove in the chapters and hands every other write back.
+- **Never:** answers whether the installation is current: the stamp, the ledger, the `AGENTS.md`
+  section. That is [devbook-config's `doctor`](devbook-config.md#doctor), the one context that
+  reads every component's stamp.
+- **Why:** two writers for one file is how a reconcile stops being idempotent, so this skill is
+  deliberately narrow.
 
 ### tech-update
 
@@ -136,11 +150,11 @@ deliberately narrow.
 related: [".devbook/arc42/building-blocks/devbook.md#tech-inventory", ".devbook/arc42/building-blocks/delivery.md#flow-spec"]
 ```
 
-Refresh a repository's technology graph from the deterministic package inventories, then
-analyse the repository for what appears in no package manifest — runtimes, services,
-platforms, protocols, tooling — and hand the authoring to the folder's own write path. It runs
-the check and never the writer; the weekly `tech-update` schedule reaches it through
-`delivery-schedule`'s own wrapper.
+- **Does:** refreshes a repository's technology graph from the deterministic package
+  inventories, then analyses the repository for what appears in no package manifest (runtimes,
+  services, platforms, protocols, tooling) and hands the authoring to the folder's own write
+  path. It runs the check.
+- **Never:** runs the writer.
 
 ### prose-check
 
@@ -148,15 +162,23 @@ the check and never the writer; the weekly `tech-update` schedule reaches it thr
 related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/building-blocks/devbook.md#chapter"]
 ```
 
-The prose half beside `validate`'s structural half: read every adopted folder and report
-the sentence that says nothing a reader needs or names something the tree no longer has — a
-stale name after a fold, a term defined twice or swapped for a synonym, a hedge on a fact,
-a stack of nouns, a chapter whose subject is unclear, padding, text moved rather than cut, a paragraph or a step past the length
-`devbook-writing.md` sets, and, where
-`arc42/` is adopted, a Mermaid fence that draws architecture — any `C4*` kind, or a sequence,
-flowchart, or graph between workspace elements — with the view to draw instead. It also counts each changed chapter's words
-against a base. It writes nothing. A chapter is content, so the standard is narrower than an instruction tightening and
-a record stays as it was taken: an edit is a person's, through the folder's flow.
+- **Does:** the prose half beside `validate`'s structural half: reads every adopted folder,
+  reports the sentence that says nothing a reader needs or names something the tree no longer
+  has, and counts each changed chapter's words against a base.
+- **Reports:**
+  - a stale name after a fold
+  - a term defined twice or swapped for a synonym
+  - a hedge on a fact
+  - a stack of nouns
+  - a chapter whose subject is unclear
+  - padding
+  - text moved rather than cut
+  - a paragraph or a step past the length `devbook-writing.md` sets
+  - where `arc42/` is adopted, a Mermaid fence that draws architecture (any `C4*` kind, or a
+    sequence, flowchart, or graph between workspace elements), with the view to draw instead
+- **Never:** writes. An edit is a person's, through the folder's flow.
+- **Why:** a chapter is content, so the standard is narrower than an instruction tightening and
+  a record stays as it was taken.
 
 ### chapter-review
 
@@ -164,14 +186,16 @@ a record stays as it was taken: an edit is a person's, through the folder's flow
 related: [".devbook/arc42/adr/annotations.md", ".devbook/arc42/12-glossary.md#review-pass"]
 ```
 
-Read one chapter, or one change with its proposal and every delta, against its folder's rules and the writing goal,
-its neighbours one `related` or `depends-on` step away, and the evidence it claims, and post
-one note per objection on the address of the passage it is about. Notes are posted through
-`devbook.decision@1` to the host that answers it in the session, named in the report; with
-none bound the skill prints each note as it would be posted and writes nothing. It never edits
-the chapter and never approves or accepts: a review that could decide is no gate, and a
-decision is a person's, in the host. An open `question` it leaves is changes requested; none
-open says nothing is outstanding, which is not approval.
+- **Does:** reads one chapter, or one change with its proposal and every delta, against its
+  folder's rules and the writing goal, its neighbours one `related` or `depends-on` step away,
+  and the evidence it claims. It posts one note per objection on the address of the passage it
+  is about.
+- **Posts:** through `devbook.decision@1` to the host that answers it in the session, named in
+  the report. With none bound, it prints each note as it would be posted and writes nothing.
+- **Never:** edits the chapter, approves, or accepts.
+- **Why:** a review that could decide is no gate, and a decision is a person's, in the host.
+- **Result:** an open `question` it leaves is changes requested. None open says nothing is
+  outstanding, which is not approval.
 
 ## Structure
 
@@ -179,22 +203,19 @@ open says nothing is outstanding, which is not approval.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/checks-and-indexes.md"]
 ```
 
-Three aggregates — the chapter, the folder, and the graph derived from a corpus of them —
-seven domain services, and the two value objects the aggregates share. Two of the services, the
-Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s,
-and the Procedure, its Goal, and the Demo Template are
-[devbook-procedures](devbook-procedures.md#structure)'s; the five services left are below. The chapter is the
-consistency boundary everything else is expressed in terms of.
-
 ![devbook's components](c4:devbook)
+
+Three aggregates (the chapter, the folder, and the graph derived from a corpus of them), seven
+domain services, and the two value objects the aggregates share. Two of the services, the Unit
+Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s. The
+Procedure, its Goal, and the Demo Template are
+[devbook-procedures](devbook-procedures.md#structure)'s. The five services left are below. The
+chapter is the consistency boundary everything else is expressed in terms of.
 
 ### Model
 
 ```meta
 ```
-
-What a devbook folder holds, what a chapter is made of, and what the generator derives from a
-corpus of them.
 
 ```mermaid
 classDiagram
@@ -261,7 +282,7 @@ classDiagram
 - **A file is a chapter as well as a container.** Its top-level heading carries a block
   describing the document as a whole, which is why `ChapterFile` both holds chapters and is
   one. `number` and `index` exist only at that level, because they place the document in its
-  directory and a chapter's position is already its position in the document.
+  directory. A chapter's position is already its position in the document.
 - **A chapter has no stored id.** `ChapterAddress` is derived from the path and the heading,
   so the association from a `MetaBlock` to another chapter is by value. Renaming a heading
   breaks every inbound edge on purpose: the alternative is an id nobody can see in the
@@ -270,9 +291,9 @@ classDiagram
   the corpus on every run and are equal by value; nothing writes to them, and nothing reads
   them as the source of a fact a chapter already carries.
 - **`ext` is a field on the block, not an association.** It produces no edge and is carried
-  through unvalidated, which is exactly what makes it usable by a plugin devbook has never
-  heard of. Two extensions never collide because each namespaces by its own name — a
-  convention this block states and deliberately does not enforce.
+  through unvalidated, which makes it usable by a plugin devbook has never heard of. Two
+  extensions never collide because each namespaces by its own name, a convention this block
+  states and deliberately does not enforce.
 - **A review note is not in the model.** It is kept by the host that keeps the subject's
   state and addressed by a chapter address, so it holds a reference to a chapter and the
   chapter holds none to it ([the annotations record](../adr/annotations.md)).
@@ -288,13 +309,12 @@ classDiagram
 
 Also called: section, heading, node.
 
-The consistency boundary of this block, and the unit everything else is expressed in terms
-of. A chapter is one heading that carries a `meta` block, together with the block. Its identity is its address — the file path plus the slug of
-its heading — which is derived and never stored, so a heading rename is a re-identification
-and every reference to the old address stops resolving in the same pass.
+A chapter is one heading that carries a `meta` block, together with the block. Its identity is
+its address, the file path plus the slug of its heading. The address is derived and never
+stored, so a heading rename is a re-identification and every reference to the old address stops
+resolving in the same pass.
 
-A chapter is not a file. One file holds many, and the file itself is a chapter too: the
-top-level heading carries a block of its own describing the document as a whole.
+A chapter is not a file. One file holds many, and the file itself is a chapter too.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -326,7 +346,7 @@ top-level heading carries a block of its own describing the document as a whole.
 
 Migration `035-delivery-path-stages` moves an `ai/` folder written in the DevOps loop's eight
 stage words onto the path: it maps every `stage` list, de-duplicates it, and writes it in path
-order, and the checker's error on a loop word names it. It places nothing on a layer and writes
+order. The checker's error on a loop word names it. It places nothing on a layer and writes
 no `substage`, `feeds`, or `evidence`, because those are a reading of the repository, not a
 rename.
 
@@ -338,7 +358,9 @@ The other four folders have neither: what those rungs decide is asked of the mod
 with its own transitional rungs, never touching the resting value, the decision rungs, or a
 rating. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
-unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
+unrated is not the same as the lowest rung.
+
+**Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value
 set that classifies every chapter, at chapter level and at file level separately; `arc42/`
 deliberately defines none, because its only kind distinction is already carried by heading
@@ -354,16 +376,17 @@ OpenSpec reads it, and everything else there is a guideline heading level alread
 Also called: meta fence, metadata block.
 
 The fenced `meta` (YAML) block under a heading: flat keys, no nesting, and equal by value. It
-is what turns a heading into a node, so deleting it as noise silently drops the chapter out of
-the graph and out of every reference pointing at it.
+turns a heading into a node, so deleting it as noise silently drops the chapter out of the graph
+and out of every reference pointing at it.
 
 The field set is closed except for one seam. `type`, `related`, `date`, `tests`, `number`,
 and `index` are devbook's in every folder, `rating` is devbook's in `tech/` and `ai/`, and
 each folder adds the fields its rule documents. `ext.<plugin>.<key>` belongs to whoever
-namespaced it. Empty collections and nulls are omitted rather than written out, so absence has
-exactly one spelling. No field records workflow state. Since contract 38 a merged chapter is in
-force, and the tool that runs a workflow keeps the state of a change proposal, a decision record,
-or a debt record outside git, per the [chapter schema decision](../adr/chapter-schema.md#branch-true-devbook).
+namespaced it.
+
+No field records workflow state. Since contract 38 a merged chapter is in force, and the tool
+that runs a workflow keeps the state of a change proposal, a decision record, or a debt record
+outside git, per the [chapter schema decision](../adr/chapter-schema.md#branch-true-devbook).
 The check reports each field that left the block by name, as it does the `review`, `reviewer`,
 and `review-at` fields contract 21 removed.
 
@@ -382,10 +405,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes
-a subset, and the tooling emits scopes for the folders that actually exist. The folder lives
-at `.devbook/<kind>/`, owns its own derived `_meta/`, written beside its chapters, and the
-reading order of the files inside it comes from each folder's convention rather than from a
-stored field.
+a subset, and the tooling emits scopes for the folders that exist. The folder lives at
+`.devbook/<kind>/` and owns its derived `_meta/`, written beside its chapters. The reading order
+of its files comes from each folder's convention rather than from a stored field.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -400,10 +422,12 @@ stored field.
 repository rollup in `.devbook/_meta/`, the tooling in `.devbook/_tools/`, and the stack
 config beside them. The layout is a constant rather than a detected value since
 [the chapter schema record](../adr/chapter-schema.md); what is detected is which of the five
-exist. **Folder Kind** is `arc42`, `domain`, `tech`, `design`, `ai`, and `changes`. The kind
-decides which rule file governs the folder, which `status` ladder applies, and which `type`
-value set is legal — which is why it is a closed set and adding the sixth, `changes`, was
-contract 23 rather than a folder.
+exist.
+
+**Folder Kind** is `arc42`, `domain`, `tech`, `design`, `ai`, and `changes`. The kind decides
+which rule file governs the folder, which `status` ladder applies, and which `type` value set
+is legal. So it is a closed set, and adding the sixth, `changes`, was contract 23 rather than a
+folder.
 
 ### Change
 
@@ -412,27 +436,33 @@ related: [".devbook/arc42/12-glossary.md#change", ".devbook/arc42/12-glossary.md
 ```
 
 A proposed change to the devbook, in `openspec/changes/<name>/`: the one folder kind outside
-`.devbook/`, because OpenSpec's CLI resolves `changes/` only under `openspec/`. Its
-`proposal.md` and every delta under `devbook-delta/` are chapters the check lints, though none
-is a node in the graph; `solution.md` and `tasks.md` are the change's own and never checked, and
-`archive/` is history and never read. A change references the devbook and never the reverse: a
-devbook chapter whose `related`, `depends-on`, or prose link points into `openspec/changes/`
-fails the check, and a delta may name a chapter only its own change adds. `delta.mjs --apply` is the only way a change lands, and only once
-both gates have passed on `proposal.md`: the change is decided as one, so `approved` and
-`accepted` are recorded once there, with a hash over the proposal and every delta, and never
-on the chapters it lands in — their `change` points at the archived proposal. Chapter rungs
-stay for work outside the lane; a merge lifts one whose content it changes. An agreed change
-is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.md`.
-`--no-move` merges and leaves the folder for a caller whose own tool moves it —
-[devbook-openspec](devbook-openspec.md#landing-a-change) lets `openspec archive` do it.
+`.devbook/`, because OpenSpec's CLI resolves `changes/` only under `openspec/`.
+
+- `proposal.md` and every delta under `devbook-delta/` are chapters the check lints, though none
+  is a node in the graph.
+- `solution.md` and `tasks.md` are the change's own and never checked.
+- `archive/` is history and never read.
+
+A change references the devbook and never the reverse: a devbook chapter whose `related`,
+`depends-on`, or prose link points into `openspec/changes/` fails the check. A delta may name a
+chapter only its own change adds.
+
+`delta.mjs --apply` is the only way a change lands, and only once both gates have passed on
+`proposal.md`. The change is decided as one, so `approved` and `accepted` are recorded once
+there, with a hash over the proposal and every delta, and never on the chapters it lands in.
+Their `change` points at the archived proposal. Chapter rungs stay for work outside the lane; a
+merge lifts one whose content it changes. An agreed change is pending truth to `verify-change`
+and `apply-change`, per `code-sync-protocol.md`. `--no-move` merges and leaves the folder for a
+caller whose own tool moves it: [devbook-openspec](devbook-openspec.md#landing-a-change) lets
+`openspec archive` do it.
 
 A journey changes through a delta of its scenarios file like any `domain/` chapter: a new
 journey is an `ADDED` entry with its parts one level down, and a part of an existing one is
-replaced whole. The rules no single file can check — setup fields that resolve, a
-`Proved by:` that names a part — would otherwise surface only at archive, after both gates.
-So once every delta merges, `--check` lays the whole change over the corpus in memory, runs
+replaced whole. The rules no single file can check, such as setup fields that resolve or a
+`Proved by:` that names a part, would otherwise surface only at archive, after both gates. So
+once every delta merges, `--check` lays the whole change over the corpus in memory, runs
 `scenario.mjs`'s pass over the result, and reports each problem the change introduces against
-the delta that causes it: a pointer may name a journey the same change adds, and a problem the
+the delta that causes it. A pointer may name a journey the same change adds, and a problem the
 corpus already had is not the change's.
 
 | Invariant | Enforced at | Evidence |
@@ -461,15 +491,19 @@ related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", "
 
 The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.html` that shows
 what a person sees in a bounded context. It belongs to the Devbook Folder aggregate and is no
-chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
-`context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
-the chapters whose `demo` field names it. Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
-journey part it plays, and a playthrough's `journey`, which names the journey it plays end to end. The file
-records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
-change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
-demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
-starting copy and a sample demo built on it ship with this block, under
-[Demo Template](devbook-procedures.md#demo-template). The
+chapter, so it carries no `meta` block.
+
+- `demo.html` belongs to the context and counts with `context.md`.
+- `<page>.demo.html` belongs to `<page>.md`.
+- Any other `*.demo.html` belongs to the chapters whose `demo` field names it.
+
+Links run from Markdown to the demo, except a linked walkthrough's `part`, which names the
+journey part it plays, and a playthrough's `journey`, which names the journey it plays end to
+end. The file records its question and nothing about its lifecycle: under `domain/` it is the
+demo, under a change's `devbook-delta/` it is a proposed demo, and anywhere else it is a
+prototype. Every demo is built on the repository's template at
+`.devbook/design/demo-template.html`. The template's starting copy and a sample demo built on it
+ship with this block, under [Demo Template](devbook-procedures.md#demo-template). The
 [demos record](../adr/demos.md) holds the reasons.
 
 A `demo` field and a note point into a demo by an address, and a frame that hosts a demo
@@ -482,31 +516,44 @@ A playthrough is the walkthrough that plays a whole journey: its `journey` names
 and each step the part and the part step it shows, in the journey's order. A `feature` or
 `sub-feature` chapter names the playthrough its page shows in its `playthrough` field, which
 the graph carries on the feature's node. The work splits three ways, so none of them overlaps:
-this block owns the field and the contract, the host — spec-manager, Backlog — owns activation
-through `demo:play`, and the repository's template owns the look: the caption over the
-product, the steps grouped by part, and the pace.
 
-The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
-density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
-`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta, one of the two routes a demo has into `domain/`.
-`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address. It
-resolves a linked walkthrough's `part` to its journey part, reports a `step` past the
-part's steps as an error, a `signature` that is not the journey's as stale, and embedded `text`
-unlike its part step as drifted, and derives a `Proved by:` requirement's `demo` entries from
-the walkthroughs linked to its part, beside its derived `tests`. It computes the signature with
-the scenario tools' `signature.mjs`, loaded only when a demo links a walkthrough, and
+| Concern | Owner |
+| --- | --- |
+| The field and the contract | This block |
+| Activation through `demo:play` | The host: spec-manager, Backlog |
+| The look: the caption over the product, the steps grouped by part, and the pace | The repository's template |
+
+The folder rules state it:
+
+- `devbook-domain.md`: the naming, the pairing, one variant at real density, and the HTML contract
+- `devbook-chapter-metadata.md`: the `demo` field and the file's `demo-meta` script
+- `devbook-design.md`: the template
+- `devbook-changes.md`: the demo delta, one of the two routes a demo has into `domain/`
+
+`demo.mjs` in the checker:
+
+- enforces the HTML contract and resolves every `demo` address
+- resolves a linked walkthrough's `part` to its journey part
+- reports a `step` past the part's steps as an error, a `signature` that is not the journey's
+  as stale, and embedded `text` unlike its part step as drifted
+- derives a `Proved by:` requirement's `demo` entries from the walkthroughs linked to its part,
+  beside its derived `tests`
+- computes the signature with the scenario tools' `signature.mjs`, loaded only when a demo links
+  a walkthrough
+- checks a playthrough as it checks a linked walkthrough, but against its whole journey: each
+  step's part and step, the journey's order, the text, and the signature
+- warns on a part no step shows and on a feature's `playthrough` whose journey does not name the
+  feature
+
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
-`demo.mjs` checks a playthrough as it checks a linked walkthrough, but against its whole journey — each step's part and step, the
-journey's order, the text, and the signature — and warns on a part no step shows and on a
-feature's `playthrough` whose journey does not name the feature.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`
 replaces the target whole.
 
 `demo-template.mjs` holds every demo's managed region to the template. The begin marker's hash
 certifies the region: text that hashes to its own marker is a release of the template exactly
 as it shipped, so no list of past versions is kept. `--check`, which `build.mjs --check` runs,
-reports a region on an earlier version than the template's as stale, a warning, and one whose
-text matches no version as hand-edited, an error. `--refresh` re-stamps the template's marker,
+reports a region on an earlier version than the template's as stale, a warning. It reports one
+whose text matches no version as hand-edited, an error. `--refresh` re-stamps the template's marker,
 then rewrites every demo's region from it and nothing else in the file. It is the one write
 into a demo that is not `/prototype`'s, and it lifts no approval: the region is the template's,
 so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
@@ -545,20 +592,30 @@ under `.devbook/arc42/c4/`. It is the one non-Markdown file `arc42/` holds and t
 an element or a view is defined. It holds people, systems, containers, components, deployment
 nodes, relationships, and views; prose, decisions, and debt stay in chapters and records.
 
-This block owns the contract around it: the rule that names the file, the `c4:<view key>`
-image embed and the chapter each view kind belongs to, the `c4` and `c4-touches` fields in
-`arc42/` and `domain/` and a building block's `code`, the limit that keeps Mermaid inside one
-element, and the checker that resolves every embed and identifier against the workspace and
-adds elements and views to the [Reference Graph](#reference-graph). Drawing a view is not this
-block's: the committed SVG is [devbook-derived](devbook-derived.md#view-renderer)'s, and a
-C4-aware viewer draws the workspace itself. The [C4 model record](../adr/c4-model.md) holds
-the reasons, and the TDR `severity` field and status ladder decided with it.
+This block owns the contract around it:
+
+- the rule that names the file
+- the `c4:<view key>` image embed and the chapter each view kind belongs to
+- the `c4` and `c4-touches` fields in `arc42/` and `domain/` and a building block's `code`
+- the limit that keeps Mermaid inside one element
+- the checker that resolves every embed and identifier against the workspace and adds elements
+  and views to the [Reference Graph](#reference-graph)
+
+Drawing a view is not this block's: the committed SVG is
+[devbook-derived](devbook-derived.md#view-renderer)'s, and a C4-aware viewer draws the workspace
+itself. The [C4 model record](../adr/c4-model.md) holds the reasons, and the TDR `severity` field
+and status ladder decided with it.
 
 The reader is built: `devbook-meta/c4.mjs` reads the workspace, with no dependency outside
-Node, into its elements — each with its hierarchical identifier, kind, name, description,
-technology, tags, parent, group, and deployment environment — its relationships, its views
-with key, scope, title, include, exclude, autolayout, and a dynamic view's steps, and its
-problems. It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
+Node, into:
+
+- its elements, each with its hierarchical identifier, kind, name, description, technology,
+  tags, parent, group, and deployment environment
+- its relationships
+- its views, with key, scope, title, include, exclude, autolayout, and a dynamic view's steps
+- its problems
+
+It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
 `!identifiers hierarchical`, `!include`, the static and deployment elements, `group`, `tags`,
 relationships, and the six view kinds. A construct outside that subset is a problem naming its
 file and line, and reading goes on past it.
@@ -580,7 +637,7 @@ file and line, and reading goes on past it.
 The check reads the model in contract 33: `devbook-meta/c4-graph.mjs` runs the reader over
 the workspace when it exists and adds each element and view to the
 [Reference Graph](#reference-graph), with `contains`, `relationship`, `embeds`, `c4`, and
-`c4-touches` edges, and a building block's `code` carried on its node. A debt record without
+`c4-touches` edges. A building block's `code` is carried on its node. A debt record without
 `severity`, and one still holding an `arc42/` rung, is a warning rather than an error, so a
 debt set written before the fields keeps validating until each record is ranked. A decision
 record whose History table is not headed `Date | Change | Why` is a warning for the same reason:
@@ -589,11 +646,15 @@ does not open a Mermaid fence, so a fence that draws between elements is
 [prose-check](#prose-check)'s finding, never a check failure.
 
 Migration `033-c4-workspace` moves a repository that drew its architecture before the
-workspace into it: it creates `workspace.dsl` or moves it from `arc42/_c4/`, turns each
-Mermaid C4 fence, each sequence whose participants all match elements, and each Archify
-`architecture` or `sequence` spec into elements and a view, replaces the fence with the view's
-embed, and fills a debt record's `severity` and `status` from its `## Severity` and `## Status`
-sections. What it cannot place it reports and leaves.
+workspace into it:
+
+- creates `workspace.dsl` or moves it from `arc42/_c4/`
+- turns each Mermaid C4 fence, each sequence whose participants all match elements, and each
+  Archify `architecture` or `sequence` spec into elements and a view
+- replaces the fence with the view's embed
+- fills a debt record's `severity` and `status` from its `## Severity` and `## Status` sections
+
+What it cannot place it reports and leaves.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -610,9 +671,9 @@ related: [".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/building-b
 Also called: graph, `graph.json`.
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
-the corpus and owned by nobody who writes prose. It is the answer to *what points at this*,
-which no single chapter can hold, and it is the reason a reference is a first-class field
-rather than a Markdown link.
+the corpus and owned by nobody who writes prose. It answers *what points at this*, which no
+single chapter can hold, and it is why a reference is a first-class field rather than a
+Markdown link.
 
 The graph is derived, never authored: the [Index Generator](#index-generator) builds it from
 the chapters every time it checks. Its committed form under `_meta/` is
@@ -629,11 +690,12 @@ commits it.
 
 A **Graph Node** is one chapter or file, identified by its address, carrying the parsed
 block, the composed label, and the folder it belongs to. The label composes the heading with
-the `type` where that adds something — `Order Platform (context-map)` — so the kind stays
-visible in a graph drawn from several repositories at once. A **Graph Edge** is a directed
-pair of addresses plus which field produced it. Equal by value, and carrying no state of its
-own: an edge is a restatement of a field in some chapter's block, so it is rebuilt rather than
-maintained.
+the `type` where that adds something, as in `Order Platform (context-map)`, so the kind stays
+visible in a graph drawn from several repositories at once.
+
+A **Graph Edge** is a directed pair of addresses plus which field produced it. It is equal by
+value and carries no state of its own: an edge restates a field in some chapter's block, so it
+is rebuilt rather than maintained.
 
 ### Reconciler
 
@@ -641,20 +703,21 @@ maintained.
 related: [".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/adr/install.md"]
 ```
 
-Brings a repository level with the installed release, in six phases — detect, resolve, plan,
+Brings a repository level with the installed release, in six phases: detect, resolve, plan,
 migrate, materialize, stamp and verify. First install, a plugin upgrade, a change in which
 folders are adopted, and an outstanding migration are one idempotent operation, and the stamp
 says which of the four this run is.
 
-Invocation semantics: command-invoked, by `devbook:init` where no stamp exists and by
-`devbook:update` where one does; each refuses the other's case. Nothing else writes what it
-materializes: `validate` repairs chapters only, and devbook-config's `doctor` reads the stamp
-and writes nothing, because one writer is what makes re-running safe.
+- **Invocation:** by command, `devbook:init` where no stamp exists and `devbook:update` where
+  one does. Each refuses the other's case.
+- **Only writer of:** what it materializes. `validate` repairs chapters only, and
+  devbook-config's `doctor` reads the stamp and writes nothing.
+- **Why:** one writer is what makes re-running safe.
 
-It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component stamp, and
-it is the only thing in this block that touches a file outside a devbook folder: the rule
-wrappers each host reads, the CI workflow templates, the procedures and their wrappers, and
-devbook's own marker-fenced section of `AGENTS.md`.
+It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component stamp. It is
+the only thing in this block that touches a file outside a devbook folder: the rule wrappers
+each host reads, the CI workflow templates, the procedures and their wrappers, and devbook's
+own marker-fenced section of `AGENTS.md`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -671,27 +734,31 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
 the term register, and the scenario register for the repository and for
 each adopted folder.
-The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
-other `domain/` chapter carrying `aliases` but a `requirement` or `invariant`, whose `aliases`
-are the codes a rule is cited by, each with its lede as its definition. It is built
-from the graph and the ledes the same walk kept, never a second read. It carries its own
-`schemaVersion`, because its first reader is outside this repository. The journey register
-is the fifth: every journey with its address, setup fields, screenshot labels, and parts, each part with the requirement cases whose `Proved by:` names it — built
-by the scenario pass, kept beside the nodes, with its own `schemaVersion` for the same
-reason. It checks by default
-and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
-[devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
-whether a problem is an error or a warning: an unresolved reference fails, a heading with no
-block is reported and tolerated — except in a structural document the folder rules name, such
-as `technology-graph.md` or `adoption-map.md`, whose sections are not chapters and draw
-nothing. A Markdown link in chapter prose is read too: a relative target with no file behind
-it, or an anchor no heading in an indexed file renders, is a warning, so a link to a deleted
-chapter is reported without failing a chapter that links ahead. Every per-block rule reaches the gate through the schema validator the graph
-build calls per file
-(`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
-Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
-request and the daily `devbook-validate` schedule runs `validate` through its own wrapper.
+The term register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
+other `domain/` chapter carrying `aliases`, each with its lede as its definition. A `requirement`
+or `invariant` is out: its `aliases` are the codes a rule is cited by. It is built from the graph
+and the ledes the same walk kept, never a second read. It carries its own `schemaVersion`,
+because its first reader is outside this repository.
+
+The journey register is the fifth: every journey with its address, setup fields, screenshot
+labels, and parts, each part with the requirement cases whose `Proved by:` names it. The scenario
+pass builds it, beside the nodes, with its own `schemaVersion` for the same reason.
+
+It checks by default and writes only on `--write`, which nothing in this block passes: the
+committed `_meta/` is [devbook-derived](devbook-derived.md#refresh)'s to ask for.
+
+It is the only thing that decides whether a problem is an error or a warning. An unresolved
+reference fails. A heading with no block is reported and tolerated, except in a structural
+document the folder rules name, such as `technology-graph.md` or `adoption-map.md`, whose
+sections are not chapters and draw nothing. A Markdown link in chapter prose is read too: a
+relative target with no file behind it, or an anchor no heading in an indexed file renders, is a
+warning. So a link to a deleted chapter is reported without failing a chapter that links ahead.
+Every per-block rule reaches the gate through the schema validator the graph build calls per
+file (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
+
+**Invocation:** by command and by schedule. `--check` runs in CI on every pull request, and the
+daily `devbook-validate` schedule runs `validate`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -711,10 +778,9 @@ related: [".devbook/arc42/building-blocks/devbook.md#tech-update", ".devbook/arc
 
 Also called: `devbook-tech`, package inventory.
 
-Two scripts that read a repository's package manifests — .NET and frontend — and emit
-deterministic JSON: sorted, timestamp-free, build output ignored. The evidence `tech-update`
-grounds a `tech/` chapter in, so a package-derived fact is reproducible and a hand-written one
-is visibly not. Materialized by `init` or `update` only where `tech/` is adopted.
+Two scripts read a repository's package manifests, .NET and frontend, and emit the deterministic
+JSON the invariants below describe. `tech-update` grounds a `tech/` chapter in that evidence, so
+a package-derived fact is reproducible and a hand-written one is visibly not.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -729,35 +795,56 @@ related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc4
 
 Also called: the scenario tooling, `.devbook/_tools/scenarios/`.
 
-Connects a repository's e2e suite to its journeys through files, not a runtime. A derived
-spec opens with the address of the journey it implements and the journey's signature; the
-runner it imports resolves the effective configuration — the profile in
-`.devbook/scenarios/profiles.json`, then the journey's `flags` and `settings` — calls the
-repository's own setup hook, keeps one browser context per portal, and opens `start`; the
-reporter writes `run.json` version 3 and one screenshot per `shot:` label into the journey's
-run folder beside its scenarios file, `scenarios/<journey>/`, in the working tree, so the run
-is committed with the change. The coverage check reads files only and reports a journey with
-no spec, a signature mismatch, label drift, an image inside a step list, a repeated anchor,
-a dangling `scenario:` reference, an unknown profile, and a page of the shape before
-contract 32. The demo sync re-copies each linked walkthrough's step `text` from the part it
-names and its `signature` from the journey, replacing those values in the
-demo's `demo-model` and no other byte; it reads the demo and resolves the part through
-devbook-meta's `demo.mjs`, so it and the checker agree on what is stale or drifted. Materialized
-by `init` or `update` only where `domain/` is adopted, because journeys live there.
+```mermaid
+flowchart TD
+    spec["Derived spec: the journey's address and signature"] --> runner["Runner: resolve the effective configuration"]
+    runner --> hook["The repository's own setup hook"]
+    hook --> browser["One browser context per portal, opening start"]
+    browser --> reporter["Reporter: run.json version 3, one screenshot per shot: label"]
+    reporter --> folder["The journey's run folder beside its scenarios file"]
+```
 
-The signature is sha256 over the normalized setup fields — a data set by its name and the
-hash of its folder — the part headings, the steps, and the labels, in document order, first 8
-hex. Every reader recomputes it, so a stale run is computed and never stored, and
+Connects a repository's e2e suite to its journeys through files, not a runtime. Profiles live in
+`.devbook/scenarios/profiles.json`. The reporter writes into `scenarios/<journey>/`, in the
+working tree, so the run is committed with the change.
+
+The coverage check reads files only and reports:
+
+- a journey with no spec
+- a signature mismatch
+- label drift
+- an image inside a step list
+- a repeated anchor
+- a dangling `scenario:` reference
+- an unknown profile
+- a page of the shape before contract 32
+
+The demo sync re-copies each linked walkthrough's and playthrough's step `text` from the part it
+names and its `signature` from the journey, replacing those values in the demo's `demo-model`
+and no other byte. It reads the demo and resolves the part through devbook-meta's `demo.mjs`, so
+it and the checker agree on what is stale or drifted. `init` or `update` materializes the tools
+only where `domain/` is adopted, because journeys live there.
+
+The signature is the first 8 hex of sha256 over the normalized setup fields (a data set by its
+name and the hash of its folder), the part headings, the steps, and the labels, in document
+order. Every reader recomputes it, so a stale run is computed and never stored, and
 `scenario-page.vector.json` is the one vector every implementation is tested against.
 
-Three skills carry a journey through the tools, one step each, and the journey is the source
-in all three: `scenario-write` writes the journey in its context's `scenarios.md` and the
-`Proved by:` lines that point at its parts; `scenario-derive` brings a spec to the journey —
-the header from `signature.mjs`, one test per part, one step per step, the `shot` calls — and
-leaves what the journey cannot say to the implementer, never touching the setup hook;
-`scenario-run` runs whole journeys, so the reporter writes, and reports each part's outcome. `scenario-derive` builds on
-`qa:playwright-e2e-authoring` by name, which is a plugin of another marketplace: where it is
-not installed, the repository's own specs are the model.
+Three skills carry a journey through the tools, one step each, and the journey is the source in
+all three. Delivery's phases reach `scenario-derive` and `scenario-run` for the pages a run's
+scope lists.
+
+- `scenario-write` writes the journey in its context's `scenarios.md` and the `Proved by:` lines
+  that point at its parts. A person reaches it from a chapter that needs a journey.
+- `scenario-derive` brings a spec to the journey: the header from `signature.mjs`, one test per
+  part, one step per step, the `shot` calls. It leaves what the journey cannot say to the
+  implementer and never touches the setup hook. A person reaches it when the coverage check
+  names it, and delivery from `implement`.
+- `scenario-run` runs whole journeys, so the reporter writes, and reports each part's outcome. A
+  person reaches it to prove a page, and delivery from `verify`.
+
+`scenario-derive` builds on `qa:playwright-e2e-authoring` by name, which is a plugin of another
+marketplace: where it is not installed, the repository's own specs are the model.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -783,35 +870,36 @@ not installed, the repository's own specs are the model.
 
 Two value objects used by more than one aggregate.
 
-**Chapter Address** — also called reference, anchor, `path#slug`. `<path>#<heading-slug>` for
-a chapter, or the bare `<path>` for a file: the repository-relative path plus a GitHub-style
-slug of the heading text. It is exactly what renders as the heading's link target, which is
-why it stays correct in any Markdown viewer and never has to be kept in sync by hand.
-"Exactly" includes letters and digits outside ASCII: `## Café Ordering` addresses as
-`café-ordering`, because an ASCII-only slug would agree with nothing the reader can click.
+**Chapter Address**, also called reference, anchor, `path#slug`: `<path>#<heading-slug>` for
+a chapter, or the bare `<path>` for a file. That is the repository-relative path plus a
+GitHub-style slug of the heading text. It is exactly what renders as the heading's link target,
+so it stays correct in any Markdown viewer and never has to be kept in sync by hand. "Exactly"
+includes letters and digits outside ASCII: `## Café Ordering` addresses as `café-ordering`,
+because an ASCII-only slug would agree with nothing the reader can click.
 
-Equal by value and derived from the content, so it is a re-identification rather than a rename
-when the heading changes. That is the cost the convention accepts in exchange for having no
-stored ids to reconcile.
+It is equal by value and derived from the content, so a changed heading is a re-identification
+rather than a rename. That is the cost the convention accepts for having no stored ids to
+reconcile.
 
 Because nothing is assigned, two headings in one file that slugify identically claim one
-address. The **first** keeps it — the one GitHub leaves unsuffixed — and the later one is
-dropped rather than overwriting it; last-writer-wins would silently move an address. A heading
+address. The **first** keeps it, the one GitHub leaves unsuffixed, and the later one is dropped
+rather than overwriting it, because last-writer-wins would silently move an address. A heading
 carrying no `meta` block claims its anchor the same way, so the rule is about headings, not
-about chapters. The graph reports the collision where a chapter is on either side of it,
-because a chapter that cannot be addressed is a chapter that has left the graph. Two
-structural headings sharing an anchor is not reported: it is the ordinary shape of a chapter
-file, where two rules in one `requirements.md` carry a `#### Scenario:` of the same name and
-every event carries its own `### Payload`, and such a heading is only ever
-materialized when something cites it.
+chapters. The graph reports the collision where a chapter is on either side of it, because a
+chapter that cannot be addressed has left the graph.
 
-**Test Reference** — also called tests entry, test link. `<level>:<runner>:<selector>`, where
-only the first two colons delimit — a selector routinely carries its own. It means *this test
-asserts what this chapter claims*, never "this is roughly the area of code involved".
-Admissible where a code path is not, for one reason: it is executable. An entry that stops
-resolving fails a run, out loud, in the same CI that runs the suite. A runner outside the
-known table is a warning rather than an error — the pairing still holds, only the run command
-is lost.
+Two structural headings sharing an anchor is not reported. It is the ordinary shape of a chapter
+file, where two rules in one `requirements.md` carry a `#### Scenario:` of the same name and
+every event carries its own `### Payload`. Such a heading is only ever materialized when
+something cites it.
+
+**Test Reference**, also called tests entry, test link: `<level>:<runner>:<selector>`, where
+only the first two colons delimit, because a selector routinely carries its own. It means *this
+test asserts what this chapter claims*, never "this is roughly the area of code involved". It is
+admissible where a code path is not, for one reason: it is executable. An entry that stops
+resolving fails a run, out loud, in the same CI that runs the suite. A runner outside the known
+table is a warning rather than an error: the pairing still holds, and only the run command is
+lost.
 
 ## Runtime
 
@@ -828,11 +916,6 @@ standing. A chapter and its implementation catching up with each other is
 ```meta
 related: [".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md"]
 ```
-
-Six phases, one idempotent operation behind two entry points. The stamp is what tells first
-install from upgrade from a change of adopted folders from an outstanding migration — never a
-version comparison, which is what makes running it twice harmless. No stamp is `init`'s case
-and every other is `update`'s; each refuses the other's.
 
 ```mermaid
 flowchart TD
@@ -854,12 +937,15 @@ flowchart TD
     repair -.->|"hands every other write back"| start
 ```
 
-- **`validate` never writes what `init` and `update` own.** It repairs what it can prove — a
-  broken reference, a malformed block, a field the schema no longer defines — and hands the
+Six phases, one idempotent operation behind two entry points. The stamp, never a version
+comparison, tells first install from upgrade from a change of adopted folders from an
+outstanding migration, which makes running it twice harmless.
+
+- **`validate` never writes what `init` and `update` own.** It repairs what it can prove (a
+  broken reference, a malformed block, a field the schema no longer defines) and hands the
   rest back, because two writers for one file is how a reconcile stops being idempotent.
 - **A customized file is reported, never overwritten.** An edit inside a marker-fenced section
-  makes the next reconcile leave the section alone, which is the whole reason the markers are
-  there.
+  makes the next reconcile leave the section alone, which is why the markers are there.
 - **A renamed payload path is a new key, not a moved one.** Reconcile resolves it as absent,
   creates it, and leaves the old file on disk unmanaged — recorded as
   [debt record 3](../tdr/3-devbook-rename-has-no-migration.md).
@@ -917,7 +1003,7 @@ consumer that reaches only the converters or only the procedures is listed in
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
+| [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `devbook-writing.md` names the skill `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Pictures read faster than prose. Without the skill, the rule's own table of diagram kinds applies, so nothing is declared. |
 | The `qa` plugin, another marketplace | Separate Ways | `scenario-derive` names `qa:playwright-e2e-authoring` for the e2e folder, the test conventions, and how a step body is written | The skill name alone | The shape of a derived spec is this block's; how a Playwright step is written well is not. Without the skill, the repository's existing specs are the model, so nothing is declared. |
@@ -933,25 +1019,24 @@ consumer that reaches only the converters or only the procedures is listed in
 | --- | --- | --- | --- | --- |
 | [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
-| [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract — none of which it pins. |
+| [delivery](delivery.md#dependencies) | **Undeclared**: see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract, none of which it pins. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | spec-manager and Backlog | Published Language | Answer `devbook.decision@1` over MCP; recompute the fingerprint and run its vector | The two contracts and the vector | That both keep their shape within `@1`, and that `chapter-hash.mjs` prints what the vector pins. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
 
 **The undeclared row is the one that matters.** `delivery` cannot be declared a dependent
-without demoting all fourteen of its skills wherever this block is absent, and cannot be
+without demoting all fourteen of its skills wherever this block is absent. It cannot be
 left silent without the next payload-path rename landing the way `.backlog` did. The debt
-record holds the four remediation options; the first — name the coupling in prose and stop
-restating this block's rules — is the one to take.
+record holds the four remediation options. The first, naming the coupling in prose and no longer
+restating this block's rules, is the one to take.
 
 **Nothing here ships a flow.** The engine's flows appear in this block only as the routing a
 repository's session-start hook performs; how a chapter change is carried is the engine's, and the two meet only in a repository that installed both.
 
 The checker and the `tech/` inventory are this block's, and so are `validate`, `chapter-review`,
-and `tech-update`. The canvas is not: it is `devbook-derived`'s and loads
-these modules by path. The one thing this block never does is write a derived index:
-`build.mjs --write` is `devbook-derived`'s to pass — see
+and `tech-update`. The one thing this block never does is write a derived index:
+`build.mjs --write` is `devbook-derived`'s to pass, per
 [the checks and indexes record](../adr/checks-and-indexes.md).
 
 Every relationship above degrades rather than fails. A repository that has not run `init`

@@ -6,16 +6,16 @@ c4: ["marketplace.delivery.pull-request-lane"]
 code: ["plugins/delivery/skills/push-branch", "plugins/delivery/skills/update-pr-branch", "plugins/delivery/skills/fix-pr-checks", "plugins/delivery/skills/pr-merge-ready"]
 ```
 
-The pull-request lane of the [delivery](delivery.md) engine, a block inside it. Responsible for
-one thing: that a finished change gets reviewed and merge-ready, whether a flow produced it or
-not.
+The pull-request lane of the [delivery](delivery.md) engine, a block inside it. Its one responsibility is that
+a finished change gets reviewed and merge-ready, whether a flow produced it or not.
 
-Inside the block: the four lane skills.
+**Owns:** the four lane skills.
 
-Outside it: opening the pull request at the end of a run, which is
-[`phase-create-pr`](delivery-phases.md#phase-create-pr); checking out the branch a run works on,
-which is [`phase-update-base`](delivery-phases.md#phase-update-base); and raising a pull request
-by hand, which is the host's own action.
+| Concern | Owner |
+| --- | --- |
+| Opening the pull request at the end of a run | [`phase-create-pr`](delivery-phases.md#phase-create-pr) |
+| Checking out the branch a run works on | [`phase-update-base`](delivery-phases.md#phase-update-base) |
+| Raising a pull request by hand | the host's own action |
 
 ## Interfaces
 
@@ -32,8 +32,9 @@ Four skills, each reached by a person, on a change a flow did or did not produce
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Push the current branch and set its upstream, and stop there. No pull request opens: this is
-the step for getting commits onto the remote so CI runs.
+- **Does:** push the current branch, set its upstream, and stop.
+- **Never:** opens a pull request.
+- **Why:** this step gets commits onto the remote so CI runs.
 
 ### update-pr-branch
 
@@ -41,8 +42,9 @@ the step for getting commits onto the remote so CI runs.
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Bring a pull request branch level with its base, resolve the conflicts, re-validate, and push.
-For a branch that is behind, or that a required up-to-date check is blocking.
+- **Does:** bring a pull request branch level with its base, resolve the conflicts, re-validate,
+  and push.
+- **For:** a branch that is behind, or blocked by a required up-to-date check.
 
 ### fix-pr-checks
 
@@ -50,8 +52,8 @@ For a branch that is behind, or that a required up-to-date check is blocking.
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Read a failing job's logs, reproduce locally, classify the failure, fix it, and push until the
-checks go green.
+- **Does:** read a failing job's logs, reproduce locally, classify the failure, fix it, and push
+  until checks go green.
 
 ### pr-merge-ready
 
@@ -59,8 +61,9 @@ checks go green.
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-Score one pull request against the merge-ready checklist and clear its blockers, using the
-other three lane skills as its tools. One pull request per pass.
+- **Does:** score one pull request against the merge-ready checklist and clear its blockers,
+  with the other three lane skills.
+- **Limit:** one pull request per pass.
 
 ## Structure
 
@@ -80,12 +83,10 @@ related: [".devbook/arc42/12-glossary.md#pr-lane"]
 ```
 
 Getting a finished change reviewed and merge-ready: push the branch, bring it level with its
-base, fix the checks that fail, and score it against the merge-ready checklist. Raising the
-pull request itself is the host's own action rather than a skill here.
+base, fix the checks that fail, and score it against the merge-ready checklist.
 
 Invocation semantics: command-invoked, and separately from a run. These skills are the one
-part of this block routinely used on a change no flow produced. With the `pr-lane` slot
-unbound, `create-pr` writes file artifacts only and opens nothing.
+part of this block routinely used on a change no flow produced.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -94,9 +95,9 @@ unbound, `create-pr` writes file artifacts only and opens nothing.
 | With the `pr-lane` slot unbound, `create-pr` writes file artifacts only and opens nothing | `phase-create-pr` | untested |
 | A run works on the branch it was started on and ends in its own pull request; no tracker names a branch or holds a pull request back | `phase-update-base`, `phase-create-pr` | untested |
 
-What one pull request carries is decided per case by whoever starts the run — the proposal of
-a change alone, the whole change, or one step of a plan such as Backlog's — and never by the
-engine or a repository's configuration.
+Whoever starts the run decides per case what one pull request carries, never the engine or a
+repository's configuration. It may carry the proposal of a change alone, the whole change, or one
+step of a plan such as Backlog's.
 
 ## Dependencies
 
