@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="844" height="616" viewBox="0 0 844 616" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="Dynamic">
+<title>Dynamic</title>
+<desc>A file written once and loaded by two hosts.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-authoring-an-asset-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="844" height="616"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">Dynamic</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">A file written once and loaded by two hosts.</text>
+<g transform="translate(32 96)">
+  <g data-element="maintainer">
+    <circle class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" cx="110" cy="21" r="21"/>
+    <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="0" y="36" width="220" height="114" rx="27"/>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="72" font-size="15" font-weight="600" text-anchor="middle">The maintainer</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="90" font-size="11" text-anchor="middle" opacity="0.85">[Person]</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="112" font-size="12" text-anchor="middle">Authors every asset by hand,</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="127" font-size="12" text-anchor="middle">runs the checks, and releases…</text>
+  </g>
+  <g data-element="marketplace">
+    <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="280" y="290" width="220" height="150" rx="8"/>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="328" font-size="15" font-weight="600" text-anchor="middle">jsdotnet-devbook</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="346" font-size="15" font-weight="600" text-anchor="middle">marketplace</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="364" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="386" font-size="12" text-anchor="middle">The Claude Code plugin</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="401" font-size="12" text-anchor="middle">marketplace of agents, skills,</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="390" y="416" font-size="12" text-anchor="middle">rules, and hooks that drive…</text>
+  </g>
+  <g data-element="claude-code">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="280" y="0" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="47" font-size="15" font-weight="600" text-anchor="middle">Claude Code</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="87" font-size="12" text-anchor="middle">The authoring host that loads</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="102" font-size="12" text-anchor="middle">manifests, skills, agents,</text>
+    <text class="c4-ink-external" fill="#ffffff" x="390" y="117" font-size="12" text-anchor="middle">hooks, and MCP servers, and run…</text>
+  </g>
+  <g data-element="copilot">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="560" y="0" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="670" y="47" font-size="15" font-weight="600" text-anchor="middle">GitHub Copilot</text>
+    <text class="c4-ink-external" fill="#ffffff" x="670" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="670" y="87" font-size="12" text-anchor="middle">The second host, loading the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="670" y="102" font-size="12" text-anchor="middle">same manifest, skill, and hook</text>
+    <text class="c4-ink-external" fill="#ffffff" x="670" y="117" font-size="12" text-anchor="middle">files and its own extensions.</text>
+  </g>
+  <g data-relationship="maintainer -> marketplace" data-step="1">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-authoring-an-asset-arrow)" d="M110 150C110 220 357 220 357 290"/>
+  </g>
+  <g data-relationship="claude-code -> marketplace" data-step="2">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-authoring-an-asset-arrow)" d="M390 150C390 220 390 220 390 290"/>
+  </g>
+  <g data-relationship="copilot -> marketplace" data-step="3">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-authoring-an-asset-arrow)" d="M670 150C670 220 423 220 423 290"/>
+  </g>
+  <g class="c4-label" data-relationship="maintainer -> marketplace" data-step="1">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="151" y="203" width="167" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="234" y="218" font-size="11" text-anchor="middle">1. Writes the asset,</text>
+    <text class="c4-ink" fill="#1f2328" x="234" y="232" font-size="11" text-anchor="middle">declares both manifests,…</text>
+  </g>
+  <g class="c4-label" data-relationship="claude-code -> marketplace" data-step="2">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="298" y="168" width="185" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="390" y="183" font-size="11" text-anchor="middle">2. Installs</text>
+    <text class="c4-ink" fill="#1f2328" x="390" y="197" font-size="11" text-anchor="middle">plugin@jsdotnet-devbook and…</text>
+  </g>
+  <g class="c4-label" data-relationship="copilot -> marketplace" data-step="3">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="461" y="203" width="173" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="547" y="218" font-size="11" text-anchor="middle">3. Loads the same files,</text>
+    <text class="c4-ink" fill="#1f2328" x="547" y="232" font-size="11" text-anchor="middle">ignoring the keys it does…</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="32" y="568" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="581" font-size="12">Person</text>
+  <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="129" y="568" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="161" y="581" font-size="12">Software System</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="286" y="568" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="318" y="581" font-size="12">External</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-authoring-an-asset-arrow)" d="M396 576L418 576"/>
+  <text class="c4-ink" fill="#1f2328" x="428" y="581" font-size="12">Numbered step</text>
+</g>
+</svg>

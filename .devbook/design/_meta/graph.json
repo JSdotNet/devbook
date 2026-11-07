@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 38,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/design",
   "sources": [
@@ -21,9 +21,7 @@
       "none": 5,
       "skill": 1
     },
-    "nodesByStatus": {
-      "draft": 2,
-      "active": 3,
+    "nodesByRating": {
       "trial": 1
     },
     "edgesByType": {
@@ -40,8 +38,7 @@
           "label": "Design",
           "type": "file",
           "folder": "design",
-          "path": ".devbook/design/README.md",
-          "status": "draft"
+          "path": ".devbook/design/README.md"
         }
       },
       {
@@ -53,8 +50,7 @@
           "path": ".devbook/design/README.md",
           "slug": "dashboard",
           "level": 2,
-          "line": 13,
-          "status": "draft",
+          "line": 11,
           "related": [
             ".devbook/ai/02-deliver.md#flow-skills"
           ]
@@ -69,9 +65,7 @@
           "path": ".devbook/design/README.md",
           "slug": "canvas",
           "level": 2,
-          "line": 40,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 35,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#surface",
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
@@ -87,14 +81,15 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "flow-skills",
           "level": 2,
-          "line": 11,
-          "status": "trial",
+          "line": 10,
           "kind": "skill",
+          "rating": "trial",
           "date": "2026-09-02",
+          "evidence": "none",
           "stage": [
-            "plan",
+            "specify",
             "code",
-            "test"
+            "verify"
           ],
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#flow-skill"
@@ -111,9 +106,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "surface",
           "level": 2,
-          "line": 299,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 386,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/05-building-block-view.md#surface-plugins",
@@ -134,9 +127,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 121,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 78,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#plugin",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule",

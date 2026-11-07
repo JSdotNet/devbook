@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 38,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
@@ -24,10 +24,9 @@
       "protocol": 2,
       "runtime": 2
     },
-    "nodesByStatus": {
+    "nodesByRating": {
       "adopted": 10,
-      "trial": 4,
-      "active": 8
+      "trial": 4
     },
     "edgesByType": {
       "contains": 10,
@@ -45,7 +44,7 @@
           "type": "file",
           "folder": "tech",
           "path": ".devbook/tech/hosts.md",
-          "status": "adopted"
+          "rating": "adopted"
         }
       },
       {
@@ -57,9 +56,9 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "claude-code-plugin-api",
           "level": 2,
-          "line": 11,
-          "status": "adopted",
+          "line": 10,
           "kind": "platform",
+          "rating": "adopted",
           "related": [
             ".devbook/arc42/05-building-block-view.md#marketplace-root"
           ]
@@ -74,9 +73,9 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "claude-code-cli",
           "level": 2,
-          "line": 23,
-          "status": "trial",
+          "line": 21,
           "kind": "platform",
+          "rating": "trial",
           "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
           ],
@@ -95,8 +94,8 @@
           "slug": "copilot-plugin-api",
           "level": 2,
           "line": 39,
-          "status": "adopted",
           "kind": "platform",
+          "rating": "adopted",
           "related": [
             ".devbook/arc42/adr/hosts.md"
           ]
@@ -112,8 +111,8 @@
           "slug": "copilot-extension-sdk",
           "level": 2,
           "line": 51,
-          "status": "trial",
           "kind": "library",
+          "rating": "trial",
           "date": "2026-09-04",
           "depends-on": [
             ".devbook/tech/hosts.md#copilot-plugin-api"
@@ -133,8 +132,8 @@
           "slug": "scheduled-routines",
           "level": 2,
           "line": 72,
-          "status": "trial",
           "kind": "platform",
+          "rating": "trial",
           "date": "2026-09-28",
           "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
@@ -152,7 +151,7 @@
           "type": "file",
           "folder": "tech",
           "path": ".devbook/tech/shared.md",
-          "status": "adopted"
+          "rating": "adopted"
         }
       },
       {
@@ -165,8 +164,8 @@
           "slug": "markdown",
           "level": 2,
           "line": 10,
-          "status": "adopted",
-          "kind": "format"
+          "kind": "format",
+          "rating": "adopted"
         }
       },
       {
@@ -179,8 +178,8 @@
           "slug": "model-context-protocol",
           "level": 2,
           "line": 20,
-          "status": "adopted",
           "kind": "protocol",
+          "rating": "adopted",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"
           ]
@@ -196,8 +195,8 @@
           "slug": "mcp-apps",
           "level": 2,
           "line": 36,
-          "status": "trial",
           "kind": "protocol",
+          "rating": "trial",
           "date": "2026-09-03",
           "depends-on": [
             ".devbook/tech/shared.md#model-context-protocol"
@@ -214,7 +213,7 @@
           "type": "file",
           "folder": "tech",
           "path": ".devbook/tech/technology-graph.md",
-          "status": "adopted"
+          "rating": "adopted"
         }
       },
       {
@@ -224,7 +223,7 @@
           "type": "file",
           "folder": "tech",
           "path": ".devbook/tech/tooling.md",
-          "status": "adopted"
+          "rating": "adopted"
         }
       },
       {
@@ -237,8 +236,8 @@
           "slug": "node",
           "level": 2,
           "line": 10,
-          "status": "adopted",
           "kind": "runtime",
+          "rating": "adopted",
           "date": "2026-09-04",
           "related": [
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
@@ -254,9 +253,9 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "powershell",
           "level": 2,
-          "line": 65,
-          "status": "adopted",
+          "line": 75,
           "kind": "runtime",
+          "rating": "adopted",
           "date": "2026-09-04",
           "depends-on": [
             ".devbook/tech/tooling.md#node"
@@ -276,9 +275,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "marketplace-root",
           "level": 2,
-          "line": 8,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 7,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#marketplace"
           ],
@@ -292,9 +289,14 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
-          "status": "active",
-          "statusDeclared": false,
           "date": "2026-09-03",
+          "severity": "medium",
+          "c4": [
+            "marketplace.delivery-schedule.entry-point"
+          ],
+          "c4-touches": [
+            "claude-code"
+          ],
           "related": [
             ".devbook/arc42/11-risks-and-technical-debt.md",
             ".devbook/arc42/08-crosscutting-concepts.md#host-slot",
@@ -313,9 +315,14 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/hosts.md",
-          "status": "active",
-          "statusDeclared": false,
           "date": "2026-09-28",
+          "c4": [
+            "claude-code",
+            "copilot"
+          ],
+          "c4-touches": [
+            "marketplace"
+          ],
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#host-slots",
@@ -336,9 +343,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 121,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 78,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#plugin",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule",
@@ -355,9 +360,10 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "status": "active",
-          "statusDeclared": false,
           "date": "2026-10-05",
+          "c4": [
+            "marketplace"
+          ],
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
@@ -385,9 +391,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "schedule-plugin",
           "level": 2,
-          "line": 513,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 488,
           "date": "2026-09-07",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#schedule",
@@ -406,9 +410,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 439,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 533,
           "related": [
             ".devbook/tech/shared.md#model-context-protocol",
             ".devbook/arc42/08-crosscutting-concepts.md#phase",
@@ -426,9 +428,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 352,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 308,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#surface",

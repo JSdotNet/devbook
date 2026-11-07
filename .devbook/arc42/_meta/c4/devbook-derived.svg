@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="1358" viewBox="0 0 1380 1358" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - devbook-derived">
+<title>[Component] jsdotnet-devbook marketplace - devbook-derived</title>
+<desc>The refresh paths, the view renderer, and the canvas.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-devbook-derived-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1380" height="1358"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - devbook-derived</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The refresh paths, the view renderer, and the canvas.</text>
+<g transform="translate(32 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="1064" y="956" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="1074" y="974" font-size="12" font-weight="600">L0 foundation</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="340" y="-32" width="620" height="412" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="352" y="-11" font-size="13" font-weight="600">devbook-derived [Container]</text>
+  <g data-element="marketplace.devbook">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="1080" y="984" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="1190" y="1031" font-size="15" font-weight="600" text-anchor="middle">devbook</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1190" y="1049" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1190" y="1071" font-size="12" text-anchor="middle">Addressed Markdown chapters,</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1190" y="1086" font-size="12" text-anchor="middle">their meta block, the check, and</text>
+    <text class="c4-ink-container" fill="#ffffff" x="1190" y="1101" font-size="12" text-anchor="middle">the reconcile that puts the…</text>
+  </g>
+  <g data-element="marketplace.devbook-derived.refresh-paths">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="257" font-size="15" font-weight="600" text-anchor="middle">Refresh Paths</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: PowerShell, GitHub Acti…</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="297" font-size="12" text-anchor="middle">The skill, script, and workflows</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="312" font-size="12" text-anchor="middle">that rewrite the committed</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="327" font-size="12" text-anchor="middle">_meta/ indexes.</text>
+  </g>
+  <g data-element="marketplace.devbook-derived.view-renderer">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="159" font-size="15" font-weight="600" text-anchor="middle">View Renderer</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="177" font-size="11" text-anchor="middle" opacity="0.85">[Component: Node.js]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="199" font-size="12" text-anchor="middle">Draws every C4 view of the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="214" font-size="12" text-anchor="middle">workspace as a committed SVG.</text>
+  </g>
+  <g data-element="marketplace.devbook-derived.canvas">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="47" font-size="15" font-weight="600" text-anchor="middle">Canvas</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Copilot extension]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="87" font-size="12" text-anchor="middle">Two Copilot canvases drawing the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="102" font-size="12" text-anchor="middle">reference graph and one chapter</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="117" font-size="12" text-anchor="middle">live.</text>
+  </g>
+  <g data-element="copilot">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="0" y="516" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="563" font-size="15" font-weight="600" text-anchor="middle">GitHub Copilot</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="581" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="603" font-size="12" text-anchor="middle">The second host, loading the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="618" font-size="12" text-anchor="middle">same manifest, skill, and hook</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="633" font-size="12" text-anchor="middle">files and its own extensions.</text>
+  </g>
+  <g data-element="github">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="0" y="726" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="773" font-size="15" font-weight="600" text-anchor="middle">GitHub</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="791" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="813" font-size="12" text-anchor="middle">Runs the checks on every pull</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="828" font-size="12" text-anchor="middle">request, refreshes the index on</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="843" font-size="12" text-anchor="middle">a schedule, and is the tracker …</text>
+  </g>
+  <g data-relationship="copilot -> marketplace.devbook-derived.canvas">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-derived-arrow)" d="M220 591C290 591 290 75 360 75"/>
+  </g>
+  <g data-relationship="github -> marketplace.devbook-derived.refresh-paths">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-derived-arrow)" d="M220 801C290 801 290 285 360 285"/>
+  </g>
+  <g data-relationship="marketplace.devbook-derived.refresh-paths -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-derived-arrow)" d="M580 300L640 300Q650 300 650 310L650 662Q650 672 660 672L1000 672Q1010 672 1010 682L1010 1072Q1010 1082 1020 1082L1080 1082"/>
+  </g>
+  <g data-relationship="marketplace.devbook-derived.refresh-paths -> marketplace.devbook-derived.view-renderer">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-derived-arrow)" d="M580 270C650 270 650 180 720 180"/>
+  </g>
+  <g data-relationship="marketplace.devbook-derived.view-renderer -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-derived-arrow)" d="M940 180C1010 180 1010 1059 1080 1059"/>
+  </g>
+  <g data-relationship="marketplace.devbook-derived.canvas -> marketplace.devbook">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-derived-arrow)" d="M580 75L640 75Q650 75 650 85L650 557Q650 567 660 567L1000 567Q1010 567 1010 577L1010 1027Q1010 1037 1020 1037L1080 1037"/>
+  </g>
+  <g class="c4-label" data-relationship="copilot -> marketplace.devbook-derived.canvas">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="204" y="309" width="173" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="324" font-size="11" text-anchor="middle">Loads the extension at run</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="338" font-size="11" text-anchor="middle">time</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="352" font-size="11" text-anchor="middle">[Copilot Extension SDK]</text>
+  </g>
+  <g class="c4-label" data-relationship="github -> marketplace.devbook-derived.refresh-paths">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="198" y="519" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="534" font-size="11" text-anchor="middle">Runs the nightly refresh and</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="548" font-size="11" text-anchor="middle">the drift warning</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="562" font-size="11" text-anchor="middle">[GitHub Actions]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-derived.refresh-paths -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="772" y="655" width="117" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="670" font-size="11" text-anchor="middle">Runs with --write</text>
+    <text class="c4-muted" fill="#59636e" x="830" y="684" font-size="11" text-anchor="middle">[build.mjs]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-derived.refresh-paths -> marketplace.devbook-derived.view-renderer">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="564" y="215" width="173" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="230" font-size="11" text-anchor="middle">Runs after the index write</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-derived.view-renderer -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="921" y="596" width="179" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="611" font-size="11" text-anchor="middle">Reads the workspace through</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="625" font-size="11" text-anchor="middle">devbook&#39;s reader</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="639" font-size="11" text-anchor="middle">[c4.mjs]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-derived.canvas -> marketplace.devbook">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="809" y="557" width="43" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="572" font-size="11" text-anchor="middle">Draws</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="1310" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="1323" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="1310" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="1323" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="266" y="1310" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="1323" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="376" y="1310" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="1323" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="486" y="1310" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="518" y="1323" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-derived-arrow)" d="M576 1318L598 1318"/>
+  <text class="c4-ink" fill="#1f2328" x="608" y="1323" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-devbook-derived-arrow)" d="M713 1318L735 1318"/>
+  <text class="c4-ink" fill="#1f2328" x="745" y="1323" font-size="12">Implied relationship</text>
+</g>
+</svg>

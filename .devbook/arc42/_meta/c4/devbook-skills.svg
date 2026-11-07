@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="703" height="1084" viewBox="0 0 703 1084" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - devbook-skills">
+<title>[Component] jsdotnet-devbook marketplace - devbook-skills</title>
+<desc>The five pieces of guidance and the two that lean on another.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-devbook-skills-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="703" height="1084"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - devbook-skills</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The five pieces of guidance and the two that lean on another.</text>
+<g transform="translate(52 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="620" height="622" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">devbook-skills [Container]</text>
+  <g data-element="marketplace.devbook-skills.show-me">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="105" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="159" font-size="15" font-weight="600" text-anchor="middle">Show-me Catalog</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="177" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="199" font-size="12" text-anchor="middle">Pairs each kind of content with</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="214" font-size="12" text-anchor="middle">the picture that shows it.</text>
+  </g>
+  <g data-element="marketplace.devbook-skills.research-brief">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="315" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="362" font-size="15" font-weight="600" text-anchor="middle">Research Brief</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="380" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="402" font-size="12" text-anchor="middle">A question answered from primary</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="417" font-size="12" text-anchor="middle">sources, each claim cited with</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="432" font-size="12" text-anchor="middle">its confidence.</text>
+  </g>
+  <g data-element="marketplace.devbook-skills.pr-body">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="47" font-size="15" font-weight="600" text-anchor="middle">PR Body</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="87" font-size="12" text-anchor="middle">A pull request description in</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="102" font-size="12" text-anchor="middle">Summary, Evidence, and Merge</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="117" font-size="12" text-anchor="middle">Danger.</text>
+  </g>
+  <g data-element="marketplace.devbook-skills.retro">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="210" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="257" font-size="15" font-weight="600" text-anchor="middle">Retro Lenses</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="297" font-size="12" text-anchor="middle">Ten lenses, each pairing what to</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="312" font-size="12" text-anchor="middle">look for with the change it</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="327" font-size="12" text-anchor="middle">calls for.</text>
+  </g>
+  <g data-element="marketplace.devbook-skills.wayfinder">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="420" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="467" font-size="15" font-weight="600" text-anchor="middle">Wayfinder Map</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="485" font-size="11" text-anchor="middle" opacity="0.85">[Component: Skill]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="507" font-size="12" text-anchor="middle">An effort too big for one</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="522" font-size="12" text-anchor="middle">session planned as a map of</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="537" font-size="12" text-anchor="middle">decision tickets.</text>
+  </g>
+  <g data-element="github">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="360" y="726" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="470" y="773" font-size="15" font-weight="600" text-anchor="middle">GitHub</text>
+    <text class="c4-ink-external" fill="#ffffff" x="470" y="791" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="470" y="813" font-size="12" text-anchor="middle">Runs the checks on every pull</text>
+    <text class="c4-ink-external" fill="#ffffff" x="470" y="828" font-size="12" text-anchor="middle">request, refreshes the index on</text>
+    <text class="c4-ink-external" fill="#ffffff" x="470" y="843" font-size="12" text-anchor="middle">a schedule, and is the tracker …</text>
+  </g>
+  <g data-relationship="marketplace.devbook-skills.pr-body -> marketplace.devbook-skills.show-me">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-skills-arrow)" d="M220 75C290 75 290 180 360 180"/>
+  </g>
+  <g data-relationship="marketplace.devbook-skills.wayfinder -> marketplace.devbook-skills.research-brief">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-skills-arrow)" d="M220 480C290 480 290 390 360 390"/>
+  </g>
+  <g data-relationship="marketplace.devbook-skills.wayfinder -> github">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-skills-arrow)" d="M220 510C290 510 290 801 360 801"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-skills.pr-body -> marketplace.devbook-skills.show-me">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="201" y="118" width="179" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="133" font-size="11" text-anchor="middle">Picks its Summary view from</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-skills.wayfinder -> marketplace.devbook-skills.research-brief">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="204" y="418" width="173" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="433" font-size="11" text-anchor="middle">Resolves a research ticket</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="447" font-size="11" text-anchor="middle">through</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.devbook-skills.wayfinder -> github">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="204" y="632" width="173" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="647" font-size="11" text-anchor="middle">Writes the map and its</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="661" font-size="11" text-anchor="middle">tickets</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="675" font-size="11" text-anchor="middle">[the repository&#39;s tracker]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="32" y="1036" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="1049" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="149" y="1036" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="1049" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="259" y="1036" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="291" y="1049" font-size="12">Boundary</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-devbook-skills-arrow)" d="M369 1044L391 1044"/>
+  <text class="c4-ink" fill="#1f2328" x="401" y="1049" font-size="12">Relationship</text>
+</g>
+</svg>
