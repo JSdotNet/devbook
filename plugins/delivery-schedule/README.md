@@ -128,8 +128,8 @@ The routine runs `schedule-bundle`. Its workflow script, `skills/schedule-bundle
 reads each checkout once, runs a repository once however many checkouts share its `origin`,
 skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder —
 and runs one subagent per repository and job from the prompt that job's own schedule carries,
-with `Mode: bundle` added. At most four run at once and two of them write, never two writers in
-one repository; at the plan's usage limit nothing new starts. Every change is a draft pull
+with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
+repository; at the plan's usage limit nothing new starts. Every change is a draft pull
 request, and the one report has a row per repository and a column per job. The planning is
 tested by `node --test plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs`.
 

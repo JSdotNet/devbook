@@ -1,6 +1,6 @@
 ---
 name: schedule-bundle
-description: 'Run one bundle — Sunday devbook review — across every repository this machine checks out: one subagent per repository and job, each fed the prompt its own schedule would carry, at most four at once and two writers, every change a draft pull request, ending in one report. A bundle schedule''s target. Use when: a bundle routine fires, or running a bundle by hand. DO NOT USE FOR: one repository''s schedule (schedule-run).'
+description: 'Run one bundle of catalog jobs across every repository this machine checks out: one subagent per repository and job, each fed the prompt its own schedule would carry, at most four at once and two writers, every change a draft pull request, ending in one report. A bundle schedule''s target. Use when: a bundle routine fires, or running a bundle by hand. DO NOT USE FOR: one repository''s schedule (schedule-run).'
 ---
 
 # Scheduled: Bundle

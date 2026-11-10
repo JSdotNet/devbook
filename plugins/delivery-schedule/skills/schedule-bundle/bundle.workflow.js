@@ -5,7 +5,7 @@ export const meta = {
     'Invoked by the schedule-bundle skill with the bundle, its jobs\' schedule files, the preamble, and the checkout list. Returns one cell per repository and job; it writes no report and decides nothing a job\'s own skill decides.',
   phases: [
     { title: 'Plan', detail: 'one read-only agent reads each checkout; selection, deduplication, and preconditions are decided in code' },
-    { title: 'Jobs', detail: 'one subagent per repository and job: four at once, two writers, one writer per repository' },
+    { title: 'Jobs', detail: 'one subagent per repository and job: four at once, two writers, one job per repository' },
     { title: 'Digest', detail: 'the digest jobs, once every other job has settled' },
   ],
 }
@@ -76,6 +76,7 @@ const BUNDLE_LINES = `This run is the job \`{{name}}\` of the bundle "All repos 
 Mode: bundle
 
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
+- The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
 - Land every change as a draft pull request, never ready for review, whatever the build and tests say. Open, comment on, reopen, or close no issue.
 - End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
 - If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
@@ -102,12 +103,13 @@ function planRepos(reports) {
     if (!samePath(r.toplevel, r.commonDirParent)) { skip('a worktree, not a main checkout'); continue }
     if (!r.stamped) { skip('no `components.schedule`'); continue }
     const origin = parseOrigin(r.origin)
-    if (!origin) { skip('no `origin` remote'); continue }
+    if (!origin) { skip(r.origin ? '`origin` is not `<host>/<owner>/<repo>`' : 'no `origin` remote'); continue }
     if (seen.has(origin.key)) { skip(`same \`origin\` as ${seen.get(origin.key)}`); continue }
     if (!r.base) { skip('default branch unknown'); continue }
     seen.set(origin.key, normPath(r.toplevel))
     repos.push({
-      repo: origin.repo,
+      // The name GitHub gives is what per-repository routines are titled by, so retirement matches.
+      repo: r.nameWithOwner || origin.repo,
       checkout: normPath(r.toplevel),
       base: r.base,
       enabled: Array.isArray(r.enabled) ? r.enabled : [],
@@ -152,13 +154,14 @@ const PLAN_SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['path', 'exists', 'toplevel', 'commonDirParent', 'origin', 'base', 'stamped', 'enabled', 'overrides', 'facts'],
+        required: ['path', 'exists', 'toplevel', 'commonDirParent', 'origin', 'nameWithOwner', 'base', 'stamped', 'enabled', 'overrides', 'facts'],
         properties: {
           path: { type: 'string', description: 'The path exactly as given' },
           exists: { type: 'boolean' },
           toplevel: { type: 'string', description: '`git rev-parse --show-toplevel`, forward slashes; empty when it fails' },
           commonDirParent: { type: 'string', description: 'The parent folder of `git rev-parse --path-format=absolute --git-common-dir`, forward slashes' },
           origin: { type: 'string', description: '`git remote get-url origin`, verbatim; empty when there is none' },
+          nameWithOwner: { type: 'string', description: '`gh repo view --json nameWithOwner` run in the folder; empty when it fails' },
           base: { type: 'string', description: 'The default branch name without `origin/`; empty when unknown' },
           stamped: { type: 'boolean', description: 'true when `.devbook/config.json` has `components.schedule`' },
           enabled: { type: 'array', items: { type: 'string' }, description: '`components.schedule.enabled`, verbatim' },
@@ -191,6 +194,7 @@ ${args.checkouts.map((p) => `- ${normPath(p)}`).join('\n')}
 - toplevel: \`git -C "<folder>" rev-parse --show-toplevel\`.
 - commonDirParent: the parent of \`git -C "<folder>" rev-parse --path-format=absolute --git-common-dir\`.
 - origin: \`git -C "<folder>" remote get-url origin\`.
+- nameWithOwner: \`gh repo view --json nameWithOwner --jq .nameWithOwner\`, run in the folder.
 - base: \`git -C "<folder>" symbolic-ref --short refs/remotes/origin/HEAD\` without \`origin/\`;
   when that fails, \`gh repo view <owner/repo> --json defaultBranchRef --jq .defaultBranchRef.name\`.
 - stamped, enabled, overrides: from \`components.schedule\` in \`<folder>/.devbook/config.json\`.
@@ -230,6 +234,7 @@ const running = new Set()
 const peak = { agents: 0, writers: 0 }
 let stoppedBy = null
 let nullStreak = 0
+let lastNull = null
 
 function settle(cell, state, reason, result) {
   cell.state = state
@@ -241,11 +246,12 @@ function settle(cell, state, reason, result) {
   delete cell.prompt
 }
 
+// One job per repository at a time, reader or writer: every job's preamble fetches into the
+// same checkout and adds a worktree there, and two at once race on its refs.
 function canStart(cell) {
   if (running.size >= MAX_AGENTS) return false
-  if (!cell.writes) return true
-  const writers = [...running].filter((e) => e.cell.writes)
-  return writers.length < MAX_WRITERS && !writers.some((e) => e.cell.repo === cell.repo)
+  if ([...running].some((e) => e.cell.repo === cell.repo)) return false
+  return !cell.writes || [...running].filter((e) => e.cell.writes).length < MAX_WRITERS
 }
 
 async function runOne(cell, phaseName) {
@@ -261,13 +267,20 @@ async function runOne(cell, phaseName) {
     return
   }
   if (!result) {
+    // The host returns nothing, rather than throwing, when an agent dies on a terminal error —
+    // the usage limit among them. One is one failed cell; two in a row is read as the limit,
+    // so nothing more starts and both cells, and any after them, read as not run.
     nullStreak += 1
-    settle(cell, 'failed', 'agent returned nothing')
-    // One dead agent is one cell; two in a row is read as the limit, so nothing more starts.
-    if (nullStreak >= 2) stoppedBy = stoppedBy || 'two agents in a row returned nothing'
+    if (stoppedBy || nullStreak >= 2) {
+      stoppedBy = stoppedBy || 'two agents in a row returned nothing'
+      settle(cell, 'not-run', stoppedBy)
+      if (lastNull && lastNull.state === 'failed') settle(lastNull, 'not-run', stoppedBy)
+    } else settle(cell, 'failed', 'agent returned nothing')
+    lastNull = cell
     return
   }
   nullStreak = 0
+  lastNull = null
   if (result.outcome === 'usage-limit') {
     stoppedBy = stoppedBy || 'usage limit'
     settle(cell, 'not-run', 'usage limit', result)

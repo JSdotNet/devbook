@@ -12,7 +12,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | --- | --- | --- |
 | Review the draft: <own words> | `<owner/repo>` · <job title> | [#<n>](<url>) |
 | <a job's own Needs you row, its words kept> | `<owner/repo>` · <job title> | <its Do> |
-| <job title> failed: <why> | `<owner/repo>` | `schedule-run <job>` in that checkout |
+| <job title> failed: <why> | `<owner/repo>` | `schedule-run <bundle name>`, or the job's own routine where it still has one |
 
 ### Jobs
 | Repository | <job title> | <job title> | … |
@@ -50,5 +50,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 - *Drift* is every repository's devbook verify table, per that skill's *In a bundle*, the
   `Repository` column added. *Digest* is one subsection per repository whose digest jobs ran.
   Omit either when empty.
+- A cell an agent returned nothing for reads `failed`, unless a second followed it: the host
+  gives no reason, so two in a row are read as the usage limit and both read `not run`.
 - *Run* carries each skipped checkout, and the jobs left unstarted. Each job's own *Run* stays
   in its report; the cell links the draft that holds it.

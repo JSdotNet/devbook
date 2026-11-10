@@ -25,7 +25,7 @@ const PREAMBLE = 'You are the scheduled run "{{title}}" for {{repo}}, cloned at 
 const schedules = Object.fromEntries(JOBS.map((j) => [j, { title: `Title of ${j}`, body: `Run the ${j} skill for {{repo}}.` }]));
 
 const checkout = (p, origin, extra = {}) => ({
-  path: p, exists: true, toplevel: p, commonDirParent: p, origin, base: "main", stamped: true,
+  path: p, exists: true, toplevel: p, commonDirParent: p, origin, nameWithOwner: "", base: "main", stamped: true,
   enabled: JOBS, overrides: [], facts: { devbook: true, tech: true, units: true }, ...extra,
 });
 
@@ -34,7 +34,7 @@ const tick = (ms) => new Promise((r) => setTimeout(r, ms));
 // Runs the script. `reports` is what the plan agent returns; `onJob(label, n)` decides each
 // job's result, `n` its start order. Returns the script's result and what the fake observed.
 async function run({ checkouts, reports, onJob, jobs = JOBS, scheds = schedules }) {
-  const seen = { starts: [], prompts: {}, running: [], maxRunning: 0, maxWriters: 0, sameRepoWriters: false, digestBeforeMainDone: false, finished: [] };
+  const seen = { starts: [], prompts: {}, running: [], maxRunning: 0, maxWriters: 0, sameRepoWriters: false, sameRepoJobs: false, digestBeforeMainDone: false, finished: [] };
   const agent = async (prompt, opts) => {
     if (opts.label === "plan") return { checkouts: reports };
     const [job, repo] = opts.label.split(":");
@@ -47,6 +47,7 @@ async function run({ checkouts, reports, onJob, jobs = JOBS, scheds = schedules 
     seen.maxRunning = Math.max(seen.maxRunning, seen.running.length);
     seen.maxWriters = Math.max(seen.maxWriters, writers.length);
     if (new Set(writers.map((w) => w.repo)).size !== writers.length) seen.sameRepoWriters = true;
+    if (new Set(seen.running.map((r) => r.repo)).size !== seen.running.length) seen.sameRepoJobs = true;
     if (DIGEST.has(job) && seen.running.some((r) => !DIGEST.has(r.job))) seen.digestBeforeMainDone = true;
     try {
       await tick(1 + ((n * 7) % 5));
@@ -80,6 +81,7 @@ test("runs only the jobs a repository selects, and assembles each prompt without
   assert.match(prompt, /\nMode: bundle\n/);
   assert.match(prompt, /take the `worktree add` branch/);
   assert.match(prompt, /draft pull request, never ready for review/);
+  assert.match(prompt, /read its own `AGENTS\.md` and `CLAUDE\.md`/);
   assert.ok(!prompt.includes("{{"), "every placeholder is substituted");
   assert.ok(!/pick(ed)? up|Skipped:/.test(prompt), "no pickup gate");
 });
@@ -97,7 +99,7 @@ test("substitutes maxResolve from the repository's override, else the schedule's
 
 test("runs a repository once per origin, the first main checkout winning, and skips what is not one", async () => {
   const { result } = await run({
-    checkouts: ["D:/Repos/devbook", "D:/Repos/devbook-wt-schedule", "D:/Repos/ai-agent-stack", "D:/Repos/wt", "D:/Repos/plain", "D:/Repos/gone", "D:/Repos/backlog", "D:/Repos/unread"],
+    checkouts: ["D:/Repos/devbook", "D:/Repos/devbook-wt-schedule", "D:/Repos/ai-agent-stack", "D:/Repos/wt", "D:/Repos/plain", "D:/Repos/gone", "D:/Repos/backlog", "D:/Repos/azure", "D:/Repos/unread"],
     reports: [
       checkout("D:/Repos/devbook", "https://github.com/JSdotNet/devbook.git"),
       checkout("D:/Repos/devbook-wt-schedule", "git@github.com:JSdotNet/devbook.git"),
@@ -105,7 +107,8 @@ test("runs a repository once per origin, the first main checkout winning, and sk
       checkout("D:/Repos/wt", "https://github.com/o/wt", { toplevel: "D:/Repos/wt", commonDirParent: "D:/Repos/main" }),
       checkout("D:/Repos/plain", "https://github.com/o/plain", { stamped: false }),
       checkout("D:/Repos/gone", "", { exists: false }),
-      checkout("D:/Repos/backlog", "https://github.com/JSdotNet/Backlog"),
+      checkout("D:/Repos/backlog", "https://github.com/jsdotnet/backlog", { nameWithOwner: "JSdotNet/Backlog" }),
+      checkout("D:/Repos/azure", "https://dev.azure.com/org/project/_git/repo"),
     ],
   });
   assert.deepEqual(result.repos.map((r) => r.repo), ["JSdotNet/devbook", "JSdotNet/Backlog"]);
@@ -117,6 +120,7 @@ test("runs a repository once per origin, the first main checkout winning, and sk
   assert.match(reasons["D:/Repos/plain"], /components\.schedule/);
   assert.equal(reasons["D:/Repos/gone"], "missing");
   assert.equal(reasons["D:/Repos/unread"], "not read");
+  assert.match(reasons["D:/Repos/azure"], /is not `<host>\/<owner>\/<repo>`/);
   assert.equal(result.cells.filter((c) => c.repo === "JSdotNet/devbook").length, JOBS.length);
 });
 
@@ -135,7 +139,7 @@ test("checks each job's precondition before any subagent starts", async () => {
   assert.equal(cell(result, "o/a", "devbook-verify").state, "done");
 });
 
-test("holds the cap: four at once, two writers, never two writers in one repository, digest last", async () => {
+test("holds the cap: four at once, two writers, one job per repository, digest last", async () => {
   const names = ["a", "b", "c", "d", "e", "f"];
   const { result, seen } = await run({
     checkouts: names.map((n) => `D:/${n}`),
@@ -146,20 +150,20 @@ test("holds the cap: four at once, two writers, never two writers in one reposit
   assert.equal(seen.maxRunning, 4, "the cap is used, not just respected");
   assert.ok(seen.maxWriters <= 2, `ran ${seen.maxWriters} writers at once`);
   assert.equal(seen.sameRepoWriters, false);
+  assert.equal(seen.sameRepoJobs, false);
   assert.equal(seen.digestBeforeMainDone, false);
   assert.deepEqual(result.peak, { agents: 4, writers: 2 });
-  // Started in bundle order: no job starts before every cell of an earlier non-digest job was eligible.
+  // The digest starts only once every other job has settled, and the first start is the first cell.
   const firstDigest = seen.starts.findIndex((l) => DIGEST.has(l.split(":")[0]));
   assert.ok(seen.starts.slice(firstDigest).every((l) => DIGEST.has(l.split(":")[0])));
   assert.equal(seen.starts[0], "devbook-validate:o/a");
   assert.ok(result.cells.every((c) => c.state === "done"));
 });
 
-test("runs one repository's writers one at a time, readers beside them", async () => {
+test("runs one repository's jobs one at a time, in bundle order", async () => {
   const { seen } = await run({ checkouts: ["D:/a"], reports: [checkout("D:/a", "https://github.com/o/a")] });
-  assert.equal(seen.maxWriters, 1);
-  assert.equal(seen.sameRepoWriters, false);
-  assert.ok(seen.maxRunning >= 2, "a reader runs beside the writer");
+  assert.equal(seen.maxRunning, 1);
+  assert.deepEqual(seen.starts, JOBS.map((j) => `${j}:o/a`));
 });
 
 test("at the usage limit starts nothing new and marks the rest not run", async () => {
@@ -194,9 +198,9 @@ test("reads a thrown usage-limit error as the limit, and two empty agents in a r
     reports: [checkout("D:/a", "https://github.com/o/a", { enabled: ["devbook-validate", "tech-update", "devbook-verify", "weekly-update"] })],
     onJob: () => null,
   });
-  assert.equal(cell(empty.result, "o/a", "devbook-validate").state, "failed");
   assert.equal(empty.result.stoppedBy, "two agents in a row returned nothing");
-  assert.equal(cell(empty.result, "o/a", "weekly-update").state, "not-run");
+  assert.deepEqual(empty.result.cells.filter((c) => c.state !== "not-selected").map((c) => c.state), ["not-run", "not-run", "not-run", "not-run"]);
+  assert.equal(empty.seen.starts.length, 2, "nothing starts after the second empty agent");
 });
 
 test("one failed job is one cell, and the run carries on", async () => {

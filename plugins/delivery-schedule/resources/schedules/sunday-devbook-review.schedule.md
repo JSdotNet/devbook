@@ -13,5 +13,3 @@ jobs: [devbook-validate, tech-update, devbook-verify, prose-check, instruction-r
 Run `schedule-bundle` with bundle `{{name}}`, "{{title}}", across every main checkout this
 machine lists. Nobody reads this session while it runs: take the safe answer wherever one is
 asked, and end with the bundle report.
-
-The cron is local time. The tool list carries the editor the prose check's bundle mode needs.
