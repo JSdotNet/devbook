@@ -47,7 +47,7 @@ proved before it is trusted.
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| Seven contracts, listed below | contracts | The skills, by path |
+| Eight contracts, listed below | contracts | The skills, by path |
 | `scripts/resolve-issue.workflow.js` | work script | The issue sweep, and another plugin's sweep resolving an item the same way, per `draft-pr-contract.md` |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times |
@@ -58,6 +58,7 @@ proved before it is trusted.
 The contracts hold:
 
 - `schedule-catalog-contract.md`: the schedule file and the stamp
+- `machine-sync.md`: how `update` syncs the bundles at machine level, and the record it reads
 - `schedule-preamble.md`: the preamble every prompt opens with
 - `report-contract.md`: where a report goes, the frame every `report.md` fills, and how every entry point runs by hand or unattended and reports to a surface
 - `change-window-contract.md`: the change window `schedule-weekly-update` and `schedule-whats-new` share
@@ -97,9 +98,14 @@ entry point. The rest are below.
 - **Matches:** entries by `<owner>/<repo> · <title>`, so a second sync updates rather than
   duplicates. No scheduler id has to be written into the repository, which keeps anything
   personal out of it.
-- **Bundles:** one routine for the whole machine, matched by `All repos · <title>`. Its skill
-  reads the checkouts from the user's devbook config directory when it runs, so no sync writes a
-  path into a repository.
+- **Bundles:** one routine for the whole machine, matched by `All repos · <title>`. `update`
+  syncs them at machine level when a person asks for the bundles, from any folder that is not a
+  worktree, and needs no stamp. It reads the checkouts and the enabled bundles from the user's
+  devbook config directory, so no sync writes a path into a repository.
+- **Retires:** once a bundle's run has finished a job in a repository, machine level deletes
+  that repository's own routine for the job, after the person confirms the list. While a bundle is
+  enabled, a repository's own sync leaves a covered job alone. It neither creates nor updates
+  that routine, and the job stays in the selection the bundle reads.
 
 ### schedule-status
 
@@ -281,14 +287,15 @@ under `components.schedule` in the stack config. This block's `init` and `update
 The split is by who the fact belongs to. The selection and the overrides are repository facts
 and are committed. The checkout's path, the approved tools, and the scheduler's own ids are
 personal and stay in the scheduler. Matching by name makes writing them down unnecessary. A
-[bundle](#bundle)'s list of checkouts is personal as well, and lives under the user's devbook
-config directory.
+[bundle](#bundle)'s list of checkouts is personal as well. It lives in the user's own overlay
+under the devbook config directory, beside the machine's choice of bundles.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Nothing personal is written into the repository | `init`, `update` | untested |
 | The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
 | A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
+| A job an enabled bundle covers keeps its place in the selection, and its routine is neither created nor updated | `update` | untested |
 | A retired name is dropped and its routine disabled, never a failure | `update` | `migrate.test.mjs`, the drop only |
 | A routine whose title is no catalog or retired schedule is left alone | `update` | untested |
 | A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
@@ -330,13 +337,17 @@ routine each. The reasons are in [the plugin boundaries record](../adr/plugin-bo
 | A job's preconditions are checked before any subagent starts | bundle skill | untested |
 | No pickup check holds a bundle back | prompt assembly | untested |
 | The list of checkouts is never written into a repository | bundle skill, `update` | untested |
+| A per-repository routine is deleted only once a bundle's run has finished its job in its repository, and only after the person confirms | `update` at machine level | untested |
 
 The value objects it holds:
 
 - **Job:** one catalog schedule run for one repository, from that schedule's own prompt. It
   succeeds or fails as one cell of the bundle's report.
-- **Checkout list:** the main checkouts on this machine, read from the user's devbook config
-  directory. Each one's `components.schedule` selection says which jobs it gets.
+- **Checkout list:** the main checkouts on this machine, kept under
+  `ext.delivery-schedule.checkouts` in the user's overlay in the devbook config directory. Each
+  one's `components.schedule` selection says which jobs it gets.
+- **Bundle choice:** which bundles this machine runs, under `ext.delivery-schedule.bundles` in the
+  same file. Absent, the machine runs none.
 
 Inside a bundle, `prose-check` opens a draft pull request with its edits, one commit per
 chapter, and skips an edit an earlier closed pull request rejected. Its own catalog entry carries
@@ -350,7 +361,8 @@ related: [".devbook/arc42/12-glossary.md#scheduler", ".devbook/tech/hosts.md#sch
 ```
 
 It finds the [scheduler](../12-glossary.md#scheduler) the live session exposes, and creates,
-updates, disables, reads, or fires an entry through it.
+updates, disables, reads, or fires an entry through it. It deletes one in a single case: a
+per-repository routine a passed bundle replaced.
 
 Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
 outcome:** the operation reports it and stops without failing anything, the same shape a surface
@@ -405,7 +417,9 @@ flowchart TD
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
     loaded -->|no| refused["Skipped: it would start without its skill"]
-    loaded -->|yes| assemble["Assemble the prompt: preamble + task half"]
+    loaded -->|yes| covered{"Does an enabled bundle run it here?"}
+    covered -->|yes| left["Left alone: the bundle runs it"]
+    covered -->|no| assemble["Assemble the prompt: preamble + task half"]
     assemble --> resolve["Resolve the scheduler from the live tool list"]
     resolve -->|absent| noop["Report, change nothing"]
     resolve -->|present| retire["Disable any cloud copy with this name"]
@@ -423,6 +437,29 @@ scheduler is a normal outcome at every step.
 **Refusing beats creating something that cannot run.** A routine loads the plugins installed on
 this machine for the checkout, so one this session has not loaded is a skill the run would not
 reach. That is also why no schedule is a cloud session: a cloud clone installed none of them.
+
+### A Machine Sync
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle"]
+```
+
+```mermaid
+flowchart TD
+    ask(["A person asks update for the bundles"]) --> read["Read the checkouts and the enabled bundles from the user's overlay"]
+    read --> sync["Create or update each enabled bundle, disable the rest"]
+    sync --> passed{"Did its last run finish a job in a repository?"}
+    passed -->|no| wait["Delete nothing: waiting for its first run"]
+    passed -->|yes| list["List that repository's own routine for each finished job"]
+    list --> confirm{"Does the person confirm the list?"}
+    confirm -->|yes| delete["Delete them"]
+    confirm -->|no| keep["Delete nothing"]
+```
+
+The sync writes nothing into any repository, because every fact it reads belongs to the
+machine. A deleted routine cannot be restored, so the list waits for the person's answer.
+Retiring is judged per repository and job, so a job that failed or never started inside the
+bundle keeps its own routine until the bundle has run it.
 
 ### A Bundle Run
 
