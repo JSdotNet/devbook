@@ -316,8 +316,8 @@ Also called: cross-repository routine.
 
 One schedule that runs several catalog jobs across every repository on this machine, one
 subagent per repository and job. Its skill runs them through the host's workflow tool and never
-starts a session. Each subagent gets the prompt `update` already assembles for that repository
-and job, so the bundle carries no procedure of its own.
+starts a session. Each subagent gets the prompt `update` assembles for that repository and job,
+built by the same rule when the bundle runs, so the bundle carries no procedure of its own.
 
 | Bundle | Fires, local time | Jobs, in order |
 | --- | --- | --- |
@@ -362,7 +362,7 @@ related: [".devbook/arc42/12-glossary.md#scheduler", ".devbook/tech/hosts.md#sch
 
 It finds the [scheduler](../12-glossary.md#scheduler) the live session exposes, and creates,
 updates, disables, reads, or fires an entry through it. It deletes one in a single case: a
-per-repository routine a passed bundle replaced.
+per-repository routine whose job a bundle has run in that repository.
 
 Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
 outcome:** the operation reports it and stops without failing anything, the same shape a surface
@@ -447,7 +447,7 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle"]
 ```mermaid
 flowchart TD
     ask(["A person asks update for the bundles"]) --> read["Read the checkouts and the enabled bundles from the user's overlay"]
-    read --> sync["Create or update each enabled bundle, disable the rest"]
+    read --> sync["Create or update each enabled bundle, disable a catalog bundle not enabled"]
     sync --> passed{"Did its last run finish a job in a repository?"}
     passed -->|no| wait["Delete nothing: waiting for its first run"]
     passed -->|yes| list["List that repository's own routine for each finished job"]
