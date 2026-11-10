@@ -15,8 +15,9 @@ The scheduler and the identity rule are in `resources/schedule-catalog-contract.
    ask.
 2. **Resolve the local scheduler** from the live tool list, never a cloud one. None: say it is fired from the host's
    own page, and stop.
-3. **Find it**: `list`, matched on `<owner>/<repo> · <title>`. Not found: say so and point at
-   `delivery-schedule:init`, or `delivery-schedule:update` where `components.schedule` exists.
+3. **Find it**: `list`, matched on `<owner>/<repo> · <title>`, or `All repos · <title>` for a
+   bundle, which needs no stamp. Not found: say so and point at `delivery-schedule:init`, or
+   `delivery-schedule:update` where `components.schedule` exists or the name is a bundle.
 4. **Confirm before firing.** Show the name, the target skill, and what the run may open — a
    pull request on `schedule/<name>/`, an issue its skill opens for a finding — and wait for a yes.
    Then `run`.

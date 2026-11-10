@@ -12,7 +12,8 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 ## Inputs
 
 - Scope: every unit (default), or the ones in one folder.
-- `bundle`: set by a bundle that runs this job (default off). Step 3 then lists issues only and
+- `bundle`: set when the prompt carries the line `Mode: bundle`, which a bundle adds to each
+  job's prompt (default off). Step 3 then lists issues only and
   opens, comments on, and closes none.
 
 ## Workflow
