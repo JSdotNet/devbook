@@ -95,8 +95,9 @@ context per job keeps heavy skills apart, and one failure is one cell of the rep
 a stopped run.
 
 **A bundle runs at most four subagents at a time.** At most two of them are jobs that write, and
-two writers never run in the same repository, so two worktrees never race on one repository's
-fetch or branches. Read-only jobs fill the other slots. When the plan's usage limit is hit, the
+no two jobs run in the same repository, so two worktrees never race on one repository's fetch or
+branches: every job's preamble fetches into the checkout and adds a worktree there, a read-only
+job's included. Read-only jobs fill the other slots from other repositories. When the plan's usage limit is hit, the
 bundle starts no new job and lists the rest as not run, for the next week or `schedule-run`.
 Seven jobs over six to eight repositories is about forty subagents, so the cap, not the cadence,
 sets how long a run takes. It is tuned after the first runs.
@@ -326,6 +327,7 @@ belongs to a person's map.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-10 | A bundle runs no two jobs in one repository, read-only ones included. | Every job fetches into its repository's checkout and adds a worktree there, so two readers race on the same refs as two writers do. |
 | 2026-11-10 | A schedule may be a bundle: one local routine that runs catalog jobs across every repository on the machine, one `Workflow` subagent per repository and job, fed the prompt `delivery-schedule:update` assembles. Two ship: Saturday code health and Sunday devbook review. At most four subagents run, two writers, never two in one repository. Every change lands as a draft and opens no issue, verify's drift table and the digest stay in the report, and prose check lands its edits as a draft. There is no pickup check, and the checkout list is personal. | 42 routines over six repositories were a list nobody could scan, and a week's reports read best across repositories. |
 | 2026-11-05 | `devbook-skills` gains a session-start hook and `show-me` an orientation card; `delivery`'s handback, gates, and summary name the card, still with no declared dependency. | A person switching between sessions must see what a reply is about at once, and ordinary replies have no caller to name the skill. |
 | 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. | — |

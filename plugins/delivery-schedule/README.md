@@ -2,8 +2,9 @@
 
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, thirteen trigger files that fire one on a cadence, and four skills that put those
-triggers in the host's scheduler and read them back.
+report, `schedule-bundle`, which runs a bundle's jobs across every repository on the machine,
+fourteen trigger files that fire one on a cadence, one of them a bundle, and four skills that
+put those triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
@@ -71,6 +72,7 @@ and traces each to its ticket.
 | `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
 | `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |
+| `sunday-devbook-review` | Sunday 04:00, local time | `schedule-bundle`: devbook validate, tech update, devbook verify, prose check, instruction review, then the weekly update and change report, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -121,6 +123,15 @@ is not a worktree. It reads your checkouts and enabled bundles from `ext.deliver
 your user overlay, syncs each bundle, and offers to delete the per-repository routines a bundle
 has run in their place. Nothing is written into a repository. The rules are in
 `resources/machine-sync.md`.
+
+The routine runs `schedule-bundle`. Its workflow script, `skills/schedule-bundle/bundle.workflow.js`,
+reads each checkout once, runs a repository once however many checkouts share its `origin`,
+skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder —
+and runs one subagent per repository and job from the prompt that job's own schedule carries,
+with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
+repository; at the plan's usage limit nothing new starts. Every change is a draft pull
+request, and the one report has a row per repository and a column per job. The planning is
+tested by `node --test plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs`.
 
 ## Migrations
 

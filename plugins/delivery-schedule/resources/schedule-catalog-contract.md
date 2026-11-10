@@ -30,7 +30,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
 | `result` | Where the run's result waits for the owner: `session` when the report in the run's own session is the result, `github` when it lands as a pull request, an issue, or a comment. Only a `session` schedule carries *The Pickup Gate*. |
 | `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
-| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, the one exception to UTC, and only `update` at machine level syncs it, per `machine-sync.md`. |
+| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, the one exception to UTC, and only `update` at machine level syncs it, per `machine-sync.md`. See *A Bundle*. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
 what it produces. It never restates the report's shape — the target's `report.md` owns that — and names
@@ -48,6 +48,17 @@ substituted in each. The preamble carries the unattended rules once — a fresh 
 never instructions, no secret values, end with a summary. A body never repeats them and never
 contradicts them. The session has no memory of a previous run and no person to ask, so a body
 that leaves a question open has left it to chance.
+
+## A Bundle
+
+A schedule carrying `jobs` targets `delivery-schedule:schedule-bundle`, whose
+`bundle.workflow.js` names each job in its `JOBS` table: what it needs before it starts and
+whether it writes. Each job is a catalog `name` that is not itself a bundle. `result` is
+`github` and `tools` carry `Workflow`: the jobs land drafts, and a bundle has no pickup check.
+Its body is synced with `{{name}}` and `{{title}}` alone. When the bundle runs, each job's
+prompt is assembled as *The Prompt* says, without the pickup gate, and followed by the lines
+that make it a bundle job: `Mode: bundle`, the preamble's rule 1 on its `worktree add` branch,
+a draft pull request only, and no issue opened, commented on, or closed.
 
 ## The Pickup Gate
 
