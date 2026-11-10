@@ -31,7 +31,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
 | `result` | Where the run's result waits for the owner: `session` when the report in the run's own session is the result, `github` when it lands as a pull request, an issue, or a comment. Only a `session` schedule carries *The Pickup Gate*. |
 | `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
-| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, and only `update` at machine level syncs it, per `machine-sync.md`. |
+| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, the one exception to UTC, and only `update` at machine level syncs it, per `machine-sync.md`. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
 what it produces. It never restates the report's shape — the target's `report.md` owns that — and names

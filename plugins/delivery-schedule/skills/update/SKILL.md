@@ -21,7 +21,7 @@ follow `../../resources/machine-sync.md` instead of the steps below. It needs no
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
    plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
    selection; change it only where the user asks. A bundle file, one carrying `jobs`, is
-   machine level's alone. A retired name is dropped, never a
+   read only for the jobs it covers and synced at machine level alone. A retired name is dropped, never a
    failure — the contract's *Retired Schedules*. Run each `../../migrations/*/migrate.mjs
    --check` in number order, the repository root as the working directory, and carry its
    plan into the report: the routines it names are the ones step 6 re-times or disables.

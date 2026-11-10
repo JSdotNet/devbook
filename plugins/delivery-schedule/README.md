@@ -115,20 +115,10 @@ the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 ### Bundles, at machine level
 
 A bundle is one routine, `All repos · <title>`, that runs several catalog jobs in every
-repository on this machine. Ask `delivery-schedule:update` for the bundles, from any folder
-that is not a worktree, and it reads two keys from your user overlay,
-`<config dir>/config.local.json`:
-
-```json
-{ "ext": { "delivery-schedule": {
-  "checkouts": ["D:/Repos/devbook", "D:/Repos/Backlog"],
-  "bundles": ["sunday-devbook-review"]
-} } }
-```
-
-It creates or updates each enabled bundle and, once a bundle's first run has passed, deletes
-the per-repository routines it replaced after you confirm the list. From then on a repository's
-own sync leaves a covered job alone. Nothing is written into a repository. The rules are in
+repository on this machine. Ask `delivery-schedule:update` for the bundles from any folder that
+is not a worktree. It reads your checkouts and enabled bundles from `ext.delivery-schedule` in
+your user overlay, syncs each bundle, and offers to delete the per-repository routines a bundle
+has run in their place. Nothing is written into a repository. The rules are in
 `resources/machine-sync.md`.
 
 ## Migrations
