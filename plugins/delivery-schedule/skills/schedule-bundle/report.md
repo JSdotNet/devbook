@@ -24,6 +24,10 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Repository | Verdict | Unit | Chapter | Evidence | Issue |
 | --- | --- | --- | --- | --- | --- |
 
+### Security
+| Repository | Severity | Layer | Where | Finding |
+| --- | --- | --- | --- | --- |
+
 ### Digest
 
 #### <owner/repo>
@@ -48,8 +52,11 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 - *Needs you* gathers every job's own *Needs you* rows, most urgent first, then one row per
   draft. The ten-row rule holds across the whole section.
 - *Drift* is every repository's devbook verify table, per that skill's *In a bundle*, the
-  `Repository` column added. *Digest* is one subsection per repository whose digest jobs ran.
-  Omit either when empty.
+  `Repository` column added. *Security* is every repository's security review *Findings* at
+  `high` and above, ranked by severity across repositories, `Issue` dropped, then one line with
+  the count below `high`; each of its rows is also a *Needs you* row. A bundle opens no issue, so
+  a finding still open is reported again each week. *Digest* is one subsection per repository
+  whose digest jobs ran. Omit any of the three when empty.
 - A cell an agent returned nothing for reads `failed`, unless a second followed it: the host
   gives no reason, so two in a row are read as the usage limit and both read `not run`.
 - *Run* carries each skipped checkout, and the jobs left unstarted. Each job's own *Run* stays

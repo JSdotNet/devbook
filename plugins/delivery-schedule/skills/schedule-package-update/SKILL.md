@@ -13,7 +13,8 @@ framework upgrade, one package on request — runs through `flow-code` instead.
 
 ## Inputs
 
-- Strategy: `minor-and-patch` (default) or `major`.
+- Strategy: `minor-and-patch` (default), `major`, or `major-only` — the major bumps alone,
+  where Dependabot takes the minor and patch ones.
 - Dry run: `true` reports the audit and writes nothing (default `false`).
 
 ## Workflow
@@ -23,9 +24,10 @@ framework upgrade, one package on request — runs through `flow-code` instead.
 1. `dotnet list package --outdated`: each package with its current and latest version, and
    whether `Directory.Packages.props` manages it centrally or a `.csproj` does. No .NET
    solution: say so and stop.
-2. **Gate**, strategy `major` only: the major bumps. Unattended, or withheld, they are left
-   out and each becomes a *Needs you* row for a `flow-code` run of the `dependency` kind.
-   Dry run: go to Phase 5.
+2. **Gate**, strategy `major` or `major-only`: the major bumps. Unattended, or withheld, they
+   are left out and each becomes a *Needs you* row for a `flow-code` run of the `dependency`
+   kind. `major-only` drops every minor and patch bump from the audit. Dry run, or nothing
+   left to apply: go to Phase 5.
 
 ### Phase 2 — Apply
 

@@ -18,22 +18,23 @@ const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
 const body = new AsyncFunction("args", "agent", "parallel", "pipeline", "phase", "log", SOURCE);
 
 const JOBS = ["devbook-validate", "tech-update", "devbook-verify", "prose-check", "instruction-review", "weekly-update", "change-report"];
-const WRITERS = new Set(["devbook-validate", "tech-update", "prose-check", "instruction-review"]);
+const SATURDAY = ["devbook-update", "package-update", "security-review"];
+const WRITERS = new Set(["devbook-validate", "tech-update", "prose-check", "instruction-review", "devbook-update", "package-update"]);
 const DIGEST = new Set(["weekly-update", "change-report"]);
 const PREAMBLE = 'You are the scheduled run "{{title}}" for {{repo}}, cloned at `{{checkout}}`, base {{base}}, branch schedule/{{name}}/.';
 
-const schedules = Object.fromEntries(JOBS.map((j) => [j, { title: `Title of ${j}`, body: `Run the ${j} skill for {{repo}}.` }]));
+const schedules = Object.fromEntries([...JOBS, ...SATURDAY].map((j) => [j, { title: `Title of ${j}`, body: `Run the ${j} skill for {{repo}}.` }]));
 
 const checkout = (p, origin, extra = {}) => ({
   path: p, exists: true, toplevel: p, commonDirParent: p, origin, nameWithOwner: "", base: "main", stamped: true,
-  enabled: JOBS, overrides: [], facts: { devbook: true, tech: true, units: true }, ...extra,
+  enabled: [...JOBS, ...SATURDAY], overrides: [], facts: { devbook: true, tech: true, units: true, nuget: true }, ...extra,
 });
 
 const tick = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Runs the script. `reports` is what the plan agent returns; `onJob(label, n)` decides each
 // job's result, `n` its start order. Returns the script's result and what the fake observed.
-async function run({ checkouts, reports, onJob, jobs = JOBS, scheds = schedules }) {
+async function run({ checkouts, reports, onJob, jobs = JOBS, scheds = schedules, name = "sunday-devbook-review", title = "Sunday devbook review" }) {
   const seen = { starts: [], prompts: {}, running: [], maxRunning: 0, maxWriters: 0, sameRepoWriters: false, sameRepoJobs: false, digestBeforeMainDone: false, finished: [] };
   const agent = async (prompt, opts) => {
     if (opts.label === "plan") return { checkouts: reports };
@@ -59,7 +60,7 @@ async function run({ checkouts, reports, onJob, jobs = JOBS, scheds = schedules 
   };
   const logs = [];
   const result = await body(
-    { bundle: { name: "sunday-devbook-review", title: "Sunday devbook review", jobs }, schedules: scheds, preamble: PREAMBLE, checkouts },
+    { bundle: { name, title, jobs }, schedules: scheds, preamble: PREAMBLE, checkouts },
     agent, null, null, () => {}, (m) => logs.push(m),
   );
   return { result, seen, logs };
@@ -128,8 +129,8 @@ test("checks each job's precondition before any subagent starts", async () => {
   const { result, seen } = await run({
     checkouts: ["D:/a", "D:/b"],
     reports: [
-      checkout("D:/a", "https://github.com/o/a", { facts: { devbook: true, tech: false, units: true } }),
-      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: false, tech: false, units: false } }),
+      checkout("D:/a", "https://github.com/o/a", { facts: { devbook: true, tech: false, units: true, nuget: true } }),
+      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: false, tech: false, units: false, nuget: true } }),
     ],
   });
   assert.deepEqual(cell(result, "o/a", "tech-update"), { repo: "o/a", job: "tech-update", state: "skipped", reason: "no `tech/` folder", pullRequest: "", report: "" });
@@ -218,4 +219,43 @@ test("a plan that returns nothing runs nothing and says why per checkout", async
   const { result, seen } = await run({ checkouts: ["D:/a"], reports: undefined });
   assert.equal(seen.starts.length, 0);
   assert.deepEqual(result.skippedCheckouts, [{ path: "D:/a", reason: "not read" }]);
+});
+
+const saturday = (opts) => run({ jobs: SATURDAY, name: "saturday-code-health", title: "Saturday code health", ...opts });
+
+test("Saturday code health: the stack update starts first in each repository, though a reader could fill the slot", async () => {
+  const names = ["a", "b", "c", "d", "e"];
+  const { result, seen } = await saturday({
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
+  });
+  assert.equal(seen.starts.length, names.length * SATURDAY.length);
+  for (const n of names) {
+    const mine = seen.starts.filter((l) => l.endsWith(`:o/${n}`)).map((l) => l.split(":")[0]);
+    assert.deepEqual(mine, SATURDAY, `o/${n} ran its jobs in bundle order`);
+    const updated = seen.finished.indexOf(`devbook-update:o/${n}`);
+    assert.ok(updated >= 0 && seen.finished.indexOf(`package-update:o/${n}`) > updated && seen.finished.indexOf(`security-review:o/${n}`) > updated);
+  }
+  assert.ok(seen.maxWriters <= 2 && seen.maxRunning <= 4);
+  assert.equal(seen.sameRepoJobs, false);
+  assert.ok(result.cells.every((c) => c.state === "done"));
+  assert.deepEqual(result.jobs.map((j) => [j.name, j.writes, j.detail]), [["devbook-update", true, false], ["package-update", true, false], ["security-review", false, true]]);
+});
+
+test("Saturday code health: no package manifest skips package update at the precondition, and the rest still run", async () => {
+  const { result, seen } = await saturday({
+    checkouts: ["D:/a", "D:/b"],
+    reports: [
+      checkout("D:/a", "https://github.com/o/a"),
+      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: true, tech: true, units: true, nuget: false } }),
+    ],
+  });
+  assert.deepEqual(cell(result, "o/b", "package-update"), { repo: "o/b", job: "package-update", state: "skipped", reason: "no .NET package manifest", pullRequest: "", report: "" });
+  assert.ok(!seen.starts.includes("package-update:o/b"));
+  assert.deepEqual(seen.starts.filter((l) => l.endsWith(":o/b")), ["devbook-update:o/b", "security-review:o/b"]);
+  assert.equal(cell(result, "o/a", "package-update").state, "done");
+  const prompt = seen.prompts["package-update:o/a"];
+  assert.match(prompt, /"All repos · Saturday code health"/);
+  assert.match(prompt, /\nMode: bundle\n/);
+  assert.match(prompt, /draft pull request, never ready for review/);
 });
