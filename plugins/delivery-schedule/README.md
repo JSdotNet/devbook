@@ -3,7 +3,7 @@
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
 report, `schedule-bundle`, which runs a bundle's jobs across every repository on the machine,
-fourteen trigger files that fire one on a cadence, one of them a bundle, and four skills that
+fifteen trigger files that fire one on a cadence, two of them bundles, and four skills that
 put those triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -59,20 +59,21 @@ and traces each to its ticket.
 
 | Schedule | Cadence (UTC) | Runs | Needs | Lands as |
 |---|---|---|---|---|
-| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
+| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch, or majors only where `.github/dependabot.yml` exists | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 10`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a brief |
 | `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
 | `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every sync unit | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
 | `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
-| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
+| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers, no issue in a bundle | `delivery-schedule`, `delivery` | One issue per new high finding, or in a bundle the findings in its report |
 | `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
 | `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
 | `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |
 | `sunday-devbook-review` | Sunday 04:00, local time | `schedule-bundle`: devbook validate, tech update, devbook verify, prose check, instruction review, then the weekly update and change report, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
+| `saturday-code-health` | Saturday 05:00, local time | `schedule-bundle`: devbook stack update first, then package update and security review, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -126,10 +127,11 @@ has run in their place. Nothing is written into a repository. The rules are in
 
 The routine runs `schedule-bundle`. Its workflow script, `skills/schedule-bundle/bundle.workflow.js`,
 reads each checkout once, runs a repository once however many checkouts share its `origin`,
-skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder —
+skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder,
+`package-update` where there is no package manifest —
 and runs one subagent per repository and job from the prompt that job's own schedule carries,
 with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
-repository; at the plan's usage limit nothing new starts. Every change is a draft pull
+repository, and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull
 request, and the one report has a row per repository and a column per job. The planning is
 tested by `node --test plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs`.
 

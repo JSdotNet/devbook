@@ -38,6 +38,9 @@ const JOBS = {
   'instruction-review': { writes: true, needs: [] },
   'weekly-update': { writes: false, needs: [], digest: true },
   'change-report': { writes: false, needs: [], digest: true },
+  'devbook-update': { writes: true, needs: [] },
+  'package-update': { writes: true, needs: ['packages'] },
+  'security-review': { writes: false, needs: [], detail: true },
 }
 
 // The facts the plan agent reads per checkout, and the reason a job that needs one is skipped.
@@ -45,6 +48,7 @@ const FACTS = {
   devbook: { check: '`.devbook/config.json` has `components.devbook` with a non-empty `adopted` list', missing: 'devbook not adopted' },
   tech: { check: 'the folder `.devbook/tech/` exists', missing: 'no `tech/` folder' },
   units: { check: 'the file `.devbook/_tools/devbook-meta/units.mjs` exists', missing: 'no sync-unit tool' },
+  packages: { check: '`git ls-files` lists a NuGet package manifest: a `*.csproj`, a `*.fsproj`, or `Directory.Packages.props`', missing: 'no package manifest' },
 }
 
 const { bundle, schedules, preamble } = args
@@ -247,10 +251,13 @@ function settle(cell, state, reason, result) {
 }
 
 // One job per repository at a time, reader or writer: every job's preamble fetches into the
-// same checkout and adds a worktree there, and two at once race on its refs.
-function canStart(cell) {
+// same checkout and adds a worktree there, and two at once race on its refs. A repository's jobs
+// start in bundle order, so a reader never overtakes an earlier job there that waits for a
+// writer's slot: the stack update lands before the jobs that read what it moved.
+function canStart(cell, earlier) {
   if (running.size >= MAX_AGENTS) return false
   if ([...running].some((e) => e.cell.repo === cell.repo)) return false
+  if (earlier.some((c) => c.repo === cell.repo)) return false
   return !cell.writes || [...running].filter((e) => e.cell.writes).length < MAX_WRITERS
 }
 
@@ -304,7 +311,7 @@ async function runAll(list, phaseName) {
     if (stoppedBy) for (const c of waiting.splice(0)) settle(c, 'not-run', stoppedBy)
     else {
       for (let i = 0; i < waiting.length && running.size < MAX_AGENTS; ) {
-        if (canStart(waiting[i])) launch(waiting.splice(i, 1)[0], phaseName)
+        if (canStart(waiting[i], waiting.slice(0, i))) launch(waiting.splice(i, 1)[0], phaseName)
         else i += 1
       }
     }

@@ -15,3 +15,6 @@ and issues created for findings at severity `high` and above.
 The issues the skill opens are its findings. A layer that could not run — a package manager
 missing, an audit command failing — is a *Needs you* row in the report, so a silent gap stays
 visible.
+
+When this prompt carries the line `Mode: bundle`, use the threshold `none`: the ranked table
+is the result, in the bundle report.

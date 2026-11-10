@@ -31,4 +31,5 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ```
 
 No cell ever holds a secret value: the kind and the location. The issues this skill opens are
-findings someone works; the report links them and is not one.
+findings someone works; the report links them and is not one. In a bundle the threshold is
+`none`: `Issues opened` reads 0, and a secret's *Needs you* row says rotate it in `Do`.
