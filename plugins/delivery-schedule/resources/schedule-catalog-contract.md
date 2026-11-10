@@ -31,6 +31,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
 | `result` | Where the run's result waits for the owner: `session` when the report in the run's own session is the result, `github` when it lands as a pull request, an issue, or a comment. Only a `session` schedule carries *The Pickup Gate*. |
 | `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
+| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, and only `update` at machine level syncs it, per `machine-sync.md`. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
 what it produces. It never restates the report's shape — the target's `report.md` owns that — and names
@@ -96,18 +97,21 @@ sweep did on 2026-09-28. A schedule that cannot reach its skill has scheduled no
 Resolved from the live tool list by capability: a tool that creates a scheduled session on
 this machine from a name, a cron expression, and a prompt, run in a working folder. A tool
 that takes a repository and an environment instead of a working folder is a cloud scheduler:
-never `create` or re-enable an entry through it. Seven operations, and the fourth is the one
+never `create` or re-enable an entry through it. Eight operations, and the fourth is the one
 every skill here starts with:
 
 | Operation | Used by |
 | --- | --- |
 | `create`, `update` | `delivery-schedule:init`, `delivery-schedule:update` |
 | `run` | `schedule-run` |
-| `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, matched on every call |
-| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate* |
+| `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, or `All repos · <title>` for a bundle, matched on every call |
+| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate*, and by `update` at machine level |
+| `delete` | `update` at machine level alone, per `machine-sync.md` |
 
-There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
-the person deletes it in the host's own page. A routine whose title is neither a catalog
+`delete` has one use: retiring a per-repository routine that a bundle has replaced, once the
+bundle's first run has passed and the person has confirmed the list. Otherwise a schedule that
+leaves the selection is `update`d to `enabled: false`, and the person deletes it in the host's
+own page. A routine whose title is neither a catalog
 schedule nor one under *Retired Schedules* belongs to another tool, even under this
 repository's name prefix, and is never touched. **None reachable is a normal outcome:**
 `delivery-schedule:update` prints each finished prompt with its local cron for that page and
@@ -139,7 +143,7 @@ written into the repository: scheduler ids and the approved tools live in the sc
 
 In Claude Code the local scheduler is the desktop app's `scheduled-tasks` server —
 `create_scheduled_task`, `update_scheduled_task`, `list_scheduled_tasks`,
-`run_scheduled_task`, `list_task_runs`, with a run's log and its archive flag read from the
+`run_scheduled_task`, `list_task_runs`, `delete_scheduled_task`, with a run's log and its archive flag read from the
 session it started — and the cloud one is the `RemoteTrigger` tool, used only to retire. Naming them here is one
 of two host facts this plugin carries — the other is the `Workflow` tool the issue sweep's two
 scripts run under — both recorded as divergences in `.devbook/arc42/adr/hosts.md`.

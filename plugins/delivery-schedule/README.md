@@ -104,13 +104,32 @@ the host keeps no archived state, every run proceeds. The rule is in `resources/
 | Skill | Does |
 |---|---|
 | `delivery-schedule:init` | Asks which schedules to enable, creates them, and stamps `components.schedule`; refused where that stamp exists |
-| `delivery-schedule:update` | Creates or updates the selected schedules, disables the deselected, rewrites `components.schedule`; refused where no stamp exists |
+| `delivery-schedule:update` | Creates or updates the selected schedules, disables the deselected, rewrites `components.schedule`; refused where no stamp exists. At machine level it syncs the bundles instead — below |
 | `schedule-status` | Lists them with their last runs, what each published, and the log where one failed |
 | `schedule-run` | Fires one now and reports the run |
 
 All four resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
 the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
+
+### Bundles, at machine level
+
+A bundle is one routine, `All repos · <title>`, that runs several catalog jobs in every
+repository on this machine. Ask `delivery-schedule:update` for the bundles, from any folder
+that is not a worktree, and it reads two keys from your user overlay,
+`<config dir>/config.local.json`:
+
+```json
+{ "ext": { "delivery-schedule": {
+  "checkouts": ["D:/Repos/devbook", "D:/Repos/Backlog"],
+  "bundles": ["sunday-devbook-review"]
+} } }
+```
+
+It creates or updates each enabled bundle and, once a bundle's first run has passed, deletes
+the per-repository routines it replaced after you confirm the list. From then on a repository's
+own sync leaves a covered job alone. Nothing is written into a repository. The rules are in
+`resources/machine-sync.md`.
 
 ## Migrations
 

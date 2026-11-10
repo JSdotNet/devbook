@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Bring the host''s scheduler level with this repository''s schedule selection — create or update each selected schedule, disable the rest, rewrite components.schedule. Refused without that stamp. Triggers on: "schedule update", "update my routines", "update my automations", "change a cadence", "add a schedule", "remove a schedule".'
+description: 'Bring the host''s scheduler level with this repository''s schedule selection — create or update each selected schedule, disable the rest, rewrite components.schedule; at machine level, sync this machine''s "All repos" bundles and delete the routines they replaced. Refused without that stamp, except at machine level. Triggers on: "schedule update", "update my routines", "update my automations", "change a cadence", "add a schedule", "remove a schedule", "update the bundles".'
 ---
 
 # schedule update
@@ -10,14 +10,18 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 One idempotent operation for a changed selection, a changed cadence, and a plugin upgrade.
 Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 
-**Refuse when `components.schedule` is absent.** Say "not initialized, run
+**Machine level.** When the person asks for the bundles, "all repos", or a bundle by name,
+follow `../../resources/machine-sync.md` instead of the steps below. It needs no stamp.
+
+**Otherwise refuse when `components.schedule` is absent.** Say "not initialized, run
 `delivery-schedule:init`" and stop.
 
 ## Steps
 
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
    plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
-   selection; change it only where the user asks. A retired name is dropped, never a
+   selection; change it only where the user asks. A bundle file, one carrying `jobs`, is
+   machine level's alone. A retired name is dropped, never a
    failure — the contract's *Retired Schedules*. Run each `../../migrations/*/migrate.mjs
    --check` in number order, the repository root as the working directory, and carry its
    plan into the report: the routines it names are the ones step 6 re-times or disables.
@@ -44,10 +48,12 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    takes it — the contract's *What a local routine changes*. Then set `enabled: false`
    on every entry with this repository's prefix whose title is a deselected or retired
    schedule, and say deleting one is done on the host's own page. Leave any other title.
+   A job an enabled bundle covers here is neither created nor updated, and stays in
+   `enabled`: *A Job a Bundle Covers* in `../../resources/machine-sync.md`.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —
    and no other key in the file. Leave the commit to the user, and say so.
 8. **Report** one table: schedule, the catalog's UTC cron beside the local one, created /
-   updated / disabled / retired / skipped with the reason, the worktree option — *on*, or
+   updated / disabled / retired / covered / skipped with the reason, the worktree option — *on*, or
    *switch on in the host's page* where the scheduler could not set it — and the link the
    scheduler returned. Close by pointing at `schedule-run`: a routine's tools are approved on
    its first run, so the first one is fired while a person is there to approve them.
