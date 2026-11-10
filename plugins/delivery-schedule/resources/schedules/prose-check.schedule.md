@@ -10,10 +10,8 @@ result: session
 ---
 
 Run `schedule-prose-check` from the repository root over every adopted devbook folder, with
-the default limit. Pass mode `bundle` when this run is a job of a bundle, and `report`
-otherwise.
+the default limit. Mode is `bundle` when this prompt carries the line `Mode: bundle`, and
+`report` otherwise.
 
-The tool list carries no editor, because this routine's own run reads and reports; the daily
-`devbook-validate` schedule owns the structural repairs. A bundle is the one place prose check
-writes: the bundle's routine carries the editor, and the job lands its edits as a draft pull
-request for a person to keep or drop, chapter by chapter.
+The tool list carries no editor, because this routine's own run only reports; a bundle is the
+one place prose check writes, and the bundle's routine carries the editor.

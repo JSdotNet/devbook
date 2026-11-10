@@ -47,6 +47,8 @@ subagent per repository and job. [In a Bundle](#in-a-bundle) lists what changes 
 related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
+- **Tells the job:** the bundle adds the line `Mode: bundle` to each job's prompt, so an entry
+  point with a bundle mode knows which run it is.
 - **Lands:** every change as a draft pull request, never ready for review, even when build and
   tests passed.
 - **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle
@@ -236,7 +238,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc
   reports the classes that ask for content a person writes. The draft carries a ledger of every
   edit.
 - **Skips:** an edit whose chapter and sentence a closed, unmerged pull request from the same
-  schedule already proposed. A rejection is an answer.
+  schedule already proposed, and the whole edit while its previous draft is still open. A
+  rejection is an answer.
 - **Why:** a list of findings is work a person still has to turn into edits, while a commit per
   chapter is one they can keep or drop.
 - **Trigger:** the weekly `prose-check`, on the same wrapper rule as
