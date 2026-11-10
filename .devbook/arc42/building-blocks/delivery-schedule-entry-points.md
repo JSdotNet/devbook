@@ -49,6 +49,8 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devboo
 
 - **Tells the job:** the bundle adds the line `Mode: bundle` to each job's prompt, so an entry
   point with a bundle mode knows which run it is.
+- **Starts:** in a worktree the job adds under its own repository's checkout, the preamble's
+  `worktree add` branch, because no job starts in a worktree of that repository.
 - **Lands:** every change as a draft pull request, never ready for review, even when build and
   tests passed.
 - **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle

@@ -33,8 +33,8 @@ merging anything, or carrying anything personal into the repository.
 ```meta
 ```
 
-The block exposes twenty skills in three groups: fourteen entry points that pick their own
-input, each with the `report.md` template its report follows, two bundle skills that run those
+The block exposes nineteen skills in three groups: fourteen entry points that pick their own
+input, each with the `report.md` template its report follows, one bundle skill that runs those
 entry points across every repository on the machine, and four that put a trigger in the
 scheduler and read it back. A person can run every one by hand, which is how a cadence gets
 proved before it is trusted.
@@ -42,13 +42,14 @@ proved before it is trusted.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
-| One skill per [bundle](#bundle), two | skills | The scheduler, weekly, or a person by hand |
+| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
 | Eight contracts, listed below | contracts | The skills, by path |
 | `scripts/resolve-issue.workflow.js` | work script | The issue sweep, and another plugin's sweep resolving an item the same way, per `draft-pr-contract.md` |
+| `skills/schedule-bundle/bundle.workflow.js` | work script | `schedule-bundle`, through the host's workflow tool |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times |
 | `migrations/002-retired-schedules/` | migration | `update`, in its first step: names the retired schedules a stamp still carries |
@@ -318,6 +319,9 @@ One schedule that runs several catalog jobs across every repository on this mach
 subagent per repository and job. Its skill runs them through the host's workflow tool and never
 starts a session. Each subagent gets the prompt `update` assembles for that repository and job,
 built by the same rule when the bundle runs, so the bundle carries no procedure of its own.
+One skill, `schedule-bundle`, runs every bundle. Its workflow script names each job's
+precondition and whether the job writes, and one read-only plan agent gathers the facts about
+each checkout that the script decides on.
 
 | Bundle | Fires, local time | Jobs, in order |
 | --- | --- | --- |
@@ -329,13 +333,13 @@ routine each. The reasons are in [the plugin boundaries record](../adr/plugin-bo
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| At most four subagents run at once, at most two of them jobs that write | bundle skill | untested |
-| Two jobs that write never run in the same repository at once | bundle skill | untested |
-| At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | untested |
+| At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| Two jobs that write never run in the same repository at once | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
-| A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | untested |
-| A job's preconditions are checked before any subagent starts | bundle skill | untested |
-| No pickup check holds a bundle back | prompt assembly | untested |
+| A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A job's preconditions are checked before any subagent starts | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| No pickup check holds a bundle back | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | The list of checkouts is never written into a repository | bundle skill, `update` | untested |
 | A per-repository routine is deleted only once a bundle's run has finished its job in its repository, and only after the person confirms | `update` at machine level | untested |
 
@@ -414,7 +418,7 @@ A trigger becomes a run below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog, bundles aside: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
