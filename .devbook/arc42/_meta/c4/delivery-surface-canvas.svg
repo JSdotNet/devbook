@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="664" viewBox="0 0 1024 664" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - delivery-surface-canvas">
+<title>[Component] jsdotnet-devbook marketplace - delivery-surface-canvas</title>
+<desc>The transport and the view it pushes.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-delivery-surface-canvas-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1024" height="664"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - delivery-surface-canvas</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The transport and the view it pushes.</text>
+<g transform="translate(32 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="340" y="-32" width="620" height="202" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="352" y="-11" font-size="13" font-weight="600">delivery-surface-canvas [Container]</text>
+  <g data-element="marketplace.delivery-surface-canvas.view">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="47" font-size="15" font-weight="600" text-anchor="middle">View</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: HTML]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="87" font-size="12" text-anchor="middle">The diagram or document a canvas</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="102" font-size="12" text-anchor="middle">shows, with its breadcrumb</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="117" font-size="12" text-anchor="middle">history and nothing persisted.</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-canvas.canvas-transport">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="360" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="47" font-size="15" font-weight="600" text-anchor="middle">Canvas Transport</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: Copilot extension]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="87" font-size="12" text-anchor="middle">Registers the two canvases,</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="102" font-size="12" text-anchor="middle">serves their pages on a loopback</text>
+    <text class="c4-ink-component" fill="#0b2540" x="470" y="117" font-size="12" text-anchor="middle">port with a token, and pushes…</text>
+  </g>
+  <g data-element="copilot">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="0" y="306" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="353" font-size="15" font-weight="600" text-anchor="middle">GitHub Copilot</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="371" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="393" font-size="12" text-anchor="middle">The second host, loading the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="408" font-size="12" text-anchor="middle">same manifest, skill, and hook</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="423" font-size="12" text-anchor="middle">files and its own extensions.</text>
+  </g>
+  <g data-relationship="copilot -> marketplace.delivery-surface-canvas.canvas-transport">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-canvas-arrow)" d="M220 381C290 381 290 75 360 75"/>
+  </g>
+  <g data-relationship="marketplace.delivery-surface-canvas.canvas-transport -> marketplace.delivery-surface-canvas.view">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-canvas-arrow)" d="M580 75C650 75 650 75 720 75"/>
+  </g>
+  <g class="c4-label" data-relationship="copilot -> marketplace.delivery-surface-canvas.canvas-transport">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="204" y="204" width="173" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="219" font-size="11" text-anchor="middle">Loads the extension at run</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="233" font-size="11" text-anchor="middle">time</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="247" font-size="11" text-anchor="middle">[Copilot Extension SDK]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery-surface-canvas.canvas-transport -> marketplace.delivery-surface-canvas.view">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="564" y="58" width="173" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="73" font-size="11" text-anchor="middle">Pushes changes to the open</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="87" font-size="11" text-anchor="middle">page of</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="32" y="616" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="629" font-size="12">Component</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="149" y="616" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="629" font-size="12">External</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="259" y="616" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="291" y="629" font-size="12">Boundary</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-canvas-arrow)" d="M369 624L391 624"/>
+  <text class="c4-ink" fill="#1f2328" x="401" y="629" font-size="12">Relationship</text>
+</g>
+</svg>

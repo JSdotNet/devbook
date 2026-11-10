@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1724" height="746" viewBox="0 0 1724 746" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[System Context] jsdotnet-devbook marketplace">
+<title>[System Context] jsdotnet-devbook marketplace</title>
+<desc>The marketplace, the person who authors it, the two hosts that load it, and the systems its plugins reach.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-context-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1724" height="746"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[System Context] jsdotnet-devbook marketplace</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The marketplace, the person who authors it, the two hosts that load it, and the systems its plugins reach.</text>
+<g transform="translate(32 96)">
+  <g data-element="maintainer">
+    <circle class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" cx="110" cy="126" r="21"/>
+    <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="0" y="141" width="220" height="114" rx="27"/>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="177" font-size="15" font-weight="600" text-anchor="middle">The maintainer</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="195" font-size="11" text-anchor="middle" opacity="0.85">[Person]</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="217" font-size="12" text-anchor="middle">Authors every asset by hand,</text>
+    <text class="c4-ink-person" fill="#ffffff" x="110" y="232" font-size="12" text-anchor="middle">runs the checks, and releases…</text>
+  </g>
+  <g data-element="marketplace">
+    <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="360" y="210" width="220" height="150" rx="8"/>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="248" font-size="15" font-weight="600" text-anchor="middle">jsdotnet-devbook</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="266" font-size="15" font-weight="600" text-anchor="middle">marketplace</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="284" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="306" font-size="12" text-anchor="middle">The Claude Code plugin</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="321" font-size="12" text-anchor="middle">marketplace of agents, skills,</text>
+    <text class="c4-ink-softwareSystem" fill="#ffffff" x="470" y="336" font-size="12" text-anchor="middle">rules, and hooks that drive…</text>
+  </g>
+  <g data-element="claude-code">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="720" y="0" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="47" font-size="15" font-weight="600" text-anchor="middle">Claude Code</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="87" font-size="12" text-anchor="middle">The authoring host that loads</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="102" font-size="12" text-anchor="middle">manifests, skills, agents,</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="117" font-size="12" text-anchor="middle">hooks, and MCP servers, and run…</text>
+  </g>
+  <g data-element="copilot">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="720" y="210" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="257" font-size="15" font-weight="600" text-anchor="middle">GitHub Copilot</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="297" font-size="12" text-anchor="middle">The second host, loading the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="312" font-size="12" text-anchor="middle">same manifest, skill, and hook</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="327" font-size="12" text-anchor="middle">files and its own extensions.</text>
+  </g>
+  <g data-element="repository">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="1080" y="210" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="1190" y="257" font-size="15" font-weight="600" text-anchor="middle">A consuming repository</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1190" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1190" y="297" font-size="12" text-anchor="middle">A repository that installs a</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1190" y="312" font-size="12" text-anchor="middle">component and keeps its stamp in</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1190" y="327" font-size="12" text-anchor="middle">.devbook/config.json.</text>
+  </g>
+  <g data-element="github">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="1440" y="210" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="1550" y="257" font-size="15" font-weight="600" text-anchor="middle">GitHub</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1550" y="275" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1550" y="297" font-size="12" text-anchor="middle">Runs the checks on every pull</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1550" y="312" font-size="12" text-anchor="middle">request, refreshes the index on</text>
+    <text class="c4-ink-external" fill="#ffffff" x="1550" y="327" font-size="12" text-anchor="middle">a schedule, and is the tracker …</text>
+  </g>
+  <g data-element="routine">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="0" y="315" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="362" font-size="15" font-weight="600" text-anchor="middle">Scheduled local routine</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="380" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="402" font-size="12" text-anchor="middle">Starts a session in a fresh</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="417" font-size="12" text-anchor="middle">worktree of a repository on the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="110" y="432" font-size="12" text-anchor="middle">maintainer&#39;s machine, with…</text>
+  </g>
+  <g data-element="backlog">
+    <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="720" y="420" width="220" height="150" rx="8"/>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="467" font-size="15" font-weight="600" text-anchor="middle">Backlog desktop app</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="485" font-size="11" text-anchor="middle" opacity="0.85">[Software System]</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="507" font-size="12" text-anchor="middle">Holds the work items, reads the</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="522" font-size="12" text-anchor="middle">committed _meta/ index off disk,</text>
+    <text class="c4-ink-external" fill="#ffffff" x="830" y="537" font-size="12" text-anchor="middle">and answers as a surface.</text>
+  </g>
+  <g data-relationship="maintainer -> marketplace">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M220 180C290 180 290 270 360 270"/>
+  </g>
+  <g data-relationship="claude-code -> marketplace">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M720 60C650 60 650 250 580 250"/>
+  </g>
+  <g data-relationship="copilot -> marketplace">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M720 270C650 270 650 270 580 270"/>
+  </g>
+  <g data-relationship="marketplace -> repository">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M580 280L640 280Q650 280 650 270L650 190Q650 180 660 180L1000 180Q1010 180 1010 190L1010 253Q1010 263 1020 263L1080 263"/>
+  </g>
+  <g data-relationship="repository -> github">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M1300 285C1370 285 1370 263 1440 263"/>
+  </g>
+  <g data-relationship="routine -> repository">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M220 375L280 375Q290 375 290 383L290 383Q290 390 300 390L1000 390Q1010 390 1010 380L1010 295Q1010 285 1020 285L1080 285"/>
+  </g>
+  <g data-relationship="backlog -> repository">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M940 495C1010 495 1010 308 1080 308"/>
+  </g>
+  <g data-relationship="routine -> marketplace">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M220 405C290 405 290 300 360 300"/>
+  </g>
+  <g data-relationship="github -> marketplace">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M1440 285L1380 285Q1370 285 1370 275L1370 190Q1370 180 1360 180L660 180Q650 180 650 190L650 280Q650 290 640 290L580 290"/>
+  </g>
+  <g data-relationship="marketplace -> backlog">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M580 320C650 320 650 495 720 495"/>
+  </g>
+  <g data-relationship="marketplace -> github">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M580 300L640 300Q650 300 650 290L650 190Q650 180 660 180L1360 180Q1370 180 1370 190L1370 298Q1370 308 1380 308L1440 308"/>
+  </g>
+  <g data-relationship="marketplace -> claude-code">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M580 260C650 260 650 90 720 90"/>
+  </g>
+  <g data-relationship="marketplace -> copilot">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M580 310C650 310 650 300 720 300"/>
+  </g>
+  <g class="c4-label" data-relationship="maintainer -> marketplace">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="198" y="201" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="216" font-size="11" text-anchor="middle">Writes every asset, runs the</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="230" font-size="11" text-anchor="middle">checks, and tags a release</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="244" font-size="11" text-anchor="middle">[git]</text>
+  </g>
+  <g class="c4-label" data-relationship="claude-code -> marketplace">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="561" y="131" width="179" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="146" font-size="11" text-anchor="middle">Installs a plugin and loads</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="160" font-size="11" text-anchor="middle">its manifests, skills, and…</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="174" font-size="11" text-anchor="middle">[Claude Code plugin API]</text>
+  </g>
+  <g class="c4-label" data-relationship="copilot -> marketplace">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="561" y="246" width="179" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="261" font-size="11" text-anchor="middle">Installs a plugin and loads</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="275" font-size="11" text-anchor="middle">its manifests, skills, and…</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="289" font-size="11" text-anchor="middle">[Copilot plugin API]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace -> repository">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="744" y="156" width="173" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="830" y="171" font-size="11" text-anchor="middle">Materializes rules, tools,</text>
+    <text class="c4-ink" fill="#1f2328" x="830" y="185" font-size="11" text-anchor="middle">workflows, one AGENTS.md…</text>
+    <text class="c4-muted" fill="#59636e" x="830" y="199" font-size="11" text-anchor="middle">[init and update]</text>
+  </g>
+  <g class="c4-label" data-relationship="repository -> github">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="1290" y="250" width="160" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="265" font-size="11" text-anchor="middle">Runs the check and opens</text>
+    <text class="c4-ink" fill="#1f2328" x="1370" y="279" font-size="11" text-anchor="middle">pull requests</text>
+    <text class="c4-muted" fill="#59636e" x="1370" y="293" font-size="11" text-anchor="middle">[GitHub Actions]</text>
+  </g>
+  <g class="c4-label" data-relationship="routine -> repository">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="561" y="373" width="179" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="388" font-size="11" text-anchor="middle">Runs a schedule entry point</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="402" font-size="11" text-anchor="middle">in a fresh worktree</text>
+  </g>
+  <g class="c4-label" data-relationship="backlog -> repository">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="924" y="385" width="173" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="400" font-size="11" text-anchor="middle">Reads the committed _meta/</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="414" font-size="11" text-anchor="middle">index and graph off disk</text>
+  </g>
+  <g class="c4-label" data-relationship="routine -> marketplace">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="207" y="336" width="167" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="351" font-size="11" text-anchor="middle">Fires the entry point its</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="365" font-size="11" text-anchor="middle">schedule targets</text>
+  </g>
+  <g class="c4-label" data-relationship="github -> marketplace">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="918" y="156" width="185" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="171" font-size="11" text-anchor="middle">Runs the nightly refresh and</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="185" font-size="11" text-anchor="middle">the drift warning</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="199" font-size="11" text-anchor="middle">[GitHub Actions]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace -> backlog">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="561" y="384" width="179" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="399" font-size="11" text-anchor="middle">Reads the run files the app</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="413" font-size="11" text-anchor="middle">writes</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="427" font-size="11" text-anchor="middle">[file]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace -> github">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="921" y="156" width="179" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="171" font-size="11" text-anchor="middle">Opens the pull request and</text>
+    <text class="c4-ink" fill="#1f2328" x="1010" y="185" font-size="11" text-anchor="middle">reports back to the tracker</text>
+    <text class="c4-muted" fill="#59636e" x="1010" y="199" font-size="11" text-anchor="middle">[gh]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace -> claude-code">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="552" y="151" width="197" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="166" font-size="11" text-anchor="middle">Creates, updates, and fires</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="180" font-size="11" text-anchor="middle">a routine per selected…</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="194" font-size="11" text-anchor="middle">[the live session&#39;s scheduler]</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace -> copilot">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="552" y="281" width="197" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="296" font-size="11" text-anchor="middle">Creates, updates, and fires</text>
+    <text class="c4-ink" fill="#1f2328" x="650" y="310" font-size="11" text-anchor="middle">an automation per selected…</text>
+    <text class="c4-muted" fill="#59636e" x="650" y="324" font-size="11" text-anchor="middle">[the live session&#39;s scheduler]</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-person" fill="#08427b" stroke="#052e56" stroke-width="1.5" x="32" y="698" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="711" font-size="12">Person</text>
+  <rect class="c4-fill-softwareSystem" fill="#1168bd" stroke="#0b4884" stroke-width="1.5" x="129" y="698" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="161" y="711" font-size="12">Software System</text>
+  <rect class="c4-fill-external" fill="#8c959f" stroke="#6e7781" stroke-width="1.5" x="286" y="698" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="318" y="711" font-size="12">External</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-context-arrow)" d="M396 706L418 706"/>
+  <text class="c4-ink" fill="#1f2328" x="428" y="711" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-context-arrow)" d="M533 706L555 706"/>
+  <text class="c4-ink" fill="#1f2328" x="565" y="711" font-size="12">Implied relationship</text>
+</g>
+</svg>

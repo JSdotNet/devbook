@@ -1,39 +1,38 @@
 {
-  "schemaVersion": 30,
+  "schemaVersion": 38,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/ai",
   "sources": [
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 17,
-    "edges": 15,
+    "nodes": 18,
+    "edges": 16,
     "nodesByFolder": {
       "ai": 10,
-      "tech": 2,
+      "tech": 3,
       "arc42": 5
     },
     "nodesByType": {
       "file": 5,
-      "chapter": 12
+      "chapter": 13
     },
     "nodesByKind": {
       "stage": 3,
       "practice": 3,
       "skill": 3,
       "adoption-map": 1,
-      "platform": 2,
+      "platform": 3,
       "none": 5
     },
-    "nodesByStatus": {
+    "nodesByRating": {
       "adopted": 4,
-      "trial": 4,
-      "candidate": 4,
-      "active": 5
+      "trial": 5,
+      "candidate": 4
     },
     "edgesByType": {
       "contains": 6,
-      "depends-on": 3,
+      "depends-on": 4,
       "related": 6
     }
   },
@@ -47,8 +46,8 @@
           "type": "file",
           "folder": "ai",
           "path": ".devbook/ai/01-author.md",
-          "status": "adopted",
           "kind": "stage",
+          "rating": "adopted",
           "number": 1
         }
       },
@@ -62,9 +61,10 @@
           "slug": "claude-code-as-authoring-host",
           "level": 2,
           "line": 11,
-          "status": "adopted",
           "kind": "practice",
+          "rating": "adopted",
           "date": "2026-09-02",
+          "evidence": "recorded",
           "stage": [
             "code"
           ],
@@ -80,8 +80,8 @@
           "type": "file",
           "folder": "ai",
           "path": ".devbook/ai/02-deliver.md",
-          "status": "trial",
           "kind": "stage",
+          "rating": "trial",
           "number": 2
         }
       },
@@ -94,14 +94,15 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "flow-skills",
           "level": 2,
-          "line": 11,
-          "status": "trial",
+          "line": 10,
           "kind": "skill",
+          "rating": "trial",
           "date": "2026-09-02",
+          "evidence": "none",
           "stage": [
-            "plan",
+            "specify",
             "code",
-            "test"
+            "verify"
           ],
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#flow-skill"
@@ -117,12 +118,13 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "fan-out",
           "level": 2,
-          "line": 55,
-          "status": "candidate",
+          "line": 65,
           "kind": "skill",
+          "rating": "candidate",
           "date": "2026-09-21",
+          "evidence": "none",
           "stage": [
-            "plan",
+            "decide",
             "code"
           ],
           "depends-on": [
@@ -143,13 +145,16 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "scheduling",
           "level": 2,
-          "line": 81,
-          "status": "trial",
+          "line": 94,
           "kind": "skill",
+          "rating": "trial",
           "date": "2026-10-06",
-          "stage": [
-            "operate",
-            "monitor"
+          "evidence": "partial",
+          "layer": [
+            "upkeep"
+          ],
+          "depends-on": [
+            ".devbook/tech/hosts.md#scheduled-routines"
           ],
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#schedule",
@@ -164,8 +169,8 @@
           "type": "file",
           "folder": "ai",
           "path": ".devbook/ai/03-verify.md",
-          "status": "candidate",
           "kind": "stage",
+          "rating": "candidate",
           "number": 3
         }
       },
@@ -179,11 +184,12 @@
           "slug": "plugin-evaluation",
           "level": 2,
           "line": 11,
-          "status": "candidate",
           "kind": "practice",
+          "rating": "candidate",
           "date": "2026-09-02",
+          "evidence": "none",
           "stage": [
-            "test"
+            "verify"
           ],
           "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
@@ -192,19 +198,20 @@
       },
       {
         "data": {
-          "id": ".devbook/ai/03-verify.md#scenario-pages",
-          "label": "Scenario Pages",
+          "id": ".devbook/ai/03-verify.md#journeys",
+          "label": "Journeys",
           "type": "chapter",
           "folder": "ai",
           "path": ".devbook/ai/03-verify.md",
-          "slug": "scenario-pages",
+          "slug": "journeys",
           "level": 2,
-          "line": 37,
-          "status": "candidate",
+          "line": 39,
           "kind": "practice",
+          "rating": "candidate",
           "date": "2026-10-08",
+          "evidence": "none",
           "stage": [
-            "test"
+            "verify"
           ],
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#scenario-tools"
@@ -218,8 +225,8 @@
           "type": "file",
           "folder": "ai",
           "path": ".devbook/ai/adoption-map.md",
-          "status": "adopted",
-          "kind": "adoption-map"
+          "kind": "adoption-map",
+          "rating": "adopted"
         }
       },
       {
@@ -231,9 +238,9 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "claude-code-plugin-api",
           "level": 2,
-          "line": 11,
-          "status": "adopted",
+          "line": 10,
           "kind": "platform",
+          "rating": "adopted",
           "related": [
             ".devbook/arc42/05-building-block-view.md#marketplace-root"
           ],
@@ -249,9 +256,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "flow-skill",
           "level": 2,
-          "line": 166,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 251,
           "date": "2026-10-05",
           "related": [
             ".devbook/ai/02-deliver.md#flow-skills",
@@ -271,9 +276,9 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "claude-code-cli",
           "level": 2,
-          "line": 23,
-          "status": "trial",
+          "line": 21,
           "kind": "platform",
+          "rating": "trial",
           "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
           ],
@@ -292,12 +297,9 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 112,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 106,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point",
-            ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-morning-brief",
             ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
             ".devbook/arc42/adr/plugin-boundaries.md"
           ],
@@ -311,9 +313,10 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "status": "active",
-          "statusDeclared": false,
           "date": "2026-10-05",
+          "c4": [
+            "marketplace"
+          ],
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
@@ -334,6 +337,29 @@
       },
       {
         "data": {
+          "id": ".devbook/tech/hosts.md#scheduled-routines",
+          "label": "Scheduled Routines",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "scheduled-routines",
+          "level": 2,
+          "line": 72,
+          "kind": "platform",
+          "rating": "trial",
+          "date": "2026-09-28",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/adr/plugin-boundaries.md",
+            ".devbook/arc42/05-building-block-view.md#schedule-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/08-crosscutting-concepts.md#schedule",
           "label": "Schedule",
           "type": "chapter",
@@ -341,9 +367,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "schedule",
           "level": 2,
-          "line": 213,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 298,
           "date": "2026-09-07",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#flow-skill",
@@ -362,9 +386,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "scenario-tools",
           "level": 3,
-          "line": 686,
-          "status": "active",
-          "statusDeclared": false,
+          "line": 790,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#reconciler",
             ".devbook/arc42/building-blocks/devbook.md#devbook-folder"
@@ -416,9 +438,9 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/ai/03-verify.md->.devbook/ai/03-verify.md#scenario-pages",
+          "id": "contains:.devbook/ai/03-verify.md->.devbook/ai/03-verify.md#journeys",
           "source": ".devbook/ai/03-verify.md",
-          "target": ".devbook/ai/03-verify.md#scenario-pages",
+          "target": ".devbook/ai/03-verify.md#journeys",
           "type": "contains"
         }
       },
@@ -464,6 +486,14 @@
       },
       {
         "data": {
+          "id": "depends-on:.devbook/ai/02-deliver.md#scheduling->.devbook/tech/hosts.md#scheduled-routines",
+          "source": ".devbook/ai/02-deliver.md#scheduling",
+          "target": ".devbook/tech/hosts.md#scheduled-routines",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/08-crosscutting-concepts.md#schedule",
           "source": ".devbook/ai/02-deliver.md#scheduling",
           "target": ".devbook/arc42/08-crosscutting-concepts.md#schedule",
@@ -488,8 +518,8 @@
       },
       {
         "data": {
-          "id": "related:.devbook/ai/03-verify.md#scenario-pages->.devbook/arc42/building-blocks/devbook.md#scenario-tools",
-          "source": ".devbook/ai/03-verify.md#scenario-pages",
+          "id": "related:.devbook/ai/03-verify.md#journeys->.devbook/arc42/building-blocks/devbook.md#scenario-tools",
+          "source": ".devbook/ai/03-verify.md#journeys",
           "target": ".devbook/arc42/building-blocks/devbook.md#scenario-tools",
           "type": "related"
         }
