@@ -87,7 +87,9 @@ related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", "
 - **Never:** writes a chapter or plans a capture on its own. It reports.
 - **Trigger:** the weekly `devbook-verify`, on the same wrapper rule as
   `schedule-devbook-validate`.
-- **In a bundle:** opens no `devbook-drift` issue. Its rows go into the bundle report.
+- **In a bundle:** run with its `bundle` input set, it opens no `devbook-drift` issue and returns
+  its merged drift table as the repository's cell of the bundle report, linking an open issue
+  that already covers a row.
 - **Outside it:** levelling chapters and code in a direction is Backlog's, per the
   [chapter schema record](../adr/chapter-schema.md#schedules-and-sync). The units a Backlog sweep
   levels are verified here as well, and its report reads beside this one.

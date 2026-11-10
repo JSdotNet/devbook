@@ -1,6 +1,6 @@
 ---
 name: schedule-devbook-verify
-description: 'Run devbook:verify-change over every sync unit, with no direction, and open one devbook-drift issue per unit with a code-ahead or conflict chapter nothing already covers. Writes no chapter. The devbook-verify schedule''s target.'
+description: 'Run devbook:verify-change over every sync unit, with no direction, and open one devbook-drift issue per unit with a code-ahead or conflict chapter nothing already covers; run by a bundle, it returns the merged drift table for the bundle report instead. Writes no chapter. The devbook-verify schedule''s target.'
 ---
 
 # Scheduled: Devbook Verify
@@ -12,6 +12,8 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 ## Inputs
 
 - Scope: every unit (default), or the ones in one folder.
+- `bundle`: set by a bundle that runs this job (default off). Step 3 then lists issues only and
+  opens, comments on, and closes none.
 
 ## Workflow
 
@@ -31,7 +33,8 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
    `devbook-drift` and `automated`, the unit's rows, their evidence, and the action the report
    named — `devbook:capture-specs` over the unit for `code-ahead`, the question put to a person
    for `conflict`.
-4. **Report** in `report.md` beside this file, with the issues from step 3 linked. Every row `aligned`: the counts and nothing else.
+4. **Report** in `report.md` beside this file, with the issues from step 3 linked. Every row
+   `aligned`: the counts and nothing else. Under `bundle`, follow `report.md`'s *In a bundle*.
 
 ## Do not
 
