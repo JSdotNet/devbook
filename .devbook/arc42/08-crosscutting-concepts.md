@@ -314,10 +314,12 @@ Both hosts ship the capability under their own name: **Routines** in Claude Code
 **Automations** in the GitHub Copilot app. Neither word is adopted, because adopting one would
 name a host; *schedule* is the term and both are aliases of it.
 
-Four words carry the shape:
+Five words carry the shape:
 
 - **Entry point:** a `schedule-*` skill that picks its own input, so it needs no person to hand
   it one.
+- **Bundle:** one schedule that runs several catalog jobs across every repository on the
+  machine, one subagent per repository and job.
 - **Catalog:** the set of schedule files a plugin ships.
 - **Preamble:** the unattended rules every prompt starts with, stated once.
 - **Scheduler:** whatever the live session exposes that turns a name, a cron expression, a

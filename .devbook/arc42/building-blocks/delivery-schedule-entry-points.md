@@ -38,6 +38,25 @@ how a cadence gets proved before it is trusted. They share these contracts of
 - the tightening standard
 - the draft pull request contract
 
+A [bundle](delivery-schedule.md#bundle) runs the same entry points from the same prompts, one
+subagent per repository and job. [In a Bundle](#in-a-bundle) lists what changes there.
+
+### In a Bundle
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+- **Lands:** every change as a draft pull request, never ready for review, even when build and
+  tests passed.
+- **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle
+  report instead of `devbook-drift` issues.
+- **Reports:** `schedule-weekly-update` and `schedule-whats-new` write the digest that ends the
+  Sunday devbook review, inside the bundle report.
+- **Skips:** the pickup check, since the host archives an inactive session after seven days.
+- **Fires:** from Saturday code health or Sunday devbook review instead of its own routine, once
+  the bundle's first run has passed.
+
 ### schedule-devbook-validate
 
 ```meta
@@ -68,6 +87,7 @@ related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", "
 - **Never:** writes a chapter or plans a capture on its own. It reports.
 - **Trigger:** the weekly `devbook-verify`, on the same wrapper rule as
   `schedule-devbook-validate`.
+- **In a bundle:** opens no `devbook-drift` issue. Its rows go into the bundle report.
 - **Outside it:** levelling chapters and code in a direction is Backlog's, per the
   [chapter schema record](../adr/chapter-schema.md#schedules-and-sync). The units a Backlog sweep
   levels are verified here as well, and its report reads beside this one.
@@ -306,6 +326,7 @@ needs a person, and a person is what an unattended run does not have.
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
 | It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
 | A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report is the session's last message, never an issue | run | untested |
+| In a bundle, a change lands as a draft and opens no issue | run, the bundle's prompt | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ### Schedule Report Published
@@ -389,7 +410,9 @@ the gate is what changes when nobody is in the session.
   under a newer one. It never archives itself, because the host marks a session archived
   mid-run as failed. A schedule whose result lands on GitHub has no such check: the pull
   request, issue, or comment waits there, and the run updates rather than duplicates it. A host
-  with no archived state leaves the check open.
+  with no archived state leaves the check open. A [bundle](delivery-schedule.md#a-bundle-run)
+  has no check either: its changes wait as drafts, and the host archives its session after seven
+  days.
 - **The gate is never passed and never waited at.** The run parks at it with a brief. That is the
   whole reason a schedule may not target a flow, and why the catalog checker enforces it.
 - **Every run ends with a report, even an empty one.** Most weeks the security review finds
