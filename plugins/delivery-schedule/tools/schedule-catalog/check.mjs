@@ -12,6 +12,10 @@
 // five the contract names — in a body, the preamble, or the pickup gate — or a `maxResolve` that is not a whole number or that the body never uses as
 // {{maxResolve}}, the one placeholder a schedule carrying that field may add, or that the
 // plugin README's catalog row or the target skill's `maxResolve` input line does not restate.
+// A bundle — a schedule carrying `jobs` — also fails on an empty or repeated job list, a job
+// that is not a catalog name or is itself a bundle, a `result` other than github, a tool list
+// without Workflow, a body placeholder other than {{name}} and {{title}}, and a target with no
+// bundle.workflow.js beside it or one whose JOBS table leaves a job out.
 //
 // Dependency-free ESM against node: built-ins, like everything else executable here.
 
@@ -79,6 +83,14 @@ const readmeRows = (await exists(README)) ? (await readFile(README, "utf8")).spl
 const files = (await readdir(CATALOG)).filter((f) => f.endsWith(".schedule.md")).sort();
 if (files.length === 0) error(CATALOG, "the catalog is empty");
 
+// Every entry's frontmatter up front, so a bundle can check the jobs it names.
+const catalog = new Map();
+for (const name of files) {
+    const parsed = frontmatter(await readFile(path.join(CATALOG, name), "utf8"));
+    if (parsed) catalog.set(name.replace(/\.schedule\.md$/, ""), parsed.fields);
+}
+const BUNDLE_PLACEHOLDERS = new Set(["name", "title"]);
+
 for (const name of files) {
     const file = path.join(CATALOG, name);
     const parsed = frontmatter(await readFile(file, "utf8"));
@@ -134,7 +146,30 @@ for (const name of files) {
         if (skillText && !line) error(file, `target ${fields.target} has no "- \`maxResolve\`:" input line stating the default`);
         else if (line && !line.includes(want)) error(file, `target ${fields.target} states a maxResolve default other than ${want}`);
     }
-    checkPlaceholders(file, body, fields);
+    if ("jobs" in fields) await checkBundle(file, fields, body, targetPlugin);
+    else checkPlaceholders(file, body, fields);
+}
+
+async function checkBundle(file, fields, body, targetPlugin) {
+    const jobs = fields.jobs;
+    if (!Array.isArray(jobs) || jobs.length === 0) { error(file, "jobs is not a non-empty list"); return; }
+    if (new Set(jobs).size !== jobs.length) error(file, "jobs names a job twice");
+    for (const job of jobs) {
+        const entry = catalog.get(job);
+        if (!entry) error(file, `job ${job} is not a catalog schedule`);
+        else if ("jobs" in entry) error(file, `job ${job} is itself a bundle`);
+    }
+    if (fields.result && fields.result !== "github") error(file, "a bundle's result is github: its changes wait as drafts, and a bundle has no pickup check");
+    if (Array.isArray(fields.tools) && !fields.tools.includes("Workflow")) error(file, "tools omits Workflow, so the bundle cannot fan out its jobs");
+    for (const [, key] of body.matchAll(PLACEHOLDER)) {
+        if (!BUNDLE_PLACEHOLDERS.has(key)) error(file, `placeholder {{${key}}} — a bundle's body is synced with {{name}} and {{title}} alone`);
+    }
+    const m = typeof fields.target === "string" && fields.target.match(/^([a-z0-9-]+):([a-z0-9-]+)$/);
+    if (!m || !targetPlugin) return;
+    const script = path.join(ROOT, "plugins", m[1], "skills", m[2], "bundle.workflow.js");
+    if (!(await exists(script))) { error(file, `target ${fields.target} has no bundle.workflow.js beside its SKILL.md`); return; }
+    const text = await readFile(script, "utf8");
+    for (const job of jobs) if (!text.includes(`'${job}':`)) error(file, `bundle.workflow.js has no JOBS entry for ${job}, so its precondition and whether it writes are unknown`);
 }
 
 for (const e of errors) console.error(`error  ${e}`);

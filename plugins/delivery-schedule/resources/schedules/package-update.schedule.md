@@ -9,4 +9,6 @@ tools: [Bash, Read, Write, Edit, Glob, Grep, WebFetch, Skill]
 result: github
 ---
 
-Run `schedule-package-update` with strategy `minor-and-patch`.
+Run `schedule-package-update` with strategy `minor-and-patch`, or `major-only` where
+`.github/dependabot.yml` has an `updates` entry with `package-ecosystem: "nuget"`: Dependabot
+proposes the minor and patch updates there.

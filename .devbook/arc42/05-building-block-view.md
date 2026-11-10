@@ -495,7 +495,7 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
 into. It has two halves in one folder:
 
-- Thirteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep,
+- Fourteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep,
   or a report.
 - Thirteen files under `resources/schedules/`, each a cadence, a target skill, the plugins that
   target needs, and the task half of a prompt. One preamble carries the unattended rules
@@ -515,7 +515,7 @@ into. It has two halves in one folder:
 | `tech-update` | `delivery-schedule:schedule-tech-update` | weekly |
 | `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 | `weekly-retro` | `delivery-schedule:schedule-weekly-retro` | weekly |
-| `prose-check` | `devbook:prose-check` | weekly |
+| `prose-check` | `delivery-schedule:schedule-prose-check` | weekly |
 
 Four skills read the catalog. `delivery-schedule:init` and `delivery-schedule:update` build each
 prompt, resolve the scheduler from the live tool list, and create or update each entry matched by

@@ -14,7 +14,8 @@ the ranked table, and the issue are `../../resources/findings-contract.md`'s.
 
 - Scope: `all` (default) or a path glob.
 - Layers: `all` (default), or any of `dependencies`, `secrets`, `workflows`, `code`.
-- Issue threshold: `high` (default), `medium`, `all`, or `none` to open no issue.
+- Issue threshold: `high` (default), `medium`, `all`, or `none` to open no issue — always
+  `none` when the prompt carries the line `Mode: bundle`.
 - Repository for issues: `owner/repo` (default: the current one).
 
 ## Hard Constraints

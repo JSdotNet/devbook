@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow or a reviewed draft. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
@@ -25,8 +25,8 @@ standard, and a class stated by half reports the wrong sentence.
 ## Hard Constraints
 
 - Writes nothing. Not a chapter, not a review note, not `_meta/`. A finding becomes an edit
-  only when a person makes it through the folder's flow, or a note through whatever review
-  skill the repository has.
+  only when a person makes it through the folder's flow or keeps it from a reviewed draft pull
+  request, or a note through whatever review skill the repository has.
 - Skips every `meta` fence, every code and Mermaid fence, every table, and
   every step list in a journey from every class but `procedure-step`: a step is one
   clause by design, not a fragment. A Mermaid fence is read for `mermaid-architecture` alone,

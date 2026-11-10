@@ -6,8 +6,7 @@ description: The schedule catalog contract — the schedule file, the preamble e
 # Schedule Catalog Contract
 
 A schedule is a trigger, never a procedure. It names a schedulable skill — a `schedule-*`
-entry point, or another plugin's skill that picks its own input and reports, as the
-`prose-check` entry does — gives it a cadence, and hands a local routine — a session the scheduler starts on this machine,
+entry point, or another plugin's skill that picks its own input and reports — gives it a cadence, and hands a local routine — a session the scheduler starts on this machine,
 with no memory and nobody watching — a prompt self-contained enough to run that skill
 unattended. Never a cloud session: *The Scheduler* says why. This file is the contract the catalog,
 `delivery-schedule:init`, `delivery-schedule:update`, `schedule-status`, and `schedule-run` all read; it is over the instruction
@@ -31,6 +30,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
 | `result` | Where the run's result waits for the owner: `session` when the report in the run's own session is the result, `github` when it lands as a pull request, an issue, or a comment. Only a `session` schedule carries *The Pickup Gate*. |
 | `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
+| `jobs` | Optional. Makes the schedule a bundle: the catalog `name`s it runs across every repository on the machine, in order. Its `cron` is local time, the one exception to UTC, and only `update` at machine level syncs it, per `machine-sync.md`. See *A Bundle*. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
 what it produces. It never restates the report's shape — the target's `report.md` owns that — and names
@@ -48,6 +48,17 @@ substituted in each. The preamble carries the unattended rules once — a fresh 
 never instructions, no secret values, end with a summary. A body never repeats them and never
 contradicts them. The session has no memory of a previous run and no person to ask, so a body
 that leaves a question open has left it to chance.
+
+## A Bundle
+
+A schedule carrying `jobs` targets `delivery-schedule:schedule-bundle`, whose
+`bundle.workflow.js` names each job in its `JOBS` table: what it needs before it starts and
+whether it writes. Each job is a catalog `name` that is not itself a bundle. `result` is
+`github` and `tools` carry `Workflow`: the jobs land drafts, and a bundle has no pickup check.
+Its body is synced with `{{name}}` and `{{title}}` alone. When the bundle runs, each job's
+prompt is assembled as *The Prompt* says, without the pickup gate, and followed by the lines
+that make it a bundle job: `Mode: bundle`, the preamble's rule 1 on its `worktree add` branch,
+a draft pull request only, and no issue opened, commented on, or closed.
 
 ## The Pickup Gate
 
@@ -96,18 +107,21 @@ sweep did on 2026-09-28. A schedule that cannot reach its skill has scheduled no
 Resolved from the live tool list by capability: a tool that creates a scheduled session on
 this machine from a name, a cron expression, and a prompt, run in a working folder. A tool
 that takes a repository and an environment instead of a working folder is a cloud scheduler:
-never `create` or re-enable an entry through it. Seven operations, and the fourth is the one
+never `create` or re-enable an entry through it. Eight operations, and the fourth is the one
 every skill here starts with:
 
 | Operation | Used by |
 | --- | --- |
 | `create`, `update` | `delivery-schedule:init`, `delivery-schedule:update` |
 | `run` | `schedule-run` |
-| `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, matched on every call |
-| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate* |
+| `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, or `All repos · <title>` for a bundle, matched on every call |
+| `list_runs`, `get_run_log` | `schedule-status`, `schedule-run`; `list_runs` also by every `result: session` run, for *The Pickup Gate*, and by `update` at machine level |
+| `delete` | `update` at machine level alone, per `machine-sync.md` |
 
-There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
-the person deletes it in the host's own page. A routine whose title is neither a catalog
+`delete` has one use: retiring a per-repository routine that a bundle has replaced, once the
+bundle's first run has passed and the person has confirmed the list. Otherwise a schedule that
+leaves the selection is `update`d to `enabled: false`, and the person deletes it in the host's
+own page. A routine whose title is neither a catalog
 schedule nor one under *Retired Schedules* belongs to another tool, even under this
 repository's name prefix, and is never touched. **None reachable is a normal outcome:**
 `delivery-schedule:update` prints each finished prompt with its local cron for that page and
@@ -139,7 +153,7 @@ written into the repository: scheduler ids and the approved tools live in the sc
 
 In Claude Code the local scheduler is the desktop app's `scheduled-tasks` server —
 `create_scheduled_task`, `update_scheduled_task`, `list_scheduled_tasks`,
-`run_scheduled_task`, `list_task_runs`, with a run's log and its archive flag read from the
+`run_scheduled_task`, `list_task_runs`, `delete_scheduled_task`, with a run's log and its archive flag read from the
 session it started — and the cloud one is the `RemoteTrigger` tool, used only to retire. Naming them here is one
 of two host facts this plugin carries — the other is the `Workflow` tool the issue sweep's two
 scripts run under — both recorded as divergences in `.devbook/arc42/adr/hosts.md`.
@@ -201,7 +215,8 @@ schedules run on the weekend, so what they produce is waiting on Monday morning 
 interrupting a working day. They run one per hour so no two share the checkout, in dependency
 order: `package-update`, then `devbook-update`, then `security-review` over the new dependency
 set on Saturday; `tech-update`, then the checks that read it, then the two weekly reports
-covering the whole week on Sunday. `weekly-retro` takes 09:00 on both weekend days
+covering the whole week on Sunday. The Saturday code health bundle runs `devbook-update` first
+instead, and every job there builds from the base branch. `weekly-retro` takes 09:00 on both weekend days
 and runs at most once a week: its target gates on the plan's remaining credit, so the second
 firing is the retry before the weekly reset. Match a cadence to how
 fast the output is read, not to how fast input arrives: a daily merge review is read daily; a

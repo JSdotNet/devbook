@@ -276,7 +276,7 @@ Each prefix names one scope, which is why none of them is called after *orchestr
 word once covered fan-out and single-session staging at once, and the fan-out it described no
 longer ships. `delivery` holds two `flow-*`, for the code and the five devbook folders, since
 [flows belong to delivery](adr/plugin-boundaries.md), and one `phase-*` per phase.
-`delivery-schedule` holds fifteen `schedule-*` beside a bare `init` and `update`.
+`delivery-schedule` holds sixteen `schedule-*` beside a bare `init` and `update`.
 
 A plugin takes its subsystem's stem, and the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -314,10 +314,12 @@ Both hosts ship the capability under their own name: **Routines** in Claude Code
 **Automations** in the GitHub Copilot app. Neither word is adopted, because adopting one would
 name a host; *schedule* is the term and both are aliases of it.
 
-Four words carry the shape:
+Five words carry the shape:
 
 - **Entry point:** a `schedule-*` skill that picks its own input, so it needs no person to hand
   it one.
+- **Bundle:** one schedule that runs several catalog jobs across every repository on the
+  machine, one subagent per repository and job.
 - **Catalog:** the set of schedule files a plugin ships.
 - **Preamble:** the unattended rules every prompt starts with, stated once.
 - **Scheduler:** whatever the live session exposes that turns a name, a cron expression, a
@@ -663,7 +665,7 @@ supporting.
 | [devbook](building-blocks/devbook-procedures.md#procedure), for the procedures | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | Open Host Service + Published Language | No, deliberately — a surface is resolved from the live tool list |
-| [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |
+| [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-prose-check` names `prose-check`, and the schedule is skipped when it is absent |
 | [devbook-derived](building-blocks/devbook-derived.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `schedule-devbook-validate` refreshes where the script exists and skips where it does not |
 | [devbook](building-blocks/devbook.md) | [delivery](building-blocks/delivery.md) | **Undeclared** | No, and it should be — see [debt record 4](tdr/4-delivery-depends-on-devbook.md) |
 | every block | [devbook-config](building-blocks/devbook-config.md) | Conformist, read-only | No, deliberately — it names every plugin and depends on none |

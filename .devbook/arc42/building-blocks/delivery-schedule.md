@@ -15,6 +15,7 @@ merging anything, or carrying anything personal into the repository.
 - The catalog of triggers that fires the entry points
 - The preamble every unattended prompt starts with
 - The selection a repository records
+- The bundles that run catalog jobs across every repository on a machine
 - How the entry points go through the scheduler
 
 **Nested blocks**
@@ -32,20 +33,23 @@ merging anything, or carrying anything personal into the repository.
 ```meta
 ```
 
-The block exposes seventeen skills in two halves: thirteen entry points that pick their own
-input, each with the `report.md` template its report follows, and four that put a trigger in
-the scheduler and read it back. A person can run every one by hand, which is how a cadence gets
+The block exposes nineteen skills in three groups: fourteen entry points that pick their own
+input, each with the `report.md` template its report follows, one bundle skill that runs those
+entry points across every repository on the machine, and four that put a trigger in the
+scheduler and read it back. A person can run every one by hand, which is how a cadence gets
 proved before it is trusted.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, thirteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| Seven contracts, listed below | contracts | The skills, by path |
+| Eight contracts, listed below | contracts | The skills, by path |
 | `scripts/resolve-issue.workflow.js` | work script | The issue sweep, and another plugin's sweep resolving an item the same way, per `draft-pr-contract.md` |
+| `skills/schedule-bundle/bundle.workflow.js` | work script | `schedule-bundle`, through the host's workflow tool |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times |
 | `migrations/002-retired-schedules/` | migration | `update`, in its first step: names the retired schedules a stamp still carries |
@@ -55,6 +59,7 @@ proved before it is trusted.
 The contracts hold:
 
 - `schedule-catalog-contract.md`: the schedule file and the stamp
+- `machine-sync.md`: how `update` syncs the bundles at machine level, and the record it reads
 - `schedule-preamble.md`: the preamble every prompt opens with
 - `report-contract.md`: where a report goes, the frame every `report.md` fills, and how every entry point runs by hand or unattended and reports to a surface
 - `change-window-contract.md`: the change window `schedule-weekly-update` and `schedule-whats-new` share
@@ -94,6 +99,14 @@ entry point. The rest are below.
 - **Matches:** entries by `<owner>/<repo> · <title>`, so a second sync updates rather than
   duplicates. No scheduler id has to be written into the repository, which keeps anything
   personal out of it.
+- **Bundles:** one routine for the whole machine, matched by `All repos · <title>`. `update`
+  syncs them at machine level when a person asks for the bundles, from any folder that is not a
+  worktree, and needs no stamp. It reads the checkouts and the enabled bundles from the user's
+  devbook config directory, so no sync writes a path into a repository.
+- **Retires:** once a bundle's run has finished a job in a repository, machine level deletes
+  that repository's own routine for the job, after the person confirms the list. While a bundle is
+  enabled, a repository's own sync leaves a covered job alone. It neither creates nor updates
+  that routine, and the job stays in the selection the bundle reads.
 
 ### schedule-status
 
@@ -121,9 +134,9 @@ related: [".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/
 
 ![delivery-schedule's components](c4:delivery-schedule)
 
-Three aggregates, two services, and one event cover the block's two halves, the triggers and
-the things they fire, and the line between what a repository commits and what stays in the
-scheduler. The model draws all of it.
+Four aggregates, two services, and one event cover the triggers, the things they fire, the
+bundles that fire many at once, and the line between what a repository commits and what stays
+personal. The model draws all of it.
 [delivery-schedule-entry-points](delivery-schedule-entry-points.md#structure) describes the
 Entry Point aggregate and the Schedule Report Published event.
 
@@ -160,6 +173,11 @@ classDiagram
     class ScheduleSelection {
         +selected
     }
+    class Bundle {
+        +title
+        +jobs
+        +cap
+    }
     class CadenceOverride {
         +schedule
         +cron
@@ -183,6 +201,8 @@ classDiagram
     EntryPoint --> Flow : calls
     ScheduleSelection "1" --> "many" Schedule : selects
     ScheduleSelection "1" --> "many" CadenceOverride : overrides
+    Bundle "1" --> "many" ScheduleSelection : reads, one per checkout
+    Bundle "1" --> "many" Prompt : fans out
     SchedulerResolution --> Scheduler : resolves, or reports absent
     SchedulerResolution --> Schedule : creates, updates, disables, fires
 ```
@@ -204,6 +224,8 @@ classDiagram
 - **The two halves share only `Target`.** The catalog is host-neutral data and the entry points
   are procedures. The plugin holds both because they are one subject, work that runs with nobody
   watching, not because either needs the other's internals.
+- **`Bundle` fans out `Prompt` and never reaches `EntryPoint` directly.** Each job runs from the
+  prompt its own schedule would carry, so a bundle adds no procedure to keep in step.
 
 ### Schedule
 
@@ -245,8 +267,8 @@ The value objects it holds:
   [catalog](../12-glossary.md#catalog) readable as the default rather than as somebody's current
   setting.
 - **Target:** the skill a trigger fires, plus the plugins it needs to be present. Three kinds are
-  admissible: an [entry point](delivery-schedule-entry-points.md#entry-point), a fan-out skill,
-  and a read-and-report skill. A flow is not, for the reason under [Model](#model).
+  admissible: an [entry point](delivery-schedule-entry-points.md#entry-point), a fan-out skill
+  such as a [bundle](#bundle)'s, and a read-and-report skill. A flow is not, for the reason under [Model](#model).
 - **Prompt:** what the scheduled session is given, assembled from the shared
   [preamble](../12-glossary.md#preamble) and the schedule's own task half. It has to be
   self-contained: the session starts with nothing but the repository, so it cannot remember
@@ -265,13 +287,16 @@ under `components.schedule` in the stack config. This block's `init` and `update
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts
 and are committed. The checkout's path, the approved tools, and the scheduler's own ids are
-personal and stay in the scheduler. Matching by name makes writing them down unnecessary.
+personal and stay in the scheduler. Matching by name makes writing them down unnecessary. A
+[bundle](#bundle)'s list of checkouts is personal as well. It lives in the user's own overlay
+under the devbook config directory, beside the machine's choice of bundles.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Nothing personal is written into the repository | `init`, `update` | untested |
 | The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
 | A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
+| A job an enabled bundle covers keeps its place in the selection, and its routine is neither created nor updated | `update` | untested |
 | A retired name is dropped and its routine disabled, never a failure | `update` | `migrate.test.mjs`, the drop only |
 | A routine whose title is no catalog or retired schedule is left alone | `update` | untested |
 | A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
@@ -282,6 +307,60 @@ The value object it holds:
   selection rather than an edit to the catalog file, so an upgrade can move the shipped default
   without silently reverting or silently keeping somebody's choice.
 
+### Bundle
+
+```meta
+related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle"]
+```
+
+Also called: cross-repository routine.
+
+One schedule that runs several catalog jobs across every repository on this machine, one
+subagent per repository and job. Its skill runs them through the host's workflow tool and never
+starts a session. Each subagent gets the prompt `update` assembles for that repository and job,
+built by the same rule when the bundle runs, so the bundle carries no procedure of its own.
+One skill, `schedule-bundle`, runs every bundle. Its workflow script names each job's
+precondition and whether the job writes, and one read-only plan agent gathers the facts about
+each checkout that the script decides on.
+
+| Bundle | Fires, local time | Jobs, in order |
+| --- | --- | --- |
+| Saturday code health | Saturday 05:00 | `devbook-update`, then `package-update` and `security-review` |
+| Sunday devbook review | Sunday 04:00 | `devbook-validate`, `tech-update`, `devbook-verify`, `prose-check`, `instruction-review`, then `weekly-update` and `change-report` as the digest |
+
+Merge review, issue sweep, weekly retro, and every job not about the repositories stay one
+routine each. The reasons are in [the plugin boundaries record](../adr/plugin-boundaries.md).
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
+| A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A job's preconditions are checked before any subagent starts | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| No pickup check holds a bundle back | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| The list of checkouts is never written into a repository | bundle skill, `update` | untested |
+| A per-repository routine is deleted only once a bundle's run has finished its job in its repository, and only after the person confirms | `update` at machine level | untested |
+
+The value objects it holds:
+
+- **Job:** one catalog schedule run for one repository, from that schedule's own prompt. It
+  succeeds or fails as one cell of the bundle's report.
+- **Checkout list:** the main checkouts on this machine, kept under
+  `ext.delivery-schedule.checkouts` in the user's overlay in the devbook config directory. Each
+  one's `components.schedule` selection says which jobs it gets.
+- **Bundle choice:** which bundles this machine runs, under `ext.delivery-schedule.bundles` in the
+  same file. Absent, the machine runs none.
+
+Inside a bundle, `prose-check` runs
+[`schedule-prose-check`](delivery-schedule-entry-points.md#schedule-prose-check) in its bundle
+mode, which opens a draft pull request with its edits, one commit per chapter, and skips an edit
+an earlier closed pull request rejected. Its own catalog entry carries no editor, so the bundle
+is the one place prose check writes. Once a bundle's first run passes,
+the per-repository routines it replaces are deleted, so no job fires twice.
+
 ### Scheduler Resolution
 
 ```meta
@@ -289,7 +368,8 @@ related: [".devbook/arc42/12-glossary.md#scheduler", ".devbook/tech/hosts.md#sch
 ```
 
 It finds the [scheduler](../12-glossary.md#scheduler) the live session exposes, and creates,
-updates, disables, reads, or fires an entry through it.
+updates, disables, reads, or fires an entry through it. It deletes one in a single case: a
+per-repository routine whose job a bundle has run in that repository.
 
 Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
 outcome:** the operation reports it and stops without failing anything, the same shape a surface
@@ -339,12 +419,14 @@ A trigger becomes a run below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog, bundles aside: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
     loaded -->|no| refused["Skipped: it would start without its skill"]
-    loaded -->|yes| assemble["Assemble the prompt: preamble + task half"]
+    loaded -->|yes| covered{"Does an enabled bundle run it here?"}
+    covered -->|yes| left["Left alone: the bundle runs it"]
+    covered -->|no| assemble["Assemble the prompt: preamble + task half"]
     assemble --> resolve["Resolve the scheduler from the live tool list"]
     resolve -->|absent| noop["Report, change nothing"]
     resolve -->|present| retire["Disable any cloud copy with this name"]
@@ -363,6 +445,52 @@ scheduler is a normal outcome at every step.
 this machine for the checkout, so one this session has not loaded is a skill the run would not
 reach. That is also why no schedule is a cloud session: a cloud clone installed none of them.
 
+### A Machine Sync
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle"]
+```
+
+```mermaid
+flowchart TD
+    ask(["A person asks update for the bundles"]) --> read["Read the checkouts and the enabled bundles from the user's overlay"]
+    read --> sync["Create or update each enabled bundle, disable a catalog bundle not enabled"]
+    sync --> passed{"Did its last run finish a job in a repository?"}
+    passed -->|no| wait["Delete nothing: waiting for its first run"]
+    passed -->|yes| list["List that repository's own routine for each finished job"]
+    list --> confirm{"Does the person confirm the list?"}
+    confirm -->|yes| delete["Delete them"]
+    confirm -->|no| keep["Delete nothing"]
+```
+
+The sync writes nothing into any repository, because every fact it reads belongs to the
+machine. A deleted routine cannot be restored, so the list waits for the person's answer.
+Retiring is judged per repository and job, so a job that failed or never started inside the
+bundle keeps its own routine until the bundle has run it.
+
+### A Bundle Run
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle"]
+```
+
+```mermaid
+flowchart TD
+    fire(["The scheduler fires the bundle on this machine"]) --> list["Read the checkout list from the devbook config directory"]
+    list --> dedupe["Read each selection, one repository per origin remote"]
+    dedupe --> pre["Check each job's preconditions"]
+    pre --> matrix["A repository × job matrix of prompts"]
+    matrix --> run["Run subagents: four at once, two writers, one job per repository"]
+    run --> limit{"Usage limit hit?"}
+    limit -->|yes| notrun["List the remaining jobs as not run"]
+    limit -->|no| digest["Weekly update and change report, as the digest"]
+    notrun --> report
+    digest --> report(["One report: a row per repository, a column per job"])
+```
+
+A job's failure is one cell of the report, and the run carries on. Each job that changed files
+leaves a draft pull request from its own `schedule/<name>/<date>` branch, which the report links.
+
 ## Dependencies
 
 ```meta
@@ -380,10 +508,12 @@ one plugin here whose subject is a host capability, a divergence on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. This real dependency is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`; three wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | Four wrappers invoke `devbook:validate`, `devbook:verify-change`, `devbook:tech-update`, and `devbook:prose-check`; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body; `schedule-merge-review` reads its door; `schedule-weekly-retro` names `retro` for lenses | The skill name alone | A reviewer weighs a merge by whether it can be walked back; a retro's lenses are written once. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | As with devbook, naming is not depending: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | The [scheduler](../12-glossary.md#scheduler) the live session exposes, for a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability has two host names, Routines and Automations, and adopting either would name a host. |
+| The host's workflow tool | Conformist, a recorded host fact | A bundle's skill and the issue sweep run their subagents through it | Named in `schedule-catalog-contract.md` | Fan-out without a second session needs it. |
+| A machine's devbook config directory | Separate Ways | A bundle reads the list of checkouts from it | The directory's location, per `AGENTS.md` | Which folders a machine holds is personal. |
 | GitHub, through `gh` | A host fact, not a binding: the block consults no tracker binding | Pull requests from dated branches, and the issues a skill opens for a finding | The preamble's publishing rules | A change reaches a person as a pull request; the report stays in the run's session. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
 | A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; anything personal about a schedule stays in the scheduler or a machine's own overlay. |
@@ -403,8 +533,8 @@ block writes to GitHub only, whatever tracker the repository binds for the engin
 | A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports in the same shape, and the next updates its pull request rather than duplicating it. |
 | Backlog's `backlog-tools` | Conformist, read-only | Its devbook sweep reads three of this plugin's files by path | `report-contract.md`, `draft-pr-contract.md`, `scripts/resolve-issue.workflow.js` | That the paths stay, and that `update` leaves its routine alone. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
-targets another plugin's skill, and the plugin declares one dependency. A target that is not
+**Naming a target is deliberately weaker than depending on one.** Four entry points wrap a
+`devbook` skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, the way the engine degrades rather than fails for a
 role.
 

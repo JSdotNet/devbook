@@ -14,8 +14,9 @@ First setup of this repository's schedules. Everything it reads and writes is in
 `delivery-schedule:update`" and stop: the stamp holds a selection somebody made, and asking
 again would overwrite it.
 
-1. **Choose.** Read every `resources/schedules/*.schedule.md` in this plugin and ask which to
-   enable, offering every schedule whose `requires` are met as the default.
+1. **Choose.** Read every `resources/schedules/*.schedule.md` in this plugin bar a bundle, one
+   carrying `jobs`, which `update` syncs at machine level alone, and ask which to enable,
+   offering every schedule whose `requires` are met as the default.
 2. **Schedule and stamp.** Run steps 2–8 of `../update/SKILL.md` with that selection — resolve
    the repository and its checkout, check `requires`, resolve the local scheduler, retire
    cloud copies, create each selected schedule, write `components.schedule`, and report. Its *Do not* list holds here

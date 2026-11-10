@@ -3,7 +3,7 @@
 ```meta
 related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 c4: ["marketplace.delivery-schedule.entry-point"]
-code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
+code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-prose-check", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
 ```
 
 The entry points of [delivery-schedule](delivery-schedule.md), a block inside it. This block
@@ -12,7 +12,7 @@ and publishes what it did without passing a gate or merging anything.
 
 **Owns**
 
-- The thirteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
+- The fourteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
 - The work script a sweep lands an item through
 - The report every run ends with
 
@@ -27,7 +27,7 @@ and publishes what it did without passing a gate or merging anything.
 related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 ```
 
-The scheduler reaches each of the thirteen skills on a cadence, or a person by hand, which is
+The scheduler reaches each of the fourteen skills on a cadence, or a person by hand, which is
 how a cadence gets proved before it is trusted. They share these contracts of
 [delivery-schedule](delivery-schedule.md#interfaces):
 
@@ -37,6 +37,32 @@ how a cadence gets proved before it is trusted. They share these contracts of
 - the findings contract
 - the tightening standard
 - the draft pull request contract
+
+A [bundle](delivery-schedule.md#bundle) runs the same entry points from the same prompts, one
+subagent per repository and job. [In a Bundle](#in-a-bundle) lists what changes there.
+
+### In a Bundle
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+- **Tells the job:** the bundle adds the line `Mode: bundle` to each job's prompt, so an entry
+  point with a bundle mode knows which run it is.
+- **Starts:** in a worktree the job adds under its own repository's checkout, the preamble's
+  `worktree add` branch, because no job starts in a worktree of that repository.
+- **Lands:** every change as a draft pull request, never ready for review, even when build and
+  tests passed.
+- **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle
+  report instead of `devbook-drift` issues, and `schedule-security-review`'s ranked findings
+  instead of `security` issues.
+- **Writes:** `schedule-prose-check` applies its findings, the one place prose check edits a
+  chapter.
+- **Reports:** `schedule-weekly-update` and `schedule-whats-new` write the digest that ends the
+  Sunday devbook review, inside the bundle report.
+- **Skips:** the pickup check, since the host archives an inactive session after seven days.
+- **Fires:** from Saturday code health or Sunday devbook review instead of its own routine, once
+  the bundle's first run has passed.
 
 ### schedule-devbook-validate
 
@@ -49,8 +75,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
   request.
 - **Reports:** as a row, what `devbook-config:doctor`, where installed, finds that needs a person.
 - **Trigger:** the daily `devbook-validate`.
-- **Wrapper rule:** the catalog names a `schedule-*` entry point or, as with `prose-check`, a
-  read-and-report skill that picks its own input, and never a flow.
+- **Wrapper rule:** the catalog names a `schedule-*` entry point or a read-and-report skill that
+  picks its own input, and never a flow.
 
 ### schedule-devbook-verify
 
@@ -68,6 +94,9 @@ related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", "
 - **Never:** writes a chapter or plans a capture on its own. It reports.
 - **Trigger:** the weekly `devbook-verify`, on the same wrapper rule as
   `schedule-devbook-validate`.
+- **In a bundle:** run with its `bundle` input set, it opens no `devbook-drift` issue and returns
+  its merged drift table as the repository's cell of the bundle report, linking an open issue
+  that already covers a row.
 - **Outside it:** levelling chapters and code in a direction is Backlog's, per the
   [chapter schema record](../adr/chapter-schema.md#schedules-and-sync). The units a Backlog sweep
   levels are verified here as well, and its report reads beside this one.
@@ -189,7 +218,9 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 ```
 
 - **Does:** updates what is outdated, verifies the build, and opens a pull request.
-- **Shipped trigger:** minor and patch only.
+- **Shipped trigger:** minor and patch only, or the major bumps alone where Dependabot covers
+  NuGet, since it proposes the minor and patch updates there. Unattended, a major bump is a
+  *Needs you* row, never applied.
 - **Why:** a major version is a decision rather than an update.
 
 ### schedule-performance-review
@@ -202,13 +233,33 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 - **Never:** implements while the previous run's pull request is still open. It reports, so one
   pull request never carries two findings.
 
+### schedule-prose-check
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+- **Does:** runs `devbook:prose-check` over every adopted folder and reports its findings. It
+  writes nothing.
+- **In a bundle:** applies the findings as one draft pull request, one commit per chapter, and
+  reports the classes that ask for content a person writes. The draft carries a ledger of every
+  edit.
+- **Skips:** an edit whose chapter and sentence a closed, unmerged pull request from the same
+  schedule already proposed, and every edit while its previous draft is still open. A
+  rejection is an answer.
+- **Why:** a list of findings is work a person still has to turn into edits, while a commit per
+  chapter is one they can keep or drop.
+- **Trigger:** the weekly `prose-check`, on the same wrapper rule as
+  `schedule-devbook-validate`.
+
 ### schedule-security-review
 
 ```meta
 ```
 
 - **Does:** checks dependencies, secrets, CI hardening, and code, and opens one issue per new high
-  finding.
+  finding, or none in a bundle, whose report carries the findings at `high` and above and so
+  repeats each week what is still open.
 - **New:** a run updates what its previous run left open rather than re-reporting it.
 
 ### schedule-tech-update
@@ -286,7 +337,7 @@ never name a flow.
 
 Also called: schedule skill, schedulable procedure.
 
-A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Thirteen
+A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Fourteen
 ship here. Input:
 
 - the unclassified issues and the top of the backlog
@@ -306,6 +357,7 @@ needs a person, and a person is what an unattended run does not have.
 | It never passes a gate — it parks with a handoff brief where Personal Validation would be | run | untested |
 | It never merges, approves, or deletes; it closes only an issue high-confidence evidence shows already resolved, with the evidence in the comment | run | untested |
 | A change lands as a pull request from a branch under `schedule/<name>/<date>`; a report is the session's last message, never an issue | run | untested |
+| In a bundle, a change lands as a draft and opens no issue | run, the bundle's prompt | untested |
 | A run updates what its previous run left open rather than opening a second | run | untested |
 
 ### Schedule Report Published
@@ -389,7 +441,9 @@ the gate is what changes when nobody is in the session.
   under a newer one. It never archives itself, because the host marks a session archived
   mid-run as failed. A schedule whose result lands on GitHub has no such check: the pull
   request, issue, or comment waits there, and the run updates rather than duplicates it. A host
-  with no archived state leaves the check open.
+  with no archived state leaves the check open. A [bundle](delivery-schedule.md#a-bundle-run)
+  has no check either: its changes wait as drafts, and the host archives its session after seven
+  days.
 - **The gate is never passed and never waited at.** The run parks at it with a brief. That is the
   whole reason a schedule may not target a flow, and why the catalog checker enforces it.
 - **Every run ends with a report, even an empty one.** Most weeks the security review finds

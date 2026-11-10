@@ -1,9 +1,10 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: thirteen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, thirteen trigger files that fire one on a cadence, and four skills that put those
-triggers in the host's scheduler and read them back.
+report, `schedule-bundle`, which runs a bundle's jobs across every repository on the machine,
+fifteen trigger files that fire one on a cadence, two of them bundles, and four skills that
+put those triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
@@ -33,13 +34,14 @@ hand it one. Every one of them is also runnable by hand.
 |---|---|---|
 | `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, and a report naming what `devbook-config:doctor` finds needs a person |
 | `schedule-devbook-update` | Runs `devbook-config:update` with the safe answer at every question, so outstanding migrations run and stale copies are refreshed; never touches the scheduler | A draft pull request, or a report naming the person's step that is left |
-| `schedule-devbook-verify` | Runs `devbook:verify-change` over every sync unit, with no direction, and opens an issue per unit with a `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such unit, and a report with the whole table |
+| `schedule-devbook-verify` | Runs `devbook:verify-change` over every sync unit, with no direction, and opens an issue per unit with a `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such unit, and a report with the whole table; run by a bundle with `bundle` set, the table alone, in the bundle report |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
-| `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
+| `schedule-package-update` | Updates outdated packages and verifies the build; at `major-only`, unattended, reports the major bumps alone | A pull request, or a report |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
-| `schedule-security-review` | Dependencies, secrets, CI hardening, code | One issue per new high finding |
+| `schedule-prose-check` | Runs `devbook:prose-check` over every adopted folder; as a bundle's job, applies the findings, skipping an edit a rejected earlier run proposed | A report, or in a bundle a draft pull request, one commit per chapter |
+| `schedule-security-review` | Dependencies, secrets, CI hardening, code; as a bundle's job, opens no issue | One issue per new high finding, or in a bundle its findings in the bundle report |
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — in a fresh context, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
@@ -57,19 +59,21 @@ and traces each to its ticket.
 
 | Schedule | Cadence (UTC) | Runs | Needs | Lands as |
 |---|---|---|---|---|
-| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
+| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch, or majors only where Dependabot covers NuGet | `delivery-schedule`, `delivery` | A pull request, or where Dependabot covers NuGet a report |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 10`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a brief |
 | `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
 | `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every sync unit | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
 | `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
-| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
+| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers, no issue in a bundle | `delivery-schedule`, `delivery` | One issue per new high finding, or in a bundle the findings in its report |
 | `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
 | `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
-| `prose-check` | Sunday 06:00 | `prose-check`, every adopted folder, report only | `devbook` | A report |
+| `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |
+| `sunday-devbook-review` | Sunday 04:00, local time | `schedule-bundle`: devbook validate, tech update, devbook verify, prose check, instruction review, then the weekly update and change report, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
+| `saturday-code-health` | Saturday 05:00, local time | `schedule-bundle`: devbook stack update first, then package update and security review, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -104,13 +108,32 @@ the host keeps no archived state, every run proceeds. The rule is in `resources/
 | Skill | Does |
 |---|---|
 | `delivery-schedule:init` | Asks which schedules to enable, creates them, and stamps `components.schedule`; refused where that stamp exists |
-| `delivery-schedule:update` | Creates or updates the selected schedules, disables the deselected, rewrites `components.schedule`; refused where no stamp exists |
+| `delivery-schedule:update` | Creates or updates the selected schedules, disables the deselected, rewrites `components.schedule`; refused where no stamp exists. At machine level it syncs the bundles instead — below |
 | `schedule-status` | Lists them with their last runs, what each published, and the log where one failed |
 | `schedule-run` | Fires one now and reports the run |
 
 All four resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
 the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
+
+### Bundles, at machine level
+
+A bundle is one routine, `All repos · <title>`, that runs several catalog jobs in every
+repository on this machine. Ask `delivery-schedule:update` for the bundles from any folder that
+is not a worktree. It reads your checkouts and enabled bundles from `ext.delivery-schedule` in
+your user overlay, syncs each bundle, and offers to delete the per-repository routines a bundle
+has run in their place. Nothing is written into a repository. The rules are in
+`resources/machine-sync.md`.
+
+The routine runs `schedule-bundle`. Its workflow script, `skills/schedule-bundle/bundle.workflow.js`,
+reads each checkout once, runs a repository once however many checkouts share its `origin`,
+skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder,
+`package-update` where there is no .NET package manifest —
+and runs one subagent per repository and job from the prompt that job's own schedule carries,
+with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
+repository, and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull
+request, and the one report has a row per repository and a column per job. The planning is
+tested by `node --test plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs`.
 
 ## Migrations
 

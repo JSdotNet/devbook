@@ -62,7 +62,7 @@ The schedules for `validate`, `tech-update`, and `verify-change` reach them thro
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `validate` | skill | A person, or the daily `devbook-validate` schedule |
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule |
-| `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
+| `prose-check` | skill | A person, or `delivery-schedule`'s `schedule-prose-check` wrapper |
 | `chapter-review` | skill | A person, on one chapter or one change |
 | `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted, and delivery's [phases](delivery-phases.md#phase-implement); described under [Scenario Tools](#scenario-tools) |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule |
@@ -176,7 +176,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
   - a paragraph or a step past the length `devbook-writing.md` sets
   - where `arc42/` is adopted, a Mermaid fence that draws architecture (any `C4*` kind, or a
     sequence, flowchart, or graph between workspace elements), with the view to draw instead
-- **Never:** writes. An edit is a person's, through the folder's flow.
+- **Never:** writes. An edit is a person's, through the folder's flow, or a draft pull request
+  `delivery-schedule` opens inside a bundle for a person to keep or drop.
 - **Why:** a chapter is content, so the standard is narrower than an instruction tightening and
   a record stays as it was taken.
 
@@ -1020,7 +1021,7 @@ consumer that reaches only the converters or only the procedures is listed in
 | [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
 | [delivery](delivery.md#dependencies) | **Undeclared**: see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract, none of which it pins. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | Four of its own `schedule-*` wrappers invoke `validate`, `verify-change`, `tech-update`, and `prose-check` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | spec-manager and Backlog | Published Language | Answer `devbook.decision@1` over MCP; recompute the fingerprint and run its vector | The two contracts and the vector | That both keep their shape within `@1`, and that `chapter-hash.mjs` prints what the vector pins. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |

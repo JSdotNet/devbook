@@ -1,7 +1,7 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-10-05
+date: 2026-11-10
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 c4: ["marketplace"]
 ```
@@ -65,6 +65,72 @@ scheduler only, disables any cloud copy carrying the repository's name, and no l
 the marketplace keys into a repository's committed settings. The cost is the machine: a
 routine fires only while it is on and the host app runs, and one due while it was closed runs
 on the next launch.
+
+**A schedule may be a bundle: one local routine that runs several catalog jobs across every
+repository on this machine.** One routine per repository and job had grown to 42 enabled
+routines and 115 runs a week over six repositories by 2026-11-06, a list nobody could scan.
+Grouping by job also fits how the reports are read: a week's results read best across every
+repository, which a single repository's routine cannot show. Two bundles ship, both on the
+weekend, and every other schedule stays one routine per repository.
+
+| Bundle | Fires, local time | Jobs, in order |
+| --- | --- | --- |
+| Saturday code health | Saturday 05:00 | Devbook stack update, then package update and security review |
+| Sunday devbook review | Sunday 04:00 | Devbook validate, technology graph refresh, devbook verify, prose check, instruction review, then the weekly update and change report as the digest |
+
+Saturday's jobs build, test, or change installs, so they can fail. Running them the day before
+keeps a failure out of Sunday's report, and the stack update runs first because the Sunday jobs
+read what it lands. In each repository the stack update also starts before the other two. They
+build from the base branch, not from its draft, so the order makes the run predictable and puts
+first the finding a later failure most often comes from: a plugin behind on this machine.
+Package update takes only the major bumps where Dependabot covers NuGet, because Dependabot
+proposes the minor and patch ones there, and a repository with no .NET package manifest skips
+it before a subagent starts. Security review opens no issue in a bundle; its findings join the
+one report, as devbook verify's drift does. Sunday's jobs all work on the chapters and
+instruction files of the same repositories, and the digest ends the run, so its one report is the single Sunday read. Merge
+review and issue sweep stay outside, because they write in several repositories every weekday.
+The weekly retro reviews the week, bundles included, so it runs after them, and a job that is
+not about the repositories stays outside as well.
+
+**A bundle fans out prompts the catalog already has, and carries no procedure of its own.** Its
+skill runs one subagent per repository and job through the `Workflow` tool, as the issue sweep
+already does, and never a separate session per job. Each subagent gets the prompt
+`delivery-schedule:update` already assembles for that repository and job. Branch names, the
+check for an open pull request, and the report frame therefore stay as they are. A fresh
+context per job keeps heavy skills apart, and one failure is one cell of the report rather than
+a stopped run.
+
+**A bundle runs at most four subagents at a time.** At most two of them are jobs that write, and
+no two jobs run in the same repository, so two worktrees never race on one repository's fetch or
+branches: every job's preamble fetches into the checkout and adds a worktree there, a read-only
+job's included. Read-only jobs fill the other slots from other repositories. When the plan's usage limit is hit, the
+bundle starts no new job and lists the rest as not run, for the next week or `schedule-run`.
+Seven jobs over six to eight repositories is about forty subagents, so the cap, not the cadence,
+sets how long a run takes. It is tuned after the first runs.
+
+**In a bundle, every job that changes files lands as a draft pull request and opens no issue.**
+The preamble marks a pull request ready once build and tests pass, but a bundle never does:
+forty changes at once are reviewed on the pull request, as the issue sweep's are. Devbook
+verify's drift table moves into the bundle report instead of `devbook-drift` issues. Prose check
+opens a draft pull request with its edits, one commit per chapter, and skips an edit an earlier
+closed pull request rejected, as instruction review already does. That reverses the prose check
+catalog entry, which leaves out an editor on purpose: a list of findings is work a person still
+has to turn into edits, while a commit per chapter is one they can keep or drop. The weekly
+update and the change report change no file and stay in the bundle report.
+
+**A bundle has no pickup check.** Its changes wait on GitHub as drafts, and its report buries
+nothing, because the app now archives a session left inactive for seven days. The check had
+made every skipped run one more unarchived session, and 226 sat open on 2026-11-06.
+
+**A bundle finds its repositories on this machine, and that list is personal.** It reads each
+main checkout's `components.schedule` selection and deduplicates by `origin` remote, because one
+repository may have several checkouts that carry a selection. Each job's preconditions, such as
+an adopted folder or a `tech/` layer, are checked before any subagent starts, so a job that could
+only report their absence never runs. The list of checkouts lives under the user's devbook
+config directory and never in a repository, because which folders a machine holds is a fact
+about the machine. Once a bundle's first run passes, the per-repository routines it replaces are
+deleted, so no job fires twice. The cost is reach: a bundle covers only the checkouts on the
+machine that runs it.
 
 **A run's report stays in the run's own session.** The catalog published every report as a
 GitHub issue labelled `schedule-report` because a cloud session leaves nothing its owner can
@@ -216,6 +282,19 @@ belongs to a person's map.
   would fire every schedule twice. A setup script that installs the plugins in the cloud
   environment would make the environment, not the repository, the thing a schedule depends on,
   and it is personal.
+- One session per job in a bundle: a skill that starts sessions breaks the rule that nothing
+  here spawns one, and each would be one more session to archive.
+- A bundle skill that restates each job's procedure: a second copy of every job's rules, drifting
+  from the prompt `delivery-schedule:update` assembles.
+- A bundle written by hand rather than shipped in the catalog: no sync updates it, and
+  `All repos · Weekly retro` kept the pickup check the catalog had already removed.
+- A lower cadence per repository instead of bundles: the scheduler page still lists one routine
+  per repository and job.
+- A pull request marked ready in a bundle once build and tests pass: forty changes arrive at
+  once, and none has had a person look at it.
+- Merge review and issue sweep in a weekend bundle: they write in several repositories and are
+  read every weekday.
+- The list of checkouts in a repository: it names folders on one machine.
 - Reports as `schedule-report` issues once schedules ran locally: a report is read once, and
   as an issue it needs closing, sits in the backlog the issue sweep triages, and is written
   for GitHub's renderer rather than the session it came from.
@@ -254,6 +333,9 @@ belongs to a person's map.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-10 | Saturday code health ships: a repository's jobs start in the bundle's order, package update takes only majors where Dependabot covers NuGet and skips a repository with no .NET package manifest, and security review's findings go into the bundle report instead of issues. | A reader filling a free slot could start security review before the stack update, whose finding explains a later failure; Dependabot already proposes the minor and patch bumps where it covers NuGet; a bundle opens no issue. |
+| 2026-11-10 | A bundle runs no two jobs in one repository, read-only ones included. | Every job fetches into its repository's checkout and adds a worktree there, so two readers race on the same refs as two writers do. |
+| 2026-11-10 | A schedule may be a bundle: one local routine that runs catalog jobs across every repository on the machine, one `Workflow` subagent per repository and job, fed the prompt `delivery-schedule:update` assembles. Two ship: Saturday code health and Sunday devbook review. At most four subagents run, two writers, never two in one repository. Every change lands as a draft and opens no issue, verify's drift table and the digest stay in the report, and prose check lands its edits as a draft. There is no pickup check, and the checkout list is personal. | 42 routines over six repositories were a list nobody could scan, and a week's reports read best across repositories. |
 | 2026-11-05 | `devbook-skills` gains a session-start hook and `show-me` an orientation card; `delivery`'s handback, gates, and summary name the card, still with no declared dependency. | A person switching between sessions must see what a reply is about at once, and ordinary replies have no caller to name the skill. |
 | 2026-10-12 | A routine's worktree option is on by default: `delivery-schedule:update` sets it where the scheduler takes it and reports each routine a person must switch on by hand, and the preamble's rule 1 works in the host's worktree when there is one and adds its own only when there is not. | — |
 | 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. | — |

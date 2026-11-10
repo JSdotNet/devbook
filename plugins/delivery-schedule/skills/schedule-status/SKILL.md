@@ -25,7 +25,8 @@ Read-only. The scheduler, the identity rule, and the stamp are in
 5. **Report** one table: schedule, cron, enabled, last run with its outcome, what it published
    as a link, and one line from the log at the point a failed run went wrong. One in the stamp
    the scheduler does not know is `not scheduled — run delivery-schedule:update`; a scheduled one the
-   stamp does not list is `unmanaged`; an enabled entry a cloud scheduler still holds for this
+   stamp does not list is `unmanaged`; one an enabled bundle covers, per *A Job a Bundle Covers*
+   in `../../resources/machine-sync.md`, is `covered by All repos · <title>`; an enabled entry a cloud scheduler still holds for this
    repository is `cloud — run delivery-schedule:update to retire it`.
 
 An empty run list is not proof a schedule never fired: a fire refused before a session existed
