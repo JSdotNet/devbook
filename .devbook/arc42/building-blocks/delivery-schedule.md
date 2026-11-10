@@ -334,7 +334,7 @@ routine each. The reasons are in [the plugin boundaries record](../adr/plugin-bo
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
-| Two jobs that write never run in the same repository at once | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
 | A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
@@ -479,7 +479,7 @@ flowchart TD
     list --> dedupe["Read each selection, one repository per origin remote"]
     dedupe --> pre["Check each job's preconditions"]
     pre --> matrix["A repository × job matrix of prompts"]
-    matrix --> run["Run subagents: four at once, two writers, one writer per repository"]
+    matrix --> run["Run subagents: four at once, two writers, one job per repository"]
     run --> limit{"Usage limit hit?"}
     limit -->|yes| notrun["List the remaining jobs as not run"]
     limit -->|no| digest["Weekly update and change report, as the digest"]
