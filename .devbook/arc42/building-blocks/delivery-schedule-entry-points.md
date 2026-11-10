@@ -238,7 +238,7 @@ related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc
   reports the classes that ask for content a person writes. The draft carries a ledger of every
   edit.
 - **Skips:** an edit whose chapter and sentence a closed, unmerged pull request from the same
-  schedule already proposed, and the whole edit while its previous draft is still open. A
+  schedule already proposed, and every edit while its previous draft is still open. A
   rejection is an answer.
 - **Why:** a list of findings is work a person still has to turn into edits, while a commit per
   chapter is one they can keep or drop.

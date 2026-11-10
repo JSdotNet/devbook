@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
+description: 'Report the prose in every adopted devbook folder that does not earn its lines or does not read — hedges, restated headings, repeated definitions, stale names, synonyms, noun stacks, overlong sentences, paragraphs, and steps, padding, text moved rather than cut, a chapter whose subject is not clear at a glance, a sequence told without a diagram, architecture drawn in Mermaid instead of a C4 view — and word counts per chapter against a base. Writes nothing; edits go through the folder''s flow or a reviewed draft. Use when: tightening chapters before a review, a chapter is hard to read, finding what a rename left behind ("prose check").'
 ---
 
 # prose check
