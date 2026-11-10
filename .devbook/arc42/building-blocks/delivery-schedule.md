@@ -335,6 +335,7 @@ routine each. The reasons are in [the plugin boundaries record](../adr/plugin-bo
 | --- | --- | --- |
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A repository's jobs start in the bundle's order, so Saturday's stack update lands before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
 | A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |

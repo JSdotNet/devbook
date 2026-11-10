@@ -80,7 +80,11 @@ weekend, and every other schedule stays one routine per repository.
 
 Saturday's jobs build, test, or change installs, so they can fail. Running them the day before
 keeps a failure out of Sunday's report, and the stack update runs first because the Sunday jobs
-read what it lands. Sunday's jobs all work on the chapters and instruction files of the same
+read what it lands. In each repository it lands before the other two start, which read what it
+moved. Package update takes only the major bumps where `.github/dependabot.yml` exists, because
+Dependabot groups the minor and patch updates there, and a repository with no package manifest
+skips it before a subagent starts. Security review opens no issue in a bundle; its findings
+join the one report, as devbook verify's drift does. Sunday's jobs all work on the chapters and instruction files of the same
 repositories, and the digest ends the run, so its one report is the single Sunday read. Merge
 review and issue sweep stay outside, because they write in several repositories every weekday.
 The weekly retro reviews the week, bundles included, so it runs after them, and a job that is
@@ -327,6 +331,7 @@ belongs to a person's map.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-10 | Saturday code health ships: a repository's jobs start in the bundle's order, package update takes only majors where Dependabot is set up and skips a repository with no package manifest, and security review's findings go into the bundle report instead of issues. | A reader filling a free slot ran security review before the stack update had landed; Dependabot already proposes the minor and patch bumps; no issue is opened by a bundle. |
 | 2026-11-10 | A bundle runs no two jobs in one repository, read-only ones included. | Every job fetches into its repository's checkout and adds a worktree there, so two readers race on the same refs as two writers do. |
 | 2026-11-10 | A schedule may be a bundle: one local routine that runs catalog jobs across every repository on the machine, one `Workflow` subagent per repository and job, fed the prompt `delivery-schedule:update` assembles. Two ship: Saturday code health and Sunday devbook review. At most four subagents run, two writers, never two in one repository. Every change lands as a draft and opens no issue, verify's drift table and the digest stay in the report, and prose check lands its edits as a draft. There is no pickup check, and the checkout list is personal. | 42 routines over six repositories were a list nobody could scan, and a week's reports read best across repositories. |
 | 2026-11-05 | `devbook-skills` gains a session-start hook and `show-me` an orientation card; `delivery`'s handback, gates, and summary name the card, still with no declared dependency. | A person switching between sessions must see what a reply is about at once, and ordinary replies have no caller to name the skill. |

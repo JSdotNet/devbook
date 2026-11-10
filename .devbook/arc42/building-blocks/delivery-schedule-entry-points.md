@@ -54,7 +54,8 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devboo
 - **Lands:** every change as a draft pull request, never ready for review, even when build and
   tests passed.
 - **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle
-  report instead of `devbook-drift` issues.
+  report instead of `devbook-drift` issues, and `schedule-security-review`'s ranked findings
+  instead of `security` issues.
 - **Writes:** `schedule-prose-check` applies its findings, the one place prose check edits a
   chapter.
 - **Reports:** `schedule-weekly-update` and `schedule-whats-new` write the digest that ends the
@@ -217,7 +218,9 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 ```
 
 - **Does:** updates what is outdated, verifies the build, and opens a pull request.
-- **Shipped trigger:** minor and patch only.
+- **Shipped trigger:** minor and patch only, or the major bumps alone where
+  `.github/dependabot.yml` exists, since Dependabot groups the minor and patch updates there.
+  Unattended, a major bump is a *Needs you* row, never applied.
 - **Why:** a major version is a decision rather than an update.
 
 ### schedule-performance-review
@@ -255,7 +258,7 @@ related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc
 ```
 
 - **Does:** checks dependencies, secrets, CI hardening, and code, and opens one issue per new high
-  finding.
+  finding, or none in a bundle, whose report carries the findings.
 - **New:** a run updates what its previous run left open rather than re-reporting it.
 
 ### schedule-tech-update
