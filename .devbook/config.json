@@ -337,7 +337,7 @@
       ],
       "overrides": {
         "devbook-validate": {
-          "cron": "0 5 * * *"
+          "cron": "0 3 * * 0"
         },
         "tech-update": {
           "cron": "50 5 * * 0"
