@@ -218,9 +218,9 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 ```
 
 - **Does:** updates what is outdated, verifies the build, and opens a pull request.
-- **Shipped trigger:** minor and patch only, or the major bumps alone where
-  `.github/dependabot.yml` exists, since Dependabot groups the minor and patch updates there.
-  Unattended, a major bump is a *Needs you* row, never applied.
+- **Shipped trigger:** minor and patch only, or the major bumps alone where Dependabot covers
+  NuGet, since it proposes the minor and patch updates there. Unattended, a major bump is a
+  *Needs you* row, never applied.
 - **Why:** a major version is a decision rather than an update.
 
 ### schedule-performance-review
@@ -258,7 +258,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc
 ```
 
 - **Does:** checks dependencies, secrets, CI hardening, and code, and opens one issue per new high
-  finding, or none in a bundle, whose report carries the findings.
+  finding, or none in a bundle, whose report carries the findings at `high` and above and so
+  repeats each week what is still open.
 - **New:** a run updates what its previous run left open rather than re-reporting it.
 
 ### schedule-tech-update
