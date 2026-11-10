@@ -1,6 +1,6 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: thirteen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
 report, thirteen trigger files that fire one on a cadence, and four skills that put those
 triggers in the host's scheduler and read them back.
@@ -39,6 +39,7 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
+| `schedule-prose-check` | Runs `devbook:prose-check` over every adopted folder; as a bundle's job, applies the findings, skipping an edit a rejected earlier run proposed | A report, or in a bundle a draft pull request, one commit per chapter |
 | `schedule-security-review` | Dependencies, secrets, CI hardening, code | One issue per new high finding |
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — in a fresh context, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
@@ -69,7 +70,7 @@ and traces each to its ticket.
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
 | `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
-| `prose-check` | Sunday 06:00 | `prose-check`, every adopted folder, report only | `devbook` | A report |
+| `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a

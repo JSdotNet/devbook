@@ -167,7 +167,7 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook-derived -> marketplace.devbook "Builds the index with the checker it ships" "dependencies: devbook >=1.1.0 <2.0.0"
         marketplace.devbook-openspec -> marketplace.devbook "Lands a change as deltas against the chapters" "dependencies: devbook >=1.32.0 <2.0.0"
         marketplace.delivery-schedule -> marketplace.delivery "Targets the engine's skills and never a flow" "dependencies: delivery >=1.0.0 <2.0.0"
-        marketplace.delivery-schedule -> marketplace.devbook "Names prose-check and the devbook checks as targets" "undeclared"
+        marketplace.delivery-schedule -> marketplace.devbook "Wraps prose-check and the devbook checks" "undeclared"
         marketplace.delivery -> marketplace.devbook "Drafts devbook folders with flow-spec and checks chapters at spec-check" "undeclared, TDR 4"
         marketplace.delivery -> marketplace.devbook "Names the procedures run and capture, never the plugin" "skill name"
         marketplace.delivery -> marketplace.devbook-config "Runs devbook-config:init for a project change" "undeclared"

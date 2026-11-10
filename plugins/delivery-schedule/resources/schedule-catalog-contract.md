@@ -6,8 +6,7 @@ description: The schedule catalog contract — the schedule file, the preamble e
 # Schedule Catalog Contract
 
 A schedule is a trigger, never a procedure. It names a schedulable skill — a `schedule-*`
-entry point, or another plugin's skill that picks its own input and reports, as the
-`prose-check` entry does — gives it a cadence, and hands a local routine — a session the scheduler starts on this machine,
+entry point, or another plugin's skill that picks its own input and reports — gives it a cadence, and hands a local routine — a session the scheduler starts on this machine,
 with no memory and nobody watching — a prompt self-contained enough to run that skill
 unattended. Never a cloud session: *The Scheduler* says why. This file is the contract the catalog,
 `delivery-schedule:init`, `delivery-schedule:update`, `schedule-status`, and `schedule-run` all read; it is over the instruction

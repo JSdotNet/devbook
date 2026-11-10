@@ -136,7 +136,8 @@ procedure step that is not one short imperative action, a chapter whose
 subject is unclear at a glance, padding, text moved
 rather than cut — and word counts per chapter against a base, beside what
 `devbook:validate` reports about structure. Report only: it writes nothing, and a
-finding becomes an edit when a person makes it through the folder's flow. ADRs
+finding becomes an edit when a person makes it through the folder's flow or keeps it
+from a reviewed draft pull request. ADRs
 and TDRs are records and stay out of the prose classes.
 
 **Trigger keywords:** `prose check`, `check the chapters' prose`,
