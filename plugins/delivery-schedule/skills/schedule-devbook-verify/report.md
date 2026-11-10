@@ -20,7 +20,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 
 ### Drift
 | Verdict | Unit | Chapter | Evidence | Issue |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 
 ### Run
 | Outcome | What | Why |
@@ -30,3 +30,10 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ```
 
 *Drift* holds every row that is not `aligned`; the `aligned` rows are the count alone.
+
+## In a bundle
+
+The same shape is returned as the bundle report's cell for this repository, *Run* included, so
+a run that stopped in step 1 is a cell that says why. In *Needs you*, a `conflict` row's `Do` is `—`, the question standing in
+`What`, and a `code-ahead` row keeps the capture command. In *Drift*, `Issue` links an open
+`devbook-drift` issue that already covers the row, and is `—` otherwise.
