@@ -105,5 +105,5 @@ longer used" to everyone downstream of a plugin that installs it into their repo
 
 This repository holds the script since 2026-09-26, and uses it for `-Check` only: a session here
 never refreshes, per [the checks and indexes record](../arc42/adr/checks-and-indexes.md).
-`devbook-meta-nightly.yml` at 02:17 UTC and the daily `devbook-validate` schedule behind it refresh
-the default branch, both passing `--write` to the vendored checker.
+`devbook-meta-nightly.yml` at 02:17 UTC and the `devbook-validate` schedule behind it, weekly here
+on Sunday, refresh the default branch, both passing `--write` to the vendored checker.
