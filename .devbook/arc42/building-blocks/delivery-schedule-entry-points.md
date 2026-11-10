@@ -3,7 +3,7 @@
 ```meta
 related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 c4: ["marketplace.delivery-schedule.entry-point"]
-code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
+code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-prose-check", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
 ```
 
 The entry points of [delivery-schedule](delivery-schedule.md), a block inside it. This block
@@ -12,7 +12,7 @@ and publishes what it did without passing a gate or merging anything.
 
 **Owns**
 
-- The thirteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
+- The fourteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
 - The work script a sweep lands an item through
 - The report every run ends with
 
@@ -27,7 +27,7 @@ and publishes what it did without passing a gate or merging anything.
 related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 ```
 
-The scheduler reaches each of the thirteen skills on a cadence, or a person by hand, which is
+The scheduler reaches each of the fourteen skills on a cadence, or a person by hand, which is
 how a cadence gets proved before it is trusted. They share these contracts of
 [delivery-schedule](delivery-schedule.md#interfaces):
 
@@ -51,6 +51,8 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devboo
   tests passed.
 - **Opens:** no issue for a change. `schedule-devbook-verify`'s drift table goes into the bundle
   report instead of `devbook-drift` issues.
+- **Writes:** `schedule-prose-check` applies its findings, the one place prose check edits a
+  chapter.
 - **Reports:** `schedule-weekly-update` and `schedule-whats-new` write the digest that ends the
   Sunday devbook review, inside the bundle report.
 - **Skips:** the pickup check, since the host archives an inactive session after seven days.
@@ -68,8 +70,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
   request.
 - **Reports:** as a row, what `devbook-config:doctor`, where installed, finds that needs a person.
 - **Trigger:** the daily `devbook-validate`.
-- **Wrapper rule:** the catalog names a `schedule-*` entry point or, as with `prose-check`, a
-  read-and-report skill that picks its own input, and never a flow.
+- **Wrapper rule:** the catalog names a `schedule-*` entry point or a read-and-report skill that
+  picks its own input, and never a flow.
 
 ### schedule-devbook-verify
 
@@ -222,6 +224,24 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 - **Never:** implements while the previous run's pull request is still open. It reports, so one
   pull request never carries two findings.
 
+### schedule-prose-check
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#prose-check", ".devbook/arc42/adr/plugin-boundaries.md"]
+```
+
+- **Does:** runs `devbook:prose-check` over every adopted folder and reports its findings. It
+  writes nothing.
+- **In a bundle:** applies the findings as one draft pull request, one commit per chapter, and
+  reports the classes that ask for content a person writes. The draft carries a ledger of every
+  edit.
+- **Skips:** an edit whose chapter and sentence a closed, unmerged pull request from the same
+  schedule already proposed. A rejection is an answer.
+- **Why:** a list of findings is work a person still has to turn into edits, while a commit per
+  chapter is one they can keep or drop.
+- **Trigger:** the weekly `prose-check`, on the same wrapper rule as
+  `schedule-devbook-validate`.
+
 ### schedule-security-review
 
 ```meta
@@ -306,7 +326,7 @@ never name a flow.
 
 Also called: schedule skill, schedulable procedure.
 
-A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Thirteen
+A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Fourteen
 ship here. Input:
 
 - the unclassified issues and the top of the backlog

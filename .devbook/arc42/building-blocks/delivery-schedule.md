@@ -33,7 +33,7 @@ merging anything, or carrying anything personal into the repository.
 ```meta
 ```
 
-The block exposes nineteen skills in three groups: thirteen entry points that pick their own
+The block exposes twenty skills in three groups: fourteen entry points that pick their own
 input, each with the `report.md` template its report follows, two bundle skills that run those
 entry points across every repository on the machine, and four that put a trigger in the
 scheduler and read it back. A person can run every one by hand, which is how a cadence gets
@@ -41,7 +41,7 @@ proved before it is trusted.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, thirteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | One skill per [bundle](#bundle), two | skills | The scheduler, weekly, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
@@ -338,9 +338,11 @@ The value objects it holds:
 - **Checkout list:** the main checkouts on this machine, read from the user's devbook config
   directory. Each one's `components.schedule` selection says which jobs it gets.
 
-Inside a bundle, `prose-check` opens a draft pull request with its edits, one commit per
-chapter, and skips an edit an earlier closed pull request rejected. Its own catalog entry carries
-no editor, so the bundle is the one place prose check writes. Once a bundle's first run passes,
+Inside a bundle, `prose-check` runs
+[`schedule-prose-check`](delivery-schedule-entry-points.md#schedule-prose-check) in its bundle
+mode, which opens a draft pull request with its edits, one commit per chapter, and skips an edit
+an earlier closed pull request rejected. Its own catalog entry carries no editor, so the bundle
+is the one place prose check writes. Once a bundle's first run passes,
 the per-repository routines it replaces are deleted, so no job fires twice.
 
 ### Scheduler Resolution
@@ -464,7 +466,7 @@ one plugin here whose subject is a host capability, a divergence on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. This real dependency is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`; three wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | Four wrappers invoke `devbook:validate`, `devbook:verify-change`, `devbook:tech-update`, and `devbook:prose-check`; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body; `schedule-merge-review` reads its door; `schedule-weekly-retro` names `retro` for lenses | The skill name alone | A reviewer weighs a merge by whether it can be walked back; a retro's lenses are written once. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | As with devbook, naming is not depending: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | The [scheduler](../12-glossary.md#scheduler) the live session exposes, for a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability has two host names, Routines and Automations, and adopting either would name a host. |
@@ -489,8 +491,8 @@ block writes to GitHub only, whatever tracker the repository binds for the engin
 | A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports in the same shape, and the next updates its pull request rather than duplicating it. |
 | Backlog's `backlog-tools` | Conformist, read-only | Its devbook sweep reads three of this plugin's files by path | `report-contract.md`, `draft-pr-contract.md`, `scripts/resolve-issue.workflow.js` | That the paths stay, and that `update` leaves its routine alone. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
-targets another plugin's skill, and the plugin declares one dependency. A target that is not
+**Naming a target is deliberately weaker than depending on one.** Four entry points wrap a
+`devbook` skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, the way the engine degrades rather than fails for a
 role.
 
