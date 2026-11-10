@@ -34,14 +34,15 @@ worktree and is refused.
    each other one to `<owner>/<repo>` by its `origin` remote; the first per repository wins.
 2. **Stop in a worktree:** the routine starts in this session's folder and would outlive it.
 3. **Check `requires`** of each bundle and each of its jobs against this session's plugins, per
-   the contract's *The Prerequisite*. A job missing one is reported, and step 5 never retires it.
+   the contract's *The Prerequisite*. A job missing one is reported, and step 6 never retires it.
 4. **Resolve the local scheduler.** None: print each enabled bundle's prompt with its cron and
    continue at step 6.
 5. **Sync.** Match on `All repos · <title>`. An enabled bundle is created or updated with its
    body as the prompt, `{{name}}` and `{{title}}` substituted, without the preamble or the
    pickup gate. Its cron is local time and is not converted. Its worktree option is off: the
    bundle's skill assembles each job's prompt at run time per the contract's *The Prompt*, and
-   that prompt's preamble puts the job on a worktree of its own repository. A catalog bundle
+   has the preamble's rule 1 take its `worktree add` branch, since no job starts in a worktree
+   of its own repository. A catalog bundle
    not enabled has its routine set `enabled: false`; any other `All repos` title is left alone.
 6. **Retire** what a bundle replaced. Read the report of the bundle routine's latest finished
    run, from its run log or session. A job ran in a repository when that report's cell for the
