@@ -38,10 +38,10 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
-| `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
+| `schedule-package-update` | Updates outdated packages and verifies the build; at `major-only`, unattended, reports the major bumps alone | A pull request, or a report |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |
 | `schedule-prose-check` | Runs `devbook:prose-check` over every adopted folder; as a bundle's job, applies the findings, skipping an edit a rejected earlier run proposed | A report, or in a bundle a draft pull request, one commit per chapter |
-| `schedule-security-review` | Dependencies, secrets, CI hardening, code | One issue per new high finding |
+| `schedule-security-review` | Dependencies, secrets, CI hardening, code; as a bundle's job, opens no issue | One issue per new high finding, or in a bundle its findings in the bundle report |
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-weekly-retro` | Reviews the week's sessions for AI usage through the `retro` skill's lenses — bottlenecks, context load, model and effort fit without it — in a fresh context, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
@@ -59,7 +59,7 @@ and traces each to its ticket.
 
 | Schedule | Cadence (UTC) | Runs | Needs | Lands as |
 |---|---|---|---|---|
-| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch, or majors only where `.github/dependabot.yml` exists | `delivery-schedule`, `delivery` | A pull request |
+| `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch, or majors only where Dependabot covers NuGet | `delivery-schedule`, `delivery` | A pull request, or where Dependabot covers NuGet a report |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 10`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a brief |
 | `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
@@ -128,7 +128,7 @@ has run in their place. Nothing is written into a repository. The rules are in
 The routine runs `schedule-bundle`. Its workflow script, `skills/schedule-bundle/bundle.workflow.js`,
 reads each checkout once, runs a repository once however many checkouts share its `origin`,
 skips a job whose precondition is missing — `tech-update` where there is no `tech/` folder,
-`package-update` where there is no package manifest —
+`package-update` where there is no .NET package manifest —
 and runs one subagent per repository and job from the prompt that job's own schedule carries,
 with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
 repository, and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull

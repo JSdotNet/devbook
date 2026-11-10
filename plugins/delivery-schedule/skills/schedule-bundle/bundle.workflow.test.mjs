@@ -27,7 +27,7 @@ const schedules = Object.fromEntries([...JOBS, ...SATURDAY].map((j) => [j, { tit
 
 const checkout = (p, origin, extra = {}) => ({
   path: p, exists: true, toplevel: p, commonDirParent: p, origin, nameWithOwner: "", base: "main", stamped: true,
-  enabled: [...JOBS, ...SATURDAY], overrides: [], facts: { devbook: true, tech: true, units: true, packages: true }, ...extra,
+  enabled: [...JOBS, ...SATURDAY], overrides: [], facts: { devbook: true, tech: true, units: true, nuget: true }, ...extra,
 });
 
 const tick = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -129,8 +129,8 @@ test("checks each job's precondition before any subagent starts", async () => {
   const { result, seen } = await run({
     checkouts: ["D:/a", "D:/b"],
     reports: [
-      checkout("D:/a", "https://github.com/o/a", { facts: { devbook: true, tech: false, units: true, packages: true } }),
-      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: false, tech: false, units: false, packages: true } }),
+      checkout("D:/a", "https://github.com/o/a", { facts: { devbook: true, tech: false, units: true, nuget: true } }),
+      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: false, tech: false, units: false, nuget: true } }),
     ],
   });
   assert.deepEqual(cell(result, "o/a", "tech-update"), { repo: "o/a", job: "tech-update", state: "skipped", reason: "no `tech/` folder", pullRequest: "", report: "" });
@@ -247,10 +247,10 @@ test("Saturday code health: no package manifest skips package update at the prec
     checkouts: ["D:/a", "D:/b"],
     reports: [
       checkout("D:/a", "https://github.com/o/a"),
-      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: true, tech: true, units: true, packages: false } }),
+      checkout("D:/b", "https://github.com/o/b", { facts: { devbook: true, tech: true, units: true, nuget: false } }),
     ],
   });
-  assert.deepEqual(cell(result, "o/b", "package-update"), { repo: "o/b", job: "package-update", state: "skipped", reason: "no package manifest", pullRequest: "", report: "" });
+  assert.deepEqual(cell(result, "o/b", "package-update"), { repo: "o/b", job: "package-update", state: "skipped", reason: "no .NET package manifest", pullRequest: "", report: "" });
   assert.ok(!seen.starts.includes("package-update:o/b"));
   assert.deepEqual(seen.starts.filter((l) => l.endsWith(":o/b")), ["devbook-update:o/b", "security-review:o/b"]);
   assert.equal(cell(result, "o/a", "package-update").state, "done");

@@ -10,4 +10,5 @@ result: github
 ---
 
 Run `schedule-package-update` with strategy `minor-and-patch`, or `major-only` where
-`.github/dependabot.yml` exists: Dependabot groups the minor and patch updates there.
+`.github/dependabot.yml` has an `updates` entry with `package-ecosystem: "nuget"`: Dependabot
+proposes the minor and patch updates there.

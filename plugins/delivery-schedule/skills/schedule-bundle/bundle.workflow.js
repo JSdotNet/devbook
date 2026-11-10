@@ -39,7 +39,7 @@ const JOBS = {
   'weekly-update': { writes: false, needs: [], digest: true },
   'change-report': { writes: false, needs: [], digest: true },
   'devbook-update': { writes: true, needs: [] },
-  'package-update': { writes: true, needs: ['packages'] },
+  'package-update': { writes: true, needs: ['nuget'] },
   'security-review': { writes: false, needs: [], detail: true },
 }
 
@@ -48,7 +48,7 @@ const FACTS = {
   devbook: { check: '`.devbook/config.json` has `components.devbook` with a non-empty `adopted` list', missing: 'devbook not adopted' },
   tech: { check: 'the folder `.devbook/tech/` exists', missing: 'no `tech/` folder' },
   units: { check: 'the file `.devbook/_tools/devbook-meta/units.mjs` exists', missing: 'no sync-unit tool' },
-  packages: { check: '`git ls-files` lists a NuGet package manifest: a `*.csproj`, a `*.fsproj`, or `Directory.Packages.props`', missing: 'no package manifest' },
+  nuget: { check: '`git ls-files` lists a .NET package manifest: a `*.csproj`, `*.fsproj`, or `*.vbproj`, or `Directory.Packages.props`', missing: 'no .NET package manifest' },
 }
 
 const { bundle, schedules, preamble } = args
@@ -253,7 +253,9 @@ function settle(cell, state, reason, result) {
 // One job per repository at a time, reader or writer: every job's preamble fetches into the
 // same checkout and adds a worktree there, and two at once race on its refs. A repository's jobs
 // start in bundle order, so a reader never overtakes an earlier job there that waits for a
-// writer's slot: the stack update lands before the jobs that read what it moved.
+// writer's slot. Every job builds from the base branch, never from an earlier job's draft: the
+// order makes a run predictable and puts the stack update's finding first, since a plugin behind
+// on this machine is what a later job's failure there most often comes from.
 function canStart(cell, earlier) {
   if (running.size >= MAX_AGENTS) return false
   if ([...running].some((e) => e.cell.repo === cell.repo)) return false

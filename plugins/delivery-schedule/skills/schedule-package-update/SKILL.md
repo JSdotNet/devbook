@@ -13,8 +13,8 @@ framework upgrade, one package on request — runs through `flow-code` instead.
 
 ## Inputs
 
-- Strategy: `minor-and-patch` (default), `major`, or `major-only` — the major bumps alone, for a
-  repository where Dependabot takes the minor and patch ones.
+- Strategy: `minor-and-patch` (default), `major`, or `major-only` — the major bumps alone,
+  where Dependabot takes the minor and patch ones.
 - Dry run: `true` reports the audit and writes nothing (default `false`).
 
 ## Workflow
