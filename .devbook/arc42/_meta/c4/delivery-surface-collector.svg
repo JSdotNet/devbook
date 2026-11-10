@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1044" height="938" viewBox="0 0 1044 938" font-family="Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="[Component] jsdotnet-devbook marketplace - delivery-surface-collector">
+<title>[Component] jsdotnet-devbook marketplace - delivery-surface-collector</title>
+<desc>The run record and its export.</desc>
+<style>
+@media (prefers-color-scheme: dark) {
+  .c4-bg{fill:#0d1117}
+  .c4-ink{fill:#e6edf3}
+  .c4-muted{fill:#9198a1}
+  .c4-line{stroke:#9198a1}
+  .c4-head{fill:#9198a1}
+  .c4-edge{stroke:#9198a1}
+  .c4-fill-person{fill:#1d5c99;stroke:#6ea2d8}
+  .c4-rim-person{stroke:#6ea2d8}
+  .c4-ink-person{fill:#ffffff}
+  .c4-fill-softwareSystem{fill:#1b6ec2;stroke:#78aee6}
+  .c4-rim-softwareSystem{stroke:#78aee6}
+  .c4-ink-softwareSystem{fill:#ffffff}
+  .c4-fill-container{fill:#2f73b5;stroke:#8dbbea}
+  .c4-rim-container{stroke:#8dbbea}
+  .c4-ink-container{fill:#ffffff}
+  .c4-fill-component{fill:#2a5d8f;stroke:#9cc4ee}
+  .c4-rim-component{stroke:#9cc4ee}
+  .c4-ink-component{fill:#ffffff}
+  .c4-fill-external{fill:#484f58;stroke:#8b949e}
+  .c4-rim-external{stroke:#8b949e}
+  .c4-ink-external{fill:#ffffff}
+}
+</style>
+<defs>
+  <marker id="c4-delivery-surface-collector-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path class="c4-head" fill="#57606a" d="M0 0L10 5L0 10Z"/>
+  </marker>
+</defs>
+<rect class="c4-bg" fill="#ffffff" x="0" y="0" width="1044" height="938"/>
+<text class="c4-ink" fill="#1f2328" x="32" y="50" font-size="20" font-weight="600">[Component] jsdotnet-devbook marketplace - delivery-surface-collector</text>
+<text class="c4-muted" fill="#59636e" x="32" y="72" font-size="13">The run record and its export.</text>
+<g transform="translate(52 128)">
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="344" y="278" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="354" y="296" font-size="12" font-weight="600">L0 foundation</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="-16" y="536" width="252" height="194" rx="6"/>
+  <text class="c4-muted" fill="#59636e" x="-6" y="554" font-size="12" font-weight="600">L1 extension</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="-20" y="-32" width="980" height="202" rx="8"/>
+  <text class="c4-ink" fill="#1f2328" x="-8" y="-11" font-size="13" font-weight="600">delivery-surface-collector [Container]</text>
+  <g data-element="marketplace.delivery">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="360" y="306" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="470" y="353" font-size="15" font-weight="600" text-anchor="middle">delivery</text>
+    <text class="c4-ink-container" fill="#ffffff" x="470" y="371" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="470" y="393" font-size="12" text-anchor="middle">The delivery engine: one unit of</text>
+    <text class="c4-ink-container" fill="#ffffff" x="470" y="408" font-size="12" text-anchor="middle">work carried from request to</text>
+    <text class="c4-ink-container" fill="#ffffff" x="470" y="423" font-size="12" text-anchor="middle">review-ready change inside one…</text>
+  </g>
+  <g data-element="marketplace.delivery-schedule">
+    <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="0" y="564" width="220" height="150" rx="8"/>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="611" font-size="15" font-weight="600" text-anchor="middle">delivery-schedule</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="629" font-size="11" text-anchor="middle" opacity="0.85">[Container: Claude Code plugin]</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="651" font-size="12" text-anchor="middle">Work that runs with nobody</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="666" font-size="12" text-anchor="middle">watching, and the catalog of</text>
+    <text class="c4-ink-container" fill="#ffffff" x="110" y="681" font-size="12" text-anchor="middle">triggers that fires it.</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-collector.run-record">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="47" font-size="15" font-weight="600" text-anchor="middle">Run Record</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="65" font-size="11" text-anchor="middle" opacity="0.85">[Component: JSON]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="87" font-size="12" text-anchor="middle">One unattended run kept on disk</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="102" font-size="12" text-anchor="middle">with stages, gate decisions,</text>
+    <text class="c4-ink-component" fill="#0b2540" x="830" y="117" font-size="12" text-anchor="middle">evidence paths, and a handoff…</text>
+  </g>
+  <g data-element="marketplace.delivery-surface-collector.report-export">
+    <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="0" y="0" width="220" height="150" rx="4"/>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="54" font-size="15" font-weight="600" text-anchor="middle">Report Export</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="72" font-size="11" text-anchor="middle" opacity="0.85">[Component: Node.js]</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="94" font-size="12" text-anchor="middle">Writes the run&#39;s report from the</text>
+    <text class="c4-ink-component" fill="#0b2540" x="110" y="109" font-size="12" text-anchor="middle">recorded data, in Markdown only.</text>
+  </g>
+  <g data-relationship="marketplace.delivery-schedule -> marketplace.delivery">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M220 654C290 654 290 381 360 381"/>
+  </g>
+  <g data-relationship="marketplace.delivery -> marketplace.delivery-surface-collector.run-record">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M580 381C650 381 650 75 720 75"/>
+  </g>
+  <g data-relationship="marketplace.delivery-schedule -> marketplace.delivery-surface-collector.run-record">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M220 624L280 624Q290 624 290 614L290 284Q290 274 300 274L640 274Q650 274 650 264L650 107Q650 97 660 97L720 97"/>
+  </g>
+  <g data-relationship="marketplace.delivery-surface-collector.report-export -> marketplace.delivery-surface-collector.run-record">
+    <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M220 75L640 75Q650 75 650 65L650 63Q650 53 660 53L720 53"/>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery-schedule -> marketplace.delivery">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="192" y="494" width="197" height="48" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="290" y="509" font-size="11" text-anchor="middle">Targets the engine&#39;s skills</text>
+    <text class="c4-ink" fill="#1f2328" x="290" y="523" font-size="11" text-anchor="middle">and never a flow</text>
+    <text class="c4-muted" fill="#59636e" x="290" y="537" font-size="11" text-anchor="middle">[dependencies: delivery &gt;=1.0…</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery -> marketplace.delivery-surface-collector.run-record">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="595" y="218" width="111" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="650" y="233" font-size="11" text-anchor="middle">Is reported into</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery-schedule -> marketplace.delivery-surface-collector.run-record">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="402" y="264" width="136" height="20" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="470" y="279" font-size="11" text-anchor="middle">Records its run into</text>
+  </g>
+  <g class="c4-label" data-relationship="marketplace.delivery-surface-collector.report-export -> marketplace.delivery-surface-collector.run-record">
+    <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="396" y="58" width="148" height="34" rx="3"/>
+    <text class="c4-ink" fill="#1f2328" x="470" y="73" font-size="11" text-anchor="middle">Reads whole and writes</text>
+    <text class="c4-ink" fill="#1f2328" x="470" y="87" font-size="11" text-anchor="middle">Markdown from</text>
+  </g>
+</g>
+<g class="c4-legend">
+  <rect class="c4-fill-container" fill="#438dd5" stroke="#2e6295" stroke-width="1.5" x="32" y="890" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="64" y="903" font-size="12">Container</text>
+  <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="149" y="890" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="181" y="903" font-size="12">Component</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="8 4" x="266" y="890" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="298" y="903" font-size="12">Boundary</text>
+  <rect class="c4-edge" fill="none" stroke="#57606a" stroke-width="1" stroke-dasharray="2 3" x="376" y="890" width="24" height="16" rx="3"/>
+  <text class="c4-ink" fill="#1f2328" x="408" y="903" font-size="12">Group</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M466 898L488 898"/>
+  <text class="c4-ink" fill="#1f2328" x="498" y="903" font-size="12">Relationship</text>
+  <path class="c4-line" fill="none" stroke="#57606a" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#c4-delivery-surface-collector-arrow)" d="M603 898L625 898"/>
+  <text class="c4-ink" fill="#1f2328" x="635" y="903" font-size="12">Implied relationship</text>
+</g>
+</svg>
