@@ -61,16 +61,25 @@ A link to a process that is not listening is worse than no link.
 The draft is what a person can open from anywhere — a phone included — when every other link
 is local. It is not approval and asks for none: it stays a draft until `phase-create-pr`.
 
-1. **Commit** the change set per **The gate** in `resources/flow-phases.md` — one commit per
-   handback, whatever `policy.commit.at` says, because the draft carries it.
-2. **Push** the run's branch, setting its upstream on the first push. Never force.
-3. **Reuse or open.** An open pull request whose head is this branch is the run's draft: the
-   push updated it, so open nothing — a revise round lands here. Otherwise open one with
-   `--draft` against `policy.pr.base`, under the `pr-lane` slot: a title from the scope record
-   and a body of two lines — the outcome, and that it awaits Personal Validation.
-4. **No draft is said, never hidden.** No change set, the `pr-lane` slot unbound, no remote, or
-   a commit, push, or open that fails: name the reason or the actual error in one line and hand
-   back without it. A pull request already marked ready is reported as it is, never re-drafted.
+1. **Check a draft can open, before anything else.** It needs a change set, the `pr-lane` slot
+   bound, a remote, and a named branch — not a detached HEAD. The base is the one the caller
+   named for the run, else `policy.pr.base`, else the default branch. Then find the pull request
+   whose head is this branch, in any state:
+   - **an open draft** on that base is the run's draft — a revise round lands here;
+   - **a closed one** on that base is reopened, and converted back to a draft if it is not one;
+   - **one open and ready for review**, or **one on another base**, is not the run's: push
+     nothing and open nothing.
+2. **Commit** the change set per **The gate** in `resources/flow-phases.md` — one commit per
+   handback. Wherever a draft can open, commit whatever `policy.commit.at` says, because the
+   draft carries it; where none can, commit only under `gate`.
+3. **Push** the run's branch after the outgoing-diff check in `skills/push-branch/SKILL.md`,
+   setting its upstream on the first push. Never force.
+4. **Open** a draft when step 1 found none to reuse: `--draft` against the base, under the
+   `pr-lane` slot, with a title from the scope record and a two-line body — the outcome, and
+   that it awaits Personal Validation.
+5. **No draft is said, never hidden.** Any precondition missing, a pull request that is not the
+   run's, or a commit, push, or open that fails: name the reason or the actual error in one line
+   and hand back without it.
 
 ## Step 3 — Publish The Links
 
@@ -103,7 +112,7 @@ When the `show-me` skill is available, write this step and Step 5 per that skill
 numbered list, each item naming **where to look, what to do, and what should happen.**
 
 - **Derive it from the scope's acceptance criteria and the change set**, not from what QA
-  already drove — QA's result is presented in Step 4.
+  already drove — QA's result is presented in Step 5.
 - **Lead with what QA cannot judge** — layout, copy, spacing, tone, whether it is usable at all.
 - **Against the demo, when there is one**: per screen and walkthrough, open the demo's address
   and the app's page side by side, and name what must match — the screens, the states, the

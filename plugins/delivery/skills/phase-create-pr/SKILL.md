@@ -33,11 +33,13 @@ so once, and continue. Nothing to submit is `skipped`.
    `Closes` when merging resolves it, `Refs` when not. With the `pr-body` skill available, write
    the description per it — Summary, Evidence at the depth Verify reached, Merge Danger;
    else, with the `show-me` skill available, write each section per it.
-4. **Push, then promote the draft.** Commit and push anything left since the handback. The open
-   pull request whose head is the run's branch is the draft Personal Validation opened: set its
-   title and description, then mark it ready for review. With none — no draft was opened, or it
-   was closed — open one, not a draft, with the host's own pull-request action when the session
-   offers one, else `gh pr create` or the bound GitHub tooling. Build & Test, Verify, Spec
+4. **Push, then promote the draft.** Commit and push anything left since the handback, after
+   the outgoing-diff check in `skills/push-branch/SKILL.md`. The open draft whose head is the
+   run's branch, on the run's base, is the one Personal Validation opened: set its title and
+   description, then mark it ready for review. A closed one is reopened, never replaced. A pull
+   request with that head on another base is not the run's: block, naming both bases. With no
+   draft — none could open — open one, not a draft, with the host's own pull-request action
+   when the session offers one, else `gh pr create` or the bound GitHub tooling. Build & Test, Verify, Spec
    Check, and the recorded approval **are** the validation: never rebuild, re-run tests or QA,
    or ask again.
 5. **Apply PR-time polish** — labels, changelog — as part of this phase.

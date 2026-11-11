@@ -130,7 +130,7 @@
         "gate.reviseBudget": { "type": "integer", "minimum": 0 },
         "gate.personalValidation": { "const": "required" },
         "commit.at": {
-          "description": "Where the flow commits its change set. `gate` makes Personal Validation the single commit point — one commit per handback, a new commit per revise round, and no intermediate commits. `manual` leaves committing to the user.",
+          "description": "Where the flow commits its change set. `gate` makes Personal Validation the single commit point — one commit per handback, a new commit per revise round, and no intermediate commits. `manual` leaves earlier commits to the user; Personal Validation still commits wherever it opens a draft pull request, and leaves the handback uncommitted only where none can open.",
           "enum": ["gate", "manual"]
         },
         "pr.required": { "type": "boolean" },

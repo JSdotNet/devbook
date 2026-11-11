@@ -157,10 +157,11 @@ those contracts; it does not re-decide them per skill.
     `decline` marks the stage `blocked` and is never a silent skip. A repository may declare
     gates in front of Personal Validation; it may never remove that one.
     At Personal Validation, run `phase-personal-validation` **inline, in this session** — no
-    agent and no model — for the review handoff: the application up and healthy, the review
-    links published both on the stage and as clickable URLs in the conversation, every demo
-    the change implements listed beside them, the what-to-check list, and the code and QA
-    reviews, closing on a Verify picture and the app's URLs as the reply's last text. Then
+    agent and no model — for the review handoff: the application up and healthy, a draft pull
+    request open, the review links — the draft first — published both on the stage and as
+    clickable URLs in the conversation, every demo the change implements listed beside them,
+    the what-to-check list, and the code and QA reviews, closing on a Verify picture, the
+    draft, and the app's URLs as the reply's last text. Then
     wait for explicit approval. **Run that
     skill again on every revise round**, before asking again. Never auto-approve. Record every
     decision with `set_run_context`.
@@ -168,8 +169,9 @@ those contracts; it does not re-decide them per skill.
     session's main loop and is never spawned by another agent: a sub-agent has no user turn
     to hand control back to. If this agent finds itself without `AskUserQuestion` — the
     signal that it was launched as a sub-agent — it is in a setup it cannot complete. Report
-    that, leave `approval` as `pending`, and stop at the gate. In a genuinely unattended run,
-    a blocking gate parks the work with a handoff brief instead of waiting.
+    that, leave `approval` as `pending`, open no draft, and stop at the gate. In a genuinely
+    unattended run, a blocking gate opens the draft and parks the work with a handoff brief
+    instead of waiting.
 14. **Gate delivery.** Mark the run's draft ready for review — or open a pull request that is
     not a draft — only when the persisted `approval` is `approved`; the draft the handoff
     opens needs none. Mark the phase `skipped` when there is no change set. A host's own create-PR instruction
