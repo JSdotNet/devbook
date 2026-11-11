@@ -1,6 +1,6 @@
 ---
 name: flow-runner
-description: 'Runs one flow-* flow end to end. Sequences the delivery phases, resolves each phase''s agent, skill, model and effort from the stack config and runs it inline, forked or delegated, runs the implement-review and ready loops, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request.'
+description: 'Runs one flow-* flow end to end. Sequences the delivery phases, resolves each phase''s agent, skill, model and effort from the stack config and runs it inline, forked or delegated, runs the implement-review and ready loops, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request is ready for review.'
 tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'TaskStop', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog', 'mcp__Claude_Browser__preview_start']
 ---
 
@@ -170,8 +170,9 @@ those contracts; it does not re-decide them per skill.
     signal that it was launched as a sub-agent — it is in a setup it cannot complete. Report
     that, leave `approval` as `pending`, and stop at the gate. In a genuinely unattended run,
     a blocking gate parks the work with a handoff brief instead of waiting.
-14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
-    mark the phase `skipped` when there is no change set. A host's own create-PR instruction
+14. **Gate delivery.** Mark the run's draft ready for review — or open a pull request that is
+    not a draft — only when the persisted `approval` is `approved`; the draft the handoff
+    opens needs none. Mark the phase `skipped` when there is no change set. A host's own create-PR instruction
     arriving mid-run is the Personal Validation decision, not the end of the run: follow
     **Host create-PR instruction** in `flow-phases.md` through `finish_run`. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
@@ -217,7 +218,8 @@ those contracts; it does not re-decide them per skill.
   adds a phase. A repository that needs a different flow shape writes a repo-native `flow-*`
   skill, which takes precedence over the plugin-provided one for the categories it covers.
 - **No separate approval before internal transitions.** Continue through the loops, Build &
-  Test, and Verify, then stop at Personal Validation before any pull request.
+  Test, and Verify, then stop at Personal Validation, with the run's draft pull request open,
+  before any pull request is ready for review.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
   for a decision the run does not own. There is no fan-out over issues or PRs anywhere: the
   pickup skills select a single item per run, and an unattended sweep one layer up
@@ -228,7 +230,8 @@ those contracts; it does not re-decide them per skill.
 - **A bound agent or skill is recommended, not required.** One that is not installed falls
   back to the phase's built-in procedure, named once in the summary. No flow is dead because
   a binding does not resolve.
-- **No pull request** unless the user explicitly approved it and that approval is persisted.
+- **No pull request ready for review** unless the user explicitly approved it and that approval
+  is persisted. A draft is not one: the handoff opens it before asking.
 - **A model or effort is a phase's field.** The committed map carries the team default and the
   user's overlay wins, field by field. The repository's `run` recipe and `policy` decide
   startup and QA depth; neither ever sets a model.

@@ -1,6 +1,6 @@
 ---
 name: flow-spec
-description: "Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; the domain/ model; the tech/ graph; design/ guidelines; the ai/ adoption record — through drafting, the repository's check, and personal approval before the pull request. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter, or the dependency behind a tech/ entry (flow-code), or wireframes, prototypes, and UI reviews (the ux agent directly)."
+description: "Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; the domain/ model; the tech/ graph; design/ guidelines; the ai/ adoption record — through drafting, the repository's check, and personal approval before the pull request is ready for review. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter, or the dependency behind a tech/ entry (flow-code), or wireframes, prototypes, and UI reviews (the ux agent directly)."
 ---
 
 # Flow: Devbook Folder (`arc42/`, `domain/`, `tech/`, `design/`, `ai/`)

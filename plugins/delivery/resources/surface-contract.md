@@ -139,9 +139,12 @@ that surface's own `runId`:
 - **Say what the pass found** on the same `execution`, per **Stage Counts** below: `round` on
   Implement and Review, `blockers` on Review, `defectsFound` on Verify.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
-  surface renders direct buttons instead of making the user copy commands.
+  surface renders direct buttons instead of making the user copy commands. At Personal
+  Validation the run's draft pull request is the first entry, labelled `Draft pull request`:
+  it is the one link a person away from the machine can open.
 - **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends
-  `done`, so a surface shows the pull request against the run that produced it. A pull
+  `done` — the same pull request as the draft, now ready for review — so a surface shows the
+  pull request against the run that produced it. A pull
   request that reaches no surface is invisible there, however it was opened.
 - **For Verify**, also pass `scenarios` (one entry per tested scenario with
   `status: "pass"|"fail"|"flaky"`, `notes`, and optional evidence paths) and `monitoring` (the

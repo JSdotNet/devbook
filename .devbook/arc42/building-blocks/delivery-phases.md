@@ -212,11 +212,18 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-runner"]
 related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
-- **Does:** hand the run back to a person to look at. Bring the application up, publish the
-  review links as clickable URLs, and say what to check by hand. Present the review findings,
-  the spec-check table, and any open items.
-- **Runs again:** on every revise round.
+- **Does:** hand the run back to a person to look at. Bring the application up, commit, push,
+  and open a draft pull request, publish it first among the review links as clickable URLs,
+  and say what to check by hand. Present the review findings, the spec-check table, and any
+  open items.
+- **Runs again:** on every revise round, pushing to the same draft.
 - **Why:** a revised change set is a new thing to look at.
+
+The draft is there because every other link is local — a dev-server URL, a `file:` path — and
+a person reading the handback away from the machine can open none of them. A draft asks
+nobody to review and merges nothing, so opening it is not approval. Only marking it ready for
+review is, and that waits for the [gate](#gate). A declined run closes its draft and keeps
+the branch.
 
 When the change implements a click demo, the demo is published beside the app at the addresses
 its chapters name. The what-to-check list compares the two screen by screen, per
@@ -244,8 +251,8 @@ job: a list of commands for the person to run is a failed handback rather than a
 related: [".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
-- **Does:** open the pull request for the approved change set with the host's own action or
-  `gh`, one per run.
+- **Does:** fill in the run's draft for the approved change set and mark it ready for review,
+  one pull request per run. With no draft, it opens one with the host's own action or `gh`.
 - **With the `pr-lane` slot unbound:** writes file artifacts only and opens nothing.
 
 ### phase-report-back

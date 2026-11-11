@@ -130,7 +130,8 @@ flowchart TD
 
 - **The gate is the only place a run stops for a human, and configuration may only add more.**
   It sits before `create-pr` and never inside it, so approval is a recorded decision, not a step
-  an agent can perform on its own behalf. Personal Validation runs inline with the runner and
+  an agent can perform on its own behalf. The run reaches it with a draft pull request open,
+  and only `create-pr` marks that draft ready for review. Personal Validation runs inline with the runner and
   takes no configuration.
 - **`implement` and `review` alternate per slice, before Build & Test.** A slice is implemented,
   reviewed, and its blockers fixed before the next starts, within `policy.review.retryBudget`.

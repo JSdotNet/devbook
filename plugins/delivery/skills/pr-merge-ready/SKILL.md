@@ -224,5 +224,5 @@ Follow the **Reporting Contract** in `resources/surface-contract.md`.
   standalone when you already know what the PR needs.
 - `start-session-from-issue` — picks up the single issue whose work this skill later takes to
   merge-ready.
-- The `flow-*` flows stop at Personal Validation, before any pull request; this skill and the
-  other three lane skills own everything after that gate.
+- The `flow-*` flows stop at Personal Validation with a draft pull request, before it is ready
+  for review; this skill and the other three lane skills own everything after that gate.

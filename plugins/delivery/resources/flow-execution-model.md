@@ -319,7 +319,8 @@ that would otherwise follow it in a session already this full.
   - `changeKind`, the kind `flow-code`'s Scope derives, as soon as it is known, so a
     resumed run selects the same Verify depth.
   - `approval` (`pending` / `approved` / `rejected`) at every Personal Validation decision.
-- **Never create a pull request unless the persisted `approval` is `approved`.** If the
+- **Never mark a pull request ready for review unless the persisted `approval` is
+  `approved`;** the draft Personal Validation opens is the one pull request allowed before. If the
   run state says `pending` after a resume, re-run Personal Validation — do not rely on
   conversation memory of an approval.
 - **When Personal Validation rejects or requests changes**, set `approval: "rejected"` with

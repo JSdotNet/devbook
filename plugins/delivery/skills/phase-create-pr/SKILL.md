@@ -1,6 +1,6 @@
 ---
 name: phase-create-pr
-description: "Create Pull Request phase of every flow-*: after an approved gate, stops the app, pushes, and opens the PR from review and evidence. flow-runner only."
+description: "Create Pull Request phase of every flow-*: after an approved gate, stops the app, pushes, fills in the run's draft from review and evidence, and marks it ready for review. flow-runner only."
 ---
 
 # Phase: Create Pull Request
@@ -8,11 +8,13 @@ description: "Create Pull Request phase of every flow-*: after an approved gate,
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 **Does**
-- Stops the runtime, pushes, opens the PR with a description from the review and evidence
+- Stops the runtime, pushes, writes the description from the review and evidence, and marks the
+  run's draft ready for review
 
 **Doesn't**
 - Run before an approved gate
 - Re-run tests or QA
+- Open a second pull request beside the run's draft
 
 Both flows, inline, after Personal Validation. Open the change under whatever the `pr-lane`
 slot resolves to; with none, write the change set and the description as file artifacts, say
@@ -31,9 +33,13 @@ so once, and continue. Nothing to submit is `skipped`.
    `Closes` when merging resolves it, `Refs` when not. With the `pr-body` skill available, write
    the description per it — Summary, Evidence at the depth Verify reached, Merge Danger;
    else, with the `show-me` skill available, write each section per it.
-4. **Push, then open** with the host's own pull-request action when the session offers one,
-   else `gh pr create` or the bound GitHub tooling. Build & Test, Verify, Spec Check, and the
-   recorded approval **are** the validation: never rebuild, re-run tests or QA, or ask again.
+4. **Push, then promote the draft.** Commit and push anything left since the handback. The open
+   pull request whose head is the run's branch is the draft Personal Validation opened: set its
+   title and description, then mark it ready for review. With none — no draft was opened, or it
+   was closed — open one, not a draft, with the host's own pull-request action when the session
+   offers one, else `gh pr create` or the bound GitHub tooling. Build & Test, Verify, Spec
+   Check, and the recorded approval **are** the validation: never rebuild, re-run tests or QA,
+   or ask again.
 5. **Apply PR-time polish** — labels, changelog — as part of this phase.
 
 Pass the pull request URL in `links` on this stage, per **Reporting Contract** in

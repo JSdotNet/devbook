@@ -372,7 +372,8 @@ related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/flow-en
 Also called: flow skill, staged procedure.
 
 A flow is a staged procedure named for what changes. It runs start to finish in one session and
-passes the Personal Validation gate before its pull request. Two ship here: `flow-code` for every
+reaches the Personal Validation gate with a draft pull request, and passes the gate before that
+pull request is ready for review. Two ship here: `flow-code` for every
 change to the code and `flow-spec` for the five devbook folders. Each owns its
 [phase](delivery-phases.md#phase) order and the [tier](#phase-tier) that order makes.
 
@@ -384,7 +385,7 @@ this one into something else.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | A flow never leaves its session | all stages | untested |
-| A flow passes Personal Validation before its pull request and holds no other mandatory gate | phase sequencing | untested |
+| A flow passes Personal Validation before its pull request is ready for review and holds no other mandatory gate | phase sequencing | untested |
 | Configuration chooses among behaviour the engine already implements and never introduces new behaviour | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | `flow-spec` in a repository that has not adopted the target folder stops at Scope and says so | `phase-scope` | untested |
 | A flow shipped by a higher layer, or a repo-native `flow-*`, declares its own phase ids; the engine never assigns them | phase resolution | untested |
@@ -734,8 +735,8 @@ flowchart TD
 - **The gate is the only place a run stops for a person, and configuration may only add more.**
   It sits before `create-pr` and never inside it, so approval is a recorded decision rather
   than a step an agent performs on its own behalf. What the person is shown there is a phase
-  skill and repeats on every revise round: the running app, the links, the what-to-check list,
-  the review findings, and the spec-check table. The decision itself is not a skill and cannot
+  skill and repeats on every revise round: a draft pull request, the running app, the links,
+  the what-to-check list, the review findings, and the spec-check table. The decision itself is not a skill and cannot
   be configured away.
 - **Review runs in tandem with implement, per slice, before Build & Test.** A slice is
   implemented, reviewed, and its blockers fixed before the next one starts, so the suites run
