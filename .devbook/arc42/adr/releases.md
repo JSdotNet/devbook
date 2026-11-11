@@ -1,12 +1,12 @@
 # Releases
 
 ```meta
-date: 2026-11-05
+date: 2026-11-11
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 c4: ["marketplace"]
 ```
 
-Every plugin carries the same version — `1.35.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.36.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -81,6 +81,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-11 | Every plugin is `1.36.0`. `delivery` reaches Personal Validation with a draft pull request: the handback commits, pushes, and opens the draft — or pushes to the one a revise round already has — and lists it first in the stage's `links`; `create-pr` marks that draft ready for review, and a decline closes it. The gate guards *ready for review*, not the pull request, per [the flow engine](flow-engine.md). A repository's `create-pr` approval gate that says nothing is pushed until asked no longer describes the run, and is the repository's to reword. No key changes, so no contract moves and no migration is owed. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-05 | Every plugin is `1.35.0`. `devbook-writing.md` states the goal of efficient, readable delivery in the fewest plain words and loads under `openspec/changes/`; `prose-check` gains `padding`, `moved-text`, `no-glance`, and word counts against a base; `chapter-review` gains a Delivery lens; `show-me` gains an orientation card that `delivery` opens handbacks, gates, summaries, and comments with; `devbook-skills` gains a session-start hook. | Chapters grew under `1.34.0`, and a person switching between sessions must see at once what something is about. No contract changed, and reconcile replaces the rule and its wrappers on its own, so no migration is owed. |
 | 2026-11-03 | Every plugin is `1.34.0`. `devbook`'s `delta.mjs` merges prose directly under a `delta: modified` chapter's heading as the chapter's new lead — the text between its `meta` block and its first subsection, a file's intro under `#` included — keeping the block, where it refused the delta before. `devbook-openspec`'s delta template shows the slot. Only a delta that was refused merges differently, so no contract moves and no migration is owed; a delta that merges where it could not is a minor release. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-03 | Every plugin is `1.33.0`. A split scenarios file may have subpages, `scenarios.<name>.<page>.md`, one level deep: `devbook`'s scenario tools read a subpage as a scenarios file, so its journeys are signed, coverage-checked, and run, with runs in `scenarios.<name>.<page>/<journey>/`, and `devbook-naming`, `devbook-chapter-metadata`, and `devbook-domain` describe it. The checker already accepted the shape. A file shape is added and none is removed, so no contract moves and no migration is owed; reconcile replaces the delivered rules and the scenario tools on a shipped hash. A minor release for the new shape. The other plugins move unchanged. | Every plugin moves together. |

@@ -402,7 +402,10 @@ key means the engine's own choice rather than undefined.
 defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
 stage commits** and `phase-implement` is briefed to leave committing to that phase.
 The mechanics — one commit per handback, a new commit per revise round — are in **Personal
-Validation** (`flow-phases.md`). `manual` leaves committing to the user.
+Validation** (`flow-phases.md`). `manual` lets earlier stages leave committing to the user,
+but Personal Validation still commits at every handback wherever it opens a draft pull
+request — the draft carries the commit — so `manual` leaves the handback uncommitted only where
+the `pr-lane` slot is unbound or there is no remote.
 
 `pr.base` is the one value that is neither enum nor number. The check validates its *shape* —
 a well-formed git ref name, so free prose is rejected by pattern — and nothing more. Whether

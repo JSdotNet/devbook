@@ -18,7 +18,7 @@ instead of by repository.
 
 | Kind | Members |
 |---|---|
-| `flow-*` (2) | A staged procedure named for what changes, run start to finish in **one** session and passing the Personal Validation gate before its pull request: `flow-code` for every change to the code, in seven kinds — `feature`, `create`, `refactor`, `defect`, `config`, `dependency`, `project` — and `flow-spec` for the devbook folders |
+| `flow-*` (2) | A staged procedure named for what changes, run start to finish in **one** session and reaching the Personal Validation gate with a draft pull request and passing it before that pull request is ready for review: `flow-code` for every change to the code, in seven kinds — `feature`, `create`, `refactor`, `defect`, `config`, `dependency`, `project` — and `flow-spec` for the devbook folders |
 | `phase-*` (15) | One phase of a flow, run by the flow-runner and never directly: `phase-update-base`, `phase-scope`, `phase-plan`, `phase-implement`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary`, and `flow-spec`'s own `phase-drafting` and `phase-check-review` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |

@@ -94,7 +94,7 @@ different item, because the previous one is filtered out as in flight.
      one. Do not proceed until they answer.
    - **Unattended run** (a scheduled run, no user turn available): proceed without
      confirmation. The scope is one item, the Phase 5 claim prevents a double pickup, and
-     the flow still stops at Personal Validation before any pull request.
+     the flow still stops at Personal Validation before any pull request is ready for review.
 
 ### Phase 4 — Route to a Flow
 

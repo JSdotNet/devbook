@@ -1,6 +1,6 @@
 ---
 name: phase-personal-validation
-description: "Personal Validation handoff of flow-code and flow-spec: starts the app, publishes review links and demos, presents the results, never approves. flow-runner only."
+description: "Personal Validation handoff of flow-code and flow-spec: starts the app, opens a draft pull request, publishes review links and demos, presents the results, never approves. flow-runner only."
 ---
 
 # Phase: Personal Validation — The Review Handoff
@@ -10,17 +10,18 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 **Does**
 
 - Starts the app, publishes the review links and a short what-to-check list
+- Commits, pushes, and opens a **draft** pull request — or pushes to the one it already opened
 - Lists every demo the change implements beside the app, opened where the chapters point
 - Lists the screenshots of every journey Verify ran beside the review links
 - Presents the review, QA and spec-check results
-- Commits the change set when `commit.at` is `gate`
-- Closes on one picture from Verify and the running app's URLs, then waits
+- Closes on one picture from Verify, the draft, and the running app's URLs, then waits
 
 **Doesn't**
 
 - Approve, or let anything approve for you
+- Mark the draft ready for review — that is `phase-create-pr`'s, after approval
 - Take a phases entry
-- Run without a person (it parks)
+- Run without a person (it opens the draft, then parks)
 
 It answers one question for the person the run hands back to: *what do I open, and what am I
 looking for?* The approve / revise / decline gate that follows belongs to the `flow-runner`
@@ -52,13 +53,39 @@ A link to a process that is not listening is worse than no link.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command; never
   hand back a review the person cannot perform.
 - **Nothing to start** — a `flow-spec` run, or `phase-verify.app` set to `null` — skips the
-  startup and the app's links, says so in one line, publishes a demo as Step 2 says, and goes
-  to Step 3 over the changed files.
+  startup and the app's links, says so in one line, opens the draft and publishes a demo as
+  Steps 2 and 3 say, and goes to Step 4 over the changed files.
 
-## Step 2 — Publish The Links
+## Step 2 — Open The Draft
+
+The draft is what a person can open from anywhere — a phone included — when every other link
+is local. It is not approval and asks for none: it stays a draft until `phase-create-pr`.
+
+1. **Check a draft can open, before anything else.** It needs a change set, the `pr-lane` slot
+   bound, a remote, and a named branch — not a detached HEAD. The base is the one the caller
+   named for the run, else `policy.pr.base`, else the default branch. Then find the pull request
+   whose head is this branch, in any state:
+   - **an open draft** on that base is the run's draft — a revise round lands here;
+   - **a closed one** on that base is reopened, and converted back to a draft if it is not one;
+   - **one open and ready for review**, or **one on another base**, is not the run's: push
+     nothing and open nothing.
+2. **Commit** the change set per **The gate** in `resources/flow-phases.md` — one commit per
+   handback. Wherever a draft can open, commit whatever `policy.commit.at` says, because the
+   draft carries it; where none can, commit only under `gate`.
+3. **Push** the run's branch after the outgoing-diff check in `skills/push-branch/SKILL.md`,
+   setting its upstream on the first push. Never force.
+4. **Open** a draft when step 1 found none to reuse: `--draft` against the base, under the
+   `pr-lane` slot, with a title from the scope record and a two-line body — the outcome, and
+   that it awaits Personal Validation.
+5. **No draft is said, never hidden.** Any precondition missing, a pull request that is not the
+   run's, or a commit, push, or open that fails: name the reason or the actual error in one line
+   and hand back without it.
+
+## Step 3 — Publish The Links
 
 - **Both places, every time.** Pass them as `links` on the stage so the surface renders
   buttons, **and** write them as clickable URLs in the conversation.
+- **The draft first**, labelled `Draft pull request`, in `links` and in the conversation.
 - **Deep-link to what changed** — the route, page, or endpoint the change set touches, not the
   site root. **Then the supporting ones:** the runtime dashboard, the health endpoint, any second
   surface the change reaches.
@@ -74,17 +101,18 @@ A link to a process that is not listening is worse than no link.
   shows, so the person can hold the run against the live page. Name a journey Verify recorded as
   not run, with its reason, instead of reusing an older run's images. They are files on disk,
   so they need no health check: link each as a `file:` URL, report one whose file is missing
-  instead of linking it, and display them as **Show image evidence** in Step 4 says.
+  instead of linking it, and display them as **Show image evidence** in Step 5 says.
 - **Label each one** with what it is for, in the person's terms.
-- **Publish nothing unconfirmed.** Every URL here was reachable in Step 1.
+- **Publish nothing unconfirmed.** Every app URL here was reachable in Step 1; the draft's is
+  the one Step 2 got back.
 
-## Step 3 — Say What To Check
+## Step 4 — Say What To Check
 
-When the `show-me` skill is available, write this step and Step 4 per that skill. A short
+When the `show-me` skill is available, write this step and Step 5 per that skill. A short
 numbered list, each item naming **where to look, what to do, and what should happen.**
 
 - **Derive it from the scope's acceptance criteria and the change set**, not from what QA
-  already drove — QA's result is presented in Step 4.
+  already drove — QA's result is presented in Step 5.
 - **Lead with what QA cannot judge** — layout, copy, spacing, tone, whether it is usable at all.
 - **Against the demo, when there is one**: per screen and walkthrough, open the demo's address
   and the app's page side by side, and name what must match — the screens, the states, the
@@ -97,7 +125,7 @@ numbered list, each item naming **where to look, what to do, and what should hap
 - **For a `flow-spec` run, or a chapter Spec Check edited**, list the chapters by path and the
   specific claim in each one to read for.
 
-## Step 4 — Present The Results
+## Step 5 — Present The Results
 
 In this order:
 
@@ -118,24 +146,22 @@ the host offers — reading an image into your own context shows the person noth
 host cannot display images, give each path as a clickable link and say once why. A video, a
 trace, or a log extract stays a clickable path.
 
-## Step 5 — Commit
-
-When `policy.commit.at` is `gate`, commit the change set before handing back, per **The gate**
-in `resources/flow-phases.md`, and report the result; under `manual`, commit nothing. In an
-unattended run there is no one to hand back to: park per **The gate**, `approval` left
-`pending`, and skip Step 6.
-
 ## Step 6 — Close On The App, Then Hand Back
 
+In an unattended run there is no one to hand back to: park per **The gate**, `approval` left
+`pending`, with the draft's URL in the brief, and skip this step.
+
 The person reads the end of the reply first and scrolls least, so the reply ends here. Write
-this block **after everything else** — results, commit report, any wrap-up or status text —
-so nothing pushes it out of view, and repeat it on every revise round.
+this block **after everything else** — results, commit and draft report, any wrap-up or status
+text — so nothing pushes it out of view, and repeat it on every revise round.
 
 1. **One picture from Verify**, displayed inline per **Show image evidence**: the screenshot of
    the screen the change touches most, or a failed part's `failureShot` when one failed. Under
    it, one line naming the scenario, part, and outcome it shows. When Verify took no
    screenshot — skipped, startup-only, nothing to start — say so in one line instead.
-2. **The running app's URLs**, as clickable labelled links, each one confirmed in Step 1: the
+2. **The draft pull request**, labelled `Draft pull request`, or the one line saying why there
+   is none.
+3. **The running app's URLs**, as clickable labelled links, each one confirmed in Step 1: the
    deep link to what changed first, then the dashboard, the health endpoint, and any second
    surface. Nothing to start: say in one line that no app is running.
 
@@ -144,5 +170,5 @@ Then stop and wait for the gate.
 ## Dashboard Reporting
 
 Report as the `Personal Validation` stage via the **Reporting Contract** in
-`resources/surface-contract.md`, passing `links` for the started application and every review
-target. The flow-runner owns the `approval` values recorded with `set_run_context`.
+`resources/surface-contract.md`, passing `links` with the draft pull request first, then the
+started application and every review target. The flow-runner owns the `approval` values recorded with `set_run_context`.

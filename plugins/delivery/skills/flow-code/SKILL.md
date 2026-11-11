@@ -1,6 +1,6 @@
 ---
 name: flow-code
-description: "Run any change to a repository outside its devbook folders, end to end — a feature, bug fix, refactor, new module or service, tooling, CI, scripting, housekeeping, a dependency or framework move, or scaffolding a repository — with review, verification, and personal approval before the pull request. DO NOT USE FOR: a devbook chapter (flow-spec)."
+description: "Run any change to a repository outside its devbook folders, end to end — a feature, bug fix, refactor, new module or service, tooling, CI, scripting, housekeeping, a dependency or framework move, or scaffolding a repository — with review, verification, and personal approval before the pull request is ready for review. DO NOT USE FOR: a devbook chapter (flow-spec)."
 ---
 
 # Flow: Code Change

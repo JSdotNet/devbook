@@ -289,9 +289,10 @@ Also called: handoff.
 What an unattended run does wherever a gate would be: stop, and write a brief naming exactly
 what a person has to look at. The brief says what is done, what is not, and the exact invocation
 to resume. It is neither approval nor failure: a parked change is finished work waiting on a
-judgement, not broken work waiting on a fix. The issue sweep is the one entry point that does not
-park. It moves the judgement onto a draft pull request instead, with what could not be proved
-written in the body.
+judgement, not broken work waiting on a fix. A flow that parks at Personal Validation opens its
+draft pull request first and names it in the brief. The issue sweep is the one entry point that
+does not park. It moves the judgement onto a draft pull request instead, with what could not be
+proved written in the body.
 
 ## Personal Validation
 
@@ -308,8 +309,9 @@ The mandatory gate every flow ends at, and an instance of the gate pattern rathe
 mechanism. It uses no agent and no model: it hands control back to the person and waits.
 
 Its two parts stay deliberately separate. The **review handoff** is a procedure: bring the
-application up, publish the links with any demo the change implements beside them, and say what
-to check by hand. It repeats on every revise round, because a revised change set is a new thing to
+application up, open a draft pull request, publish the links — the draft first — with any demo
+the change implements beside them, and say what to check by hand. Opening the draft is not
+approval; only marking it ready for review waits for the gate. It repeats on every revise round, because a revised change set is a new thing to
 look at. The **gate** is the decision, and it happens once
 per pass. Splitting them lets the presentation be a phase skill without any of it becoming
 configurable. A repository may declare gates in front of this one and may never remove it.

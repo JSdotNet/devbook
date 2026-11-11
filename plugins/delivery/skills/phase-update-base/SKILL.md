@@ -26,9 +26,11 @@ a branch is stale whenever the local default branch is behind, and nothing later
    **Never stash**: the stash stack is shared by every worktree, so an entry left here can be
    popped by another session.
 3. **Never rebase a branch with an open pull request.** Mark it `skipped` and name
-   `update-pr-branch`: a rewrite detaches review comments and moves code under a reviewer.
+   `update-pr-branch`: a rewrite detaches review comments and moves code under a reviewer. The
+   draft an earlier handback opened counts: its branch is pushed.
 4. **Fast-forward** when the branch carries no commits of its own; otherwise **rebase** its
-   own commits onto the fetched tip. That history is still private, so rewriting it is safe.
+   own commits onto the fetched tip. With no pull request that history is still private, so
+   rewriting it is safe.
 5. **Block on conflict.** Abort the rebase so the tree is exactly as it was, mark the phase
    `blocked` with the conflicting paths, and stop before the flow's next phase. A base
    conflict is work with its own scope; never fold it into this run.
