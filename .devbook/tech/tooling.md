@@ -45,11 +45,11 @@ negotiated rather than held:
   `@github/copilot-sdk/extension`, which their host supplies at load time, per
   [the SDK entry](hosts.md#copilot-extension-sdk). Only the scenario tools, below, also import
   something they do not ship.
-- **The scenario tools' two Playwright files are the other exception.** `setup.ts` and `shot.ts`
-  under `plugins/devbook/tools/scenarios/` use `@playwright/test`, which the adopting repository's
-  own e2e suite supplies. `playwright.mjs` resolves it from the running Playwright, so a suite that
-  is its own npm package works. The folder's `package.json` loads both as ES modules under an ES
-  module suite. A CommonJS suite needs Node 22.12 to load the `.mjs` modules beside them. Every
+- **The scenario tools' Playwright file is the other exception.** `shot.ts` under
+  `plugins/devbook/tools/scenarios/` uses `@playwright/test`, which the adopting repository's own
+  e2e suite supplies. `playwright.mjs` resolves it from the running Playwright, so a suite that is
+  its own npm package works. The folder's `package.json` loads it as an ES module under an ES
+  module suite. A CommonJS suite needs Node 22.12 to load the `.mjs` modules beside it. Every
   `.mjs` there stays on `node:` built-ins: the parser, the signature, the reporter, the coverage
   check, the loader.
 

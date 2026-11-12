@@ -166,7 +166,7 @@ from the journey to its proof:
 | Skill | Does |
 | --- | --- |
 | `scenario-write` | Writes or revises the journey in its context's `scenarios.md` — setup fields, English steps, screenshot labels — and the `Proved by:` line in every requirement case it proves |
-| `scenario-derive` | Writes or re-derives the spec from the journey: the header and signature, the setup call, one test per part titled as its `###`, one step per step, the `shot` calls. Leaves a step body the journey cannot say to the implementer, never edits the setup hook, and builds on `qa:playwright-e2e-authoring` when it is installed |
+| `scenario-derive` | Writes or re-derives the spec from the journey: the header and signature, one test per part titled as its `###`, one step per step, the `shot` calls, grouped and set up the way the suite's other journey specs are. Leaves a step body the journey cannot say to the implementer, never edits the suite's fixtures, and builds on `qa:playwright-e2e-authoring` when it is installed |
 | `scenario-run` | Runs one journey or all of them, each under its own profile, so the reporter writes `run.json` and the screenshots beside the scenarios file |
 
 The journey is the source throughout: a finding is fixed by bringing the spec to the journey.
@@ -445,8 +445,8 @@ node .devbook/_tools/scenarios/check.mjs          # coverage: every journey agai
 node .devbook/_tools/scenarios/signature.mjs <scenarios.md>#<journey>   # the signature a spec's header takes
 ```
 
-The scenario tools connect a repository's e2e suite to its journeys: the parser, the
-signature and its shared vector, the setup runner and `shot` helper a derived spec imports,
+The scenario tools point a repository's e2e suite at its journeys, and leave running it to the suite: the parser, the
+signature and its shared vector, the `shot` helper a derived spec imports,
 the reporter that writes `run.json` and the screenshots, and the coverage check. Materialized
 only where `domain/` is adopted. The contract and the wiring are
 [tools/scenarios/README.md](tools/scenarios/README.md).
@@ -526,7 +526,10 @@ not place; the sixteenth is `038-workflow-state-leaves-the-chapter`, which delet
 outside `tech/` and `ai/`, the six `approved-*` and `accepted-*` fields, `sync`, `issue`,
 `effort`, `roadmap`, and `change` from every block, renames a `tech/` or `ai/` `status` to
 `rating`, reports each value it took off, and writes no export file, because each host imports
-the state from the default branch's Markdown first.
+the state from the default branch's Markdown first; the seventeenth is `038-journey-specs-own-runner`,
+which moves the scenario runner a repository's specs import out of `.devbook/_tools/scenarios/`
+into the repository, its own copy first, and points every import at it, now that devbook no
+longer ships one.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -703,7 +706,7 @@ After running `devbook:init`, a repository that adopted everything has:
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
     ├── devbook-tech/                # deterministic package inventory scripts
-    └── scenarios/                   # journey parser, signature, runner, reporter, coverage check
+    └── scenarios/                   # journey parser, signature, shot helper, reporter, coverage check
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .github/
 └── workflows/devbook-meta.yml       # the CI check

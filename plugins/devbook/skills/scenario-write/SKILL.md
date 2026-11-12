@@ -50,5 +50,5 @@ or a setup field changed here turns the last run stale until the spec is re-deri
 
 ## Do not
 
-- Write the spec, the setup hook, `profiles.json`, a `run.json`, or a screenshot.
+- Write the spec, the suite's fixtures, `profiles.json`, a `run.json`, or a screenshot.
 - Rewrite a step to match what the spec or the application does: the journey is the source.

@@ -111,7 +111,7 @@ scaffold included. `tdd-rules.md` holds the test-first rules ported from Matt Po
 
 For each journey `scope` listed, it invokes devbook's `scenario-derive` in the first slice the
 journey crosses, before that slice's code. It fills the step bodies the change builds. It never
-edits the journey, the setup hook, or the profiles, because the journey is the source. A journey
+edits the journey, the suite's fixtures, or the profiles, because the journey is the source. A journey
 that cannot be derived is a spec problem returned to `scope`.
 
 ### phase-review
