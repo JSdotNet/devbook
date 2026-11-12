@@ -78,8 +78,8 @@ The schedules for `validate`, `tech-update`, and `verify-change` reach them thro
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
 | `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links |
-| `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | Derived specs import the runner and its `shot` helper; the repository's Playwright config names the reporter, which writes `run.json` and the screenshots |
-| `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The runner and `shot` helper, which take `@playwright/test` from the suite that runs them and load as ES modules, so a suite that is its own npm package needs no mapping |
+| `scenarios/shot.ts`, `scenarios/report.mjs` | `shot` helper and Playwright reporter | Derived specs import the `shot` helper; the repository's Playwright config names the reporter, which writes `run.json` and the screenshots |
+| `scenarios/playwright.mjs`, `scenarios/package.json` | Playwright loader and module scope | The `shot` helper, which takes `@playwright/test` from the suite that runs it and loads as an ES module, so a suite that is its own npm package needs no mapping |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog address and talk to a demo through it and never extend it |
@@ -791,21 +791,22 @@ a package-derived fact is reproducible and a hand-written one is visibly not.
 ### Scenario Tools
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#devbook-folder"]
+related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#devbook-folder", ".devbook/arc42/adr/journey-specs.md"]
 ```
 
 Also called: the scenario tooling, `.devbook/_tools/scenarios/`.
 
 ```mermaid
 flowchart TD
-    spec["Derived spec: the journey's address and signature"] --> runner["Runner: resolve the effective configuration"]
-    runner --> hook["The repository's own setup hook"]
-    hook --> browser["One browser context per portal, opening start"]
-    browser --> reporter["Reporter: run.json version 3, one screenshot per shot: label"]
+    journey["Journey in scenarios.md: setup fields, parts, steps, shot: labels"] --> spec["The repository's spec: header with address and signature, one test per part"]
+    spec --> suite["The repository's suite: fixtures, grouping, sign-in"]
+    suite --> reporter["Reporter: run.json version 3, one screenshot per shot: label"]
     reporter --> folder["The journey's run folder beside its scenarios file"]
 ```
 
-Connects a repository's e2e suite to its journeys through files, not a runtime. Profiles live in
+Connects a repository's e2e suite to its journeys through files, not a runtime. devbook points
+at a journey's spec and leaves running it to the suite, per the
+[journey specs record](../adr/journey-specs.md). Profiles live in
 `.devbook/scenarios/profiles.json`. The reporter writes into `scenarios/<journey>/`, in the
 working tree, so the run is committed with the change.
 
@@ -838,9 +839,10 @@ scope lists.
 - `scenario-write` writes the journey in its context's `scenarios.md` and the `Proved by:` lines
   that point at its parts. A person reaches it from a chapter that needs a journey.
 - `scenario-derive` brings a spec to the journey: the header from `signature.mjs`, one test per
-  part, one step per step, the `shot` calls. It leaves what the journey cannot say to the
-  implementer and never touches the setup hook. A person reaches it when the coverage check
-  names it, and delivery from `implement`.
+  part, one step per step, the `shot` calls. It groups the parts and applies the setup the way
+  the suite's other journey specs do. It leaves what the journey cannot say to the implementer
+  and never touches the suite's fixtures. A person reaches it when the coverage check names it,
+  and delivery from `implement`.
 - `scenario-run` runs whole journeys, so the reporter writes, and reports each part's outcome. A
   person reaches it to prove a page, and delivery from `verify`.
 
@@ -852,13 +854,13 @@ marketplace: where it is not installed, the repository's own specs are the model
 | The signature agrees with the shared vector, and a caption, the lead, or whitespace does not change it | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
 | The signature CLI prints one `<signature>  <address>` line per journey of a scenarios file, or the one an address names, and exits 1 on a path that is not a scenarios file or an address that names no journey | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
 | A filtered run writes nothing; a label the run did not reach keeps its file; a label the journey dropped is pruned; the run lands beside the scenarios file | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
-| A part is grouped under the spec of its file suite, not the `setup.ts` that declares it | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| A part is grouped under the spec of its file suite, not a helper that declares it | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | A run that executed none of a journey's parts, such as a listing, writes nothing | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | A failed part records the journey step that threw, numbered across the part, and its message | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | Each shot records the signature of the run that took it, and a kept shot keeps its own | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
-| The runner takes `@playwright/test` from the running Playwright before its own folder, and loads as an ES module | `playwright.mjs`, `package.json` | `unit:node:plugins/devbook/tools/scenarios/playwright.test.mjs` |
-| `runSetup` declares `dataFolder` as taking a name, so a consumer's `tsc` passes through `setup.ts` | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
-| The effective configuration is the profile, then the journey's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
+| The `shot` helper takes `@playwright/test` from the running Playwright before its own folder, and loads as an ES module | `playwright.mjs`, `package.json` | `unit:node:plugins/devbook/tools/scenarios/playwright.test.mjs` |
+| The effective configuration is the profile, then the journey's flags and settings | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
+| A spec that imports the runner devbook used to ship is pointed at the repository's own copy of it, customizations kept, and a second run changes nothing | migration `038-journey-specs-own-runner` | `unit:node:plugins/devbook/migrations/038-journey-specs-own-runner/migrate.test.mjs` |
 | Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
 | The demo sync replaces only a stale `signature` and drifted step `text`, keeps a copy's keyword style, leaves a current demo byte for byte, and with `--check` writes nothing and exits 1 while either remains | `demo-sync.mjs` | `unit:node:plugins/devbook/tools/scenarios/demo-sync.test.mjs` |
 | A path taken from an argument, a scenarios file, a spec header, or a profile that resolves outside the repository is reported the way that tool reports a bad path, and is never read or written | `resolveInside` in `parse.mjs`, and in devbook-meta's `paths.mjs` | `unit:node:plugins/devbook/tools/scenarios/parse.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/paths.test.mjs` |

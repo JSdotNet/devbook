@@ -20,7 +20,7 @@ workspace "jsdotnet-devbook" {
                     index-generator = component "Index Generator" "The checker that walks the corpus and builds the graph, the outline, and the registers." "Node.js"
                     chapter-review = component "Chapter Review" "Reads a chapter against its folder's rules and posts one note per objection through devbook.decision@1." "Skill"
                     tech-inventory = component "Tech Inventory" "Scripts that read package manifests and emit deterministic JSON." "Node.js"
-                    scenario-tools = component "Scenario Tools" "The runner, reporter, signature, coverage check, and demo sync that tie end-to-end specs to scenario pages." "Node.js"
+                    scenario-tools = component "Scenario Tools" "The signature, shot helper, reporter, coverage check, and demo sync that point end-to-end specs at journeys." "Node.js"
 
                     group "devbook-code-sync" {
                         unit-lister = component "Unit Lister" "Lists every sync unit and group with its effective sync direction." "Node.js"
