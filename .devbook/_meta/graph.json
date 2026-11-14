@@ -9,22 +9,22 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 662,
-    "edges": 1650,
+    "nodes": 671,
+    "edges": 1675,
     "nodesByFolder": {
-      "arc42": 635,
+      "arc42": 644,
       "tech": 14,
       "design": 3,
       "ai": 10
     },
     "nodesByType": {
-      "file": 61,
-      "chapter": 491,
+      "file": 62,
+      "chapter": 499,
       "element": 86,
       "view": 24
     },
     "nodesByKind": {
-      "none": 532,
+      "none": 541,
       "platform": 4,
       "library": 1,
       "format": 1,
@@ -47,12 +47,12 @@
       "candidate": 4
     },
     "edgesByType": {
-      "contains": 569,
-      "related": 837,
+      "contains": 577,
+      "related": 853,
       "depends-on": 9,
       "relationship": 124,
       "embeds": 24,
-      "c4": 67,
+      "c4": 68,
       "c4-touches": 20
     }
   },
@@ -642,7 +642,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "phase",
           "level": 2,
-          "line": 330,
+          "line": 332,
           "date": "2026-10-05",
           "related": [
             ".devbook/arc42/adr/flow-engine.md",
@@ -662,7 +662,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "gate",
           "level": 2,
-          "line": 369,
+          "line": 371,
           "date": "2026-10-05",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#phase"
@@ -678,7 +678,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "surface",
           "level": 2,
-          "line": 386,
+          "line": 388,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/05-building-block-view.md#surface-plugins",
@@ -698,7 +698,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "host-slot",
           "level": 2,
-          "line": 431,
+          "line": 433,
           "date": "2026-09-23",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#host",
@@ -715,7 +715,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "role",
           "level": 2,
-          "line": 451,
+          "line": 453,
           "date": "2026-10-05",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#agent",
@@ -735,7 +735,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "tracker",
           "level": 2,
-          "line": 476,
+          "line": 478,
           "date": "2026-09-03"
         }
       },
@@ -748,7 +748,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "stamp",
           "level": 2,
-          "line": 488,
+          "line": 490,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#migration",
@@ -767,7 +767,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "migration",
           "level": 2,
-          "line": 515,
+          "line": 517,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#stamp"
@@ -783,7 +783,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 533,
+          "line": 535,
           "related": [
             ".devbook/tech/shared.md#model-context-protocol",
             ".devbook/arc42/08-crosscutting-concepts.md#phase",
@@ -800,7 +800,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "layer",
           "level": 2,
-          "line": 549,
+          "line": 551,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#plugin",
@@ -818,7 +818,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "extension-namespace",
           "level": 2,
-          "line": 572,
+          "line": 574,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
@@ -835,7 +835,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "published-languages",
           "level": 2,
-          "line": 595,
+          "line": 597,
           "related": [
             ".devbook/arc42/building-blocks/README.md"
           ]
@@ -850,7 +850,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "strategic-rules",
           "level": 2,
-          "line": 620,
+          "line": 622,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
             ".devbook/arc42/08-crosscutting-concepts.md#schedule"
@@ -866,7 +866,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "relationships-between-blocks",
           "level": 2,
-          "line": 642,
+          "line": 644,
           "related": [
             ".devbook/arc42/05-building-block-view.md#level-1-the-plugin-landscape",
             ".devbook/arc42/building-blocks/README.md",
@@ -883,7 +883,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 677,
+          "line": 679,
           "related": [
             ".devbook/tech/hosts.md#claude-code-plugin-api",
             ".devbook/tech/hosts.md#copilot-plugin-api",
@@ -900,7 +900,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "outbound",
           "level": 3,
-          "line": 686
+          "line": 688
         }
       },
       {
@@ -912,7 +912,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "inbound",
           "level": 3,
-          "line": 702
+          "line": 704
         }
       },
       {
@@ -924,7 +924,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "authoring-and-packaging",
           "level": 2,
-          "line": 713,
+          "line": 715,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#agent",
             ".devbook/arc42/08-crosscutting-concepts.md#skill",
@@ -1312,7 +1312,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "personal-validation",
           "level": 2,
-          "line": 296,
+          "line": 297,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
@@ -1331,7 +1331,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "playthrough",
           "level": 2,
-          "line": 321,
+          "line": 323,
           "date": "2026-10-22",
           "related": [
             ".devbook/arc42/adr/demos.md#playing-a-journey-end-to-end",
@@ -1349,7 +1349,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "pr-lane",
           "level": 2,
-          "line": 335,
+          "line": 337,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
@@ -1367,7 +1367,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "preamble",
           "level": 2,
-          "line": 352,
+          "line": 354,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md",
@@ -1384,7 +1384,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "preview",
           "level": 2,
-          "line": 375,
+          "line": 377,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery-surface-canvas.md",
@@ -1401,7 +1401,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "proposal",
           "level": 2,
-          "line": 391,
+          "line": 393,
           "date": "2026-09-28",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#change",
@@ -1418,7 +1418,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "prototype",
           "level": 2,
-          "line": 408,
+          "line": 410,
           "date": "2026-10-02",
           "related": [
             ".devbook/arc42/adr/demos.md#how-prototyping-works",
@@ -1436,7 +1436,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "prototyping",
           "level": 2,
-          "line": 423,
+          "line": 425,
           "date": "2026-10-02",
           "related": [
             ".devbook/arc42/adr/demos.md#how-prototyping-works",
@@ -1453,7 +1453,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "provider",
           "level": 2,
-          "line": 439,
+          "line": 441,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
@@ -1471,7 +1471,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "reconcile",
           "level": 2,
-          "line": 456,
+          "line": 458,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md",
@@ -1489,7 +1489,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "report",
           "level": 2,
-          "line": 472,
+          "line": 474,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/devbook-config.md",
@@ -1507,7 +1507,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "requirement",
           "level": 2,
-          "line": 488,
+          "line": 490,
           "date": "2026-09-24",
           "related": [
             ".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs",
@@ -1524,7 +1524,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "review-pass",
           "level": 2,
-          "line": 505,
+          "line": 507,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#chapter-review",
@@ -1541,7 +1541,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "scheduler",
           "level": 2,
-          "line": 522,
+          "line": 524,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md",
@@ -1559,7 +1559,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-direction",
           "level": 2,
-          "line": 540,
+          "line": 542,
           "date": "2026-10-01",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md",
@@ -1577,7 +1577,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-group",
           "level": 2,
-          "line": 560,
+          "line": 562,
           "date": "2026-10-01",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md",
@@ -1594,7 +1594,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "sync-unit",
           "level": 2,
-          "line": 575,
+          "line": 577,
           "date": "2026-10-06",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md",
@@ -1612,7 +1612,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "tier",
           "level": 2,
-          "line": 598,
+          "line": 600,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
@@ -1629,7 +1629,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "unanswered-group",
           "level": 2,
-          "line": 613,
+          "line": 615,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/delivery-surface-collector.md",
@@ -1670,7 +1670,7 @@
           "path": ".devbook/arc42/adr/README.md",
           "slug": "where-a-numbered-record-went",
           "level": 2,
-          "line": 45
+          "line": 46
         }
       },
       {
@@ -2200,7 +2200,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/flow-engine.md",
-          "date": "2026-10-28",
+          "date": "2026-11-11",
           "c4": [
             "marketplace.delivery.flow",
             "marketplace.delivery.flow-runner",
@@ -2452,12 +2452,68 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/adr/journey-specs.md",
+          "label": "Journey Specs",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/journey-specs.md",
+          "date": "2026-11-12",
+          "c4": [
+            "marketplace.devbook.scenario-tools"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md",
+            ".devbook/arc42/building-blocks/devbook.md#scenario-tools",
+            ".devbook/arc42/adr/chapter-schema.md",
+            ".devbook/arc42/adr/install.md",
+            ".devbook/arc42/adr/releases.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/journey-specs.md#why",
+          "label": "Why",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/journey-specs.md",
+          "slug": "why",
+          "level": 2,
+          "line": 24
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/journey-specs.md#rejected",
+          "label": "Rejected",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/journey-specs.md",
+          "slug": "rejected",
+          "level": 2,
+          "line": 47
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/journey-specs.md#history",
+          "label": "History",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/journey-specs.md",
+          "slug": "history",
+          "level": 2,
+          "line": 63
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/adr/plugin-boundaries.md",
           "label": "Plugin Boundaries",
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-10-05",
+          "date": "2026-11-10",
           "c4": [
             "marketplace"
           ],
@@ -2499,7 +2555,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "rejected",
           "level": 2,
-          "line": 206
+          "line": 272
         }
       },
       {
@@ -2511,7 +2567,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "history",
           "level": 2,
-          "line": 250
+          "line": 329
         }
       },
       {
@@ -2521,7 +2577,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/releases.md",
-          "date": "2026-11-05",
+          "date": "2026-11-12",
           "c4": [
             "marketplace"
           ],
@@ -2886,7 +2942,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-create-pr",
           "level": 3,
-          "line": 241,
+          "line": 248,
           "related": [
             ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"
           ]
@@ -2901,7 +2957,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-report-back",
           "level": 3,
-          "line": 251,
+          "line": 258,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#tracker",
             ".devbook/arc42/building-blocks/delivery.md#run"
@@ -2917,7 +2973,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-summary",
           "level": 3,
-          "line": 262,
+          "line": 269,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run-finished",
             ".devbook/arc42/building-blocks/devbook-skills.md#retro"
@@ -2933,7 +2989,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase-drafting-and-phase-check-review",
           "level": 3,
-          "line": 274,
+          "line": 281,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow-spec-run"
           ]
@@ -2948,7 +3004,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "structure",
           "level": 2,
-          "line": 288,
+          "line": 295,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#model",
             ".devbook/arc42/adr/configuration.md"
@@ -2964,7 +3020,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "phase",
           "level": 3,
-          "line": 300,
+          "line": 307,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#phase",
             ".devbook/arc42/adr/flow-engine.md",
@@ -2981,7 +3037,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "gate",
           "level": 3,
-          "line": 338,
+          "line": 345,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#gate",
             ".devbook/arc42/adr/configuration.md"
@@ -2997,7 +3053,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "gate-decision",
           "level": 3,
-          "line": 366,
+          "line": 373,
           "related": [
             ".devbook/arc42/building-blocks/delivery-phases.md#gate",
             ".devbook/arc42/building-blocks/delivery.md#run"
@@ -3013,7 +3069,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "runtime",
           "level": 2,
-          "line": 381,
+          "line": 388,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#runtime"
           ]
@@ -3028,7 +3084,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "a-gate-answered",
           "level": 3,
-          "line": 390
+          "line": 397
         }
       },
       {
@@ -3040,7 +3096,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 420,
+          "line": 427,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies"
           ]
@@ -3055,7 +3111,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "outbound",
           "level": 3,
-          "line": 430
+          "line": 437
         }
       },
       {
@@ -3067,7 +3123,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-phases.md",
           "slug": "inbound",
           "level": 3,
-          "line": 444
+          "line": 451
         }
       },
       {
@@ -3339,6 +3395,7 @@
             "plugins/delivery-schedule/skills/schedule-merge-review",
             "plugins/delivery-schedule/skills/schedule-package-update",
             "plugins/delivery-schedule/skills/schedule-performance-review",
+            "plugins/delivery-schedule/skills/schedule-prose-check",
             "plugins/delivery-schedule/skills/schedule-security-review",
             "plugins/delivery-schedule/skills/schedule-tech-update",
             "plugins/delivery-schedule/skills/schedule-weekly-retro",
@@ -3372,6 +3429,22 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "label": "In a Bundle",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
+          "slug": "in-a-bundle",
+          "level": 3,
+          "line": 44,
+          "related": [
+            ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+            ".devbook/arc42/adr/plugin-boundaries.md"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
           "label": "schedule-devbook-validate",
           "type": "chapter",
@@ -3379,7 +3452,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-validate",
           "level": 3,
-          "line": 41,
+          "line": 67,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#validate",
             ".devbook/arc42/building-blocks/devbook-derived.md#update",
@@ -3396,7 +3469,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-verify",
           "level": 3,
-          "line": 55,
+          "line": 81,
           "related": [
             ".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change",
             ".devbook/arc42/12-glossary.md#drift-verdict",
@@ -3413,7 +3486,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-update",
           "level": 3,
-          "line": 75,
+          "line": 104,
           "related": [
             ".devbook/arc42/building-blocks/devbook-config.md#update",
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
@@ -3430,7 +3503,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-instruction-review",
           "level": 3,
-          "line": 90,
+          "line": 119,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#skill",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"
@@ -3446,7 +3519,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 106,
+          "line": 135,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point",
             ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
@@ -3463,7 +3536,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "classify-once-judge-every-sweep",
           "level": 4,
-          "line": 125
+          "line": 154
         }
       },
       {
@@ -3475,7 +3548,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "close-on-evidence-draft-everything-else",
           "level": 4,
-          "line": 136,
+          "line": 165,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point"
           ]
@@ -3490,7 +3563,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "one-session-one-issue-at-a-time",
           "level": 4,
-          "line": 148
+          "line": 177
         }
       },
       {
@@ -3502,7 +3575,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-merge-review",
           "level": 3,
-          "line": 163
+          "line": 192
         }
       },
       {
@@ -3514,7 +3587,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-package-update",
           "level": 3,
-          "line": 185,
+          "line": 214,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow-code"
           ]
@@ -3529,7 +3602,23 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-performance-review",
           "level": 3,
-          "line": 195
+          "line": 226
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check",
+          "label": "schedule-prose-check",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
+          "slug": "schedule-prose-check",
+          "level": 3,
+          "line": 236,
+          "related": [
+            ".devbook/arc42/building-blocks/devbook.md#prose-check",
+            ".devbook/arc42/adr/plugin-boundaries.md"
+          ]
         }
       },
       {
@@ -3541,7 +3630,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-security-review",
           "level": 3,
-          "line": 205
+          "line": 255
         }
       },
       {
@@ -3553,7 +3642,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-tech-update",
           "level": 3,
-          "line": 214,
+          "line": 265,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#tech-update",
             ".devbook/arc42/adr/checks-and-indexes.md"
@@ -3569,7 +3658,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-retro",
           "level": 3,
-          "line": 226,
+          "line": 277,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies",
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-instruction-review",
@@ -3586,7 +3675,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-update",
           "level": 3,
-          "line": 249
+          "line": 300
         }
       },
       {
@@ -3598,7 +3687,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-whats-new",
           "level": 3,
-          "line": 260
+          "line": 311
         }
       },
       {
@@ -3610,7 +3699,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "structure",
           "level": 2,
-          "line": 270,
+          "line": 321,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#model"
           ]
@@ -3625,7 +3714,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "entry-point",
           "level": 3,
-          "line": 282
+          "line": 333
         }
       },
       {
@@ -3637,7 +3726,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-report-published",
           "level": 3,
-          "line": 311,
+          "line": 363,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#tracker"
           ]
@@ -3652,7 +3741,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "runtime",
           "level": 2,
-          "line": 347,
+          "line": 399,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
             ".devbook/arc42/building-blocks/delivery-schedule.md#runtime"
@@ -3668,7 +3757,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "an-unattended-run",
           "level": 3,
-          "line": 356
+          "line": 408
         }
       },
       {
@@ -3680,7 +3769,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 403,
+          "line": 457,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#dependencies"
           ]
@@ -3695,7 +3784,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "outbound",
           "level": 3,
-          "line": 414
+          "line": 468
         }
       },
       {
@@ -3707,7 +3796,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "inbound",
           "level": 3,
-          "line": 424
+          "line": 478
         }
       },
       {
@@ -3741,7 +3830,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "interfaces",
           "level": 2,
-          "line": 30
+          "line": 31
         }
       },
       {
@@ -3753,7 +3842,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "init-and-update",
           "level": 3,
-          "line": 73
+          "line": 78
         }
       },
       {
@@ -3765,7 +3854,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-status",
           "level": 3,
-          "line": 98
+          "line": 111
         }
       },
       {
@@ -3777,7 +3866,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-run",
           "level": 3,
-          "line": 106
+          "line": 119
         }
       },
       {
@@ -3789,7 +3878,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "structure",
           "level": 2,
-          "line": 116,
+          "line": 129,
           "related": [
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/adr/plugin-boundaries.md"
@@ -3805,7 +3894,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "model",
           "level": 3,
-          "line": 130,
+          "line": 143,
           "related": [
             ".devbook/arc42/building-blocks/delivery-surface-dashboard.md"
           ]
@@ -3820,7 +3909,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule",
           "level": 3,
-          "line": 208,
+          "line": 230,
           "related": [
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/12-glossary.md#catalog"
@@ -3836,10 +3925,27 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-selection",
           "level": 3,
-          "line": 257,
+          "line": 279,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#stamp",
             ".devbook/arc42/05-building-block-view.md#stack-config"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "label": "Bundle",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
+          "slug": "bundle",
+          "level": 3,
+          "line": 310,
+          "related": [
+            ".devbook/arc42/adr/plugin-boundaries.md",
+            ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+            ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle"
           ]
         }
       },
@@ -3852,7 +3958,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "scheduler-resolution",
           "level": 3,
-          "line": 285,
+          "line": 364,
           "related": [
             ".devbook/arc42/12-glossary.md#scheduler",
             ".devbook/tech/hosts.md#scheduled-routines"
@@ -3868,7 +3974,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "catalog-check",
           "level": 3,
-          "line": 309,
+          "line": 389,
           "related": [
             ".devbook/arc42/12-glossary.md#catalog"
           ]
@@ -3883,7 +3989,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "runtime",
           "level": 2,
-          "line": 326,
+          "line": 406,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md"
           ]
@@ -3898,7 +4004,38 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "from-catalog-to-scheduler",
           "level": 3,
-          "line": 335
+          "line": 415
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/delivery-schedule.md#a-machine-sync",
+          "label": "A Machine Sync",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
+          "slug": "a-machine-sync",
+          "level": 3,
+          "line": 448,
+          "related": [
+            ".devbook/arc42/building-blocks/delivery-schedule.md#bundle"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run",
+          "label": "A Bundle Run",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
+          "slug": "a-bundle-run",
+          "level": 3,
+          "line": 471,
+          "related": [
+            ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+            ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle"
+          ]
         }
       },
       {
@@ -3910,7 +4047,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 366,
+          "line": 494,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies",
             ".devbook/arc42/adr/plugin-boundaries.md",
@@ -3927,7 +4064,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "outbound",
           "level": 3,
-          "line": 375
+          "line": 503
         }
       },
       {
@@ -3939,7 +4076,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "inbound",
           "level": 3,
-          "line": 395
+          "line": 525
         }
       },
       {
@@ -5070,7 +5207,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "phase-tier",
           "level": 3,
-          "line": 394,
+          "line": 395,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow",
             ".devbook/arc42/12-glossary.md#tier"
@@ -5086,7 +5223,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "stack-config",
           "level": 3,
-          "line": 416,
+          "line": 417,
           "related": [
             ".devbook/arc42/adr/configuration.md",
             ".devbook/arc42/05-building-block-view.md#stack-config"
@@ -5102,7 +5239,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "binding",
           "level": 3,
-          "line": 467,
+          "line": 468,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#stack-config",
             ".devbook/arc42/08-crosscutting-concepts.md#tracker"
@@ -5118,7 +5255,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "flow-runner",
           "level": 3,
-          "line": 483,
+          "line": 484,
           "related": [
             ".devbook/arc42/adr/flow-engine.md",
             ".devbook/arc42/building-blocks/delivery-phases.md#phase"
@@ -5134,7 +5271,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "run-started",
           "level": 3,
-          "line": 537,
+          "line": 538,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run",
             ".devbook/arc42/adr/surfaces.md"
@@ -5150,7 +5287,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "stage-updated",
           "level": 3,
-          "line": 573,
+          "line": 574,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run"
           ]
@@ -5165,7 +5302,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "run-finished",
           "level": 3,
-          "line": 620,
+          "line": 621,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run",
             ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"
@@ -5181,7 +5318,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "host-slot",
           "level": 3,
-          "line": 656,
+          "line": 657,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#host-slot",
             ".devbook/arc42/05-building-block-view.md#host-slots"
@@ -5197,7 +5334,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "change-kind",
           "level": 3,
-          "line": 676,
+          "line": 677,
           "related": [
             ".devbook/arc42/adr/flow-engine.md",
             ".devbook/arc42/building-blocks/delivery.md#flow-code-run"
@@ -5213,7 +5350,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "runtime",
           "level": 2,
-          "line": 695,
+          "line": 696,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run",
             ".devbook/arc42/building-blocks/delivery-phases.md#gate",
@@ -5230,7 +5367,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "a-run-end-to-end",
           "level": 3,
-          "line": 707
+          "line": 708
         }
       },
       {
@@ -5242,7 +5379,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "the-two-tiers",
           "level": 3,
-          "line": 756
+          "line": 757
         }
       },
       {
@@ -5254,7 +5391,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "flow-code-run",
           "level": 3,
-          "line": 802,
+          "line": 803,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow-code",
             ".devbook/arc42/building-blocks/delivery.md#change-kind",
@@ -5271,7 +5408,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "flow-spec-run",
           "level": 3,
-          "line": 874,
+          "line": 875,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow-spec",
             ".devbook/arc42/adr/flow-engine.md"
@@ -5287,7 +5424,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 912,
+          "line": 913,
           "related": [
             ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
             ".devbook/arc42/adr/surfaces.md",
@@ -5304,7 +5441,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "outbound",
           "level": 3,
-          "line": 921
+          "line": 922
         }
       },
       {
@@ -5316,7 +5453,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "inbound",
           "level": 3,
-          "line": 951
+          "line": 952
         }
       },
       {
@@ -6772,7 +6909,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "chapter-review",
           "level": 3,
-          "line": 183,
+          "line": 184,
           "related": [
             ".devbook/arc42/adr/annotations.md",
             ".devbook/arc42/12-glossary.md#review-pass"
@@ -6788,7 +6925,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "structure",
           "level": 2,
-          "line": 200,
+          "line": 201,
           "related": [
             ".devbook/arc42/building-blocks/devbook-derived.md#structure",
             ".devbook/arc42/adr/chapter-schema.md",
@@ -6805,7 +6942,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "model",
           "level": 3,
-          "line": 215
+          "line": 216
         }
       },
       {
@@ -6817,7 +6954,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "chapter",
           "level": 3,
-          "line": 305
+          "line": 306
         }
       },
       {
@@ -6829,7 +6966,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "meta-block",
           "level": 3,
-          "line": 371
+          "line": 372
         }
       },
       {
@@ -6841,7 +6978,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "devbook-folder",
           "level": 3,
-          "line": 401,
+          "line": 402,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder",
             ".devbook/arc42/adr/chapter-schema.md",
@@ -6858,7 +6995,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "change",
           "level": 3,
-          "line": 432,
+          "line": 433,
           "related": [
             ".devbook/arc42/12-glossary.md#change",
             ".devbook/arc42/12-glossary.md#delta",
@@ -6876,7 +7013,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "demo",
           "level": 3,
-          "line": 486,
+          "line": 487,
           "related": [
             ".devbook/arc42/adr/demos.md",
             ".devbook/arc42/12-glossary.md#demo",
@@ -6894,7 +7031,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "c4-model",
           "level": 3,
-          "line": 581,
+          "line": 582,
           "related": [
             ".devbook/arc42/adr/c4-model.md",
             ".devbook/arc42/building-blocks/devbook.md#reference-graph",
@@ -6911,7 +7048,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reference-graph",
           "level": 3,
-          "line": 665,
+          "line": 666,
           "related": [
             ".devbook/arc42/adr/checks-and-indexes.md",
             ".devbook/arc42/building-blocks/devbook.md#index-generator"
@@ -6927,7 +7064,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reconciler",
           "level": 3,
-          "line": 700,
+          "line": 701,
           "related": [
             ".devbook/arc42/12-glossary.md#reconcile",
             ".devbook/arc42/adr/install.md"
@@ -6943,7 +7080,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "index-generator",
           "level": 3,
-          "line": 728,
+          "line": 729,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#reference-graph",
             ".devbook/arc42/12-glossary.md#derived-index",
@@ -6960,7 +7097,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "tech-inventory",
           "level": 3,
-          "line": 773,
+          "line": 774,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#tech-update",
             ".devbook/arc42/building-blocks/devbook.md#devbook-folder"
@@ -6976,10 +7113,11 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "scenario-tools",
           "level": 3,
-          "line": 790,
+          "line": 791,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#reconciler",
-            ".devbook/arc42/building-blocks/devbook.md#devbook-folder"
+            ".devbook/arc42/building-blocks/devbook.md#devbook-folder",
+            ".devbook/arc42/adr/journey-specs.md"
           ]
         }
       },
@@ -6992,7 +7130,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "shared-value-objects",
           "level": 3,
-          "line": 866
+          "line": 869
         }
       },
       {
@@ -7004,7 +7142,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "runtime",
           "level": 2,
-          "line": 904,
+          "line": 907,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#reconciler",
             ".devbook/arc42/building-blocks/devbook-code-sync.md#runtime",
@@ -7021,7 +7159,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reconciling-a-repository",
           "level": 3,
-          "line": 914,
+          "line": 917,
           "related": [
             ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md"
           ]
@@ -7036,7 +7174,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "a-chapters-standing",
           "level": 3,
-          "line": 953,
+          "line": 956,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#chapter",
             ".devbook/arc42/adr/chapter-schema.md#branch-true-devbook",
@@ -7053,7 +7191,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 987,
+          "line": 990,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
             ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
@@ -7070,7 +7208,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "outbound",
           "level": 3,
-          "line": 999
+          "line": 1002
         }
       },
       {
@@ -7082,7 +7220,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "inbound",
           "level": 3,
-          "line": 1013
+          "line": 1016
         }
       },
       {
@@ -8677,7 +8815,7 @@
           "line": 23,
           "kind": "component",
           "element": "marketplace.devbook.scenario-tools",
-          "description": "The runner, reporter, signature, coverage check, and demo sync that tie end-to-end specs to scenario pages.",
+          "description": "The signature, shot helper, reporter, coverage check, and demo sync that point end-to-end specs at journeys.",
           "technology": "Node.js"
         }
       },
@@ -11065,6 +11203,30 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/journey-specs.md#why",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/journey-specs.md#why",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/journey-specs.md#rejected",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/journey-specs.md#rejected",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/journey-specs.md#history",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/journey-specs.md#history",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/adr/plugin-boundaries.md->.devbook/arc42/adr/plugin-boundaries.md#why",
           "source": ".devbook/arc42/adr/plugin-boundaries.md",
           "target": ".devbook/arc42/adr/plugin-boundaries.md#why",
@@ -11465,6 +11627,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
           "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces",
           "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
@@ -11548,6 +11718,14 @@
           "id": "contains:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-performance-review",
           "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces",
           "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-performance-review",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#interfaces",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check",
           "type": "contains"
         }
       },
@@ -11721,6 +11899,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/building-blocks/delivery-schedule.md#structure->.devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#structure",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/building-blocks/delivery-schedule.md#structure->.devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution",
           "source": ".devbook/arc42/building-blocks/delivery-schedule.md#structure",
           "target": ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution",
@@ -11748,6 +11934,22 @@
           "id": "contains:.devbook/arc42/building-blocks/delivery-schedule.md#runtime->.devbook/arc42/building-blocks/delivery-schedule.md#from-catalog-to-scheduler",
           "source": ".devbook/arc42/building-blocks/delivery-schedule.md#runtime",
           "target": ".devbook/arc42/building-blocks/delivery-schedule.md#from-catalog-to-scheduler",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/delivery-schedule.md#runtime->.devbook/arc42/building-blocks/delivery-schedule.md#a-machine-sync",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#runtime",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#a-machine-sync",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/delivery-schedule.md#runtime->.devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#runtime",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run",
           "type": "contains"
         }
       },
@@ -16513,6 +16715,46 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/09-architecture-decisions.md",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/building-blocks/devbook.md#scenario-tools",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/building-blocks/devbook.md#scenario-tools",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/install.md",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/install.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/journey-specs.md->.devbook/arc42/adr/releases.md",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": ".devbook/arc42/adr/releases.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/adr/plugin-boundaries.md->.devbook/arc42/09-architecture-decisions.md",
           "source": ".devbook/arc42/adr/plugin-boundaries.md",
           "target": ".devbook/arc42/09-architecture-decisions.md",
@@ -17281,6 +17523,22 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle->.devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate->.devbook/arc42/building-blocks/devbook.md#validate",
           "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
           "target": ".devbook/arc42/building-blocks/devbook.md#validate",
@@ -17404,6 +17662,22 @@
           "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-package-update->.devbook/arc42/building-blocks/delivery.md#flow-code",
           "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-package-update",
           "target": ".devbook/arc42/building-blocks/delivery.md#flow-code",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check->.devbook/arc42/building-blocks/devbook.md#prose-check",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check",
+          "target": ".devbook/arc42/building-blocks/devbook.md#prose-check",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-prose-check",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
           "type": "related"
         }
       },
@@ -17585,6 +17859,30 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#bundle->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#bundle->.devbook/arc42/08-crosscutting-concepts.md#schedule",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "target": ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#bundle->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution->.devbook/arc42/12-glossary.md#scheduler",
           "source": ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution",
           "target": ".devbook/arc42/12-glossary.md#scheduler",
@@ -17612,6 +17910,30 @@
           "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#runtime->.devbook/arc42/building-blocks/delivery.md",
           "source": ".devbook/arc42/building-blocks/delivery-schedule.md#runtime",
           "target": ".devbook/arc42/building-blocks/delivery.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#a-machine-sync->.devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#a-machine-sync",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run->.devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run->.devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
+          "source": ".devbook/arc42/building-blocks/delivery-schedule.md#a-bundle-run",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle",
           "type": "related"
         }
       },
@@ -20049,6 +20371,14 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#scenario-tools->.devbook/arc42/adr/journey-specs.md",
+          "source": ".devbook/arc42/building-blocks/devbook.md#scenario-tools",
+          "target": ".devbook/arc42/adr/journey-specs.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/building-blocks/devbook.md#runtime->.devbook/arc42/building-blocks/devbook.md#reconciler",
           "source": ".devbook/arc42/building-blocks/devbook.md#runtime",
           "target": ".devbook/arc42/building-blocks/devbook.md#reconciler",
@@ -21544,7 +21874,7 @@
           "source": "c4:marketplace.delivery-schedule",
           "target": "c4:marketplace.devbook",
           "type": "relationship",
-          "description": "Names prose-check and the devbook checks as targets",
+          "description": "Wraps prose-check and the devbook checks",
           "technology": "undeclared"
         }
       },
@@ -23007,6 +23337,14 @@
           "source": ".devbook/arc42/adr/install.md",
           "target": "c4:repository",
           "type": "c4-touches"
+        }
+      },
+      {
+        "data": {
+          "id": "c4:.devbook/arc42/adr/journey-specs.md->c4:marketplace.devbook.scenario-tools",
+          "source": ".devbook/arc42/adr/journey-specs.md",
+          "target": "c4:marketplace.devbook.scenario-tools",
+          "type": "c4"
         }
       },
       {

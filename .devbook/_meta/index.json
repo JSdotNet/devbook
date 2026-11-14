@@ -153,7 +153,7 @@
               "name": "flow-engine.md",
               "path": ".devbook/arc42/adr/flow-engine.md",
               "title": "Flow Engine",
-              "date": "2026-10-28",
+              "date": "2026-11-11",
               "summary": "delivery is a flow engine: two flows named for what changes — flow-code for every change to a repository's code, flow-spec for a devbook chapter — over a closed list of phases with stable ids, and the phase is the unit a repository configures. Everything a flow talks to outside the engine is a…",
               "diagrams": 1
             },
@@ -183,10 +183,18 @@
             },
             {
               "type": "file",
+              "name": "journey-specs.md",
+              "path": ".devbook/arc42/adr/journey-specs.md",
+              "title": "Journey Specs",
+              "date": "2026-11-12",
+              "summary": "devbook points at a journey's spec and leaves running it to the repository. The connection is files only. The repository decides how a spec groups its parts, serial or independent, and owns its fixtures, setup, sign-in, and browser contexts."
+            },
+            {
+              "type": "file",
               "name": "plugin-boundaries.md",
               "path": ".devbook/arc42/adr/plugin-boundaries.md",
               "title": "Plugin Boundaries",
-              "date": "2026-10-05",
+              "date": "2026-11-10",
               "summary": "Every plugin is self-contained under plugins/<name>/ and either works alone or declares what it needs. There are three ways to couple — a declared dependency on a lower layer, a bridge plugin depending on both sides, a surface capability resolved from the live tool list — and a lower layer never…"
             },
             {
@@ -194,8 +202,8 @@
               "name": "releases.md",
               "path": ".devbook/arc42/adr/releases.md",
               "title": "Releases",
-              "date": "2026-11-05",
-              "summary": "Every plugin carries the same version — 1.35.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…",
+              "date": "2026-11-12",
+              "summary": "Every plugin carries the same version — 1.37.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…",
               "diagrams": 1
             },
             {
@@ -260,7 +268,7 @@
               "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
               "title": "delivery-schedule",
               "summary": "Work that runs with nobody watching, and the catalog of triggers that fires it. This block guarantees that a procedure can run in a session nobody is watching without passing a gate, merging anything, or carrying anything personal into the repository.",
-              "diagrams": 3
+              "diagrams": 5
             },
             {
               "type": "file",

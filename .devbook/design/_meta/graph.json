@@ -106,7 +106,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "surface",
           "level": 2,
-          "line": 386,
+          "line": 388,
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/05-building-block-view.md#surface-plugins",
