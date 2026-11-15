@@ -445,8 +445,8 @@
   </g>
   <g class="c4-label" data-relationship="marketplace.delivery-schedule -> marketplace.devbook">
     <rect class="c4-bg" fill="#ffffff" fill-opacity="0.9" x="707" y="1211" width="167" height="48" rx="3"/>
-    <text class="c4-ink" fill="#1f2328" x="790" y="1226" font-size="11" text-anchor="middle">Names prose-check and the</text>
-    <text class="c4-ink" fill="#1f2328" x="790" y="1240" font-size="11" text-anchor="middle">devbook checks as targets</text>
+    <text class="c4-ink" fill="#1f2328" x="790" y="1226" font-size="11" text-anchor="middle">Wraps prose-check and the</text>
+    <text class="c4-ink" fill="#1f2328" x="790" y="1240" font-size="11" text-anchor="middle">devbook checks</text>
     <text class="c4-muted" fill="#59636e" x="790" y="1254" font-size="11" text-anchor="middle">[undeclared]</text>
   </g>
   <g class="c4-label" data-relationship="marketplace.delivery -> marketplace.devbook">

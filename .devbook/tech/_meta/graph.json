@@ -360,7 +360,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-10-05",
+          "date": "2026-11-10",
           "c4": [
             "marketplace"
           ],
@@ -410,7 +410,7 @@
           "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 533,
+          "line": 535,
           "related": [
             ".devbook/tech/shared.md#model-context-protocol",
             ".devbook/arc42/08-crosscutting-concepts.md#phase",

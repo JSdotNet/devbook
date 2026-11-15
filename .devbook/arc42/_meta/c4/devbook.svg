@@ -136,9 +136,9 @@
     <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="1080" y="630" width="220" height="150" rx="4"/>
     <text class="c4-ink-component" fill="#0b2540" x="1190" y="677" font-size="15" font-weight="600" text-anchor="middle">Scenario Tools</text>
     <text class="c4-ink-component" fill="#0b2540" x="1190" y="695" font-size="11" text-anchor="middle" opacity="0.85">[Component: Node.js]</text>
-    <text class="c4-ink-component" fill="#0b2540" x="1190" y="717" font-size="12" text-anchor="middle">The runner, reporter, signature,</text>
-    <text class="c4-ink-component" fill="#0b2540" x="1190" y="732" font-size="12" text-anchor="middle">coverage check, and demo sync</text>
-    <text class="c4-ink-component" fill="#0b2540" x="1190" y="747" font-size="12" text-anchor="middle">that tie end-to-end specs to…</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="717" font-size="12" text-anchor="middle">The signature, shot helper,</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="732" font-size="12" text-anchor="middle">reporter, coverage check, and</text>
+    <text class="c4-ink-component" fill="#0b2540" x="1190" y="747" font-size="12" text-anchor="middle">demo sync that point end-to-end…</text>
   </g>
   <g data-element="marketplace.devbook.unit-lister">
     <rect class="c4-fill-component" fill="#85bbf0" stroke="#5d82a8" stroke-width="1.5" x="720" y="1098" width="220" height="150" rx="4"/>
