@@ -24,8 +24,9 @@ A plugin's executable parts run on it:
 - `delivery`'s stack-config checker and the tests behind it
 - `delivery-schedule`'s catalog checker
 - `devbook-config`'s read-only report script
-- the two MCP-backed surfaces' servers: the dashboard's with its HTTP viewer, telemetry hook, and
-  `dev/` checks, and the collector's headless
+- the three MCP-backed surfaces' servers: the dashboard's with its HTTP viewer, telemetry hook, and
+  `dev/` checks, the collector's headless, and the Backlog surface's, which forwards every call to
+  the Backlog desktop app's own endpoint
 - the two canvas extensions with their own HTTP viewers
 - the command hook each plugin uses to emit session-start context
 - this repository's own `tools/check-assets.mjs`
@@ -36,7 +37,7 @@ All of that is ESM against `node:` built-ins with no third-party dependency, whi
 The flat claim used to get three things wrong. They are the seams where the constraint is
 negotiated rather than held:
 
-- **Two package manifests exist**, one per surface plugin that runs a server, under
+- **Three package manifests exist**, one per surface plugin that runs a server, under
   `mcp/<server>/package.json`. Each is `private`, declares `type: module` and an entry point, and
   carries **no `dependencies`**. The manifest names the server and floors the runtime at
   `engines.node >= 18`, and pulls nothing in. So a version *is* pinned, as a floor; only a lockfile
