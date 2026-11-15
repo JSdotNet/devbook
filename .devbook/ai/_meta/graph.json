@@ -297,7 +297,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 106,
+          "line": 135,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point",
             ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
@@ -313,7 +313,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-10-05",
+          "date": "2026-11-10",
           "c4": [
             "marketplace"
           ],
@@ -386,10 +386,11 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "scenario-tools",
           "level": 3,
-          "line": 790,
+          "line": 791,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#reconciler",
-            ".devbook/arc42/building-blocks/devbook.md#devbook-folder"
+            ".devbook/arc42/building-blocks/devbook.md#devbook-folder",
+            ".devbook/arc42/adr/journey-specs.md"
           ],
           "outOfScope": true
         }
