@@ -29,9 +29,44 @@ const GROUPING_BLOCK = `${GROUPING}\n\n\`\`\`meta\ntype: ubiquitous-language\n\`
 
 // A path segment or a link/reference opener in front, an anchor or a closer
 // behind: `.domain/orders/naming.md#order`, `(naming.md#order)`,
-// `"../orders/naming.md#order"`. Prose naming the file in backticks is left
-// exactly as written — this migration moves references, not sentences.
-const REFERENCE = /([/("[])naming\.md(?=$|[#"')\],\s])/g;
+// `"../orders/naming.md#order"`.
+const REFERENCE = /([/("[<\s]|^)naming\.md(?=$|[#"')\]>,\s])/gm;
+
+// A reference lives in two places only: a `meta` block and a Markdown link
+// target (inline or a reference definition). Prose, quoted text — a scenario
+// step `When I change its path to "x/naming.md"` — and other code fences are
+// left exactly as written: this migration moves references, not sentences.
+const LINK_TARGET = /(\]\()([^)\n]*)(\))/g;
+const LINK_DEFINITION = /^(\s{0,3}\[[^\]\n]+\]:[ \t]*)(\S+)/;
+
+function rewriteReferences(text) {
+    let count = 0;
+    const swap = (s) =>
+        s.replace(REFERENCE, (_, before) => {
+            count++;
+            return `${before}domain.md`;
+        });
+    let fence = null;
+    const lines = text.split("\n").map((line) => {
+        const opener = /^(`{3,}|~{3,})\s*(\S*)/.exec(line);
+        if (fence === null && opener) {
+            fence = { marker: opener[1], meta: opener[2] === "meta" };
+            return line;
+        }
+        if (fence !== null) {
+            const closer = /^\s*(`{3,}|~{3,})\s*$/.exec(line);
+            if (closer && closer[1][0] === fence.marker[0] && closer[1].length >= fence.marker.length) {
+                fence = null;
+                return line;
+            }
+            return fence.meta ? swap(line) : line;
+        }
+        const definition = LINK_DEFINITION.exec(line);
+        if (definition) return line.replace(LINK_DEFINITION, (_, head, target) => head + swap(target));
+        return line.replace(LINK_TARGET, (_, open, target, close) => open + swap(target) + close);
+    });
+    return { text: lines.join("\n"), count };
+}
 
 // Files are read as LF and written back with the line ending they had, so a
 // CRLF checkout is migrated without a whole-file diff or mixed endings.
@@ -133,7 +168,7 @@ for (const domainDir of folders.filter((f) => f.endsWith("domain"))) {
         if (!(await exists(naming))) continue;
         // A term relating to a sibling term references the file it is leaving.
         const { text: raw, eol } = await readText(naming);
-        const text = raw.replace(REFERENCE, "$1domain.md");
+        const { text } = rewriteReferences(raw);
         const chapters = chaptersOf(text);
         folds.push({
             naming,
@@ -150,8 +185,8 @@ for (const folder of folders) {
     for (const file of await markdownFiles(folder)) {
         if (leaving.has(file)) continue;
         const { text, eol } = await readText(file);
-        const count = (text.match(REFERENCE) ?? []).length;
-        if (count > 0) rewrites.push({ file, text: text.replace(REFERENCE, "$1domain.md"), count, eol });
+        const { text: rewritten, count } = rewriteReferences(text);
+        if (count > 0) rewrites.push({ file, text: rewritten, count, eol });
     }
 }
 
