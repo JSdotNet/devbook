@@ -65,6 +65,10 @@ and, in every Markdown file under every devbook folder, rewrites
 references and in links alike — and a bare `naming.md#<anchor>` link inside
 the context's own folder the same way.
 
+It does not touch prose, quoted text, or code fences other than `meta`: a
+scenario step `When I change its path to "x/naming.md"` is test data, not a
+reference, and stays as written.
+
 It does not fold a term into the chapter it duplicates. Whether a term is a
 restatement of an aggregate beside it is a reading, not a rewrite, and the
 moved chapters are exactly as they were; fold them by hand, through the
