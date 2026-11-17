@@ -3,14 +3,14 @@
 The change lane. [devbook](../devbook) is the source of truth and defines what a change looks
 like on disk — `proposal.md`, deltas under `devbook-delta/`, `solution.md`, `tasks.md`, and the
 merge in `delta.mjs`. [OpenSpec](https://github.com/Fission-AI/OpenSpec) runs the workflow
-around it — `/opsx:explore`, `/opsx:propose`, `/opsx:apply`, and the rest. This plugin installs
+around it — `openspec-explore`, `openspec-propose`, `openspec-apply-change`, and the rest. This plugin installs
 and configures OpenSpec so its skills write devbook changes, and never copies one of them.
 
 An L1 extension: it depends on `devbook` and nothing else. The engine appears only as provider
 strings a repository binds in `.devbook/config.json` — `devbook-openspec:spec` as the `skill` of
 `flow-code`'s `phase-scope`, the replan chore `devbook-openspec:status --replan` after it, and
 `bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`; without them,
-OpenSpec's `/opsx:apply` builds each step itself.
+OpenSpec's `openspec-apply-change` builds each step itself.
 
 ## Installation
 
@@ -31,6 +31,7 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 | `rules/devbook-openspec-change.md` | What an OpenSpec skill does inside `openspec/changes/`, installed as a trio so both hosts apply it |
 | `migrations/001-no-step-0-prototype/` | Removes the `prototype` stamp field and the Step 0 rule line `init` once seeded into `openspec/config.yaml`; `update` runs it first |
 | `migrations/002-no-git-workflow/` | Removes the `workflow` stamp field, a proposal's `Workflow:` line, a step's `branch:` and `PR:` lines, and the per-step pull request line `init` once seeded into `openspec/config.yaml` |
+| `migrations/003-cli-range-2x/` | Widens a stamped `cli` still at the old default `>=1.13.2 <2.0.0` to `>=1.13.2 <3.0.0`, so OpenSpec 2.x passes the check |
 
 ## Skills
 
@@ -73,7 +74,7 @@ has the step, and the verdicts once Spec Check has them.
 ```
 
 `openspec.grill` names a skill from another marketplace that interrogates an idea before
-`/opsx:propose`; `onboard` offers it at the explore move. `null` or absent, explore runs alone.
+`openspec-propose`; `onboard` offers it at the explore move. `null` or absent, explore runs alone.
 A machine may bind its own in the stack-config overlay through `devbook-config:local`.
 
 ## Where things live

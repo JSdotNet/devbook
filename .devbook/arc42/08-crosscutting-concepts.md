@@ -661,7 +661,7 @@ supporting.
 | This chapter | every block | Shared Kernel | No — it is the vocabulary, not a plugin |
 | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.28.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-openspec](building-blocks/devbook-openspec.md) | Customer/Supplier | Yes, `devbook >=1.32.0 <2.0.0` |
-| [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `/opsx:apply` builds the step |
+| [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `openspec-apply-change` builds the step |
 | [devbook](building-blocks/devbook-procedures.md#procedure), for the procedures | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | Open Host Service + Published Language | No, deliberately — a surface is resolved from the live tool list |

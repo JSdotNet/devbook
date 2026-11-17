@@ -20,9 +20,10 @@ its hash rules, and devbook's `assets/rule-wrappers.md` for the rule trio. This 
 already exists (a setup this skill did not write — moving it to the `devbook` schema is a
 person's call). `openspec/changes/` alone is devbook's change folder, and `openspec init` keeps it.
 
-**The CLI.** Run `openspec --version` against `>=1.13.2 <2.0.0`, or a narrower range the person
+**The CLI.** Run `openspec --version` against `>=1.13.2 <3.0.0`, or a narrower range the person
 gives. Absent or outside it, print `npm install -g @fission-ai/openspec@latest` and stop: never
-install it. Every CLI call runs from the repository root.
+install it. Every CLI call runs from the repository root. On 2.x, pass `--scope project` to
+`openspec init`: its default is `global`, which writes the skills into the person's home folder.
 
 **Ask**, before writing anything: which hosts OpenSpec installs its skills for — its `--tools`
 list, `claude,github-copilot` by default. That is the repository's and goes in the stamp. Whether to send OpenSpec's anonymous

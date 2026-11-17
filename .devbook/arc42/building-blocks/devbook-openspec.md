@@ -154,7 +154,7 @@ In an end-to-end run on a trial change against 1.13.2, the gate refused `propose
 ```meta
 ```
 
-`components.openspec` holds `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
+`components.openspec` holds `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <3.0.0` by
 default), `tools` (the hosts `openspec init` set up), and `materialized`. It records no git
 workflow: migration `002-no-git-workflow` removed the `workflow` field. Whether OpenSpec may send
 usage statistics is one machine's answer, in the stack-config overlay as
@@ -172,6 +172,14 @@ a throwaway branch since deleted. It used the schema and config above and one ch
 answer: `core/root-selection.js` builds each root as `<root>/openspec/changes`,
 `<root>/openspec/specs`, and `<root>/openspec/changes/archive`, and the schema resolver as
 `<root>/openspec/schemas`.
+
+The same run against **2.1.0** gave the same answers, warning included. Three things moved in
+2.0. `openspec init` installs skills into the home folder unless it is given `--scope project`,
+so `init` passes it. The `/opsx:*` command files are gone, and a step is invoked through
+OpenSpec's skills by name, such as `openspec-propose`. Copilot's skills now land in
+`.agents/skills/`, and `openspec update .` moves them there from `.github/skills/` on the
+first run after an upgrade. Migration `003-cli-range-2x` widens a stamped default range to
+admit 2.x.
 
 ### The root is a folder named openspec
 
@@ -279,4 +287,4 @@ dependency and names the engine only as the provider strings a repository binds.
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.32.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
 | `devbook.decision@1`, answered by spec-manager or Backlog | Conformist, resolved from the live tool list | `devbook_get_state` on the proposal, for its approval and acceptance and the fingerprint each was recorded at | [devbook](devbook.md)'s `resources/decision.md` | The two gates are a person's decisions, taken in the host that keeps the state; `status` and `archive` read them and never record one. |
 | OpenSpec CLI | Conformist | `openspec init`, `update`, `new change`, `status`, `validate`, `schema validate`, `archive` | The CLI, its `schema.yaml` and `config.yaml` formats, and its fixed `openspec/` layout | The workflow is OpenSpec's; this plugin only configures it. |
-| delivery | Separate Ways | Provider strings in `.devbook/config.json`, skipped when absent | The engine's `spec` point and its `plugin:skill` tracker contract | A step runs through a flow when an engine is installed and through `/opsx:apply` when not. |
+| delivery | Separate Ways | Provider strings in `.devbook/config.json`, skipped when absent | The engine's `spec` point and its `plugin:skill` tracker contract | A step runs through a flow when an engine is installed and through `openspec-apply-change` when not. |

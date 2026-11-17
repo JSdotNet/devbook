@@ -33,7 +33,7 @@ nothing: every edit this report points at is a person's or another skill's.
    lapsed gate. `devbook_list_notes` on the proposal and each delta: an open `question` blocks
    both gates. With no host bound, say the gates cannot be read.
 5. **Next move**, exactly one: approve (the person, in the host), build the first open step
-   (`/opsx:apply`), fix a verdict, run a stale or missing scenario (`devbook:scenario-run`),
+   (`openspec-apply-change`), fix a verdict, run a stale or missing scenario (`devbook:scenario-run`),
    accept (the person, in the host — every step `done`, every delta it can verify aligned, and
    every delivered journey's run current), or archive (`devbook-openspec:archive` — accepted at
    the current fingerprint).
@@ -47,5 +47,5 @@ as it now stands on `main` (a target changed since the approval is a conflict); 
 step against the code through `devbook:verify-change` (a step whose requirements and
 invariants already hold, or whose assumption a merged step broke); and every `depends-on` and
 `related` chapter of the proposal (one deprecated or rewritten since). Print one row per flag
-and exit non-zero on any, zero on none. Rewrite nothing: revising is `/opsx:update`, and a
+and exit non-zero on any, zero on none. Rewrite nothing: revising is `openspec-update-change`, and a
 revised delta lapses the approval, and the person approves the change again in the host.

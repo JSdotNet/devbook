@@ -16,13 +16,13 @@ otherwise offer `devbook-openspec:init` and stop.
 
 1. **Pick the change** with the person: small, real, touching one or two chapters. Not a
    rehearsal — a change nobody keeps teaches the lane nothing.
-2. **Explore**, optionally: `/opsx:explore`, or the skill bound as `openspec.grill` when one is.
-3. **Propose**: `/opsx:propose`. Show the four artifacts it wrote under
+2. **Explore**, optionally: `openspec-explore`, or the skill bound as `openspec.grill` when one is.
+3. **Propose**: `openspec-propose`. Show the four artifacts it wrote under
    `openspec/changes/<name>/`, and run `delta.mjs --check <name>` together.
 4. **Approve**: the person approves the change in the host that keeps its state, through
    `devbook.decision@1`. Point out that the approval is one record in that host, at the
    change's fingerprint, and that any later edit lapses it.
-5. **Build**: `/opsx:apply`, which builds the change whole — a step marked
+5. **Build**: `openspec-apply-change`, which builds the change whole — a step marked
    `owner: me` is the person's. Show `devbook-openspec:status` between steps.
 6. **Verify and accept**: `devbook:verify-change`, then the person accepts the change in the
    same host.
