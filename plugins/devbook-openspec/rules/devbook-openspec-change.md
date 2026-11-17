@@ -6,7 +6,7 @@ description: What an OpenSpec skill does inside openspec/changes/ when the devbo
 # OpenSpec inside the change folder
 
 A change here is a devbook change: its shape is `devbook-changes.md`, and OpenSpec's
-`/opsx:*` skills write it through the `devbook` schema in `openspec/schemas/devbook/`. This
+`openspec-*` skills write it through the `devbook` schema in `openspec/schemas/devbook/`. This
 rule is what they do differently from OpenSpec's defaults.
 
 - **Four artifacts.** `proposal`, `devbook-delta`, `solution`, `tasks`. There is no `specs`

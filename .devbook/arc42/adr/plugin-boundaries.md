@@ -216,7 +216,7 @@ procedure around a shape devbook owns: `devbook-openspec`, an L1 over `devbook`.
 OpenSpec through its documented surfaces — a project schema and `config.yaml` — rather than
 forking a dozen skills against a project that releases every few weeks, and it names the engine
 only as the `spec` and `tracker` providers a repository binds, so a repository without an engine
-builds each step through OpenSpec's own `/opsx:apply`.
+builds each step through OpenSpec's own `openspec-apply-change`.
 
 **Showing before telling is a plugin of its own, named by skill and never by plugin.** A
 person takes in a diagram, a file tree, or a type signature faster than the paragraph that

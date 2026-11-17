@@ -29,4 +29,4 @@ stands: derive nothing, summarise nothing, and supplement nothing. Write nothing
    knows what it must not build.
 
 A revise from a gate re-runs this skill with the person's notes; the notes are for the change,
-through `/opsx:propose` or a hand edit and a fresh approval, never an edit made here.
+through `openspec-propose` or a hand edit and a fresh approval, never an edit made here.

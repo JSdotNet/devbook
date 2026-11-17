@@ -14,11 +14,11 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
 **Refuse when `components.openspec` is absent**: say "not initialized, run
 `devbook-openspec:init`" and stop — with no stamp, every file on disk reads as customized.
 
-1. **The CLI.** `openspec --version` against `components.openspec.cli`. Outside it, report the
-   installed version and the range and stop; never install, and never widen the range yourself.
-2. **Migrate.** Run each script under `../../migrations/` in number order with node, the
+1. **Migrate.** Run each script under `../../migrations/` in number order with node, the
    repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
-   its plan, run it without `--check`, and report what moved.
+   its plan, run it without `--check`, and report what moved. A migration may move the range.
+2. **The CLI.** `openspec --version` against `components.openspec.cli`. Outside it, report the
+   installed version and the range and stop; never install, and never widen the range yourself.
 3. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
    stamped hash. Equal is stale-or-current and replaceable; different is customized.
 4. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip

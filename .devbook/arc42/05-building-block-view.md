@@ -69,7 +69,7 @@ procedures can ship inside `devbook` and the engine can stay capability-free: se
 
 The `devbook-openspec → delivery` binding runs the same way as the procedures one. The bridge ships
 a `spec` and a `tracker` provider an engine binds by name in `.devbook/config.json`, and names the
-engine nowhere else. Unbound, OpenSpec's own `/opsx:apply` builds each step.
+engine nowhere else. Unbound, OpenSpec's own `openspec-apply-change` builds each step.
 
 `devbook-config` sits in no layer for the opposite reason. It names every plugin here and
 deliberately declares none, so a plugin it cannot find is a row reading `not installed` rather
