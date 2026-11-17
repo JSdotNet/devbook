@@ -28,10 +28,11 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#mcp-server"]
 A plugin ships tools rather than prose through it. A plugin namespaces the server it provides, so
 the same server has two possible tool prefixes depending on how it was registered.
 
-Two servers ship here, one per MCP-backed surface: the dashboard and the collector. Each is
-hand-written against the stdio transport, newline-delimited JSON-RPC 2.0 on stdin and stdout, with
-no SDK and no dependency. The third surface, the canvas, reaches its host as one Copilot extension
-registering two canvases and ships no server.
+Three servers ship here, one per MCP-backed surface: the dashboard, the collector, and Backlog. Each
+is hand-written against the stdio transport, newline-delimited JSON-RPC 2.0 on stdin and stdout,
+with no SDK and no dependency. The Backlog server is also a client: it forwards every call to the
+Backlog desktop app's own MCP endpoint over streamable HTTP. The fourth surface, the canvas, reaches
+its host as one Copilot extension registering two canvases and ships no server.
 
 ## MCP Apps
 
