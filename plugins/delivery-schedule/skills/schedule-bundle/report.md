@@ -13,6 +13,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Review the draft: <own words> | `<owner/repo>` · <job title> | [#<n>](<url>) |
 | <a job's own Needs you row, its words kept> | `<owner/repo>` · <job title> | <its Do> |
 | <job title> failed: <why> | `<owner/repo>` | `schedule-run <bundle name>`, or the job's own routine where it still has one |
+| <job title> could not call Workflow from a bundle subagent | `<owner/repo>`, one row per entry in `noWorkflow` | Keep its own routine; run this bundle by its same-session fallback, `.devbook/arc42/adr/plugin-boundaries.md` |
 
 ### Jobs
 | Repository | <job title> | <job title> | … |
@@ -39,6 +40,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | --- | --- | --- |
 | skipped | `<checkout>` | <the reason the plan gave> |
 | skipped | <n> jobs not run | <usage limit, or two agents in a row returned nothing> |
+| not run | `<owner/repo>` · <job title> | another bundle's job was still running there: <its lock line> |
 | worktree | none of the bundle's own | each job removes or leaves its own, per its report |
 
 *`schedule-bundle@<version>` · <n> repositories × <m> jobs · <ISO datetime UTC>*
@@ -49,6 +51,9 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
   `failed: <why>`, `not run`, or `—` where the repository does not select the job.
   `delivery-schedule:update` reads `draft` and `done` as the job having run there, and nothing
   else.
+- A `noWorkflow` row comes first in *Needs you*, in place of that cell's failed row: it is the
+  first run's proof that a sweep cannot nest its scripts in a bundle, and it decides how the
+  bundle runs next.
 - *Needs you* gathers every job's own *Needs you* rows, most urgent first, then one row per
   draft. The ten-row rule holds across the whole section.
 - *Drift* is every repository's devbook verify table, per that skill's *In a bundle*, the
@@ -59,5 +64,6 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
   whose digest jobs ran. Omit any of the three when empty.
 - A cell an agent returned nothing for reads `failed`, unless a second followed it: the host
   gives no reason, so two in a row are read as the usage limit and both read `not run`.
-- *Run* carries each skipped checkout, and the jobs left unstarted. Each job's own *Run* stays
+- *Run* carries each skipped checkout, the jobs left unstarted, and one row per job a busy
+  repository kept from starting; that cell reads `not run`, and the next weekday runs it. Each job's own *Run* stays
   in its report; the cell links the draft that holds it.

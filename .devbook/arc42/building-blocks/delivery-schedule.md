@@ -42,7 +42,7 @@ proved before it is trusted.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
-| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly, or a person by hand |
+| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly or on weekdays, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
@@ -334,16 +334,32 @@ Weekly retro and every job not about the repositories stay one routine each. The
 what the first weekday run must prove, are in
 [the plugin boundaries record](../adr/plugin-boundaries.md).
 
+A bundle tells whether another bundle's job still runs in a repository by a lock file,
+`schedule-bundle.lock` in that checkout's common git directory. A job's first step reads it:
+another bundle's lock younger than twelve hours sends the job back at once as busy, and anything
+else is replaced with the job's own line — bundle, job, start time — which its last step
+deletes. The common git directory is shared by the checkout and every worktree of it, and is in
+no tree and no diff. A worktree is not the signal, because a job that landed a branch leaves its
+worktree for the owner, so a finished job would read as running. A lock a crashed job left
+behind holds another bundle off for twelve hours at most, and never its own bundle, which runs
+one job per repository and so reads its own lock as stale. The script puts a busy repository at
+the back of the queue, asks it again once another job has settled, and reports it not run when
+nothing else is left. Reading and writing the lock are two steps, so two bundles starting in one
+repository in the same moment could both pass; the two hours between the weekday bundles are
+what rule that out. The lock is the prompt's protocol, followed by the job: the tests prove the
+queue around a busy job and the lines that ask for it, not a model's reading of the file.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
-| No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill | untested |
-| Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | untested |
+| No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill, the lock its prompt holds | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| An issue sweep that cannot call the workflow tool from a bundle stops before any write and fails as its own cell, named in the report, so its repository keeps its own routine | the prompt the bundle passes, bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
-| Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
-| A weekend bundle's job comments on, labels, and closes no issue; a weekday bundle's job writes what its own routine writes and no more | the prompt the bundle passes | untested |
+| Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A weekend bundle's job comments on, labels, and closes no issue; a weekday bundle's job writes what its own routine writes and no more | the prompt the bundle passes, from `ownWrites` in `JOBS` | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A job's preconditions are checked before any subagent starts | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No pickup check holds a bundle back | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |

@@ -28,9 +28,40 @@ if (!args || !args.bundle || !Array.isArray(args.bundle.jobs) || !args.schedules
 const MAX_AGENTS = 4
 const MAX_WRITERS = 2
 
+// The cross-bundle guard. A bundle job holds a lock file in its repository's common git dir for
+// as long as it runs: one line naming the bundle, the job, and when it started. Another bundle's
+// lock younger than LOCK_HOURS means that bundle's job still runs there; an older one, or one of
+// this bundle's own (a bundle never runs two jobs in one repository, so its own is always left
+// over), is stale and replaced. The common git dir is shared by the checkout and every worktree
+// of it, and is in no tree and no diff. A worktree is no such signal: a job that landed a branch
+// leaves its worktree behind for the owner, so a finished job would read as running.
+const LOCK_FILE = 'schedule-bundle.lock'
+const LOCK_HOURS = 12
+
+// Whether a bundle subagent may call `Workflow` again is unproved. A `scripts` job that cannot
+// fails as its own cell under this reason, which keeps the repository's own routine and names
+// the same-session fallback in the plugin boundaries record.
+const NO_WORKFLOW_SUMMARY = 'no Workflow in a bundle subagent'
+const NO_WORKFLOW = 'could not call Workflow from a bundle subagent; the repository keeps its own routine, and the bundle needs its same-session fallback'
+
 // What each job needs before a subagent starts, and whether it writes. A job missing here is
 // treated as a writer with no precondition — the slower reading, never the unsafe one.
+// `ownWrites` is the GitHub writes a weekday job's own routine makes and the bundle lets it
+// keep; a job without it lands drafts only and writes nothing to an issue. `scripts` marks a
+// job whose skill starts its own scripts through the `Workflow` tool.
 const JOBS = {
+  'issue-sweep': {
+    writes: true,
+    needs: [],
+    scripts: true,
+    ownWrites:
+      'the classification and marker labels the skill writes, its comments asking a reporter for what is missing or naming a likely duplicate, the closes its own procedure makes on high-confidence evidence with that evidence in the comment, and each resolution as a draft pull request, with the claim, outcome, and failure-marker comments and labels `draft-pr-contract.md` puts on the issue it resolves',
+  },
+  'merge-review': {
+    writes: false,
+    needs: [],
+    ownWrites: 'the one verdict comment per pull request head commit the skill posts; it never approves, requests changes, merges, or pushes',
+  },
   'devbook-validate': { writes: true, needs: ['devbook'] },
   'tech-update': { writes: true, needs: ['tech'] },
   'devbook-verify': { writes: false, needs: ['devbook', 'units'], detail: true },
@@ -75,23 +106,49 @@ function substitute(text, vars) {
   return String(text).replace(/\{\{\s*([A-Za-z]+)\s*\}\}/g, (whole, key) => (key in vars ? String(vars[key]) : whole))
 }
 
-const BUNDLE_LINES = `This run is the job \`{{name}}\` of the bundle "All repos · ${bundle.title}": a subagent of that bundle's session, not a routine of its own.
+// The write rule a bundle adds to a job's prompt. Every job lands drafts and opens no issue; a
+// job with `ownWrites` keeps exactly the other writes its own routine makes, and no more.
+function writeRule(job) {
+  const own = traits(job).ownWrites
+  const drafts = 'Land every change as a draft pull request, never ready for review, whatever the build and tests say. Open no issue.'
+  if (!own) return `${drafts} Comment on, label, reopen, or close no issue.`
+  return `${drafts} Make the writes this job's own routine makes, and no others: ${own}.`
+}
+
+const bundleLines = (job) => `This run is the job \`{{name}}\` of the bundle "All repos · ${bundle.title}": a subagent of that bundle's session, not a routine of its own.
 
 Mode: bundle
 
+- Before rule 1, check the cross-bundle lock. Its path is \`<common>/${LOCK_FILE}\`, \`<common>\` being \`git -C "{{checkout}}" rev-parse --path-format=absolute --git-common-dir\`, and it holds one line: \`<bundle> <job> <ISO UTC start>\`. When it exists, names a bundle other than \`${bundle.name}\`, and started less than ${LOCK_HOURS} hours ago, another bundle's job still runs in {{repo}}: do nothing else, and return the outcome \`busy\` with that line as the summary. Otherwise write it as \`${bundle.name} {{name}} <now, ISO UTC>\`, replacing what was there — the one file this job writes outside its worktree — and before you return, whatever the outcome, a usage limit and a failure included, delete it when it still names \`${bundle.name} {{name}}\`.
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
 - The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
-- Land every change as a draft pull request, never ready for review, whatever the build and tests say. Open, comment on, reopen, or close no issue.
-- End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
-- If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
+- ${writeRule(job)}
+${traits(job).scripts ? `- This job's skill starts its own scripts through the \`Workflow\` tool, and you are already a subagent of a workflow. When that tool is not in your tool list, or its first call is refused or errors, stop there, before any label, comment, close, or branch, and return the outcome \`failed\` with the summary \`${NO_WORKFLOW_SUMMARY}\`.
+` : ''}- End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
+- If the plan's usage limit stops you, delete the lock, then return the outcome \`usage-limit\` at once.`
+
+// `{{maxResolve}}` by the rule the repository's own routine is synced with: the stamp's override
+// in `components.schedule.overrides` when it is a whole number, else the schedule's field. An
+// override for a schedule with no such field, or one that is not a whole number, is reported
+// and ignored, as the catalog contract's *The Stamp* says.
+function resolveMaxResolve(repo, job, s) {
+  const has = (v) => v !== undefined && v !== null && v !== ''
+  const override = (repo.overrides || []).find((o) => o && o.name === job)
+  if (override && !has(s.maxResolve)) {
+    log(`${repo.repo}: the override maxResolve for ${job} is ignored, since that schedule sets none.`)
+    return undefined
+  }
+  if (override && Number.isInteger(override.maxResolve) && override.maxResolve >= 0) return override.maxResolve
+  if (override) log(`${repo.repo}: the override maxResolve ${JSON.stringify(override.maxResolve)} for ${job} is not a whole number; the schedule's ${s.maxResolve} is used.`)
+  return has(s.maxResolve) ? s.maxResolve : undefined
+}
 
 function jobPrompt(repo, job) {
   const s = schedules[job]
   const vars = { repo: repo.repo, base: repo.base, name: job, title: s.title, checkout: repo.checkout }
-  const override = (repo.overrides || []).find((o) => o && o.name === job && Number.isInteger(o.maxResolve))
-  const maxResolve = override ? override.maxResolve : s.maxResolve
-  if (maxResolve !== undefined && maxResolve !== null && maxResolve !== '') vars.maxResolve = maxResolve
-  return [preamble, s.body, BUNDLE_LINES].map((t) => substitute(String(t).trim(), vars)).join('\n\n')
+  const maxResolve = resolveMaxResolve(repo, job, s)
+  if (maxResolve !== undefined) vars.maxResolve = maxResolve
+  return [preamble, s.body, bundleLines(job)].map((t) => substitute(String(t).trim(), vars)).join('\n\n')
 }
 
 // One repository per origin, in checkout order; the first readable, stamped main checkout wins.
@@ -224,8 +281,8 @@ const JOB_SCHEMA = {
   properties: {
     outcome: {
       type: 'string',
-      enum: ['draft', 'done', 'skipped', 'failed', 'usage-limit'],
-      description: 'draft: a draft pull request was opened or updated; done: finished with nothing to land; skipped: the skill stopped on a missing input; failed; usage-limit: the plan\'s usage limit stopped the run',
+      enum: ['draft', 'done', 'skipped', 'failed', 'usage-limit', 'busy'],
+      description: 'draft: a draft pull request was opened or updated; done: finished with nothing to land; skipped: the skill stopped on a missing input; failed; usage-limit: the plan\'s usage limit stopped the run; busy: another bundle\'s lock was found, and nothing was done',
     },
     pullRequest: { type: 'string', description: 'The draft pull request URL, or empty' },
     summary: { type: 'string', description: 'At most eight words: what happened, or what stopped it' },
@@ -240,7 +297,14 @@ let stoppedBy = null
 let nullStreak = 0
 let lastNull = null
 
+// A cell found busy waits at the back of the queue until some other cell has settled since:
+// that count is the only clock the script has, and it keeps a busy repository from being asked
+// again in a loop. One still busy when nothing else is left is reported not run.
+let progress = 0
+const BUSY = 'another bundle\'s job was still running there'
+
 function settle(cell, state, reason, result) {
+  progress += 1
   cell.state = state
   cell.reason = reason || ''
   if (result) {
@@ -258,6 +322,7 @@ function settle(cell, state, reason, result) {
 // on this machine is what a later job's failure there most often comes from.
 function canStart(cell, earlier) {
   if (running.size >= MAX_AGENTS) return false
+  if (cell.busyAt !== undefined && progress <= cell.busyAt) return false
   if ([...running].some((e) => e.cell.repo === cell.repo)) return false
   if (earlier.some((c) => c.repo === cell.repo)) return false
   return !cell.writes || [...running].filter((e) => e.cell.writes).length < MAX_WRITERS
@@ -290,20 +355,39 @@ async function runOne(cell, phaseName) {
   }
   nullStreak = 0
   lastNull = null
+  if (result.outcome === 'busy') {
+    cell.busyAt = progress
+    cell.reason = `${BUSY}: ${String(result.summary || '').slice(0, 80)}`
+    return 'busy'
+  }
   if (result.outcome === 'usage-limit') {
     stoppedBy = stoppedBy || 'usage limit'
     settle(cell, 'not-run', 'usage limit', result)
     return
   }
+  if (result.outcome === 'failed' && traits(cell.job).scripts && String(result.summary || '').toLowerCase().includes(NO_WORKFLOW_SUMMARY.toLowerCase())) {
+    settle(cell, 'failed', NO_WORKFLOW, result)
+    return
+  }
   settle(cell, result.outcome, result.summary, result)
 }
 
-function launch(cell, phaseName) {
+// A busy cell goes to the back of the queue with its repository's later jobs behind it, so the
+// bundle's order within a repository holds.
+function requeue(waiting, cell) {
+  const later = waiting.filter((c) => c.repo === cell.repo)
+  for (const c of later) waiting.splice(waiting.indexOf(c), 1)
+  waiting.push(cell, ...later)
+}
+
+function launch(cell, phaseName, waiting) {
   const entry = { cell }
   running.add(entry)
   peak.agents = Math.max(peak.agents, running.size)
   peak.writers = Math.max(peak.writers, [...running].filter((e) => e.cell.writes).length)
-  entry.promise = runOne(cell, phaseName).finally(() => running.delete(entry))
+  entry.promise = runOne(cell, phaseName)
+    .then((r) => { if (r === 'busy') requeue(waiting, cell) })
+    .finally(() => running.delete(entry))
 }
 
 // Start, in order, every waiting cell that fits; a reader fills a slot a writer cannot take.
@@ -313,11 +397,15 @@ async function runAll(list, phaseName) {
     if (stoppedBy) for (const c of waiting.splice(0)) settle(c, 'not-run', stoppedBy)
     else {
       for (let i = 0; i < waiting.length && running.size < MAX_AGENTS; ) {
-        if (canStart(waiting[i], waiting.slice(0, i))) launch(waiting.splice(i, 1)[0], phaseName)
+        if (canStart(waiting[i], waiting.slice(0, i))) launch(waiting.splice(i, 1)[0], phaseName, waiting)
         else i += 1
       }
     }
-    if (running.size === 0) break
+    if (running.size === 0) {
+      // Nothing runs and nothing could start: every cell left is a busy repository's.
+      for (const c of waiting.splice(0)) settle(c, 'not-run', c.reason || BUSY)
+      break
+    }
     await Promise.race([...running].map((e) => e.promise))
   }
 }
@@ -338,5 +426,7 @@ return {
   skippedCheckouts,
   cells: cells.map(({ repo, job, state, reason, pullRequest, report }) => ({ repo, job, state, reason, pullRequest, report })),
   stoppedBy,
+  // The repositories whose job could not nest `Workflow`: the report's call for the fallback.
+  noWorkflow: cells.filter((c) => c.reason === NO_WORKFLOW).map(({ repo, job }) => ({ repo, job })),
   peak,
 }

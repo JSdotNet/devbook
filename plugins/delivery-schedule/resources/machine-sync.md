@@ -39,7 +39,7 @@ worktree and is refused.
    continue at step 6.
 5. **Sync.** Match on `All repos · <title>`. An enabled bundle is created or updated with its
    body as the prompt, `{{name}}` and `{{title}}` substituted, without the preamble or the
-   pickup gate. Its cron is local time and is not converted. Its worktree option is off: the
+   pickup gate, weekend and weekday bundles alike. Its cron is local time and is not converted. Its worktree option is off: the
    bundle's skill assembles each job's prompt at run time per the contract's *The Prompt*, and
    has the preamble's rule 1 take its `worktree add` branch, since no job starts in a worktree
    of its own repository. A catalog bundle
@@ -47,7 +47,9 @@ worktree and is refused.
 6. **Retire** what a bundle replaced. Read the report of the bundle routine's latest finished
    run, from its run log or session. A job ran in a repository when that report's cell for the
    pair is a draft pull request or a finished result. A failed, not-run, or skipped cell does
-   not count, and neither does a run with no readable report. For each pair that ran, the
+   not count, and neither does a run with no readable report: an issue sweep that could not
+   call `Workflow` from the bundle, or a job a busy repository kept from starting, keeps its
+   repository's own routine. For each pair that ran, the
    covered routine is `<owner>/<repo> · <title>`, `<title>` being the job's catalog title.
    List those routines and wait for the person's reply. Delete nothing without a yes: a
    deleted routine cannot be restored, and its run history goes with it. On a yes, delete each

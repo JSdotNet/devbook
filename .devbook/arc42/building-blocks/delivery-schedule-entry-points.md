@@ -187,7 +187,9 @@ issue, and runs through the host's workflow tool as sub-agents, never a second s
 scheduled run has hours and nobody to hand a parked worktree to, so it neither fans out nor
 parks. What did not reach a draft pull request is a comment on the issue and a row in the brief.
 In the weekday bundle the sweep is itself a subagent of the bundle's workflow, so whether it may
-call the workflow tool again is what the bundle's first run proves; the fallback is in
+call the workflow tool again is what the bundle's first run proves. A sweep that cannot stops
+before any write and fails as its cell, which the bundle report lists first and which keeps the
+repository's own routine; the fallback is in
 [the plugin boundaries record](../adr/plugin-boundaries.md).
 
 `resources/draft-pr-contract.md` holds the claim, the branch, the draft pull request and its
