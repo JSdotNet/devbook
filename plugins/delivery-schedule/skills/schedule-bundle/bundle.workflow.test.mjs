@@ -302,3 +302,29 @@ test("a weekend job's prompt writes nothing to an issue", async () => {
     assert.ok(!/Make the writes this job's own routine makes/.test(prompt), job);
   }
 });
+
+test("Issue sweep in a bundle resolves each repository's own maxResolve, the stamp's override first", async () => {
+  const scheds = { ...schedules, "issue-sweep": { title: "Issue sweep", body: "Run `schedule-issue-sweep` for {{repo}} with `maxResolve {{maxResolve}}`; up to {{maxResolve}} resolved.", maxResolve: 10 } };
+  const names = ["a", "b", "c", "d"];
+  const overrides = { a: [{ name: "issue-sweep", maxResolve: 3 }], b: [], c: [{ name: "issue-sweep", maxResolve: 0 }], d: [{ name: "merge-review", maxResolve: 2 }] };
+  const { seen, logs } = await weekday("issue-sweep", {
+    scheds,
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`, { overrides: overrides[n] })),
+  });
+  assert.match(seen.prompts["issue-sweep:o/a"], /`maxResolve 3`; up to 3 resolved/);
+  assert.match(seen.prompts["issue-sweep:o/b"], /`maxResolve 10`; up to 10 resolved/);
+  assert.match(seen.prompts["issue-sweep:o/c"], /`maxResolve 0`; up to 0 resolved/, "0 is an override: triage alone");
+  assert.match(seen.prompts["issue-sweep:o/d"], /`maxResolve 10`/, "another schedule's override does not apply");
+  assert.ok(!logs.some((l) => /ignored|not a whole number/.test(l)));
+});
+
+test("an override for a schedule with no maxResolve field, or not a whole number, is reported and ignored", async () => {
+  const scheds = { ...schedules, "issue-sweep": { title: "Issue sweep", body: "Resolve {{maxResolve}}.", maxResolve: 10 }, "merge-review": { title: "Merge review", body: "Review {{repo}}." } };
+  const bad = await weekday("issue-sweep", { scheds, checkouts: ["D:/a"], reports: [checkout("D:/a", "https://github.com/o/a", { overrides: [{ name: "issue-sweep", maxResolve: -1 }] })] });
+  assert.match(bad.seen.prompts["issue-sweep:o/a"], /Resolve 10\./);
+  assert.ok(bad.logs.some((l) => /o\/a: the override maxResolve -1 for issue-sweep is not a whole number/.test(l)));
+  const none = await weekday("merge-review", { scheds, checkouts: ["D:/a"], reports: [checkout("D:/a", "https://github.com/o/a", { overrides: [{ name: "merge-review", maxResolve: 4 }] })] });
+  assert.match(none.seen.prompts["merge-review:o/a"], /Review o\/a\./);
+  assert.ok(none.logs.some((l) => /override maxResolve for merge-review is ignored, since that schedule sets none/.test(l)));
+});

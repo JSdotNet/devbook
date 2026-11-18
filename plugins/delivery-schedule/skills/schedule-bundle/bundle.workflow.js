@@ -109,12 +109,27 @@ Mode: bundle
 - End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
 - If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
 
+// `{{maxResolve}}` by the rule the repository's own routine is synced with: the stamp's override
+// in `components.schedule.overrides` when it is a whole number, else the schedule's field. An
+// override for a schedule with no such field, or one that is not a whole number, is reported
+// and ignored, as the catalog contract's *The Stamp* says.
+function resolveMaxResolve(repo, job, s) {
+  const has = (v) => v !== undefined && v !== null && v !== ''
+  const override = (repo.overrides || []).find((o) => o && o.name === job)
+  if (override && !has(s.maxResolve)) {
+    log(`${repo.repo}: the override maxResolve for ${job} is ignored, since that schedule sets none.`)
+    return undefined
+  }
+  if (override && Number.isInteger(override.maxResolve) && override.maxResolve >= 0) return override.maxResolve
+  if (override) log(`${repo.repo}: the override maxResolve ${JSON.stringify(override.maxResolve)} for ${job} is not a whole number; the schedule's ${s.maxResolve} is used.`)
+  return has(s.maxResolve) ? s.maxResolve : undefined
+}
+
 function jobPrompt(repo, job) {
   const s = schedules[job]
   const vars = { repo: repo.repo, base: repo.base, name: job, title: s.title, checkout: repo.checkout }
-  const override = (repo.overrides || []).find((o) => o && o.name === job && Number.isInteger(o.maxResolve))
-  const maxResolve = override ? override.maxResolve : s.maxResolve
-  if (maxResolve !== undefined && maxResolve !== null && maxResolve !== '') vars.maxResolve = maxResolve
+  const maxResolve = resolveMaxResolve(repo, job, s)
+  if (maxResolve !== undefined) vars.maxResolve = maxResolve
   return [preamble, s.body, bundleLines(job)].map((t) => substitute(String(t).trim(), vars)).join('\n\n')
 }
 

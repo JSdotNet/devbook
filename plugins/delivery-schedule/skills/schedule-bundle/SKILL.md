@@ -17,7 +17,8 @@ hand; it asks nothing. A bundle file's shape is *The Schedule File* in
 
 ## Phases
 
-1. **Read.** The bundle file; each job's file — `title`, body, `maxResolve` — read verbatim;
+1. **Read.** The bundle file; each job's file — `title`, body, `maxResolve` — read verbatim,
+   the script resolving each repository's `maxResolve` override from its stamp;
    `../../resources/schedule-preamble.md`, and never the pickup gate: a bundle has none. Then the
    checkout list, per *The Machine Record* in `../../resources/machine-sync.md`, the user layer
    alone. Not a bundle, or no checkouts: report so and stop.

@@ -339,7 +339,7 @@ what the first weekday run must prove, are in
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill | untested |
-| Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | untested |
+| Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
