@@ -334,11 +334,23 @@ Weekly retro and every job not about the repositories stay one routine each. The
 what the first weekday run must prove, are in
 [the plugin boundaries record](../adr/plugin-boundaries.md).
 
+A bundle tells whether another bundle's job still runs in a repository by a lock file,
+`schedule-bundle.lock` in that checkout's common git directory. A job's first step reads it:
+another bundle's lock younger than twelve hours sends the job back at once as busy, and anything
+else is replaced with the job's own line — bundle, job, start time — which its last step
+deletes. The common git directory is shared by the checkout and every worktree of it, and is in
+no tree and no diff. A worktree is not the signal, because a job that landed a branch leaves its
+worktree for the owner, so a finished job would read as running. A lock a crashed job left
+behind holds another bundle off for twelve hours at most, and never its own bundle, which runs
+one job per repository and so reads its own lock as stale. The script puts a busy repository at
+the back of the queue, asks it again once another job has settled, and reports it not run when
+nothing else is left.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
-| No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill | untested |
+| No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill, the lock its prompt holds | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |

@@ -39,6 +39,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | --- | --- | --- |
 | skipped | `<checkout>` | <the reason the plan gave> |
 | skipped | <n> jobs not run | <usage limit, or two agents in a row returned nothing> |
+| not run | `<owner/repo>` · <job title> | another bundle's job was still running there: <its lock line> |
 | worktree | none of the bundle's own | each job removes or leaves its own, per its report |
 
 *`schedule-bundle@<version>` · <n> repositories × <m> jobs · <ISO datetime UTC>*
@@ -59,5 +60,6 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
   whose digest jobs ran. Omit any of the three when empty.
 - A cell an agent returned nothing for reads `failed`, unless a second followed it: the host
   gives no reason, so two in a row are read as the usage limit and both read `not run`.
-- *Run* carries each skipped checkout, and the jobs left unstarted. Each job's own *Run* stays
+- *Run* carries each skipped checkout, the jobs left unstarted, and one row per job a busy
+  repository kept from starting; that cell reads `not run`, and the next weekday runs it. Each job's own *Run* stays
   in its report; the cell links the draft that holds it.

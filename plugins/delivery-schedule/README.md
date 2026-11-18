@@ -133,7 +133,7 @@ skips a job whose precondition is missing — `tech-update` where there is no `t
 `package-update` where there is no .NET package manifest —
 and runs one subagent per repository and job from the prompt that job's own schedule carries,
 with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
-repository, and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull
+repository — across bundles too, by a lock in the checkout's git directory — and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull
 request and no job opens an issue. A weekend job writes nothing else; a weekday job — issue
 sweep, merge review — makes the writes its own routine makes. The one report has a row per
 repository and a column per job. The planning is

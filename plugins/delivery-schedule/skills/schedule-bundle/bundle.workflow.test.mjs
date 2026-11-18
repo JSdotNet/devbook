@@ -328,3 +328,67 @@ test("an override for a schedule with no maxResolve field, or not a whole number
   assert.match(none.seen.prompts["merge-review:o/a"], /Review o\/a\./);
   assert.ok(none.logs.some((l) => /override maxResolve for merge-review is ignored, since that schedule sets none/.test(l)));
 });
+
+// A fake for the cross-bundle lock: `busy[label]` is how many times that cell finds another
+// bundle's lock before it is free.
+const lockedBy = (busy) => {
+  const asked = {};
+  return (label, n, s) => {
+    asked[label] = (asked[label] || 0) + 1;
+    s.asked = asked;
+    if (asked[label] <= (busy[label] || 0)) return { outcome: "busy", pullRequest: "", summary: "weekday-issue-sweep issue-sweep 2026-11-18T05:00:00Z", report: "" };
+    return { outcome: "done", pullRequest: "", summary: "finished", report: "r" };
+  };
+};
+
+test("every job's prompt checks the cross-bundle lock before rule 1 and holds it while it runs", async () => {
+  const { seen } = await weekday("merge-review", { checkouts: ["D:/a"], reports: [checkout("D:/a", "https://github.com/o/a")] });
+  const prompt = seen.prompts["merge-review:o/a"];
+  assert.match(prompt, /Before rule 1, check the cross-bundle lock\. Its path is `<common>\/schedule-bundle\.lock`/);
+  assert.ok(prompt.includes('`git -C "D:/a" rev-parse --path-format=absolute --git-common-dir`'));
+  assert.match(prompt, /names a bundle other than `weekday-merge-review`, and started less than 12 hours ago/);
+  assert.match(prompt, /return the outcome `busy`/);
+  assert.match(prompt, /write it as `weekday-merge-review merge-review <now, ISO UTC>`/);
+  assert.match(prompt, /delete it when it still names `weekday-merge-review merge-review`/);
+  assert.ok(prompt.indexOf("cross-bundle lock") < prompt.indexOf("In rule 1, take the `worktree add` branch"));
+});
+
+test("a busy repository goes to the back of the queue and runs once another job has settled", async () => {
+  const names = ["a", "b", "c"];
+  const { result, seen } = await weekday("issue-sweep", {
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
+    onJob: lockedBy({ "issue-sweep:o/a": 1 }),
+  });
+  assert.deepEqual(seen.starts, ["issue-sweep:o/a", "issue-sweep:o/b", "issue-sweep:o/c", "issue-sweep:o/a"]);
+  assert.equal(seen.asked["issue-sweep:o/a"], 2, "asked again once, after another job settled");
+  assert.ok(result.cells.every((c) => c.state === "done"));
+  assert.ok(seen.maxWriters <= 2);
+});
+
+test("a repository still busy when nothing else is left is reported not run, and is not asked in a loop", async () => {
+  const names = ["a", "b", "c", "d"];
+  const { result, seen } = await weekday("merge-review", {
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
+    onJob: lockedBy({ "merge-review:o/b": 99 }),
+  });
+  const b = cell(result, "o/b", "merge-review");
+  assert.equal(b.state, "not-run");
+  assert.match(b.reason, /^another bundle's job was still running there: weekday-issue-sweep issue-sweep/);
+  assert.ok(seen.asked["merge-review:o/b"] <= names.length, `asked ${seen.asked["merge-review:o/b"]} times`);
+  for (const n of ["a", "c", "d"]) assert.equal(cell(result, `o/${n}`, "merge-review").state, "done");
+  assert.equal(result.stoppedBy, null);
+});
+
+test("a busy repository keeps the bundle's order: its later jobs wait behind the busy one", async () => {
+  const { result, seen } = await saturday({
+    checkouts: ["D:/a", "D:/b"],
+    reports: [checkout("D:/a", "https://github.com/o/a"), checkout("D:/b", "https://github.com/o/b")],
+    onJob: lockedBy({ "devbook-update:o/a": 1 }),
+  });
+  const mine = seen.starts.filter((l) => l.endsWith(":o/a")).map((l) => l.split(":")[0]);
+  assert.deepEqual(mine, ["devbook-update", "devbook-update", "package-update", "security-review"]);
+  assert.ok(result.cells.every((c) => c.state === "done"));
+  assert.equal(seen.sameRepoJobs, false);
+});

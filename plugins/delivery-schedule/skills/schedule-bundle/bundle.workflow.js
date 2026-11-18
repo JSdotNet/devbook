@@ -28,6 +28,16 @@ if (!args || !args.bundle || !Array.isArray(args.bundle.jobs) || !args.schedules
 const MAX_AGENTS = 4
 const MAX_WRITERS = 2
 
+// The cross-bundle guard. A bundle job holds a lock file in its repository's common git dir for
+// as long as it runs: one line naming the bundle, the job, and when it started. Another bundle's
+// lock younger than LOCK_HOURS means that bundle's job still runs there; an older one, or one of
+// this bundle's own (a bundle never runs two jobs in one repository, so its own is always left
+// over), is stale and replaced. The common git dir is shared by the checkout and every worktree
+// of it, and is in no tree and no diff. A worktree is no such signal: a job that landed a branch
+// leaves its worktree behind for the owner, so a finished job would read as running.
+const LOCK_FILE = 'schedule-bundle.lock'
+const LOCK_HOURS = 12
+
 // What each job needs before a subagent starts, and whether it writes. A job missing here is
 // treated as a writer with no precondition — the slower reading, never the unsafe one.
 // `ownWrites` is the GitHub writes a weekday job's own routine makes and the bundle lets it
@@ -103,6 +113,7 @@ const bundleLines = (job) => `This run is the job \`{{name}}\` of the bundle "Al
 
 Mode: bundle
 
+- Before rule 1, check the cross-bundle lock. Its path is \`<common>/${LOCK_FILE}\`, \`<common>\` being \`git -C "{{checkout}}" rev-parse --path-format=absolute --git-common-dir\`, and it holds one line: \`<bundle> <job> <ISO UTC start>\`. When it exists, names a bundle other than \`${bundle.name}\`, and started less than ${LOCK_HOURS} hours ago, another bundle's job still runs in {{repo}}: do nothing else, and return the outcome \`busy\` with that line as the summary. Otherwise write it as \`${bundle.name} {{name}} <now, ISO UTC>\`, replacing what was there — the one file this job writes outside its worktree — and as your very last step, whatever the outcome, delete it when it still names \`${bundle.name} {{name}}\`.
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
 - The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
 - ${writeRule(job)}
@@ -263,8 +274,8 @@ const JOB_SCHEMA = {
   properties: {
     outcome: {
       type: 'string',
-      enum: ['draft', 'done', 'skipped', 'failed', 'usage-limit'],
-      description: 'draft: a draft pull request was opened or updated; done: finished with nothing to land; skipped: the skill stopped on a missing input; failed; usage-limit: the plan\'s usage limit stopped the run',
+      enum: ['draft', 'done', 'skipped', 'failed', 'usage-limit', 'busy'],
+      description: 'draft: a draft pull request was opened or updated; done: finished with nothing to land; skipped: the skill stopped on a missing input; failed; usage-limit: the plan\'s usage limit stopped the run; busy: another bundle\'s lock was found, and nothing was done',
     },
     pullRequest: { type: 'string', description: 'The draft pull request URL, or empty' },
     summary: { type: 'string', description: 'At most eight words: what happened, or what stopped it' },
@@ -279,7 +290,14 @@ let stoppedBy = null
 let nullStreak = 0
 let lastNull = null
 
+// A cell found busy waits at the back of the queue until some other cell has settled since:
+// that count is the only clock the script has, and it keeps a busy repository from being asked
+// again in a loop. One still busy when nothing else is left is reported not run.
+let progress = 0
+const BUSY = 'another bundle\'s job was still running there'
+
 function settle(cell, state, reason, result) {
+  progress += 1
   cell.state = state
   cell.reason = reason || ''
   if (result) {
@@ -297,6 +315,7 @@ function settle(cell, state, reason, result) {
 // on this machine is what a later job's failure there most often comes from.
 function canStart(cell, earlier) {
   if (running.size >= MAX_AGENTS) return false
+  if (cell.busyAt !== undefined && progress <= cell.busyAt) return false
   if ([...running].some((e) => e.cell.repo === cell.repo)) return false
   if (earlier.some((c) => c.repo === cell.repo)) return false
   return !cell.writes || [...running].filter((e) => e.cell.writes).length < MAX_WRITERS
@@ -329,6 +348,11 @@ async function runOne(cell, phaseName) {
   }
   nullStreak = 0
   lastNull = null
+  if (result.outcome === 'busy') {
+    cell.busyAt = progress
+    cell.reason = `${BUSY}: ${String(result.summary || '').slice(0, 80)}`
+    return 'busy'
+  }
   if (result.outcome === 'usage-limit') {
     stoppedBy = stoppedBy || 'usage limit'
     settle(cell, 'not-run', 'usage limit', result)
@@ -337,12 +361,22 @@ async function runOne(cell, phaseName) {
   settle(cell, result.outcome, result.summary, result)
 }
 
-function launch(cell, phaseName) {
+// A busy cell goes to the back of the queue with its repository's later jobs behind it, so the
+// bundle's order within a repository holds.
+function requeue(waiting, cell) {
+  const later = waiting.filter((c) => c.repo === cell.repo)
+  for (const c of later) waiting.splice(waiting.indexOf(c), 1)
+  waiting.push(cell, ...later)
+}
+
+function launch(cell, phaseName, waiting) {
   const entry = { cell }
   running.add(entry)
   peak.agents = Math.max(peak.agents, running.size)
   peak.writers = Math.max(peak.writers, [...running].filter((e) => e.cell.writes).length)
-  entry.promise = runOne(cell, phaseName).finally(() => running.delete(entry))
+  entry.promise = runOne(cell, phaseName)
+    .then((r) => { if (r === 'busy') requeue(waiting, cell) })
+    .finally(() => running.delete(entry))
 }
 
 // Start, in order, every waiting cell that fits; a reader fills a slot a writer cannot take.
@@ -352,11 +386,15 @@ async function runAll(list, phaseName) {
     if (stoppedBy) for (const c of waiting.splice(0)) settle(c, 'not-run', stoppedBy)
     else {
       for (let i = 0; i < waiting.length && running.size < MAX_AGENTS; ) {
-        if (canStart(waiting[i], waiting.slice(0, i))) launch(waiting.splice(i, 1)[0], phaseName)
+        if (canStart(waiting[i], waiting.slice(0, i))) launch(waiting.splice(i, 1)[0], phaseName, waiting)
         else i += 1
       }
     }
-    if (running.size === 0) break
+    if (running.size === 0) {
+      // Nothing runs and nothing could start: every cell left is a busy repository's.
+      for (const c of waiting.splice(0)) settle(c, 'not-run', c.reason || BUSY)
+      break
+    }
     await Promise.race([...running].map((e) => e.promise))
   }
 }
