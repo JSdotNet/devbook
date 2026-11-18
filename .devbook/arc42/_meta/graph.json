@@ -6390,7 +6390,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "the-root-is-a-folder-named-openspec",
           "level": 3,
-          "line": 176
+          "line": 184
         }
       },
       {
@@ -6402,7 +6402,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "folder-names-are-fixed",
           "level": 3,
-          "line": 201
+          "line": 209
         }
       },
       {
@@ -6414,7 +6414,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "an-empty-glob-artifact-is-incomplete",
           "level": 3,
-          "line": 225
+          "line": 233
         }
       },
       {
@@ -6426,7 +6426,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "archive-moves-and-merges-nothing",
           "level": 3,
-          "line": 243
+          "line": 251
         }
       },
       {
@@ -6438,7 +6438,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 263,
+          "line": 271,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#dependencies",
             ".devbook/arc42/08-crosscutting-concepts.md#layer"
@@ -6454,7 +6454,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
           "slug": "outbound",
           "level": 3,
-          "line": 272
+          "line": 280
         }
       },
       {
