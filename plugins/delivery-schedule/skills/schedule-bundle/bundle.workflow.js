@@ -30,7 +30,22 @@ const MAX_WRITERS = 2
 
 // What each job needs before a subagent starts, and whether it writes. A job missing here is
 // treated as a writer with no precondition — the slower reading, never the unsafe one.
+// `ownWrites` is the GitHub writes a weekday job's own routine makes and the bundle lets it
+// keep; a job without it lands drafts only and writes nothing to an issue. `scripts` marks a
+// job whose skill starts its own scripts through the `Workflow` tool.
 const JOBS = {
+  'issue-sweep': {
+    writes: true,
+    needs: [],
+    scripts: true,
+    ownWrites:
+      'the classification and marker labels the skill writes, its comments asking a reporter for what is missing or naming a likely duplicate, the closes its own procedure makes on high-confidence evidence with that evidence in the comment, and each resolution as a draft pull request',
+  },
+  'merge-review': {
+    writes: false,
+    needs: [],
+    ownWrites: 'the one verdict comment per pull request head commit the skill posts; it never approves, requests changes, merges, or pushes',
+  },
   'devbook-validate': { writes: true, needs: ['devbook'] },
   'tech-update': { writes: true, needs: ['tech'] },
   'devbook-verify': { writes: false, needs: ['devbook', 'units'], detail: true },
@@ -75,13 +90,22 @@ function substitute(text, vars) {
   return String(text).replace(/\{\{\s*([A-Za-z]+)\s*\}\}/g, (whole, key) => (key in vars ? String(vars[key]) : whole))
 }
 
-const BUNDLE_LINES = `This run is the job \`{{name}}\` of the bundle "All repos · ${bundle.title}": a subagent of that bundle's session, not a routine of its own.
+// The write rule a bundle adds to a job's prompt. Every job lands drafts and opens no issue; a
+// job with `ownWrites` keeps exactly the other writes its own routine makes, and no more.
+function writeRule(job) {
+  const own = traits(job).ownWrites
+  const drafts = 'Land every change as a draft pull request, never ready for review, whatever the build and tests say. Open no issue.'
+  if (!own) return `${drafts} Comment on, label, reopen, or close no issue.`
+  return `${drafts} Make the writes this job's own routine makes, and no others: ${own}.`
+}
+
+const bundleLines = (job) => `This run is the job \`{{name}}\` of the bundle "All repos · ${bundle.title}": a subagent of that bundle's session, not a routine of its own.
 
 Mode: bundle
 
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
 - The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
-- Land every change as a draft pull request, never ready for review, whatever the build and tests say. Open, comment on, reopen, or close no issue.
+- ${writeRule(job)}
 - End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
 - If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
 
@@ -91,7 +115,7 @@ function jobPrompt(repo, job) {
   const override = (repo.overrides || []).find((o) => o && o.name === job && Number.isInteger(o.maxResolve))
   const maxResolve = override ? override.maxResolve : s.maxResolve
   if (maxResolve !== undefined && maxResolve !== null && maxResolve !== '') vars.maxResolve = maxResolve
-  return [preamble, s.body, BUNDLE_LINES].map((t) => substitute(String(t).trim(), vars)).join('\n\n')
+  return [preamble, s.body, bundleLines(job)].map((t) => substitute(String(t).trim(), vars)).join('\n\n')
 }
 
 // One repository per origin, in checkout order; the first readable, stamped main checkout wins.

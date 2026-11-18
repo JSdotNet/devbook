@@ -3,7 +3,7 @@
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
 report, `schedule-bundle`, which runs a bundle's jobs across every repository on the machine,
-fifteen trigger files that fire one on a cadence, two of them bundles, and four skills that
+seventeen trigger files that fire one on a cadence, four of them bundles, and four skills that
 put those triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -74,6 +74,8 @@ and traces each to its ticket.
 | `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |
 | `sunday-devbook-review` | Sunday 04:00, local time | `schedule-bundle`: devbook validate, tech update, devbook verify, prose check, instruction review, then the weekly update and change report, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
 | `saturday-code-health` | Saturday 05:00, local time | `schedule-bundle`: devbook stack update first, then package update and security review, in every repository on the machine | `delivery-schedule`, and each job's own | Draft pull requests and one report |
+| `weekday-issue-sweep` | Weekdays 06:00, local time | `schedule-bundle`: issue sweep in every repository on the machine, each at its own `maxResolve` | `delivery-schedule`, and each job's own | Labels, comments, evidence-backed closes, draft pull requests, and one report |
+| `weekday-merge-review` | Weekdays 08:00, local time | `schedule-bundle`: merge review in every repository on the machine | `delivery-schedule`, and each job's own | One comment per pull request head commit, and one report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -132,7 +134,9 @@ skips a job whose precondition is missing — `tech-update` where there is no `t
 and runs one subagent per repository and job from the prompt that job's own schedule carries,
 with `Mode: bundle` added. At most four run at once and two of them write, never two jobs in one
 repository, and a repository's jobs start in the bundle's order; at the plan's usage limit nothing new starts. Every change is a draft pull
-request, and the one report has a row per repository and a column per job. The planning is
+request and no job opens an issue. A weekend job writes nothing else; a weekday job — issue
+sweep, merge review — makes the writes its own routine makes. The one report has a row per
+repository and a column per job. The planning is
 tested by `node --test plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs`.
 
 ## Migrations

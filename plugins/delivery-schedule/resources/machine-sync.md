@@ -39,7 +39,7 @@ worktree and is refused.
    continue at step 6.
 5. **Sync.** Match on `All repos · <title>`. An enabled bundle is created or updated with its
    body as the prompt, `{{name}}` and `{{title}}` substituted, without the preamble or the
-   pickup gate. Its cron is local time and is not converted. Its worktree option is off: the
+   pickup gate, weekend and weekday bundles alike. Its cron is local time and is not converted. Its worktree option is off: the
    bundle's skill assembles each job's prompt at run time per the contract's *The Prompt*, and
    has the preamble's rule 1 take its `worktree add` branch, since no job starts in a worktree
    of its own repository. A catalog bundle

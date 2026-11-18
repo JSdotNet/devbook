@@ -32,7 +32,10 @@ hand; it asks nothing. A bundle file's shape is *The Schedule File* in
 ## Do not
 
 - Start a session, or write the checkout list into a repository.
-- Mark a pull request ready, or open, comment on, or close an issue: the jobs land drafts only.
+- Mark a pull request ready, or open an issue. A weekend job writes nothing else; a weekday job
+  makes the writes its own routine makes and no more — merge review's verdict comment per head
+  commit, issue sweep's labels, its question and duplicate comments, its evidence-backed closes,
+  and its drafts. The prompt's lines carry the rule, from `ownWrites` in `JOBS`.
 
 ## Surface Reporting
 

@@ -342,8 +342,8 @@ what the first weekday run must prove, are in
 | Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | untested |
 | A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
-| Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
-| A weekend bundle's job comments on, labels, and closes no issue; a weekday bundle's job writes what its own routine writes and no more | the prompt the bundle passes | untested |
+| Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| A weekend bundle's job comments on, labels, and closes no issue; a weekday bundle's job writes what its own routine writes and no more | the prompt the bundle passes, from `ownWrites` in `JOBS` | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A job's preconditions are checked before any subagent starts | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No pickup check holds a bundle back | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |

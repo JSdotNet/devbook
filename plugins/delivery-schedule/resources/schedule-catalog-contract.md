@@ -58,7 +58,10 @@ whether it writes. Each job is a catalog `name` that is not itself a bundle. `re
 Its body is synced with `{{name}}` and `{{title}}` alone. When the bundle runs, each job's
 prompt is assembled as *The Prompt* says, without the pickup gate, and followed by the lines
 that make it a bundle job: `Mode: bundle`, the preamble's rule 1 on its `worktree add` branch,
-a draft pull request only, and no issue opened, commented on, or closed.
+a draft pull request only, and no issue opened. A weekend job comments on, labels, and closes no
+issue. A weekday job makes the writes its own routine makes and no more: merge review its one
+verdict comment per head commit, issue sweep its labels, its question and duplicate comments,
+its evidence-backed closes, and its drafts.
 
 ## The Pickup Gate
 

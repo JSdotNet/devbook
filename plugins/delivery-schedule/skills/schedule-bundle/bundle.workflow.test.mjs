@@ -19,15 +19,16 @@ const body = new AsyncFunction("args", "agent", "parallel", "pipeline", "phase",
 
 const JOBS = ["devbook-validate", "tech-update", "devbook-verify", "prose-check", "instruction-review", "weekly-update", "change-report"];
 const SATURDAY = ["devbook-update", "package-update", "security-review"];
-const WRITERS = new Set(["devbook-validate", "tech-update", "prose-check", "instruction-review", "devbook-update", "package-update"]);
+const WEEKDAY = ["issue-sweep", "merge-review"];
+const WRITERS = new Set(["devbook-validate", "tech-update", "prose-check", "instruction-review", "devbook-update", "package-update", "issue-sweep"]);
 const DIGEST = new Set(["weekly-update", "change-report"]);
 const PREAMBLE = 'You are the scheduled run "{{title}}" for {{repo}}, cloned at `{{checkout}}`, base {{base}}, branch schedule/{{name}}/.';
 
-const schedules = Object.fromEntries([...JOBS, ...SATURDAY].map((j) => [j, { title: `Title of ${j}`, body: `Run the ${j} skill for {{repo}}.` }]));
+const schedules = Object.fromEntries([...JOBS, ...SATURDAY, ...WEEKDAY].map((j) => [j, { title: `Title of ${j}`, body: `Run the ${j} skill for {{repo}}.` }]));
 
 const checkout = (p, origin, extra = {}) => ({
   path: p, exists: true, toplevel: p, commonDirParent: p, origin, nameWithOwner: "", base: "main", stamped: true,
-  enabled: [...JOBS, ...SATURDAY], overrides: [], facts: { devbook: true, tech: true, units: true, nuget: true }, ...extra,
+  enabled: [...JOBS, ...SATURDAY, ...WEEKDAY], overrides: [], facts: { devbook: true, tech: true, units: true, nuget: true }, ...extra,
 });
 
 const tick = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -258,4 +259,46 @@ test("Saturday code health: no package manifest skips package update at the prec
   assert.match(prompt, /"All repos · Saturday code health"/);
   assert.match(prompt, /\nMode: bundle\n/);
   assert.match(prompt, /draft pull request, never ready for review/);
+});
+
+const weekday = (job, opts) => run({ jobs: [job], name: `weekday-${job}`, title: job === "issue-sweep" ? "Issue sweep" : "Merge review", ...opts });
+const six = ["a", "b", "c", "d", "e", "f"];
+const sixRepos = { checkouts: six.map((n) => `D:/${n}`), reports: six.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)) };
+
+test("Merge review: a reader, so four repositories run at once, each prompt keeping the verdict comment and nothing else", async () => {
+  const { result, seen } = await weekday("merge-review", sixRepos);
+  assert.deepEqual(result.jobs.map((j) => [j.name, j.writes]), [["merge-review", false]]);
+  assert.equal(seen.maxRunning, 4);
+  assert.equal(seen.maxWriters, 0);
+  assert.ok(result.cells.every((c) => c.state === "done"));
+  const prompt = seen.prompts["merge-review:o/a"];
+  assert.match(prompt, /"All repos · Merge review"/);
+  assert.match(prompt, /draft pull request, never ready for review/);
+  assert.match(prompt, /Open no issue\./);
+  assert.match(prompt, /Make the writes this job's own routine makes, and no others: the one verdict comment per pull request head commit/);
+  assert.match(prompt, /never approves, requests changes, merges, or pushes/);
+  assert.ok(!/Comment on, label, reopen, or close no issue/.test(prompt));
+});
+
+test("Issue sweep: a writer, so at most two sweeps run at once, each prompt keeping the routine's labels, comments, closes, and drafts", async () => {
+  const { result, seen } = await weekday("issue-sweep", sixRepos);
+  assert.deepEqual(result.jobs.map((j) => [j.name, j.writes]), [["issue-sweep", true]]);
+  assert.equal(seen.maxWriters, 2);
+  assert.equal(seen.maxRunning, 2);
+  const prompt = seen.prompts["issue-sweep:o/a"];
+  assert.match(prompt, /"All repos · Issue sweep"/);
+  assert.match(prompt, /Open no issue\./);
+  assert.match(prompt, /classification and marker labels/);
+  assert.match(prompt, /likely duplicate/);
+  assert.match(prompt, /closes its own procedure makes on high-confidence evidence/);
+  assert.match(prompt, /each resolution as a draft pull request/);
+});
+
+test("a weekend job's prompt writes nothing to an issue", async () => {
+  for (const job of [...JOBS, ...SATURDAY]) {
+    const { seen } = await run({ jobs: [job], checkouts: ["D:/a"], reports: [checkout("D:/a", "https://github.com/o/a")] });
+    const prompt = seen.prompts[`${job}:o/a`];
+    assert.match(prompt, /Open no issue\. Comment on, label, reopen, or close no issue\./, job);
+    assert.ok(!/Make the writes this job's own routine makes/.test(prompt), job);
+  }
 });
