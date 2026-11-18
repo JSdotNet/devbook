@@ -37,11 +37,12 @@ All of that is ESM against `node:` built-ins with no third-party dependency, whi
 The flat claim used to get three things wrong. They are the seams where the constraint is
 negotiated rather than held:
 
-- **Three package manifests exist**, one per surface plugin that runs a server, under
+- **Four package manifests exist.** Three are one per surface plugin that runs a server, under
   `mcp/<server>/package.json`. Each is `private`, declares `type: module` and an entry point, and
   carries **no `dependencies`**. The manifest names the server and floors the runtime at
   `engines.node >= 18`, and pulls nothing in. So a version *is* pinned, as a floor; only a lockfile
-  and an install step are absent.
+  and an install step are absent. The fourth is the scenario tools' own, below: `private` and
+  `type: module`, with no name, no engine, and no dependency.
 - **The two Copilot canvas extensions are one exception to `node:`-only.** Both import
   `@github/copilot-sdk/extension`, which their host supplies at load time, per
   [the SDK entry](hosts.md#copilot-extension-sdk). Only the scenario tools, below, also import
