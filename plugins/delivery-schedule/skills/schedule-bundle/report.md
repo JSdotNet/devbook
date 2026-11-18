@@ -13,6 +13,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Review the draft: <own words> | `<owner/repo>` · <job title> | [#<n>](<url>) |
 | <a job's own Needs you row, its words kept> | `<owner/repo>` · <job title> | <its Do> |
 | <job title> failed: <why> | `<owner/repo>` | `schedule-run <bundle name>`, or the job's own routine where it still has one |
+| <job title> could not call Workflow from a bundle subagent | `<owner/repo>`, one row per entry in `noWorkflow` | Keep its own routine; run this bundle by its same-session fallback, `.devbook/arc42/adr/plugin-boundaries.md` |
 
 ### Jobs
 | Repository | <job title> | <job title> | … |
@@ -50,6 +51,8 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
   `failed: <why>`, `not run`, or `—` where the repository does not select the job.
   `delivery-schedule:update` reads `draft` and `done` as the job having run there, and nothing
   else.
+- A `noWorkflow` row comes first in *Needs you*: it is the first run's proof that a sweep
+  cannot nest its scripts in a bundle, and it decides how the bundle runs next.
 - *Needs you* gathers every job's own *Needs you* rows, most urgent first, then one row per
   draft. The ten-row rule holds across the whole section.
 - *Drift* is every repository's devbook verify table, per that skill's *In a bundle*, the

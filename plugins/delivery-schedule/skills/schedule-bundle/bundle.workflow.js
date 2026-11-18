@@ -38,6 +38,12 @@ const MAX_WRITERS = 2
 const LOCK_FILE = 'schedule-bundle.lock'
 const LOCK_HOURS = 12
 
+// Whether a bundle subagent may call `Workflow` again is unproved. A `scripts` job that cannot
+// fails as its own cell under this reason, which keeps the repository's own routine and names
+// the same-session fallback in the plugin boundaries record.
+const NO_WORKFLOW_SUMMARY = 'no Workflow in a bundle subagent'
+const NO_WORKFLOW = 'could not call Workflow from a bundle subagent; the repository keeps its own routine, and the bundle needs its same-session fallback'
+
 // What each job needs before a subagent starts, and whether it writes. A job missing here is
 // treated as a writer with no precondition — the slower reading, never the unsafe one.
 // `ownWrites` is the GitHub writes a weekday job's own routine makes and the bundle lets it
@@ -117,7 +123,8 @@ Mode: bundle
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
 - The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
 - ${writeRule(job)}
-- End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
+${traits(job).scripts ? `- This job's skill starts its own scripts through the \`Workflow\` tool, and you are already a subagent of a workflow. When that tool is not in your tool list, or its first call is refused or errors, stop there, before any label, comment, close, or branch, and return the outcome \`failed\` with the summary \`${NO_WORKFLOW_SUMMARY}\`.
+` : ''}- End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
 - If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
 
 // `{{maxResolve}}` by the rule the repository's own routine is synced with: the stamp's override
@@ -358,6 +365,10 @@ async function runOne(cell, phaseName) {
     settle(cell, 'not-run', 'usage limit', result)
     return
   }
+  if (result.outcome === 'failed' && traits(cell.job).scripts && String(result.summary || '').includes(NO_WORKFLOW_SUMMARY)) {
+    settle(cell, 'failed', NO_WORKFLOW, result)
+    return
+  }
   settle(cell, result.outcome, result.summary, result)
 }
 
@@ -415,5 +426,7 @@ return {
   skippedCheckouts,
   cells: cells.map(({ repo, job, state, reason, pullRequest, report }) => ({ repo, job, state, reason, pullRequest, report })),
   stoppedBy,
+  // The repositories whose job could not nest `Workflow`: the report's call for the fallback.
+  noWorkflow: cells.filter((c) => c.reason === NO_WORKFLOW).map(({ repo, job }) => ({ repo, job })),
   peak,
 }

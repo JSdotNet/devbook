@@ -392,3 +392,34 @@ test("a busy repository keeps the bundle's order: its later jobs wait behind the
   assert.ok(result.cells.every((c) => c.state === "done"));
   assert.equal(seen.sameRepoJobs, false);
 });
+
+test("an issue sweep that cannot call Workflow fails as its own cell, named, and the run carries on", async () => {
+  const names = ["a", "b"];
+  const { result, seen } = await weekday("issue-sweep", {
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
+    onJob: (label) => (label.endsWith(":o/a")
+      ? { outcome: "failed", pullRequest: "", summary: "no Workflow in a bundle subagent", report: "" }
+      : { outcome: "draft", pullRequest: "https://github.com/o/b/pull/1", summary: "landed", report: "r" }),
+  });
+  const prompt = seen.prompts["issue-sweep:o/a"];
+  assert.match(prompt, /starts its own scripts through the `Workflow` tool/);
+  assert.match(prompt, /before any label, comment, close, or branch, and return the outcome `failed` with the summary `no Workflow in a bundle subagent`/);
+  const a = cell(result, "o/a", "issue-sweep");
+  assert.equal(a.state, "failed");
+  assert.match(a.reason, /could not call Workflow from a bundle subagent; the repository keeps its own routine/);
+  assert.deepEqual(result.noWorkflow, [{ repo: "o/a", job: "issue-sweep" }]);
+  assert.equal(cell(result, "o/b", "issue-sweep").state, "draft");
+  assert.equal(result.stoppedBy, null);
+});
+
+test("only a job that starts its own scripts carries the Workflow line", async () => {
+  const { seen, result } = await weekday("merge-review", {
+    checkouts: ["D:/a"],
+    reports: [checkout("D:/a", "https://github.com/o/a")],
+    onJob: () => ({ outcome: "failed", pullRequest: "", summary: "no Workflow in a bundle subagent", report: "" }),
+  });
+  assert.ok(!seen.prompts["merge-review:o/a"].includes("`Workflow` tool"));
+  assert.equal(cell(result, "o/a", "merge-review").reason, "no Workflow in a bundle subagent");
+  assert.deepEqual(result.noWorkflow, []);
+});
