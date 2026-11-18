@@ -291,7 +291,7 @@ test("Issue sweep: a writer, so at most two sweeps run at once, each prompt keep
   assert.match(prompt, /classification and marker labels/);
   assert.match(prompt, /likely duplicate/);
   assert.match(prompt, /closes its own procedure makes on high-confidence evidence/);
-  assert.match(prompt, /each resolution as a draft pull request/);
+  assert.match(prompt, /each resolution as a draft pull request, with the claim, outcome, and failure-marker comments and labels `draft-pr-contract\.md` puts on the issue it resolves/);
 });
 
 test("a weekend job's prompt writes nothing to an issue", async () => {
@@ -349,7 +349,8 @@ test("every job's prompt checks the cross-bundle lock before rule 1 and holds it
   assert.match(prompt, /names a bundle other than `weekday-merge-review`, and started less than 12 hours ago/);
   assert.match(prompt, /return the outcome `busy`/);
   assert.match(prompt, /write it as `weekday-merge-review merge-review <now, ISO UTC>`/);
-  assert.match(prompt, /delete it when it still names `weekday-merge-review merge-review`/);
+  assert.match(prompt, /before you return, whatever the outcome, a usage limit and a failure included, delete it when it still names `weekday-merge-review merge-review`/);
+  assert.match(prompt, /delete the lock, then return the outcome `usage-limit`/);
   assert.ok(prompt.indexOf("cross-bundle lock") < prompt.indexOf("In rule 1, take the `worktree add` branch"));
 });
 
@@ -399,7 +400,7 @@ test("an issue sweep that cannot call Workflow fails as its own cell, named, and
     checkouts: names.map((n) => `D:/${n}`),
     reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
     onJob: (label) => (label.endsWith(":o/a")
-      ? { outcome: "failed", pullRequest: "", summary: "no Workflow in a bundle subagent", report: "" }
+      ? { outcome: "failed", pullRequest: "", summary: "No Workflow in a bundle subagent", report: "" }
       : { outcome: "draft", pullRequest: "https://github.com/o/b/pull/1", summary: "landed", report: "r" }),
   });
   const prompt = seen.prompts["issue-sweep:o/a"];
@@ -422,4 +423,19 @@ test("only a job that starts its own scripts carries the Workflow line", async (
   assert.ok(!seen.prompts["merge-review:o/a"].includes("`Workflow` tool"));
   assert.equal(cell(result, "o/a", "merge-review").reason, "no Workflow in a bundle subagent");
   assert.deepEqual(result.noWorkflow, []);
+});
+
+test("a busy repository waiting at the back is reported not run with the rest when the usage limit stops the run", async () => {
+  const names = ["a", "b", "c"];
+  const { result } = await weekday("issue-sweep", {
+    checkouts: names.map((n) => `D:/${n}`),
+    reports: names.map((n) => checkout(`D:/${n}`, `https://github.com/o/${n}`)),
+    onJob: (label) => {
+      if (label.endsWith(":o/a")) return { outcome: "busy", pullRequest: "", summary: "weekday-merge-review merge-review 2026-11-18T07:00:00Z", report: "" };
+      return { outcome: "usage-limit", pullRequest: "", summary: "usage limit", report: "" };
+    },
+  });
+  assert.equal(result.stoppedBy, "usage limit");
+  assert.ok(result.cells.every((c) => c.state === "not-run"), JSON.stringify(result.cells.map((c) => c.state)));
+  assert.equal(cell(result, "o/a", "issue-sweep").reason, "usage limit");
 });

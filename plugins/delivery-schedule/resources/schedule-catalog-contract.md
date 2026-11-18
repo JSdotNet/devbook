@@ -61,7 +61,8 @@ that make it a bundle job: `Mode: bundle`, the preamble's rule 1 on its `worktre
 a draft pull request only, and no issue opened. A weekend job comments on, labels, and closes no
 issue. A weekday job makes the writes its own routine makes and no more: merge review its one
 verdict comment per head commit, issue sweep its labels, its question and duplicate comments,
-its evidence-backed closes, and its drafts.
+its evidence-backed closes, and its drafts with the comments and labels each resolution puts on
+its issue.
 
 ## The Pickup Gate
 

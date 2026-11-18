@@ -55,7 +55,7 @@ const JOBS = {
     needs: [],
     scripts: true,
     ownWrites:
-      'the classification and marker labels the skill writes, its comments asking a reporter for what is missing or naming a likely duplicate, the closes its own procedure makes on high-confidence evidence with that evidence in the comment, and each resolution as a draft pull request',
+      'the classification and marker labels the skill writes, its comments asking a reporter for what is missing or naming a likely duplicate, the closes its own procedure makes on high-confidence evidence with that evidence in the comment, and each resolution as a draft pull request, with the claim, outcome, and failure-marker comments and labels `draft-pr-contract.md` puts on the issue it resolves',
   },
   'merge-review': {
     writes: false,
@@ -119,13 +119,13 @@ const bundleLines = (job) => `This run is the job \`{{name}}\` of the bundle "Al
 
 Mode: bundle
 
-- Before rule 1, check the cross-bundle lock. Its path is \`<common>/${LOCK_FILE}\`, \`<common>\` being \`git -C "{{checkout}}" rev-parse --path-format=absolute --git-common-dir\`, and it holds one line: \`<bundle> <job> <ISO UTC start>\`. When it exists, names a bundle other than \`${bundle.name}\`, and started less than ${LOCK_HOURS} hours ago, another bundle's job still runs in {{repo}}: do nothing else, and return the outcome \`busy\` with that line as the summary. Otherwise write it as \`${bundle.name} {{name}} <now, ISO UTC>\`, replacing what was there — the one file this job writes outside its worktree — and as your very last step, whatever the outcome, delete it when it still names \`${bundle.name} {{name}}\`.
+- Before rule 1, check the cross-bundle lock. Its path is \`<common>/${LOCK_FILE}\`, \`<common>\` being \`git -C "{{checkout}}" rev-parse --path-format=absolute --git-common-dir\`, and it holds one line: \`<bundle> <job> <ISO UTC start>\`. When it exists, names a bundle other than \`${bundle.name}\`, and started less than ${LOCK_HOURS} hours ago, another bundle's job still runs in {{repo}}: do nothing else, and return the outcome \`busy\` with that line as the summary. Otherwise write it as \`${bundle.name} {{name}} <now, ISO UTC>\`, replacing what was there — the one file this job writes outside its worktree — and before you return, whatever the outcome, a usage limit and a failure included, delete it when it still names \`${bundle.name} {{name}}\`.
 - In rule 1, take the \`worktree add\` branch: this session did not start in a worktree of {{repo}}.
 - The instruction files this session loaded at its start belong to the folder the bundle started in, not to {{repo}}. Once your worktree exists, read its own \`AGENTS.md\` and \`CLAUDE.md\` and follow those as this repository's rules.
 - ${writeRule(job)}
 ${traits(job).scripts ? `- This job's skill starts its own scripts through the \`Workflow\` tool, and you are already a subagent of a workflow. When that tool is not in your tool list, or its first call is refused or errors, stop there, before any label, comment, close, or branch, and return the outcome \`failed\` with the summary \`${NO_WORKFLOW_SUMMARY}\`.
 ` : ''}- End with the report rule 6 asks for, and return it as your structured result with the outcome, the pull request's URL when you opened or updated one, and at most eight words saying what happened.
-- If the plan's usage limit stops you, return the outcome \`usage-limit\` at once.`
+- If the plan's usage limit stops you, delete the lock, then return the outcome \`usage-limit\` at once.`
 
 // `{{maxResolve}}` by the rule the repository's own routine is synced with: the stamp's override
 // in `components.schedule.overrides` when it is a whole number, else the schedule's field. An
@@ -365,7 +365,7 @@ async function runOne(cell, phaseName) {
     settle(cell, 'not-run', 'usage limit', result)
     return
   }
-  if (result.outcome === 'failed' && traits(cell.job).scripts && String(result.summary || '').includes(NO_WORKFLOW_SUMMARY)) {
+  if (result.outcome === 'failed' && traits(cell.job).scripts && String(result.summary || '').toLowerCase().includes(NO_WORKFLOW_SUMMARY.toLowerCase())) {
     settle(cell, 'failed', NO_WORKFLOW, result)
     return
   }

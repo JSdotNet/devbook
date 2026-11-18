@@ -26,9 +26,8 @@ hand; it asks nothing. A bundle file's shape is *The Schedule File* in
    absolute path, and `args` `{ bundle: { name, title, jobs }, schedules, preamble, checkouts }`.
    The schedule's prompt, or the person's turn, is the opt-in the tool requires. The script plans
    the repository × job matrix — selection, one repository per `origin`, each job's
-   precondition — and runs each cell's assembled prompt under the cap. A cell whose repository
-   another bundle's job holds, by the lock its prompt checks first, waits at the back and is
-   reported not run when nothing else is left. Never rewrite a prompt,
+   precondition — and runs each cell's assembled prompt under the cap, a repository another
+   bundle's job holds waiting at the back. Never rewrite a prompt,
    run a job here, or retry a cell: each job's procedure is its own skill's.
 3. **Report** in `report.md` beside this file, from the script's result.
 
@@ -36,9 +35,7 @@ hand; it asks nothing. A bundle file's shape is *The Schedule File* in
 
 - Start a session, or write the checkout list into a repository.
 - Mark a pull request ready, or open an issue. A weekend job writes nothing else; a weekday job
-  makes the writes its own routine makes and no more — merge review's verdict comment per head
-  commit, issue sweep's labels, its question and duplicate comments, its evidence-backed closes,
-  and its drafts. The prompt's lines carry the rule, from `ownWrites` in `JOBS`.
+  makes its own routine's writes and no more, per `ownWrites` in `JOBS`.
 
 ## Surface Reporting
 

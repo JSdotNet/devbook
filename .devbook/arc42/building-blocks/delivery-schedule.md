@@ -344,7 +344,10 @@ worktree for the owner, so a finished job would read as running. A lock a crashe
 behind holds another bundle off for twelve hours at most, and never its own bundle, which runs
 one job per repository and so reads its own lock as stale. The script puts a busy repository at
 the back of the queue, asks it again once another job has settled, and reports it not run when
-nothing else is left.
+nothing else is left. Reading and writing the lock are two steps, so two bundles starting in one
+repository in the same moment could both pass; the two hours between the weekday bundles are
+what rule that out. The lock is the prompt's protocol, followed by the job: the tests prove the
+queue around a busy job and the lines that ask for it, not a model's reading of the file.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |

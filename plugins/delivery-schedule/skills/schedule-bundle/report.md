@@ -51,8 +51,9 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
   `failed: <why>`, `not run`, or `—` where the repository does not select the job.
   `delivery-schedule:update` reads `draft` and `done` as the job having run there, and nothing
   else.
-- A `noWorkflow` row comes first in *Needs you*: it is the first run's proof that a sweep
-  cannot nest its scripts in a bundle, and it decides how the bundle runs next.
+- A `noWorkflow` row comes first in *Needs you*, in place of that cell's failed row: it is the
+  first run's proof that a sweep cannot nest its scripts in a bundle, and it decides how the
+  bundle runs next.
 - *Needs you* gathers every job's own *Needs you* rows, most urgent first, then one row per
   draft. The ten-row rule holds across the whole section.
 - *Drift* is every repository's devbook verify table, per that skill's *In a bundle*, the
