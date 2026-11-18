@@ -1,7 +1,7 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-11-10
+date: 2026-11-18
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 c4: ["marketplace"]
 ```
@@ -70,13 +70,15 @@ on the next launch.
 repository on this machine.** One routine per repository and job had grown to 42 enabled
 routines and 115 runs a week over six repositories by 2026-11-06, a list nobody could scan.
 Grouping by job also fits how the reports are read: a week's results read best across every
-repository, which a single repository's routine cannot show. Two bundles ship, both on the
-weekend, and every other schedule stays one routine per repository.
+repository, which a single repository's routine cannot show. Four bundles ship, two on the
+weekend and two on weekdays, and every other schedule stays one routine per repository.
 
 | Bundle | Fires, local time | Jobs, in order |
 | --- | --- | --- |
 | Saturday code health | Saturday 05:00 | Devbook stack update, then package update and security review |
 | Sunday devbook review | Sunday 04:00 | Devbook validate, technology graph refresh, devbook verify, prose check, instruction review, then the weekly update and change report as the digest |
+| Issue sweep | Monday to Friday 06:00 | Issue sweep |
+| Merge review | Monday to Friday 08:00 | Merge review |
 
 Saturday's jobs build, test, or change installs, so they can fail. Running them the day before
 keeps a failure out of Sunday's report, and the stack update runs first because the Sunday jobs
@@ -87,10 +89,45 @@ Package update takes only the major bumps where Dependabot covers NuGet, because
 proposes the minor and patch ones there, and a repository with no .NET package manifest skips
 it before a subagent starts. Security review opens no issue in a bundle; its findings join the
 one report, as devbook verify's drift does. Sunday's jobs all work on the chapters and
-instruction files of the same repositories, and the digest ends the run, so its one report is the single Sunday read. Merge
-review and issue sweep stay outside, because they write in several repositories every weekday.
+instruction files of the same repositories, and the digest ends the run, so its one report is the single Sunday read.
 The weekly retro reviews the week, bundles included, so it runs after them, and a job that is
 not about the repositories stays outside as well.
+
+**Merge review and issue sweep are weekday bundles, one job each.** Nine per-repository
+routines were left once the weekend bundles shipped: merge review in six repositories and issue
+sweep in three. Both weekend bundles passed their first runs on 2026-11-18, Saturday's eighteen
+jobs and Sunday's twenty-two with nothing failed, so the fan-out, the cap, and the one report
+hold across repositories. What kept these two jobs out was their cadence, not the mechanism:
+a verdict is read the morning a pull request waits for it, and a sweep's drafts the morning
+they land, so each runs on weekdays rather than inside a weekend bundle. They are two bundles
+rather than one because nothing orders them: merge review leaves drafts out, so it never reads
+what the sweep lands, and a sweep running long must not hold back the verdicts. Issue sweep
+keeps each repository's `maxResolve`: the bundle assembles the job's prompt by the rule the
+repository's own routine used, the stamp's override included, so a run resolves as many issues
+as before. Once each bundle's first run passes, its routines are retired by the rule below, a
+person's yes for each repository and job that ran.
+
+**No two bundles run a job in the same repository at once.** Issue sweep fires at 06:00 and merge
+review at 08:00. The reason no bundle runs two jobs in one repository holds across bundles too:
+each job fetches into the checkout and adds a worktree there. Issue sweep keeps 06:00 because its
+runs are the long ones, a resolution being Scope through Build & Test, and its drafts should be
+waiting when the working day starts. Merge review reads at most ten pull requests per repository
+and writes no file, so it can start later and still be read that morning. A gap only makes a
+collision unlikely, so each bundle checks a repository before starting a job there: one where
+another bundle's job still runs goes to the back of the queue, and one still busy when nothing
+else is left is reported not run, for the next weekday. The two hours are tuned after the first
+runs, as the cap is.
+
+**A sweep inside a bundle must still reach its own scripts, and the first run proves it does.**
+Issue sweep runs `triage.workflow.js` and `resolve-issue.workflow.js` through the `Workflow`
+tool, and in a bundle it is already a subagent the bundle's own `Workflow` call started. No run
+has yet shown whether such a subagent may call `Workflow` again. A sweep that cannot start its
+scripts fails as its cell, which keeps that repository's own routine, so the first run decides
+safely. If nesting fails, the issue sweep bundle runs its jobs one repository at a time in the
+bundle's own session, outside `bundle.workflow.js`, so each sweep calls `Workflow` at the top
+level as its routine did. That is still one session and spawns none; the cost is a fresh context
+per job, since three sweeps then share one. Merge review calls no script of its own and stays
+fanned out either way.
 
 **A bundle fans out prompts the catalog already has, and carries no procedure of its own.** Its
 skill runs one subagent per repository and job through the `Workflow` tool, as the issue sweep
@@ -106,9 +143,14 @@ branches: every job's preamble fetches into the checkout and adds a worktree the
 job's included. Read-only jobs fill the other slots from other repositories. When the plan's usage limit is hit, the
 bundle starts no new job and lists the rest as not run, for the next week or `schedule-run`.
 Seven jobs over six to eight repositories is about forty subagents, so the cap, not the cadence,
-sets how long a run takes. It is tuned after the first runs.
+sets how long a run takes. It is tuned after the first runs. The weekday bundles keep it. Issue
+sweep is a writer, so at most two sweeps run at once, one fewer than the three its routines
+started together, and each sweep's own scripts stay inside its triage and resolution limits.
+Merge review changes no file and pushes no branch, so it counts as a reader and four of its six
+repositories run at once. On a weekday the bundles share the plan's usage with the person's own
+sessions, which is why the cap is not raised.
 
-**In a bundle, every job that changes files lands as a draft pull request and opens no issue.**
+**In a bundle, every job that changes files lands as a draft pull request, and no job opens an issue.**
 The preamble marks a pull request ready once build and tests pass, but a bundle never does:
 forty changes at once are reviewed on the pull request, as the issue sweep's are. Devbook
 verify's drift table moves into the bundle report instead of `devbook-drift` issues. Prose check
@@ -118,9 +160,22 @@ catalog entry, which leaves out an editor on purpose: a list of findings is work
 has to turn into edits, while a commit per chapter is one they can keep or drop. The weekly
 update and the change report change no file and stay in the bundle report.
 
+A weekend bundle's job writes nothing else: it comments on, labels, and closes no issue, since
+none of its jobs needs to. A weekday bundle's job makes the writes its own routine makes, and no
+more. Merge review posts one verdict comment per head commit and never approves or merges. Issue
+sweep writes its classification and marker labels, comments its questions and likely duplicates,
+closes an issue only on the high-confidence evidence the unattended lane already allows, and
+lands each resolution as a draft. Those writes are the job: withheld, they would become a
+weekday report a person applies by hand in several repositories, which is the work the routines
+exist to remove. So the lines a bundle adds to each prompt state its own write rule, and the
+weekday rule extends the weekend one for these two jobs alone; nothing a weekend job may write
+changes.
+
 **A bundle has no pickup check.** Its changes wait on GitHub as drafts, and its report buries
 nothing, because the app now archives a session left inactive for seven days. The check had
-made every skipped run one more unarchived session, and 226 sat open on 2026-11-06.
+made every skipped run one more unarchived session, and 226 sat open on 2026-11-06. The weekday
+bundles have none either: merge review and issue sweep report to GitHub, and their routines
+never had one.
 
 **A bundle finds its repositories on this machine, and that list is personal.** It reads each
 main checkout's `components.schedule` selection and deduplicates by `origin` remote, because one
@@ -292,8 +347,19 @@ belongs to a person's map.
   per repository and job.
 - A pull request marked ready in a bundle once build and tests pass: forty changes arrive at
   once, and none has had a person look at it.
-- Merge review and issue sweep in a weekend bundle: they write in several repositories and are
-  read every weekday.
+- Merge review and issue sweep in a weekend bundle: they are read every weekday, so a pull
+  request would wait days for its verdict and a week of issues for triage.
+- Merge review and issue sweep in one weekday bundle: nothing orders the two, and the verdicts
+  would wait on the slowest sweep.
+- Both weekday bundles at 06:00: two jobs would fetch into one checkout and add worktrees there
+  at once. Nor does one bundle fire the other: that is a schedule starting a run from no
+  person's turn.
+- A weekday bundle held to drafts only, as the weekend ones are: merge review would post no
+  verdict and the sweep would label and close nothing, leaving each for a person to apply.
+- Keeping the issue sweep routines if a bundle subagent cannot call `Workflow`: three routines
+  stay on the list for a limit the bundle's own session works around.
+- A tighter cap for the weekday bundles: the routines already ran three sweeps at once, and the
+  cap's two writers are fewer.
 - The list of checkouts in a repository: it names folders on one machine.
 - Reports as `schedule-report` issues once schedules ran locally: a report is read once, and
   as an issue it needs closing, sits in the backlog the issue sweep triages, and is written
@@ -333,6 +399,7 @@ belongs to a person's map.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-18 | Merge review and issue sweep become weekday bundles, `All repos · Merge review` and `All repos · Issue sweep`, replacing nine per-repository routines once each first run passes and a person says yes. Issue sweep fires at 06:00 and merge review at 08:00, and no bundle starts a job in a repository where another bundle's job still runs. A weekday job makes the writes its own routine makes, verdict comments or labels, evidence-backed closes, and drafts, while the weekend bundles stay drafts only. The cap stays, with merge review a reader. Issue sweep keeps each repository's `maxResolve`. The first run proves a sweep can call `Workflow` from a bundle subagent; if it cannot, the sweep bundle runs its jobs one at a time in its own session. | Both weekend bundles passed their first runs, and these two jobs had stayed out for their cadence alone. |
 | 2026-11-10 | Saturday code health ships: a repository's jobs start in the bundle's order, package update takes only majors where Dependabot covers NuGet and skips a repository with no .NET package manifest, and security review's findings go into the bundle report instead of issues. | A reader filling a free slot could start security review before the stack update, whose finding explains a later failure; Dependabot already proposes the minor and patch bumps where it covers NuGet; a bundle opens no issue. |
 | 2026-11-10 | A bundle runs no two jobs in one repository, read-only ones included. | Every job fetches into its repository's checkout and adds a worktree there, so two readers race on the same refs as two writers do. |
 | 2026-11-10 | A schedule may be a bundle: one local routine that runs catalog jobs across every repository on the machine, one `Workflow` subagent per repository and job, fed the prompt `delivery-schedule:update` assembles. Two ship: Saturday code health and Sunday devbook review. At most four subagents run, two writers, never two in one repository. Every change lands as a draft and opens no issue, verify's drift table and the digest stay in the report, and prose check lands its edits as a draft. There is no pickup check, and the checkout list is personal. | 42 routines over six repositories were a list nobody could scan, and a week's reports read best across repositories. |
