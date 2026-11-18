@@ -57,12 +57,14 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devboo
   report instead of `devbook-drift` issues, and `schedule-security-review`'s ranked findings
   instead of `security` issues.
 - **Writes:** `schedule-prose-check` applies its findings, the one place prose check edits a
-  chapter.
+  chapter. In a weekend bundle a job comments on, labels, and closes no issue. In a weekday
+  bundle a job writes what its own routine writes: `schedule-merge-review` its verdict comments,
+  `schedule-issue-sweep` its labels, its comments, its evidence-backed closes, and its drafts.
 - **Reports:** `schedule-weekly-update` and `schedule-whats-new` write the digest that ends the
   Sunday devbook review, inside the bundle report.
 - **Skips:** the pickup check, since the host archives an inactive session after seven days.
-- **Fires:** from Saturday code health or Sunday devbook review instead of its own routine, once
-  the bundle's first run has passed.
+- **Fires:** from Saturday code health, Sunday devbook review, or the weekday Issue sweep or
+  Merge review bundle instead of its own routine, once the bundle's first run has passed.
 
 ### schedule-devbook-validate
 
@@ -145,7 +147,8 @@ related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entr
 - **Resolves:** up to N of the rest one at a time, each on its own branch, each a draft pull
   request whose body says what could not be proved.
 - **Publishes:** one brief, *Needs you* first.
-- **Trigger:** the weekday `issue-sweep`.
+- **Trigger:** the weekday Issue sweep [bundle](delivery-schedule.md#bundle) at 06:00, or a
+  repository's own weekday `issue-sweep` until that bundle's first run has passed there.
 - **Leaves out:** an issue carrying a `wayfinder:*` label, before triage. It is a map or a decision
   ticket, and it belongs to the person working the map, so the sweep never classifies, comments
   on, closes, or resolves it. The brief counts these issues and names none of them. The triage
@@ -183,6 +186,9 @@ Resolution is sequential in the session the schedule gave it. It cuts and remove
 issue, and runs through the host's workflow tool as sub-agents, never a second session. A
 scheduled run has hours and nobody to hand a parked worktree to, so it neither fans out nor
 parks. What did not reach a draft pull request is a comment on the issue and a row in the brief.
+In the weekday bundle the sweep is itself a subagent of the bundle's workflow, so whether it may
+call the workflow tool again is what the bundle's first run proves; the fallback is in
+[the plugin boundaries record](../adr/plugin-boundaries.md).
 
 `resources/draft-pr-contract.md` holds the claim, the branch, the draft pull request and its
 body, the failure marker, and the worktree removal. `scripts/resolve-issue.workflow.js` holds the
@@ -198,6 +204,9 @@ calls the same step. The issue sweep passes `sweep-failed` as its marker.
   request.
 - **Never:** approves.
 - **Why:** approving is a decision, and no unattended run takes one.
+- **Trigger:** the weekday Merge review [bundle](delivery-schedule.md#bundle) at 08:00, after the
+  Issue sweep bundle, or a repository's own weekday `merge-review` until that bundle's first run
+  has passed there.
 - **Conflicts:** reads the window's conflicts (merges re-run from their parents, open pull requests
   against the base and each other, overlapping squash merges) with `git merge-tree`, which never
   touches the working tree. It names each file that keeps conflicting with the change that would

@@ -327,17 +327,23 @@ each checkout that the script decides on.
 | --- | --- | --- |
 | Saturday code health | Saturday 05:00 | `devbook-update`, then `package-update` and `security-review` |
 | Sunday devbook review | Sunday 04:00 | `devbook-validate`, `tech-update`, `devbook-verify`, `prose-check`, `instruction-review`, then `weekly-update` and `change-report` as the digest |
+| Issue sweep | Monday to Friday 06:00 | `issue-sweep` |
+| Merge review | Monday to Friday 08:00 | `merge-review` |
 
-Merge review, issue sweep, weekly retro, and every job not about the repositories stay one
-routine each. The reasons are in [the plugin boundaries record](../adr/plugin-boundaries.md).
+Weekly retro and every job not about the repositories stay one routine each. The reasons, and
+what the first weekday run must prove, are in
+[the plugin boundaries record](../adr/plugin-boundaries.md).
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | At most four subagents run at once, at most two of them jobs that write | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No two jobs run in the same repository at once, reader or writer | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
+| No bundle starts a job in a repository where another bundle's job still runs; one still busy at the end is reported not run | bundle skill | untested |
+| Issue sweep in a bundle resolves the repository's own `maxResolve`, the stamp's override included | prompt assembly | untested |
 | A repository's jobs start in the bundle's order, so Saturday's stack update starts before package update and security review | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | At the plan's usage limit, no new job starts and the rest are reported as not run | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | Every job that changes files lands as a draft pull request and opens no issue | bundle skill, the prompt it passes | untested |
+| A weekend bundle's job comments on, labels, and closes no issue; a weekday bundle's job writes what its own routine writes and no more | the prompt the bundle passes | untested |
 | A repository is run once, however many checkouts carry its selection, deduplicated by `origin` | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | A job's preconditions are checked before any subagent starts | bundle skill | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
 | No pickup check holds a bundle back | prompt assembly | `unit:node:plugins/delivery-schedule/skills/schedule-bundle/bundle.workflow.test.mjs` |
@@ -480,7 +486,7 @@ flowchart TD
     list --> dedupe["Read each selection, one repository per origin remote"]
     dedupe --> pre["Check each job's preconditions"]
     pre --> matrix["A repository × job matrix of prompts"]
-    matrix --> run["Run subagents: four at once, two writers, one job per repository"]
+    matrix --> run["Run subagents: four at once, two writers, one job per repository across bundles"]
     run --> limit{"Usage limit hit?"}
     limit -->|yes| notrun["List the remaining jobs as not run"]
     limit -->|no| digest["Weekly update and change report, as the digest"]
