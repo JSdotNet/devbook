@@ -65,6 +65,14 @@ To add a technology:
 1. Write its `##` chapter in its layer file, with `status`, `type`, and any `depends-on` edges.
 2. Add its node and edges to the graph above in the same change.
 
+**Open Questions**
+
+- Does the OpenSpec CLI belong in `hosts.md`? `devbook-openspec` installs and drives it in an
+  adopting repository, at the range `>=1.13.2 <3.0.0` since its 2.x support, but this repository
+  has no `openspec/` folder and runs it nowhere. PowerShell is listed on the same grounds: a
+  script this repository ships into others. A person decides whether a tool the plugins drive
+  elsewhere earns a chapter here.
+
 To change a rating, change it in the chapter and in the `class` line here together. The generated
 `_meta/graph.json` beside this file comes from the chapters, never from this diagram, so when the
 two disagree the diagram is stale.
