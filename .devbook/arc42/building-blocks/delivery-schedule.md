@@ -42,7 +42,7 @@ proved before it is trusted.
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
-| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly, or a person by hand |
+| `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly or on weekdays, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
