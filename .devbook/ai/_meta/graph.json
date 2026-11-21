@@ -297,7 +297,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 135,
+          "line": 137,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point",
             ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
@@ -313,7 +313,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-11-10",
+          "date": "2026-11-18",
           "c4": [
             "marketplace"
           ],
