@@ -183,7 +183,8 @@ and by nothing else, and never another component's key:
 cadence does not fit the repository, and a `maxResolve` where the schedule sets one and the
 repository wants fewer or more items per run. An override the schedule has no field for is
 reported and ignored. Both are facts about the repository. A retired name is dropped, per
-*Retired Schedules*. Deliberately absent:
+*Retired Schedules*, and so is the `cron` of a job a bundle covers on the machine running
+`update`, per *A Job a Bundle Covers* in `machine-sync.md`. Deliberately absent:
 scheduler ids, the checkout's path, the approved tools, and who created them — personal, and
 wrong the moment a second person opens the file. They live in the scheduler.
 

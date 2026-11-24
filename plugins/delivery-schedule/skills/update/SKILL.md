@@ -48,10 +48,12 @@ follow `../../resources/machine-sync.md` instead of the steps below. It needs no
    takes it — the contract's *What a local routine changes*. Then set `enabled: false`
    on every entry with this repository's prefix whose title is a deselected or retired
    schedule, and say deleting one is done on the host's own page. Leave any other title.
-   A job an enabled bundle covers here is neither created nor updated, and stays in
-   `enabled`: *A Job a Bundle Covers* in `../../resources/machine-sync.md`.
-7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —
-   and no other key in the file. Leave the commit to the user, and say so.
+   A job an enabled bundle covers here is neither created nor updated, stays in `enabled`,
+   and loses its `cron` override but no other field: *A Job a Bundle Covers* in
+   `../../resources/machine-sync.md`.
+7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides`, a
+   covered job's `cron` dropped — and no other key in the file. Leave the commit to the user,
+   and say so.
 8. **Report** one table: schedule, the catalog's UTC cron beside the local one, created /
    updated / disabled / retired / covered / skipped with the reason, the worktree option — *on*, or
    *switch on in the host's page* where the scheduler could not set it — and the link the

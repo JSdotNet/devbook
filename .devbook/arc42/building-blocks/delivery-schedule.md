@@ -106,7 +106,9 @@ entry point. The rest are below.
 - **Retires:** once a bundle's run has finished a job in a repository, machine level deletes
   that repository's own routine for the job, after the person confirms the list. While a bundle is
   enabled, a repository's own sync leaves a covered job alone. It neither creates nor updates
-  that routine, and the job stays in the selection the bundle reads.
+  that routine, and the job stays in the selection the bundle reads. The job's `cron` override
+  goes from the stamp, because a bundle keeps its own cadence and never reads one, while a
+  `maxResolve` override stays for the bundle to use.
 
 ### schedule-status
 
@@ -297,6 +299,7 @@ under the devbook config directory, beside the machine's choice of bundles.
 | The selection is written by this block's `init` and `update` and by nothing else | `init`, `update` | untested |
 | A deselected schedule is disabled rather than deleted, so re-selecting it does not duplicate | `init`, `update` | untested |
 | A job an enabled bundle covers keeps its place in the selection, and its routine is neither created nor updated | `update` | untested |
+| A job an enabled bundle covers loses its `cron` override and keeps every other override field | `update` | untested |
 | A retired name is dropped and its routine disabled, never a failure | `update` | `migrate.test.mjs`, the drop only |
 | A routine whose title is no catalog or retired schedule is left alone | `update` | untested |
 | A schedule that would start without its skill is refused rather than created | `init`, `update` | untested |
@@ -305,7 +308,8 @@ The value object it holds:
 
 - **Cadence Override:** a repository's replacement for a catalog cadence. It is a value in the
   selection rather than an edit to the catalog file, so an upgrade can move the shipped default
-  without silently reverting or silently keeping somebody's choice.
+  without silently reverting or silently keeping somebody's choice. It lapses where a
+  [bundle](#bundle) covers the job, and `update` removes it there.
 
 ### Bundle
 
