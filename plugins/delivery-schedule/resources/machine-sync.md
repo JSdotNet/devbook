@@ -64,4 +64,7 @@ worktree and is refused.
 A job is covered in a repository when an enabled bundle lists it in `jobs` and a listed
 checkout resolves to that repository. The per-repository sync neither creates nor updates its
 routine, a migration's re-time included, and keeps the job in `enabled`: the bundle reads that
-selection to know what to run. The report row says *covered by All repos · <title>*.
+selection to know what to run. It drops the job's `cron` override from the stamp, since a
+bundle runs on its own cadence and never reads one, and keeps every other field, `maxResolve`
+among them; an override left empty goes. The report row says *covered by All repos · <title>*,
+and *cron override dropped* when it dropped one.
