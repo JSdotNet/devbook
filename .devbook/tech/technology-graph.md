@@ -15,7 +15,7 @@ in its layer file; this file is the map.
 | --- | --- |
 | [shared.md](shared.md) | Cross-layer formats and protocols: Markdown, the Model Context Protocol, MCP Apps. |
 | [hosts.md](hosts.md) | What reads or runs an asset: two plugin APIs, the Claude Code CLI, the scheduler, the Copilot extension SDK. |
-| [tooling.md](tooling.md) | What the executable parts run on: Node, PowerShell. |
+| [tooling.md](tooling.md) | What the executable parts run on: Node, PowerShell; and the Aspire CLI a shipped procedure drives. |
 
 Three layers is the whole stack. A fourth appears only when a technology belongs to none of these,
 and the change that adds its file registers it in this table.
@@ -42,6 +42,7 @@ graph LR
   subgraph tooling
     node[Node]
     pwsh[PowerShell]
+    aspireCli[Aspire CLI]
   end
   mcpApps --> mcp
   claudeCli --> claudeApi
@@ -51,13 +52,13 @@ graph LR
   classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
   classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
   class markdown,mcp,claudeApi,copilotApi,node,pwsh adopted;
-  class mcpApps,claudeCli,copilotSdk,scheduler trial;
+  class mcpApps,claudeCli,copilotSdk,scheduler,aspireCli trial;
 ```
 
 **How to Read It**
 
 `status` rates a technology in this repository, on the radar ladder `candidate`, `trial`,
-`adopted`, `hold`, `retired`. The four `trial` entries share one reason: nothing here has exercised
+`adopted`, `hold`, `retired`. The five `trial` entries share one reason: nothing here has exercised
 them yet, and each says what a first real run would test.
 
 To add a technology:

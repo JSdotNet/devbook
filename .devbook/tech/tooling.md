@@ -5,7 +5,8 @@ rating: adopted
 ```
 
 A plugin's executable parts run on these two runtimes. A consuming repository already has both, and
-nothing here installs either.
+nothing here installs either. The Aspire CLI is the one tool a shipped procedure drives in a
+consuming repository.
 
 ## Node
 
@@ -108,3 +109,37 @@ This repository holds the script since 2026-09-26, and uses it for `-Check` only
 never refreshes, per [the checks and indexes record](../arc42/adr/checks-and-indexes.md).
 `devbook-meta-nightly.yml` at 02:17 UTC and the `devbook-validate` schedule behind it, weekly here
 on Sunday, refresh the default branch, both passing `--write` to the vendored checker.
+
+## Aspire CLI
+
+```meta
+rating: trial
+type: tool
+version: "17.0"
+date: 2026-11-24
+related: [".devbook/arc42/building-blocks/devbook-procedures.md#procedure"]
+```
+
+Nothing in this repository runs Aspire. The `run` seed under `plugins/devbook/assets/procedures/skills/`
+writes its example launch against the Aspire CLI, and `devbook:scenario-run` names the browser log
+an Aspire frontend can keep. A consuming repository that orchestrates with Aspire replaces the
+example with its own AppHost; one that does not replaces the command.
+
+On 2026-11-24 the seed was checked against Aspire CLI 17.0.0, on a throwaway `aspire-starter`
+AppHost created with `aspire new` outside this repository:
+
+- `aspire start` detaches on its own. `--format json` prints one object with `appHostPath`,
+  `appHostPid`, `cliPid`, `dashboardUrl`, and `logFile`. It names no frontend URL and writes no
+  file into the checkout, so the seed reads resource URLs from `aspire describe <resource>
+  --format json` instead.
+- `aspire start` on an AppHost already running stops that instance and starts anew, so the seed
+  checks `aspire ps --format json` before it starts.
+- `aspire wait <resource>` is the health signal, and `aspire stop --apphost <path>` stops one
+  checkout's instance.
+- `.WithBrowserLogs()` from `Aspire.Hosting.Browsers`, still a preview package behind the
+  `ASPIREBROWSERLOGS001` diagnostic, adds a `<frontend>-browser-logs` resource. `aspire logs` on it
+  shows console and network entries for the browser Aspire opens itself, not for a browser
+  Playwright launches.
+
+It stays `trial` because the seed is an example and no consuming repository's recipe has been
+checked against 17.0 from here.
