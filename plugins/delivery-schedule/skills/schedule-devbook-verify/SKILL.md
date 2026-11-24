@@ -13,8 +13,7 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 
 - Scope: every unit (default), or the ones in one folder.
 - `bundle`: set when the prompt carries the line `Mode: bundle`, which a bundle adds to each
-  job's prompt (default off). Step 3 then lists issues only and
-  opens, comments on, and closes none.
+  job's prompt (default off).
 
 ## Workflow
 
@@ -30,10 +29,11 @@ Runs under *Running an Entry Point* in `../../resources/report-contract.md`.
 3. **Issues.** One per unit. List the open issues labelled `devbook-drift`, matched by the title
    `[Devbook drift] <unit id>`; an earlier run's `[Devbook drift] <path>#<heading-slug>` for one
    of its chapters covers that row, and so does a sweep's issue whose body names the chapter.
-   One is open: comment when a verdict changed, otherwise leave it. None: open it with labels
-   `devbook-drift` and `automated`, the unit's rows, their evidence, and the action the report
-   named — `devbook:capture-specs` over the unit for `code-ahead`, the question put to a person
-   for `conflict`.
+   Under `bundle`, stop at the list: open, comment on, and close none — the bundle report
+   carries the table. One is open: comment when a verdict changed, otherwise leave it. None:
+   open it with labels `devbook-drift` and `automated`, the unit's rows, their evidence, and the
+   action the report named — `devbook:capture-specs` over the unit for `code-ahead`, the
+   question put to a person for `conflict`.
 4. **Report** in `report.md` beside this file, with the issues from step 3 linked. Every row
    `aligned`: the counts and nothing else. Under `bundle`, follow `report.md`'s *In a bundle*.
 
