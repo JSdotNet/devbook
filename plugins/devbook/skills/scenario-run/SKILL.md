@@ -21,7 +21,9 @@ hand. The reporter writes only for a run that covered a whole journey. The contr
    `devbook:update`. A run of a stale spec records a signature the journey no longer has.
 2. **Bring the application up** through the repository's `run` procedure, unless the profile's
    portals point at an environment already running, and set every `env:<NAME>` the profile
-   names: an unset one fails setup.
+   names: an unset one fails setup. Read browser errors from `aspire logs
+   <frontend>-browser-logs` where the AppHost gives the frontend `.WithBrowserLogs()`; it
+   records only the browser Aspire tracks, so a Playwright browser's errors stay in its report.
 3. **Pick the specs**: for one journey, the spec whose `// scenario:` header names its address;
    for all, every spec with that header. Confirm `playwright.config.ts` lists
    `.devbook/_tools/scenarios/report.mjs` as a reporter; without it nothing is written, so stop
