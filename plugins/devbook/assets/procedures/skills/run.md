@@ -28,18 +28,24 @@ keep `## Healthy` and `## Entry points` in it either way — a flow's validation
 <!-- The command, where it runs from. Replace the example. -->
 
 ```bash
-aspire start
+aspire start --format json
 ```
 
 - From the repository root. AppHost: `src/Orders.AppHost/Orders.AppHost.csproj`
+- Aspire 17 detaches on its own and returns when the AppHost is up: one JSON object with
+  `appHostPath`, `appHostPid`, `cliPid`, `dashboardUrl` (login token included), and `logFile`.
+  It names no resource URL and writes no file into the repository. `--isolated` randomizes the
+  ports, so two worktrees can run side by side.
 
 1. **Check whether it is already running** before starting a second copy — worktrees share
-   ports. Reuse a running instance and say so.
-2. **Run the declared command** in the background. Never substitute a different command when
-   the declared one fails; report the failure.
-3. **Wait for the signals under Healthy.** Stop waiting on a fatal error, or after two
-   minutes of silence. Do not report a partially-started app as healthy.
-4. **Re-read the entry points** every launch — a port changes.
+   ports. `aspire ps --format json` lists each running AppHost by `appHostPath`. Reuse a running
+   instance and say so: `aspire start` on an AppHost already running stops it and starts anew.
+2. **Run the declared command.** Never substitute a different command when the declared one
+   fails; report the failure and the `logFile` it names.
+3. **Wait for the signals under Healthy** — `aspire wait <resource>` blocks until the resource
+   reports healthy, 120 seconds by default. Do not report a partially-started app as healthy.
+4. **Re-read the entry points** every launch — a port changes. `aspire describe <resource>
+   --format json` lists a resource's `urls`.
 
 Report in a couple of lines: the command, the health verdict, the entry points. Leave the app
 running — `diagnose` and a flow's later stages work against it.
@@ -70,6 +76,13 @@ running — `diagnose` and a flow's later stages work against it.
   `ORDERS_QA_PASSWORD` environment variable, provisioned from the team's secret store.
 - Never type a password, token, or key into a form yourself: open the page, name where the
   credential lives, and let the user sign in.
+
+## Stop
+
+<!-- How to stop this checkout's application and nothing else. -->
+
+- `aspire stop --apphost src/Orders.AppHost/Orders.AppHost.csproj` from this worktree's root.
+  Name the AppHost, so the stop reaches this checkout's instance and no other.
 
 ## Never
 
