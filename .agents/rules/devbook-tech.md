@@ -6,33 +6,23 @@ description: Structure and authoring rules for the technology devbook folder, ho
 # Technology documentation (`tech/`)
 
 `tech/` is the durable record of **which technologies this project itself is
-built with, and how they depend on each other** — the technology graph. It is
-complementary to `arc42/` (system architecture), `domain/` (domain model), and
-the rest of the devbook folders.
+built with, and how they depend on each other** — the technology graph: what it
+builds on, at which version and rating, and what depends on what. A product
+that models technologies as a domain concept keeps that model in `domain/`.
 
-`tech/` answers "what do we build on, at which version, with what maturity, and
-what depends on what". `arc42/` stays the place for *why* an architecture looks
-the way it does; `tech/` links back to it rather than restating rationale.
+## Where a fact lives
 
-> `tech/` describes **this repository's own stack**. If the product itself
-> models technologies as a domain concept, that lives in `domain/` — keep the
-> two separate and cross-link with `related` when they touch.
+Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact" in
+`devbook-writing.md`. `tech/` ranks third: it links to `arc42/` and `design/`. Load the
+relevant layer files for stack, dependency, upgrade, or technology-selection work.
 
-> `tech/` is also the **registry for AI tooling** — Claude Code, an MCP server,
-> a model provider — with its version and its maturity here. How that tooling is
-> actually used across the development flow, and how far that use has been
-> adopted, is `ai/`. An `ai/` chapter points at the `tech/` chapter with
-> `depends-on`; the reverse link is never written. See
-> `devbook-ai.md`.
-
-## Context-loading policy
-
-- `tech/` is **not** baseline repository context. Load it for stack, dependency,
-  upgrade, or technology-selection tasks, and when implementation work needs to
-  know which technology owns a responsibility.
-- Load only the chapters a task needs, never the folder whole, per
-  `devbook-writing.md` under *Loading a folder*. Here that
-  means the relevant layer files.
+- A **Why** an ADR backs is one clause and a link to it. Which choice is an ADR's
+  and which a `tech/` chapter's is the test under "Decision records" in
+  `devbook-arc42.md`. `alternatives` stays on the chapter either way.
+- An AI tool's chapter holds its version and rating only and states no usage;
+  `ai/` keeps how it is used and points here with `depends-on`.
+- A UI component library's chapter holds its version and rating and links to
+  `component-libraries.md` in `design/`, which keeps the adopted library and why.
 
 ## Structure
 
@@ -91,8 +81,8 @@ related: [".devbook/arc42/04-solution-strategy.md#technology-choices"]
 One or two sentences: what it is used for in this project.
 
 - **Used for** — the concrete responsibility it carries here.
-- **Why** — the decisive reason it was picked (link the ADR/arc42 section rather
-  than restating the full rationale).
+- **Why** — the decisive reason it was picked, in one sentence, or one clause and
+  a link where an ADR holds it.
 - **Alternatives** — what else was considered, if the choice is still open.
 ```
 
@@ -163,12 +153,6 @@ Omit every optional field that has no value (no `related: []`, no
   edges in the layer files whenever a node or edge is added, removed, or
   renamed, and run the check in the same change:
   `node .devbook/_tools/devbook-meta/build.mjs --scope tech --check`.
-- Ground stack claims in `arc42/` (especially
-  `.devbook/arc42/04-solution-strategy.md#technology-choices` and
-  `.devbook/arc42/09-architecture-decisions.md`) rather than inventing new choices here.
-  If `tech/` and `arc42/` disagree, `arc42/` wins and `tech/` is corrected.
-- A change of technology *decision* belongs in an ADR first; `tech/` records the
-  outcome and links to it.
 - Do not add a new metadata field without updating this file (folder-specific)
   or `devbook-chapter-metadata.md` (universal) first — the visualization
   tooling depends on a fixed schema.
