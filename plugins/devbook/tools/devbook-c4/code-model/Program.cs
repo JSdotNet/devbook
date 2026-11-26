@@ -46,6 +46,13 @@ namespace Devbook.C4.CodeModel
             var report = new Report();
             var devbook = DevbookFolder.Read(options.Root, report);
             var types = await TypeFinder.FindAsync(options, report);
+            if (types is null)
+            {
+                // A project that did not load would read as types removed: compare and write nothing.
+                report.Print();
+                Console.Error.WriteLine("code-model: the solution did not load whole; nothing was compared or written");
+                return 3;
+            }
             var files = Generator.Generate(types, devbook, options, report);
             var drift = Output.Apply(files, devbook.GeneratedFolder, options.Root, options.Check);
 

@@ -40,7 +40,7 @@ internal static class Generator
         {
             roots.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
             var file = $"code/{component}.mmd";
-            files[file] = Diagram(roots, types);
+            files[file] = Diagram(component, roots, types, options.Markers, report);
             views.Append('\n')
                 .Append($"image {component} {component.Replace('.', '-')}-code {{\n")
                 .Append($"    title \"{string.Join(", ", roots.Select(r => r.Name))}\"\n")
@@ -59,31 +59,54 @@ internal static class Generator
             .Select(f => f.Component)
             .FirstOrDefault();
 
-    private static string Diagram(List<MarkedType> roots, IReadOnlyDictionary<string, MarkedType> types)
+    private static string Diagram(
+        string component, List<MarkedType> roots, IReadOnlyDictionary<string, MarkedType> types, Markers markers, Report report)
     {
         var classes = new List<MarkedType>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var names = new Dictionary<string, string>(StringComparer.Ordinal); // type key → class name here
+        var taken = new HashSet<string>(StringComparer.Ordinal);
         var relations = new List<string>();
         var drawn = new HashSet<string>(StringComparer.Ordinal);
+
+        // A class name is unique in the diagram: a nested type is Outer_Inner, and a second type
+        // of the same name takes a number and is reported, since the renderer would merge them.
+        bool Add(MarkedType type)
+        {
+            if (names.ContainsKey(type.Key)) return false;
+            var name = ClassName(type.Symbol);
+            var id = name.Split('~')[0];
+            if (!taken.Add(id))
+            {
+                var n = 2;
+                while (!taken.Add($"{id}_{n}")) n++;
+                report.Add("name-collision", $"{component}: two types are named {id}; {type.Key.Replace("global::", "")} is drawn as {id}_{n}");
+                name = $"{id}_{n}" + name[id.Length..];
+            }
+            names[type.Key] = name;
+            classes.Add(type);
+            return true;
+        }
 
         // Each root, then what it holds, breadth first: an entity or value object it holds, and
         // what those hold in turn. Another aggregate is a boundary and is never entered.
         var queue = new Queue<MarkedType>();
         foreach (var root in roots)
-            if (seen.Add(root.Key)) { classes.Add(root); queue.Enqueue(root); }
+            if (Add(root)) queue.Enqueue(root);
         while (queue.Count > 0)
         {
             var owner = queue.Dequeue();
-            foreach (var (member, memberType) in HeldMembers(owner.Symbol))
+            foreach (var member in PublicMembers(owner.Symbol, markers))
             {
-                foreach (var (held, many) in Elements(memberType))
+                var memberType = member switch { IPropertySymbol p => p.Type, IFieldSymbol f => f.Type, _ => null };
+                if (memberType is null) continue;
+                foreach (var (held, many) in Elements(memberType, false))
                 {
                     if (!types.TryGetValue(TypeFinder.KeyOf(held), out var target)) continue;
                     if (target.Role is not (Role.Entity or Role.ValueObject) || target.Key == owner.Key) continue;
+                    if (Add(target)) queue.Enqueue(target);
                     var arrow = target.Role == Role.Entity ? "*--" : "-->";
-                    var line = $"{ClassName(owner.Symbol)} \"1\" {arrow} \"{(many ? "many" : "1")}\" {ClassName(target.Symbol)} : {member}";
+                    var line = $"{names[owner.Key]} \"1\" {arrow} \"{(many ? "many" : "1")}\" {names[target.Key]} : {member.Name}";
                     if (drawn.Add(line)) relations.Add(line);
-                    if (seen.Add(target.Key)) { classes.Add(target); queue.Enqueue(target); }
                 }
             }
         }
@@ -91,8 +114,18 @@ internal static class Generator
         var text = new StringBuilder($"%% {Header}\nclassDiagram\n    direction TB\n");
         foreach (var type in classes)
         {
-            text.Append($"    class {ClassName(type.Symbol)} {{\n        <<{Label(type.Role)}>>\n");
-            foreach (var member in Members(type.Symbol)) text.Append($"        {member}\n");
+            text.Append($"    class {names[type.Key]} {{\n        <<{Label(type.Role)}>>\n");
+            foreach (var member in PublicMembers(type.Symbol, markers))
+            {
+                var line = member switch
+                {
+                    IPropertySymbol p => $"+{Display(p.Type)} {p.Name}",
+                    IFieldSymbol f => $"+{Display(f.Type)} {f.Name}",
+                    IMethodSymbol m => $"+{m.Name}({string.Join(", ", m.Parameters.Select(p => $"{Display(p.Type)} {p.Name}"))}) {Display(m.ReturnType)}",
+                    _ => null,
+                };
+                if (line is not null) text.Append($"        {line}\n");
+            }
             text.Append("    }\n");
         }
         foreach (var line in relations) text.Append($"    {line}\n");
@@ -107,42 +140,50 @@ internal static class Generator
         _ => "domain event",
     };
 
-    // The instance properties and fields a type declares itself, in source order.
-    private static IEnumerable<(string Name, ITypeSymbol Type)> HeldMembers(INamedTypeSymbol type)
+    // The public instance properties, fields, and ordinary methods a box lists and a relation is
+    // drawn from, in source order: the type's own, then those of each base class in the solution
+    // up to a marker's own base. A private field behind a property is the property's business.
+    private static IEnumerable<ISymbol> PublicMembers(INamedTypeSymbol type, Markers markers)
     {
-        foreach (var member in type.GetMembers())
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        for (var t = type; t is not null; t = t.BaseType)
         {
-            if (member.IsStatic || member.IsImplicitlyDeclared) continue;
-            if (member is IPropertySymbol property) yield return (property.Name, property.Type);
-            else if (member is IFieldSymbol field && field.AssociatedSymbol is null) yield return (Trim(field.Name), field.Type);
+            if (t != type && (markers.IsMarkerName(t.Name) || !t.Locations.Any(l => l.IsInSource))) yield break;
+            foreach (var member in t.GetMembers())
+            {
+                if (member.IsStatic || member.IsImplicitlyDeclared || member.DeclaredAccessibility != Accessibility.Public) continue;
+                var wanted = member is IPropertySymbol { IsIndexer: false } or IFieldSymbol or IMethodSymbol { MethodKind: MethodKind.Ordinary };
+                // An override or a hiding member below wins over the one it replaces.
+                if (wanted && seen.Add(member is IMethodSymbol m ? $"{m.Name}({string.Join(",", m.Parameters.Select(p => Display(p.Type)))})" : member.Name))
+                    yield return member;
+            }
         }
     }
 
-    // `_lines` holds what `Lines` exposes; the label is the name a reader knows.
-    private static string Trim(string name)
+    // The types a member's type holds: an array's or a collection's elements, however deep, and
+    // a nullable's value. `many` once any collection was crossed.
+    private static IEnumerable<(ITypeSymbol Type, bool Many)> Elements(ITypeSymbol type, bool many)
     {
-        var trimmed = name.TrimStart('_');
-        return trimmed.Length == 0 ? name : char.ToUpperInvariant(trimmed[0]) + trimmed[1..];
-    }
-
-    // The types a member's type holds: an array's or collection's element, a nullable's value.
-    private static IEnumerable<(ITypeSymbol Type, bool Many)> Elements(ITypeSymbol type)
-    {
-        if (type is IArrayTypeSymbol array) { yield return (array.ElementType, true); yield break; }
+        if (type is IArrayTypeSymbol array)
+        {
+            foreach (var e in Elements(array.ElementType, true)) yield return e;
+            yield break;
+        }
         if (type is INamedTypeSymbol { IsGenericType: true } named)
         {
             if (named.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
             {
-                yield return (named.TypeArguments[0], false);
+                foreach (var e in Elements(named.TypeArguments[0], many)) yield return e;
                 yield break;
             }
             if (IsCollection(named))
             {
-                foreach (var argument in named.TypeArguments) yield return (argument, true);
+                foreach (var argument in named.TypeArguments)
+                    foreach (var e in Elements(argument, true)) yield return e;
                 yield break;
             }
         }
-        yield return (type, false);
+        yield return (type, many);
     }
 
     private static bool IsCollection(INamedTypeSymbol type) =>
@@ -150,26 +191,32 @@ internal static class Generator
         (CollectionNames.Contains(type.Name) ||
          type.AllInterfaces.Any(i => i.OriginalDefinition.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T));
 
-    // The public members a box lists: properties as `+Type Name`, methods as `+Name(Type p) Return`.
-    private static IEnumerable<string> Members(INamedTypeSymbol type)
+    // A nested type is Outer_Inner; a generic carries its parameters between tildes.
+    private static string ClassName(INamedTypeSymbol type)
     {
-        foreach (var member in type.GetMembers())
-        {
-            if (member.IsStatic || member.IsImplicitlyDeclared || member.DeclaredAccessibility != Accessibility.Public) continue;
-            if (member is IPropertySymbol { IsIndexer: false } property)
-                yield return $"+{Display(property.Type)} {property.Name}";
-            else if (member is IMethodSymbol { MethodKind: MethodKind.Ordinary } method)
-            {
-                var parameters = string.Join(", ", method.Parameters.Select(p => $"{Display(p.Type)} {p.Name}"));
-                yield return $"+{method.Name}({parameters}) {Display(method.ReturnType)}";
-            }
-        }
+        var name = type.Name;
+        for (var outer = type.ContainingType; outer is not null; outer = outer.ContainingType) name = $"{outer.Name}_{name}";
+        return type.TypeParameters.Length == 0 ? name : $"{name}~{string.Join(",", type.TypeParameters.Select(p => p.Name))}~";
     }
 
-    private static string ClassName(INamedTypeSymbol type) =>
-        type.TypeParameters.Length == 0 ? type.Name : $"{type.Name}~{string.Join(",", type.TypeParameters.Select(p => p.Name))}~";
-
-    // Mermaid writes a generic's arguments between tildes.
-    private static string Display(ITypeSymbol type) =>
-        type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace('<', '~').Replace('>', '~').Replace(" ", "");
+    // A type as a member line shows it: Mermaid writes a generic's arguments between tildes, so a
+    // tuple is a ValueTuple, and no space or parenthesis is left for the parser to misread.
+    private static string Display(ITypeSymbol type)
+    {
+        switch (type)
+        {
+            case IArrayTypeSymbol array:
+                return $"{Display(array.ElementType)}[]";
+            case INamedTypeSymbol { IsTupleType: true } tuple:
+                return $"ValueTuple~{string.Join(",", tuple.TupleElements.Select(e => Display(e.Type)))}~";
+            case INamedTypeSymbol named when named.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T:
+                return $"{Display(named.TypeArguments[0])}?";
+            case INamedTypeSymbol { IsGenericType: true } generic:
+                var nullable = generic.NullableAnnotation == NullableAnnotation.Annotated ? "?" : "";
+                return $"{generic.Name}~{string.Join(",", generic.TypeArguments.Select(Display))}~{nullable}";
+            default:
+                return type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat).Replace(" ", "");
+        }
+    }
 }
+

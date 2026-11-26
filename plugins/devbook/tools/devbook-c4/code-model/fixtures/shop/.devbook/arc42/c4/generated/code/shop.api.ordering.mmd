@@ -6,29 +6,45 @@ classDiagram
         +OrderId Id
         +IReadOnlyList~OrderLine~ Lines
         +Address? ShipTo
+        +Dictionary~string,List~OrderLine~~ ByWarehouse
+        +IReadOnlyList~Note~ Notes
+        +ValueTuple~int,decimal~ Totals
         +Place(Address shipTo) void
         +Cancel(string reason) OrderPlaced
-    }
-    class OrderLine {
-        <<entity>>
-        +Money Price
-        +int Quantity
+        +DateTime CreatedAt
     }
     class OrderId {
         <<value object>>
         +Guid Value
+    }
+    class OrderLine {
+        <<entity>>
+        +Money Price
+        +Money? LegacyPrice
+        +int Quantity
     }
     class Address {
         <<value object>>
         +string Street
         +string City
     }
+    class Order_Note {
+        <<value object>>
+        +string Text
+    }
     class Money {
         <<value object>>
         +decimal Amount
         +string Currency
     }
-    Order "1" *-- "many" OrderLine : Lines
+    class Money_2 {
+        <<value object>>
+        +decimal Cents
+    }
     Order "1" --> "1" OrderId : Id
+    Order "1" *-- "many" OrderLine : Lines
     Order "1" --> "1" Address : ShipTo
+    Order "1" *-- "many" OrderLine : ByWarehouse
+    Order "1" --> "many" Order_Note : Notes
     OrderLine "1" --> "1" Money : Price
+    OrderLine "1" --> "1" Money_2 : LegacyPrice

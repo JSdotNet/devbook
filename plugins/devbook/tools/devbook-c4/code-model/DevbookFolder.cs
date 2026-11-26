@@ -28,15 +28,17 @@ internal sealed class DevbookFolder
                 if (meta is null) continue;
                 var code = List(meta, "code");
                 if (code.Count == 0) continue;
-                var c4 = List(meta, "c4");
-                if (c4.Count == 0)
+                // An image view sits on a component only, and a hierarchical identifier names one
+                // in exactly three parts: system.container.component.
+                var components = List(meta, "c4").Where(id => id.Split('.').Length == 3).ToList();
+                if (components.Count == 0)
                 {
-                    report.Add("no-element", $"{block} lists `code` but names no `c4` element; its types are left out");
+                    report.Add("no-component", $"{block} lists `code` but names no component in `c4`; its types are left out");
                     continue;
                 }
-                if (c4.Count > 1)
-                    report.Add("several-elements", $"{block} names {c4.Count} `c4` elements; its code is drawn under the first, {c4[0]}");
-                folders.AddRange(code.Select(f => new CodeFolder(f.Replace('\\', '/').TrimEnd('/'), c4[0], block)));
+                if (components.Count > 1)
+                    report.Add("several-components", $"{block} names {components.Count} components in `c4`; its code is drawn under the first, {components[0]}");
+                folders.AddRange(code.Select(f => new CodeFolder(Relative(root, Path.GetFullPath(f.Replace('\\', '/'), root)).TrimEnd('/'), components[0], block)));
             }
         }
 

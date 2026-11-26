@@ -6,7 +6,7 @@
 ## Order
 
 ```meta
-aliases: [Order, OrderId]
+aliases: [Order, OrderId, Note]
 ```
 
 What a customer asked for.

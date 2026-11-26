@@ -846,6 +846,8 @@ the aliases but never drawn. The [C4 Model](#c4-model) reader checks the view an
 | What it writes reads with no problem in `c4.mjs`, and every image view draws | `code-model`, `c4.mjs`, `render.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
 | A marked type no `domain/` chapter carries in `aliases`, and a root in no block's `code` folder, are reported | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
 | `--check` writes nothing and exits `1` when a file would change or a stale diagram remains | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A solution that does not load whole, which would read as types removed, writes and compares nothing and exits `3` | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| An image view lands only on a component, the three-part identifier a block names in `c4`; a block naming none draws nothing | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
 
 ### Scenario Tools
 

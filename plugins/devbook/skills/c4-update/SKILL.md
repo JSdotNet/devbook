@@ -29,7 +29,7 @@ through `devbook:update`.
 3. **Act on what it reports.** `no-alias` is a class name no `domain/` chapter carries in
    `aliases`: add it to the chapter of the concept it implements, or report the concept as
    unmodelled. `unmapped` is a root in no block's `code` folder: name the folder in the
-   block that owns it. Neither is fixed in the generated files.
-4. **Hand over.** This skill lands nothing: a `flow-spec` run or the C4 refresh schedule carries
-   the files. Run `node .devbook/_tools/devbook-meta/build.mjs --scope arc42 --check` and repair
+   block that owns it. Neither is fixed in the generated files. Exit `3` is a solution that did
+   not load whole: restore it and run again, since nothing was written.
+4. **Hand over.** This skill lands nothing: a `flow-spec` run carries the files. Run `node .devbook/_tools/devbook-meta/build.mjs --scope arc42 --check` and repair
    what it reports per `devbook:validate`. Never refresh `_meta/` here.

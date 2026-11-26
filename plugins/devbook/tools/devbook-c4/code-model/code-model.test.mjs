@@ -74,7 +74,9 @@ test("a run from nothing writes the golden files and reports what it cannot plac
         assert.deepEqual(tree(path.join(dir, generated)), tree(path.join(fixture, generated)));
         assert.match(r.stderr, /^no-alias: Address \(value object, src\/Shop\.Ordering\/Order\.cs\)/m);
         assert.match(r.stderr, /^unmapped: AuditEntry \(src\/Shop\.Kernel\/Audit\/AuditEntry\.cs\)/m);
-        assert.doesNotMatch(r.stderr, /no-alias: (Order|OrderLine|Money|Product|Sku)\b/);
+        assert.match(r.stderr, /^name-collision: shop\.api\.ordering: two types are named Money; Shop\.Ordering\.Legacy\.Money is drawn as Money_2$/m);
+        assert.doesNotMatch(r.stderr, /no-alias: (Order|OrderLine|Money|Note|Product|Sku)\b/);
+        assert.doesNotMatch(r.stderr, /OrderingRoot/, "an abstract base is no root of its own");
     } finally {
         rmSync(dir, { recursive: true, force: true });
     }
@@ -93,7 +95,13 @@ test("the diagram holds the root's entities and value objects, never its events 
     assert.match(ordering, /Order "1" \*-- "many" OrderLine : Lines/);
     assert.match(ordering, /OrderLine "1" --> "1" Money : Price/);
     assert.match(ordering, /<<aggregate root>>/);
-    assert.doesNotMatch(ordering, /class OrderPlaced|class Product|class AuditEntry/);
+    assert.doesNotMatch(ordering, /class OrderPlaced|class Product|class AuditEntry|class OrderingRoot/);
+    assert.match(ordering, /Order "1" \*-- "many" OrderLine : ByWarehouse/, "a collection inside a collection is unwrapped");
+    assert.match(ordering, /Order "1" --> "many" Order_Note : Notes/, "a nested type is Outer_Inner");
+    assert.match(ordering, /OrderLine "1" --> "1" Money_2 : LegacyPrice/, "a second type of one name takes a number");
+    assert.match(ordering, /\+ValueTuple~int,decimal~ Totals/, "a tuple is a ValueTuple, not a method");
+    assert.match(ordering, /\+DateTime CreatedAt/, "a base class's public member shows on the root");
+    assert.doesNotMatch(ordering, /_lines/, "a private field draws nothing");
     const catalog = read(path.join(fixture, generated, "code", "shop.api.catalog.mmd"));
     assert.match(catalog, /Product "1" --> "many" Sku : Variants/, "a base class named for a marker marks the type");
 });
@@ -118,6 +126,38 @@ test("--check exits 0 when current and 1 on drift, writing nothing", { skip }, (
         assert.equal(run(dir).status, 0);
         assert.equal(existsSync(stale), false, "a write removes a diagram no component produces");
         assert.match(read(path.join(dir, generated, "code", "shop.api.ordering.mmd")), /OrderLine "1" --> "1" Money : Discount/);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+});
+
+test("a project that fails to load writes and compares nothing", { skip }, () => {
+    const dir = copy();
+    try {
+        rmSync(path.join(dir, "src", "Shop.Catalog"), { recursive: true, force: true });
+        const before = tree(path.join(dir, generated));
+        for (const args of [[], ["--check"]]) {
+            const r = run(dir, ...args);
+            assert.equal(r.status, 3, r.stderr);
+            assert.match(r.stderr, /^load: /m);
+        }
+        assert.deepEqual(tree(path.join(dir, generated)), before);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+});
+
+test("a block whose c4 names no component draws nothing for its code", { skip }, () => {
+    const dir = copy();
+    try {
+        const block = path.join(dir, ".devbook", "arc42", "building-blocks", "catalog.md");
+        writeFileSync(block, read(block).replace("c4: [shop.api.catalog]", "c4: [shop.api]"));
+        const r = run(dir);
+        assert.equal(r.status, 0, r.stderr);
+        assert.match(r.stderr, /^no-component: \.devbook\/arc42\/building-blocks\/catalog\.md lists `code` but names no component/m);
+        assert.match(r.stderr, /^unmapped: Product /m);
+        assert.equal(existsSync(path.join(dir, generated, "code", "shop.api.catalog.mmd")), false);
+        assert.deepEqual(readWorkspace(path.join(dir, ".devbook", "arc42", "workspace.dsl"), { root: dir }).problems, []);
     } finally {
         rmSync(dir, { recursive: true, force: true });
     }
