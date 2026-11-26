@@ -408,7 +408,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook
 One of the five folders the convention governs, and the unit of adoption: a repository takes
 a subset, and the tooling emits scopes for the folders that exist. The folder lives at
 `.devbook/<kind>/` and owns its derived `_meta/`, written beside its chapters. The reading order
-of its files comes from each folder's convention rather than from a stored field.
+of its files comes from each folder's convention rather than from a stored field. When two
+folders hold the same text, the earlier of `arc42`, `design`, `tech`, `domain`, `ai` keeps it,
+per [the folder priority](../adr/chapter-schema.md#folder-priority).
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
