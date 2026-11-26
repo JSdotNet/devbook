@@ -16,8 +16,9 @@ domain looks like" — complementary to `arc42/` (system architecture), `tech/`
   modeling, bounded-context, or ubiquitous-language tasks, normally after
   routing through the repository's domain flow or a domain specialist
   agent.
-- When `domain/` is needed as task context, load only the relevant bounded
-  context's chapters instead of reading the whole folder by default.
+- Load only the chapters a task needs, never the folder whole, per
+  `devbook-writing.md` under *Loading a folder*. Here that
+  means the relevant bounded context's chapters.
 - Implementation work consults `domain/` when the change touches domain
   behavior, an aggregate boundary, or naming — not by default.
 
