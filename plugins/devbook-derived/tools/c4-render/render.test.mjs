@@ -20,7 +20,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseWorkspace } from "../../../devbook/tools/devbook-meta/c4.mjs";
-import { arrange, main, renderView, renderViews, selectDeployment, selectElements, selectRelationships, selectSteps, wrap } from "./render.mjs";
+import { arrange, arrangeClassDiagram, main, parseClassDiagram, renderView, renderViews, selectDeployment, selectElements, selectRelationships, selectSteps, wrap } from "./render.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = readFileSync(path.join(here, "fixtures", "workspace.dsl"), "utf8").replace(/\r\n/g, "\n");
@@ -558,4 +558,106 @@ test("refresh: materialized under .devbook/_tools/c4-render/, it runs from the r
     assert.deepEqual(renders(root), named(goldenKeys));
     assert.equal(cli("--check").status, 0);
     assert.equal(cli("--bogus").status, 2);
+}));
+
+// ── image views: a component's code, from its generated Mermaid file ────────
+
+const ordersMmd = readFileSync(path.join(here, "fixtures", "orders.mmd"), "utf8").replace(/\r\n/g, "\n");
+const imageModel = (text = ordersMmd, extra = "") => {
+    const source = (target) => ({ file: `c4/generated/${target.replace(/^c4\/generated\//, "")}`, text });
+    const m = parseWorkspace(wrapModel('shop = softwareSystem "Shop" {\napi = container "API" {\norders = component "Orders" "Takes orders"\n}\n}', `image shop.api.orders orders-code {\nmermaid c4/generated/code/orders.mmd\n}\n${extra}`), { source });
+    assert.deepEqual(m.problems, []);
+    return m;
+};
+
+test("golden: an image view draws its Mermaid class diagram byte for byte as orders-code.svg", () => {
+    const m = imageModel();
+    const svg = renderView(m, view("orders-code", m));
+    const file = path.join(here, "fixtures", "golden", "orders-code.svg");
+    if (process.env.UPDATE_GOLDEN) writeFileSync(file, svg);
+    assert.equal(svg, readFileSync(file, "utf8").replace(/\r\n/g, "\n"));
+    assert.deepEqual(renderViews(m), renderViews(imageModel()), "the same source gives the same bytes");
+});
+
+test("image: the classDiagram subset reads classes, annotations, members, and every relationship arrow", () => {
+    const d = parseClassDiagram(ordersMmd);
+    assert.deepEqual(d.problems, []);
+    assert.deepEqual(d.classes.map((c) => [c.id, c.annotation]), [["Order", "aggregate root"], ["OrderLine", "entity"], ["Money", "value object"], ["IAggregateRoot", "interface"], ["OrderPlaced", "domain event"]]);
+    assert.deepEqual(d.classes[0].attributes, ["+OrderId Id", "+Money Total"]);
+    assert.deepEqual(d.classes[0].methods, ["+Place() void", "+Cancel(Reason reason) void"]);
+    assert.deepEqual(d.relationships.map((r) => [r.a, r.kind, r.head, r.dashed, r.b, r.label, r.cardinality]), [
+        ["IAggregateRoot", "realization", "a", true, "Order", null, [null, null]],
+        ["Order", "composition", "a", false, "OrderLine", "holds", ["1", "many"]],
+        ["OrderLine", "association", "b", false, "Money", "priced in", [null, null]],
+        ["Order", "dependency", "b", true, "OrderPlaced", "raises", [null, null]],
+    ]);
+    for (const [op, kind, head] of [["<|--", "inheritance", "a"], ["--|>", "inheritance", "b"], ["--*", "composition", "b"], ["o--", "aggregation", "a"], ["--o", "aggregation", "b"], ["<--", "association", "a"], ["<..", "dependency", "a"], ["..|>", "realization", "b"], ["--", "link", null], ["..", "link", null]]) {
+        const r = parseClassDiagram(`classDiagram\nA ${op} B`).relationships[0];
+        assert.deepEqual([r?.kind, r?.head], [kind, head], op);
+    }
+    assert.equal(parseClassDiagram("classDiagram\nclass Box~T~").classes[0].label, "Box<T>");
+});
+
+test("image: a parent, a whole, or a source sits above what it holds, in every direction", () => {
+    const d = parseClassDiagram(ordersMmd);
+    const { boxes, lines } = arrangeClassDiagram(d);
+    const at = (id) => boxes.find((b) => b.cls.id === id);
+    assert.ok(at("IAggregateRoot").y + at("IAggregateRoot").h <= at("Order").y, "the interface is above its realization");
+    assert.ok(at("Order").y + at("Order").h <= at("OrderLine").y, "the whole is above its part");
+    assert.ok(at("OrderLine").y + at("OrderLine").h <= at("Money").y, "the source is above its target");
+    for (const a of boxes) for (const b of boxes) if (a !== b) assert.ok(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y, `${a.cls.id} and ${b.cls.id} overlap`);
+    const onBorder = (box, [x, y]) => (x === box.x || x === box.x + box.w || y === box.y || y === box.y + box.h) && x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+    for (const l of lines) {
+        assert.ok(onBorder(at(l.relationship.a), l.from), `${l.relationship.a} end on its border`);
+        assert.ok(onBorder(at(l.relationship.b), l.to), `${l.relationship.b} end on its border`);
+    }
+    const lr = arrangeClassDiagram(parseClassDiagram(ordersMmd.replace("direction TB", "direction LR"))).boxes;
+    const lat = (id) => lr.find((b) => b.cls.id === id);
+    assert.ok(lat("Order").x + lat("Order").w <= lat("OrderLine").x, "left to right, the whole is left of its part");
+    const bt = arrangeClassDiagram(parseClassDiagram(ordersMmd.replace("direction TB", "direction BT"))).boxes;
+    const bat = (id) => bt.find((b) => b.cls.id === id);
+    assert.ok(bat("OrderLine").y + bat("OrderLine").h <= bat("Order").y, "bottom to top, the whole is below its part");
+});
+
+test("image: a source the renderer cannot draw is a problem with its line, and the view is skipped", () => {
+    for (const [text, line, pattern] of [
+        ["flowchart TD\nA --> B", 1, /only a Mermaid `classDiagram` is drawn/],
+        ["classDiagram\nnote \"hi\"", 2, /outside the `classDiagram` subset/],
+        ["classDiagram\nA <|-- A", 2, /to itself is not drawn/],
+        ["classDiagram\nclass A {\n+x", 3, /never closed/],
+        ["classDiagram\ndirection XY", 2, /direction is one of/],
+        ["", 1, /The file is empty/],
+    ]) {
+        const d = parseClassDiagram(text);
+        assert.ok(d.problems.some((p) => p.line === line && pattern.test(p.message)), `${JSON.stringify(text)}: ${JSON.stringify(d.problems)}`);
+    }
+    const m = imageModel("flowchart TD\nA --> B");
+    const out = renderViews(m);
+    assert.deepEqual(out.rendered, []);
+    assert.deepEqual(out.skipped, [{ key: "orders-code", kind: "image", reason: "its Mermaid source cannot be drawn" }]);
+    assert.deepEqual(out.problems.map((p) => [p.file, p.line]), [["c4/generated/code/orders.mmd", 1]]);
+    const unread = parseWorkspace(wrapModel('shop = softwareSystem "Shop" {\napi = container "API" {\norders = component "Orders"\n}\n}', "image shop.api.orders k {\nmermaid c4/generated/k.mmd\n}"));
+    assert.match(renderViews(unread).problems[0].message, /was not read/);
+});
+
+test("refresh: an image view renders its generated file to <key>.svg beside the other views, and an unreadable one fails the run", () => withRepo(async (root) => {
+    const generated = path.join(root, ".devbook", "arc42", "c4", "generated", "code");
+    mkdirSync(generated, { recursive: true });
+    writeFileSync(path.join(generated, "orders.mmd"), ordersMmd);
+    const withImage = fixture.replace(/(orders = component[^\n]*\n)/, "$1").replace(/\n    views \{\n/, "\n    views {\n        image shop.api.orders orders-code {\n            mermaid c4/generated/code/orders.mmd\n        }\n");
+    writeFileSync(path.join(root, workspacePath), withImage);
+    const first = await refresh(root);
+    assert.equal(first.code, 0, first.lines.join("\n"));
+    assert.ok(renders(root).includes("orders-code.svg"), renders(root).join());
+    assert.equal((await refresh(root, "--check")).code, 0);
+    writeFileSync(path.join(generated, "orders.mmd"), "flowchart TD\nA --> B\n");
+    const broken = await refresh(root);
+    assert.equal(broken.code, 1);
+    assert.ok(broken.lines.some((l) => /orders\.mmd:1: .*only a Mermaid `classDiagram`/.test(l)), broken.lines.join("\n"));
+    assert.ok(renders(root).includes("orders-code.svg"), "a source that cannot be drawn keeps its last render");
+    assert.ok(broken.lines.some((l) => /kept .*orders-code\.svg: its image view's source cannot be drawn/.test(l)), broken.lines.join("\n"));
+    rmSync(path.join(generated, "orders.mmd"));
+    const gone = await refresh(root);
+    assert.equal(gone.code, 1);
+    assert.equal(gone.lines.filter((l) => /orders\.mmd/.test(l)).length, 1, `a missing source is reported once, by the reader: ${gone.lines.join("\n")}`);
 }));

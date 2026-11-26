@@ -210,6 +210,49 @@ model {
     check(eq(r.views[0].include, ["r1"]), "a view includes a relationship by its identifier", show(r.views[0]));
 }
 
+// ── image views: the code level ─────────────────────────────────────────────
+
+{
+    const model = "s = softwareSystem \"S\" {\napi = container \"API\" {\norders = component \"Orders\"\n}\n}";
+    const at = (views) => parseWorkspace(wrap(model, views), { file: ".devbook/arc42/workspace.dsl" });
+    const r = at("image s.api.orders orders-code {\ntitle \"Orders code\"\ndescription \"Its types\"\nmermaid c4/generated/code/orders.mmd\n}");
+    const v = view(r, "orders-code");
+    check(r.problems.length === 0, "an image view on a component with a generated mermaid source reads clean", show(r.problems));
+    check(v?.kind === "image" && v.scope === "s.api.orders" && v.title === "Orders code" && v.description === "Its types", "an image view keeps its scope, key, title, and description", show(v));
+    check(eq(v?.source, { format: "mermaid", file: ".devbook/arc42/c4/generated/code/orders.mmd" }), "without a reader, the source is resolved against the workspace folder and no text is read", show(v?.source));
+    for (const [name, views, pattern, line] of [
+        ["an image view on a container", "image s.api api-code {\nmermaid c4/generated/a.mmd\n}", /A `image` view is scoped to component; `s.api` is a container/, 11],
+        ["an image view with no scope", "image {\nmermaid c4/generated/a.mmd\n}", /needs a scope/, 11],
+        ["an image view with no source", "image s.api.orders k {\ntitle \"T\"\n}", /needs a `mermaid` source/, 11],
+        ["a plantuml source", "image s.api.orders k {\nplantuml c4/generated/a.puml\n}", /`plantuml` is outside the supported DSL subset/, 12],
+        ["a second source", "image s.api.orders k {\nmermaid c4/generated/a.mmd\nmermaid c4/generated/b.mmd\n}", /takes one source/, 13],
+        ["a source outside c4/generated/", "image s.api.orders k {\nmermaid c4/code/a.mmd\n}", /lands outside `.devbook\/arc42\/c4\/generated`/, 12],
+        ["a source climbing out of c4/generated/", "image s.api.orders k {\nmermaid c4/generated/../a.mmd\n}", /lands outside/, 12],
+        ["a source that is not .mmd", "image s.api.orders k {\nmermaid c4/generated/a.md\n}", /is not a `\.mmd` file/, 12],
+        ["a URL source", "image s.api.orders k {\nmermaid https://example.com/a.mmd\n}", /only a relative path/, 12],
+        ["include in an image view", "image s.api.orders k {\nmermaid c4/generated/a.mmd\ninclude *\n}", /`include` is outside the supported DSL subset inside `image view`/, 13],
+    ]) {
+        const got = at(views);
+        check(reports(got, pattern, line), `problem: ${name} (line ${line})`, show(got.problems));
+    }
+}
+{
+    const root = await mkdtemp(path.join(tmpdir(), "c4-image-"));
+    try {
+        const arc = path.join(root, ".devbook", "arc42");
+        await mkdir(path.join(arc, "c4", "generated", "code"), { recursive: true });
+        await writeFile(path.join(arc, "c4", "generated", "code", "orders.mmd"), "classDiagram\n    class Order\n");
+        await writeFile(path.join(arc, "c4", "views.dsl"), "image s.api.orders from-include {\nmermaid generated/code/orders.mmd\n}\n");
+        await writeFile(path.join(arc, "workspace.dsl"), wrap("s = softwareSystem \"S\" {\napi = container \"API\" {\norders = component \"Orders\"\n}\n}", "image s.api.orders orders-code {\nmermaid c4/generated/code/orders.mmd\n}\nimage s.api.orders gone {\nmermaid c4/generated/code/gone.mmd\n}\n!include c4/views.dsl"));
+        const r = readWorkspace(".devbook/arc42/workspace.dsl", { root });
+        check(view(r, "orders-code")?.source?.text === "classDiagram\n    class Order\n", "readWorkspace attaches the generated file's text to its image view", show(view(r, "orders-code")));
+        check(view(r, "from-include")?.source?.file === ".devbook/arc42/c4/generated/code/orders.mmd", "a source in an included file resolves from that file's folder", show(view(r, "from-include")));
+        check(reports(r, /`mermaid c4\/generated\/code\/gone\.mmd`: no such file/, 15) && r.problems.length === 1, "a generated file that is missing is a problem", show(r.problems));
+    } finally {
+        await rm(root, { recursive: true, force: true });
+    }
+}
+
 // ── includes ────────────────────────────────────────────────────────────────
 
 {

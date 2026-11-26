@@ -223,6 +223,34 @@ for (const [name, overrides, needle, severity = "error"] of [
     const hit = graph.problems.find((p) => p.message.includes(needle));
     check(hit?.severity === severity, `${name} is ${severity === "error" ? "an error" : "a warning"}`, dump(hit ?? c4Problems(graph)));
 }
+// ── image views: the code level, in a building block's `## Structure` ─────
+
+{
+    const withImage = WORKSPACE
+        .replace('web = container "Web" "Serves pages." "ASP.NET Core"', 'web = container "Web" "Serves pages." "ASP.NET Core" {\n                cart = component "Cart" "Holds the basket." "C#"\n            }')
+        .replace("        dynamic shop checkout {", "        image shop.web.cart cart-code {\n            mermaid c4/generated/code/cart.mmd\n        }\n        dynamic shop checkout {");
+    const mmd = "classDiagram\n    class Cart\n";
+    const block = (section) => ({ ".devbook/arc42/building-blocks/cart.md": `# Cart\n\n${fence("c4: [shop.web.cart]\n")}\nThe cart.\n\n## ${section}\n\n${fence()}\n![Cart code](c4:cart-code)\n` });
+    const base = { ".devbook/arc42/workspace.dsl": withImage, ".devbook/arc42/c4/generated/code/cart.mmd": mmd };
+    const clean = await graphOf({ ...base, ...block("Structure") });
+    const relevant = c4Problems(clean).filter((p) => p.path?.startsWith(".devbook/arc42"));
+    check(relevant.length === 0, "an image view embedded in a building block's `## Structure` reads clean", dump(relevant));
+    check(node(clean, "c4-view:cart-code")?.kind === "image" && node(clean, "c4-view:cart-code").scope === "shop.web.cart" && node(clean, "c4-view:cart-code").source === ".devbook/arc42/c4/generated/code/cart.mmd", "an image view is a node carrying its scope and source", dump(node(clean, "c4-view:cart-code")));
+    for (const [name, overrides] of [
+        ["under `## Runtime`", block("Runtime")],
+        ["in chapter 5", { ...bb5("![Containers](c4:containers)\n![Cart code](c4:cart-code)") }],
+    ]) {
+        const graph = await graphOf({ ...base, ...overrides });
+        const hit = graph.problems.find((p) => p.message.includes("embeds the `image` view `cart-code`, which belongs in the component's building block, under `## Structure`"));
+        check(hit?.severity === "error", `an image view ${name} is an error`, dump(c4Problems(graph)));
+    }
+    const elsewhere = await graphOf({ ...base, ".devbook/arc42/building-blocks/cart.md": block("Structure")[".devbook/arc42/building-blocks/cart.md"].replace("c4: [shop.web.cart]", "c4: [shop.db]") });
+    check(elsewhere.problems.some((p) => p.severity === "error" && p.message.includes("in a building block whose `c4` names neither it nor an element holding it")), "an image view in another component's building block is an error", dump(c4Problems(elsewhere)));
+    const holder = await graphOf({ ...base, ".devbook/arc42/building-blocks/cart.md": block("Structure")[".devbook/arc42/building-blocks/cart.md"].replace("c4: [shop.web.cart]", "c4: [shop.web]") });
+    check(!holder.problems.some((p) => p.message.includes("names neither it")), "an image view in the block of the container holding its component reads clean", dump(c4Problems(holder)));
+    const missing = await graphOf({ ...base, ".devbook/arc42/c4/generated/code/cart.mmd": null, ...block("Structure") });
+    check(missing.problems.some((p) => p.severity === "error" && p.message.includes("`mermaid c4/generated/code/cart.mmd`: no such file")), "an image view whose generated file is missing is an error", dump(c4Problems(missing)));
+}
 {
     const graph = await graphOf({ ".devbook/domain/orders/domain.md": `# Domain\n\n${fence("type: domain\nc4: [shop.web, shop.web]\n")}\nOrders.\n` });
     const ids = graph.edges.filter((e) => e.type === "c4" && e.source === ".devbook/domain/orders/domain.md").map((e) => e.id);

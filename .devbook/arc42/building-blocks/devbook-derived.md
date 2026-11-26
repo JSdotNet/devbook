@@ -139,6 +139,14 @@ the scope as a boundary when it is a system or a container, and one arrow per st
 with its number and description and drawn in step order. A response step is its own arrow,
 never folded into the request it answers.
 
+An image view draws a component's code: the Mermaid class diagram the code-level script
+generated under `.devbook/arc42/c4/generated/`, whose text the reader attaches to the view.
+Classes, with their annotation and members, sit in ranks along their relationships, a parent,
+a whole, or a source above what it holds, and each relationship is a straight line between the
+two boxes' borders with its UML end, cardinalities, and label. A line outside the
+`classDiagram` subset the script writes is reported with its file and line and fails the run;
+the view is skipped and keeps its last render.
+
 A deployment view draws one environment, so each environment's view is its own SVG.
 
 - **Leaves:** The infrastructure nodes and the instances of that environment that `include *`, `include <id>`, and `exclude` give it. Under a system scope, `include *` and an included node keep only that system's container instances and the infrastructure, while a leaf named outright is always shown. Each instance is drawn as the element it instantiates, with that element's tags.
@@ -170,7 +178,8 @@ its picture until the workspace reads clean.
 | A dynamic view draws one arrow per step, numbered, in step order, and two steps between one pair get separate label places | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A deployment node holds every leaf and node inside it, sibling nodes never overlap, and no leaf sits in a node that does not hold it, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A relationship to or from a deployment node ends on the node's border and its other end's, crosses no leaf, and is not drawn to what the node holds, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
-| It reads devbook's model and bundles no parser | `render.mjs` | untested |
+| It reads devbook's model and bundles no DSL parser; the only text it parses is an image view's Mermaid source, which devbook's reader does not read | `render.mjs` | untested |
+| An image view draws its generated class diagram byte for byte as its golden file, a parent, whole, or source above what it holds in every direction, with no two classes overlapping; a source outside the subset is a problem with its line | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A refresh writes one SVG per view key, rewrites only what changed, and deletes the render of a view that no longer exists | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | `--check` reports a missing, stale, or orphaned render, exits `1`, and writes nothing | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | The vendored `.devbook/_tools/c4-render/` holds `render.mjs` and `README.md` as the plugin ships them, and nothing else | `tools/check-assets.mjs` | untested |
