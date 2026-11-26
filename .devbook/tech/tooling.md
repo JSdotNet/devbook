@@ -4,9 +4,10 @@
 rating: adopted
 ```
 
-A plugin's executable parts run on these two runtimes. A consuming repository already has both, and
-nothing here installs either. The Aspire CLI is the one tool a shipped procedure drives in a
-consuming repository.
+A plugin's executable parts run on Node and PowerShell. A consuming repository already has both, and
+nothing here installs either. devbook's code-model console alone runs on the .NET SDK, which only a
+.NET repository needs. The Aspire CLI is the one tool a shipped procedure drives in a consuming
+repository.
 
 ## Node
 
@@ -33,7 +34,9 @@ A plugin's executable parts run on it:
 - this repository's own `tools/check-assets.mjs`
 
 All of that is ESM against `node:` built-ins with no third-party dependency, which is why
-`npm install` is not a step anywhere in this repository.
+`npm install` is not a step anywhere in this repository. The code-model console is not on this
+list: it is .NET, under [the .NET SDK](#net-sdk), and the one executable here with a package
+dependency.
 
 The flat claim used to get three things wrong. They are the seams where the constraint is
 negotiated rather than held:
@@ -110,6 +113,41 @@ This repository holds the script since 2026-09-26, and uses it for `-Check` only
 never refreshes, per [the checks and indexes record](../arc42/adr/checks-and-indexes.md).
 `devbook-meta-nightly.yml` at 02:17 UTC and the `devbook-validate` schedule behind it, weekly here
 on Sunday, refresh the default branch, both passing `--write` to the vendored checker.
+
+## .NET SDK
+
+```meta
+rating: trial
+type: runtime
+version: "10.0"
+date: 2026-11-26
+related: [".devbook/arc42/building-blocks/devbook.md#code-model", ".devbook/arc42/adr/c4-model.md"]
+```
+
+devbook's code-model console, `plugins/devbook/tools/devbook-c4/code-model/`, targets `net10.0`
+and rolls forward to a later runtime. `devbook:c4-update` runs it with `dotnet run` in a
+repository whose code is .NET, which already has the SDK. Here, `repo-checks.yml` installs SDK 10
+for its test, which skips without one. Reading C# types needs the compiler itself, so this
+console is not Node.
+
+It stays `trial` until a consuming repository's solution has been drawn by it.
+
+## Roslyn
+
+```meta
+rating: trial
+type: package
+version: "5.0.0"
+date: 2026-11-26
+depends-on: [".devbook/tech/tooling.md#net-sdk"]
+alternatives: ["a syntax-only parse of the .cs files", "Microsoft.CodeAnalysis.Workspaces.MSBuild 4.14.0"]
+related: [".devbook/arc42/building-blocks/devbook.md#code-model"]
+```
+
+`Microsoft.CodeAnalysis.CSharp.Workspaces` and `Microsoft.CodeAnalysis.Workspaces.MSBuild`, with
+`Microsoft.Build.Locator` 1.9.1, load a solution the way a build sees it, so a marker interface
+or base class in another project resolves. 4.14.0 was passed over because it pulls in a
+`Microsoft.Build.Tasks.Core` with a high-severity advisory.
 
 ## Aspire CLI
 
