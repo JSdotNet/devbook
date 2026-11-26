@@ -77,6 +77,7 @@ The schedules for `validate`, `tech-update`, and `verify-change` reach them thro
 | `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass covers; `schedule-devbook-verify`, listing units from `--json`; Backlog's sync sweeps, selecting groups from `--groups --json` |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `devbook-c4/containers.mjs`, `devbook-c4/components.mjs` | generator CLIs, never materialized | `c4-update`, from the plugin itself; a person with `--check` |
+| `devbook-c4/code-model/` | code-level generator, .NET console, never materialized | `c4-update`, run from the plugin with `dotnet run`; described under [Code Model](#code-model) |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
 | `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links |
@@ -161,15 +162,17 @@ related: [".devbook/arc42/building-blocks/devbook.md#tech-inventory", ".devbook/
 ### c4-update
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#c4-generators", ".devbook/arc42/adr/c4-model.md"]
+related: [".devbook/arc42/building-blocks/devbook.md#c4-generators", ".devbook/arc42/building-blocks/devbook.md#code-model", ".devbook/arc42/adr/c4-model.md"]
 ```
 
 - **Does:** starts its own isolated instance of the repository's Aspire AppHost, captures
   `aspire describe --format mermaid`, stops that instance, and runs the
-  [C4 Generators](#c4-generators) into `.devbook/arc42/c4/generated/`. It lists each resource
-  with no mapping, project in no block, and element with no description, then runs the check.
-- **Never:** lands the files, invents a mapping or a description, or touches an AppHost
-  instance it did not start.
+  [C4 Generators](#c4-generators) into `.devbook/arc42/c4/generated/`, then the
+  [Code Model](#code-model) console for the code level. It lists each resource with no mapping,
+  project or aggregate root in no block, element with no description, and marked type no
+  `domain/` chapter aliases, then runs the check.
+- **Never:** lands the files, invents a mapping, a description, or an alias, or touches an
+  AppHost instance it did not start.
 - **Why:** like `tech-update`, it produces evidence and leaves the change to the folder's own
   write path, so a regenerated level is reviewed like any other chapter change.
 
@@ -836,6 +839,48 @@ with `!element`, and each runs from the plugin, never from a materialized copy.
 | A project belongs to the block whose `code` folder holds it most closely; a reference between two blocks is one relationship | `components.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
 | `--check` writes nothing and exits `1` while the committed file differs | both | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
 | Both files read clean in a workspace that includes them after their parents | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
+
+### Code Model
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#c4-update", ".devbook/arc42/building-blocks/devbook.md#c4-generators", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/c4-model.md"]
+```
+
+The code level of the C4 model, generated so nobody types it. A .NET console under
+`tools/devbook-c4/code-model/` loads a solution with Roslyn and finds every class or struct a
+marker names: an interface `IAggregateRoot`, `IEntity`, `IValueObject`, or `IDomainEvent`, or a
+base class of that name with or without its `I`. A repository with its own names passes them
+with `--markers`. Interfaces come first because a C# `record` can implement one and keep its
+own base.
+
+```mermaid
+flowchart LR
+    sln[Solution] --> finder[Marked types]
+    blocks["Building blocks: code and c4"] --> map[Component per type]
+    finder --> map
+    map --> mmd["code/component.mmd"]
+    map --> dsl[code.dsl image views]
+    aliases["domain/ aliases"] --> report[no-alias report]
+    finder --> report
+```
+
+Each aggregate root lands under the `c4` element of the building block whose `code` folder
+holds its file. The component's diagram draws each of its roots with the entities and value
+objects they hold, and `code.dsl` gives it one `image` view, which `workspace.dsl` includes in
+`views` and the block embeds under `## Structure`. A domain event is found and checked against
+the aliases but never drawn. The [C4 Model](#c4-model) reader checks the view and the
+[view renderer](devbook-derived.md#view-renderer) draws it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The same code gives the same bytes, and a run from nothing writes exactly the committed files | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A type is marked by an interface or by a base class of a marker's name, and `--markers` replaces the four names | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A diagram holds its roots, their entities, and their value objects; another root and a domain event are never drawn | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| What it writes reads with no problem in `c4.mjs`, and every image view draws | `code-model`, `c4.mjs`, `render.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A marked type no `domain/` chapter carries in `aliases`, and a root in no block's `code` folder, are reported | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| `--check` writes nothing and exits `1` when a file would change or a stale diagram remains | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A solution that does not load whole, which would read as types removed, writes and compares nothing and exits `3` | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| An image view lands only on a component, the three-part identifier a block names in `c4`; a block naming none draws nothing | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
 
 ### Scenario Tools
 

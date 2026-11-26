@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The code level of the C4 model: reads a solution with Roslyn and writes one Mermaid
+       classDiagram per component plus the image views that show them. README.md beside it. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RollForward>LatestMajor</RollForward>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>devbook-c4-code-model</AssemblyName>
+    <RootNamespace>Devbook.C4.CodeModel</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- The fixture solution is test input, never part of this program. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);fixtures/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -50,6 +50,14 @@ jobs:
       - name: Check devbook metadata and references
         run: node plugins/devbook/tools/devbook-meta/build.mjs --check
 
+      # devbook's code-model generator is a .NET console, and its test skips
+      # without a .NET 10 SDK, so the runner gets one rather than whatever the
+      # image happens to carry.
+      - name: Install the .NET SDK
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: "10.0.x"
+
       # The files are listed, never the folder: `node --test <dir>` loads
       # nothing on Windows, and a glob over one folder misses a test added in a
       # new one without saying so. In a git pathspec `*` crosses `/`, so these

@@ -128,14 +128,17 @@ check, never the writer.
 
 ### Skill: `c4-update`
 
-Regenerates the C4 container and component levels of `arc42/`'s workspace from code: it
+Regenerates the C4 container, component, and code levels of `arc42/`'s workspace from code: it
 starts its own isolated instance of the Aspire AppHost, captures `aspire describe --format
 mermaid`, stops that instance, and runs the two `devbook-c4` generators into
-`.devbook/arc42/c4/generated/`. It lists what has no mapping or no description for a person,
-runs the check, and lands nothing: the `arc42/` flow or a schedule carries the files.
+`.devbook/arc42/c4/generated/`. The code level comes from `tools/devbook-c4/code-model/`, a .NET
+console that loads a solution with Roslyn and writes one Mermaid class diagram per component of
+its aggregate roots, entities, and value objects, with the `image` views that show them. It
+lists what has no mapping, no description, or no `domain/` alias for a person, runs the check,
+and lands nothing: the `arc42/` flow or a schedule carries the files.
 
 **Trigger keywords:** `refresh the C4 model from code`, `update containers.dsl`,
-`update components.dsl`, `generated C4 files are stale`
+`update components.dsl`, `regenerate the code diagrams`, `generated C4 files are stale`
 
 ### Skill: `prose-check`
 
