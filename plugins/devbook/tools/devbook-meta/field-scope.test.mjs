@@ -204,94 +204,26 @@ const dump = (issues) => JSON.stringify(issues, null, 2);
     );
 }
 
-// How a bounded context ships — its own `service`, or a `module` in a modular
-// monolith — belongs to the context, so `deployment` sits on
-// `context-map.md`'s `bounded-context` chapter and nowhere else.
-{
-    const issues = validateDocument(
-        ".devbook/domain/context-map.md",
-        `# Order Platform\n\n${fence("type: context-map\n")}\n## Ordering\n\n` +
-            `${fence("type: bounded-context\ndeployment: service\n")}\nProse.\n\n## Invoicing\n\n` +
-            `${fence("type: bounded-context\ndeployment: module\n")}\nProse.\n\n## Shipping\n\n` +
-            `${fence("type: bounded-context\n")}\nProse.\n`
-    );
-
+// How a context ships left the chapter in contract 39: it is the C4 element
+// `context.md` names in `c4`. A `deployment` left behind, on `context.md` or
+// anywhere else, is an error naming the migration that moves it.
+for (const [where, rel, md] of [
+    ["`context.md`'s file-level block", ".devbook/domain/ordering/context.md", `# Ordering\n\n${fence("type: context\nindex: root\ndeployment: service\n")}\nProse.\n`],
+    ["an aggregate", ".devbook/domain/ordering/domain.md", `# Domain\n\n${fence("type: domain\n")}\n## Order\n\n${fence("type: aggregate\ndeployment: module\n")}\nProse.\n`],
+]) {
+    const issues = validateDocument(rel, md);
     check(
-        !issues.some((i) => i.severity === "error"),
-        "`deployment` of `service`, `module`, or none on a bounded context is silent",
-        dump(issues)
-    );
-}
-{
-    const issues = validateDocument(
-        ".devbook/domain/context-map.md",
-        `# Order Platform\n\n${fence("type: context-map\ndeployment: module\n")}\n## Ordering\n\n` +
-            `${fence("type: bounded-context\ndeployment: lambda\n")}\nProse.\n`
-    );
-
-    check(
-        Boolean(find(issues, "error", "`deployment` on the file-level block")),
-        "`deployment` on the file-level block is an error",
-        dump(issues)
-    );
-    check(
-        Boolean(find(issues, "error", '`deployment` "lambda", expected one of: service, module')),
-        "a `deployment` outside the two values is an error",
-        dump(issues)
-    );
-}
-{
-    const issues = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
-            `${fence("type: aggregate\ndeployment: service\n")}\nProse.\n`
-    );
-
-    check(
-        Boolean(find(issues, "error", '`deployment` on a chapter of type "aggregate"')),
-        "`deployment` on an aggregate is an error",
-        dump(issues)
-    );
-}
-
-// `context.md` is the context itself, so its file-level block carries the
-// same `deployment` as the context's chapter on the map. Only that file type
-// gets the exception: the map's own file-level block is still an error above.
-{
-    const issues = validateDocument(
-        ".devbook/domain/ordering/context.md",
-        `# Ordering\n\n${fence("type: context\nindex: root\ndeployment: service\n")}\nProse.\n`
-    );
-
-    check(
-        !issues.some((i) => i.severity === "error"),
-        "`deployment` on `context.md`'s file-level block is silent",
+        Boolean(find(issues, "error", "039-context-map-joins-c4")) && !find(issues, "error", "file-level block, where"),
+        `\`deployment\` on ${where} is an error naming the migration, and only that`,
         dump(issues)
     );
 }
 {
     const issues = validateDocument(
         ".devbook/domain/ordering/context.md",
-        `# Ordering\n\n${fence("type: context\nindex: root\ndeployment: serverless\n")}\nProse.\n`
+        `# Ordering\n\n${fence("type: context\nindex: root\nc4: [shop.ordering]\n")}\nProse.\n`
     );
-
-    check(
-        Boolean(find(issues, "error", '`deployment` "serverless", expected one of: service, module')),
-        "a `deployment` outside the two values on `context.md` is an error",
-        dump(issues)
-    );
-}
-{
-    const issues = validateDocument(
-        ".devbook/domain/ordering/domain.md",
-        `# Ordering\n\n${fence("type: domain\ndeployment: module\n")}\nProse.\n`
-    );
-
-    check(
-        Boolean(find(issues, "error", "`deployment` on the file-level block")),
-        "`deployment` on another file type's file-level block is still an error",
-        dump(issues)
-    );
+    check(!issues.some((i) => i.severity === "error"), "`c4` on `context.md`'s file-level block is silent", dump(issues));
 }
 
 // --- .ai `stage` is a chapter's, never a file's ---------------------------

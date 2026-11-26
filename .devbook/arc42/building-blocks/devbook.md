@@ -339,8 +339,8 @@ A chapter is not a file. One file holds many, and the file itself is a chapter t
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `deployment` sits on a `bounded-context` chapter or a `context.md` file-level block and is `service` or `module`; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| A context's `deployment` is stated alike on its `bounded-context` chapter and on the `context.md` that chapter's `related` names, or on neither | build | `unit:node:plugins/devbook/tools/devbook-meta/deployment-pairing.test.mjs` |
+| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| A `context-map` file, a `bounded-context` chapter, and a `deployment` field are errors naming `039-context-map-joins-c4`: a context's element, relationships, and subdomain class are the C4 workspace's | parse | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | No chapter carries an `annotation` fence: a leftover, open or resolved, is an error naming `038-workflow-state-leaves-the-chapter`, and one quoted inside another fence is that fence's content | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | `ai/`'s `stage` and `layer` are a chapter's own, from the delivery path's seven words and the three layer words; each `substage` sits under a listed stage, each `feeds` entry carries a label and resolves, `evidence` is one of four words, and a `trial` or `candidate` chapter says what moves it up; a file-level placement field is an error and a usage with neither `stage` nor `layer` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
@@ -693,7 +693,7 @@ commits it.
 
 A **Graph Node** is one chapter or file, identified by its address, carrying the parsed
 block, the composed label, and the folder it belongs to. The label composes the heading with
-the `type` where that adds something, as in `Order Platform (context-map)`, so the kind stays
+the `type` where that adds something, as in `Order (domain)`, so the kind stays
 visible in a graph drawn from several repositories at once.
 
 A **Graph Edge** is a directed pair of addresses plus which field produced it. It is equal by

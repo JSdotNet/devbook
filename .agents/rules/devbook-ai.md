@@ -109,7 +109,7 @@ nothing in the picture.
   - Links the scheduler's `tech/` chapter, when the repository has one — the
     one place the [loop picture](#the-loop-picture) learns which it is.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
-    carries a file-level block only — the same rule as `.devbook/domain/context-map.md`
+    carries a file-level block only — the same rule as a bounded context's `model.md`
     and `.devbook/tech/technology-graph.md`.
 - **`<nn>-<part>.md`** — One `## <Chapter Name>` chapter per usage. Each chapter
   is an addressable node in the graph, carries a chapter metadata block, and

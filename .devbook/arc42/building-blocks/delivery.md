@@ -88,7 +88,7 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-spec-run"]
 ```
 
 - **Does:** write or correct a devbook folder: an architecture chapter, decision record, or debt
-  record; a bounded context or the context map; the technology graph; design principles, tokens,
+  record; a bounded context; the technology graph; design principles, tokens,
   and component guidance; the AI adoption record.
 - **Never:** regenerates the derived indexes.
 - **Why:** the procedure is the same across the five folders, and only the drafting agent differs.

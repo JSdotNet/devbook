@@ -11,7 +11,7 @@ carries the kind.
 | Chapters | The whole view, or one `##` section of it — a single container, or one level of decomposition; or one block's own file, whole or one `##` section of it. The workspace comes with every run, per **The workspace is part of the kind** |
 | File | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` for a block the view keeps in its own file, per `devbook-arc42.md`; and `.devbook/arc42/workspace.dsl` with the files it includes from `c4/` |
 | Folder rule | `devbook-arc42.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The view as it stands, the workspace, and `03-context-and-scope.md` for the system boundary; `.devbook/domain/context-map.md` only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
+| Context to load | The view as it stands, the workspace, and `03-context-and-scope.md` for the system boundary; the `domain/` `context.md` files whose `c4` names the block's element, only for bounded-context alignment; when applying, `09-architecture-decisions.md` for the decisions that constrain the structure |
 | Plan target | A chapter of the `arc42/` folder, drafted to its rule, and the workspace's DSL, both delivered in the capture plan, per **The capture plan** in the protocol and **The workspace is part of the kind** below |
 | Index scope | `--scope arc42` |
 | Extra input | Level depth: default to level 1 (containers) and level 2 (the blocks inside them that carry real responsibility) |
@@ -89,7 +89,7 @@ it.
 | Dependencies between blocks | Project and package references, container registrations, client instantiations — the actual edges, in their actual direction | Only the documented edges, in the documented direction — check every current reference crossing a block line |
 | Elements | A `container` per level 1 block and a `component` per level 2 block in the workspace, each with a one-line `description`; the block's file names its element in `c4` and its folders in `code` | Each element's `code` folders existing and holding the block |
 | Views | The container view embedded in chapter 5 and a block's component view in its own file, as `![…](c4:<key>)`; relationships are the observed dependencies, with what each does and over what technology | The real dependency graph matching the workspace's relationships |
-| Bounded-context alignment | Which `domain/` context each block belongs to, where the mapping is clean — a `related` reference, not a restatement | — |
+| Bounded-context alignment | Which `domain/` contexts each block hosts: each context's `context.md` names the block's element in `c4`, and the block restates none of it | Each such `c4` naming an element the workspace defines |
 
 Prefer diagrams over prose; the folder rules say so. Record dependency
 **direction** from the references, not from the intended layering: a block that

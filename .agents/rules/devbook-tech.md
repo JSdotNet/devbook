@@ -55,7 +55,7 @@ last — the order shown in the tree above. See
     edges = `depends-on`).
   - Explains the rating ladder and how to read/extend the graph.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
-    carries a file-level block only (same rule as `.devbook/domain/context-map.md`).
+    carries a file-level block only (same rule as a bounded context's `model.md`).
   - It is `tech/`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
   Never hand-edited; the rule for them comes with the layered plugin that commits the

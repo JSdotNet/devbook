@@ -7,7 +7,7 @@
 // Ordering rules, per directory:
 //   1. The directory's *root document* sorts first — the file declaring
 //      `index: root`, or failing that the entry point its folder convention
-//      names (`.devbook/domain/context-map.md`, a bounded context's `domain.md`,
+//      names (a bounded context's `context.md`,
 //      `.devbook/tech/technology-graph.md`, `.devbook/design/README.md`, `.devbook/ai/adoption-map.md`).
 //   2. If anything left carries a **number** — from a `number` field or from a
 //      numbered filename — the directory is a numbered set (arc42 chapters,
@@ -72,7 +72,9 @@ function testList(meta) {
  * change one and change the other in the same edit.
  */
 const DIRECTORY_CONVENTION = {
-    "domain": { root: "context-map.md", first: [], last: [] },
+    // `domain/` itself has no root document since contract 39: its contexts
+    // sort by name.
+    "domain": { root: null, first: [], last: [] },
     "domain/*": {
         root: "context.md",
         first: [
@@ -141,7 +143,7 @@ function resolveRoot(relDir, parsed, excluded, convention, problems) {
     }
     if (declared.length) return declared[0][0];
 
-    if (!convention) return null;
+    if (!convention?.root) return null;
     if (parsed.has(convention.root)) return convention.root;
 
     problems.push(
