@@ -91,10 +91,9 @@ logs back. Claude Code calls the page Routines and the GitHub Copilot app Automa
 The plugin resolves the tool from the live tool list, so it names neither.
 
 The cloud flavour is not used: a repository, a tool allowlist, a model, and an environment in place
-of the working folder, on a fresh clone. On 2026-09-28 a cloud run of the Backlog issue sweep started
-with none of this marketplace's plugins installed, though the repository's committed settings enabled
-them. It stopped without its skill, and a session without its skill has scheduled nothing. `delivery-schedule` creates local routines only and disables any cloud copy
-it finds.
+of the working folder, on a fresh clone. A cloud run starts without this marketplace's plugins, so
+it [stops without its skill](../arc42/adr/plugin-boundaries.md). `delivery-schedule` creates local
+routines only and disables any cloud copy it finds.
 
 `trial`: local routines have run these targets against several repositories since 2026-09-26. The
 unverified part is the machine: a routine needs it on and the host app open. Its absence costs the
