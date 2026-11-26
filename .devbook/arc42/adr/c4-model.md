@@ -22,7 +22,9 @@ The choice in full:
 - **Generated files sit apart.** A script that reads the code writes its part of the model
   under `.devbook/arc42/c4/generated/`, and `workspace.dsl` includes it like any other file
   there. No person edits a file in that folder: the script's next run replaces it, so a change
-  belongs in the code or in the hand-written workspace.
+  belongs in the code or in the hand-written workspace. A generated file adds its elements to
+  a hand-written system or container with `!element`, and what a person writes for a script to
+  read, such as the AppHost mapping, sits in `c4/` beside that folder, never in it.
 - **A component's code is an image view.** Structurizr has no code element, so level 4 is an
   `image` view on a component, `image <component> <key> { mermaid <file> }`, whose source is a
   generated Mermaid file under `c4/generated/`. No other source format and no inline text.
@@ -134,5 +136,6 @@ fixed History header lets a reader show a concern's decisions in order across ev
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-26 | A generated file reopens its hand-written parent with Structurizr's `!element`, and a script's hand-written input, the AppHost mapping `aspire-map.json`, sits in `c4/` rather than `c4/generated/`. | A generated container or component must sit inside an element the workspace already declares, and a file a person edits cannot live in the folder no person edits. |
 | 2026-11-26 | Generated model files under `.devbook/arc42/c4/generated/`, included by `workspace.dsl` and edited by no person, and an `image` view on a component, sourced from a generated Mermaid file there and embedded as `c4:<key>` in its building block's `## Structure`, as the code level. | Generating the lower levels from code keeps them true at no cost, and Structurizr has no code element, only an image view. |
 | 2026-10-20 | One Structurizr workspace per repository, views embedded by `c4:<key>` in the chapter that owns their kind, `c4`, `c4-touches`, and `code` in `meta`, Mermaid only inside one element, a committed SVG per view rendered by `devbook-derived`, and TDR `severity` and status with a fixed History header. | Mermaid and Archify drew the same system twice with nothing to check them against each other, and the Backlog app needs one model to navigate. |
