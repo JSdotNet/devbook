@@ -111,7 +111,7 @@ workspace "jsdotnet-devbook" {
 
                 delivery-surface-backlog = container "delivery-surface-backlog" "A run shown in the Backlog desktop app, where its work item already lives." "MCP server" {
                     proxy-server = component "Proxy Server" "The stdio server that forwards lifecycle and export calls to the endpoint inside the running Backlog app." "MCP server"
-                    endpoint = component "Endpoint" "The Backlog address and bearer token, from the environment, then settings, then the default port." "Node.js"
+                    endpoint = component "Endpoint" "The Backlog address, from the environment, then settings, then the default port, and the delivery grant's token from the app's broker." "Node.js"
                     declared-tools = component "Declared Tools" "The tool names this server lists and forwards, export only while Backlog lists it." "MCP server"
                 }
 

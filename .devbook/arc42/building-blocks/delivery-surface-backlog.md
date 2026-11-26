@@ -82,16 +82,20 @@ A value and a session, and nothing stored.
 
 Also called: Backlog endpoint, port and token.
 
-Where Backlog listens and how it is let in: `http://127.0.0.1:<port>/mcp` with a bearer token. It
-resolves from `BACKLOG_MCP_PORT` and `BACKLOG_MCP_TOKEN`, then `mcpServer.port` and
-`mcpServer.token` in the app's `settings.json`, then port `5757`, the order Backlog's own
-`backlog-tools` telemetry forwarder uses. It re-resolves after Backlog stops answering, so an app
+Where Backlog listens and how it is let in: `http://127.0.0.1:<port>/mcp` with a bearer token. The
+port resolves from `BACKLOG_MCP_PORT`, then `mcpServer.port` in the app's `settings.json`, then
+`5757`. The token is the "Backlog delivery" grant's, `mcpServer.grants.delivery`, minted by the
+app's token broker over the pipe `backlog-mcp-broker-<user>` — the protocol of Backlog's
+`tools/mcp/backlog-mcp-headers.mjs`, `JSdotNet/Backlog` local ADR 0058 §3. `BACKLOG_MCP_TOKEN`
+is used only where no grant is recorded. It re-resolves after Backlog stops answering, so an app
 restarted on another port is found again.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The environment wins over `settings.json`, which wins over the default port | `resolveEndpoint()` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
+| A recorded grant wins over `BACKLOG_MCP_TOKEN`, and `mcpServer.token` is never read | `resolveEndpoint()` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 | Every forwarded request carries the bearer token when one resolves | `BacklogClient` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
+| A minted token is kept until a minute before its `expiresAt`, and a 401 or 403 mints it once more | `BacklogClient` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 | A session id Backlog issues is sent back on every later request | `BacklogClient` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 
 ### Declared Tools
