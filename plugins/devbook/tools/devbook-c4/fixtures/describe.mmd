@@ -1,0 +1,19 @@
+flowchart LR
+    resource0["api"]
+    resource1["cache"]
+    resource2["orders"]
+    resource3["payments"]
+    resource4["shopdb"]
+    resource5["storybook"]
+    resource6["storybook-browser-logs"]
+    resource7["web"]
+    resource8["worker"]
+    resource2 --> resource4
+    resource3 --> resource4
+    resource0 --> resource4
+    resource0 --> resource1
+    resource6 --> resource5
+    resource7 --> resource0
+    resource7 --> resource0
+    resource8 --> resource4
+    resource8 --> resource0

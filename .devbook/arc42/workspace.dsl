@@ -20,6 +20,7 @@ workspace "jsdotnet-devbook" {
                     index-generator = component "Index Generator" "The checker that walks the corpus and builds the graph, the outline, and the registers." "Node.js"
                     chapter-review = component "Chapter Review" "Reads a chapter against its folder's rules and posts one note per objection through devbook.decision@1." "Skill"
                     tech-inventory = component "Tech Inventory" "Scripts that read package manifests and emit deterministic JSON." "Node.js"
+                    c4-generators = component "C4 Generators" "Scripts that write the container and component levels of a workspace from an AppHost's description and the .NET project graph." "Node.js"
                     scenario-tools = component "Scenario Tools" "The signature, shot helper, reporter, coverage check, and demo sync that point end-to-end specs at journeys." "Node.js"
 
                     group "devbook-code-sync" {
@@ -213,6 +214,7 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook.reconciler -> marketplace.devbook.devbook-folder "Adopts and drops"
         marketplace.devbook.reconciler -> marketplace.devbook.scenario-tools "Materializes"
         marketplace.devbook.reconciler -> marketplace.devbook.tech-inventory "Materializes"
+        marketplace.devbook.c4-generators -> marketplace.devbook.c4-model "Writes the generated includes of"
         marketplace.devbook.unit-lister -> marketplace.devbook.reference-graph "Reads the units and groups off"
         marketplace.devbook.spec-converter -> marketplace.devbook.unit-lister "Takes its unit and group scope from"
         marketplace.devbook.spec-converter -> marketplace.devbook.chapter "Writes, in its folder's shape"

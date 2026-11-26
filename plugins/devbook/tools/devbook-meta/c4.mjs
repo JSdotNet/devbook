@@ -12,7 +12,8 @@
 // what could not be read is the failure this guards against.
 //
 // The subset: `workspace`, `model`, `views`, `!identifiers hierarchical`,
-// `!include` of a relative file under the workspace's `c4/` folder; `person`,
+// `!include` of a relative file under the workspace's `c4/` folder; `!element`
+// reopening a system or container at the top of the model; `person`,
 // `softwareSystem`, `container`, `component`, `group`, `tags`; relationships with
 // description, technology, and tags; `deploymentEnvironment`, `deploymentNode`,
 // `infrastructureNode`, `containerInstance`, `softwareSystemInstance`; the
@@ -335,6 +336,7 @@ class Parser {
             const word = lower(head);
             const where = parent ? parent.kind : "model";
             if (word === "!identifiers" && !parent) { this.identifiers(s.parts, false); continue; }
+            if (word === "!element") { this.reopen(s, parent, group); continue; }
             if (word === "tags" && parent && !s.block) { parent.tags.push(...splitTags(this.values(s.parts, 1, 1, "tags")[0])); continue; }
             if (word === "group" && [null, "softwareSystem", "container"].includes(parent?.kind ?? null)) { this.group(s, parent, group, (g) => this.model(head, parent, g)); continue; }
             if (this.relationship(s, parent, null)) continue;
@@ -356,6 +358,22 @@ class Parser {
             }
             this.unknown(keyword ?? head, s.block, where);
         }
+    }
+
+    // `!element <identifier> { … }` at the top of the model: reopens a system or a
+    // container declared before it, so a generated file can add the elements it
+    // owns to a hand-written parent. Its block reads as that element's own.
+    reopen(s, parent, group) {
+        const head = s.parts[0];
+        const [target] = this.values(s.parts, 1, 1, "!element");
+        const refuse = (message) => { this.report(head, message); if (s.block) this.skip(); };
+        if (parent || group) return refuse("`!element` stands at the top of the model, outside every element and group; it was skipped.");
+        if (!s.block) return refuse("`!element` has no block, so it adds nothing.");
+        if (!target) return refuse("`!element` names no element; its block was skipped.");
+        const element = this.byId.get(target.toLowerCase());
+        if (!element) return refuse(`\`!element ${target}\` names no element declared before it; its block was skipped.`);
+        if (element.kind !== "softwareSystem" && element.kind !== "container") return refuse(`\`!element ${target}\` reopens a ${element.kind}; only a softwareSystem or a container is reopened.`);
+        this.model(head, element, null);
     }
 
     group(s, parent, group, body) {

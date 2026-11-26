@@ -424,6 +424,38 @@ for (const [name, source, pattern, line] of cases) {
     check(!!el(r, "a") && r.views.length === 1, "reading continues past each problem");
 }
 
+// ── !element: a generated file adds children to a hand-written parent ───────
+
+{
+    const r = parseWorkspace(wrap([
+        's = softwareSystem "S" {',
+        '    api = container "API"',
+        '}',
+        '!element s {',
+        '    db = container "DB" "Holds rows" "SQL"',
+        '}',
+        '!element s.api {',
+        '    orders = component "Orders" "Takes orders" ".NET"',
+        '}',
+        's.api.orders -> s.db "References"',
+    ].join("\n")));
+    check(r.problems.length === 0, "`!element` reads clean", show(r.problems));
+    check(el(r, "s.db")?.parent === "s" && el(r, "s.db")?.description === "Holds rows", "`!element` on a system declares its container under it", show(r.elements));
+    check(el(r, "s.api.orders")?.parent === "s.api", "`!element` on a container declares its component under it", show(r.elements));
+    check(r.relationships.some((x) => x.source === "s.api.orders" && x.destination === "s.db"), "a relationship names a reopened element's child", show(r.relationships));
+}
+
+for (const [name, model, pattern] of [
+    ["unknown target", '!element nope {\n  x = container "X"\n}', /names no element declared before it/],
+    ["declared after", '!element s {\n  x = container "X"\n}\ns = softwareSystem "S"', /names no element declared before it/],
+    ["a person", 'p = person "P"\n!element p {\n}', /only a softwareSystem or a container/],
+    ["no block", 's = softwareSystem "S"\n!element s', /has no block/],
+    ["nested", 's = softwareSystem "S" {\n  !element s {\n  }\n}', /top of the model/],
+]) {
+    const r = parseWorkspace(wrap(model));
+    check(reports(r, pattern), `problem: \`!element\` ${name}`, show(r.problems));
+}
+
 // ── the lexer ───────────────────────────────────────────────────────────────
 
 {
