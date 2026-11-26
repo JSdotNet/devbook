@@ -96,7 +96,11 @@ outside that folder.
 A script that reads the code writes its part of the model under
 `.devbook/arc42/c4/generated/`, and the workspace includes it like any other file
 in `c4/`. Never edit a file there: the next run replaces it, so change the code or
-the hand-written workspace instead.
+the hand-written workspace instead. A generated file adds its elements to a
+hand-written system or container with `!element <identifier> { … }`, so include it
+after the element it reopens. `devbook:c4-update` writes the container and component
+levels; what a person writes for it to read, the AppHost mapping
+`c4/aspire-map.json`, sits beside `generated/`, never in it.
 
 It holds the elements, their relationships, and the views:
 
