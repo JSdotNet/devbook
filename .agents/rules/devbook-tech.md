@@ -30,8 +30,9 @@ the way it does; `tech/` links back to it rather than restating rationale.
 - `tech/` is **not** baseline repository context. Load it for stack, dependency,
   upgrade, or technology-selection tasks, and when implementation work needs to
   know which technology owns a responsibility.
-- When `tech/` is needed as task context, load only the relevant layer file(s)
-  instead of reading the whole folder by default.
+- Load only the chapters a task needs, never the folder whole, per
+  `devbook-writing.md` under *Loading a folder*. Here that
+  means the relevant layer files.
 
 ## Structure
 

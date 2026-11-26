@@ -44,8 +44,8 @@ chapters carry the rationale directly.
 - `design/` is **not** baseline repository context. Load it only for design,
   UX, or UI-implementation tasks, normally after routing through the
   repository's design flow or a UX specialist agent.
-- When `design/` is needed as task context, load only the relevant file(s)
-  instead of reading the whole folder.
+- Load only the chapters a task needs, never the folder whole, per
+  `devbook-writing.md` under *Loading a folder*.
 - UI implementation work (feature or bug) consults `design/` when the change
   touches visual design, interaction behavior, editing behavior, or
   accessibility — not by default.

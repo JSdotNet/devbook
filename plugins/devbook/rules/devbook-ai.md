@@ -53,8 +53,9 @@ concepts, and guardrails have no product behind them.
 - `ai/` is **not** baseline repository context. Load it when the task is about
   how the team works with AI — adopting a tool into the path, changing a
   practice, reviewing adoption, onboarding someone into the way of working.
-- When `ai/` is needed as task context, load `adoption-map.md` plus only the
-  files in scope, not the whole folder.
+- Load only the chapters a task needs, never the folder whole, per
+  `devbook-writing.md` under *Loading a folder*. Here that
+  means `adoption-map.md` plus the files in scope.
 - An agent does **not** read `ai/` to decide how to do its own current task.
   These chapters are the record of a way of working, not instructions to follow;
   instructions live in instruction files and skills.
