@@ -126,6 +126,17 @@ check, never the writer.
 **Trigger keywords:** `update technology graph`, `refresh tech/`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
+### Skill: `c4-update`
+
+Regenerates the C4 model files the code owns under `.devbook/arc42/c4/generated/`. The code
+level comes from `tools/devbook-c4/code-model/`, a .NET console that loads a solution with
+Roslyn and writes one Mermaid class diagram per component of its aggregate roots, entities,
+and value objects, with the `image` views that show them, and reports a marked type no
+`domain/` chapter names in `aliases`. Writes the files and lands nothing; its `--check` fails
+on drift.
+
+**Trigger keywords:** `c4 update`, `refresh the C4 model`, `regenerate the code diagrams`
+
 ### Skill: `prose-check`
 
 Reads every adopted folder and reports the prose that does not earn its lines
