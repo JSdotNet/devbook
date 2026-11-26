@@ -51,6 +51,7 @@ record's `meta` is the source.
 | [8. The domain rule is not exercised here](8-the-domain-rule-is-not-exercised-here.md) | 2026-09-21 | Medium | identified |
 | [9. OpenSpec's model does not cover a devbook change](9-openspecs-model-does-not-cover-a-devbook-change.md) | 2026-09-27 | Medium | resolved |
 | [10. The C4 rules run ahead of this devbook](10-the-c4-rules-run-ahead-of-this-devbook.md) | 2026-10-20 | Low | resolved |
+| [11. The viewers are hard-coded dark](11-the-viewers-are-hard-coded-dark.md) | 2026-11-26 | Low | identified |
 
 None carries a target date. This repository has one maintainer and no release commitment to
 schedule against, so a date would be invented rather than agreed. Each record states the

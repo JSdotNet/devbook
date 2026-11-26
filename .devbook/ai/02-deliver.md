@@ -26,11 +26,11 @@ A change routes to the flow named for what it changes, which runs it end to end.
 
   `.claude/settings.json` enables five plugins for every session here: `devbook`,
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config`. The stamps in
-  `.devbook/config.json` record what they materialized:
+  [`.devbook/config.json`](../config.json) record each version and what it materialized:
 
-  - `devbook` 1.19.0, contract 29, over `arc42`, `tech`, `design`, and `ai`
-  - `delivery` and `schedule` 1.18.0
-  - `devbook-derived` 1.18.0, with its refresh script, its nightly and drift workflows, its rule
+  - `devbook`, over the adopted folders
+  - `delivery` and `schedule`
+  - `devbook-derived`, with its refresh script, its nightly and drift workflows, its rule
     trio, and its `AGENTS.md` section
 
   No procedure is adopted. The procedures are this marketplace's product, kept as seeds in
@@ -114,9 +114,8 @@ its report as the run's last message.
   1.32.0. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a
   glance, not a rebase.
-- **Evidence** — the fact the design first rested on came back false on 2026-09-28. A cloud
-  session did not load the marketplace from the repository's committed settings, and the
-  Backlog issue sweep stopped at its first rule without its skill. Every schedule has been a
+- **Evidence** — the fact the design first rested on, that a cloud session loads the
+  marketplace, [came back false](../arc42/adr/plugin-boundaries.md). Every schedule has been a
   local routine since, running with the plugins installed on the machine. The first local runs
   of `devbook-validate` ran their target and published here: one pull request a day on
   2026-09-30, 2026-10-01, and 2026-10-02 (#187, #199, #210), each merged the day it opened.

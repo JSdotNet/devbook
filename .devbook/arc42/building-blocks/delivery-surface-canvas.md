@@ -167,6 +167,10 @@ storing one would create a second, staler copy of something one call can re-rend
 The history is the only state not derivable from the current call, which is why the aggregate
 exists rather than the render being a pure function.
 
+A canvas panel sits beside a conversation, so a view follows the viewer's light or dark theme
+and stays readable at sidebar width. Both viewers are hard-coded dark today, down to the
+Mermaid theme, which [TDR 11](../tdr/11-the-viewers-are-hard-coded-dark.md) records.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Nothing is persisted; a view is re-rendered rather than restored | render | untested |
