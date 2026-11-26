@@ -460,7 +460,8 @@ node tools/devbook-c4/components.mjs --root . [--check]
 ```
 
 Two generators `c4-update` runs from the plugin itself; neither is materialized into a
-repository. `containers.mjs` reads the Mermaid flowchart `aspire describe --format mermaid`
+repository. `devbook-derived`'s drift workflow runs `components.mjs` and the code model with
+`--check` on every pull request, fetched from this marketplace at the stamped version. `containers.mjs` reads the Mermaid flowchart `aspire describe --format mermaid`
 prints, and the hand-written `.devbook/arc42/c4/aspire-map.json`, which drops a resource or
 names the `<system>.<container>` identifier the rest of the workspace knows its container by
 (resources sharing one fold into it), and writes

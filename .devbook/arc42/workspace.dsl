@@ -72,7 +72,7 @@ workspace "jsdotnet-devbook" {
 
             group "L1 extension" {
                 devbook-derived = container "devbook-derived" "The committed _meta/ index, its refresh paths, the rendered C4 views, and the graph canvas." "Claude Code plugin" {
-                    refresh-paths = component "Refresh Paths" "The skill, script, and workflows that rewrite the committed _meta/ indexes." "PowerShell, GitHub Actions"
+                    refresh-paths = component "Refresh Paths" "The skill, script, and workflows that rewrite the committed _meta/ indexes, and the pull-request job that compares the generated C4 model with the code." "PowerShell, GitHub Actions"
                     view-renderer = component "View Renderer" "Draws every C4 view of the workspace as a committed SVG." "Node.js"
                     canvas = component "Canvas" "Two Copilot canvases drawing the reference graph and one chapter live." "Copilot extension"
                 }
@@ -164,6 +164,8 @@ workspace "jsdotnet-devbook" {
         copilot -> marketplace.devbook-derived.canvas "Loads the extension at run time" "Copilot Extension SDK"
         routine -> marketplace.delivery-schedule.entry-point "Fires the entry point its schedule targets"
         github -> marketplace.devbook-derived.refresh-paths "Runs the nightly refresh and the drift warning" "GitHub Actions"
+        marketplace.devbook-derived.refresh-paths -> marketplace.devbook.c4-generators "Compares the component level with, on a pull request" "--check"
+        marketplace.devbook-derived.refresh-paths -> marketplace.devbook.code-model "Compares the code level with, on a pull request" "--check"
 
         # Between plugins, in the direction of the coupling
         marketplace.devbook-derived -> marketplace.devbook "Builds the index with the checker it ships" "dependencies: devbook >=1.1.0 <2.0.0"

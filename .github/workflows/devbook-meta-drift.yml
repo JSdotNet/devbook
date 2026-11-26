@@ -9,8 +9,14 @@ name: Devbook index drift
 # ./build/Update-DevbookIndex.ps1 refreshes a branch on demand. Broken
 # references and schema violations are devbook's own check, devbook-meta.yml.
 #
+# The c4 job is the exception, and fails: a generated C4 model under
+# .devbook/arc42/c4/generated/ is the code's own picture, so a pull request that
+# moves the code carries it. It compares levels 3 and 4 with --check and
+# regenerates nothing. Level 2 needs the AppHost running, so the local c4-update
+# schedule is the only run that refreshes and compares it.
+#
 # The path filters below are rendered, not copied: delete the rows for folders
-# this repository has not adopted.
+# this repository has not adopted. The last five rows are the code the c4 job reads.
 
 on:
   pull_request:
@@ -23,6 +29,11 @@ on:
       - '.devbook/ai/**'
       - '.devbook/_tools/devbook-meta/**'
       - '.devbook/_tools/c4-render/**'
+      - '**/*.csproj'
+      - '**/*.cs'
+      - '**/*.sln'
+      - '**/*.slnx'
+      - '**/*.props'
   workflow_dispatch:
 
 permissions:
@@ -52,3 +63,87 @@ jobs:
             echo "::warning::Derived _meta indexes or view renders have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"
             git status --short -- '*_meta/*.json' '*_meta/c4/*.svg'
           fi
+
+  c4:
+    name: Fail on drift in the generated C4 model
+    runs-on: ubuntu-latest
+    env:
+      GENERATED: .devbook/arc42/c4/generated
+      # Rendered for the repository when its run of devbook:c4-update differs from
+      # the defaults: the solution it passes, and the markers it names. Empty means
+      # the solution nearest the root and the four default markers.
+      C4_SOLUTION: ''
+      C4_MARKERS: ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Find the generators
+        id: tools
+        run: |
+          # Nothing to compare until c4-update has committed a generated level.
+          if [ ! -f "$GENERATED/components.dsl" ] && [ ! -f "$GENERATED/code.dsl" ]; then
+            echo "No generated C4 model is committed; nothing to compare."
+            exit 0
+          fi
+          # The generators run from the devbook plugin and are never materialized:
+          # this marketplace's own checkout has them, any other repository fetches
+          # them, outside the workspace so no fixture project is read as its own.
+          if [ -f plugins/devbook/tools/devbook-c4/components.mjs ]; then
+            echo "dir=$GITHUB_WORKSPACE/plugins/devbook/tools/devbook-c4" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Pin to the devbook release the repository's stamp records: the last
+          # commit on the default branch before the plugin's manifest moved past it.
+          want=$(node -p "require('./.devbook/config.json').components.devbook.pluginVersion")
+          src="$RUNNER_TEMP/devbook"
+          manifest=plugins/devbook/.claude-plugin/plugin.json
+          git clone --quiet --filter=blob:none --no-checkout https://github.com/JSdotNet/devbook.git "$src"
+          ref=HEAD
+          found=
+          for commit in $(git -C "$src" rev-list --first-parent HEAD -- "$manifest"); do
+            version=$(git -C "$src" show "$commit:$manifest" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+            if [ "$version" = "$want" ]; then found=1; break; fi
+            ref="$commit^"
+          done
+          if [ -z "$found" ]; then
+            echo "::error::devbook $want, which .devbook/config.json records, is no release of JSdotNet/devbook"
+            exit 1
+          fi
+          git -C "$src" sparse-checkout set plugins/devbook/tools/devbook-c4 plugins/devbook/tools/devbook-meta
+          git -C "$src" checkout --quiet "$(git -C "$src" rev-parse "$ref")"
+          echo "Generators from devbook $want at $(git -C "$src" rev-parse --short HEAD)."
+          echo "dir=$src/plugins/devbook/tools/devbook-c4" >> "$GITHUB_OUTPUT"
+
+      - name: Compare the components (level 3)
+        if: steps.tools.outputs.dir != '' && hashFiles('.devbook/arc42/c4/generated/components.dsl') != ''
+        run: node "${{ steps.tools.outputs.dir }}/components.mjs" --root . --check
+
+      - name: Set up the repository's .NET SDK
+        if: steps.tools.outputs.dir != '' && hashFiles('.devbook/arc42/c4/generated/code.dsl') != '' && hashFiles('global.json') != ''
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Set up .NET for the code level
+        if: steps.tools.outputs.dir != '' && hashFiles('.devbook/arc42/c4/generated/code.dsl') != ''
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Compare the code diagrams (level 4)
+        if: steps.tools.outputs.dir != '' && hashFiles('.devbook/arc42/c4/generated/code.dsl') != ''
+        run: |
+          solution="$C4_SOLUTION"
+          if [ -z "$solution" ]; then
+            # The solution nearest the root; a generator fixture is never the repository's.
+            solution=$(git ls-files -- '*.slnx' '*.sln' | grep -v -e '^fixtures/' -e '/fixtures/' | awk -F/ '{ print NF " " $0 }' | sort -n | head -n 1 | cut -d' ' -f2-)
+          fi
+          if [ -z "$solution" ]; then
+            echo "::error::$GENERATED/code.dsl is committed but no solution is; run devbook:c4-update"
+            exit 1
+          fi
+          dotnet restore "$solution"
+          # From the console's own folder, so the repository's global.json does not pick its SDK.
+          cd "${{ steps.tools.outputs.dir }}/code-model"
+          dotnet run -- --solution "$GITHUB_WORKSPACE/$solution" --root "$GITHUB_WORKSPACE" ${C4_MARKERS:+--markers "$C4_MARKERS"} --check

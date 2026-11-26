@@ -495,9 +495,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
 into. It has two halves in one folder:
 
-- Fourteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep,
+- Fifteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep,
   or a report.
-- Thirteen files under `resources/schedules/`, each a cadence, a target skill, the plugins that
+- Fourteen files under `resources/schedules/`, bundles aside, each a cadence, a target skill, the plugins that
   target needs, and the task half of a prompt. One preamble carries the unattended rules
   every prompt starts with.
 
@@ -513,6 +513,7 @@ into. It has two halves in one folder:
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `instruction-review` | `delivery-schedule:schedule-instruction-review` | weekly |
 | `tech-update` | `delivery-schedule:schedule-tech-update` | weekly |
+| `c4-update` | `delivery-schedule:schedule-c4-update` | weekly |
 | `weekly-update` | `delivery-schedule:schedule-weekly-update` | weekly |
 | `weekly-retro` | `delivery-schedule:schedule-weekly-retro` | weekly |
 | `prose-check` | `delivery-schedule:schedule-prose-check` | weekly |
