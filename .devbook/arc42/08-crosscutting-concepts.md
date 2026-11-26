@@ -206,13 +206,15 @@ hook may be, so the event, not the intent, decides the form it takes.
 ## Devbook Folder
 
 ```meta
-date: 2026-10-08
+date: 2026-11-26
 related: [".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 One of the five folders the `devbook` convention governs (`arc42`, `domain`, `tech`, `design`,
 `ai`), at `.devbook/<name>/`, holding addressed Markdown **chapters**, each carrying a fenced
-`meta` block. A repository adopts any subset; there is one layout.
+`meta` block. A repository adopts any subset; there is one layout. When two folders hold the
+same text, the earlier of `arc42`, `design`, `tech`, `domain`, `ai` keeps it, per
+[the folder priority](adr/chapter-schema.md#folder-priority).
 
 The convention's own name is the only noun for these. There is no common-noun synonym, because
 a convention that has a name does not need one. *Knowledge* was that synonym until 2026-09-07,
