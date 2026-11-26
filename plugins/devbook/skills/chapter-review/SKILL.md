@@ -25,7 +25,7 @@ review that skips a lens misses the finding.
    | Truth | Does the chapter still describe what the code and the product actually do? |
    | Evidence | Does every claim that could be proven carry a `tests` entry, and does the named test still exist? |
    | Edges | Does every `related` and `depends-on` target resolve, and is each one a real relationship? |
-   | Vocabulary | Are the terms the ones the glossary or `domain.md` defines, used as defined? |
+   | Vocabulary | Is each term used as the ubiquitous language in `domain/` defines it, or, for a word no bounded context owns, the glossary? |
    | Rating | In `tech/` and `ai/`, does `rating` still match reality? |
    | Scope | Does the chapter say one thing, or has a second subject grown inside it? |
    | Gaps | What does a reader need that the chapter does not say? |
