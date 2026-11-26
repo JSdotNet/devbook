@@ -6,21 +6,19 @@ description: Structure and authoring rules for the domain devbook folder, includ
 # Domain documentation (`domain/`)
 
 `domain/` is the durable, ubiquitous-language record of the domain model,
-organized by bounded context. It is the authoritative source for "what the
-domain looks like" — complementary to `arc42/` (system architecture), `tech/`
-(technology stack), and `design/` (UX guidelines).
+organized by bounded context: what the business means, and what must hold.
 
-## Context-loading policy
+## Where a fact lives
 
-- `domain/` is **not** baseline repository context. Load it only for domain
-  modeling, bounded-context, or ubiquitous-language tasks, normally after
-  routing through the repository's domain flow or a domain specialist
-  agent.
-- Load only the chapters a task needs, never the folder whole, per
-  `devbook-writing.md` under *Loading a folder*. Here that
-  means the relevant bounded context's chapters.
-- Implementation work consults `domain/` when the change touches domain
-  behavior, an aggregate boundary, or naming — not by default.
+Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact" in
+`devbook-writing.md`. `domain/` ranks fourth, but always keeps a business rule and a term
+its ubiquitous language defines. Load the relevant context's chapters for domain work, and
+for implementation work that touches domain behaviour, an aggregate boundary, or naming.
+
+- `context.md` links to the `arc42/` building block that hosts the context, through
+  `related`, and keeps only the business side of each relationship: the DDD pattern,
+  such as ACL or Customer-Supplier, and why. The mechanism and the contract are the
+  building block's `## Dependencies`, and the dependency tables link to it.
 
 ## Structure
 
@@ -345,8 +343,9 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   switches, and — until they outgrow it — its actors and dependencies. The
   context's root document.
   - Opens with the boundary: what the context is responsible for, what is
-    inside it, what is outside it and where that is answered instead. Prose
-    under the file-level block, no chapter of its own.
+    inside it, what is outside it and where that is answered instead, and a
+    link to the building block that hosts it. Prose under the file-level
+    block, no chapter of its own.
   - **`type: feature-flag`** — a capability switch decided at release, from
     configuration. Carries `key` (the flag key the code checks) and, where the
     catalog states one, `default: on` or `off`. The prose says who owns the
@@ -516,8 +515,9 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Use explicit DDD relationship semantics (`ACL`, `Customer/Supplier`,
     `Partnership`, `OHS + Published Language`, etc.) instead of ad hoc
     integration prose.
-  - For each relationship, document DDD pattern, integration mechanism,
-    contract, and why/what the dependency relies on.
+  - For each relationship, document the DDD pattern and why or what the
+    dependency relies on. The mechanism and the contract stay in the hosting
+    building block, per "Where a fact lives".
   - An actor chapter never restates one of these relationships: another
 
     bounded context or a module is a dependency, not an actor, and a
@@ -736,8 +736,7 @@ instructions.
 - In the dependency tables — under `## Dependencies` in `context.md` or in
   `dependencies.md` — use explicit DDD relationship terminology for each
   cross-context row when applicable (for example: `ACL`,
-  `Customer/Supplier`, `Partnership`, `OHS + Published Language`) and identify
-  the contract/published language entry used by consumers.
+  `Customer/Supplier`, `Partnership`, `OHS + Published Language`).
 - One rule per chapter, in both files. A chapter holding three related rules
   cannot be checked, enforced, or accepted as one thing, and it is a chapter a
   brief has to split before it can quote it. A requirement states its one rule
@@ -872,9 +871,11 @@ each one.>
 index: root
 type: context
 deployment: module
+related: [.devbook/arc42/building-blocks/<block-slug>.md]
 \`\`\`
 
-What this context is responsible for, in one or two sentences.
+What this context is responsible for, in one or two sentences, and the
+[building block](../../arc42/building-blocks/<block-slug>.md) that hosts it.
 
 Inside the boundary: <the things this context owns and decides>.
 
@@ -921,15 +922,15 @@ them here.
 
 ### Outbound dependencies
 
-| Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
-|---|---|---|---|---|
-| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <event, API call, registry lookup, id link, etc.> | <published language / contract chapter reference> | <reason this context needs it> |
+| Depends on (context/module) | DDD pattern | Why |
+|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <reason this context needs it> |
 
 ### Inbound dependents (known)
 
-| Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
-|---|---|---|---|---|
-| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <how the consumer integrates> | <published language / contract chapter reference> | <what would break if changed> |
+| Consumer (context/module) | DDD pattern | What it relies on |
+|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <what would break if changed> |
 ```
 
 `## Dependencies` is the file's one structural section: it carries no
@@ -944,12 +945,6 @@ describes, one heading level down.
 \`\`\`meta
 type: domain
 \`\`\`
-
-> One chapter per Aggregate, Domain Service, Domain Event, or Shared Value
-> Objects / Shared Enums grouping in this bounded context.
-> Aggregate chapters include sub-chapters for their owned Entities, Value
-> Objects, and Enums. Value Objects/Enums shared across multiple aggregates
-> get their own chapter at the end instead of being duplicated.
 
 ## <AggregateName>
 
@@ -1467,20 +1462,20 @@ type: dependencies
 \`\`\`
 
 > Dependencies this bounded context has on other bounded contexts or
-> modules, and known dependents. Use explicit DDD relationship semantics,
-> integration mechanism details, and contract references.
+> modules, and known dependents, by DDD pattern. The mechanism and the contract
+> are the hosting building block's `## Dependencies`.
 
 ## Outbound dependencies
 
-| Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
-|---|---|---|---|---|
-| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <event, API call, registry lookup, id link, etc.> | <published language / contract chapter reference> | <reason this context needs it> |
+| Depends on (context/module) | DDD pattern | Why |
+|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <reason this context needs it> |
 
 ## Inbound dependents (known)
 
-| Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
-|---|---|---|---|---|
-| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <how the consumer integrates> | <published language / contract chapter reference> | <what would break if changed> |
+| Consumer (context/module) | DDD pattern | What it relies on |
+|---|---|---|
+| <OtherContext> | <ACL / Customer-Supplier / Partnership / OHS + Published Language> | <what would break if changed> |
 
 ## Notes
 

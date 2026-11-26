@@ -39,27 +39,19 @@ stable, reviewable, offline copy:
 When no upstream source exists, `design/` is itself authoritative and its
 chapters carry the rationale directly.
 
-## Context-loading policy
+## Where a fact lives
 
-- `design/` is **not** baseline repository context. Load it only for design,
-  UX, or UI-implementation tasks, normally after routing through the
-  repository's design flow or a UX specialist agent.
-- Load only the chapters a task needs, never the folder whole, per
-  `devbook-writing.md` under *Loading a folder*.
-- UI implementation work (feature or bug) consults `design/` when the change
-  touches visual design, interaction behavior, editing behavior, or
-  accessibility — not by default.
+Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact" in
+`devbook-writing.md`. `design/` ranks second, after `arc42/`. Load it for design and UX
+work, and for UI work that touches visual design, interaction, editing, or accessibility.
 
-## Relationship to other devbook folders
-
-- `arc42/` describes *how the system is built and runs*; `design/` describes
-  *how it looks and behaves for the user*. Channel and stack facts live in
-  `arc42/` and `tech/` — `design/` links to them rather than restating them.
-- `domain/` describes *what the domain is*. `design/` does not define domain
-  concepts; it uses the ubiquitous language from the context's `term` chapters,
-  in `.devbook/domain/<context>/domain.md`.
-- Work items link to the
-  `design/` chapter they realize via `related`.
+- Link to `arc42/` for UI behaviour, a channel, or a stack fact it states, and never
+  restate it here.
+- `component-libraries.md` keeps the adopted library and the reason for it. The
+  library's `tech/` chapter holds its version and rating and links here.
+- A design requirement covers only what a component keeps on its own. A rule it
+  shares with a domain requirement stays in `domain/`, and the design chapter links to it.
+- A work item links to the `design/` chapter it realizes through `related`.
 
 ## Structure
 
@@ -102,10 +94,10 @@ filename after them. See `devbook-chapter-metadata.md`.
   without a pointer.
 - Cross-channel guidance states the shared rule first, then per-stack mapping —
   it does not fork into unrelated per-stack designs.
-- `component-libraries.md` records a recommendation with rationale, a
-  comparison table, and known gaps. It does not add or pin dependencies;
-  dependency changes go through the repository's package-update workflow, and
-  the adopted result is recorded in `tech/`.
+- `component-libraries.md` records the adopted library per channel with its
+  rationale, a comparison table, and known gaps. It does not add or pin
+  dependencies; dependency changes go through the repository's package-update
+  workflow, and the version lands in `tech/`.
 - Keep all `design/` content in English.
 
 ## Requirements
