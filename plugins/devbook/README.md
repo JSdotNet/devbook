@@ -128,14 +128,17 @@ check, never the writer.
 
 ### Skill: `c4-update`
 
-Regenerates the C4 model files the code owns under `.devbook/arc42/c4/generated/`. The code
-level comes from `tools/devbook-c4/code-model/`, a .NET console that loads a solution with
-Roslyn and writes one Mermaid class diagram per component of its aggregate roots, entities,
-and value objects, with the `image` views that show them, and reports a marked type no
-`domain/` chapter names in `aliases`. Writes the files and lands nothing; its `--check` fails
-on drift.
+Regenerates the C4 container, component, and code levels of `arc42/`'s workspace from code: it
+starts its own isolated instance of the Aspire AppHost, captures `aspire describe --format
+mermaid`, stops that instance, and runs the two `devbook-c4` generators into
+`.devbook/arc42/c4/generated/`. The code level comes from `tools/devbook-c4/code-model/`, a .NET
+console that loads a solution with Roslyn and writes one Mermaid class diagram per component of
+its aggregate roots, entities, and value objects, with the `image` views that show them. It
+lists what has no mapping, no description, or no `domain/` alias for a person, runs the check,
+and lands nothing: the `arc42/` flow or a schedule carries the files.
 
-**Trigger keywords:** `c4 update`, `refresh the C4 model`, `regenerate the code diagrams`
+**Trigger keywords:** `refresh the C4 model from code`, `update containers.dsl`,
+`update components.dsl`, `regenerate the code diagrams`, `generated C4 files are stale`
 
 ### Skill: `prose-check`
 
@@ -448,6 +451,24 @@ node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
 The inventory scripts emit deterministic JSON from repository manifests. Use them
 as the source of truth for package-derived `tech/` facts; use repository analysis
 for technologies that do not appear in package manifests.
+
+### Tooling: `devbook-c4`
+
+```bash
+node tools/devbook-c4/containers.mjs --root . --describe describe.mmd [--check]
+node tools/devbook-c4/components.mjs --root . [--check]
+```
+
+Two generators `c4-update` runs from the plugin itself; neither is materialized into a
+repository. `containers.mjs` reads the Mermaid flowchart `aspire describe --format mermaid`
+prints, and the hand-written `.devbook/arc42/c4/aspire-map.json`, which drops a resource or
+names the `<system>.<container>` identifier the rest of the workspace knows its container by
+(resources sharing one fold into it), and writes
+`containers.dsl`. `components.mjs` reads every `.csproj` with no build and each building
+block's `c4` and `code`, and writes `components.dsl`: a component per block holding a project,
+a relationship per `ProjectReference` between two blocks. Each file reopens its parents with
+`!element`, so `workspace.dsl` includes it after them. `--check` writes nothing and exits `1`
+when the committed file differs. Each reports to stderr what has no mapping or description.
 
 ### Tooling: `scenarios`
 
