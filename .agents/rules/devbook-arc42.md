@@ -38,6 +38,7 @@ when a chapter has real content — do not scaffold empty placeholders):
   12-glossary.md
   workspace.dsl                  (the C4 model — the one non-Markdown file here)
   c4/                            (files workspace.dsl includes, when it splits)
+    generated/                   (what a script writes from the code; no person edits it)
   adr/                           (decision records — one per technical concern)
   tdr/                           (technical debt records — one per item)
   building-blocks/               (one whitebox per building block that outgrows chapter 5)
@@ -92,6 +93,11 @@ defined. Start it with `!identifiers hierarchical`. It may `!include` files unde
 `.devbook/arc42/c4/`, to split a large model by building block, and nothing
 outside that folder.
 
+A script that reads the code writes its part of the model under
+`.devbook/arc42/c4/generated/`, and the workspace includes it like any other file
+in `c4/`. Never edit a file there: the next run replaces it, so change the code or
+the hand-written workspace instead.
+
 It holds the elements, their relationships, and the views:
 
 | Element | What it is |
@@ -119,6 +125,14 @@ each view in exactly one section, in the chapter its kind belongs to:
 | `container`, `component` | `05-building-block-view.md` or a `building-blocks/<slug>.md` |
 | `dynamic` | `06-runtime-view.md` or a building block's `## Runtime` |
 | `deployment` | `07-deployment-view.md` |
+| `image` | the component's `building-blocks/<slug>.md`, under `## Structure` |
+
+A component's code is the one level with no element: show it as an `image` view
+on the component, `image <component> <key> { mermaid c4/generated/<file>.mmd }`,
+whose source is a generated Mermaid file under `c4/generated/`. The path is
+relative to the file that holds the statement, as an `!include` is. No other
+source format, and never a hand-written one. The block that embeds it names the
+component, or an element holding it, in `c4`.
 
 Any other chapter links to that section. Where the repository keeps derived
 indexes, a committed SVG of each view sits at `.devbook/arc42/_meta/c4/<view key>.svg`,

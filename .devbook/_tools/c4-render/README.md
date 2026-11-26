@@ -22,7 +22,7 @@ writes nothing and lists each render that is `missing`, `stale`, or an `orphan`.
 | Exit | Meaning |
 | --- | --- |
 | `0` | The folder is current, or now is |
-| `1` | The workspace has a problem — every view that reads is still written — or, under `--check`, a render is missing, stale, or an orphan |
+| `1` | The workspace has a problem, or an image view's Mermaid source cannot be drawn — every view that reads is still written — or, under `--check`, a render is missing, stale, or an orphan |
 | `2` | A usage error, or devbook's reader is not installed |
 
 A workspace that does not exist has no views, so every render left in the folder is an orphan,
@@ -36,9 +36,16 @@ the problem hid would otherwise lose its render. `--check` still lists the orpha
 ## Output
 
 One `<view key>.svg` per `systemLandscape`, `systemContext`, `container`, `component`,
-`dynamic`, and `deployment` view with a key, in the folder and nothing else. Deterministic:
-the same workspace gives the same bytes, so a refresh moves a file only when its view changed.
-A view with no key, or of a kind outside the six, is skipped and named on standard output.
+`dynamic`, `deployment`, and `image` view with a key, in the folder and nothing else.
+Deterministic: the same workspace gives the same bytes, so a refresh moves a file only when its
+view changed. A view with no key, or of a kind outside the seven, is skipped and named on
+standard output.
+
+An `image` view draws a component's code: the generated Mermaid file under
+`.devbook/arc42/c4/generated/` that `c4.mjs` attached to it. Only the `classDiagram` subset the
+code-level script writes is drawn — classes with an annotation and members, the relationship
+arrows with cardinalities and a label, and `direction`. Any other line is reported with its
+file and line, the view is skipped, and its last render is kept.
 
 It parses nothing itself. It loads devbook's `c4.mjs` from `.devbook/_tools/devbook-meta/`, or
 from `plugins/devbook/tools/devbook-meta/` in the marketplace that authors both.

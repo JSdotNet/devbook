@@ -11,7 +11,8 @@
 // environment: its deployment nodes as nested boxes, each holding the
 // infrastructure nodes and instances deployed on it, the relationships the
 // instances inherit from what they instantiate, and the relationships declared
-// to or from a deployment node, drawn to the node's box.
+// to or from a deployment node, drawn to the node's box. An image view draws
+// the generated Mermaid class diagram `c4.mjs` attached to it: a component's code.
 //
 // Deterministic: the same model gives the same bytes. Every coordinate is a
 // whole number, every order comes from the model's own order, and nothing reads
@@ -982,8 +983,327 @@ function drawDeploymentLabel(d) {
     return out;
 }
 
+// ── image views: a component's code, from its generated Mermaid file ──────────
+//
+// An image view's source is a Mermaid file the code-level script generates
+// under `c4/generated/`, and `c4.mjs` attaches its text. The renderer draws the
+// `classDiagram` subset that script writes — classes with an annotation and
+// members, the fourteen relationship arrows with cardinalities and a label, and
+// `direction` — and reports any other line rather than drawing a picture that
+// quietly misses it. Classes sit in ranks along their relationships, a parent,
+// whole, or source above what it holds; each line runs straight between the
+// two boxes' borders.
+
+const ARROWS = [
+    ["<|--", "inheritance", "a", false], ["--|>", "inheritance", "b", false],
+    ["<|..", "realization", "a", true], ["..|>", "realization", "b", true],
+    ["*--", "composition", "a", false], ["--*", "composition", "b", false],
+    ["o--", "aggregation", "a", false], ["--o", "aggregation", "b", false],
+    ["<--", "association", "a", false], ["-->", "association", "b", false],
+    ["<..", "dependency", "a", true], ["..>", "dependency", "b", true],
+    ["--", "link", null, false], ["..", "link", null, true],
+];
+const ARROW_PATTERN = ARROWS.map(([op]) => op.replace(/[|*.]/g, "\\$&")).join("|");
+const CLASS_NAME = "[A-Za-z_][A-Za-z0-9_]*(?:~[^~\\s]+~)?";
+const RELATION = new RegExp(`^(${CLASS_NAME})\\s*(?:"([^"]*)"\\s*)?(${ARROW_PATTERN})\\s*(?:"([^"]*)"\\s*)?(${CLASS_NAME})\\s*(?::\\s*(.*))?$`);
+const RELATION_LABEL = { inheritance: "Inheritance", realization: "Realization", composition: "Composition", aggregation: "Aggregation", association: "Association", dependency: "Dependency", link: "Link" };
+const MERMAID_DIRECTIONS = new Set(["TB", "TD", "BT", "LR", "RL"]);
+
+const classId = (written) => written.replace(/~.*$/, "");
+const classLabel = (written) => written.replace(/~([^~]+)~/, "<$1>");
+
+/**
+ * Reads the `classDiagram` subset of Mermaid: `{ direction, classes,
+ * relationships, problems }`, classes in the order they first appear, every
+ * problem with its 1-based line.
+ */
+export function parseClassDiagram(text) {
+    const lines = String(text ?? "").replace(/\r\n?/g, "\n").split("\n");
+    const problems = [];
+    const classes = new Map();
+    const relationships = [];
+    let direction = "TB";
+    let opened = false;
+    let open = null; // the class whose `{` block is being read
+    const ensure = (written) => {
+        const id = classId(written);
+        if (!classes.has(id)) classes.set(id, { id, label: classLabel(written), annotation: null, attributes: [], methods: [] });
+        return classes.get(id);
+    };
+    const member = (cls, raw) => {
+        const value = raw.trim();
+        if (!value) return;
+        (/\(/.test(value) ? cls.methods : cls.attributes).push(value);
+    };
+    lines.forEach((raw, i) => {
+        const line = raw.trim();
+        const at = i + 1;
+        if (!line || line.startsWith("%%") || opened === null) return;
+        if (!opened) {
+            if (/^classDiagram(-v2)?$/.test(line)) { opened = true; return; }
+            problems.push({ line: at, message: `\`${clip(line, 40)}\`: only a Mermaid \`classDiagram\` is drawn.` });
+            opened = null; // the rest of a file that is no class diagram is not read
+            return;
+        }
+        if (open) {
+            if (line === "}") { open = null; return; }
+            const annotation = /^<<\s*(.+?)\s*>>$/.exec(line);
+            if (annotation) open.annotation = annotation[1];
+            else member(open, line);
+            return;
+        }
+        let match;
+        if ((match = /^direction\s+(\S+)$/.exec(line))) {
+            if (MERMAID_DIRECTIONS.has(match[1])) direction = match[1] === "TD" ? "TB" : match[1];
+            else problems.push({ line: at, message: `\`direction ${match[1]}\`: the direction is one of TB, BT, LR, RL.` });
+            return;
+        }
+        if ((match = new RegExp(`^class\\s+(${CLASS_NAME})\\s*(\\{)?\\s*$`).exec(line))) {
+            const cls = ensure(match[1]);
+            if (match[2]) open = cls;
+            return;
+        }
+        if ((match = new RegExp(`^<<\\s*(.+?)\\s*>>\\s+(${CLASS_NAME})$`).exec(line))) { ensure(match[2]).annotation = match[1]; return; }
+        if ((match = RELATION.exec(line))) {
+            const [, left, leftCard, op, rightCard, right, label] = match;
+            const [, kind, head, dashed] = ARROWS.find(([o]) => o === op);
+            const a = ensure(left).id;
+            const b = ensure(right).id;
+            if (a === b) { problems.push({ line: at, message: `\`${clip(line, 40)}\`: a relationship from a class to itself is not drawn.` }); return; }
+            relationships.push({ a, b, kind, head, dashed, label: label?.trim() || null, cardinality: [leftCard ?? null, rightCard ?? null], line: at });
+            return;
+        }
+        if ((match = new RegExp(`^(${CLASS_NAME})\\s*:\\s*(.*)$`).exec(line))) {
+            const value = match[2].trim();
+            const annotation = /^<<\s*(.+?)\s*>>$/.exec(value);
+            if (annotation) ensure(match[1]).annotation = annotation[1];
+            else member(ensure(match[1]), value);
+            return;
+        }
+        problems.push({ line: at, message: `\`${clip(line, 40)}\` is outside the \`classDiagram\` subset the renderer draws.` });
+    });
+    if (opened === false) problems.push({ line: 1, message: "The file is empty: no `classDiagram` to draw." });
+    if (open) problems.push({ line: lines.length, message: `\`class ${open.id} {\` is never closed.` });
+    return { direction, classes: [...classes.values()], relationships, problems };
+}
+
+const CLASS_GAP = 48;
+const CLASS_RANK_GAP = 88;
+const CLASS_MIN_W = 140;
+const CLASS_HEAD = 30;
+const CLASS_LINE = 16;
+const CLASS_PAD = 8;
+const MEMBER_MAX = 48;
+
+function classBox(cls) {
+    const members = [...cls.attributes, ...cls.methods].map((t) => clip(t, MEMBER_MAX));
+    const head = CLASS_HEAD + (cls.annotation ? 14 : 0);
+    const sections = [cls.attributes, cls.methods].filter((s) => s.length);
+    const body = sections.length ? sections.reduce((sum, s) => sum + s.length * CLASS_LINE + 2 * CLASS_PAD, 0) : 2 * CLASS_PAD;
+    const w = Math.max(CLASS_MIN_W, textWidth(cls.label, 15) + 24, cls.annotation ? textWidth(`«${cls.annotation}»`, 11) + 24 : 0, ...members.map((t) => textWidth(t, 12) + 24));
+    return { cls, w, h: head + body, head };
+}
+
+// The point where the line from a box's centre toward `[tx, ty]` leaves the box.
+function border(box, tx, ty) {
+    const cx = box.x + box.w / 2;
+    const cy = box.y + box.h / 2;
+    const dx = tx - cx;
+    const dy = ty - cy;
+    if (!dx && !dy) return [cx, cy];
+    const s = Math.min(dx ? box.w / 2 / Math.abs(dx) : Infinity, dy ? box.h / 2 / Math.abs(dy) : Infinity);
+    return [Math.round(cx + dx * s), Math.round(cy + dy * s)];
+}
+
+/** Places a parsed class diagram: every class's box and every relationship's end points. */
+export function arrangeClassDiagram(diagram) {
+    const boxes = diagram.classes.map(classBox);
+    const index = new Map(diagram.classes.map((c, i) => [c.id, i]));
+    // A parent, a whole, or a source ranks above what it holds or points at.
+    const edges = diagram.relationships.map((r) => (r.head === "b" && r.kind !== "association" && r.kind !== "dependency") || (r.head === "a" && (r.kind === "association" || r.kind === "dependency"))
+        ? [index.get(r.b), index.get(r.a)]
+        : [index.get(r.a), index.get(r.b)]);
+    const ranks = rank(boxes.length, edges);
+    const layers = order(ranks, edges);
+    const vertical = diagram.direction === "TB" || diagram.direction === "BT";
+    const reversed = diagram.direction === "BT" || diagram.direction === "RL";
+    const along = (b) => (vertical ? b.h : b.w);
+    const across = (b) => (vertical ? b.w : b.h);
+    const spans = layers.map((layer) => layer.reduce((s, v) => s + across(boxes[v]), 0) + Math.max(0, layer.length - 1) * CLASS_GAP);
+    const widest = Math.max(0, ...spans);
+    const depth = layers.map((layer) => Math.max(0, ...layer.map((v) => along(boxes[v]))));
+    const sequence = reversed ? layers.map((_, i) => layers.length - 1 - i) : layers.map((_, i) => i);
+    let cursor = 0;
+    for (const r of sequence) {
+        let slot = (widest - spans[r]) / 2;
+        for (const v of layers[r]) {
+            const b = boxes[v];
+            const a = cursor + (depth[r] - along(b)) / 2;
+            b.x = Math.round(vertical ? slot : a);
+            b.y = Math.round(vertical ? a : slot);
+            slot += across(b) + CLASS_GAP;
+        }
+        cursor += depth[r] + CLASS_RANK_GAP;
+    }
+    const lines = diagram.relationships.map((r) => {
+        const a = boxes[index.get(r.a)];
+        const b = boxes[index.get(r.b)];
+        const from = border(a, b.x + b.w / 2, b.y + b.h / 2);
+        const to = border(b, a.x + a.w / 2, a.y + a.h / 2);
+        return { relationship: r, from, to };
+    });
+    return { boxes, lines };
+}
+
+const MARKERS = {
+    inheritance: { d: "M0 0L14 7L0 14Z", w: 14, h: 14, hollow: true },
+    realization: { d: "M0 0L14 7L0 14Z", w: 14, h: 14, hollow: true },
+    composition: { d: "M0 6L9 0L18 6L9 12Z", w: 18, h: 12, hollow: false },
+    aggregation: { d: "M0 6L9 0L18 6L9 12Z", w: 18, h: 12, hollow: true },
+    association: { d: "M0 0L10 5L0 10", w: 10, h: 10, open: true },
+    dependency: { d: "M0 0L10 5L0 10", w: 10, h: 10, open: true },
+};
+
+function marker(id, spec) {
+    const paint = spec.open
+        ? `class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"`
+        : spec.hollow
+            ? `class="c4-bg c4-line" fill="${PAGE.light.bg}" stroke="${PAGE.light.line}" stroke-width="1.5"`
+            : `class="c4-head" fill="${PAGE.light.line}"`;
+    return [
+        `  <marker id="${id}" viewBox="-1 -1 ${spec.w + 2} ${spec.h + 2}" refX="${spec.w}" refY="${spec.h / 2}" markerWidth="${spec.w + 2}" markerHeight="${spec.h + 2}" markerUnits="userSpaceOnUse" orient="auto-start-reverse">`,
+        `    <path ${paint} d="${spec.d}"/>`,
+        "  </marker>",
+    ];
+}
+
+function drawClass(box) {
+    const { cls } = box;
+    const out = [`<g data-class="${escape(cls.id)}">`];
+    out.push(`  <rect class="c4-bg c4-edge" fill="${PAGE.light.bg}" stroke="${PAGE.light.line}" stroke-width="1.5" x="${n(box.x)}" y="${n(box.y)}" width="${n(box.w)}" height="${n(box.h)}" rx="4"/>`);
+    out.push(`  <rect ${fillAttrs("component")} x="${n(box.x)}" y="${n(box.y)}" width="${n(box.w)}" height="${n(box.head)}" rx="4"/>`);
+    const cx = n(box.x + box.w / 2);
+    let y = box.y + 20;
+    if (cls.annotation) { out.push(`  <text ${inkAttrs("component")} x="${cx}" y="${n(y - 4)}" font-size="11" text-anchor="middle">${escape(`«${cls.annotation}»`)}</text>`); y += 14; }
+    out.push(`  <text ${inkAttrs("component")} x="${cx}" y="${n(y)}" font-size="14" font-weight="600" text-anchor="middle">${escape(cls.label)}</text>`);
+    let top = box.y + box.head;
+    for (const section of [cls.attributes, cls.methods]) {
+        if (!section.length) continue;
+        if (top > box.y + box.head) out.push(`  <path class="c4-edge" stroke="${PAGE.light.line}" stroke-width="1" d="M${n(box.x)} ${n(top)}L${n(box.x + box.w)} ${n(top)}"/>`);
+        section.forEach((m, i) => out.push(`  <text ${pageInk("ink")} x="${n(box.x + 12)}" y="${n(top + CLASS_PAD + 12 + i * CLASS_LINE)}" font-size="12">${escape(clip(m, MEMBER_MAX))}</text>`));
+        top += section.length * CLASS_LINE + 2 * CLASS_PAD;
+    }
+    out.push("</g>");
+    return out;
+}
+
+function drawRelationship(line, prefix) {
+    const r = line.relationship;
+    const [x0, y0] = line.from;
+    const [x1, y1] = line.to;
+    const end = r.kind === "link" ? "" : ` marker-${r.head === "a" ? "start" : "end"}="url(#${prefix}-${r.kind})"`;
+    const out = [`<g data-relationship="${escape(r.a)} ${escape(r.kind)} ${escape(r.b)}">`];
+    out.push(`  <path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"${r.dashed ? ' stroke-dasharray="6 4"' : ""}${end} d="M${n(x0)} ${n(y0)}L${n(x1)} ${n(y1)}"/>`);
+    const length = Math.hypot(x1 - x0, y1 - y0) || 1;
+    const [ux, uy] = [(x1 - x0) / length, (y1 - y0) / length];
+    r.cardinality.forEach((card, k) => {
+        if (!card) return;
+        const [px, py] = k ? [x1 - ux * 26, y1 - uy * 26] : [x0 + ux * 26, y0 + uy * 26];
+        out.push(`  <text ${pageInk("muted")} x="${n(px - uy * 12)}" y="${n(py + ux * 12 + 4)}" font-size="11" text-anchor="middle">${escape(clip(card, 12))}</text>`);
+    });
+    if (r.label) {
+        const text = clip(r.label, 32);
+        const w = textWidth(text, 11) + 12;
+        const [mx, my] = [Math.round((x0 + x1) / 2), Math.round((y0 + y1) / 2)];
+        out.push(`  <rect class="c4-bg" fill="${PAGE.light.bg}" fill-opacity="0.9" x="${n(mx - w / 2)}" y="${n(my - 10)}" width="${n(w)}" height="20" rx="3"/>`);
+        out.push(`  <text ${pageInk("ink")} x="${n(mx)}" y="${n(my + 4)}" font-size="11" text-anchor="middle">${escape(text)}</text>`);
+    }
+    out.push("</g>");
+    return out;
+}
+
+/**
+ * Draws an image view: its generated Mermaid class diagram as one SVG. Returns
+ * `{ svg }`, or `{ problems }` when the source was not read or holds a line
+ * outside the subset, each problem naming the source file and line.
+ */
+export function renderImage(model, view) {
+    const file = view.source?.file ?? view.file ?? null;
+    if (view.source?.text == null) return { problems: [{ file: view.file ?? null, line: view.line ?? 1, message: `Image view \`${view.key}\` has no source text to draw: its generated Mermaid file was not read.` }] };
+    const diagram = parseClassDiagram(view.source.text);
+    if (diagram.problems.length) return { problems: diagram.problems.map((p) => ({ file, ...p })) };
+    const { boxes, lines } = arrangeClassDiagram(diagram);
+    const prefix = `c4-${slug(view.key ?? view.kind)}`;
+    const scope = model.elements.find((e) => e.id === view.scope);
+    const title = view.title ?? `[Code] ${scope?.name ?? view.scope ?? ""}`.trim();
+    const header = [title, ...(view.description ? [view.description] : [])];
+    const headerHeight = view.description ? 64 : 44;
+    const minX = Math.min(0, ...boxes.map((b) => b.x));
+    const minY = Math.min(0, ...boxes.map((b) => b.y));
+    const maxX = Math.max(0, ...boxes.map((b) => b.x + b.w));
+    const maxY = Math.max(0, ...boxes.map((b) => b.y + b.h));
+    const offsetX = MARGIN - minX;
+    const offsetY = MARGIN + headerHeight - minY;
+    const contentHeight = boxes.length ? maxY - minY : 24;
+
+    const used = [...new Set(diagram.relationships.map((r) => r.kind))].sort((a, b) => Object.keys(RELATION_LABEL).indexOf(a) - Object.keys(RELATION_LABEL).indexOf(b));
+    const legendY = MARGIN + headerHeight + contentHeight + 32;
+    const legendParts = [];
+    let lx = MARGIN;
+    const item = (label, draw) => {
+        legendParts.push(...draw(lx, legendY));
+        legendParts.push(`<text ${pageInk("ink")} x="${lx + 40}" y="${legendY + 13}" font-size="12">${escape(label)}</text>`);
+        lx += 40 + textWidth(label, 12) + 24;
+    };
+    if (boxes.length) item("Class", (x, y) => [`<rect ${fillAttrs("component")} x="${x}" y="${y}" width="32" height="16" rx="3"/>`]);
+    for (const kind of used) {
+        const dashed = diagram.relationships.some((r) => r.kind === kind && r.dashed) && !diagram.relationships.some((r) => r.kind === kind && !r.dashed);
+        item(RELATION_LABEL[kind], (x, y) => [`<path class="c4-line" fill="none" stroke="${PAGE.light.line}" stroke-width="1.5"${dashed ? ' stroke-dasharray="6 4"' : ""}${kind === "link" ? "" : ` marker-end="url(#${prefix}-${kind})"`} d="M${x} ${y + 8}L${x + 32} ${y + 8}"/>`]);
+    }
+
+    const width = Math.max(MARGIN * 2 + (boxes.length ? maxX - minX : 0), lx + MARGIN - 24, MARGIN * 2 + Math.max(...header.map((h, i) => textWidth(h, i ? 13 : 20))));
+    const height = legendY + (legendParts.length ? 16 : 0) + MARGIN;
+    const dark = [
+        `.c4-bg{fill:${PAGE.dark.bg}}`,
+        `.c4-ink{fill:${PAGE.dark.ink}}`,
+        `.c4-muted{fill:${PAGE.dark.muted}}`,
+        `.c4-line{stroke:${PAGE.dark.line}}`,
+        `.c4-head{fill:${PAGE.dark.line}}`,
+        `.c4-edge{stroke:${PAGE.dark.line}}`,
+        `.c4-fill-component{fill:${STYLES.component.dark[0]};stroke:${STYLES.component.dark[1]}}`,
+        `.c4-ink-component{fill:${STYLES.component.dark[2]}}`,
+    ];
+    const body = [...boxes.flatMap(drawClass), ...lines.flatMap((l) => drawRelationship(l, prefix))];
+    const out = [
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${n(width)}" height="${n(height)}" viewBox="0 0 ${n(width)} ${n(height)}" font-family="${FONT}" role="img" aria-label="${escape(title)}">`,
+        `<title>${escape(title)}</title>`,
+        ...(view.description ? [`<desc>${escape(view.description)}</desc>`] : []),
+        "<style>",
+        "@media (prefers-color-scheme: dark) {",
+        ...dark.map((rule) => `  ${rule}`),
+        "}",
+        "</style>",
+        ...(used.some((k) => MARKERS[k]) ? ["<defs>", ...used.filter((k) => MARKERS[k]).flatMap((k) => marker(`${prefix}-${k}`, MARKERS[k])), "</defs>"] : []),
+        `<rect class="c4-bg" fill="${PAGE.light.bg}" x="0" y="0" width="${n(width)}" height="${n(height)}"/>`,
+        `<text ${pageInk("ink")} x="${MARGIN}" y="${MARGIN + 18}" font-size="20" font-weight="600">${escape(title)}</text>`,
+        ...(view.description ? [`<text ${pageInk("muted")} x="${MARGIN}" y="${MARGIN + 40}" font-size="13">${escape(view.description)}</text>`] : []),
+        ...(boxes.length
+            ? [`<g transform="translate(${n(offsetX)} ${n(offsetY)})">`, ...body.map((line) => `  ${line}`), "</g>"]
+            : [`<text ${pageInk("muted")} x="${MARGIN}" y="${MARGIN + headerHeight + 16}" font-size="13">This diagram shows no classes.</text>`]),
+        ...(legendParts.length ? ['<g class="c4-legend">', ...legendParts.map((line) => `  ${line}`), "</g>"] : []),
+        "</svg>",
+        "",
+    ];
+    return { svg: out.join("\n") };
+}
+
 /** Draws one view of a model `c4.mjs` read; returns the SVG text. */
 export function renderView(model, view) {
+    if (view.kind === "image") {
+        const result = renderImage(model, view);
+        if (result.problems) throw new Error(result.problems.map((p) => `${p.file ?? view.key}:${p.line}: ${p.message}`).join("\n"));
+        return result.svg;
+    }
     const { m, nodes, lines, scope, boundaryOwner, ...result } = arrange(model, view);
     const marker = `c4-${slug(view.key ?? view.kind)}-arrow`;
 
@@ -1078,17 +1398,30 @@ export function renderView(model, view) {
 
 /**
  * Draws every view with a key. Returns `{ rendered: [{ key, kind, svg }],
- * skipped: [{ key, kind, reason }] }`, both in the workspace's view order.
+ * skipped: [{ key, kind, reason }], problems: [{ file, line, message }] }`, all
+ * in the workspace's view order. An image view whose Mermaid source cannot be
+ * drawn is skipped, and its source's problems are listed.
  */
 export function renderViews(model) {
     const rendered = [];
     const skipped = [];
+    const problems = [];
     for (const view of model.views) {
         if (!view.key) { skipped.push({ key: null, kind: view.kind, reason: "the view has no key, so it has no file name" }); continue; }
+        if (view.kind === "image") {
+            // The reader already reported a source it rejected; it is not reported twice.
+            if (!view.source) { skipped.push({ key: view.key, kind: view.kind, reason: "its Mermaid source was not read" }); continue; }
+            const result = renderImage(model, view);
+            if (result.problems) {
+                problems.push(...result.problems);
+                skipped.push({ key: view.key, kind: view.kind, reason: "its Mermaid source cannot be drawn" });
+            } else rendered.push({ key: view.key, kind: view.kind, svg: result.svg });
+            continue;
+        }
         if (!KINDS.includes(view.kind)) { skipped.push({ key: view.key, kind: view.kind, reason: `${view.kind} views are not drawn` }); continue; }
         rendered.push({ key: view.key, kind: view.kind, svg: renderView(model, view) });
     }
-    return { rendered, skipped };
+    return { rendered, skipped, problems };
 }
 
 // ── refresh ─────────────────────────────────────────────────────────────────
@@ -1124,16 +1457,16 @@ export async function compareRenders(rendered, folder) {
  * comparison taken before any write.
  */
 export async function refreshRenders(model, folder, { check = false } = {}) {
-    const { rendered, skipped } = renderViews(model);
+    const { rendered, skipped, problems } = renderViews(model);
     const before = await compareRenders(rendered, folder);
-    const prune = !model.problems?.length;
+    const prune = !model.problems?.length && !problems.length;
     if (!check) {
         if (prune) for (const name of before.orphan) await unlink(path.join(folder, name));
         const write = new Set([...before.missing, ...before.stale]);
         if (write.size) await mkdir(folder, { recursive: true });
         for (const { key, svg } of rendered) if (write.has(`${key}.svg`)) await writeFile(path.join(folder, `${key}.svg`), svg);
     }
-    return { ...before, kept: check || prune ? [] : before.orphan, skipped };
+    return { ...before, kept: check || prune ? [] : before.orphan, skipped, problems };
 }
 
 // ── command line ────────────────────────────────────────────────────────────
@@ -1181,6 +1514,8 @@ export async function main(argv, { root = process.cwd(), log = console.log, warn
     const out = path.resolve(root, folder);
     const label = (name) => path.join(folder, name).split(path.sep).join("/");
     const result = await refreshRenders(model, out, { check });
+    for (const p of result.problems) warn(`${p.file}:${p.line}: ${p.message}`);
+    const failed = model.problems.length || result.problems.length;
     for (const s of result.skipped) log(`skipped ${s.key ?? `(${s.kind})`}: ${s.reason}`);
     if (check) {
         for (const name of result.missing) log(`missing  ${label(name)}`);
@@ -1188,14 +1523,15 @@ export async function main(argv, { root = process.cwd(), log = console.log, warn
         for (const name of result.orphan) log(`orphan   ${label(name)}`);
         const drifted = result.missing.length + result.stale.length + result.orphan.length;
         if (!drifted) log(`checked ${folder}: ${result.current.length} renders current`);
-        return model.problems.length || drifted ? 1 : 0;
+        return failed || drifted ? 1 : 0;
     }
     for (const name of result.missing) log(`added    ${label(name)}`);
     for (const name of result.stale) log(`updated  ${label(name)}`);
-    for (const name of result.kept) log(`kept     ${label(name)}: names no view, but the workspace has a problem`);
+    const undrawn = new Set(result.skipped.filter((s) => s.kind === "image").map((s) => `${s.key}.svg`));
+    for (const name of result.kept) log(undrawn.has(name) ? `kept     ${label(name)}: its image view's source cannot be drawn, so the last render stays` : `kept     ${label(name)}: names no view, but the workspace has a problem`);
     for (const name of result.orphan) if (!result.kept.includes(name)) log(`removed  ${label(name)}`);
     if (!result.missing.length && !result.stale.length && !result.orphan.length) log(`${folder}: ${result.current.length} renders already current`);
-    return model.problems.length ? 1 : 0;
+    return failed ? 1 : 0;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

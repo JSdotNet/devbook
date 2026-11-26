@@ -36,6 +36,7 @@ const VIEW_PLACES = {
     component: { chapters: ["05-building-block-view.md"], block: true, says: "`05-building-block-view.md` or a `building-blocks/<slug>.md`" },
     dynamic: { chapters: ["06-runtime-view.md"], runtime: true, says: "`06-runtime-view.md` or a building block's `## Runtime`" },
     deployment: { chapters: ["07-deployment-view.md"], says: "`07-deployment-view.md`" },
+    image: { chapters: [], structure: true, says: "the component's building block, under `## Structure`" },
 };
 
 // Kinds a description is asked of: every declared element. An instance is a
@@ -186,6 +187,7 @@ export async function c4Graph(repoRoot, docs, nodes) {
             if (view.scope) node.scope = view.scope;
             if (view.environment) node.environment = view.environment;
             if (view.description) node.description = view.description;
+            if (view.source) node.source = view.source.file;
             added.push(node);
         }
     }
@@ -221,12 +223,19 @@ export async function c4Graph(repoRoot, docs, nodes) {
             const subject = relPath.startsWith(ARC42) ? relPath.slice(ARC42.length) : null;
             // The building-blocks index lists the blocks; it is none of them.
             const inBlock = subject !== null && BUILDING_BLOCK.test(subject) && fileMeta?.index !== "root";
-            const underRuntime = embed.trail.some((h) => h.level === 2 && h.slug === "runtime");
+            const under = (slug) => embed.trail.some((h) => h.level === 2 && h.slug === slug);
             const fits =
                 subject !== null &&
-                (place.chapters.includes(subject) || (place.block && inBlock) || (place.runtime && inBlock && underRuntime));
+                (place.chapters.includes(subject) || (place.block && inBlock) || (place.runtime && inBlock && under("runtime")) || (place.structure && inBlock && under("structure")));
             if (!fits) {
                 report("error", relPath, `${at} embeds the \`${view.kind}\` view \`${view.key}\`, which belongs in ${place.says} — any other chapter links to the section that embeds it.`);
+            } else if (place.structure && view.scope) {
+                // An image view belongs to its component's block: one whose `c4`
+                // names the component or an element holding it.
+                const named = new Set((nodes.get(relPath)?.c4 ?? []).map((e) => String(e).toLowerCase()));
+                let owner = elements.get(view.scope.toLowerCase());
+                while (owner && !named.has(owner.id.toLowerCase())) owner = owner.parent ? elements.get(owner.parent.toLowerCase()) : null;
+                if (!owner) report("error", relPath, `${at} embeds the \`image\` view \`${view.key}\` of \`${view.scope}\` in a building block whose \`c4\` names neither it nor an element holding it — embed it in that component's building block.`);
             }
         }
     }
