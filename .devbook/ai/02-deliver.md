@@ -107,7 +107,7 @@ date: 2026-10-06
 routine on the maintainer's machine with nobody watching. It lands a change as a pull request and
 its report as the run's last message.
 
-- **Used for** — three of the thirteen catalog schedules are enabled against this repository,
+- **Used for** — three of the fourteen catalog schedules are enabled against this repository,
   per the stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, and
   `merge-review`. `package-update` and `devbook-pull-sweep` were dropped from the selection at
   the 1.19 update, and the sync sweeps left the catalog for Backlog's `backlog-tools` in

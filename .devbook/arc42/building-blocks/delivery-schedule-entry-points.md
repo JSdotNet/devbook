@@ -3,7 +3,7 @@
 ```meta
 related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 c4: ["marketplace.delivery-schedule.entry-point"]
-code: ["plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-prose-check", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
+code: ["plugins/delivery-schedule/skills/schedule-c4-update", "plugins/delivery-schedule/skills/schedule-devbook-update", "plugins/delivery-schedule/skills/schedule-devbook-validate", "plugins/delivery-schedule/skills/schedule-devbook-verify", "plugins/delivery-schedule/skills/schedule-instruction-review", "plugins/delivery-schedule/skills/schedule-issue-sweep", "plugins/delivery-schedule/skills/schedule-merge-review", "plugins/delivery-schedule/skills/schedule-package-update", "plugins/delivery-schedule/skills/schedule-performance-review", "plugins/delivery-schedule/skills/schedule-prose-check", "plugins/delivery-schedule/skills/schedule-security-review", "plugins/delivery-schedule/skills/schedule-tech-update", "plugins/delivery-schedule/skills/schedule-weekly-retro", "plugins/delivery-schedule/skills/schedule-weekly-update", "plugins/delivery-schedule/skills/schedule-whats-new"]
 ```
 
 The entry points of [delivery-schedule](delivery-schedule.md), a block inside it. This block
@@ -12,7 +12,7 @@ and publishes what it did without passing a gate or merging anything.
 
 **Owns**
 
-- The fourteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
+- The fifteen `schedule-*` skills that pick their own input, each with the `report.md` template its report follows
 - The work script a sweep lands an item through
 - The report every run ends with
 
@@ -27,7 +27,7 @@ and publishes what it did without passing a gate or merging anything.
 related: [".devbook/arc42/building-blocks/delivery-schedule.md#interfaces"]
 ```
 
-The scheduler reaches each of the fourteen skills on a cadence, or a person by hand, which is
+The scheduler reaches each of the fifteen skills on a cadence, or a person by hand, which is
 how a cadence gets proved before it is trusted. They share these contracts of
 [delivery-schedule](delivery-schedule.md#interfaces):
 
@@ -65,6 +65,24 @@ related: [".devbook/arc42/building-blocks/delivery-schedule.md#bundle", ".devboo
 - **Skips:** the pickup check, since the host archives an inactive session after seven days.
 - **Fires:** from Saturday code health, Sunday devbook review, or the weekday Issue sweep or
   Merge review bundle instead of its own routine, once the bundle's first run has passed.
+
+### schedule-c4-update
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#c4-update", ".devbook/arc42/building-blocks/devbook-derived.md#refresh-paths", ".devbook/arc42/adr/c4-model.md"]
+```
+
+- **Does:** runs `devbook:c4-update` over every C4 level the repository has a source for and
+  lands what moved under `.devbook/arc42/c4/generated/` as one draft pull request, the way
+  `schedule-tech-update` lands its refresh.
+- **Level 2:** refreshed and compared here alone. Only a local routine can start the AppHost,
+  so CI never sees the containers.
+- **Levels 3 and 4:** also compared on every pull request, by the `c4` job of
+  `devbook-derived`'s drift workflow, which fails on drift and regenerates nothing.
+- **Never:** writes a mapping, a description, or an alias to silence a report. Each is a
+  *Needs you* row, because each is a person's call.
+- **Trigger:** the weekly `c4-update`, on Sunday after the checks. No bundle runs it, so each
+  repository's own routine starts its AppHost in its own checkout.
 
 ### schedule-devbook-validate
 
@@ -348,7 +366,7 @@ never name a flow.
 
 Also called: schedule skill, schedulable procedure.
 
-A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Fourteen
+A `schedule-*` skill that picks its own input, so it needs no person to hand it one. Fifteen
 ship here. Input:
 
 - the unclassified issues and the top of the backlog
@@ -357,6 +375,7 @@ ship here. Input:
 - the week's changes in the tracked repositories
 - the repository's own week
 - the instruction assets a model loads
+- the code a generated C4 model is drawn from
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is what an unattended run does not have.
