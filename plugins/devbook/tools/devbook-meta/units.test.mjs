@@ -29,7 +29,6 @@ const I = `${CTX}/domain.invariants.md`;
 // shared grouping, a feature with a sub-feature, requirements, terms, and a
 // switch; one building block; one design component.
 const files = {
-    ".devbook/domain/context-map.md": `# Context Map\n\n${fence("type: context-map\n")}`,
     [`${CTX}/context.md`]: [
         `# Ordering\n\n${fence("type: context\n")}`,
         `## Express Checkout\n\n${fence("type: feature-flag\n")}\nA switch.\n`,

@@ -308,7 +308,16 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // comment thread in that tool, a fence left in a chapter is an error the same
 // migration deletes, a node carries no `openNotes`, and `annotations.json` is
 // no longer written.
-export const CONTRACT_VERSION = 38;
+//
+// 39 drops `domain/`'s context map for the C4 workspace. `context-map.md`,
+// its `bounded-context` sections, and the `deployment` field are retired: a
+// context's relationships and how it ships are elements and relationships of
+// `.devbook/arc42/workspace.dsl`, the DDD pattern in a relationship's
+// description and the subdomain class in a tag, and each `context.md` names its
+// element in `c4`. A `context-map` file, a `bounded-context` chapter, and a
+// `deployment` field are errors naming `039-context-map-joins-c4`, which moves
+// them, and the pairing check between the map and `context.md` is gone.
+export const CONTRACT_VERSION = 39;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -424,7 +433,6 @@ const ATTRIBUTE_FIELDS = [
     "key",
     "default",
     "scope",
-    "deployment",
     "date",
     // `.ai`: how much the chapter's rating rests on.
     "evidence",
@@ -545,7 +553,7 @@ function chapterLede(lines, headingLine) {
  * A `domain/` file is titled by what it holds, so a split file's title is its
  * chapter's name and an older file's may still be the context's. The file's
  * `type` says which kind of page it is, and is left off when the title already
- * says it ("Domain" + `domain`, "Context Map" + `context-map`).
+ * says it ("Domain" + `domain`).
  */
 function composeFileLabel(title, type) {
     if (!type || slugify(title) === type) return title;
@@ -935,27 +943,6 @@ export async function buildGraph(repoRoot, folders = null) {
                     });
                 }
             }
-        }
-    }
-
-    // How a context ships is stated twice — on the map, by its
-    // `bounded-context` chapter, and by the context itself, on its
-    // `context.md` — so a reader of either sees it without opening the other.
-    // The pair is the chapter and the `context` file its `related` names, and
-    // the two have to agree: a context written as `module` on the map and
-    // `service` in its own folder has no answer at all.
-    for (const node of nodes.values()) {
-        if (node.type !== "chapter" || node.kind !== "bounded-context") continue;
-        for (const ref of asList(node.related)) {
-            const context = nodes.get(ref);
-            if (context?.type !== "file" || context.kind !== "context") continue;
-            if ((node.deployment ?? null) === (context.deployment ?? null)) continue;
-            const state = (value) => (value == null ? "no `deployment`" : `\`deployment: ${value}\``);
-            problems.push({
-                severity: "error",
-                path: node.path,
-                message: `${node.id} states ${state(node.deployment)} but ${context.id} states ${state(context.deployment)} — how a context ships is written the same on its \`bounded-context\` chapter and its \`context.md\`, or on neither.`,
-            });
         }
     }
 

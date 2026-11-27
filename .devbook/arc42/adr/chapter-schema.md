@@ -81,7 +81,9 @@ reverse the choice inside one building block, without migrating data or changing
 another block relies on. If it could, the choice is a package choice. Versions always live in
 `tech/`.
 
-Decided, not yet built: the folder rules, the context map's removal, and its migration follow.
+The folder rules state it, and contract 39 drops the map: a context's relationships, how it
+ships, and its subdomain class are elements, relationships, and tags of the workspace, and
+`039-context-map-joins-c4` moves an existing map there and into chapter 8.
 
 ## Branch-true devbook
 
@@ -721,6 +723,7 @@ left.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-26 | Contract 39 drops `domain/context-map.md`, the `bounded-context` chapter type, and `deployment` with its pairing check. A context lives in the C4 element that hosts it — a container when it ships on its own, a component of its host when it runs as a module — and `context.md` names it in `c4`. A relationship between contexts opens its description with the DDD pattern, the subdomain class is a tag on the element, and published languages and strategic rules are sections of chapter 8. `domain/` has no root document. `039-context-map-joins-c4` moves an existing map. | The map drew the boundaries the workspace already draws, and kept `deployment` equal to `context.md` by a check of its own. |
 | 2026-11-26 | The folders rank `arc42`, `design`, `tech`, `domain`, `ai`, and on overlap the earlier keeps the text. `domain/` keeps business rules and terms, and `ai/` how AI is used, whatever the rank. A bounded context sits inside one building block and names it in `c4`; `context-map.md` is dropped for the C4 workspace. An architecture choice is a decision record with no version; a package choice is a `tech/` chapter linking to it. Decided, not yet built: the rule edits and the context map's migration follow. | Reversing the priority means moving text between folders in every adopting repository. |
 | 2026-11-03 | A `delta: modified` chapter's lead is addressable: prose directly under its heading replaces the text between the target's `meta` block and its first subsection, a file's intro under `#` included, and keeps the block. A `meta` block there is an error — fields go under `MODIFIED` — and a removed chapter still holds no text. No contract bump and no migration: only deltas that were refused before merge differently. | A change could not rewrite a paragraph in a file's intro, and left it to be fixed by hand after the merge. |
 | 2026-11-03 | A split scenarios file may have subpages, `scenarios.<name>.<page>.md`, one level deep, each a scenarios file of its own: its journeys are parsed, signed, coverage-checked, and run like any other, addressed `<subpage>#<journey>`, with runs in `scenarios.<name>.<page>/<journey>/`. No contract change: a repository without subpages reads as before. | The same subject walked under a second configuration, such as another profile, reads as a variant of its split rather than a sibling subject, and the scenario tools refused the file shape the checker already accepted. |

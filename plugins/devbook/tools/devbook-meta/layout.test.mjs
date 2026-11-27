@@ -63,9 +63,8 @@ const fence = (body) => "```meta\n" + body + "```\n";
 const at = (name) => `${DEVBOOK_ROOT}/${name}`;
 const corpus = [
     [
-        `${at("domain")}/context-map.md`,
-        `# Context Map\n\n${fence("index: root\ntype: context-map\n")}\n` +
-            `## Order Management\n\n${fence(`type: bounded-context\nrelated: ["${at("tech")}/technology-graph.md#postgres"]\n`)}\nA context.\n`,
+        `${at("domain")}/order-management/context.md`,
+        `# Order Management\n\n${fence(`index: root\ntype: context\nrelated: ["${at("tech")}/technology-graph.md#postgres"]\n`)}\nA context.\n`,
     ],
     [
         `${at("tech")}/technology-graph.md`,
@@ -132,6 +131,7 @@ try {
     const domain = await buildOutlineDocument(root, `${DEVBOOK_ROOT}/domain`);
     const context = domain.entries.find((e) => e.name === "order-management");
     const expected = [
+        "context.md",
         "domain.md",
         "domain.invariants.md",
         "domain.invoice.md",
@@ -169,11 +169,15 @@ try {
     await rm(root, { recursive: true, force: true });
 }
 
-// -- bounded-context is a domain chapter type -------------------------------
+// -- the context map is retired, naming its migration ----------------------
 
-const contextMap = `# Context Map\n\n${fence("index: root\ntype: context-map\n")}\n## Order Management\n\n${fence("type: bounded-context\n")}\nA context.\n`;
-const issues = validateDocument(`${DEVBOOK_ROOT}/domain/context-map.md`, contextMap);
-check(issues.filter((i) => i.severity === "error").length === 0, "bounded-context validates as a domain chapter type", JSON.stringify(issues));
+const contextMap = `# Context Map\n\n${fence("type: context-map\n")}\n## Order Management\n\n${fence("type: bounded-context\n")}\nA context.\n`;
+const issues = validateDocument(`${DEVBOOK_ROOT}/domain/context-map.md`, contextMap).filter((i) => i.severity === "error");
+check(
+    issues.length === 2 && issues.every((i) => i.message.includes("039-context-map-joins-c4")),
+    "a context-map file and a bounded-context chapter are each an error naming the migration",
+    JSON.stringify(issues)
+);
 
 console.log(failed ? `\n${failed} case(s) failed.` : "\nAll cases passed.");
 process.exit(failed ? 1 : 0);

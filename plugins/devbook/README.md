@@ -562,7 +562,11 @@ outside `tech/` and `ai/`, the six `approved-*` and `accepted-*` fields, `sync`,
 the state from the default branch's Markdown first; the seventeenth is `038-journey-specs-own-runner`,
 which moves the scenario runner a repository's specs import out of `.devbook/_tools/scenarios/`
 into the repository, its own copy first, and points every import at it, now that devbook no
-longer ships one.
+longer ships one; the eighteenth is `039-context-map-joins-c4`, which moves `domain/`'s
+context map into the C4 workspace — each context's deployment and relationships into
+`arc42/workspace.dsl`, its published languages and strategic rules into sections of
+`arc42/08-crosscutting-concepts.md` — sets `c4` on each `context.md`, rewrites every
+reference to the map, and deletes it.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -708,7 +712,10 @@ move to the host that runs the workflow or are dropped, and a rating becomes `ra
 is an error naming `038-workflow-state-leaves-the-chapter`, which deletes or renames it. The
 `annotation` fence retires with them: a review note is a comment thread in the host, a fence
 left in a chapter is an error the same migration deletes, open or resolved, and
-`annotations.json` is no longer written.
+`annotations.json` is no longer written. 39 drops `domain/`'s `context-map.md` for the C4
+workspace: the `context-map` file type, the `bounded-context` chapter type, and `deployment`
+are errors naming `039-context-map-joins-c4`, which moves them, and a `context.md` names
+the element that hosts its context in `c4`.
 
 ## Folder structure
 

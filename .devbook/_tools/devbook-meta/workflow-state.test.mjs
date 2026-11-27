@@ -17,7 +17,7 @@ import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { behaviourIssues, parseDocument, validateDocument, CHANGES_ROOT } from "./metadata.mjs";
-import { buildGraph, buildGraphDocument } from "./graph.mjs";
+import { buildGraph, buildGraphDocument, CONTRACT_VERSION } from "./graph.mjs";
 import { buildOutlineDocument } from "./outline.mjs";
 import { applyChange, changeFingerprint } from "./delta.mjs";
 import { listUnits } from "./units.mjs";
@@ -172,7 +172,7 @@ async function repo(files) {
 
         const doc = await buildGraphDocument(root, ".", graph);
         check(dump(doc.stats.nodesByRating) === dump({ adopted: 1, trial: 1 }) && !("nodesByStatus" in doc.stats), "graph.json stats count `nodesByRating`, rated nodes only", dump(doc.stats));
-        check(doc.schemaVersion === 38, "graph.json stamps contract 38", String(doc.schemaVersion));
+        check(doc.schemaVersion === CONTRACT_VERSION && CONTRACT_VERSION >= 38, "graph.json stamps the contract, 38 or later", String(doc.schemaVersion));
 
         const tech = (await buildOutlineDocument(root, ".devbook/tech")).entries.find((e) => e.path === ".devbook/tech/technology-graph.md");
         check(tech?.rating === "adopted" && !("status" in tech), "index.json lists a tech/ file's rating", dump(tech));

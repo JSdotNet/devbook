@@ -1,6 +1,6 @@
 ---
 name: devbook-domain
-description: Structure and authoring rules for the domain devbook folder, including root strategic DDD context mapping and per-bounded-context documentation.
+description: Structure and authoring rules for the domain devbook folder, one folder per bounded context.
 ---
 
 # Domain documentation (`domain/`)
@@ -15,15 +15,18 @@ Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact
 its ubiquitous language defines. Load the relevant context's chapters for domain work, and
 for implementation work that touches domain behaviour, an aggregate boundary, or naming.
 
-- `context.md` links to the `arc42/` building block that hosts the context, through
-  `related`, and keeps only the business side of each relationship: the DDD pattern,
-  such as ACL or Customer-Supplier, and why. The mechanism and the contract are the
-  building block's `## Dependencies`, and the dependency tables link to it.
+- `context.md` names the C4 element that hosts the context in `c4`, links to the
+  `arc42/` building block that owns that element through `related`, and keeps only
+  the business side of each relationship: the DDD pattern, such as ACL or
+  Customer-Supplier, and why. The mechanism and the contract are the building
+  block's `## Dependencies`, and the dependency tables link to it.
+- Which contexts there are, how each ships, how they relate, and which subdomain
+  each serves are the C4 workspace's, per "C4 model" in `devbook-arc42.md`. `domain/`
+  holds no context map.
 
 ## Structure
 
-`domain/` contains one root strategic artifact plus one folder per bounded
-context.
+`domain/` contains one folder per bounded context, and nothing at its root.
 
 Each bounded context gets its own subfolder, named in kebab-case after the
 context (e.g. `.devbook/domain/order-management/`). Use the same name consistently
@@ -31,7 +34,6 @@ across `domain/`, ADRs, and code module names where practical.
 
 ```
 .devbook/domain/
-  context-map.md
   <bounded-context-name>/
     context.md       # the boundary: what the context is responsible for, its
                      # feature flags and settings, and — until they outgrow
@@ -161,7 +163,7 @@ would miss, which state is persisted. What moves decides the chapter:
 | One aggregate's or entity's states | That aggregate's or entity's chapter on its domain page |
 | A process one capability runs, or a value it derives | The domain service that owns it, else the feature or skill |
 | How the context's processes hand over to one another | `context.md`, after the boundary |
-| A path across contexts | `context-map.md` |
+| A path across contexts | `arc42/`: a `dynamic` view of the workspace, in the runtime view |
 | A sequence whose participants are building blocks, not domain terms | `arc42/`: the runtime view, or the block's `## Runtime` |
 
 A rule a transition enforces stays an invariant or a requirement, and the note
@@ -319,8 +321,7 @@ from the template, and touches nothing else in the file. The region stands outsi
 the page's fingerprint, so a refresh lifts no approval.
 
 Reading order comes from this convention, not from a metadata field and not from
-filenames. `context-map.md` is `domain/`'s root document and is read first,
-followed by the bounded contexts in alphabetical order; inside a context,
+filenames. The bounded contexts read in alphabetical order; inside a context,
 `context.md` is the root document and the rest read in the order listed in the
 tree above — `domain.md`, `actors.md`, `skills.md` or `features.md`,
 `requirements.md`, `scenarios.md`, `model.md`, `dependencies.md` — with a split file
@@ -332,20 +333,14 @@ Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
 
-- **context-map.md** — Strategic DDD view across bounded contexts at the
-  `domain/` root.
-  - Documents the subdomain landscape/classification (core/supporting/generic
-    as applicable).
-  - Captures bounded-context relationships in a context map.
-  - Records published languages/contracts used across context boundaries.
-  - States strategic rules that constrain cross-context collaboration.
 - **context.md** — The bounded context as a whole: its boundary, its
   switches, and — until they outgrow it — its actors and dependencies. The
   context's root document.
   - Opens with the boundary: what the context is responsible for, what is
     inside it, what is outside it and where that is answered instead, and a
     link to the building block that hosts it. Prose under the file-level
-    block, no chapter of its own.
+    block, no chapter of its own. The block names the hosting C4 element in
+    `c4`.
   - **`type: feature-flag`** — a capability switch decided at release, from
     configuration. Carries `key` (the flag key the code checks) and, where the
     catalog states one, `default: on` or `off`. The prose says who owns the
@@ -547,15 +542,13 @@ instructions.
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; the optional cross-folder
   tags (`related`) are included only when they have a value.
-- Every file in `domain/` — `context-map.md` and, per bounded context,
-  `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
+- Every file in `domain/` — per bounded context, `context.md`, `domain.md`, `actors.md` (when present), `features.md` or
   `skills.md`, `requirements.md`, `scenarios.md` (when present), `model.md`,
   `dependencies.md` (when present), each split file and invariants
   subpage (when present), and any additional page the context carries
   — must also carry the file-level metadata
   block described in `devbook-chapter-metadata.md`, placed directly under the
-  file's top-level `#` heading. This applies even to `context-map.md`,
-  `model.md`, its split files, `dependencies.md`, and any
+  file's top-level `#` heading. This applies even to `model.md`, its split files, `dependencies.md`, and any
   additional page, whose `##` sections do not carry their own per-chapter
   blocks — the file-level block is the only metadata those files carry.
   `context.md` declares `index: root`, so that it sorts first even in a
@@ -573,8 +566,8 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
-  | File | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies` — or, for an additional page, its own filename |
+  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` |
+  | File | `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies` — or, for an additional page, its own filename |
 
   `requirements` and `invariants` are each in both sets, and mean the same
   thing at both levels: the file holds a context's, a `##` chapter holds one
@@ -597,8 +590,7 @@ instructions.
 
   Each file's `type` matches its filename: `context.md` is `type: context`,
   `domain.md` is `type: domain`, `features.md` is `type: features`, and so on,
-  with `context-map.md` at the `domain/` root carrying `type: context-map`. A
-  split file carries the type of the file it is named after — `domain.order.md`
+  A split file carries the type of the file it is named after — `domain.order.md`
   is `type: domain` — because the suffix narrows the scope and not the kind. An
   invariants subpage is the exception the name spells out: a trailing
   `.invariants` makes `domain.invariants.md` and `domain.order.invariants.md`
@@ -643,21 +635,6 @@ instructions.
   validates; `018-behaviour-titles` retitles it. No other file carries a title the check
   reads, so one still titled by its context validates too; retitle it when the
   file is next edited, never by a sweep.
-
-  `context-map.md` is the one `domain/` file that is not about a single bounded
-  context, so it has no context name to carry. Prefer titling it after the
-  system or product the map covers — `# Order Platform` — with
-  `type: context-map` carrying the kind, exactly as everywhere else. The
-  generator composes its node label as `Order Platform (context-map)`, so the kind
-  stays visible in the graph and the label stays distinct when several
-  repositories' devbook folders are viewed together.
-
-  A plain `# Context Map` is also accepted, and the generator suppresses the
-  redundant suffix so it renders as `Context Map` rather than
-  `Context Map (context-map)`. It restates the `type` in the heading, which is
-  mildly against the grain of this convention, but it reads unambiguously and
-  reasonable people prefer it. Pick one per repository and stay with it; do not
-  churn an existing title to switch.
 
   A `domain/` folder written the old way (kind prefixes in headings, no `type`,
   `#### <Name>` sub-chapters under `### Entities`) is migrated with the steps in
@@ -705,22 +682,14 @@ instructions.
   who may change it at runtime. A flag has no `scope`: it is decided at
   release, and writing one on it is an error. No other chapter carries any of
   the three.
-- A `bounded-context` chapter in `context-map.md` may carry `deployment`:
-  how the context ships. `service` is a deployable of its own, released and
-  scaled apart from the others; `module` runs inside a modular monolith beside
-  other contexts, sharing its process and its release. It is one plain value,
-  never a reference, and no other chapter carries it — an aggregate or a
-  feature ships with its context. The context's `context.md` carries the same
-  value on its file-level block, so a reader of the context sees it without
-  opening the map; where the chapter's `related` names that `context.md`, the
-  two must agree, and the check reports a difference or a value on one side
-  only. A repository that lists its contexts only in tables writes it on
-  `context.md` alone. Omit it until the choice is made. Name the
-  deployable itself — the service, or the monolith hosting the module — through
-  `related`, pointing at its `arc42/` building block; which contexts share one
-  host is read from those links, not restated here. Moving a context from
-  `module` to `service`, or back, is a decision worth an `arc42/adr/` record
-  that the chapter's `related` points at.
+- `context.md` carries `c4` on its file-level block: the C4 element that hosts the
+  context, per "C4 model" in `devbook-arc42.md` — a `container` for a context that
+  ships as a service, a `component` for one that runs as a module. How it ships, its
+  relationships to other contexts, and its subdomain class are that element's, and
+  no `domain/` chapter restates them. Moving a context from module to service, or
+  back, is a decision worth an `arc42/adr/` record that `context.md`'s `related`
+  points at. A `context-map.md`, a `bounded-context` chapter, or a `deployment`
+  field left from before contract 39 is an error naming `039-context-map-joins-c4`.
 - Actor chapters may carry a `role` field: the role, claim, or group name
   the authorization layer checks for this actor, as the code spells it — e.g.
   `role: Consultant` or, where one actor holds several, `role: [Consultant,
@@ -805,63 +774,6 @@ instructions.
 
 ## Templates
 
-### context-map.md
-
-```markdown
-# <System or Product Name>
-
-\`\`\`meta
-type: context-map
-\`\`\`
-
-> `domain/`'s root document. Prefer titling it after the system the map covers,
-> since the `type` above already carries the kind and the generator labels this
-> node `<System Name> (context-map)`; a plain `# Context Map` is also accepted.
-> Its structural `##` sections — the four from `## Subdomain landscape` on —
-> carry no metadata blocks; the file-level block above is the only metadata
-> they need.
->
-> A `##` section naming **one bounded context** is the exception, and it takes
-> `type: bounded-context`. Give a context its own section and block when another
-> chapter needs to address it — `.devbook/domain/context-map.md#order-management` — which
-> is how a building block, a technology, or an arc42 chapter points at the
-> context it belongs to, or when its `deployment` is decided: `service` or
-> `module`. A repository whose contexts are only listed in the tables below
-> needs no such sections.
-
-## <Bounded Context Name>
-
-\`\`\`meta
-type: bounded-context
-deployment: module
-related: [.devbook/domain/<bounded-context-name>/context.md, .devbook/arc42/05-building-block-view.md#<host-heading-slug>]
-\`\`\`
-
-What the context is for, in one sentence, and where it runs: the service it
-is, or the modular monolith that hosts it as a module.
-
-## Subdomain landscape
-
-| Subdomain | Classification | Bounded context |
-|---|---|---|
-| <Subdomain> | Core / Supporting / Generic | <Bounded Context Name> |
-
-## Context map
-
-<Diagram or table of the relationships between bounded contexts, using
-explicit DDD relationship terminology — ACL, Customer/Supplier, Partnership,
-OHS + Published Language.>
-
-## Published languages
-
-<The contracts used across context boundaries, and which contexts consume
-each one.>
-
-## Strategic rules
-
-<Rules that constrain cross-context collaboration.>
-```
-
 ### context.md
 
 ```markdown
@@ -870,7 +782,7 @@ each one.>
 \`\`\`meta
 index: root
 type: context
-deployment: module
+c4: [<system>.<container>.<component>]
 related: [.devbook/arc42/building-blocks/<block-slug>.md]
 \`\`\`
 

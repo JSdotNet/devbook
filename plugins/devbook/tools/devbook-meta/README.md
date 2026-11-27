@@ -217,17 +217,10 @@ to the kind:
 | `.devbook/domain/order-management/domain.md` | `Domain` | `domain` | `Domain` |
 | `.devbook/domain/order-management/domain.order.md` | `Order` | `domain` | `Order (domain)` |
 | `.devbook/domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
-| `.devbook/domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
-| `.devbook/domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
 | `.devbook/arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
 
 Node `id` is the path and was always unique; the label is for display, and it names
 the context only where the title does.
-
-The two `context-map.md` rows are the recommended shape and the fallback: title
-that file after the system it maps, and reach for the literal `Context Map` only
-when there is no meaningful system name. The suppression branch exists so the
-fallback does not render as `Context Map (context-map)`.
 
 ### Edge types
 
@@ -326,6 +319,7 @@ each expects, without building a command.
 | A field moved to tooling — `status` outside `tech/` and `ai/`, an `approved-*` or `accepted-*` field, `sync`, `issue`, `effort`, `roadmap`, `change` — named with `038-workflow-state-leaves-the-chapter` | error |
 | An `annotation` fence at the top level of a chapter, open or resolved — retired with contract 38 and named with `038-workflow-state-leaves-the-chapter` | error |
 | `status` on a `tech/` or `ai/` block, renamed `rating` in contract 38 | error |
+| A `context-map` file, a `bounded-context` chapter, or a `deployment` field — retired with contract 39 and named with `039-context-map-joins-c4` | error |
 | A `tech/` or `ai/` block without `rating`, or with one outside `candidate`, `trial`, `adopted`, `hold`, `retired` | error |
 | `ai/` `stage` entry outside the delivery path's seven — `decide`, `specify`, `code`, `verify`, `integrate`, `release`, `operate` | error |
 | `ai/` `layer` entry outside `thread`, `upkeep`, `harness` | error |
@@ -404,9 +398,6 @@ sorting filenames.
   "sources": [".devbook/domain"],
   "problems": [],
   "entries": [
-    { "type": "file", "name": "context-map.md", "path": ".devbook/domain/context-map.md",
-      "title": "Shop", "kind": "context-map",
-      "summary": "How the shop's bounded contexts relate.", "root": true },
     { "type": "directory", "name": "ordering", "path": ".devbook/domain/ordering",
       "title": "Ordering",
       "children": [

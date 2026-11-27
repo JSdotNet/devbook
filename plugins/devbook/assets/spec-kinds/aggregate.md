@@ -10,7 +10,7 @@ agreed, the brief contract, and the report table; this file carries the kind.
 | Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in the invariants subpage, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant`, plus the `## Shared Value Objects` or `## Shared Enums` chapter of `domain.invariants.md` for the rules a shared type it draws from enforces |
 | File | `.devbook/domain/<context>/domain.md` and its subpage `domain.invariants.md`, or the `domain.<name>.md` the chapters were split into and its `domain.<name>.invariants.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
-| Context to load | The target context's `domain.md` and `domain.invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
+| Context to load | The target context's `domain.md` and `domain.invariants.md`, the workspace relationships of the element its `context.md` names in `c4`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
 | Plan target | A chapter of the `domain/` folder, drafted to its rule and delivered in the capture plan, per **The capture plan** in the protocol |
 | Index scope | `--scope domain` |
 

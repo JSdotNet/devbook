@@ -25,12 +25,12 @@ const check = (ok, name, detail) => {
 };
 
 const fence = (body) => "```meta\n" + body + "```\n";
-const REL = ".devbook/domain/context-map.md";
+const REL = ".devbook/domain/ordering/domain.md";
 const ANCHOR = `${REL}#order-management`;
 
 // "Order Management" and "Order Management!" both slugify to "order-management":
 // GitHub's algorithm strips the punctuation.
-const HEAD = `# Context Map\n\n${fence("index: root\ntype: context-map\n")}\n`;
+const HEAD = `# Domain\n\n${fence("type: domain\n")}\n`;
 const chapter = (text, body) => `## ${text}\n\n${fence(body)}\n${text} prose.\n\n`;
 const structural = (text) => `## ${text}\n\nNo fence, so not a chapter.\n\n`;
 
@@ -54,8 +54,8 @@ const nodeAt = (graph, id) => graph.nodes.find((n) => n.id === id);
 // ── Two addressable headings ────────────────────────────────────────────────
 
 const twoChapters = await graphOf(
-    chapter("Order Management", "type: bounded-context\ndate: 2026-01-01\n") +
-        chapter("Order Management!", "type: bounded-context\ndate: 2026-02-02\n")
+    chapter("Order Management", "type: aggregate\ndate: 2026-01-01\n") +
+        chapter("Order Management!", "type: aggregate\ndate: 2026-02-02\n")
 );
 check(
     collisions(twoChapters).length === 1,
@@ -76,7 +76,7 @@ check(
 // ── A structural heading shadowed by a later chapter ────────────────────────
 
 const structuralFirst = await graphOf(
-    structural("Order Management") + chapter("Order Management!", "type: bounded-context\n")
+    structural("Order Management") + chapter("Order Management!", "type: aggregate\n")
 );
 check(
     collisions(structuralFirst).length === 1,
@@ -92,7 +92,7 @@ check(
 // ── A chapter shadowed by a later structural heading ────────────────────────
 
 const chapterFirst = await graphOf(
-    chapter("Order Management", "type: bounded-context\n") + structural("Order Management!")
+    chapter("Order Management", "type: aggregate\n") + structural("Order Management!")
 );
 check(
     collisions(chapterFirst).length === 1,
@@ -108,9 +108,9 @@ check(
 // ── Two structural headings: kept first, and silent ───────────────────────
 
 const twoStructural = await graphOf(
-    chapter("Order Management", "type: bounded-context\n") +
+    chapter("Order Management", "type: aggregate\n") +
         structural("Scenario: The order is already confirmed") +
-        chapter("Order Fulfilment", "type: bounded-context\n") +
+        chapter("Order Fulfilment", "type: aggregate\n") +
         structural("Scenario: The order is already confirmed!")
 );
 check(
@@ -126,8 +126,8 @@ check(
 // ── The negative: distinct slugs are not a collision ────────────────────────
 
 const distinct = await graphOf(
-    chapter("Order Management", "type: bounded-context\n") +
-        chapter("Order Fulfilment", "type: bounded-context\n")
+    chapter("Order Management", "type: aggregate\n") +
+        chapter("Order Fulfilment", "type: aggregate\n")
 );
 check(
     distinct.problems.filter((p) => /Duplicate chapter anchor/.test(p.message)).length === 0,

@@ -119,6 +119,17 @@ explains it, `adr/` and `tdr/` hold the reasons, and a building block's `code`
 field holds its folders. No element carries a DSL `properties` block, so a code folder
 has nowhere to go but `code`.
 
+A `domain/` bounded context lives in the element that hosts it: a `container` when
+it ships as a service of its own, or a `component` of the container that hosts it as
+a module. Its `context.md` names that element in `c4`. A relationship between two
+contexts' elements opens its description with the DDD pattern —
+`"ACL: reads the order total"` — one of `ACL`, `Customer/Supplier`, `Conformist`,
+`Partnership`, `Shared Kernel`, or `OHS + Published Language`, and the element carries
+the subdomain class as a tag: `Core`, `Supporting`, or `Generic`. A published
+language used across contexts and a strategic rule that constrains how they
+collaborate are sections of `08-crosscutting-concepts.md`. There is no context map
+beside the workspace.
+
 A chapter shows a view with an image embed addressed by the view's key,
 `![Containers](c4:containers)` — the same form as `shot:` and `scenario:`. Embed
 each view in exactly one section, in the chapter its kind belongs to:
