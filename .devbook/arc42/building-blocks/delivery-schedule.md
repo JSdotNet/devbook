@@ -33,7 +33,7 @@ merging anything, or carrying anything personal into the repository.
 ```meta
 ```
 
-The block exposes nineteen skills in three groups: fourteen entry points that pick their own
+The block exposes twenty skills in three groups: fifteen entry points that pick their own
 input, each with the `report.md` template its report follows, one bundle skill that runs those
 entry points across every repository on the machine, and four that put a trigger in the
 scheduler and read it back. A person can run every one by hand, which is how a cadence gets
@@ -41,7 +41,7 @@ proved before it is trusted.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, fourteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-c4-update` through `schedule-whats-new`, fifteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `schedule-bundle`, one skill for every [bundle](#bundle) | skill | The scheduler, weekly or on weekdays, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
@@ -445,7 +445,7 @@ A trigger becomes a run below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog, bundles aside: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog, bundles aside: fourteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
@@ -534,7 +534,7 @@ one plugin here whose subject is a host capability, a divergence on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. This real dependency is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | Four wrappers invoke `devbook:validate`, `devbook:verify-change`, `devbook:tech-update`, and `devbook:prose-check`; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | Five wrappers invoke `devbook:validate`, `devbook:verify-change`, `devbook:tech-update`, `devbook:c4-update`, and `devbook:prose-check`; `schedule-devbook-verify` lists units with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin is not enabled is reported and skipped, never scheduled. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body; `schedule-merge-review` reads its door; `schedule-weekly-retro` names `retro` for lenses | The skill name alone | A reviewer weighs a merge by whether it can be walked back; a retro's lenses are written once. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | As with devbook, naming is not depending: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | The [scheduler](../12-glossary.md#scheduler) the live session exposes, for a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability has two host names, Routines and Automations, and adopting either would name a host. |

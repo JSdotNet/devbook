@@ -1,0 +1,11 @@
+{
+  "drop": ["storybook", "*-browser-logs"],
+  "resources": {
+    "api": { "element": "shop.api", "name": "API", "description": "Takes and serves orders over HTTP.", "technology": "ASP.NET Core" },
+    "cache": { "element": "shop.cache", "name": "Cache", "technology": "Redis" },
+    "shopdb": { "element": "shop.db", "name": "Database", "description": "Holds orders and payments.", "technology": "Azure Cosmos DB" },
+    "orders": { "element": "shop.db" },
+    "payments": { "element": "shop.db" },
+    "web": { "element": "shop.web", "name": "Web", "description": "Serves the shop's pages.", "technology": "Blazor" }
+  }
+}

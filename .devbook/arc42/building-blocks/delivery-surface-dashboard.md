@@ -311,6 +311,11 @@ document viewer. One file serves each page two ways: inline where the host imple
 and on a loopback origin where it does not. A bridge answers the page's own network calls as
 tool calls, so neither page learns which way it was loaded.
 
+Every page sits beside a conversation, so it follows the viewer's light or dark theme and stays
+readable at sidebar width. The run timeline takes the host's tokens with light fallbacks under
+`color-scheme: light dark`. The diagram and document viewers are hard-coded dark, down to the
+Mermaid theme, which [TDR 11](../tdr/11-the-viewers-are-hard-coded-dark.md) records.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Navigation and view inspection are served over the plugin's own origin, never added as extra tools | page load | untested |

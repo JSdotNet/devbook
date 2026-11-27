@@ -2,7 +2,7 @@
 // sections, not chapters, so a heading there without a `meta` block is what the
 // folder rules ask for and draws no warning.
 //
-// The rules name the files: `context-map.md`, `model.md`, its
+// The rules name the files: `model.md`, its
 // splits, `dependencies.md`, and any additional page in `domain/`;
 // `technology-graph.md` in `tech/`; `adoption-map.md` in `ai/`. Everywhere else
 // a heading without a block is still reported.
@@ -26,7 +26,6 @@ const dump = (list) => JSON.stringify(list, null, 2);
 for (const [path, fileMeta] of [
     [".devbook/tech/technology-graph.md", "status: adopt\nindex: root\n"],
     [".devbook/ai/adoption-map.md", "status: trial\nindex: root\ntype: adoption-map\n"],
-    [".devbook/domain/context-map.md", "index: root\ntype: context-map\n"],
     [".devbook/domain/ordering/model.md", "type: model\n"],
     [".devbook/domain/ordering/model.order.md", "type: model\n"],
     [".devbook/domain/ordering/dependencies.md", "type: dependencies\n"],
@@ -65,11 +64,11 @@ check(!isStructuralDocument(".devbook/domain/work/scenarios.md"), "a scenarios f
     check(m.length === 1, "a deeper page still reports a section without a block", dump(m));
 }
 
-// A section that does carry a block is still validated: a `bounded-context`
-// section in context-map.md is a chapter, and a bad type there is an error.
+// A section that does carry a block is still validated: a block on a section
+// of dependencies.md is read as a chapter's, and a bad type there is an error.
 {
-    const md = "# Map\n\n```meta\nindex: root\ntype: context-map\n```\n\n## Ordering\n\n```meta\ntype: nonsense\n```\n\nProse.\n";
-    const e = validateDocument(".devbook/domain/context-map.md", md).filter((i) => i.severity === "error");
+    const md = "# Dependencies\n\n```meta\ntype: dependencies\n```\n\n## Ordering\n\n```meta\ntype: nonsense\n```\n\nProse.\n";
+    const e = validateDocument(".devbook/domain/ordering/dependencies.md", md).filter((i) => i.severity === "error");
     check(e.length === 1 && e[0].message.includes("nonsense"), "a block on a structural section is still validated", dump(e));
 }
 

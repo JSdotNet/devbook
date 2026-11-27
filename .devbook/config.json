@@ -67,12 +67,11 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.37.0",
+      "pluginVersion": "1.37.1",
       "contractVersion": 38,
       "adopted": [
         "arc42",
         "tech",
-        "design",
         "ai"
       ],
       "materialized": {
@@ -192,13 +191,13 @@
           "managed": true
         },
         ".github/workflows/devbook-meta.yml": {
-          "from": "1.19.0",
-          "hash": "sha256:7c2f584e561cc138e8e17602c81b2a34549a2f48c0d253b9372361f3e7929395",
+          "from": "1.37.1",
+          "hash": "sha256:9844037658eca49af22254609ee8bd31d01bd47d6cd2f6e051b6bf11307ed8d1",
           "managed": true
         },
         "AGENTS.md#devbook": {
-          "from": "1.32.0",
-          "hash": "sha256:014e525c3f30a3ade81c6573e61e43cddd4faf50123aec4d08966459c38e476a",
+          "from": "1.37.1",
+          "hash": "sha256:5f1cc7a15bdd619b0c50c9f369106d28ffca68796d0a8cc44694db84d3f770f5",
           "managed": true
         }
       },

@@ -10,30 +10,12 @@ context, building blocks, runtime views, cross-cutting concerns, and
 architecture decisions, at the level of the whole system or a major
 deployable unit.
 
-## Context-loading policy
+## Where a fact lives
 
-- `arc42/` is **not** baseline repository context. Load it only for architecture,
-  ADR, blueprint, TDR, or explicit arc42 tasks, normally after routing through the
-  repository's architecture flow or an architecture specialist agent.
-- When `arc42/` is needed as task context, load only the relevant chapter(s) or
-  sections instead of reading the whole folder by default.
-- For non-architecture implementation or documentation tasks, consult `arc42/`
-  only when the user asks for architecture context or when the work depends on a
-  specific documented constraint, decision, runtime view, deployment view, or
-  glossary entry.
-
-## Relationship to other devbook folders
-
-- `domain/` describes *what the domain is* (bounded contexts, aggregates,
-  ubiquitous language). `arc42/` describes *how the system is built and runs*
-  (containers, deployment, quality attributes, decisions).
-- `design/` describes *how the product looks and behaves for the user* (UX
-  principles, design tokens, interaction and accessibility rules). Channel and
-  stack facts stay in `arc42/`; `design/` links to them.
-- Decision records and debt records live under `arc42/adr/` and `arc42/tdr/`
-  and are linked from `09-architecture-decisions.md` and
-  `11-risks-and-technical-debt.md`, never restated there. A decision an
-  organization already records elsewhere is linked, not copied.
+Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact" in
+`devbook-writing.md`. `arc42/` ranks first, so it keeps what it shares with any other folder
+except a business rule and a term. Load it for architecture, decision, debt, and blueprint
+work, and for other work only when it depends on a documented constraint, decision, or view.
 
 ## Structure
 
@@ -56,6 +38,7 @@ when a chapter has real content — do not scaffold empty placeholders):
   12-glossary.md
   workspace.dsl                  (the C4 model — the one non-Markdown file here)
   c4/                            (files workspace.dsl includes, when it splits)
+    generated/                   (what a script writes from the code; no person edits it)
   adr/                           (decision records — one per technical concern)
   tdr/                           (technical debt records — one per item)
   building-blocks/               (one whitebox per building block that outgrows chapter 5)
@@ -67,8 +50,8 @@ These rules describe the persisted shape of `arc42/` assets only. Authoring
 workflow, routing, and cross-document governance are handled by separate
 instructions.
 
-- Keep the glossary aligned with the ubiquitous language defined per bounded
-  context in `domain/`.
+- `12-glossary.md` defines only the words no bounded context owns, and links each
+  word a context's ubiquitous language defines to that context's chapter.
 - Show context, building blocks, runtime, and deployment as views of the C4
   model, per "C4 model" below. Mermaid draws only inside one element, per
   `devbook-writing.md`.
@@ -110,6 +93,15 @@ defined. Start it with `!identifiers hierarchical`. It may `!include` files unde
 `.devbook/arc42/c4/`, to split a large model by building block, and nothing
 outside that folder.
 
+A script that reads the code writes its part of the model under
+`.devbook/arc42/c4/generated/`, and the workspace includes it like any other file
+in `c4/`. Never edit a file there: the next run replaces it, so change the code or
+the hand-written workspace instead. A generated file adds its elements to a
+hand-written system or container with `!element <identifier> { … }`, so include it
+after the element it reopens. `devbook:c4-update` writes the container and component
+levels; what a person writes for it to read, the AppHost mapping
+`c4/aspire-map.json`, sits beside `generated/`, never in it.
+
 It holds the elements, their relationships, and the views:
 
 | Element | What it is |
@@ -127,6 +119,17 @@ explains it, `adr/` and `tdr/` hold the reasons, and a building block's `code`
 field holds its folders. No element carries a DSL `properties` block, so a code folder
 has nowhere to go but `code`.
 
+A `domain/` bounded context lives in the element that hosts it: a `container` when
+it ships as a service of its own, or a `component` of the container that hosts it as
+a module. Its `context.md` names that element in `c4`. A relationship between two
+contexts' elements opens its description with the DDD pattern —
+`"ACL: reads the order total"` — one of `ACL`, `Customer/Supplier`, `Conformist`,
+`Partnership`, `Shared Kernel`, or `OHS + Published Language`, and the element carries
+the subdomain class as a tag: `Core`, `Supporting`, or `Generic`. A published
+language used across contexts and a strategic rule that constrains how they
+collaborate are sections of `08-crosscutting-concepts.md`. There is no context map
+beside the workspace.
+
 A chapter shows a view with an image embed addressed by the view's key,
 `![Containers](c4:containers)` — the same form as `shot:` and `scenario:`. Embed
 each view in exactly one section, in the chapter its kind belongs to:
@@ -137,6 +140,14 @@ each view in exactly one section, in the chapter its kind belongs to:
 | `container`, `component` | `05-building-block-view.md` or a `building-blocks/<slug>.md` |
 | `dynamic` | `06-runtime-view.md` or a building block's `## Runtime` |
 | `deployment` | `07-deployment-view.md` |
+| `image` | the component's `building-blocks/<slug>.md`, under `## Structure` |
+
+A component's code is the one level with no element: show it as an `image` view
+on the component, `image <component> <key> { mermaid c4/generated/<file>.mmd }`,
+whose source is a generated Mermaid file under `c4/generated/`. The path is
+relative to the file that holds the statement, as an `!include` is. No other
+source format, and never a hand-written one. The block that embeds it names the
+component, or an element holding it, in `c4`.
 
 Any other chapter links to that section. Where the repository keeps derived
 indexes, a committed SVG of each view sits at `.devbook/arc42/_meta/c4/<view key>.svg`,
@@ -157,7 +168,21 @@ contested term the model now depends on. The test is what reversing it would
 cost. A choice a reader could reverse with a find-and-replace is not a record.
 Naming, folder layout, process rules, who owns what, and how a document is
 written are not architecture: the rule, chapter, or bounded context that states
-them carries the reason in a sentence, and no record is opened.
+them carries the reason in a sentence, and no record is opened. A decision an
+organization already records elsewhere is linked, not copied.
+
+For a technology, the test reads: could a dependency-update pull request reverse the
+choice inside one building block, without migrating data or changing a contract
+another block relies on?
+
+| Answer | The choice | Where it lives |
+| --- | --- | --- |
+| No | An architecture choice: what kind of thing fills a role, such as the storage engine, a protocol, or the UI framework | A record here, naming the category and never a package version |
+| Yes | A package choice: which package fills a role a record already settled | The `tech/` chapter: one **Why** sentence, `alternatives`, and a `related` link to the record |
+
+A record is version independent, so an upgrade changes `tech/` alone and never reopens
+it. A package whose reason outgrows a sentence usually hides an architecture choice,
+which then gets its record.
 
 **One record per concern, not per decision.** The file is the concern —
 `adr/storage.md`, `adr/api.md`, `adr/package-management.md` — a kebab-case slug

@@ -20,6 +20,8 @@ workspace "jsdotnet-devbook" {
                     index-generator = component "Index Generator" "The checker that walks the corpus and builds the graph, the outline, and the registers." "Node.js"
                     chapter-review = component "Chapter Review" "Reads a chapter against its folder's rules and posts one note per objection through devbook.decision@1." "Skill"
                     tech-inventory = component "Tech Inventory" "Scripts that read package manifests and emit deterministic JSON." "Node.js"
+                    code-model = component "Code Model" "Reads a solution with Roslyn and writes the C4 code level: a class diagram per component and its image view." ".NET console"
+                    c4-generators = component "C4 Generators" "Scripts that write the container and component levels of a workspace from an AppHost's description and the .NET project graph." "Node.js"
                     scenario-tools = component "Scenario Tools" "The signature, shot helper, reporter, coverage check, and demo sync that point end-to-end specs at journeys." "Node.js"
 
                     group "devbook-code-sync" {
@@ -70,7 +72,7 @@ workspace "jsdotnet-devbook" {
 
             group "L1 extension" {
                 devbook-derived = container "devbook-derived" "The committed _meta/ index, its refresh paths, the rendered C4 views, and the graph canvas." "Claude Code plugin" {
-                    refresh-paths = component "Refresh Paths" "The skill, script, and workflows that rewrite the committed _meta/ indexes." "PowerShell, GitHub Actions"
+                    refresh-paths = component "Refresh Paths" "The skill, script, and workflows that rewrite the committed _meta/ indexes, and the pull-request job that compares the generated C4 model with the code." "PowerShell, GitHub Actions"
                     view-renderer = component "View Renderer" "Draws every C4 view of the workspace as a committed SVG." "Node.js"
                     canvas = component "Canvas" "Two Copilot canvases drawing the reference graph and one chapter live." "Copilot extension"
                 }
@@ -162,6 +164,8 @@ workspace "jsdotnet-devbook" {
         copilot -> marketplace.devbook-derived.canvas "Loads the extension at run time" "Copilot Extension SDK"
         routine -> marketplace.delivery-schedule.entry-point "Fires the entry point its schedule targets"
         github -> marketplace.devbook-derived.refresh-paths "Runs the nightly refresh and the drift warning" "GitHub Actions"
+        marketplace.devbook-derived.refresh-paths -> marketplace.devbook.c4-generators "Compares the component level with, on a pull request" "--check"
+        marketplace.devbook-derived.refresh-paths -> marketplace.devbook.code-model "Compares the code level with, on a pull request" "--check"
 
         # Between plugins, in the direction of the coupling
         marketplace.devbook-derived -> marketplace.devbook "Builds the index with the checker it ships" "dependencies: devbook >=1.1.0 <2.0.0"
@@ -213,6 +217,8 @@ workspace "jsdotnet-devbook" {
         marketplace.devbook.reconciler -> marketplace.devbook.devbook-folder "Adopts and drops"
         marketplace.devbook.reconciler -> marketplace.devbook.scenario-tools "Materializes"
         marketplace.devbook.reconciler -> marketplace.devbook.tech-inventory "Materializes"
+        marketplace.devbook.code-model -> marketplace.devbook.c4-model "Writes the code level of, under c4/generated/"
+        marketplace.devbook.c4-generators -> marketplace.devbook.c4-model "Writes the generated includes of"
         marketplace.devbook.unit-lister -> marketplace.devbook.reference-graph "Reads the units and groups off"
         marketplace.devbook.spec-converter -> marketplace.devbook.unit-lister "Takes its unit and group scope from"
         marketplace.devbook.spec-converter -> marketplace.devbook.chapter "Writes, in its folder's shape"

@@ -24,7 +24,7 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 |---|---|
 | `assets/build/Update-DevbookIndex.ps1` | The on-demand refresh: runs devbook's `build.mjs --write`, then the view renderer where it is materialized, and says which index and render files moved. `-Scope` narrows it, `-Check` validates without writing and reports a stale render as a warning |
 | `assets/workflows/devbook-meta-nightly.yml` | The scheduled refresh: one pull request when the indexes or the view renders moved, nothing when they did not |
-| `assets/workflows/devbook-meta-drift.yml` | The pull-request drift warning: reports a committed index that no longer matches the Markdown, and never fails on it |
+| `assets/workflows/devbook-meta-drift.yml` | The pull-request drift warning: reports a committed index that no longer matches the Markdown, and never fails on it. Its `c4` job is the one that fails: where `.devbook/arc42/c4/generated/` is committed, it runs devbook's `components.mjs` and code-model generator with `--check` against the code, fetching them from this marketplace at the devbook version the stamp records, outside its own checkout, and regenerates nothing. `C4_SOLUTION` and `C4_MARKERS` in the job carry a repository's own solution and markers. Level 2 needs the AppHost, so `delivery-schedule`'s local `c4-update` routine alone compares it |
 | `rules/devbook-derived-artifacts.md` | Placement, naming, and envelope rules for everything under `_meta/`, installed as a trio so both hosts apply it |
 | `assets/agents-section.md` | The plugin's own marker-fenced section of `AGENTS.md`: the `_meta/` rule and the refresh paths |
 | `assets/settings-snippet.md` | The `Read(_meta/**)` deny rule for `.claude/settings.json`, offered and never applied |
@@ -55,7 +55,8 @@ to be current, committed on its own. Two branches that each touch one chapter bo
 and the conflict is only resolvable by re-running the generator — so refresh is
 `./build/Update-DevbookIndex.ps1` on demand, or the nightly workflow on the default branch,
 and a pull request that only edits chapters carries no regenerated index. The drift
-workflow warns and never fails.
+workflow warns on an index and never fails on one; only its `c4` job fails, on a generated C4
+model the code has moved past, which is the code's file and not an index.
 
 ## License
 

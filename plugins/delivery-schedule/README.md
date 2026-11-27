@@ -1,9 +1,9 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fourteen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: fifteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
 report, `schedule-bundle`, which runs a bundle's jobs across every repository on the machine,
-seventeen trigger files that fire one on a cadence, four of them bundles, and four skills that
+eighteen trigger files that fire one on a cadence, four of them bundles, and four skills that
 put those triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -32,6 +32,7 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
+| `schedule-c4-update` | Runs `devbook:c4-update` and lands what moved in the generated C4 model; the only run that refreshes and compares level 2, since it can start the AppHost | A draft pull request |
 | `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, and a report naming what `devbook-config:doctor` finds needs a person |
 | `schedule-devbook-update` | Runs `devbook-config:update` with the safe answer at every question, so outstanding migrations run and stale copies are refreshed; never touches the scheduler | A draft pull request, or a report naming the person's step that is left |
 | `schedule-devbook-verify` | Runs `devbook:verify-change` over every sync unit, with no direction, and opens an issue per unit with a `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such unit, and a report with the whole table; run by a bundle with `bundle` set, the table alone, in the bundle report |
@@ -69,6 +70,7 @@ and traces each to its ticket.
 | `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers, no issue in a bundle | `delivery-schedule`, `delivery` | One issue per new high finding, or in a bundle the findings in its report |
 | `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
+| `c4-update` | Sunday 08:00 | `schedule-c4-update`, every C4 level the repository has a source for | `delivery-schedule`, `devbook` | A draft pull request when the generated model moved |
 | `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
 | `prose-check` | Sunday 06:00 | `schedule-prose-check`, every adopted folder, report only outside a bundle | `delivery-schedule`, `devbook` | A report, or in a bundle a draft pull request |

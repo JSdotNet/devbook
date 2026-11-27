@@ -12,12 +12,15 @@
 // what could not be read is the failure this guards against.
 //
 // The subset: `workspace`, `model`, `views`, `!identifiers hierarchical`,
-// `!include` of a relative file under the workspace's `c4/` folder; `person`,
+// `!include` of a relative file under the workspace's `c4/` folder; `!element`
+// reopening a system or container at the top of the model; `person`,
 // `softwareSystem`, `container`, `component`, `group`, `tags`; relationships with
 // description, technology, and tags; `deploymentEnvironment`, `deploymentNode`,
-// `infrastructureNode`, `containerInstance`, `softwareSystemInstance`; and the
+// `infrastructureNode`, `containerInstance`, `softwareSystemInstance`; the
 // six view kinds with key, scope, description, `title`, `include`, `exclude`,
-// `autolayout`, and a dynamic view's steps.
+// `autolayout`, and a dynamic view's steps; and an `image` view on a component,
+// with key, `title`, `description`, and one `mermaid` source: a relative `.mmd`
+// file under the workspace's `c4/generated/` folder, the code level's diagram.
 //
 // Zero dependencies beyond Node, like every file in this folder.
 //
@@ -177,14 +180,19 @@ const VIEWS = {
     component: { kind: "component", scope: ["container"] },
     dynamic: { kind: "dynamic", scope: ["*", "softwareSystem", "container"] },
     deployment: { kind: "deployment", scope: ["*", "softwareSystem"], environment: true },
+    image: { kind: "image", scope: ["component"] },
 };
+// The sources Structurizr's image view takes; only `mermaid` is in the subset.
+const IMAGE_SOURCES = new Set(["mermaid", "plantuml", "kroki", "image"]);
+const MERMAID_FILE = /\.mmd$/i;
 const DIRECTIONS = new Set(["tb", "bt", "lr", "rl"]);
 const VIEW_KEY = /^[A-Za-z0-9_-]+$/;
 const IDENTIFIER = /^[A-Za-z0-9_-]+$/;
 
 class Parser {
-    constructor(tokens, problems) {
+    constructor(tokens, problems, source) {
         this.tokens = tokens;
+        this.source = source;
         this.i = 0;
         this.problems = problems;
         this.hierarchical = false;
@@ -328,6 +336,7 @@ class Parser {
             const word = lower(head);
             const where = parent ? parent.kind : "model";
             if (word === "!identifiers" && !parent) { this.identifiers(s.parts, false); continue; }
+            if (word === "!element") { this.reopen(s, parent, group); continue; }
             if (word === "tags" && parent && !s.block) { parent.tags.push(...splitTags(this.values(s.parts, 1, 1, "tags")[0])); continue; }
             if (word === "group" && [null, "softwareSystem", "container"].includes(parent?.kind ?? null)) { this.group(s, parent, group, (g) => this.model(head, parent, g)); continue; }
             if (this.relationship(s, parent, null)) continue;
@@ -349,6 +358,22 @@ class Parser {
             }
             this.unknown(keyword ?? head, s.block, where);
         }
+    }
+
+    // `!element <identifier> { … }` at the top of the model: reopens a system or a
+    // container declared before it, so a generated file can add the elements it
+    // owns to a hand-written parent. Its block reads as that element's own.
+    reopen(s, parent, group) {
+        const head = s.parts[0];
+        const [target] = this.values(s.parts, 1, 1, "!element");
+        const refuse = (message) => { this.report(head, message); if (s.block) this.skip(); };
+        if (parent || group) return refuse("`!element` stands at the top of the model, outside every element and group; it was skipped.");
+        if (!s.block) return refuse("`!element` has no block, so it adds nothing.");
+        if (!target) return refuse("`!element` names no element; its block was skipped.");
+        const element = this.byId.get(target.toLowerCase());
+        if (!element) return refuse(`\`!element ${target}\` names no element declared before it; its block was skipped.`);
+        if (element.kind !== "softwareSystem" && element.kind !== "container") return refuse(`\`!element ${target}\` reopens a ${element.kind}; only a softwareSystem or a container is reopened.`);
+        this.model(head, element, null);
     }
 
     group(s, parent, group, body) {
@@ -552,7 +577,42 @@ class Parser {
         }
     }
 
+    // `image <component> <key> { mermaid <file> }`: the scope, the key, and one
+    // source, resolved to a generated file, plus `title` and `description`.
+    imageView(spec, s) {
+        const head = s.parts[0];
+        const [scope, key] = this.values(s.parts, 1, 2, head.text).map(blank);
+        const view = { key: key ?? null, kind: spec.kind, scope: scope ?? null, environment: null, title: null, description: null, source: null, include: [], exclude: [], autolayout: null, steps: [], file: head.file, line: head.line };
+        if (!view.scope) this.report(head, "An `image` view needs a scope: the component whose code it draws.");
+        let named = false; // a source statement was written, so a missing source is already reported
+        if (s.block) {
+            for (const b of this.block(head)) {
+                const word = lower(b.parts[0]);
+                if (b.block) { this.unknown(b.parts[0], true, "image view"); continue; }
+                if (word === "title" || word === "description") { view[word] = blank(this.values(b.parts, 1, 1, word)[0]); continue; }
+                if (IMAGE_SOURCES.has(word)) {
+                    named = true;
+                    if (word !== "mermaid") { this.report(b.parts[0], `\`${b.parts[0].text}\` is outside the supported DSL subset: an image view's source is a \`mermaid\` file.`); continue; }
+                    const [target] = this.values(b.parts, 1, 1, "mermaid");
+                    if (view.source) { this.report(b.parts[0], "An image view takes one source; this one was ignored."); continue; }
+                    if (!target) { this.report(b.parts[0], "`mermaid` names no file."); continue; }
+                    const found = this.source(target, b.parts[0].file);
+                    if (found.problem) { this.report(b.parts[0], found.problem); continue; }
+                    view.source = { format: "mermaid", file: found.file };
+                    if (found.text != null) view.source.text = found.text;
+                    continue;
+                }
+                this.unknown(b.parts[0], false, "image view");
+            }
+        }
+        if (!named) {
+            this.report(head, "An `image` view needs a `mermaid` source: a generated `.mmd` file under `c4/generated/`.");
+        }
+        this.views.push(view);
+    }
+
     view(spec, s) {
+        if (spec.kind === "image") return this.imageView(spec, s);
         const head = s.parts[0];
         const max = spec.scope.length ? (spec.environment ? 4 : 3) : 2;
         const values = this.values(s.parts, 1, max, head.text);
@@ -731,16 +791,31 @@ class Parser {
     }
 }
 
+// Where an image view's source may live: a relative `.mmd` path that lands in
+// `<workspace folder>/c4/generated/`, worked on `/`-separated labels so the
+// answer is the same on every platform. `{ file }` or `{ problem }`.
+export function generatedSource(target, fromFile, workspaceFile) {
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith("/") || target.startsWith("\\") || path.win32.isAbsolute(target)) {
+        return { problem: `\`mermaid ${target}\`: only a relative path is supported.` };
+    }
+    if (!MERMAID_FILE.test(target)) return { problem: `\`mermaid ${target}\` is not a \`.mmd\` file.` };
+    const folder = path.posix.join(path.posix.dirname(workspaceFile.replace(/\\/g, "/")), "c4", "generated");
+    const file = path.posix.join(path.posix.dirname(fromFile.replace(/\\/g, "/")), target.replace(/\\/g, "/"));
+    if (!file.startsWith(`${folder}/`)) return { problem: `\`mermaid ${target}\` lands outside \`${folder}\`, the only folder an image view's source comes from: a generated file no person edits.` };
+    return { file };
+}
+
 /**
  * Reads workspace text. `include(path, fromFile)` resolves an `!include` and
  * returns `{ file, text }` or `{ problem }`; without one, every include is a
- * problem.
+ * problem. `source(path, fromFile)` resolves an image view's `mermaid` file the
+ * same way; without one, only the path's shape is checked and no text is read.
  */
-export function parseWorkspace(source, { file = "workspace.dsl", include } = {}) {
+export function parseWorkspace(source, { file = "workspace.dsl", include, source: sourceResolver } = {}) {
     const problems = [];
     const resolver = include ?? (() => ({ problem: "`!include` cannot be read here: no folder to read it from." }));
     const tokens = expandIncludes(tokenize(source, file, problems), resolver, problems, [file]);
-    const parser = new Parser(tokens, problems);
+    const parser = new Parser(tokens, problems, sourceResolver ?? ((target, from) => generatedSource(target, from, file)));
     parser.workspace();
     parser.leftover();
     parser.finish();
@@ -788,7 +863,18 @@ export function readWorkspace(workspacePath, { root = process.cwd() } = {}) {
         if (!inside(realpathSync(allowed), realpathSync(resolved))) return { problem: `\`!include ${target}\` is a link to a file outside \`${label(allowed)}\`; it was not read.` };
         return { file: label(resolved), text: readFileSync(resolved, "utf8") };
     };
-    return parseWorkspace(readFileSync(absolute, "utf8"), { file: label(absolute), include });
+    const generated = path.join(allowed, "generated");
+    const source = (target, fromFile) => {
+        const shape = generatedSource(target, fromFile, label(absolute));
+        if (shape.problem) return shape;
+        const resolved = path.resolve(root, shape.file);
+        let stat;
+        try { stat = statSync(resolved); } catch { return { problem: `\`mermaid ${target}\`: no such file; the script that generates it has not run.` }; }
+        if (!stat.isFile()) return { problem: `\`mermaid ${target}\` is not a file.` };
+        if (!inside(realpathSync(generated), realpathSync(resolved))) return { problem: `\`mermaid ${target}\` is a link to a file outside \`${label(generated)}\`; it was not read.` };
+        return { file: shape.file, text: readFileSync(resolved, "utf8") };
+    };
+    return parseWorkspace(readFileSync(absolute, "utf8"), { file: label(absolute), include, source });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

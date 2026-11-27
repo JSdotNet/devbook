@@ -95,9 +95,16 @@ These are the only ways a committed index gets rewritten:
 - The `refresh` skill, when a person asks for this branch to be current
 - `build/Update-DevbookIndex.ps1`, on demand, reporting which files moved
 - The nightly workflow on the default branch, opening one pull request when anything moved
-- The pull-request drift workflow, which warns and never fails
+- The pull-request drift workflow, which warns on an index and never fails on one
 
-Each passes `--write` to devbook's checker at `.devbook/_tools/devbook-meta/build.mjs`. Where
+The drift workflow also carries the one check here that fails. Its `c4` job compares a
+committed generated C4 model, levels 3 and 4, against the code with devbook's generators in
+`--check` mode, and writes nothing. Those files are the code's picture and no index, so a pull
+request that moves the code carries them. Level 2 needs the AppHost running, so
+`delivery-schedule`'s local [c4-update](delivery-schedule-entry-points.md#schedule-c4-update)
+routine alone refreshes and compares it.
+
+Each refresh path passes `--write` to devbook's checker at `.devbook/_tools/devbook-meta/build.mjs`. Where
 the [view renderer](#view-renderer) is materialized, each then renders the C4 views into
 `.devbook/arc42/_meta/c4/`, so the renders land in the same pull request as the indexes. A
 flow or a chapter edit is never one of them.
@@ -106,6 +113,7 @@ flow or a chapter edit is never one of them.
 | --- | --- | --- |
 | Nothing writes a derived artifact but `build.mjs --write` and the view renderer, and nothing in devbook passes the flag | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | A drifted index warns a pull request and never fails it | `devbook-meta-drift.yml` | untested |
+| A generated C4 level 3 or 4 the code has moved past fails a pull request, and the job regenerates nothing | `devbook-meta-drift.yml`, its `c4` job | untested |
 | The nightly refresh opens one pull request when the output moved and nothing when it did not | `devbook-meta-nightly.yml` | untested |
 | A stale view render warns `Update-DevbookIndex.ps1 -Check` and never fails it | `Update-DevbookIndex.ps1` | untested |
 
@@ -139,6 +147,14 @@ the scope as a boundary when it is a system or a container, and one arrow per st
 with its number and description and drawn in step order. A response step is its own arrow,
 never folded into the request it answers.
 
+An image view draws a component's code: the Mermaid class diagram the code-level script
+generated under `.devbook/arc42/c4/generated/`, whose text the reader attaches to the view.
+Classes, with their annotation and members, sit in ranks along their relationships, a parent,
+a whole, or a source above what it holds, and each relationship is a straight line between the
+two boxes' borders with its UML end, cardinalities, and label. A line outside the
+`classDiagram` subset the script writes is reported with its file and line and fails the run;
+the view is skipped and keeps its last render.
+
 A deployment view draws one environment, so each environment's view is its own SVG.
 
 - **Leaves:** The infrastructure nodes and the instances of that environment that `include *`, `include <id>`, and `exclude` give it. Under a system scope, `include *` and an included node keep only that system's container instances and the infrastructure, while a leaf named outright is always shown. Each instance is drawn as the element it instantiates, with that element's tags.
@@ -170,7 +186,8 @@ its picture until the workspace reads clean.
 | A dynamic view draws one arrow per step, numbered, in step order, and two steps between one pair get separate label places | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A deployment node holds every leaf and node inside it, sibling nodes never overlap, and no leaf sits in a node that does not hold it, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A relationship to or from a deployment node ends on the node's border and its other end's, crosses no leaf, and is not drawn to what the node holds, in any autolayout direction | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
-| It reads devbook's model and bundles no parser | `render.mjs` | untested |
+| It reads devbook's model and bundles no DSL parser; the only text it parses is an image view's Mermaid source, which devbook's reader does not read | `render.mjs` | untested |
+| An image view draws its generated class diagram byte for byte as its golden file, a parent, whole, or source above what it holds in every direction, with no two classes overlapping; a source outside the subset is a problem with its line | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | A refresh writes one SVG per view key, rewrites only what changed, and deletes the render of a view that no longer exists | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | `--check` reports a missing, stale, or orphaned render, exits `1`, and writes nothing | `render.mjs` | `unit:node:plugins/devbook-derived/tools/c4-render/render.test.mjs` |
 | The vendored `.devbook/_tools/c4-render/` holds `render.mjs` and `README.md` as the plugin ships them, and nothing else | `tools/check-assets.mjs` | untested |
@@ -217,7 +234,7 @@ write.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.28.0 <2.0.0` | Passes `--write` to `.devbook/_tools/devbook-meta/build.mjs`, and loads the [canvas](#canvas)'s and [renderer](#view-renderer)'s modules from that folder; reads `adopted` from devbook's stamp | The checker's CLI, its module exports, the C4 model's shape, and the derived-artifacts envelope | It computes nothing itself. Every byte under `_meta/` and every node the canvas draws is devbook's checker's output. |
+| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.28.0 <2.0.0` | Passes `--write` to `.devbook/_tools/devbook-meta/build.mjs`, and loads the [canvas](#canvas)'s and [renderer](#view-renderer)'s modules from that folder; reads `adopted` and `pluginVersion` from devbook's stamp; the drift workflow's `c4` job runs `components.mjs` and the code-model console with `--check`, from this marketplace's checkout or a clone of it pinned to that version | The checker's CLI, its module exports, the C4 model's shape, the generators' `--root`, `--solution`, `--markers`, and `--check` options, and the derived-artifacts envelope | It computes nothing itself. Every byte under `_meta/` and every node the canvas draws is devbook's checker's output. |
 | Copilot Extension SDK | Conformist | `extensions/devbook-graph/`, registering two canvases | `copilot-extension.json` | The graph canvas is a host capability this block uses and does not define. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, the `rules/` folder its `init` delivers, the `components.derived` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like every other plugin here. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, the `init` and `update` skills, the hook pair, and the rule wrappers `init` writes | Each host's own schemas | Only a materialized wrapper makes the `_meta/` rule fire when either host opens a derived file. |

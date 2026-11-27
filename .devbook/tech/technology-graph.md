@@ -5,8 +5,9 @@ rating: adopted
 index: root
 ```
 
-This is everything this repository builds with. It has no runtime and no dependency manifest: the
-assets are Markdown and JSON, and the platforms below read them. Each technology has one chapter
+This is everything this repository builds with. Its assets are Markdown and JSON, and the
+platforms below read them; its one dependency manifest is the project file of devbook's
+code-model console. Each technology has one chapter
 in its layer file; this file is the map.
 
 **Layers**
@@ -15,14 +16,14 @@ in its layer file; this file is the map.
 | --- | --- |
 | [shared.md](shared.md) | Cross-layer formats and protocols: Markdown, the Model Context Protocol, MCP Apps. |
 | [hosts.md](hosts.md) | What reads or runs an asset: two plugin APIs, the Claude Code CLI, the scheduler, the Copilot extension SDK. |
-| [tooling.md](tooling.md) | What the executable parts run on: Node, PowerShell; and the Aspire CLI a shipped procedure drives. |
+| [tooling.md](tooling.md) | What the executable parts run on: Node, PowerShell, the .NET SDK and Roslyn; and the Aspire CLI a shipped procedure drives. |
 
 Three layers is the whole stack. A fourth appears only when a technology belongs to none of these,
 and the change that adds its file registers it in this table.
 
 **Graph**
 
-Nodes are technologies, edges are `depends-on`, shading is `status`. Five edges is the honest
+Nodes are technologies, edges are `depends-on`, shading is `status`. Six edges is the honest
 count: almost everything here is read by a host rather than built on another technology.
 
 ```mermaid
@@ -43,22 +44,25 @@ graph LR
     node[Node]
     pwsh[PowerShell]
     aspireCli[Aspire CLI]
+    dotnet[.NET SDK]
+    roslyn[Roslyn]
   end
   mcpApps --> mcp
   claudeCli --> claudeApi
   scheduler --> claudeApi
   copilotSdk --> copilotApi
   pwsh --> node
+  roslyn --> dotnet
   classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
   classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
   class markdown,mcp,claudeApi,copilotApi,node,pwsh adopted;
-  class mcpApps,claudeCli,copilotSdk,scheduler,aspireCli trial;
+  class mcpApps,claudeCli,copilotSdk,scheduler,aspireCli,dotnet,roslyn trial;
 ```
 
 **How to Read It**
 
 `status` rates a technology in this repository, on the radar ladder `candidate`, `trial`,
-`adopted`, `hold`, `retired`. The five `trial` entries share one reason: nothing here has exercised
+`adopted`, `hold`, `retired`. The seven `trial` entries share one reason: nothing here has exercised
 them yet, and each says what a first real run would test.
 
 To add a technology:

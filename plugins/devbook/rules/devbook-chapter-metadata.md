@@ -38,7 +38,7 @@ already treat as an addressable unit:
 - `.devbook/ai/<nn>-<part>.md` and `.devbook/ai/concepts.md` — each `## <Chapter Name>`
   chapter (one graph node per chapter).
 
-- `domain/` `context-map.md`, `model.md`, its split files,
+- `domain/` `model.md`, its split files,
   `dependencies.md`, and any additional page a context carries, `tech/`
   `technology-graph.md`, and `ai/` `adoption-map.md` are strategic/structural
   artifacts; their `##` sections do **not** carry per-chapter metadata blocks,
@@ -123,7 +123,7 @@ In addition to per-chapter blocks, every file in `domain/`, `arc42/`,
 `tech/`, `design/`, and `ai/` carries one file-level metadata block
 describing the document as a whole. This gives the tooling a
 relations rollup for the file itself, distinct from any individual chapter
-inside it — useful for files such as `domain/` `context-map.md`, `model.md`,
+inside it — useful for files such as `domain/` `model.md`
 and `dependencies.md`, whose `##` sections don't carry their own per-chapter
 blocks.
 
@@ -148,9 +148,8 @@ optional; `rating` required in `tech/` and `ai/`, exactly as above) and the
 same omit-when-empty rule. A file-level `rating` rates the document as a whole
 and is set independently of its chapters' ratings. Folder-specific fields defined for chapters
 (`depends-on`, `aliases`, `feature-flag`, `setting`, `role`, `key`, `default`,
-`scope`, `deployment`, `version`, `alternatives`, and `ai/`'s `stage`, `substage`, `layer`, `feeds`, and `evidence`) are chapter-scoped and are not used at file level — a file's
-overall relationships are expressed through `related` only. The one exception is
-`deployment` on a domain `context.md`, which is the bounded context itself.
+`scope`, `version`, `alternatives`, and `ai/`'s `stage`, `substage`, `layer`, `feeds`, and `evidence`) are chapter-scoped and are not used at file level — a file's
+overall relationships are expressed through `related` only.
 
 In `arc42/`, the file's top-level chapter heading (e.g. `# 01. Introduction
 and Goals`) already carries a chapter metadata block as described above; for
@@ -243,7 +242,7 @@ error. A delta may name a chapter its own change adds, by the path it lands at.
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `domain/` | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `scenario`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies`, or an additional page's own filename |
+  | `domain/` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `scenario`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `scenarios`, `model`, `dependencies`, or an additional page's own filename |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format`, `plugin`, `skill`, `agent` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
   | `design/` | `requirement` | none |
@@ -412,8 +411,7 @@ its directory. A chapter's position is already its position in the document.
 
 Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
 `feature-flag` and `setting` on domain feature chapters, `key`/`default`/`scope`
-on domain switch chapters, `role` on domain actor chapters, `deployment` on
-domain `bounded-context` chapters and on a domain `context.md`,
+on domain switch chapters, `role` on domain actor chapters,
 `version`/`alternatives` on tech chapters, `stage`, `substage`, `layer`, `feeds`, and
 `evidence` on ai chapters and never on an ai file) are
 documented in that folder's
@@ -762,7 +760,7 @@ Per directory, `_meta/index.json` is generated like this:
 
    | Directory | Root document by convention |
    |---|---|
-   | `domain/` | `context-map.md` |
+   | `domain/` | none — its bounded contexts sort by name |
    | `.devbook/domain/<context>/` | `context.md` |
    | `tech/` | `technology-graph.md` |
    | `design/` | `README.md` |

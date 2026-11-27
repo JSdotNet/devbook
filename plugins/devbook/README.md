@@ -126,6 +126,20 @@ check, never the writer.
 **Trigger keywords:** `update technology graph`, `refresh tech/`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
+### Skill: `c4-update`
+
+Regenerates the C4 container, component, and code levels of `arc42/`'s workspace from code: it
+starts its own isolated instance of the Aspire AppHost, captures `aspire describe --format
+mermaid`, stops that instance, and runs the two `devbook-c4` generators into
+`.devbook/arc42/c4/generated/`. The code level comes from `tools/devbook-c4/code-model/`, a .NET
+console that loads a solution with Roslyn and writes one Mermaid class diagram per component of
+its aggregate roots, entities, and value objects, with the `image` views that show them. It
+lists what has no mapping, no description, or no `domain/` alias for a person, runs the check,
+and lands nothing: the `arc42/` flow or a schedule carries the files.
+
+**Trigger keywords:** `refresh the C4 model from code`, `update containers.dsl`,
+`update components.dsl`, `regenerate the code diagrams`, `generated C4 files are stale`
+
 ### Skill: `prose-check`
 
 Reads every adopted folder and reports the prose that does not earn its lines
@@ -438,6 +452,25 @@ The inventory scripts emit deterministic JSON from repository manifests. Use the
 as the source of truth for package-derived `tech/` facts; use repository analysis
 for technologies that do not appear in package manifests.
 
+### Tooling: `devbook-c4`
+
+```bash
+node tools/devbook-c4/containers.mjs --root . --describe describe.mmd [--check]
+node tools/devbook-c4/components.mjs --root . [--check]
+```
+
+Two generators `c4-update` runs from the plugin itself; neither is materialized into a
+repository. `devbook-derived`'s drift workflow runs `components.mjs` and the code model with
+`--check` on every pull request, fetched from this marketplace at the stamped version. `containers.mjs` reads the Mermaid flowchart `aspire describe --format mermaid`
+prints, and the hand-written `.devbook/arc42/c4/aspire-map.json`, which drops a resource or
+names the `<system>.<container>` identifier the rest of the workspace knows its container by
+(resources sharing one fold into it), and writes
+`containers.dsl`. `components.mjs` reads every `.csproj` with no build and each building
+block's `c4` and `code`, and writes `components.dsl`: a component per block holding a project,
+a relationship per `ProjectReference` between two blocks. Each file reopens its parents with
+`!element`, so `workspace.dsl` includes it after them. `--check` writes nothing and exits `1`
+when the committed file differs. Each reports to stderr what has no mapping or description.
+
 ### Tooling: `scenarios`
 
 ```bash
@@ -529,7 +562,11 @@ outside `tech/` and `ai/`, the six `approved-*` and `accepted-*` fields, `sync`,
 the state from the default branch's Markdown first; the seventeenth is `038-journey-specs-own-runner`,
 which moves the scenario runner a repository's specs import out of `.devbook/_tools/scenarios/`
 into the repository, its own copy first, and points every import at it, now that devbook no
-longer ships one.
+longer ships one; the eighteenth is `039-context-map-joins-c4`, which moves `domain/`'s
+context map into the C4 workspace — each context's deployment and relationships into
+`arc42/workspace.dsl`, its published languages and strategic rules into sections of
+`arc42/08-crosscutting-concepts.md` — sets `c4` on each `context.md`, rewrites every
+reference to the map, and deletes it.
 `001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
 `004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
 shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
@@ -675,7 +712,10 @@ move to the host that runs the workflow or are dropped, and a rating becomes `ra
 is an error naming `038-workflow-state-leaves-the-chapter`, which deletes or renames it. The
 `annotation` fence retires with them: a review note is a comment thread in the host, a fence
 left in a chapter is an error the same migration deletes, open or resolved, and
-`annotations.json` is no longer written.
+`annotations.json` is no longer written. 39 drops `domain/`'s `context-map.md` for the C4
+workspace: the `context-map` file type, the `bounded-context` chapter type, and `deployment`
+are errors naming `039-context-map-joins-c4`, which moves them, and a `context.md` names
+the element that hosts its context in `c4`.
 
 ## Folder structure
 

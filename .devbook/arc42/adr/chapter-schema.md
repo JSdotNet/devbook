@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-10-29
+date: 2026-11-26
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 c4: ["marketplace.devbook.chapter", "marketplace.devbook.meta-block", "marketplace.devbook.devbook-folder"]
 c4-touches: ["marketplace.devbook.chapter-review"]
@@ -9,7 +9,9 @@ c4-touches: ["marketplace.devbook.chapter-review"]
 
 A devbook is five folders of Markdown chapters under one parent — `.devbook/arc42`,
 `.devbook/domain`, `.devbook/tech`, `.devbook/design`, `.devbook/ai` — and nowhere else, each
-addressable heading carrying a fenced `meta` block. A branch's devbook states only what is true
+addressable heading carrying a fenced `meta` block. The folders rank `arc42`, `design`, `tech`,
+`domain`, `ai`: when two hold the same text, the earlier keeps it and the later links to it,
+with the exceptions under [Folder Priority](#folder-priority). A branch's devbook states only what is true
 of that branch's code. Workflow state is not content. It exists for a change proposal, a
 decision record under discussion, and a debt record, and the tool that runs the workflow keeps
 it outside git. An ordinary chapter carries no state, and once merged it is in force. A `tech/`
@@ -40,6 +42,48 @@ merges the deltas one heading level up and moves the folder to `archive/`. An op
 run ahead of the code on any branch, and it is what lets `.devbook/` stay true. The path is
 OpenSpec's, because its CLI resolves `changes/` nowhere
 else, per [the devbook-openspec building block](../building-blocks/devbook-openspec.md#constraints).
+
+## Folder Priority
+
+```meta
+related: [".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/building-blocks/devbook.md#devbook-folder", ".devbook/arc42/adr/c4-model.md", ".devbook/arc42/12-glossary.md"]
+```
+
+**The choice.** Each folder answers its own question. When two folders hold the same text,
+the earlier folder in this rank keeps it and the later one links to it.
+
+| Rank | Folder | Its question |
+| --- | --- | --- |
+| 1 | `arc42/` | How is the system built and run, why this choice, and what is known to be wrong? |
+| 2 | `design/` | How does it look and behave for a person? |
+| 3 | `tech/` | What does it build on, at what version and rating? |
+| 4 | `domain/` | What does the business mean, and what must hold? |
+| 5 | `ai/` | How does the team work with AI? |
+
+**Three exceptions** hold whatever the rank, and every other folder links to them:
+
+- **A business rule** stays in `domain/`: a `### Requirement:` or `### Invariant:` chapter.
+- **A term** its ubiquitous language defines stays in `domain/`. The `arc42/` glossary defines
+  only words no bounded context owns, and links to the rest.
+- **How AI is used** stays in `ai/`: the practice, the stage, what a tool is used for, and the
+  AI vocabulary. `tech/` keeps only an AI tool's version and rating.
+
+**Bounded contexts sit inside building blocks.** `arc42/` leads how bounded contexts are
+grouped. Each context sits inside one building block, a C4 element, and names that element in
+`c4`. `domain/context-map.md` is dropped in favour of the C4 workspace.
+
+**An architecture choice is a decision record; a package choice is a `tech/` chapter.** An
+architecture choice says what kind of thing fills a role: a storage engine, a protocol, a
+hosting model, a UI framework. Its record names no version. A package choice says which
+package fills a role a record already settled. Its `tech/` chapter gives one **Why** sentence
+and a `related` link to that record. The test is whether a routine dependency update could
+reverse the choice inside one building block, without migrating data or changing a contract
+another block relies on. If it could, the choice is a package choice. Versions always live in
+`tech/`.
+
+The folder rules state it, and contract 39 drops the map: a context's relationships, how it
+ships, and its subdomain class are elements, relationships, and tags of the workspace, and
+`039-context-map-joins-c4` moves an existing map there and into chapter 8.
 
 ## Branch-true devbook
 
@@ -220,6 +264,16 @@ store for this state. The changes:
 
 ```meta
 ```
+
+**The folders have one priority.** Each folder answers its own question, yet the same text
+still lands in two of them: a boundary, a reason for a choice, a term. Without a rank, every
+repository argues each overlap again and keeps both copies, which then drift apart. The rank
+is a decision and not a rule edit, because reversing it means moving text between folders in
+every adopting repository. The exceptions follow what the text carries. A business rule carries
+the test that proves it, a term is the model's own language, and how AI is used is what `ai/`
+exists to record. A context map beside the C4 workspace drew the same boundaries twice, and the
+workspace already holds the elements and their relationships. Versions live in `tech/` alone,
+so an upgrade changes one chapter and never reopens a decision record.
 
 **A branch's devbook is true of its code.** A rung is about a review, not about the content,
 so it changes on a different schedule from the content. Committed, it made a branch ahead of or
@@ -599,6 +653,10 @@ left.
 ```meta
 ```
 
+- One question per folder with no priority: an overlap the questions do not settle, such as a
+  boundary both `arc42/` and `domain/` describe, is argued again each time and kept in both.
+- A decision record as the only home for a reason: a package choice would open a record that a
+  routine dependency update reverses, and the record would name a version that goes stale.
 - Workflow state committed in the `meta` block, as it stood until 2026-10-29.
 - The tool's state kept per chapter and per branch, keyed by repository, branch, and chapter
   address: every ordinary chapter would carry state, and a branch would need an overlay.
@@ -665,6 +723,8 @@ left.
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-26 | Contract 39 drops `domain/context-map.md`, the `bounded-context` chapter type, and `deployment` with its pairing check. A context lives in the C4 element that hosts it — a container when it ships on its own, a component of its host when it runs as a module — and `context.md` names it in `c4`. A relationship between contexts opens its description with the DDD pattern, the subdomain class is a tag on the element, and published languages and strategic rules are sections of chapter 8. `domain/` has no root document. `039-context-map-joins-c4` moves an existing map. | The map drew the boundaries the workspace already draws, and kept `deployment` equal to `context.md` by a check of its own. |
+| 2026-11-26 | The folders rank `arc42`, `design`, `tech`, `domain`, `ai`, and on overlap the earlier keeps the text. `domain/` keeps business rules and terms, and `ai/` how AI is used, whatever the rank. A bounded context sits inside one building block and names it in `c4`; `context-map.md` is dropped for the C4 workspace. An architecture choice is a decision record with no version; a package choice is a `tech/` chapter linking to it. Decided, not yet built: the rule edits and the context map's migration follow. | Reversing the priority means moving text between folders in every adopting repository. |
 | 2026-11-03 | A `delta: modified` chapter's lead is addressable: prose directly under its heading replaces the text between the target's `meta` block and its first subsection, a file's intro under `#` included, and keeps the block. A `meta` block there is an error — fields go under `MODIFIED` — and a removed chapter still holds no text. No contract bump and no migration: only deltas that were refused before merge differently. | A change could not rewrite a paragraph in a file's intro, and left it to be fixed by hand after the merge. |
 | 2026-11-03 | A split scenarios file may have subpages, `scenarios.<name>.<page>.md`, one level deep, each a scenarios file of its own: its journeys are parsed, signed, coverage-checked, and run like any other, addressed `<subpage>#<journey>`, with runs in `scenarios.<name>.<page>/<journey>/`. No contract change: a repository without subpages reads as before. | The same subject walked under a second configuration, such as another profile, reads as a variant of its split rather than a sibling subject, and the scenario tools refused the file shape the checker already accepted. |
 | 2026-11-02 | `delivery-schedule` builds *Schedules and sync*. `schedule-devbook-sweep` with its scripts, report, and `devbook-sweep-contract.md`, the `devbook-pull-sweep`, `devbook-push-sweep`, and `morning-brief` entries, `schedule-morning-brief`, `schedule-week-starter`, `schedule-weekly-cost-analysis`, and `schedule-review` are removed. `devbook-verify` verifies every unit with no direction. `002-retired-schedules` names the retired entries, and `update` drops them from a selection and disables their routines without failing. | Backlog's `backlog-tools` runs the sweeps and the cost analysis now, after the `backlog-morning-brief` routine was deleted. |

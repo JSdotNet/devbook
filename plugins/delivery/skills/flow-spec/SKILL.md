@@ -37,7 +37,7 @@ The folder qualifies `phase-drafting`, so each folder names its own agent, model
 | Folder | `phases` entry | Drafts |
 |---|---|---|
 | `arc42/` | `phase-drafting:arc42` | Architecture chapters, decision and debt records |
-| `domain/` | `phase-drafting:domain` | The context map and bounded contexts |
+| `domain/` | `phase-drafting:domain` | The bounded contexts |
 | `tech/` | `phase-drafting:tech` | The technology graph and its ratings |
 | `design/` | `phase-drafting:design` | Principles, tokens, component guidelines |
 | `ai/` | `phase-drafting:ai` | The AI adoption record |

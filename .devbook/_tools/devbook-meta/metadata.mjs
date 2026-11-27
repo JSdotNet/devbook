@@ -162,11 +162,6 @@ export function isRepoFolder(entry) {
 const TYPE_BY_FOLDER = {
     domain: {
         chapter: [
-            // `context-map.md`'s own sections: one per bounded context. The
-            // strategic view names contexts, so a chapter elsewhere can address
-            // one — `.devbook/domain/context-map.md#order-management` — the same way it
-            // addresses an aggregate.
-            "bounded-context",
             "aggregate",
             "entity",
             "value-object",
@@ -218,7 +213,6 @@ const TYPE_BY_FOLDER = {
             "setting",
         ],
         file: [
-            "context-map",
             "context",
             "domain",
             "actors",
@@ -341,10 +335,6 @@ export const CHANGE_CATEGORIES = ["feature", "behaviour-change", "defect"];
 // A change's name as its folder spells it, and so as `change` spells it in a
 // delta's header.
 const CHANGE_NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-// How a bounded context ships: as its own deployable `service`, or as a
-// `module` inside a modular monolith that hosts other contexts beside it.
-const CONTEXT_DEPLOYMENTS = ["service", "module"];
 
 // `tests` links a chapter or file to the test cases that assert what it claims.
 // Entries are `<level>:<runner>:<selector>` — coarse to fine, so a consumer can
@@ -680,7 +670,19 @@ const REMOVED_FIELDS = {
     effort: movedToTooling("an estimate belongs to a change proposal's tasks and the work item each becomes"),
     roadmap: movedToTooling("dropped — Backlog's goals and roadmap plans group the work"),
     change: movedToTooling("dropped — git history and the archived change folder record the merge"),
+    // How a context ships is the C4 workspace's since contract 39: the element
+    // `context.md` names in `c4` is a container, or a component of one.
+    deployment: joinsC4("how a context ships is the C4 element `context.md` names in `c4` — a container of its own, or a component inside the one that hosts it"),
 };
+
+/** The message for what contract 39 moved from the context map into the C4 workspace. */
+function joinsC4(where) {
+    return `${where}. Run the \`039-context-map-joins-c4\` migration, which moves it into \`.devbook/arc42/workspace.dsl\`.`;
+}
+
+// `domain/`'s context map and its per-context sections, retired by contract 39
+// for the C4 workspace. Named only to point at the migration.
+const RETIRED_CONTEXT_MAP_TYPES = { file: "context-map", chapter: "bounded-context" };
 
 /** The message for a field contract 38 moved out of the chapter. */
 function movedToTooling(where) {
@@ -702,7 +704,6 @@ const BUILDING_BLOCK_FILE = /^\.devbook\/arc42\/building-blocks\/[^/]+\.md$/;
 const FOLDER_EXTRA_FIELDS = {
     domain: [
         "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
-        "deployment",
         // The playthrough a feature's page shows: a demo walkthrough that plays
         // a whole journey, resolved by demo.mjs. Contract 36.
         "playthrough",
@@ -898,7 +899,6 @@ const CHAPTER_ONLY_EXTRA_FIELDS = [
     "key",
     "default",
     "scope",
-    "deployment",
     "version",
     "alternatives",
     "stage",
@@ -950,28 +950,12 @@ const FIELD_TYPE_SCOPE = {
         key: ["feature-flag", "setting"],
         default: ["feature-flag", "setting"],
         scope: ["setting"],
-        // How the context ships is the context's own: `context-map.md`'s
-        // `bounded-context` chapter stands for it on the map, and the
-        // context's `context.md` carries it on its file-level block (see
-        // `FILE_FIELD_TYPE_SCOPE`). The graph build holds the two equal.
-        deployment: ["bounded-context"],
     },
     arc42: {},
     tech: {},
     design: {},
     ai: {},
     [CHANGES_FOLDER]: {},
-};
-
-// The exceptions to `CHAPTER_ONLY_EXTRA_FIELDS`: a chapter-only field a file
-// may carry after all, on the file-level block of the `type` values named.
-// `context.md` is the one document that *is* its subject — the bounded context
-// as a whole — so how the context ships describes that document, not a chapter
-// missing from it.
-const FILE_FIELD_TYPE_SCOPE = {
-    domain: {
-        deployment: ["context"],
-    },
 };
 
 // ---------------------------------------------------------------------------
@@ -1340,6 +1324,13 @@ export function typeIssues(folder, blockLevel, meta, fileBase = null) {
         issues.push({
             severity: "error",
             message: `has type "${RETIRED_FLOW_TYPE}", a flow page — retired by contract 37: each diagram opens the chapter of what it draws. Run the \`037-flows-in-their-chapters\` migration.`,
+        });
+        return issues;
+    }
+    if (folder === "domain" && declared === RETIRED_CONTEXT_MAP_TYPES[blockLevel]) {
+        issues.push({
+            severity: "error",
+            message: `has type "${declared}", ${blockLevel === "file" ? "the context map" : "a context map section"} — retired by contract 39: contexts, their relationships, and how each ships are elements of the C4 workspace, and each \`context.md\` names its element in \`c4\`. Run the \`039-context-map-joins-c4\` migration.`,
         });
         return issues;
     }
@@ -1801,10 +1792,8 @@ export function fieldScopeIssues(folder, blockLevel, meta) {
     if (!folderFields) return issues;
 
     if (blockLevel === "file") {
-        const fileType = resolveType(folder, meta);
         for (const field of CHAPTER_ONLY_EXTRA_FIELDS) {
             if (!folderFields.includes(field) || meta[field] == null) continue;
-            if (FILE_FIELD_TYPE_SCOPE[folder]?.[field]?.includes(fileType)) continue;
             issues.push({
                 severity: "error",
                 message:
@@ -1935,12 +1924,9 @@ export function domainFileName(relPath) {
 // The structural documents: files whose `##` sections are sections, not
 // chapters, and carry no block of their own — the file-level block is the only
 // metadata they need. Mirrors the folder instruction files that say so; change
-// one and change the other in the same edit. `context-map.md` is on the list
-// although a `bounded-context` section there takes a block: that section is
-// optional, so a section without one is structural, and one with one is still
-// validated like any chapter.
+// one and change the other in the same edit. `domain/` has no root document:
+// its context map joined the C4 workspace in contract 39.
 const STRUCTURAL_ROOT_FILES = {
-    domain: "context-map.md",
     tech: "technology-graph.md",
     ai: "adoption-map.md",
 };
@@ -2219,16 +2205,6 @@ export function validateDocument(relPath, markdown) {
                         message: `${label} has \`scope\` "${scope}", expected one of: ${SETTING_SCOPES.join(", ")}.`,
                     });
                 }
-            }
-        }
-
-        if (kind === "domain") {
-            const deployment = chapter.meta.deployment;
-            if (deployment != null && !CONTEXT_DEPLOYMENTS.includes(deployment)) {
-                issues.push({
-                    severity: "error",
-                    message: `${label} has \`deployment\` "${deployment}", expected one of: ${CONTEXT_DEPLOYMENTS.join(", ")}.`,
-                });
             }
         }
 

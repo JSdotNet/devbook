@@ -1,12 +1,12 @@
 # Releases
 
 ```meta
-date: 2026-11-26
+date: 2026-11-27
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 c4: ["marketplace"]
 ```
 
-Every plugin carries the same version — `1.37.1` — in both manifests and the marketplace
+Every plugin carries the same version — `1.38.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -81,6 +81,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change | Why |
 | --- | --- | --- |
+| 2026-11-27 | Every plugin is `1.38.0`. Contract 39 drops `.devbook/domain/context-map.md`: the C4 workspace holds which contexts there are, how each ships, and how they relate, and `039-context-map-joins-c4` moves a map into it. `devbook` generates the C4 container, component, and code levels from code through `devbook:c4-update`, and its writing rule, `prose-check`, and `chapter-review` state the folder priority. `delivery-schedule` adds the `c4-update` schedule, and `devbook-derived`'s drift workflow fails on a generated C4 level that drifted. A contract bump with its migration is a minor release. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-26 | Every plugin is `1.37.1`. `delivery-surface-backlog` authenticates with the "Backlog delivery" grant: it reads `mcpServer.grants.delivery` from the app's `settings.json`, asks the app's token broker pipe for the grant's token, keeps it until a minute before its `expiresAt`, and mints it once more on a 401 or 403; `BACKLOG_MCP_TOKEN` is used only where no grant is recorded. Backlog retired the shared `mcpServer.token` this plugin read, so every connect was refused. No contract moves and no migration is owed: a patch. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-12 | Every plugin is `1.37.0`. `devbook` stops shipping the scenario runner, per [the journey specs record](journey-specs.md): `.devbook/_tools/scenarios/` loses `setup.ts`, and `setup.mjs` keeps only the effective configuration the reporter records. A spec keeps its header, one test per part titled as its heading, and `shot()`, and the repository groups the parts and applies the setup itself. `038-journey-specs-own-runner` moves the runner a repository's specs import into the repository and points each import at it, because reconcile replaces the folder without it. No contract moves; a migration ships, so this is a minor release. `delivery`'s `phase-implement` names the suite's fixtures where it named the setup hook. The other plugins move unchanged. | Every plugin moves together. |
 | 2026-11-11 | Every plugin is `1.36.0`. `delivery` reaches Personal Validation with a draft pull request: the handback commits, pushes, and opens the draft — or pushes to the one a revise round already has — and lists it first in the stage's `links`; `create-pr` marks that draft ready for review, and a decline closes it. The gate guards *ready for review*, not the pull request, per [the flow engine](flow-engine.md). A repository's `create-pr` approval gate that says nothing is pushed until asked no longer describes the run, and is the repository's to reword. No key changes, so no contract moves and no migration is owed. The other plugins move unchanged. | Every plugin moves together. |

@@ -7,15 +7,46 @@ description: How a devbook chapter reads. Plain sentences a new team member unde
 
 This file exceeds the 60-line body budget on purpose: it is the whole standard
 `prose-check` reports against, and a convention stated by half reports the wrong sentence.
+It also states the folder priority every folder rule points at, so the rank lives in one file.
 
 A change's proposal and deltas follow this rule too, because a delta becomes a chapter.
 
 Write a chapter for a person first: a new team member reading it without context. An agent
 reads the same text, and plain sentences cost it less than packed ones.
 
-This rule covers the prose. The folder's own rule says which sections a chapter has, and
-`devbook-chapter-metadata.md` covers the `meta` block. Skills, agents, and rules use a terser
-style meant for a model. Never copy that style into a chapter.
+This rule covers the prose and which folder keeps a fact. The folder's own rule says which
+sections a chapter has, and `devbook-chapter-metadata.md` covers the `meta` block. Skills,
+agents, and rules use a terser style meant for a model. Never copy that style into a chapter.
+
+## One folder keeps a fact
+
+Each folder answers its own question. When two folders hold the same text, the earlier folder
+in this rank keeps it and the later one links to it.
+
+| Rank | Folder | Its question |
+| --- | --- | --- |
+| 1 | `arc42/` | How is the system built and run, why this choice, and what is known to be wrong? |
+| 2 | `design/` | How does it look and behave for a person? |
+| 3 | `tech/` | What does it build on, at what version and rating? |
+| 4 | `domain/` | What does the business mean, and what must hold? |
+| 5 | `ai/` | How does the team work with AI? |
+
+Three exceptions hold whatever the rank, and every other folder links to them:
+
+- **A business rule** stays in `domain/`: a `### Requirement:` or `### Invariant:` chapter.
+- **A term** its ubiquitous language defines stays in `domain/`. The `arc42/` glossary defines
+  only words no bounded context owns, and links to the rest.
+- **How AI is used** stays in `ai/`: the practice, the stage, what a tool is used for, and the
+  AI vocabulary. `tech/` keeps only an AI tool's version and rating.
+
+**Why:** devbook's [Folder Priority](https://github.com/JSdotNet/devbook/blob/main/.devbook/arc42/adr/chapter-schema.md#folder-priority)
+decision.
+
+### Loading a folder
+
+No devbook folder is baseline context. Load only the chapters a task needs, then walk their
+`related` and `depends-on` links. Never load a folder whole. The folder's own rule says which
+tasks need it.
 
 ## The goal
 

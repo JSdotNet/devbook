@@ -49,7 +49,8 @@ standard, and a class stated by half reports the wrong sentence.
    the tree, and the terms the glossary (arc42 chapter 12) and each ubiquitous language section define.
 
 3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
-   else; a `related` edge is followed only to test a `second-definition`.
+   else; a `related` edge, or a chapter in another adopted folder on the same subject, is read only
+   to test a `second-definition`.
 
 4. **Record a finding per hit**: chapter address (`<path>#<slug>`), line, class, the
    sentence, and a one-line suggestion.
@@ -57,7 +58,7 @@ standard, and a class stated by half reports the wrong sentence.
    | Class | Hit when | Suggestion |
    |---|---|---|
    | `stale-name` | Prose names a skill, plugin, path, command, or flow the tree does not have | The current name, or "gone — cut the sentence" |
-   | `second-definition` | A term the folder's ubiquitous language section defines is defined again elsewhere in different words | Point at the definition, cut the second |
+   | `second-definition` | A term the ubiquitous language defines is defined again elsewhere in different words, or one folder repeats text another folder holds | Keep it where "One folder keeps a fact" in `devbook-writing.md` puts it: the earlier folder in its rank, except a business rule or a term in `domain/` and how AI is used in `ai/`; link there, cut the copy |
    | `hedge` | "it is worth noting", "arguably", "generally", "in most cases", "somewhat" in a sentence that states a fact, a rule, or an invariant | The sentence without the hedge |
    | `restated-heading` | A section's first sentence paraphrases its heading | Cut it; start at the second sentence |
    | `repeated-body` | A closing paragraph repeats what the section already said | Cut it |

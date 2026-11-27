@@ -46,7 +46,7 @@ content.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Twelve skills: six own the convention in a repository, three cross the boundary between a
+Thirteen skills: seven own the convention in a repository, three cross the boundary between a
 chapter and the code implementing it, each over seven chapter kinds and the demo a page
 carries, and three carry a journey from its text to its run. The block also has the rules
 `init` delivers, the tools it materializes, one workflow, one hook, three contracts other
@@ -54,7 +54,7 @@ plugins follow or answer, and the one file a repository may author to change wha
 accepts. None of the skills is a flow: this block ships the shape and the check, and the engine
 owns the procedure for carrying a change.
 
-The schedules for `validate`, `tech-update`, and `verify-change` reach them through `delivery-schedule`'s own wrappers.
+The schedules for `validate`, `tech-update`, `c4-update`, and `verify-change` reach them through `delivery-schedule`'s own wrappers.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -62,6 +62,7 @@ The schedules for `validate`, `tech-update`, and `verify-change` reach them thro
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `validate` | skill | A person, or the daily `devbook-validate` schedule |
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule |
+| `c4-update` | skill | A person, or the weekly `c4-update` schedule, where `arc42/` is adopted |
 | `prose-check` | skill | A person, or `delivery-schedule`'s `schedule-prose-check` wrapper |
 | `chapter-review` | skill | A person, on one chapter or one change |
 | `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted, and delivery's [phases](delivery-phases.md#phase-implement); described under [Scenario Tools](#scenario-tools) |
@@ -75,6 +76,8 @@ The schedules for `validate`, `tech-update`, and `verify-change` reach them thro
 | `chapter-fingerprint.vector.json` | shared test vector | spec-manager and Backlog, which must agree with it |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what one verify pass covers; `schedule-devbook-verify`, listing units from `--json`; Backlog's sync sweeps, selecting groups from `--groups --json` |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
+| `devbook-c4/containers.mjs`, `devbook-c4/components.mjs` | generator CLIs, never materialized | `c4-update`, from the plugin itself; a person with `--check`; `components.mjs --check` also in `devbook-derived`'s drift workflow |
+| `devbook-c4/code-model/` | code-level generator, .NET console, never materialized | `c4-update`, run from the plugin with `dotnet run`, and with `--check` in `devbook-derived`'s drift workflow; described under [Code Model](#code-model) |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every journey against the spec that implements it |
 | `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
 | `scenarios/demo-sync.mjs` | demo sync CLI | `prototype` when it revises a demo, `scenario-write` after it changes a journey a walkthrough links, and migration `030-linked-walkthroughs`, through the frozen copy `032-scenarios-md` keeps, for the walkthroughs it links |
@@ -156,6 +159,27 @@ related: [".devbook/arc42/building-blocks/devbook.md#tech-inventory", ".devbook/
   path. It runs the check.
 - **Never:** runs the writer.
 
+### c4-update
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#c4-generators", ".devbook/arc42/building-blocks/devbook.md#code-model", ".devbook/arc42/adr/c4-model.md"]
+```
+
+- **Does:** starts its own isolated instance of the repository's Aspire AppHost, captures
+  `aspire describe --format mermaid`, stops that instance, and runs the
+  [C4 Generators](#c4-generators) into `.devbook/arc42/c4/generated/`, then the
+  [Code Model](#code-model) console for the code level. It lists each resource with no mapping,
+  project or aggregate root in no block, element with no description, and marked type no
+  `domain/` chapter aliases, then runs the check.
+- **Never:** lands the files, invents a mapping, a description, or an alias, or touches an
+  AppHost instance it did not start.
+- **Why:** like `tech-update`, it produces evidence and leaves the change to the folder's own
+  write path, so a regenerated level is reviewed like any other chapter change.
+- **Carried by:** the `arc42/` flow, or `delivery-schedule`'s
+  [schedule-c4-update](delivery-schedule-entry-points.md#schedule-c4-update), the one run that
+  refreshes level 2. `devbook-derived`'s drift workflow compares levels 3 and 4 on every pull
+  request.
+
 ### prose-check
 
 ```meta
@@ -206,11 +230,11 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbo
 
 ![devbook's components](c4:devbook)
 
-Three aggregates (the chapter, the folder, and the graph derived from a corpus of them), seven
+Three aggregates (the chapter, the folder, and the graph derived from a corpus of them), eight
 domain services, and the two value objects the aggregates share. Two of the services, the Unit
 Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s. The
 Procedure, its Goal, and the Demo Template are
-[devbook-procedures](devbook-procedures.md#structure)'s. The five services left are below. The
+[devbook-procedures](devbook-procedures.md#structure)'s. The six services left are below. The
 chapter is the consistency boundary everything else is expressed in terms of.
 
 ### Model
@@ -339,8 +363,8 @@ A chapter is not a file. One file holds many, and the file itself is a chapter t
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `deployment` sits on a `bounded-context` chapter or a `context.md` file-level block and is `service` or `module`; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| A context's `deployment` is stated alike on its `bounded-context` chapter and on the `context.md` that chapter's `related` names, or on neither | build | `unit:node:plugins/devbook/tools/devbook-meta/deployment-pairing.test.mjs` |
+| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| A `context-map` file, a `bounded-context` chapter, and a `deployment` field are errors naming `039-context-map-joins-c4`: a context's element, relationships, and subdomain class are the C4 workspace's | parse | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | No chapter carries an `annotation` fence: a leftover, open or resolved, is an error naming `038-workflow-state-leaves-the-chapter`, and one quoted inside another fence is that fence's content | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | `ai/`'s `stage` and `layer` are a chapter's own, from the delivery path's seven words and the three layer words; each `substage` sits under a listed stage, each `feeds` entry carries a label and resolves, `evidence` is one of four words, and a `trial` or `candidate` chapter says what moves it up; a file-level placement field is an error and a usage with neither `stage` nor `layer` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | An `ai/` usage names the technology it rests on in `depends-on`; a `related` entry into `tech/` is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs` |
@@ -408,7 +432,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook
 One of the five folders the convention governs, and the unit of adoption: a repository takes
 a subset, and the tooling emits scopes for the folders that exist. The folder lives at
 `.devbook/<kind>/` and owns its derived `_meta/`, written beside its chapters. The reading order
-of its files comes from each folder's convention rather than from a stored field.
+of its files comes from each folder's convention rather than from a stored field. When two
+folders hold the same text, the earlier of `arc42`, `design`, `tech`, `domain`, `ai` keeps it,
+per [the folder priority](../adr/chapter-schema.md#folder-priority).
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -613,23 +639,28 @@ Node, into:
 - its elements, each with its hierarchical identifier, kind, name, description, technology,
   tags, parent, group, and deployment environment
 - its relationships
-- its views, with key, scope, title, include, exclude, autolayout, and a dynamic view's steps
+- its views, with key, scope, title, include, exclude, autolayout, a dynamic view's steps, and
+  an image view's generated Mermaid source with its text
 - its problems
 
 It reads the DSL subset the decision supports: `workspace`, `model`, `views`,
-`!identifiers hierarchical`, `!include`, the static and deployment elements, `group`, `tags`,
-relationships, and the six view kinds. A construct outside that subset is a problem naming its
-file and line, and reading goes on past it.
+`!identifiers hierarchical`, `!include`, `!element` reopening a system or container declared
+before it, the static and deployment elements, `group`, `tags`,
+relationships, the six view kinds, and an `image` view on a component whose `mermaid` source is
+a `.mmd` file under `c4/generated/`, the code level. A construct outside that subset is a problem
+naming its file and line, and reading goes on past it.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Every construct outside the supported subset is reported with its file and line, never dropped silently, and reading continues past it | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | A workspace that does not start with `!identifiers hierarchical` is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | An `!include` is a relative path to a file under the workspace's `c4/` folder; anything else is a problem and is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| An `!element` stands at the top of the model and reopens a system or container declared before it; anything else is a problem and its block is not read | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
+| An image view is scoped to a component and has one `mermaid` source: a relative `.mmd` file under the workspace's `c4/generated/` folder that exists; any other source is a problem | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every relationship end, instance, view scope, environment, include, exclude, and dynamic step resolves to an element of the kind it needs | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every view has a key, unique in the workspace, that a `c4:` embed can address | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4.test.mjs` |
 | Every element has a description of one line | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
-| Every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to, and every view is embedded in exactly one section; a view no chapter embeds is a warning | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
+| Every `c4:` embed names a view the workspace defines, in the chapter its kind belongs to — an image view in the `## Structure` of a building block whose `c4` names its component or an element holding it — and every view is embedded in exactly one section; a view no chapter embeds is a warning | `c4-graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 | Every `c4` and `c4-touches` identifier resolves to an element, and no element is in both | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 | `code` sits on a building block's top-level block and lists folders; a missing folder is a warning | `c4-graph.mjs`, `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
 | A debt record's `status` is on the debt ladder, resting at `identified`, and its `severity` is one of four values | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/c4-graph.test.mjs` |
@@ -691,7 +722,7 @@ commits it.
 
 A **Graph Node** is one chapter or file, identified by its address, carrying the parsed
 block, the composed label, and the folder it belongs to. The label composes the heading with
-the `type` where that adds something, as in `Order Platform (context-map)`, so the kind stays
+the `type` where that adds something, as in `Order (domain)`, so the kind stays
 visible in a graph drawn from several repositories at once.
 
 A **Graph Edge** is a directed pair of addresses plus which field produced it. It is equal by
@@ -787,6 +818,73 @@ a package-derived fact is reproducible and a hand-written one is visibly not.
 | --- | --- | --- |
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
 | Materialized only where `tech/` is adopted | `init`, `update` | untested |
+
+### C4 Generators
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#c4-update", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/c4-model.md"]
+```
+
+Also called: `devbook-c4`.
+
+Two scripts write the generated part of a [C4 Model](#c4-model) from code, so the container and
+component levels stay true without anyone typing them. `containers.mjs` reads the Mermaid
+flowchart an Aspire AppHost's `aspire describe` prints, through a hand-written mapping file,
+`.devbook/arc42/c4/aspire-map.json`, that drops a resource or names the identifier the rest
+of the workspace knows its container by.
+`components.mjs` reads the `.csproj` files, with no build, against each building block's `c4`
+and `code`. Each writes one file under `.devbook/arc42/c4/generated/` that reopens its parents
+with `!element`, and each runs from the plugin, never from a materialized copy.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| One container per mapped element, resources sharing an identifier folded into it, and one relationship per reference between two of them | `containers.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/containers.test.mjs` |
+| A resource with no mapping, and an element with no description, is reported and never guessed | `containers.mjs`, `components.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/containers.test.mjs` |
+| A project belongs to the block whose `code` folder holds it most closely; a reference between two blocks is one relationship | `components.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
+| `--check` writes nothing and exits `1` while the committed file differs | both | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
+| Both files read clean in a workspace that includes them after their parents | `c4.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/components.test.mjs` |
+
+### Code Model
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#c4-update", ".devbook/arc42/building-blocks/devbook.md#c4-generators", ".devbook/arc42/building-blocks/devbook.md#c4-model", ".devbook/arc42/adr/c4-model.md"]
+```
+
+The code level of the C4 model, generated so nobody types it. A .NET console under
+`tools/devbook-c4/code-model/` loads a solution with Roslyn and finds every class or struct a
+marker names: an interface `IAggregateRoot`, `IEntity`, `IValueObject`, or `IDomainEvent`, or a
+base class of that name with or without its `I`. A repository with its own names passes them
+with `--markers`. Interfaces come first because a C# `record` can implement one and keep its
+own base.
+
+```mermaid
+flowchart LR
+    sln[Solution] --> finder[Marked types]
+    blocks["Building blocks: code and c4"] --> map[Component per type]
+    finder --> map
+    map --> mmd["code/component.mmd"]
+    map --> dsl[code.dsl image views]
+    aliases["domain/ aliases"] --> report[no-alias report]
+    finder --> report
+```
+
+Each aggregate root lands under the `c4` element of the building block whose `code` folder
+holds its file. The component's diagram draws each of its roots with the entities and value
+objects they hold, and `code.dsl` gives it one `image` view, which `workspace.dsl` includes in
+`views` and the block embeds under `## Structure`. A domain event is found and checked against
+the aliases but never drawn. The [C4 Model](#c4-model) reader checks the view and the
+[view renderer](devbook-derived.md#view-renderer) draws it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The same code gives the same bytes, and a run from nothing writes exactly the committed files | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A type is marked by an interface or by a base class of a marker's name, and `--markers` replaces the four names | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A diagram holds its roots, their entities, and their value objects; another root and a domain event are never drawn | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| What it writes reads with no problem in `c4.mjs`, and every image view draws | `code-model`, `c4.mjs`, `render.mjs` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A marked type no `domain/` chapter carries in `aliases`, and a root in no block's `code` folder, are reported | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| `--check` writes nothing and exits `1` when a file would change or a stale diagram remains | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| A solution that does not load whole, which would read as types removed, writes and compares nothing and exits `3` | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
+| An image view lands only on a component, the three-part identifier a block names in `c4`; a block naming none draws nothing | `code-model` | `unit:node:plugins/devbook/tools/devbook-c4/code-model/code-model.test.mjs` |
 
 ### Scenario Tools
 
@@ -1020,10 +1118,10 @@ consumer that reaches only the converters or only the procedures is listed in
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
+| [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime; its drift workflow runs `components.mjs` and the code-model console with `--check`, fetched from the plugin at the version the stamp records | The checker's CLI, the three modules' exports, and the generators' `--check` options | That the tool lands where this block's install puts it, that the exports the canvas reads keep their names, and that `--check` writes nothing and exits `1` on drift. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
 | [delivery](delivery.md#dependencies) | **Undeclared**: see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract, none of which it pins. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | Four of its own `schedule-*` wrappers invoke `validate`, `verify-change`, `tech-update`, and `prose-check` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | Five of its own `schedule-*` wrappers invoke `validate`, `verify-change`, `tech-update`, `c4-update`, and `prose-check` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | spec-manager and Backlog | Published Language | Answer `devbook.decision@1` over MCP; recompute the fingerprint and run its vector | The two contracts and the vector | That both keep their shape within `@1`, and that `chapter-hash.mjs` prints what the vector pins. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |

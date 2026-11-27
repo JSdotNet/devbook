@@ -19,45 +19,20 @@ it works at, so a tool can draw the answer — see
 > `ai/` describes how **we build the product**. AI shipped **inside** the
 > product — a model call in a feature, a retrieval pipeline the user hits — is
 > ordinary architecture and belongs in `arc42/`, `domain/`, and `tech/`.
-> Cross-link with `related` where the two touch, and keep the boundary sharp:
-> an agent that reviews our pull requests is `ai/`; an agent the customer talks
+> Cross-link with `related` where the two touch: an agent that reviews our pull requests is `ai/`; an agent the customer talks
 > to is product.
 
-## The boundary with `tech/`
+## Where a fact lives
 
-**`tech/` stays the registry.** An AI tool with a vendor and a version — Claude
-Code, an MCP server, a model provider, a CI agent — is registered as a `tech/`
-chapter like any other technology, with `tech/`'s `rating` recording its maturity
-as a technology in this project.
+Which folder keeps a fact, and how a task loads one, is "One folder keeps a fact" in
+`devbook-writing.md`. `ai/` ranks last but always keeps how AI is used. Load
+`adoption-map.md` and the files in scope when the task is about how the team works with AI.
 
-`ai/` never re-registers it. An `ai/` chapter names the **usage**: the practice,
-the agent persona, the skill, the guardrail — the thing that exists only because
-of how we chose to work — and points at the registered technology with
-`depends-on`.
-
-| Fact | Folder |
-|---|---|
-| "We use Claude Code, version X, `adopted`" | `tech/` |
-| "At `specify` we draft devbook chapters with the devbook skills, `trial`" | `ai/` |
-| "The coding agent persona, and when we hand work to it" | `ai/` |
-| "Anthropic's API is a service dependency of the build pipeline" | `tech/` |
-| "Every agent-authored change is reviewed by a human before merge" | `ai/` |
-
-The test: **if it has a vendor and a version, it is a `tech/` chapter.** If it is
-a decision about how we work, it is an `ai/` chapter. An `ai/` chapter whose
-`depends-on` points at nothing in `tech/` is usually fine — most practices,
-concepts, and guardrails have no product behind them.
-
-## Context-loading policy
-
-- `ai/` is **not** baseline repository context. Load it when the task is about
-  how the team works with AI — adopting a tool into the path, changing a
-  practice, reviewing adoption, onboarding someone into the way of working.
-- When `ai/` is needed as task context, load `adoption-map.md` plus only the
-  files in scope, not the whole folder.
-- An agent does **not** read `ai/` to decide how to do its own current task.
-  These chapters are the record of a way of working, not instructions to follow;
-  instructions live in instruction files and skills.
+- An `ai/` chapter keeps the usage: the practice, the agent persona, the skill, the
+  guardrail. It points at the tool's `tech/` chapter with `depends-on` and restates
+  no version, path, or date of that tool; the reverse link is never written.
+- An agent does **not** read `ai/` to decide how to do its own current task. These
+  chapters record a way of working; instructions live in instruction files and skills.
 
 ## The stages
 
@@ -134,7 +109,7 @@ nothing in the picture.
   - Links the scheduler's `tech/` chapter, when the repository has one — the
     one place the [loop picture](#the-loop-picture) learns which it is.
   - Its `##` sections do **not** carry per-chapter metadata blocks; the file
-    carries a file-level block only — the same rule as `.devbook/domain/context-map.md`
+    carries a file-level block only — the same rule as a bounded context's `model.md`
     and `.devbook/tech/technology-graph.md`.
 - **`<nn>-<part>.md`** — One `## <Chapter Name>` chapter per usage. Each chapter
   is an addressable node in the graph, carries a chapter metadata block, and
