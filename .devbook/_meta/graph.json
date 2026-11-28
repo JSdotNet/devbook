@@ -9,17 +9,17 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 671,
-    "edges": 1675,
+    "nodes": 672,
+    "edges": 1677,
     "nodesByFolder": {
       "arc42": 644,
-      "tech": 14,
+      "tech": 15,
       "design": 3,
       "ai": 10
     },
     "nodesByType": {
       "file": 62,
-      "chapter": 499,
+      "chapter": 500,
       "element": 86,
       "view": 24
     },
@@ -30,6 +30,7 @@
       "format": 1,
       "protocol": 2,
       "runtime": 2,
+      "tool": 1,
       "stage": 3,
       "practice": 3,
       "skill": 3,
@@ -43,12 +44,12 @@
     },
     "nodesByRating": {
       "adopted": 13,
-      "trial": 7,
+      "trial": 8,
       "candidate": 4
     },
     "edgesByType": {
-      "contains": 577,
-      "related": 853,
+      "contains": 578,
+      "related": 854,
       "depends-on": 9,
       "relationship": 124,
       "embeds": 24,
@@ -2513,7 +2514,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-11-10",
+          "date": "2026-11-18",
           "c4": [
             "marketplace"
           ],
@@ -2555,7 +2556,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "rejected",
           "level": 2,
-          "line": 272
+          "line": 327
         }
       },
       {
@@ -2567,7 +2568,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "history",
           "level": 2,
-          "line": 329
+          "line": 395
         }
       },
       {
@@ -2577,7 +2578,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/releases.md",
-          "date": "2026-11-12",
+          "date": "2026-11-26",
           "c4": [
             "marketplace"
           ],
@@ -3452,7 +3453,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-validate",
           "level": 3,
-          "line": 67,
+          "line": 69,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#validate",
             ".devbook/arc42/building-blocks/devbook-derived.md#update",
@@ -3469,7 +3470,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-verify",
           "level": 3,
-          "line": 81,
+          "line": 83,
           "related": [
             ".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change",
             ".devbook/arc42/12-glossary.md#drift-verdict",
@@ -3486,7 +3487,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-devbook-update",
           "level": 3,
-          "line": 104,
+          "line": 106,
           "related": [
             ".devbook/arc42/building-blocks/devbook-config.md#update",
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-devbook-validate",
@@ -3503,7 +3504,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-instruction-review",
           "level": 3,
-          "line": 119,
+          "line": 121,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#skill",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"
@@ -3519,7 +3520,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-issue-sweep",
           "level": 3,
-          "line": 135,
+          "line": 137,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point",
             ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
@@ -3536,7 +3537,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "classify-once-judge-every-sweep",
           "level": 4,
-          "line": 154
+          "line": 157
         }
       },
       {
@@ -3548,7 +3549,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "close-on-evidence-draft-everything-else",
           "level": 4,
-          "line": 165,
+          "line": 168,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point"
           ]
@@ -3563,7 +3564,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "one-session-one-issue-at-a-time",
           "level": 4,
-          "line": 177
+          "line": 180
         }
       },
       {
@@ -3575,7 +3576,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-merge-review",
           "level": 3,
-          "line": 192
+          "line": 200
         }
       },
       {
@@ -3587,7 +3588,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-package-update",
           "level": 3,
-          "line": 214,
+          "line": 225,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#flow-code"
           ]
@@ -3602,7 +3603,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-performance-review",
           "level": 3,
-          "line": 226
+          "line": 237
         }
       },
       {
@@ -3614,7 +3615,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-prose-check",
           "level": 3,
-          "line": 236,
+          "line": 247,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#prose-check",
             ".devbook/arc42/adr/plugin-boundaries.md"
@@ -3630,7 +3631,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-security-review",
           "level": 3,
-          "line": 255
+          "line": 266
         }
       },
       {
@@ -3642,7 +3643,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-tech-update",
           "level": 3,
-          "line": 265,
+          "line": 276,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#tech-update",
             ".devbook/arc42/adr/checks-and-indexes.md"
@@ -3658,7 +3659,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-retro",
           "level": 3,
-          "line": 277,
+          "line": 288,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies",
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-instruction-review",
@@ -3675,7 +3676,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-weekly-update",
           "level": 3,
-          "line": 300
+          "line": 311
         }
       },
       {
@@ -3687,7 +3688,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-whats-new",
           "level": 3,
-          "line": 311
+          "line": 322
         }
       },
       {
@@ -3699,7 +3700,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "structure",
           "level": 2,
-          "line": 321,
+          "line": 332,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#model"
           ]
@@ -3714,7 +3715,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "entry-point",
           "level": 3,
-          "line": 333
+          "line": 344
         }
       },
       {
@@ -3726,7 +3727,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "schedule-report-published",
           "level": 3,
-          "line": 363,
+          "line": 374,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#tracker"
           ]
@@ -3741,7 +3742,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "runtime",
           "level": 2,
-          "line": 399,
+          "line": 410,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md",
             ".devbook/arc42/building-blocks/delivery-schedule.md#runtime"
@@ -3757,7 +3758,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "an-unattended-run",
           "level": 3,
-          "line": 408
+          "line": 419
         }
       },
       {
@@ -3769,7 +3770,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 457,
+          "line": 468,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#dependencies"
           ]
@@ -3784,7 +3785,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "outbound",
           "level": 3,
-          "line": 468
+          "line": 479
         }
       },
       {
@@ -3796,7 +3797,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md",
           "slug": "inbound",
           "level": 3,
-          "line": 478
+          "line": 489
         }
       },
       {
@@ -3854,7 +3855,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-status",
           "level": 3,
-          "line": 111
+          "line": 113
         }
       },
       {
@@ -3866,7 +3867,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-run",
           "level": 3,
-          "line": 119
+          "line": 121
         }
       },
       {
@@ -3878,7 +3879,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "structure",
           "level": 2,
-          "line": 129,
+          "line": 131,
           "related": [
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/adr/plugin-boundaries.md"
@@ -3894,7 +3895,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "model",
           "level": 3,
-          "line": 143,
+          "line": 145,
           "related": [
             ".devbook/arc42/building-blocks/delivery-surface-dashboard.md"
           ]
@@ -3909,7 +3910,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule",
           "level": 3,
-          "line": 230,
+          "line": 232,
           "related": [
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/12-glossary.md#catalog"
@@ -3925,7 +3926,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "schedule-selection",
           "level": 3,
-          "line": 279,
+          "line": 281,
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#stamp",
             ".devbook/arc42/05-building-block-view.md#stack-config"
@@ -3941,7 +3942,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "bundle",
           "level": 3,
-          "line": 310,
+          "line": 314,
           "related": [
             ".devbook/arc42/adr/plugin-boundaries.md",
             ".devbook/arc42/08-crosscutting-concepts.md#schedule",
@@ -3958,7 +3959,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "scheduler-resolution",
           "level": 3,
-          "line": 364,
+          "line": 390,
           "related": [
             ".devbook/arc42/12-glossary.md#scheduler",
             ".devbook/tech/hosts.md#scheduled-routines"
@@ -3974,7 +3975,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "catalog-check",
           "level": 3,
-          "line": 389,
+          "line": 415,
           "related": [
             ".devbook/arc42/12-glossary.md#catalog"
           ]
@@ -3989,7 +3990,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "runtime",
           "level": 2,
-          "line": 406,
+          "line": 432,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md"
           ]
@@ -4004,7 +4005,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "from-catalog-to-scheduler",
           "level": 3,
-          "line": 415
+          "line": 441
         }
       },
       {
@@ -4016,7 +4017,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "a-machine-sync",
           "level": 3,
-          "line": 448,
+          "line": 474,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#bundle"
           ]
@@ -4031,7 +4032,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "a-bundle-run",
           "level": 3,
-          "line": 471,
+          "line": 497,
           "related": [
             ".devbook/arc42/building-blocks/delivery-schedule.md#bundle",
             ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#in-a-bundle"
@@ -4047,7 +4048,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 494,
+          "line": 520,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies",
             ".devbook/arc42/adr/plugin-boundaries.md",
@@ -4064,7 +4065,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "outbound",
           "level": 3,
-          "line": 503
+          "line": 529
         }
       },
       {
@@ -4076,7 +4077,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
           "slug": "inbound",
           "level": 3,
-          "line": 525
+          "line": 551
         }
       },
       {
@@ -4182,7 +4183,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "declared-tools",
           "level": 3,
-          "line": 97
+          "line": 101
         }
       },
       {
@@ -4194,7 +4195,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "runtime",
           "level": 2,
-          "line": 113,
+          "line": 117,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#run-started"
           ]
@@ -4209,7 +4210,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "a-run-bound-or-skipped",
           "level": 3,
-          "line": 119
+          "line": 123
         }
       },
       {
@@ -4221,7 +4222,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 151,
+          "line": 155,
           "related": [
             ".devbook/arc42/building-blocks/delivery.md#dependencies",
             ".devbook/arc42/08-crosscutting-concepts.md#surface"
@@ -4237,7 +4238,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "outbound",
           "level": 3,
-          "line": 159
+          "line": 163
         }
       },
       {
@@ -4249,7 +4250,7 @@
           "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
           "slug": "inbound",
           "level": 3,
-          "line": 171
+          "line": 175
         }
       },
       {
@@ -8350,7 +8351,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "node",
           "level": 2,
-          "line": 10,
+          "line": 11,
           "kind": "runtime",
           "rating": "adopted",
           "date": "2026-09-04",
@@ -8368,7 +8369,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "powershell",
           "level": 2,
-          "line": 76,
+          "line": 78,
           "kind": "runtime",
           "rating": "adopted",
           "date": "2026-09-04",
@@ -8378,6 +8379,25 @@
           "related": [
             ".devbook/arc42/adr/hosts.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md#aspire-cli",
+          "label": "Aspire CLI",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "slug": "aspire-cli",
+          "level": 2,
+          "line": 114,
+          "kind": "tool",
+          "rating": "trial",
+          "version": "17.0",
+          "date": "2026-11-24",
+          "related": [
+            ".devbook/arc42/building-blocks/devbook-procedures.md#procedure"
           ]
         }
       },
@@ -9569,7 +9589,7 @@
           "line": 114,
           "kind": "component",
           "element": "marketplace.delivery-surface-backlog.endpoint",
-          "description": "The Backlog address and bearer token, from the environment, then settings, then the default port.",
+          "description": "The Backlog address, from the environment, then settings, then the default port, and the delivery grant's token from the app's broker.",
           "technology": "Node.js"
         }
       },
@@ -14086,6 +14106,14 @@
           "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#powershell",
           "source": ".devbook/tech/tooling.md",
           "target": ".devbook/tech/tooling.md#powershell",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#aspire-cli",
+          "source": ".devbook/tech/tooling.md",
+          "target": ".devbook/tech/tooling.md#aspire-cli",
           "type": "contains"
         }
       },
@@ -20942,6 +20970,14 @@
           "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/05-building-block-view.md#plugin-folder",
           "source": ".devbook/tech/tooling.md#powershell",
           "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/tooling.md#aspire-cli->.devbook/arc42/building-blocks/devbook-procedures.md#procedure",
+          "source": ".devbook/tech/tooling.md#aspire-cli",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#procedure",
           "type": "related"
         }
       },

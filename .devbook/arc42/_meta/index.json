@@ -184,7 +184,7 @@
           "name": "plugin-boundaries.md",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "title": "Plugin Boundaries",
-          "date": "2026-11-10",
+          "date": "2026-11-18",
           "summary": "Every plugin is self-contained under plugins/<name>/ and either works alone or declares what it needs. There are three ways to couple — a declared dependency on a lower layer, a bridge plugin depending on both sides, a surface capability resolved from the live tool list — and a lower layer never…"
         },
         {
@@ -192,8 +192,8 @@
           "name": "releases.md",
           "path": ".devbook/arc42/adr/releases.md",
           "title": "Releases",
-          "date": "2026-11-12",
-          "summary": "Every plugin carries the same version — 1.37.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…",
+          "date": "2026-11-26",
+          "summary": "Every plugin carries the same version — 1.37.1 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…",
           "diagrams": 1
         },
         {

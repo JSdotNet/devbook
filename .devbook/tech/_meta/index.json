@@ -39,7 +39,7 @@
       "path": ".devbook/tech/tooling.md",
       "title": "Tooling",
       "rating": "adopted",
-      "summary": "A plugin's executable parts run on these two runtimes. A consuming repository already has both, and nothing here installs either."
+      "summary": "A plugin's executable parts run on these two runtimes. A consuming repository already has both, and nothing here installs either. The Aspire CLI is the one tool a shipped procedure drives in a consuming repository."
     }
   ]
 }

@@ -6,31 +6,32 @@
     ".devbook/tech"
   ],
   "stats": {
-    "nodes": 22,
-    "edges": 26,
+    "nodes": 24,
+    "edges": 28,
     "nodesByFolder": {
-      "tech": 14,
-      "arc42": 8
+      "tech": 15,
+      "arc42": 9
     },
     "nodesByType": {
       "file": 7,
-      "chapter": 15
+      "chapter": 17
     },
     "nodesByKind": {
-      "none": 12,
+      "none": 13,
       "platform": 4,
       "library": 1,
       "format": 1,
       "protocol": 2,
-      "runtime": 2
+      "runtime": 2,
+      "tool": 1
     },
     "nodesByRating": {
       "adopted": 10,
-      "trial": 4
+      "trial": 5
     },
     "edgesByType": {
-      "contains": 10,
-      "related": 11,
+      "contains": 11,
+      "related": 12,
       "depends-on": 5
     }
   },
@@ -235,7 +236,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "node",
           "level": 2,
-          "line": 10,
+          "line": 11,
           "kind": "runtime",
           "rating": "adopted",
           "date": "2026-09-04",
@@ -253,7 +254,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "powershell",
           "level": 2,
-          "line": 76,
+          "line": 78,
           "kind": "runtime",
           "rating": "adopted",
           "date": "2026-09-04",
@@ -263,6 +264,25 @@
           "related": [
             ".devbook/arc42/adr/hosts.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/tooling.md#aspire-cli",
+          "label": "Aspire CLI",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/tooling.md",
+          "slug": "aspire-cli",
+          "level": 2,
+          "line": 114,
+          "kind": "tool",
+          "rating": "trial",
+          "version": "17.0",
+          "date": "2026-11-24",
+          "related": [
+            ".devbook/arc42/building-blocks/devbook-procedures.md#procedure"
           ]
         }
       },
@@ -360,7 +380,7 @@
           "type": "file",
           "folder": "arc42",
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
-          "date": "2026-11-10",
+          "date": "2026-11-18",
           "c4": [
             "marketplace"
           ],
@@ -433,6 +453,24 @@
           "related": [
             ".devbook/arc42/08-crosscutting-concepts.md#surface",
             ".devbook/arc42/adr/surfaces.md"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-procedures.md#procedure",
+          "label": "Procedure",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-procedures.md",
+          "slug": "procedure",
+          "level": 3,
+          "line": 49,
+          "related": [
+            ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+            ".devbook/arc42/building-blocks/devbook.md#init",
+            ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"
           ],
           "outOfScope": true
         }
@@ -516,6 +554,14 @@
           "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#powershell",
           "source": ".devbook/tech/tooling.md",
           "target": ".devbook/tech/tooling.md#powershell",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/tooling.md->.devbook/tech/tooling.md#aspire-cli",
+          "source": ".devbook/tech/tooling.md",
+          "target": ".devbook/tech/tooling.md#aspire-cli",
           "type": "contains"
         }
       },
@@ -644,6 +690,14 @@
           "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/05-building-block-view.md#plugin-folder",
           "source": ".devbook/tech/tooling.md#powershell",
           "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/tooling.md#aspire-cli->.devbook/arc42/building-blocks/devbook-procedures.md#procedure",
+          "source": ".devbook/tech/tooling.md#aspire-cli",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#procedure",
           "type": "related"
         }
       }
